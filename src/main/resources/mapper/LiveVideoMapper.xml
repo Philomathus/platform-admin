@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveVideoMapper">
+
+    <resultMap type="LiveVideo" id="LiveVideoResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="userId"    column="user_id"    />
+        <result property="liveIn"    column="live_in"    />
+        <result property="watchNumber"    column="watch_number"    />
+        <result property="virtualWatchNumber"    column="virtual_watch_number"    />
+        <result property="voteNumber"    column="vote_number"    />
+        <result property="cateId"    column="cate_id"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="destroyGroupStatus"    column="destroy_group_status"    />
+        <result property="longPollingKey"    column="long_polling_key"    />
+        <result property="maxWatchNumber"    column="max_watch_number"    />
+        <result property="roomType"    column="room_type"    />
+        <result property="isPlayback"    column="is_playback"    />
+        <result property="videoVid"    column="video_vid"    />
+        <result property="monitorTime"    column="monitor_time"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="robotNum"    column="robot_num"    />
+        <result property="robotTime"    column="robot_time"    />
+        <result property="channelid"    column="channelid"    />
+        <result property="isAborted"    column="is_aborted"    />
+        <result property="isDelVod"    column="is_del_vod"    />
+        <result property="onlineStatus"    column="online_status"    />
+        <result property="tipoffCount"    column="tipoff_count"    />
+        <result property="privateKey"    column="private_key"    />
+        <result property="shareType"    column="share_type"    />
+        <result property="sort"    column="sort"    />
+        <result property="paiId"    column="pai_id"    />
+        <result property="sex"    column="sex"    />
+        <result property="videoType"    column="video_type"    />
+        <result property="sortNum"    column="sort_num"    />
+        <result property="createType"    column="create_type"    />
+        <result property="maxRobotNum"    column="max_robot_num"    />
+        <result property="shareCount"    column="share_count"    />
+        <result property="likeCount"    column="like_count"    />
+        <result property="fansCount"    column="fans_count"    />
+        <result property="sortInit"    column="sort_init"    />
+        <result property="pushRtmp"    column="push_rtmp"    />
+        <result property="playFlv"    column="play_flv"    />
+        <result property="playRtmp"    column="play_rtmp"    />
+        <result property="playMp4"    column="play_mp4"    />
+        <result property="playHls"    column="play_hls"    />
+        <result property="xpoint"    column="xpoint"    />
+        <result property="ypoint"    column="ypoint"    />
+        <result property="headImage"    column="head_image"    />
+        <result property="thumbHeadImage"    column="thumb_head_image"    />
+        <result property="playUrl"    column="play_url"    />
+        <result property="isRecommend"    column="is_recommend"    />
+        <result property="liveImage"    column="live_image"    />
+        <result property="virtualNumber"    column="virtual_number"    />
+        <result property="livePayTime"    column="live_pay_time"    />
+        <result property="isLivePay"    column="is_live_pay"    />
+        <result property="liveFee"    column="live_fee"    />
+        <result property="liveIsMention"    column="live_is_mention"    />
+        <result property="livePayType"    column="live_pay_type"    />
+        <result property="livePayCount"    column="live_pay_count"    />
+        <result property="propTable"    column="prop_table"    />
+        <result property="roomTitle"    column="room_title"    />
+        <result property="payRoomId"    column="pay_room_id"    />
+        <result property="lenTime"    column="len_time"    />
+        <result property="isConcatvideo"    column="is_concatvideo"    />
+        <result property="stick"    column="stick"    />
+        <result property="classifiedId"    column="classified_id"    />
+        <result property="gameLogId"    column="game_log_id"    />
+        <result property="bankerStatus"    column="banker_status"    />
+        <result property="bankerId"    column="banker_id"    />
+        <result property="autoStart"    column="auto_start"    />
+        <result property="autoGameId"    column="auto_game_id"    />
+        <result property="lotteryId"    column="lottery_id"    />
+        <result property="newPlayFlv"    column="new_play_flv"    />
+        <result property="nPlayFlv"    column="n_play_flv"    />
+        <result property="hostName"    column="host_name"    />
+        <result property="lotteryName"    column="lottery_name"    />
+    </resultMap>
+
+    <sql id="selectLiveVideoVo">
+        select id, title, user_id, live_in, watch_number, virtual_watch_number, vote_number, cate_id, province, city, create_time, begin_time, end_time, end_date, group_id, destroy_group_status, long_polling_key, max_watch_number, room_type, is_playback, video_vid, monitor_time, is_delete, robot_num, robot_time, channelid, is_aborted, is_del_vod, online_status, tipoff_count, private_key, share_type, sort, pai_id, sex, video_type, sort_num, create_type, max_robot_num, share_count, like_count, fans_count, sort_init, push_rtmp, play_flv, play_rtmp, play_mp4, play_hls, xpoint, ypoint, head_image, thumb_head_image, play_url, is_recommend, live_image, virtual_number, live_pay_time, is_live_pay, live_fee, live_is_mention, live_pay_type, live_pay_count, prop_table, room_title, pay_room_id, len_time, is_concatvideo, stick, classified_id, game_log_id, banker_status, banker_id, auto_start, auto_game_id, lottery_id, new_play_flv, n_play_flv, host_name, lottery_name from 7700_live.live_video
+    </sql>
+
+    <select id="selectLiveVideoList" parameterType="LiveVideo" resultMap="LiveVideoResult">
+        <include refid="selectLiveVideoVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="liveIn != null "> and live_in = #{liveIn}</if>
+            <if test="watchNumber != null "> and watch_number = #{watchNumber}</if>
+            <if test="virtualWatchNumber != null "> and virtual_watch_number = #{virtualWatchNumber}</if>
+            <if test="voteNumber != null "> and vote_number = #{voteNumber}</if>
+            <if test="cateId != null "> and cate_id = #{cateId}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="beginTime != null "> and begin_time = #{beginTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="groupId != null  and groupId != ''"> and group_id = #{groupId}</if>
+            <if test="destroyGroupStatus != null "> and destroy_group_status = #{destroyGroupStatus}</if>
+            <if test="longPollingKey != null  and longPollingKey != ''"> and long_polling_key = #{longPollingKey}</if>
+            <if test="maxWatchNumber != null "> and max_watch_number = #{maxWatchNumber}</if>
+            <if test="roomType != null "> and room_type = #{roomType}</if>
+            <if test="isPlayback != null "> and is_playback = #{isPlayback}</if>
+            <if test="videoVid != null  and videoVid != ''"> and video_vid = #{videoVid}</if>
+            <if test="monitorTime != null "> and monitor_time = #{monitorTime}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="robotNum != null "> and robot_num = #{robotNum}</if>
+            <if test="robotTime != null "> and robot_time = #{robotTime}</if>
+            <if test="channelid != null  and channelid != ''"> and channelid = #{channelid}</if>
+            <if test="isAborted != null "> and is_aborted = #{isAborted}</if>
+            <if test="isDelVod != null "> and is_del_vod = #{isDelVod}</if>
+            <if test="onlineStatus != null "> and online_status = #{onlineStatus}</if>
+            <if test="tipoffCount != null "> and tipoff_count = #{tipoffCount}</if>
+            <if test="privateKey != null  and privateKey != ''"> and private_key = #{privateKey}</if>
+            <if test="shareType != null  and shareType != ''"> and share_type = #{shareType}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="paiId != null "> and pai_id = #{paiId}</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="videoType != null "> and video_type = #{videoType}</if>
+            <if test="sortNum != null "> and sort_num = #{sortNum}</if>
+            <if test="createType != null "> and create_type = #{createType}</if>
+            <if test="maxRobotNum != null "> and max_robot_num = #{maxRobotNum}</if>
+            <if test="shareCount != null "> and share_count = #{shareCount}</if>
+            <if test="likeCount != null "> and like_count = #{likeCount}</if>
+            <if test="fansCount != null "> and fans_count = #{fansCount}</if>
+            <if test="sortInit != null "> and sort_init = #{sortInit}</if>
+            <if test="pushRtmp != null  and pushRtmp != ''"> and push_rtmp = #{pushRtmp}</if>
+            <if test="playFlv != null  and playFlv != ''"> and play_flv = #{playFlv}</if>
+            <if test="playRtmp != null  and playRtmp != ''"> and play_rtmp = #{playRtmp}</if>
+            <if test="playMp4 != null  and playMp4 != ''"> and play_mp4 = #{playMp4}</if>
+            <if test="playHls != null  and playHls != ''"> and play_hls = #{playHls}</if>
+            <if test="xpoint != null "> and xpoint = #{xpoint}</if>
+            <if test="ypoint != null "> and ypoint = #{ypoint}</if>
+            <if test="headImage != null  and headImage != ''"> and head_image = #{headImage}</if>
+            <if test="thumbHeadImage != null  and thumbHeadImage != ''"> and thumb_head_image = #{thumbHeadImage}</if>
+            <if test="playUrl != null  and playUrl != ''"> and play_url = #{playUrl}</if>
+            <if test="isRecommend != null "> and is_recommend = #{isRecommend}</if>
+            <if test="liveImage != null  and liveImage != ''"> and live_image = #{liveImage}</if>
+            <if test="virtualNumber != null "> and virtual_number = #{virtualNumber}</if>
+            <if test="livePayTime != null "> and live_pay_time = #{livePayTime}</if>
+            <if test="isLivePay != null "> and is_live_pay = #{isLivePay}</if>
+            <if test="liveFee != null "> and live_fee = #{liveFee}</if>
+            <if test="liveIsMention != null "> and live_is_mention = #{liveIsMention}</if>
+            <if test="livePayType != null "> and live_pay_type = #{livePayType}</if>
+            <if test="livePayCount != null "> and live_pay_count = #{livePayCount}</if>
+            <if test="propTable != null  and propTable != ''"> and prop_table = #{propTable}</if>
+            <if test="roomTitle != null  and roomTitle != ''"> and room_title = #{roomTitle}</if>
+            <if test="payRoomId != null "> and pay_room_id = #{payRoomId}</if>
+            <if test="lenTime != null "> and len_time = #{lenTime}</if>
+            <if test="isConcatvideo != null "> and is_concatvideo = #{isConcatvideo}</if>
+            <if test="stick != null "> and stick = #{stick}</if>
+            <if test="classifiedId != null "> and classified_id = #{classifiedId}</if>
+            <if test="gameLogId != null "> and game_log_id = #{gameLogId}</if>
+            <if test="bankerStatus != null "> and banker_status = #{bankerStatus}</if>
+            <if test="bankerId != null "> and banker_id = #{bankerId}</if>
+            <if test="autoStart != null "> and auto_start = #{autoStart}</if>
+            <if test="autoGameId != null "> and auto_game_id = #{autoGameId}</if>
+            <if test="lotteryId != null "> and lottery_id = #{lotteryId}</if>
+            <if test="newPlayFlv != null  and newPlayFlv != ''"> and new_play_flv = #{newPlayFlv}</if>
+            <if test="nPlayFlv != null  and nPlayFlv != ''"> and n_play_flv = #{nPlayFlv}</if>
+            <if test="hostName != null  and hostName != ''"> and host_name like concat('%', #{hostName}, '%')</if>
+            <if test="lotteryName != null  and lotteryName != ''"> and lottery_name like concat('%', #{lotteryName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectLiveVideoById" parameterType="Long" resultMap="LiveVideoResult">
+        <include refid="selectLiveVideoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveVideo" parameterType="LiveVideo">
+        insert into 7700_live.live_video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="liveIn != null">live_in,</if>
+            <if test="watchNumber != null">watch_number,</if>
+            <if test="virtualWatchNumber != null">virtual_watch_number,</if>
+            <if test="voteNumber != null">vote_number,</if>
+            <if test="cateId != null">cate_id,</if>
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="beginTime != null">begin_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="groupId != null and groupId != ''">group_id,</if>
+            <if test="destroyGroupStatus != null">destroy_group_status,</if>
+            <if test="longPollingKey != null and longPollingKey != ''">long_polling_key,</if>
+            <if test="maxWatchNumber != null">max_watch_number,</if>
+            <if test="roomType != null">room_type,</if>
+            <if test="isPlayback != null">is_playback,</if>
+            <if test="videoVid != null">video_vid,</if>
+            <if test="monitorTime != null">monitor_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="robotNum != null">robot_num,</if>
+            <if test="robotTime != null">robot_time,</if>
+            <if test="channelid != null and channelid != ''">channelid,</if>
+            <if test="isAborted != null">is_aborted,</if>
+            <if test="isDelVod != null">is_del_vod,</if>
+            <if test="onlineStatus != null">online_status,</if>
+            <if test="tipoffCount != null">tipoff_count,</if>
+            <if test="privateKey != null">private_key,</if>
+            <if test="shareType != null and shareType != ''">share_type,</if>
+            <if test="sort != null">sort,</if>
+            <if test="paiId != null">pai_id,</if>
+            <if test="sex != null">sex,</if>
+            <if test="videoType != null">video_type,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="createType != null">create_type,</if>
+            <if test="maxRobotNum != null">max_robot_num,</if>
+            <if test="shareCount != null">share_count,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="fansCount != null">fans_count,</if>
+            <if test="sortInit != null">sort_init,</if>
+            <if test="pushRtmp != null and pushRtmp != ''">push_rtmp,</if>
+            <if test="playFlv != null and playFlv != ''">play_flv,</if>
+            <if test="playRtmp != null and playRtmp != ''">play_rtmp,</if>
+            <if test="playMp4 != null">play_mp4,</if>
+            <if test="playHls != null and playHls != ''">play_hls,</if>
+            <if test="xpoint != null">xpoint,</if>
+            <if test="ypoint != null">ypoint,</if>
+            <if test="headImage != null and headImage != ''">head_image,</if>
+            <if test="thumbHeadImage != null">thumb_head_image,</if>
+            <if test="playUrl != null and playUrl != ''">play_url,</if>
+            <if test="isRecommend != null">is_recommend,</if>
+            <if test="liveImage != null and liveImage != ''">live_image,</if>
+            <if test="virtualNumber != null">virtual_number,</if>
+            <if test="livePayTime != null">live_pay_time,</if>
+            <if test="isLivePay != null">is_live_pay,</if>
+            <if test="liveFee != null">live_fee,</if>
+            <if test="liveIsMention != null">live_is_mention,</if>
+            <if test="livePayType != null">live_pay_type,</if>
+            <if test="livePayCount != null">live_pay_count,</if>
+            <if test="propTable != null and propTable != ''">prop_table,</if>
+            <if test="roomTitle != null">room_title,</if>
+            <if test="payRoomId != null">pay_room_id,</if>
+            <if test="lenTime != null">len_time,</if>
+            <if test="isConcatvideo != null">is_concatvideo,</if>
+            <if test="stick != null">stick,</if>
+            <if test="classifiedId != null">classified_id,</if>
+            <if test="gameLogId != null">game_log_id,</if>
+            <if test="bankerStatus != null">banker_status,</if>
+            <if test="bankerId != null">banker_id,</if>
+            <if test="autoStart != null">auto_start,</if>
+            <if test="autoGameId != null">auto_game_id,</if>
+            <if test="lotteryId != null">lottery_id,</if>
+            <if test="newPlayFlv != null">new_play_flv,</if>
+            <if test="nPlayFlv != null">n_play_flv,</if>
+            <if test="hostName != null">host_name,</if>
+            <if test="lotteryName != null">lottery_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="liveIn != null">#{liveIn},</if>
+            <if test="watchNumber != null">#{watchNumber},</if>
+            <if test="virtualWatchNumber != null">#{virtualWatchNumber},</if>
+            <if test="voteNumber != null">#{voteNumber},</if>
+            <if test="cateId != null">#{cateId},</if>
+            <if test="province != null">#{province},</if>
+            <if test="city != null">#{city},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="beginTime != null">#{beginTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="groupId != null and groupId != ''">#{groupId},</if>
+            <if test="destroyGroupStatus != null">#{destroyGroupStatus},</if>
+            <if test="longPollingKey != null and longPollingKey != ''">#{longPollingKey},</if>
+            <if test="maxWatchNumber != null">#{maxWatchNumber},</if>
+            <if test="roomType != null">#{roomType},</if>
+            <if test="isPlayback != null">#{isPlayback},</if>
+            <if test="videoVid != null">#{videoVid},</if>
+            <if test="monitorTime != null">#{monitorTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="robotNum != null">#{robotNum},</if>
+            <if test="robotTime != null">#{robotTime},</if>
+            <if test="channelid != null and channelid != ''">#{channelid},</if>
+            <if test="isAborted != null">#{isAborted},</if>
+            <if test="isDelVod != null">#{isDelVod},</if>
+            <if test="onlineStatus != null">#{onlineStatus},</if>
+            <if test="tipoffCount != null">#{tipoffCount},</if>
+            <if test="privateKey != null">#{privateKey},</if>
+            <if test="shareType != null and shareType != ''">#{shareType},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="paiId != null">#{paiId},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="videoType != null">#{videoType},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="createType != null">#{createType},</if>
+            <if test="maxRobotNum != null">#{maxRobotNum},</if>
+            <if test="shareCount != null">#{shareCount},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="fansCount != null">#{fansCount},</if>
+            <if test="sortInit != null">#{sortInit},</if>
+            <if test="pushRtmp != null and pushRtmp != ''">#{pushRtmp},</if>
+            <if test="playFlv != null and playFlv != ''">#{playFlv},</if>
+            <if test="playRtmp != null and playRtmp != ''">#{playRtmp},</if>
+            <if test="playMp4 != null">#{playMp4},</if>
+            <if test="playHls != null and playHls != ''">#{playHls},</if>
+            <if test="xpoint != null">#{xpoint},</if>
+            <if test="ypoint != null">#{ypoint},</if>
+            <if test="headImage != null and headImage != ''">#{headImage},</if>
+            <if test="thumbHeadImage != null">#{thumbHeadImage},</if>
+            <if test="playUrl != null and playUrl != ''">#{playUrl},</if>
+            <if test="isRecommend != null">#{isRecommend},</if>
+            <if test="liveImage != null and liveImage != ''">#{liveImage},</if>
+            <if test="virtualNumber != null">#{virtualNumber},</if>
+            <if test="livePayTime != null">#{livePayTime},</if>
+            <if test="isLivePay != null">#{isLivePay},</if>
+            <if test="liveFee != null">#{liveFee},</if>
+            <if test="liveIsMention != null">#{liveIsMention},</if>
+            <if test="livePayType != null">#{livePayType},</if>
+            <if test="livePayCount != null">#{livePayCount},</if>
+            <if test="propTable != null and propTable != ''">#{propTable},</if>
+            <if test="roomTitle != null">#{roomTitle},</if>
+            <if test="payRoomId != null">#{payRoomId},</if>
+            <if test="lenTime != null">#{lenTime},</if>
+            <if test="isConcatvideo != null">#{isConcatvideo},</if>
+            <if test="stick != null">#{stick},</if>
+            <if test="classifiedId != null">#{classifiedId},</if>
+            <if test="gameLogId != null">#{gameLogId},</if>
+            <if test="bankerStatus != null">#{bankerStatus},</if>
+            <if test="bankerId != null">#{bankerId},</if>
+            <if test="autoStart != null">#{autoStart},</if>
+            <if test="autoGameId != null">#{autoGameId},</if>
+            <if test="lotteryId != null">#{lotteryId},</if>
+            <if test="newPlayFlv != null">#{newPlayFlv},</if>
+            <if test="nPlayFlv != null">#{nPlayFlv},</if>
+            <if test="hostName != null">#{hostName},</if>
+            <if test="lotteryName != null">#{lotteryName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLiveVideo" parameterType="LiveVideo">
+        update 7700_live.live_video
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="liveIn != null">live_in = #{liveIn},</if>
+            <if test="watchNumber != null">watch_number = #{watchNumber},</if>
+            <if test="virtualWatchNumber != null">virtual_watch_number = #{virtualWatchNumber},</if>
+            <if test="voteNumber != null">vote_number = #{voteNumber},</if>
+            <if test="cateId != null">cate_id = #{cateId},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="beginTime != null">begin_time = #{beginTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="groupId != null and groupId != ''">group_id = #{groupId},</if>
+            <if test="destroyGroupStatus != null">destroy_group_status = #{destroyGroupStatus},</if>
+            <if test="longPollingKey != null and longPollingKey != ''">long_polling_key = #{longPollingKey},</if>
+            <if test="maxWatchNumber != null">max_watch_number = #{maxWatchNumber},</if>
+            <if test="roomType != null">room_type = #{roomType},</if>
+            <if test="isPlayback != null">is_playback = #{isPlayback},</if>
+            <if test="videoVid != null">video_vid = #{videoVid},</if>
+            <if test="monitorTime != null">monitor_time = #{monitorTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="robotNum != null">robot_num = #{robotNum},</if>
+            <if test="robotTime != null">robot_time = #{robotTime},</if>
+            <if test="channelid != null and channelid != ''">channelid = #{channelid},</if>
+            <if test="isAborted != null">is_aborted = #{isAborted},</if>
+            <if test="isDelVod != null">is_del_vod = #{isDelVod},</if>
+            <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
+            <if test="tipoffCount != null">tipoff_count = #{tipoffCount},</if>
+            <if test="privateKey != null">private_key = #{privateKey},</if>
+            <if test="shareType != null and shareType != ''">share_type = #{shareType},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="paiId != null">pai_id = #{paiId},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="videoType != null">video_type = #{videoType},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="createType != null">create_type = #{createType},</if>
+            <if test="maxRobotNum != null">max_robot_num = #{maxRobotNum},</if>
+            <if test="shareCount != null">share_count = #{shareCount},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="fansCount != null">fans_count = #{fansCount},</if>
+            <if test="sortInit != null">sort_init = #{sortInit},</if>
+            <if test="pushRtmp != null and pushRtmp != ''">push_rtmp = #{pushRtmp},</if>
+            <if test="playFlv != null and playFlv != ''">play_flv = #{playFlv},</if>
+            <if test="playRtmp != null and playRtmp != ''">play_rtmp = #{playRtmp},</if>
+            <if test="playMp4 != null">play_mp4 = #{playMp4},</if>
+            <if test="playHls != null and playHls != ''">play_hls = #{playHls},</if>
+            <if test="xpoint != null">xpoint = #{xpoint},</if>
+            <if test="ypoint != null">ypoint = #{ypoint},</if>
+            <if test="headImage != null and headImage != ''">head_image = #{headImage},</if>
+            <if test="thumbHeadImage != null">thumb_head_image = #{thumbHeadImage},</if>
+            <if test="playUrl != null and playUrl != ''">play_url = #{playUrl},</if>
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
+            <if test="liveImage != null and liveImage != ''">live_image = #{liveImage},</if>
+            <if test="virtualNumber != null">virtual_number = #{virtualNumber},</if>
+            <if test="livePayTime != null">live_pay_time = #{livePayTime},</if>
+            <if test="isLivePay != null">is_live_pay = #{isLivePay},</if>
+            <if test="liveFee != null">live_fee = #{liveFee},</if>
+            <if test="liveIsMention != null">live_is_mention = #{liveIsMention},</if>
+            <if test="livePayType != null">live_pay_type = #{livePayType},</if>
+            <if test="livePayCount != null">live_pay_count = #{livePayCount},</if>
+            <if test="propTable != null and propTable != ''">prop_table = #{propTable},</if>
+            <if test="roomTitle != null">room_title = #{roomTitle},</if>
+            <if test="payRoomId != null">pay_room_id = #{payRoomId},</if>
+            <if test="lenTime != null">len_time = #{lenTime},</if>
+            <if test="isConcatvideo != null">is_concatvideo = #{isConcatvideo},</if>
+            <if test="stick != null">stick = #{stick},</if>
+            <if test="classifiedId != null">classified_id = #{classifiedId},</if>
+            <if test="gameLogId != null">game_log_id = #{gameLogId},</if>
+            <if test="bankerStatus != null">banker_status = #{bankerStatus},</if>
+            <if test="bankerId != null">banker_id = #{bankerId},</if>
+            <if test="autoStart != null">auto_start = #{autoStart},</if>
+            <if test="autoGameId != null">auto_game_id = #{autoGameId},</if>
+            <if test="lotteryId != null">lottery_id = #{lotteryId},</if>
+            <if test="newPlayFlv != null">new_play_flv = #{newPlayFlv},</if>
+            <if test="nPlayFlv != null">n_play_flv = #{nPlayFlv},</if>
+            <if test="hostName != null">host_name = #{hostName},</if>
+            <if test="lotteryName != null">lottery_name = #{lotteryName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveVideoById" parameterType="Long">
+        delete from 7700_live.live_video where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveVideoByIds" parameterType="String">
+        delete from 7700_live.live_video where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
