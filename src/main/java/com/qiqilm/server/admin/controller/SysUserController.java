@@ -182,7 +182,7 @@ public class SysUserController extends BaseController {
 	}
 
 	/**
-	 * 获取谷歌验证码二维码
+	 * 绑定谷歌验证码
 	 */
 	@PostMapping( "bindGoogleAuth" )
 	public RspBase getGoogleAuth( @RequestBody Map<String, Object> requestMap ) throws Exception {
