@@ -10,3 +10,8 @@ spring:
 
 domainTxtUploadUrl: http://47.254.238.161:41006/upload/oss?path=77ym
 domainTxtUrl: https://77live.jiayiss.com/77ym/77.txt
+
+mybatis:
+  # spring boot集成mybatis的方式打印sql
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -66,6 +66,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="tableName != null and tableName != ''">
 				AND lower(table_name) like lower(concat('%', #{tableName}, '%'))
 			</if>
+			<if test="tableSchema != null and tableSchema != ''">
+				AND lower(table_schema) like lower(#{tableSchema})
+			</if>
 			<if test="tableComment != null and tableComment != ''">
 				AND lower(table_comment) like lower(concat('%', #{tableComment}, '%'))
 			</if>
@@ -85,6 +88,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		AND table_name NOT IN (select table_name from sys_n_gen_table)
 		<if test="tableName != null and tableName != ''">
 			AND lower(table_name) like lower(concat('%', #{tableName}, '%'))
+		</if>
+		<if test="tableSchema != null and tableSchema != ''">
+			AND lower(table_schema) = lower(#{tableSchema})
 		</if>
 		<if test="tableComment != null and tableComment != ''">
 			AND lower(table_comment) like lower(concat('%', #{tableComment}, '%'))
