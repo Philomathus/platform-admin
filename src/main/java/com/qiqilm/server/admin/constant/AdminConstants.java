@@ -52,9 +52,13 @@ public class AdminConstants {
 	public static final String LOGIN_FAIL = "Error";
 
 	/**
-	 * 登录用户 redis key
+	 * 登录用户 redis token key
 	 */
-	public static final String LOGIN_TOKEN_KEY = "login_tokens:";
+	public static final String LOGIN_TOKEN_KEY = "platform:loginTokens:";
+	/**
+	 * 登录用户 redis user key
+	 */
+	public static final String LOGIN_USER_TOEN_KEY = "platform:loginUsers:";
 
 	/**
 	 * 防重提交 redis key

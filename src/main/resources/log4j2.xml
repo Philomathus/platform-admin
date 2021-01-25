@@ -8,8 +8,8 @@
 
         <!--服务模块名称-->
         <!--尽量要求这个配置属性的是英文代号以及是小写，使用下划线分隔标识多个单词-->
-        <Property name="SERVICE_MODULE_NAME">PlatformWeb</Property>
-        <Property name="LOG_MODULE_NAME">chongxuan</Property>
+        <Property name="SERVICE_MODULE_NAME">platform-admin</Property>
+        <Property name="LOG_MODULE_NAME">77tv</Property>
 
         <!--全局格式化模式-->
         <!--服务日志时间戳 - 服务线程名称 - 服务线程编号 - 服务代码类 - 服务代码行号 - 服务模块名称 - 服务日志级别 - SFS=[服务流水号](服务流水号需要自行存入 MDC 中，

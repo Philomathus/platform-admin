@@ -36,16 +36,12 @@ spring:
     jedis:
       pool:
         ## 连接池最大连接数（使用负值表示没有限制）
-        ##spring.redis.pool.max-active=8
-        max-active: 50
+        max-active: 500
         ##连接池最大阻塞等待时间（使用负值表示没有限制）
-        ##spring.redis.pool.max-wait=-1
         max-wait: 10s
         ## 连接池中的最大空闲连接
-        ##spring.redis.pool.max-idle=8
         max-idle: 10
         ## 连接池中的最小空闲连接
-        ##spring.redis.pool.min-idle=0
         min-idle: 5
     ## 连接超时时间（毫秒）
     timeout: 100000
@@ -68,4 +64,4 @@ token:
   # 令牌密钥
   secret: abcdefghijklmxopqrstuvwxyz
   # 令牌有效期（默认30分钟）
-  expireTime: 30
+  expireTime: 120
