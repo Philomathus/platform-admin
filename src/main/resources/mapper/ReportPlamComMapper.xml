@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qiqilm.server.admin.dao.ReportPlamComMapper">
+<mapper namespace="com.qiqilm.server.admin.mapper.ReportPlamComMapper">
 
 	<resultMap type="ReportPlamCom" id="ReportPlamComResult">
 		<result property="repId"    column="rep_id"    />
