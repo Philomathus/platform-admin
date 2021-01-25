@@ -47,6 +47,7 @@ public class VelocityUtils {
 		VelocityContext velocityContext = new VelocityContext();
 		velocityContext.put( "tplCategory", genTable.getTplCategory() );
 		velocityContext.put( "tableName", genTable.getTableName() );
+		velocityContext.put( "tableSchema", genTable.getTableSchema() );
 		velocityContext.put( "functionName", StringUtils.isNotEmpty( functionName ) ? functionName : "【请填写功能名称】" );
 		velocityContext.put( "ClassName", genTable.getClassName() );
 		velocityContext.put( "className", StringUtils.uncapitalize( genTable.getClassName() ) );

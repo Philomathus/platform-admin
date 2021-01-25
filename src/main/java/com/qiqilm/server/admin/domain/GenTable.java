@@ -106,6 +106,11 @@ public class GenTable extends BaseEntity {
 	private GenTable subTable;
 
 	/**
+	 * 库名
+	 */
+	private String tableSchema;
+
+	/**
 	 * 表列信息
 	 */
 	@Valid
@@ -271,6 +276,14 @@ public class GenTable extends BaseEntity {
 
 	public void setGenPath( String genPath ) {
 		this.genPath = genPath;
+	}
+
+	public String getTableSchema() {
+		return tableSchema;
+	}
+
+	public void setTableSchema( String tableSchema ) {
+		this.tableSchema = tableSchema;
 	}
 
 	public GenTableColumn getPkColumn() {
