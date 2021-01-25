@@ -13,14 +13,6 @@ import com.qiqilm.server.admin.domain.ReportPlamCom;
  */
 public interface IReportPlamComService {
 	/**
-	 * 查询综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间
-	 *
-	 * @param repId 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间ID
-	 * @return 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间
-	 */
-	public ReportPlamCom selectReportPlamComById(String repId);
-
-	/**
 	 * 查询综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间列表
 	 *
 	 * @param reportPlamCom 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间
@@ -28,35 +20,5 @@ public interface IReportPlamComService {
 	 */
 	public List<ReportPlamCom> selectReportPlamComList(ReportPlamCom reportPlamCom);
 
-	/**
-	 * 新增综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间
-	 *
-	 * @param reportPlamCom 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间
-	 * @return 结果
-	 */
-	public int insertReportPlamCom(ReportPlamCom reportPlamCom);
 
-	/**
-	 * 修改综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间
-	 *
-	 * @param reportPlamCom 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间
-	 * @return 结果
-	 */
-	public int updateReportPlamCom(ReportPlamCom reportPlamCom);
-
-	/**
-	 * 批量删除综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间
-	 *
-	 * @param repIds 需要删除的综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间ID
-	 * @return 结果
-	 */
-	public int deleteReportPlamComByIds(String[] repIds );
-
-	/**
-	 * 删除综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间信息
-	 *
-	 * @param repId 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间ID
-	 * @return 结果
-	 */
-	public int deleteReportPlamComById(String repId);
 }
