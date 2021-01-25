@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.dao.ReportPlamComMapper">
+
+	<resultMap type="ReportPlamCom" id="ReportPlamComResult">
+		<result property="repId"    column="rep_id"    />
+		<result property="classOne"    column="class_one"    />
+		<result property="classOnename"    column="class_onename"    />
+		<result property="classTwo"    column="class_two"    />
+		<result property="classTwoname"    column="class_twoname"    />
+		<result property="type"    column="type"    />
+		<result property="tValue"    column="t_value"    />
+		<result property="reporttime"    column="reporttime"    />
+	</resultMap>
+
+	<sql id="selectReportPlamComVo">
+		select rep_id, class_one, class_onename, class_two, class_twoname, type, t_value, reporttime from report_plam_com
+	</sql>
+
+	<select id="selectReportPlamComList" parameterType="ReportPlamCom" resultMap="ReportPlamComResult">
+		<include refid="selectReportPlamComVo"/>
+		<where>
+			<if test="classOne != null  and classOne != ''"> and class_one = #{classOne}</if>
+			<if test="classOnename != null  and classOnename != ''"> and class_onename like concat('%', #{classOnename}, '%')</if>
+			<if test="classTwo != null  and classTwo != ''"> and class_two = #{classTwo}</if>
+			<if test="classTwoname != null  and classTwoname != ''"> and class_twoname like concat('%', #{classTwoname}, '%')</if>
+			<if test="type != null  and type != ''"> and type = #{type}</if>
+			<if test="tValue != null "> and t_value = #{tValue}</if>
+			<if test="reporttime != null  and reporttime != ''"> and reporttime = #{reporttime}</if>
+		</where>
+	</select>
+
+	<select id="selectReportPlamComById" parameterType="String" resultMap="ReportPlamComResult">
+		<include refid="selectReportPlamComVo"/>
+		where rep_id = #{repId}
+	</select>
+
+	<insert id="insertReportPlamCom" parameterType="ReportPlamCom">
+		insert into report_plam_com
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="repId != null">rep_id,</if>
+			<if test="classOne != null">class_one,</if>
+			<if test="classOnename != null">class_onename,</if>
+			<if test="classTwo != null">class_two,</if>
+			<if test="classTwoname != null">class_twoname,</if>
+			<if test="type != null">type,</if>
+			<if test="tValue != null">t_value,</if>
+			<if test="reporttime != null">reporttime,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="repId != null">#{repId},</if>
+			<if test="classOne != null">#{classOne},</if>
+			<if test="classOnename != null">#{classOnename},</if>
+			<if test="classTwo != null">#{classTwo},</if>
+			<if test="classTwoname != null">#{classTwoname},</if>
+			<if test="type != null">#{type},</if>
+			<if test="tValue != null">#{tValue},</if>
+			<if test="reporttime != null">#{reporttime},</if>
+		</trim>
+	</insert>
+
+	<update id="updateReportPlamCom" parameterType="ReportPlamCom">
+		update report_plam_com
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="classOne != null">class_one = #{classOne},</if>
+			<if test="classOnename != null">class_onename = #{classOnename},</if>
+			<if test="classTwo != null">class_two = #{classTwo},</if>
+			<if test="classTwoname != null">class_twoname = #{classTwoname},</if>
+			<if test="type != null">type = #{type},</if>
+			<if test="tValue != null">t_value = #{tValue},</if>
+			<if test="reporttime != null">reporttime = #{reporttime},</if>
+		</trim>
+		where rep_id = #{repId}
+	</update>
+
+	<delete id="deleteReportPlamComById" parameterType="String">
+		delete from report_plam_com where rep_id = #{repId}
+	</delete>
+
+	<delete id="deleteReportPlamComByIds" parameterType="String">
+		delete from report_plam_com where rep_id in
+		<foreach item="repId" collection="array" open="(" separator="," close=")">
+			#{repId}
+		</foreach>
+	</delete>
+</mapper>
