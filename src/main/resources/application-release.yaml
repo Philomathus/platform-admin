@@ -8,6 +8,5 @@ spring:
     port: 6379
     password: 75a2-4e0e-9897-0347cc
 
-payAgentNotifyUrl: http://47.254.238.161:41001/v1.0/payAgentCallBack/
 domainTxtUploadUrl: http://47.254.238.161:41006/upload/oss?path=77ym
 domainTxtUrl: https://77live.jiayiss.com/77ym/77.txt

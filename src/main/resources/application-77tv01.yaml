@@ -8,6 +8,5 @@ spring:
     port: 6379
     host: r-j6cjbpr49a0sffxuzv.redis.rds.aliyuncs.com
 
-payAgentNotifyUrl: https://77pay.77777live.com/platform-app/v1.0/payAgentCallBack/
 domainTxtUploadUrl: http://172.21.136.230:41006/upload/oss?path=77ym
 domainTxtUrl: https://77live.jiayiss.com/77ym/77.txt

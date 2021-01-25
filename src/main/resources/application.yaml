@@ -59,7 +59,7 @@ spring:
       thread-name-prefix: grap-task-
 mybatis:
   typeAliasesPackage: com.qiqilm.server.admin.domain
-  mapperLocations: classpath:com/chongxuan/web/dao/**/*.xml,classpath:mapper/*.xml
+  mapperLocations: classpath:classpath:mapper/*.xml
 
 # token配置
 token:
