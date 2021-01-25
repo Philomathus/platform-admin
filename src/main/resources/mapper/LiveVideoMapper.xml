@@ -93,9 +93,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectLiveVideoList" parameterType="LiveVideo" resultMap="LiveVideoResult">
         <include refid="selectLiveVideoVo"/>
         <where>
+            live_in = 1
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="liveIn != null "> and live_in = #{liveIn}</if>
             <if test="watchNumber != null "> and watch_number = #{watchNumber}</if>
             <if test="virtualWatchNumber != null "> and virtual_watch_number = #{virtualWatchNumber}</if>
             <if test="voteNumber != null "> and vote_number = #{voteNumber}</if>
