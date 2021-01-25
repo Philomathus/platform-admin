@@ -2,9 +2,9 @@ package ${packageName}.mapper;
 
 import java.util.List;
 
-import ${packageName}.entity.${ClassName};
+import ${packageName}.domain.${ClassName};
 #if($table.sub)
-import ${packageName}.entity.${subClassName};
+import ${packageName}.domain.${subClassName};
 #end
 
 /**

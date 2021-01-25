@@ -157,7 +157,7 @@ public class VelocityUtils {
 		String businessName = genTable.getBusinessName();
 
 		String javaPath    = PROJECT_PATH + "/" + StringUtils.replace( packageName, ".", "/" );
-		String mybatisPath = MYBATIS_PATH + "/" + moduleName;
+		String mybatisPath = MYBATIS_PATH;
 		String vuePath     = "vue";
 
 		if ( template.contains( "domain.java.vm" ) ) {

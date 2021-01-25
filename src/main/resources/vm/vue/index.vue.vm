@@ -158,7 +158,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -308,7 +308,7 @@
 </template>
 
 <script>
-import { list${BusinessName}, get${BusinessName}, del${BusinessName}, add${BusinessName}, update${BusinessName}, export${BusinessName} } from "@/api/${moduleName}/${businessName}";
+import { list${BusinessName}, get${BusinessName}, del${BusinessName}, add${BusinessName}, update${BusinessName}, export${BusinessName} } from "@/api/platform-web/${moduleName}/${businessName}";
 #foreach($column in $columns)
 #if($column.insert && !$column.superColumn && !$column.pk && $column.htmlType == "imageUpload")
 import ImageUpload from '@/components/ImageUpload';

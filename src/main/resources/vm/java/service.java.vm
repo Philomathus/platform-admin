@@ -2,7 +2,7 @@ package ${packageName}.service;
 
 import java.util.List;
 
-import ${packageName}.entity.${ClassName};
+import ${packageName}.domain.${ClassName};
 
 /**
  * ${functionName}Service接口
