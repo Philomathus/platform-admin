@@ -145,7 +145,8 @@ public class GenUtils {
        int lastIndex = tableName.lastIndexOf("_");
         int nameLength = tableName.length();
         String businessName = StringUtils.substring(tableName, lastIndex + 1, nameLength);*/
-		return tableName.replaceAll( "_", "-" ).toLowerCase();
+//		return tableName.replaceAll( "_", "-" ).toLowerCase();
+		return StringUtils.toCamelCase(tableName);
 	}
 
 	/**

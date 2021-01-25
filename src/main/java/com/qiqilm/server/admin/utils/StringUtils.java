@@ -384,4 +384,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 		return StrFormatter.format( template, params );
 	}
+
+    public static void main(String[] args) {
+        System.out.println( toCamelCase("user_name"));
+    }
 }

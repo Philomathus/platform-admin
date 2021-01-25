@@ -6,9 +6,9 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginBody;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.service.ISysUserService;
-import com.qiqilm.server.admin.utils.*;
+import com.qiqilm.server.admin.utils.AsyncManager;
+import com.qiqilm.server.admin.utils.MessageUtils;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,6 +44,7 @@ public class SysLoginService {
 	 */
 	public AjaxResult login( String ip, LoginBody loginBody ) throws Exception {
 		String googleAuthSecret = userService.selectGoogleAuthKeyByUserName( loginBody.getUsername() );
+/*
 		if ( StringUtils.isBlank( googleAuthSecret ) ) {
 			return AjaxResult.error( "请联系管理员绑定google验证秘钥" );
 		}
@@ -54,6 +55,7 @@ public class SysLoginService {
 					MessageUtils.message( "user.google.auth.error" ) ) );
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
+*/
 
 		// 用户验证
 		Authentication authentication = null;
