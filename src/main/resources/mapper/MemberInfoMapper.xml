@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MemberInfoMapper">
+
+    <resultMap type="MemberInfo" id="MemberInfoResult">
+        <result property="id"    column="id"    />
+        <result property="memberCode"    column="member_code"    />
+        <result property="cxAgent"    column="cx_agent"    />
+        <result property="userName"    column="user_name"    />
+        <result property="realName"    column="real_name"    />
+        <result property="status"    column="status"    />
+        <result property="vip"    column="vip"    />
+        <result property="totalAccount"    column="total_account"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="password"    column="password"    />
+        <result property="isOnline"    column="is_online"    />
+        <result property="sex"    column="sex"    />
+        <result property="regTime"    column="reg_time"    />
+        <result property="registIp"    column="regist_ip"    />
+        <result property="loginIp"    column="login_ip"    />
+        <result property="loginAddress"    column="login_address"    />
+        <result property="loginDev"    column="login_dev"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="birthDay"    column="birth_day"    />
+        <result property="qq"    column="qq"    />
+        <result property="wechat"    column="wechat"    />
+        <result property="headImg"    column="head_img"    />
+        <result property="onlineTime"    column="online_time"    />
+        <result property="linkUrl"    column="link_url"    />
+        <result property="loginTime"    column="login_time"    />
+        <result property="boxAccount"    column="box_account"    />
+        <result property="boxPass"    column="box_pass"    />
+        <result property="cleanTime"    column="clean_time"    />
+        <result property="levelIntegral"    column="level_integral"    />
+        <result property="inviterCode"    column="inviter_code"    />
+        <result property="inviteMoney"    column="invite_money"    />
+        <result property="codeAccount"    column="code_account"    />
+        <result property="pid"    column="PID"    />
+        <result property="codeTotal"    column="code_total"    />
+        <result property="channelcode"    column="channelCode"    />
+        <result property="speak"    column="speak"    />
+        <result property="loginNum"    column="login_num"    />
+        <result property="version"    column="version"    />
+        <result property="withdrawalPass"    column="withdrawal_pass"    />
+        <result property="deviceId"    column="device_id"    />
+    </resultMap>
+
+    <sql id="selectMemberInfoVo">
+        select id, member_code, cx_agent, user_name, real_name, status, vip, total_account, phone, email, password, is_online, sex, reg_time, regist_ip, login_ip, login_address, login_dev, nick_name, birth_day, qq, wechat, head_img, online_time, link_url, login_time, box_account, box_pass, clean_time, level_integral, inviter_code, invite_money, code_account, PID, code_total, channelCode, speak, login_num, version, withdrawal_pass, device_id from member_info
+    </sql>
+
+    <select id="selectMemberInfoList" parameterType="MemberInfo" resultMap="MemberInfoResult">
+        <include refid="selectMemberInfoVo"/>
+        <where>
+            <if test="memberCode != null  and memberCode != ''"> and member_code = #{memberCode}</if>
+            <if test="cxAgent != null  and cxAgent != ''"> and cx_agent = #{cxAgent}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="vip != null "> and vip = #{vip}</if>
+            <if test="totalAccount != null "> and total_account = #{totalAccount}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="isOnline != null "> and is_online = #{isOnline}</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="regTime != null "> and reg_time = #{regTime}</if>
+            <if test="registIp != null  and registIp != ''"> and regist_ip = #{registIp}</if>
+            <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
+            <if test="loginAddress != null  and loginAddress != ''"> and login_address = #{loginAddress}</if>
+            <if test="loginDev != null "> and login_dev = #{loginDev}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="birthDay != null  and birthDay != ''"> and birth_day = #{birthDay}</if>
+            <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
+            <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
+            <if test="headImg != null  and headImg != ''"> and head_img = #{headImg}</if>
+            <if test="onlineTime != null "> and online_time = #{onlineTime}</if>
+            <if test="linkUrl != null  and linkUrl != ''"> and link_url = #{linkUrl}</if>
+            <if test="loginTime != null "> and login_time = #{loginTime}</if>
+            <if test="boxAccount != null "> and box_account = #{boxAccount}</if>
+            <if test="boxPass != null  and boxPass != ''"> and box_pass = #{boxPass}</if>
+            <if test="cleanTime != null "> and clean_time = #{cleanTime}</if>
+            <if test="levelIntegral != null "> and level_integral = #{levelIntegral}</if>
+            <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
+            <if test="inviteMoney != null "> and invite_money = #{inviteMoney}</if>
+            <if test="codeAccount != null "> and code_account = #{codeAccount}</if>
+            <if test="pid != null "> and PID = #{pid}</if>
+            <if test="codeTotal != null "> and code_total = #{codeTotal}</if>
+            <if test="channelcode != null  and channelcode != ''"> and channelCode = #{channelcode}</if>
+            <if test="speak != null "> and speak = #{speak}</if>
+            <if test="loginNum != null "> and login_num = #{loginNum}</if>
+            <if test="version != null  and version != ''"> and version = #{version}</if>
+            <if test="withdrawalPass != null  and withdrawalPass != ''"> and withdrawal_pass = #{withdrawalPass}</if>
+            <if test="deviceId != null  and deviceId != ''"> and device_id = #{deviceId}</if>
+        </where>
+    </select>
+
+    <select id="selectMemberInfoById" parameterType="String" resultMap="MemberInfoResult">
+        <include refid="selectMemberInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMemberInfo" parameterType="MemberInfo">
+        insert into member_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="memberCode != null and memberCode != ''">member_code,</if>
+            <if test="cxAgent != null and cxAgent != ''">cx_agent,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="realName != null">real_name,</if>
+            <if test="status != null">status,</if>
+            <if test="vip != null">vip,</if>
+            <if test="totalAccount != null">total_account,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="password != null">password,</if>
+            <if test="isOnline != null">is_online,</if>
+            <if test="sex != null">sex,</if>
+            <if test="regTime != null">reg_time,</if>
+            <if test="registIp != null">regist_ip,</if>
+            <if test="loginIp != null">login_ip,</if>
+            <if test="loginAddress != null">login_address,</if>
+            <if test="loginDev != null">login_dev,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="birthDay != null">birth_day,</if>
+            <if test="qq != null">qq,</if>
+            <if test="wechat != null">wechat,</if>
+            <if test="headImg != null">head_img,</if>
+            <if test="onlineTime != null">online_time,</if>
+            <if test="linkUrl != null">link_url,</if>
+            <if test="loginTime != null">login_time,</if>
+            <if test="boxAccount != null">box_account,</if>
+            <if test="boxPass != null">box_pass,</if>
+            <if test="cleanTime != null">clean_time,</if>
+            <if test="levelIntegral != null">level_integral,</if>
+            <if test="inviterCode != null">inviter_code,</if>
+            <if test="inviteMoney != null">invite_money,</if>
+            <if test="codeAccount != null">code_account,</if>
+            <if test="pid != null">PID,</if>
+            <if test="codeTotal != null">code_total,</if>
+            <if test="channelcode != null">channelCode,</if>
+            <if test="speak != null">speak,</if>
+            <if test="loginNum != null">login_num,</if>
+            <if test="version != null">version,</if>
+            <if test="withdrawalPass != null">withdrawal_pass,</if>
+            <if test="deviceId != null">device_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="memberCode != null and memberCode != ''">#{memberCode},</if>
+            <if test="cxAgent != null and cxAgent != ''">#{cxAgent},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="realName != null">#{realName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="vip != null">#{vip},</if>
+            <if test="totalAccount != null">#{totalAccount},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="password != null">#{password},</if>
+            <if test="isOnline != null">#{isOnline},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="regTime != null">#{regTime},</if>
+            <if test="registIp != null">#{registIp},</if>
+            <if test="loginIp != null">#{loginIp},</if>
+            <if test="loginAddress != null">#{loginAddress},</if>
+            <if test="loginDev != null">#{loginDev},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="birthDay != null">#{birthDay},</if>
+            <if test="qq != null">#{qq},</if>
+            <if test="wechat != null">#{wechat},</if>
+            <if test="headImg != null">#{headImg},</if>
+            <if test="onlineTime != null">#{onlineTime},</if>
+            <if test="linkUrl != null">#{linkUrl},</if>
+            <if test="loginTime != null">#{loginTime},</if>
+            <if test="boxAccount != null">#{boxAccount},</if>
+            <if test="boxPass != null">#{boxPass},</if>
+            <if test="cleanTime != null">#{cleanTime},</if>
+            <if test="levelIntegral != null">#{levelIntegral},</if>
+            <if test="inviterCode != null">#{inviterCode},</if>
+            <if test="inviteMoney != null">#{inviteMoney},</if>
+            <if test="codeAccount != null">#{codeAccount},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="codeTotal != null">#{codeTotal},</if>
+            <if test="channelcode != null">#{channelcode},</if>
+            <if test="speak != null">#{speak},</if>
+            <if test="loginNum != null">#{loginNum},</if>
+            <if test="version != null">#{version},</if>
+            <if test="withdrawalPass != null">#{withdrawalPass},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMemberInfo" parameterType="MemberInfo">
+        update member_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberCode != null and memberCode != ''">member_code = #{memberCode},</if>
+            <if test="cxAgent != null and cxAgent != ''">cx_agent = #{cxAgent},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="vip != null">vip = #{vip},</if>
+            <if test="totalAccount != null">total_account = #{totalAccount},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="isOnline != null">is_online = #{isOnline},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="regTime != null">reg_time = #{regTime},</if>
+            <if test="registIp != null">regist_ip = #{registIp},</if>
+            <if test="loginIp != null">login_ip = #{loginIp},</if>
+            <if test="loginAddress != null">login_address = #{loginAddress},</if>
+            <if test="loginDev != null">login_dev = #{loginDev},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="birthDay != null">birth_day = #{birthDay},</if>
+            <if test="qq != null">qq = #{qq},</if>
+            <if test="wechat != null">wechat = #{wechat},</if>
+            <if test="headImg != null">head_img = #{headImg},</if>
+            <if test="onlineTime != null">online_time = #{onlineTime},</if>
+            <if test="linkUrl != null">link_url = #{linkUrl},</if>
+            <if test="loginTime != null">login_time = #{loginTime},</if>
+            <if test="boxAccount != null">box_account = #{boxAccount},</if>
+            <if test="boxPass != null">box_pass = #{boxPass},</if>
+            <if test="cleanTime != null">clean_time = #{cleanTime},</if>
+            <if test="levelIntegral != null">level_integral = #{levelIntegral},</if>
+            <if test="inviterCode != null">inviter_code = #{inviterCode},</if>
+            <if test="inviteMoney != null">invite_money = #{inviteMoney},</if>
+            <if test="codeAccount != null">code_account = #{codeAccount},</if>
+            <if test="pid != null">PID = #{pid},</if>
+            <if test="codeTotal != null">code_total = #{codeTotal},</if>
+            <if test="channelcode != null">channelCode = #{channelcode},</if>
+            <if test="speak != null">speak = #{speak},</if>
+            <if test="loginNum != null">login_num = #{loginNum},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="withdrawalPass != null">withdrawal_pass = #{withdrawalPass},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMemberInfoById" parameterType="String">
+        delete from member_info where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberInfoByIds" parameterType="String">
+        delete from member_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
