@@ -1,6 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.constant.UserConstants;
+import com.qiqilm.server.admin.core.vo.MetaVo;
+import com.qiqilm.server.admin.core.vo.RouterVo;
+import com.qiqilm.server.admin.core.vo.TreeSelect;
 import com.qiqilm.server.admin.domain.SysMenu;
 import com.qiqilm.server.admin.domain.SysRole;
 import com.qiqilm.server.admin.mapper.SysMenuMapper;
@@ -8,9 +11,6 @@ import com.qiqilm.server.admin.mapper.SysRoleMapper;
 import com.qiqilm.server.admin.mapper.SysRoleMenuMapper;
 import com.qiqilm.server.admin.service.ISysMenuService;
 import com.qiqilm.server.admin.utils.SecurityUtils;
-import com.qiqilm.server.admin.core.vo.MetaVo;
-import com.qiqilm.server.admin.core.vo.RouterVo;
-import com.qiqilm.server.admin.core.vo.TreeSelect;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,10 +56,10 @@ public class SysMenuServiceImpl implements ISysMenuService {
 		List<SysMenu> menuList = null;
 		// 管理员显示所有菜单信息
 		//if ( SysUser.isAdmin( userId ) ) {
-			menuList = menuMapper.selectMenuList( menu );
+		menuList = menuMapper.selectMenuList( menu );
 		//} else {
 		//	menu.getParams().put( "userId", userId );
-			//menuList = menuMapper.selectMenuListByUserId( menu );
+		//menuList = menuMapper.selectMenuListByUserId( menu );
 		//}
 		return menuList;
 	}
@@ -119,7 +119,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
 	 */
 	@Override
 	public List<RouterVo> buildMenus( List<SysMenu> menus ) {
-		List<RouterVo> routers = new LinkedList<RouterVo>();
+		List<RouterVo> routers = new LinkedList<>();
 		for ( SysMenu menu : menus ) {
 			RouterVo router = new RouterVo();
 			router.setHidden( "1".equals( menu.getVisible() ) );
@@ -128,12 +128,12 @@ public class SysMenuServiceImpl implements ISysMenuService {
 			router.setComponent( getComponent( menu ) );
 			router.setMeta( new MetaVo( menu.getMenuName(), menu.getIcon(), StringUtils.equals( "1", menu.getIsCache() ) ) );
 			List<SysMenu> cMenus = menu.getChildren();
-			if ( !cMenus.isEmpty() && cMenus.size() > 0 && UserConstants.TYPE_DIR.equals( menu.getMenuType() ) ) {
+			if ( !cMenus.isEmpty() && UserConstants.TYPE_DIR.equals( menu.getMenuType() ) ) {
 				router.setAlwaysShow( true );
 				router.setRedirect( "noRedirect" );
 				router.setChildren( buildMenus( cMenus ) );
 			} else if ( isMeunFrame( menu ) ) {
-				List<RouterVo> childrenList = new ArrayList<RouterVo>();
+				List<RouterVo> childrenList = new ArrayList<>();
 				RouterVo       children     = new RouterVo();
 				children.setPath( menu.getPath() );
 				children.setComponent( menu.getComponent() );
@@ -156,13 +156,12 @@ public class SysMenuServiceImpl implements ISysMenuService {
 	 */
 	@Override
 	public List<SysMenu> buildMenuTree( List<SysMenu> menus ) {
-		List<SysMenu> returnList = new ArrayList<SysMenu>();
-		List<Long>    tempList   = new ArrayList<Long>();
+		List<SysMenu> returnList = new ArrayList<>();
+		List<Long>    tempList   = new ArrayList<>();
 		for ( SysMenu dept : menus ) {
 			tempList.add( dept.getMenuId() );
 		}
-		for ( Iterator<SysMenu> iterator = menus.iterator(); iterator.hasNext(); ) {
-			SysMenu menu = ( SysMenu ) iterator.next();
+		for ( SysMenu menu : menus ) {
 			// 如果是顶级节点, 遍历该父节点的所有子节点
 			if ( !tempList.contains( menu.getParentId() ) ) {
 				recursionFn( menus, menu );
@@ -207,7 +206,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
 	@Override
 	public boolean hasChildByMenuId( Long menuId ) {
 		int result = menuMapper.hasChildByMenuId( menuId );
-		return result > 0 ? true : false;
+		return result > 0;
 	}
 
 	/**
@@ -219,7 +218,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
 	@Override
 	public boolean checkMenuExistRole( Long menuId ) {
 		int result = roleMenuMapper.checkMenuExistRole( menuId );
-		return result > 0 ? true : false;
+		return result > 0;
 	}
 
 	/**
@@ -263,9 +262,9 @@ public class SysMenuServiceImpl implements ISysMenuService {
 	 */
 	@Override
 	public String checkMenuNameUnique( SysMenu menu ) {
-		Long    menuId = Objects.isNull( menu.getMenuId() ) ? -1L : menu.getMenuId();
+		long    menuId = Objects.isNull( menu.getMenuId() ) ? -1L : menu.getMenuId();
 		SysMenu info   = menuMapper.checkMenuNameUnique( menu.getMenuName(), menu.getParentId() );
-		if ( Objects.nonNull( info ) && info.getMenuId().longValue() != menuId.longValue() ) {
+		if ( Objects.nonNull( info ) && info.getMenuId() != menuId ) {
 			return UserConstants.NOT_UNIQUE;
 		}
 		return UserConstants.UNIQUE;
@@ -351,9 +350,8 @@ public class SysMenuServiceImpl implements ISysMenuService {
 	 * @return String
 	 */
 	public List<SysMenu> getChildPerms( List<SysMenu> list, int parentId ) {
-		List<SysMenu> returnList = new ArrayList<SysMenu>();
-		for ( Iterator<SysMenu> iterator = list.iterator(); iterator.hasNext(); ) {
-			SysMenu t = ( SysMenu ) iterator.next();
+		List<SysMenu> returnList = new ArrayList<>();
+		for ( SysMenu t : list ) {
 			// 一、根据传入的某个父节点ID,遍历该父节点的所有子节点
 			if ( t.getParentId() == parentId ) {
 				recursionFn( list, t );
@@ -381,21 +379,13 @@ public class SysMenuServiceImpl implements ISysMenuService {
 	 * 得到子节点列表
 	 */
 	private List<SysMenu> getChildList( List<SysMenu> list, SysMenu t ) {
-		List<SysMenu>     tlist = new ArrayList<SysMenu>();
-		Iterator<SysMenu> it    = list.iterator();
-		while ( it.hasNext() ) {
-			SysMenu n = ( SysMenu ) it.next();
-			if ( n.getParentId().longValue() == t.getMenuId().longValue() ) {
-				tlist.add( n );
-			}
-		}
-		return tlist;
+		return list.stream().filter( n -> n.getParentId().longValue() == t.getMenuId().longValue() ).collect( Collectors.toList() );
 	}
 
 	/**
 	 * 判断是否有子节点
 	 */
 	private boolean hasChild( List<SysMenu> list, SysMenu t ) {
-		return getChildList( list, t ).size() > 0 ? true : false;
+		return getChildList( list, t ).size() > 0;
 	}
 }
