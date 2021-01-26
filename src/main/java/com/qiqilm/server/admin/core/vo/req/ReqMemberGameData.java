@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.core.vo.req;
 
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 
-public class reqMemberGameData extends BaseEntity {
+public class ReqMemberGameData extends BaseEntity {
 
     private String platform_name;
 

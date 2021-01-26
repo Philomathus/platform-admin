@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ReportIncomeDayMapper">
+
+    <resultMap type="ReportIncomeDay" id="ReportIncomeDayResult">
+        <result property="reppayId"    column="reppay_id"    />
+        <result property="money"    column="money"    />
+        <result property="type"    column="type"    />
+        <result property="payplam"    column="payplam"    />
+        <result property="paychancl"    column="paychancl"    />
+        <result property="paycard"    column="paycard"    />
+        <result property="paydate"    column="paydate"    />
+    </resultMap>
+
+    <sql id="selectReportIncomeDayVo">
+        select reppay_id, money, type, payplam, paychancl, paycard, paydate from 7700_main.report_income_day
+    </sql>
+
+    <select id="selectReportIncomeDayList" parameterType="ReportIncomeDay" resultMap="ReportIncomeDayResult">
+        <include refid="selectReportIncomeDayVo"/>
+        <where>
+            <if test="reppayId != null  and reppayId != ''"> and reppay_id = #{reppayId}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="payplam != null  and payplam != ''"> and payplam = #{payplam}</if>
+            <if test="paychancl != null  and paychancl != ''"> and paychancl = #{paychancl}</if>
+            <if test="paycard != null  and paycard != ''"> and paycard = #{paycard}</if>
+            <if test="paydate != null  and paydate != ''"> and paydate = #{paydate}</if>
+        </where>
+    </select>
+
+
+</mapper>
