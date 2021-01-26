@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ReportIncomeDay;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -20,5 +21,6 @@ public interface ReportIncomeDayMapper {
 	 * @return 【请填写功能名称】集合
 	 */
 	public List<ReportIncomeDay> selectReportIncomeDayList(ReportIncomeDay reportIncomeDay);
+	String calldataProrepPlamcom(@Param( "timedateta" ) String timedateta);
 
 }

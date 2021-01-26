@@ -21,15 +21,11 @@
     <select id="selectReportIncomeDayList" parameterType="ReportIncomeDay" resultMap="ReportIncomeDayResult">
         <include refid="selectReportIncomeDayVo"/>
         <where>
-            <if test="reppayId != null  and reppayId != ''"> and reppay_id = #{reppayId}</if>
-            <if test="money != null "> and money = #{money}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="payplam != null  and payplam != ''"> and payplam = #{payplam}</if>
-            <if test="paychancl != null  and paychancl != ''"> and paychancl = #{paychancl}</if>
-            <if test="paycard != null  and paycard != ''"> and paycard = #{paycard}</if>
             <if test="paydate != null  and paydate != ''"> and paydate = #{paydate}</if>
         </where>
     </select>
-
+    <select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">
+        {call prorep_incomeday(#{timedateta,mode=IN,jdbcType=VARCHAR},#{timedateta,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}
+    </select>
 
 </mapper>

@@ -28,7 +28,16 @@ public class ReportIncomeDayServiceImpl implements IReportIncomeDayService {
      */
     @Override
     public List<ReportIncomeDay> selectReportIncomeDayList(ReportIncomeDay reportIncomeDay) {
-        return reportIncomeDayMapper.selectReportIncomeDayList(reportIncomeDay);
+
+
+        List<ReportIncomeDay> allList =reportIncomeDayMapper.selectReportIncomeDayList(reportIncomeDay);
+        if(reportIncomeDay.getPaydate()!=null){
+            if(allList.isEmpty()){
+                reportIncomeDayMapper.calldataProrepPlamcom(reportIncomeDay.getPaydate());
+                allList =reportIncomeDayMapper.selectReportIncomeDayList(reportIncomeDay);
+            }
+        }
+        return allList;
     }
 
 
