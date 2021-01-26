@@ -28,8 +28,20 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 	 */
 	@Override
 	public List<ReportPlamCom> selectReportPlamComList(ReportPlamCom reportPlamCom) {
-		return reportPlamComMapper.selectReportPlamComList(reportPlamCom);
+		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
+		if(reportPlamCom.getParams().get(0)!=null){
+			String startTime = (String) reportPlamCom.getParams().get(0);
+			if(allList.isEmpty()){
+				getCalldataProrepPlamcom(startTime);
+				allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
+			}
+		}
+
+		return allList;
 	}
 
-
+	private String getCalldataProrepPlamcom(String a){
+		String s = reportPlamComMapper.calldataProrepPlamcom(a);
+		return s;
+	}
 }

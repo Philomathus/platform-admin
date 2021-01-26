@@ -1,5 +1,8 @@
 package com.qiqilm.server.admin.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.controller.BaseController;
@@ -7,6 +10,7 @@ import com.qiqilm.server.admin.domain.ReportPlamCom;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,7 +44,7 @@ public class ReportPlamComController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list(ReportPlamCom reportPlamCom) {
+	public TableDataInfo list(ReportPlamCom reportPlamCom){
 		startPage();
 		List<ReportPlamCom> list = reportPlamComService.selectReportPlamComList(reportPlamCom);
 		return getDataTable( list );
