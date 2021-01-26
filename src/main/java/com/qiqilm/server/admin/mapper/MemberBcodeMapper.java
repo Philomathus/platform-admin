@@ -1,0 +1,61 @@
+package com.qiqilm.server.admin.mapper;
+
+import java.util.List;
+
+import com.qiqilm.server.admin.domain.MemberBcode;
+
+/**
+ * MemberBcodeMapper接口
+ *
+ * @author 77tv
+ * @date 2021-01-26
+ */
+public interface MemberBcodeMapper {
+	/**
+	 * 查询MemberBcode
+	 *
+	 * @param id MemberBcodeID
+	 * @return MemberBcode
+	 */
+	public MemberBcode selectMemberBcodeById(String id);
+
+	/**
+	 * 查询MemberBcode列表
+	 *
+	 * @param memberBcode MemberBcode
+	 * @return MemberBcode集合
+	 */
+	public List<MemberBcode> selectMemberBcodeList(MemberBcode memberBcode);
+
+	/**
+	 * 新增MemberBcode
+	 *
+	 * @param memberBcode MemberBcode
+	 * @return 结果
+	 */
+	public int insertMemberBcode(MemberBcode memberBcode);
+
+	/**
+	 * 修改MemberBcode
+	 *
+	 * @param memberBcode MemberBcode
+	 * @return 结果
+	 */
+	public int updateMemberBcode(MemberBcode memberBcode);
+
+	/**
+	 * 删除MemberBcode
+	 *
+	 * @param id MemberBcodeID
+	 * @return 结果
+	 */
+	public int deleteMemberBcodeById(String id);
+
+	/**
+	 * 批量删除MemberBcode
+	 *
+	 * @param ids 需要删除的数据ID
+	 * @return 结果
+	 */
+	public int deleteMemberBcodeByIds(String[] ids );
+}
