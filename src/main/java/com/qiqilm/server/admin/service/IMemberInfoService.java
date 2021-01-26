@@ -1,7 +1,10 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.core.vo.RspBase;
+import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.vo.PageBO;
+import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -62,4 +65,10 @@ public interface IMemberInfoService {
 	public int deleteMemberInfoById(String id);
 
     RspBase addMemberMoneyOnly(String ip,String userId,BigDecimal money, BigDecimal beatNum, String Mk, String ordermk, String admin_name);
+
+    PageBO<WithdrawReport> withdrawReport(String memberId, Integer page, Integer limit);
+
+    PageBO<MemberCard> findMemberCardPage(String memberid, Integer page, Integer pageSize);
+
+    int updateByPrimaryKeySelective(MemberInfo record);
 }

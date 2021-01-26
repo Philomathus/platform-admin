@@ -1,16 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.qiqilm.server.admin.core.vo.RspBase;
-import com.qiqilm.server.admin.domain.LogMoney;
-import com.qiqilm.server.admin.domain.MemberActionLogs;
-import com.qiqilm.server.admin.domain.MemberBcode;
-import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.domain.vo.PageBO;
+import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumAction;
 import com.qiqilm.server.admin.enums.EnumMoney;
-import com.qiqilm.server.admin.mapper.LogMoneyMapper;
-import com.qiqilm.server.admin.mapper.MemberActionLogsMapper;
-import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
-import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.UuidUtil;
@@ -40,12 +38,14 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	private MemberBcodeMapper      codeFlowMapper;
 	@Autowired
 	private ILogService            logService;
+	@Autowired
+    private MemberCardMapper  memberCardMapper;
 
 	/**
-	 * 查询会员信息 
+	 * 查询会员信息
 	 *
 	 * @param id 会员信息 ID
-	 * @return 会员信息 
+	 * @return 会员信息
 	 */
 	@Override
 	public MemberInfo selectMemberInfoById( String id ) {
@@ -55,8 +55,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	/**
 	 * 查询会员信息 列表
 	 *
-	 * @param memberInfo 会员信息 
-	 * @return 会员信息 
+	 * @param memberInfo 会员信息
+	 * @return 会员信息
 	 */
 	@Override
 	public List<MemberInfo> selectMemberInfoList( MemberInfo memberInfo ) {
@@ -64,9 +64,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	}
 
 	/**
-	 * 新增会员信息 
+	 * 新增会员信息
 	 *
-	 * @param memberInfo 会员信息 
+	 * @param memberInfo 会员信息
 	 * @return 结果
 	 */
 	@Override
@@ -75,9 +75,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	}
 
 	/**
-	 * 修改会员信息 
+	 * 修改会员信息
 	 *
-	 * @param memberInfo 会员信息 
+	 * @param memberInfo 会员信息
 	 * @return 结果
 	 */
 	@Override
@@ -86,7 +86,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	}
 
 	/**
-	 * 批量删除会员信息 
+	 * 批量删除会员信息
 	 *
 	 * @param ids 需要删除的会员信息 ID
 	 * @return 结果
@@ -183,4 +183,31 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 		}
 		return rspBase;
 	}
+
+    @Override
+    public PageBO<WithdrawReport> withdrawReport(String memberid, Integer pageNum, Integer pageSize ) {
+        memberInfoMapper.call_pro_useranalysis(memberid);
+        PageBO<WithdrawReport> pageBO = new PageBO<>();
+        pageNum = 1;
+        pageSize = 100;
+        Page page   = PageHelper.startPage( pageNum, pageSize, true );
+        pageBO.setData( memberInfoMapper.userWithdrawReportList());
+        pageBO.setCount( page.getTotal() );
+        return pageBO;
+    }
+
+
+    @Override
+    public PageBO<MemberCard> findMemberCardPage(String memberid, Integer pageNum, Integer pageSize ) {
+        PageBO<MemberCard> pageBO = new PageBO<>();
+        Page               page   = PageHelper.startPage( pageNum, pageSize, true );
+        pageBO.setData( memberCardMapper.findList( memberid ) );
+        pageBO.setCount( page.getTotal() );
+        return pageBO;
+    }
+    @Override
+    public int updateByPrimaryKeySelective(MemberInfo record) {
+        return memberInfoMapper.updateMemberInfo(record);
+    }
+
 }

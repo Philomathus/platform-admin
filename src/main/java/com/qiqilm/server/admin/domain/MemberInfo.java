@@ -33,9 +33,19 @@ public class MemberInfo extends BaseEntity {
     @Excel(name = "账号")
     private String userName;
 
+    private Integer googleAuthCode;
+
     /** 姓名 */
     @Excel(name = "姓名")
     private String realName;
+
+    public Integer getGoogleAuthCode() {
+        return googleAuthCode;
+    }
+
+    public void setGoogleAuthCode(Integer googleAuthCode) {
+        this.googleAuthCode = googleAuthCode;
+    }
 
     /** 状态(0= 禁用 1=正常 2=测试号3=超管号) */
     @Excel(name = "状态(0= 禁用 1=正常 2=测试号3=超管号)")
