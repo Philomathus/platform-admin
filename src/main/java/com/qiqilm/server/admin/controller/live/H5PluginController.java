@@ -22,7 +22,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * h5插件Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -34,7 +34,7 @@ public class H5PluginController extends BaseController {
 	private IH5PluginService h5PluginService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询h5插件列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:h5Plugin:list')" )
 	@GetMapping( "/list" )
@@ -45,10 +45,10 @@ public class H5PluginController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出h5插件列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:h5Plugin:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "h5插件", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(H5Plugin h5Plugin) {
 		List<H5Plugin>      list = h5PluginService.selectH5PluginList(h5Plugin);
@@ -57,7 +57,7 @@ public class H5PluginController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取h5插件详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:h5Plugin:query')" )
 	@GetMapping( value = "/{id}" )
@@ -66,30 +66,30 @@ public class H5PluginController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增h5插件
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:h5Plugin:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "h5插件", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody H5Plugin h5Plugin) {
 		return toAjax( h5PluginService.insertH5Plugin(h5Plugin) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改h5插件
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:h5Plugin:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "h5插件", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody H5Plugin h5Plugin) {
 		return toAjax( h5PluginService.updateH5Plugin(h5Plugin) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除h5插件
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:h5Plugin:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "h5插件", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( h5PluginService.deleteH5PluginByIds( ids ) );
