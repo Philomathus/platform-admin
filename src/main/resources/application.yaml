@@ -3,6 +3,7 @@ server:
 logging:
   level:
     root: info
+    com.qiqilm.server.admin.mapper: debug
 spring:
   # 资源信息
   messages:
