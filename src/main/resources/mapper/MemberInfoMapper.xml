@@ -250,4 +250,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectMaxMemberCode" resultType="java.lang.Integer">
+         select IFNULL( max(member_code),0) from member_info
+	</select>
+
+    <update id="updateMoneySelect">
+        update member_info
+        <set>
+            <if test="money != null">
+                total_account = total_account + #{money},
+            </if>
+            <if test="invite_money != null">
+                invite_money = invite_money + #{invite_money},
+            </if>
+            <if test="level_integral != null">
+                level_integral = level_integral + #{level_integral},
+            </if>
+
+            <if test="code_account != null">
+                code_account = code_account + #{code_account},
+            </if>
+
+            <if test="code_total != null">
+                code_total = code_total + #{code_total}
+            </if>
+
+        </set>
+        where id = #{userId}
+        <if test="money != null">
+            and total_account + #{money} >= 0
+        </if>
+    </update>
 </mapper>

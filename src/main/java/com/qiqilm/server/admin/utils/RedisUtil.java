@@ -1,10 +1,9 @@
 package com.qiqilm.server.admin.utils;
 
+import com.qiqilm.server.admin.constant.Constants;
+import com.qiqilm.server.admin.enums.EnumLock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.BitFieldSubCommands;
-import org.springframework.data.redis.connection.DataType;
-import org.springframework.data.redis.connection.RedisZSetCommands;
-import org.springframework.data.redis.connection.StringRedisConnection;
+import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
@@ -1006,4 +1005,18 @@ public class RedisUtil {
 			return null;
 		} );
 	}
+
+    public boolean lock( EnumLock mode, String userId, String value, int timeOut ) {
+        Boolean getLock = this.strSetIfAbsent( Constants.SESSION_CLICK_LOCK.concat( mode.getKey() ).concat( userId ), value
+                , Duration.ofSeconds( timeOut ) );
+        return getLock;
+    }
+
+    public void unLock(EnumLock mode, String userId ) {
+        this.unlink( Constants.SESSION_CLICK_LOCK.concat( mode.getKey() ).concat( userId ) );
+    }
+
+    public RedisConnectionFactory getConnectionFactory() {
+	    return stringRedisTemplate.getConnectionFactory();
+    }
 }

@@ -27,13 +27,13 @@ import javax.annotation.Resource;
 @Component
 public class SysLoginService {
 	@Autowired
-	private com.qiqilm.server.admin.service.impl.TokenService tokenService;
+	private TokenService          tokenService;
 	@Resource
-	private AuthenticationManager                       authenticationManager;
+	private AuthenticationManager authenticationManager;
 	@Autowired
 	private ISysUserService       userService;
-//	@Autowired
-//	private SystemIpWhiteMapper   systemIpWhiteMapper;
+	//	@Autowired
+	//	private SystemIpWhiteMapper   systemIpWhiteMapper;
 
 	/**
 	 * 登录验证
@@ -76,14 +76,14 @@ public class SysLoginService {
 			}
 		}
 
-//		log.info( "管理员{}登录IP:{}", loginBody.getUsername(), ip );
-//		String ipId = systemIpWhiteMapper.selectEffectIp( ip );
-//		if ( StringUtils.isBlank( ipId ) ) {
-//			AsyncManager.me().execute( AsyncFactory.recordLogininfor( loginBody.getUsername(), AdminConstants.LOGIN_FAIL,
-//					MessageUtils.message( "user.block.ip" ), ip ) );
-//			log.warn( "限制IP:{}登录", ip );
-//			return AjaxResult.error( "您所在区域无法登录本系统IP：" + ip );
-//		}
+		//		log.info( "管理员{}登录IP:{}", loginBody.getUsername(), ip );
+		//		String ipId = systemIpWhiteMapper.selectEffectIp( ip );
+		//		if ( StringUtils.isBlank( ipId ) ) {
+		//			AsyncManager.me().execute( AsyncFactory.recordLogininfor( loginBody.getUsername(), AdminConstants.LOGIN_FAIL,
+		//					MessageUtils.message( "user.block.ip" ), ip ) );
+		//			log.warn( "限制IP:{}登录", ip );
+		//			return AjaxResult.error( "您所在区域无法登录本系统IP：" + ip );
+		//		}
 
 		AsyncManager.me().execute( AsyncFactory.recordLogininfor( loginBody.getUsername(), AdminConstants.LOGIN_SUCCESS,
 				MessageUtils.message( "user.login.success" ) ) );
