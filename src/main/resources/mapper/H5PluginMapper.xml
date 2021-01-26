@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.H5PluginMapper">
+
+    <resultMap type="H5Plugin" id="H5PluginResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="conUrl"    column="con_url"    />
+        <result property="iconUrl"    column="icon_url"    />
+    </resultMap>
+
+    <sql id="selectH5PluginVo">
+        select id, name, status, con_url, icon_url from 7700_live.h5_plugin
+    </sql>
+
+    <select id="selectH5PluginList" parameterType="H5Plugin" resultMap="H5PluginResult">
+        <include refid="selectH5PluginVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="conUrl != null  and conUrl != ''"> and con_url = #{conUrl}</if>
+            <if test="iconUrl != null  and iconUrl != ''"> and icon_url = #{iconUrl}</if>
+        </where>
+    </select>
+
+    <select id="selectH5PluginById" parameterType="Long" resultMap="H5PluginResult">
+        <include refid="selectH5PluginVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertH5Plugin" parameterType="H5Plugin">
+        insert into 7700_live.h5_plugin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="status != null">status,</if>
+            <if test="conUrl != null">con_url,</if>
+            <if test="iconUrl != null">icon_url,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="name != null and name != ''">#{name},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="conUrl != null">#{conUrl},</if>
+                    <if test="iconUrl != null">#{iconUrl},</if>
+             </trim>
+    </insert>
+
+    <update id="updateH5Plugin" parameterType="H5Plugin">
+        update 7700_live.h5_plugin
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+    
+            <if test="status != null">status = #{status},</if>
+    
+            <if test="conUrl != null">con_url = #{conUrl},</if>
+    
+            <if test="iconUrl != null">icon_url = #{iconUrl},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteH5PluginById" parameterType="Long">
+        delete from 7700_live.h5_plugin where id = #{id}
+    </delete>
+
+    <delete id="deleteH5PluginByIds" parameterType="String">
+        delete from 7700_live.h5_plugin where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
