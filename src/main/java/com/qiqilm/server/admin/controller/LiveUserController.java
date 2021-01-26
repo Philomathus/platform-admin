@@ -1,0 +1,97 @@
+package com.qiqilm.server.admin.controller;
+
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.qiqilm.server.admin.annotation.Log;
+import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.service.ILiveUserService;
+import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+/**
+ * //用户信息Controller
+ *
+ * @author 77tv
+ * @date 2021-01-26
+ */
+@RestController
+@RequestMapping( "/admin/liveUser" )
+public class LiveUserController extends BaseController {
+	@Autowired
+	private ILiveUserService liveUserService;
+
+	/**
+	 * 查询//用户信息列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:list')" )
+	@GetMapping( "/list" )
+    	public TableDataInfo list(LiveUser liveUser) {
+		startPage();
+		List<LiveUser> list = liveUserService.selectLiveUserList(liveUser);
+		return getDataTable( list );
+	}
+    
+	/**
+	 * 导出//用户信息列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:export')" )
+	@Log( title = "//用户信息", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export(LiveUser liveUser) {
+		List<LiveUser>      list = liveUserService.selectLiveUserList(liveUser);
+		ExcelUtil<LiveUser> util = new ExcelUtil<LiveUser>(LiveUser. class);
+		return util.exportExcel( list, "liveUser" );
+	}
+
+	/**
+	 * 获取//用户信息详细信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:query')" )
+	@GetMapping( value = "/{id}" )
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
+		return AjaxResult.success( liveUserService.selectLiveUserById(id) );
+	}
+
+	/**
+	 * 新增//用户信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
+	@Log( title = "//用户信息", businessType = BusinessType.INSERT )
+	@PostMapping
+	public AjaxResult add( @RequestBody LiveUser liveUser) {
+		return toAjax( liveUserService.insertLiveUser(liveUser) );
+	}
+
+	/**
+	 * 修改//用户信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
+	@Log( title = "//用户信息", businessType = BusinessType.UPDATE )
+	@PutMapping
+	public AjaxResult edit( @RequestBody LiveUser liveUser) {
+		return toAjax( liveUserService.updateLiveUser(liveUser) );
+	}
+
+	/**
+	 * 删除//用户信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:remove')" )
+	@Log( title = "//用户信息", businessType = BusinessType.DELETE )
+	@DeleteMapping( "/{ids}" )
+	public AjaxResult remove( @PathVariable Long[] ids ) {
+		return toAjax( liveUserService.deleteLiveUserByIds( ids ) );
+	}
+}

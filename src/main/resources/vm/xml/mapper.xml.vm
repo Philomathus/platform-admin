@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 
     <sql id="select${ClassName}Vo">
-        select#foreach($column in $columns) $column.columnName#if($velocityCount != $columns.size()),#end#end from ${tableName}
+        select#foreach($column in $columns) #if($column.columnName == "create_time" || $column.columnName == "update_time") FROM_UNIXTIME($column.columnName) $column.columnName #if($velocityCount != $columns.size()),#end #else$column.columnName#if($velocityCount != $columns.size()),#end#end#end from ${tableSchema}.${tableName}
     </sql>
 
     <select id="select${ClassName}List" parameterType="${ClassName}" resultMap="${ClassName}Result">
@@ -66,14 +66,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select#foreach($column in $columns) a.$column.columnName#if($velocityCount != $columns.size()),#end#end,
            #foreach($column in $subTable.columns) b.$column.columnName#if($velocityCount != $subTable.columns.size()),#end#end
 
-        from ${tableName} a
+        from ${tableSchema}.${tableName} a
         left join ${subTableName} b on b.${subTableFkName} = a.${pkColumn.columnName}
         where a.${pkColumn.columnName} = #{${pkColumn.javaField}}
 #end
     </select>
 
     <insert id="insert${ClassName}" parameterType="${ClassName}"#if($pkColumn.increment) useGeneratedKeys="true" keyProperty="$pkColumn.javaField"#end>
-        insert into ${tableName}
+        insert into ${tableSchema}.${tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
 #foreach($column in $columns)
 #if($column.columnName != $pkColumn.columnName || !$pkColumn.increment)
@@ -84,18 +84,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 #foreach($column in $columns)
 #if($column.columnName != $pkColumn.columnName || !$pkColumn.increment)
+    #if($column.columnName == "create_time" || $column.columnName == "update_time")
+        <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">UNIX_TIMESTAMP(#{$column.javaField}),</if>
+    #else
             <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">#{$column.javaField},</if>
+    #end
 #end
 #end
          </trim>
     </insert>
 
     <update id="update${ClassName}" parameterType="${ClassName}">
-        update ${tableName}
+        update ${tableSchema}.${tableName}
         <trim prefix="SET" suffixOverrides=",">
 #foreach($column in $columns)
 #if($column.columnName != $pkColumn.columnName)
-            <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">$column.columnName = #{$column.javaField},</if>
+    #if($column.columnName == "create_time" || $column.columnName == "update_time")
+        <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">$column.columnName = UNIX_TIMESTAMP(#{$column.javaField}),</if>
+    #else
+        <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">$column.columnName = #{$column.javaField},</if>
+    #end
+
 #end
 #end
         </trim>
@@ -103,11 +112,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="delete${ClassName}ById" parameterType="${pkColumn.javaType}">
-        delete from ${tableName} where ${pkColumn.columnName} = #{${pkColumn.javaField}}
+        delete from ${tableSchema}.${tableName} where ${pkColumn.columnName} = #{${pkColumn.javaField}}
     </delete>
 
     <delete id="delete${ClassName}ByIds" parameterType="String">
-        delete from ${tableName} where ${pkColumn.columnName} in
+        delete from ${tableSchema}.${tableName} where ${pkColumn.columnName} in
         <foreach item="${pkColumn.javaField}" collection="array" open="(" separator="," close=")">
             #{${pkColumn.javaField}}
         </foreach>
