@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
+import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.MemberInfo;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service接口
@@ -58,4 +60,6 @@ public interface IMemberInfoService {
 	 * @return 结果
 	 */
 	public int deleteMemberInfoById(String id);
+
+    RspBase addMemberMoneyOnly(String ip,String userId,BigDecimal money, BigDecimal beatNum, String Mk, String ordermk, String admin_name);
 }
