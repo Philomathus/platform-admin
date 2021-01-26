@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveVideoPropMapper">
+
+    <resultMap type="LiveVideoProp" id="LiveVideoPropResult">
+        <result property="id"    column="id"    />
+        <result property="propId"    column="prop_id"    />
+        <result property="propName"    column="prop_name"    />
+        <result property="totalScore"    column="total_score"    />
+        <result property="totalDiamonds"    column="total_diamonds"    />
+        <result property="totalTicket"    column="total_ticket"    />
+        <result property="currentDiamonds"    column="current_diamonds"    />
+        <result property="beforeTicket"    column="before_ticket"    />
+        <result property="fromUserId"    column="from_user_id"    />
+        <result property="pUserId"    column="p_user_id"    />
+        <result property="pUserName"    column="p_user_name"    />
+        <result property="toUserId"    column="to_user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createY"    column="create_y"    />
+        <result property="createM"    column="create_m"    />
+        <result property="createD"    column="create_d"    />
+        <result property="createW"    column="create_w"    />
+        <result property="num"    column="num"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="isRedEnvelope"    column="is_red_envelope"    />
+        <result property="msg"    column="msg"    />
+        <result property="actionstatus"    column="ActionStatus"    />
+        <result property="errorinfo"    column="ErrorInfo"    />
+        <result property="errorcode"    column="ErrorCode"    />
+        <result property="createYm"    column="create_ym"    />
+        <result property="isPrivate"    column="is_private"    />
+        <result property="fromIp"    column="from_ip"    />
+        <result property="isCoin"    column="is_coin"    />
+    </resultMap>
+
+    <sql id="selectLiveVideoPropVo">
+        select id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id, p_user_id, p_user_name, to_user_id,  FROM_UNIXTIME(create_time) create_time ,  create_date, create_y, create_m, create_d, create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private, from_ip, is_coin from 7700_live.live_video_prop
+    </sql>
+
+    <select id="selectLiveVideoPropList" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
+        <include refid="selectLiveVideoPropVo"/>
+        <where>
+            <if test="propId != null "> and prop_id = #{propId}</if>
+            <if test="propName != null  and propName != ''"> and prop_name like concat('%', #{propName}, '%')</if>
+            <if test="totalScore != null "> and total_score = #{totalScore}</if>
+            <if test="totalDiamonds != null "> and total_diamonds = #{totalDiamonds}</if>
+            <if test="totalTicket != null "> and total_ticket = #{totalTicket}</if>
+            <if test="currentDiamonds != null "> and current_diamonds = #{currentDiamonds}</if>
+            <if test="beforeTicket != null "> and before_ticket = #{beforeTicket}</if>
+            <if test="fromUserId != null "> and from_user_id = #{fromUserId}</if>
+            <if test="pUserId != null  and pUserId != ''"> and p_user_id = #{pUserId}</if>
+            <if test="pUserName != null  and pUserName != ''"> and p_user_name like concat('%', #{pUserName}, '%')</if>
+            <if test="toUserId != null "> and to_user_id = #{toUserId}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="createY != null "> and create_y = #{createY}</if>
+            <if test="createM != null "> and create_m = #{createM}</if>
+            <if test="createD != null "> and create_d = #{createD}</if>
+            <if test="createW != null "> and create_w = #{createW}</if>
+            <if test="num != null "> and num = #{num}</if>
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+            <if test="groupId != null  and groupId != ''"> and group_id = #{groupId}</if>
+            <if test="isRedEnvelope != null "> and is_red_envelope = #{isRedEnvelope}</if>
+            <if test="msg != null  and msg != ''"> and msg = #{msg}</if>
+            <if test="actionstatus != null  and actionstatus != ''"> and ActionStatus = #{actionstatus}</if>
+            <if test="errorinfo != null  and errorinfo != ''"> and ErrorInfo = #{errorinfo}</if>
+            <if test="errorcode != null "> and ErrorCode = #{errorcode}</if>
+            <if test="createYm != null  and createYm != ''"> and create_ym = #{createYm}</if>
+            <if test="isPrivate != null "> and is_private = #{isPrivate}</if>
+            <if test="fromIp != null  and fromIp != ''"> and from_ip = #{fromIp}</if>
+            <if test="isCoin != null "> and is_coin = #{isCoin}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveVideoPropById" parameterType="Long" resultMap="LiveVideoPropResult">
+        <include refid="selectLiveVideoPropVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveVideoProp" parameterType="LiveVideoProp" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.live_video_prop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="propId != null">prop_id,</if>
+            <if test="propName != null and propName != ''">prop_name,</if>
+            <if test="totalScore != null">total_score,</if>
+            <if test="totalDiamonds != null">total_diamonds,</if>
+            <if test="totalTicket != null">total_ticket,</if>
+            <if test="currentDiamonds != null">current_diamonds,</if>
+            <if test="beforeTicket != null">before_ticket,</if>
+            <if test="fromUserId != null">from_user_id,</if>
+            <if test="pUserId != null">p_user_id,</if>
+            <if test="pUserName != null">p_user_name,</if>
+            <if test="toUserId != null">to_user_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createY != null">create_y,</if>
+            <if test="createM != null">create_m,</if>
+            <if test="createD != null">create_d,</if>
+            <if test="createW != null">create_w,</if>
+            <if test="num != null">num,</if>
+            <if test="videoId != null">video_id,</if>
+            <if test="groupId != null and groupId != ''">group_id,</if>
+            <if test="isRedEnvelope != null">is_red_envelope,</if>
+            <if test="msg != null and msg != ''">msg,</if>
+            <if test="actionstatus != null and actionstatus != ''">ActionStatus,</if>
+            <if test="errorinfo != null and errorinfo != ''">ErrorInfo,</if>
+            <if test="errorcode != null">ErrorCode,</if>
+            <if test="createYm != null and createYm != ''">create_ym,</if>
+            <if test="isPrivate != null">is_private,</if>
+            <if test="fromIp != null">from_ip,</if>
+            <if test="isCoin != null">is_coin,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="propId != null">#{propId},</if>
+                    <if test="propName != null and propName != ''">#{propName},</if>
+                    <if test="totalScore != null">#{totalScore},</if>
+                    <if test="totalDiamonds != null">#{totalDiamonds},</if>
+                    <if test="totalTicket != null">#{totalTicket},</if>
+                    <if test="currentDiamonds != null">#{currentDiamonds},</if>
+                    <if test="beforeTicket != null">#{beforeTicket},</if>
+                    <if test="fromUserId != null">#{fromUserId},</if>
+                    <if test="pUserId != null">#{pUserId},</if>
+                    <if test="pUserName != null">#{pUserName},</if>
+                    <if test="toUserId != null">#{toUserId},</if>
+                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                    <if test="createDate != null">#{createDate},</if>
+                    <if test="createY != null">#{createY},</if>
+                    <if test="createM != null">#{createM},</if>
+                    <if test="createD != null">#{createD},</if>
+                    <if test="createW != null">#{createW},</if>
+                    <if test="num != null">#{num},</if>
+                    <if test="videoId != null">#{videoId},</if>
+                    <if test="groupId != null and groupId != ''">#{groupId},</if>
+                    <if test="isRedEnvelope != null">#{isRedEnvelope},</if>
+                    <if test="msg != null and msg != ''">#{msg},</if>
+                    <if test="actionstatus != null and actionstatus != ''">#{actionstatus},</if>
+                    <if test="errorinfo != null and errorinfo != ''">#{errorinfo},</if>
+                    <if test="errorcode != null">#{errorcode},</if>
+                    <if test="createYm != null and createYm != ''">#{createYm},</if>
+                    <if test="isPrivate != null">#{isPrivate},</if>
+                    <if test="fromIp != null">#{fromIp},</if>
+                    <if test="isCoin != null">#{isCoin},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLiveVideoProp" parameterType="LiveVideoProp">
+        update 7700_live.live_video_prop
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="propId != null">prop_id = #{propId},</if>
+    
+            <if test="propName != null and propName != ''">prop_name = #{propName},</if>
+    
+            <if test="totalScore != null">total_score = #{totalScore},</if>
+    
+            <if test="totalDiamonds != null">total_diamonds = #{totalDiamonds},</if>
+    
+            <if test="totalTicket != null">total_ticket = #{totalTicket},</if>
+    
+            <if test="currentDiamonds != null">current_diamonds = #{currentDiamonds},</if>
+    
+            <if test="beforeTicket != null">before_ticket = #{beforeTicket},</if>
+    
+            <if test="fromUserId != null">from_user_id = #{fromUserId},</if>
+    
+            <if test="pUserId != null">p_user_id = #{pUserId},</if>
+    
+            <if test="pUserName != null">p_user_name = #{pUserName},</if>
+    
+            <if test="toUserId != null">to_user_id = #{toUserId},</if>
+    
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+    
+            <if test="createDate != null">create_date = #{createDate},</if>
+    
+            <if test="createY != null">create_y = #{createY},</if>
+    
+            <if test="createM != null">create_m = #{createM},</if>
+    
+            <if test="createD != null">create_d = #{createD},</if>
+    
+            <if test="createW != null">create_w = #{createW},</if>
+    
+            <if test="num != null">num = #{num},</if>
+    
+            <if test="videoId != null">video_id = #{videoId},</if>
+    
+            <if test="groupId != null and groupId != ''">group_id = #{groupId},</if>
+    
+            <if test="isRedEnvelope != null">is_red_envelope = #{isRedEnvelope},</if>
+    
+            <if test="msg != null and msg != ''">msg = #{msg},</if>
+    
+            <if test="actionstatus != null and actionstatus != ''">ActionStatus = #{actionstatus},</if>
+    
+            <if test="errorinfo != null and errorinfo != ''">ErrorInfo = #{errorinfo},</if>
+    
+            <if test="errorcode != null">ErrorCode = #{errorcode},</if>
+    
+            <if test="createYm != null and createYm != ''">create_ym = #{createYm},</if>
+    
+            <if test="isPrivate != null">is_private = #{isPrivate},</if>
+    
+            <if test="fromIp != null">from_ip = #{fromIp},</if>
+    
+            <if test="isCoin != null">is_coin = #{isCoin},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveVideoPropById" parameterType="Long">
+        delete from 7700_live.live_video_prop where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveVideoPropByIds" parameterType="String">
+        delete from 7700_live.live_video_prop where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
