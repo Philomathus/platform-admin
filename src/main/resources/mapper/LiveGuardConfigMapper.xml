@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveGuardConfigMapper">
+
+    <resultMap type="LiveGuardConfig" id="LiveGuardConfigResult">
+        <result property="id"    column="id"    />
+        <result property="specifications"    column="Specifications"    />
+        <result property="month"    column="month"    />
+        <result property="price"    column="Price"    />
+        <result property="type"    column="type"    />
+        <result property="propId"    column="prop_id"    />
+        <result property="discountPrice"    column="discount_price"    />
+        <result property="giveday"    column="giveday"    />
+    </resultMap>
+
+    <sql id="selectLiveGuardConfigVo">
+        select id, Specifications, month, Price, type, prop_id, discount_price, giveday from 7700_live.live_guard_config
+    </sql>
+
+    <select id="selectLiveGuardConfigList" parameterType="LiveGuardConfig" resultMap="LiveGuardConfigResult">
+        <include refid="selectLiveGuardConfigVo"/>
+        <where>
+            <if test="specifications != null  and specifications != ''"> and Specifications = #{specifications}</if>
+            <if test="month != null "> and month = #{month}</if>
+            <if test="price != null "> and Price = #{price}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="propId != null "> and prop_id = #{propId}</if>
+            <if test="discountPrice != null "> and discount_price = #{discountPrice}</if>
+            <if test="giveday != null "> and giveday = #{giveday}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveGuardConfigById" parameterType="Long" resultMap="LiveGuardConfigResult">
+        <include refid="selectLiveGuardConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveGuardConfig" parameterType="LiveGuardConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.live_guard_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="specifications != null">Specifications,</if>
+            <if test="month != null">month,</if>
+            <if test="price != null">Price,</if>
+            <if test="type != null">type,</if>
+            <if test="propId != null">prop_id,</if>
+            <if test="discountPrice != null">discount_price,</if>
+            <if test="giveday != null">giveday,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="specifications != null">#{specifications},</if>
+                    <if test="month != null">#{month},</if>
+                    <if test="price != null">#{price},</if>
+                    <if test="type != null">#{type},</if>
+                    <if test="propId != null">#{propId},</if>
+                    <if test="discountPrice != null">#{discountPrice},</if>
+                    <if test="giveday != null">#{giveday},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLiveGuardConfig" parameterType="LiveGuardConfig">
+        update 7700_live.live_guard_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="specifications != null">Specifications = #{specifications},</if>
+    
+            <if test="month != null">month = #{month},</if>
+    
+            <if test="price != null">Price = #{price},</if>
+    
+            <if test="type != null">type = #{type},</if>
+    
+            <if test="propId != null">prop_id = #{propId},</if>
+    
+            <if test="discountPrice != null">discount_price = #{discountPrice},</if>
+    
+            <if test="giveday != null">giveday = #{giveday},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveGuardConfigById" parameterType="Long">
+        delete from 7700_live.live_guard_config where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveGuardConfigByIds" parameterType="String">
+        delete from 7700_live.live_guard_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

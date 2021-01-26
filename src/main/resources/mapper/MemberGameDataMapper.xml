@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MemberGameDataMapper">
+
+    <resultMap type="MemberGameData" id="MemberGameDataResult">
+        <result property="id"    column="id"    />
+        <result property="gameId"    column="game_id"    />
+        <result property="account"    column="account"    />
+        <result property="kindId"    column="kind_id"    />
+        <result property="cellScore"    column="cell_score"    />
+        <result property="allBet"    column="all_bet"    />
+        <result property="profit"    column="profit"    />
+        <result property="revenue"    column="revenue"    />
+        <result property="gameEndTime"    column="game_end_time"    />
+        <result property="platformId"    column="platform_id"    />
+        <result property="agent"    column="agent"    />
+        <result property="platformType"    column="platform_type"    />
+        <result property="status"    column="status"    />
+        <result property="gameStartTime"    column="game_start_time"    />
+    </resultMap>
+
+    <sql id="selectMemberGameDataVo">
+        select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from member_game_data
+    </sql>
+
+    <select id="findAccountList" resultType="com.qiqilm.server.admin.core.vo.RspMemberGameData">
+        SELECT
+        m.game_end_time as game_end_time,
+        m.account as account,
+        c.platform_name as platform_name ,
+        c.son_platform_name as son_platform_name,
+        FORMAT(sum(m.cell_score),2) as sumCellScore,
+        FORMAT(SUM(m.all_bet),2) as sumAllBet ,
+        FORMAT(SUM(m.profit),2) as sumProfit,
+        FORMAT(-SUM(m.profit),2) as sumPlatformProfit
+        FROM member_game_data m
+        left join config_gametype c
+        on m.agent = c.platform_id AND m.kind_id = c.son_platform_id and m.cell_score <![CDATA[ <> ]]> ('0.00')
+        <where>
+            and m.cell_score <![CDATA[ <> ]]> ('0.00')
+            <if test="req.account != null and req.account != ''">
+                and m.account =#{req.account}
+            </if>
+            <if test="req.son_platform_name != null and req.son_platform_name != ''">
+                and c.son_platform_name =#{req.son_platform_name}
+            </if>
+            <if test="req.pubStartDate != null and req.pubStartDate != '' and req.pubEndDate != null and req.pubEndDate != ''">
+                and m.game_end_time <![CDATA[ >= ]]> #{req.pubStartDate} and m.game_end_time <![CDATA[ <= ]]> #{req.pubEndDate}
+            </if>
+        </where>
+        GROUP BY
+        m.account,
+        c.platform_name,
+        c.son_platform_name
+        ORDER BY CONVERT(sum(m.cell_score), DECIMAL)  desc
+    </select>
+</mapper>
