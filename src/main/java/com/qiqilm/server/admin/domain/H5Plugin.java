@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 h5_plugin
+ * h5插件对象 h5_plugin
  *
  * @author 77tv
  * @date 2021-01-26

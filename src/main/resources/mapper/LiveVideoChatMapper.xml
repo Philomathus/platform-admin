@@ -18,14 +18,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveVideoChatVo">
-        select id, poscat_id, group, user_id, msg,  FROM_UNIXTIME(create_time) create_time ,  type, poscat_nick_name, user_nick_name, from_platform from 7700_live.live_video_chat
+        select id, poscat_id, `group`, user_id, msg,  FROM_UNIXTIME(create_time) create_time ,  type, poscat_nick_name, user_nick_name, from_platform from 7700_live.live_video_chat
     </sql>
 
     <select id="selectLiveVideoChatList" parameterType="LiveVideoChat" resultMap="LiveVideoChatResult">
         <include refid="selectLiveVideoChatVo"/>
         <where>
             <if test="poscatId != null "> and poscat_id = #{poscatId}</if>
-            <if test="group != null  and group != ''"> and group = #{group}</if>
+            <if test="group != null  and group != ''"> and `group` = #{group}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="msg != null  and msg != ''"> and msg = #{msg}</if>
             <if test="type != null "> and type = #{type}</if>
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into 7700_live.live_video_chat
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="poscatId != null">poscat_id,</if>
-            <if test="group != null">group,</if>
+            <if test="group != null">`group`,</if>
             <if test="userId != null">user_id,</if>
             <if test="msg != null">msg,</if>
             <if test="createTime != null">create_time,</if>
@@ -70,23 +70,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update 7700_live.live_video_chat
         <trim prefix="SET" suffixOverrides=",">
             <if test="poscatId != null">poscat_id = #{poscatId},</if>
-    
-            <if test="group != null">group = #{group},</if>
-    
+
+            <if test="group != null">`group` = #{group},</if>
+
             <if test="userId != null">user_id = #{userId},</if>
-    
+
             <if test="msg != null">msg = #{msg},</if>
-    
+
             <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
-    
+
             <if test="type != null">type = #{type},</if>
-    
+
             <if test="poscatNickName != null">poscat_nick_name = #{poscatNickName},</if>
-    
+
             <if test="userNickName != null">user_nick_name = #{userNickName},</if>
-    
+
             <if test="fromPlatform != null">from_platform = #{fromPlatform},</if>
-    
+
         </trim>
         where id = #{id}
     </update>
