@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -64,4 +65,8 @@ public interface MemberInfoMapper {
     int selectMaxMemberCode();
 
     int updateMoneySelect(@Param("userId") String userId, @Param("money") BigDecimal money, @Param("invite_money") BigDecimal invite_money, @Param("level_integral") BigDecimal level_integral, @Param("code_account") BigDecimal code_account, @Param("code_total") BigDecimal code_total);
+
+    void call_pro_useranalysis(@Param("userid") String userId);
+
+    List<WithdrawReport> userWithdrawReportList();
 }

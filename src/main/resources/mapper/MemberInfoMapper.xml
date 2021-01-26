@@ -282,4 +282,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and total_account + #{money} >= 0
         </if>
     </update>
+    <insert id="call_pro_useranalysis" statementType="CALLABLE">
+        {call pro_useranalysis(#{userid,mode=IN,jdbcType=VARCHAR})}
+    </insert>
+
+    <select id="userWithdrawReportList" resultType="com.qiqilm.server.admin.domain.vo.WithdrawReport">
+		select * from report_analysisuser  ORDER BY rep_id asc
+	</select>
 </mapper>
