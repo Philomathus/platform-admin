@@ -1,25 +1,19 @@
-package com.qiqilm.server.admin.controller;
+package com.qiqilm.server.admin.controller.live;
 
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * //用户信息Controller
@@ -43,7 +37,7 @@ public class LiveUserController extends BaseController {
 		List<LiveUser> list = liveUserService.selectLiveUserList(liveUser);
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出//用户信息列表
 	 */
@@ -86,6 +80,23 @@ public class LiveUserController extends BaseController {
 	}
 
 	/**
+	 * 修改用户状态
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
+	@Log( title = "修改用户状态", businessType = BusinessType.UPDATE )
+	@PutMapping("/banDetail")
+	public AjaxResult banDetail( LiveUser liveUser) {
+        LiveUser liveUser1 = liveUserService.selectLiveUserById(liveUser.getId());
+        liveUser1.setIsBan(liveUser.getIsBan());
+        return toAjax( liveUserService.updateLiveUser(liveUser1) );
+	}
+
+    @ApiOperation( "加入家族" )
+    @PutMapping( "/gofamiily" )
+    public AjaxResult gofamiily( LiveUser user ) {
+        return liveUserService.updateFamilyID(user.getFamilyId(),user.getId());
+    }
+	/**
 	 * 删除//用户信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:remove')" )
@@ -94,4 +105,6 @@ public class LiveUserController extends BaseController {
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( liveUserService.deleteLiveUserByIds( ids ) );
 	}
+
+
 }

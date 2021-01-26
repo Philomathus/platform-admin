@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.LiveFamily;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -58,4 +60,8 @@ public interface LiveFamilyMapper {
 	 * @return 结果
 	 */
 	public int deleteLiveFamilyByIds(Long[] ids );
+
+    //修改加入家族人数
+    @Update( "update live_family set user_count = ${user_count} where id= ${familyId}" )
+    int updateFamilyID(@Param( "user_count" ) Integer user_count, @Param( "familyId" ) Integer familyId );
 }
