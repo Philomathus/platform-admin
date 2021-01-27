@@ -39,7 +39,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	@Autowired
 	private ILogService            logService;
 	@Autowired
-	private MemberCardMapper       memberCardMapper;
+    private MemberCardMapper  memberCardMapper;
 
 	/**
 	 * 查询会员信息
@@ -146,7 +146,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			}
 		}
 
-		if ( total != null ) {
+		if (total != null ) {
 			BigDecimal now = total.add( money );
 			if ( beatNum != null && beatNum.compareTo( BigDecimal.ZERO ) > 0 ) {
 				MemberBcode codeFlow = new MemberBcode();
@@ -184,24 +184,30 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 		return rspBase;
 	}
 
-	@Override
-	public PageBO<WithdrawReport> withdrawReport( String memberid, Integer pageNum, Integer pageSize ) {
-		memberInfoMapper.call_pro_useranalysis( memberid );
-		PageBO<WithdrawReport> pageBO = new PageBO<>();
-		pageNum = 1;
-		pageSize = 100;
-		Page page = PageHelper.startPage( pageNum, pageSize, true );
-		pageBO.setData( memberInfoMapper.userWithdrawReportList() );
-		pageBO.setCount( page.getTotal() );
-		return pageBO;
-	}
+    @Override
+    public PageBO<WithdrawReport> withdrawReport(String memberid, Integer pageNum, Integer pageSize ) {
+        memberInfoMapper.call_pro_useranalysis(memberid);
+        PageBO<WithdrawReport> pageBO = new PageBO<>();
+        pageNum = 1;
+        pageSize = 100;
+        Page page   = PageHelper.startPage( pageNum, pageSize, true );
+        pageBO.setData( memberInfoMapper.userWithdrawReportList());
+        pageBO.setCount( page.getTotal() );
+        return pageBO;
+    }
 
-	@Override
-	public PageBO<MemberCard> findMemberCardPage( String memberid, Integer pageNum, Integer pageSize ) {
-		PageBO<MemberCard> pageBO = new PageBO<>();
-		Page               page   = PageHelper.startPage( pageNum, pageSize, true );
-		pageBO.setData( memberCardMapper.findList( memberid ) );
-		pageBO.setCount( page.getTotal() );
-		return pageBO;
-	}
+
+    @Override
+    public PageBO<MemberCard> findMemberCardPage(String memberid, Integer pageNum, Integer pageSize, String orderBy) {
+        PageBO<MemberCard> pageBO = new PageBO<>();
+        Page               page   = PageHelper.startPage( pageNum, pageSize, orderBy );
+        pageBO.setData( memberCardMapper.findList( memberid ) );
+        pageBO.setCount( page.getTotal() );
+        return pageBO;
+    }
+    @Override
+    public int updateByPrimaryKeySelective(MemberInfo record) {
+        return memberInfoMapper.updateMemberInfo(record);
+    }
+
 }

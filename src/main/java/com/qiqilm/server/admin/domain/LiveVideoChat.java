@@ -45,10 +45,36 @@ public class LiveVideoChat extends BaseEntity {
     @Excel(name = "发送者昵称")
     private String userNickName;
 
+    /**
+     * 发送开始时间
+     */
+    private String sendStartTime;
+
+    /**
+     * 发送结束时间
+     */
+    private String sendEndTime;
+
     /** 平台会员ID */
     @Excel(name = "平台会员ID")
     private String fromPlatform;
 
+
+    public String getSendStartTime() {
+        return sendStartTime;
+    }
+
+    public void setSendStartTime(String sendStartTime) {
+        this.sendStartTime = sendStartTime;
+    }
+
+    public String getSendEndTime() {
+        return sendEndTime;
+    }
+
+    public void setSendEndTime(String sendEndTime) {
+        this.sendEndTime = sendEndTime;
+    }
     public void setId(Long id) {
         this.id = id;
     }

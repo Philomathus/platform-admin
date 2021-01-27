@@ -1,12 +1,13 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 送礼物对象 live_video_prop
@@ -132,6 +133,31 @@ public class LiveVideoProp extends BaseEntity {
     /** 双币礼物，0是钻石，1是游戏币 */
     @Excel(name = "双币礼物，0是钻石，1是游戏币")
     private Long isCoin;
+    /**
+     * 发送开始时间
+     */
+    private String sendStartTime;
+
+    /**
+     * 发送结束时间
+     */
+    private String sendEndTime;
+
+    public String getSendStartTime() {
+        return sendStartTime;
+    }
+
+    public void setSendStartTime(String sendStartTime) {
+        this.sendStartTime = sendStartTime;
+    }
+
+    public String getSendEndTime() {
+        return sendEndTime;
+    }
+
+    public void setSendEndTime(String sendEndTime) {
+        this.sendEndTime = sendEndTime;
+    }
 
     public void setId(Long id) {
         this.id = id;

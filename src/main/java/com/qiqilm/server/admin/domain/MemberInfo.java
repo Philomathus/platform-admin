@@ -25,6 +25,29 @@ public class MemberInfo extends BaseEntity {
     @Excel(name = "会员编号")
     private String memberCode;
 
+    /** 会员ID/账号/手机号 */
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    /** 会员编号 */
+    @Excel(name = "银行卡号")
+    private String bankAccount;
+
     /** 代理编号 */
     @Excel(name = "代理编号")
     private String cxAgent;
