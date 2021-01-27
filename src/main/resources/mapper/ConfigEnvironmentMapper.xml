@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper">
+
+    <resultMap type="ConfigEnvironment" id="ConfigEnvironmentResult">
+        <result property="envCode"    column="env_code"    />
+        <result property="envValue"    column="env_value"    />
+        <result property="envDes"    column="env_des"    />
+        <result property="envGroup"    column="env_group"    />
+        <result property="envSort"    column="env_sort"    />
+        <result property="envStatus"    column="env_status"    />
+    </resultMap>
+
+    <sql id="selectConfigEnvironmentVo">
+        select env_code, env_value, env_des, env_group, env_sort, env_status from 7700_main.config_environment
+    </sql>
+
+    <select id="selectConfigEnvironmentList" parameterType="ConfigEnvironment" resultMap="ConfigEnvironmentResult">
+        <include refid="selectConfigEnvironmentVo"/>
+        <where>
+            <if test="envValue != null  and envValue != ''"> and env_value = #{envValue}</if>
+            <if test="envDes != null  and envDes != ''"> and env_des = #{envDes}</if>
+            <if test="envGroup != null "> and env_group = #{envGroup}</if>
+            <if test="envSort != null "> and env_sort = #{envSort}</if>
+            <if test="envStatus != null "> and env_status = #{envStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectConfigEnvironmentById" parameterType="String" resultMap="ConfigEnvironmentResult">
+        <include refid="selectConfigEnvironmentVo"/>
+        where env_code = #{envCode}
+    </select>
+
+    <insert id="insertConfigEnvironment" parameterType="ConfigEnvironment">
+        insert into 7700_main.config_environment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="envCode != null">env_code,</if>
+            <if test="envValue != null">env_value,</if>
+            <if test="envDes != null">env_des,</if>
+            <if test="envGroup != null">env_group,</if>
+            <if test="envSort != null">env_sort,</if>
+            <if test="envStatus != null">env_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="envCode != null">#{envCode},</if>
+                    <if test="envValue != null">#{envValue},</if>
+                    <if test="envDes != null">#{envDes},</if>
+                    <if test="envGroup != null">#{envGroup},</if>
+                    <if test="envSort != null">#{envSort},</if>
+                    <if test="envStatus != null">#{envStatus},</if>
+             </trim>
+    </insert>
+
+    <update id="updateConfigEnvironment" parameterType="ConfigEnvironment">
+        update 7700_main.config_environment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="envValue != null">env_value = #{envValue},</if>
+    
+            <if test="envDes != null">env_des = #{envDes},</if>
+    
+            <if test="envGroup != null">env_group = #{envGroup},</if>
+    
+            <if test="envSort != null">env_sort = #{envSort},</if>
+    
+            <if test="envStatus != null">env_status = #{envStatus},</if>
+    
+        </trim>
+        where env_code = #{envCode}
+    </update>
+
+    <delete id="deleteConfigEnvironmentById" parameterType="String">
+        delete from 7700_main.config_environment where env_code = #{envCode}
+    </delete>
+
+    <delete id="deleteConfigEnvironmentByIds" parameterType="String">
+        delete from 7700_main.config_environment where env_code in
+        <foreach item="envCode" collection="array" open="(" separator="," close=")">
+            #{envCode}
+        </foreach>
+    </delete>
+</mapper>
