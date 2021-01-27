@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ReportIncomeDayMapper">
+
+    <resultMap type="ReportIncomeDay" id="ReportIncomeDayResult">
+        <result property="reppayId"    column="reppay_id"    />
+        <result property="money"    column="money"    />
+        <result property="type"    column="type"    />
+        <result property="payplam"    column="payplam"    />
+        <result property="paychancl"    column="paychancl"    />
+        <result property="paycard"    column="paycard"    />
+        <result property="paydate"    column="paydate"    />
+    </resultMap>
+
+    <sql id="selectReportIncomeDayVo">
+        select reppay_id, money, type, payplam, paychancl, paycard, paydate from 7700_main.report_income_day
+    </sql>
+
+    <select id="selectReportIncomeDayList" parameterType="ReportIncomeDay" resultMap="ReportIncomeDayResult">
+        <include refid="selectReportIncomeDayVo"/>
+        <where>
+            <if test="paydate != null  and paydate != ''"> and paydate = #{paydate}</if>
+        </where>
+    </select>
+    <select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">
+        {call prorep_incomeday(#{timedateta,mode=IN,jdbcType=VARCHAR},#{timedateta,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}
+    </select>
+
+</mapper>
