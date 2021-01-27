@@ -165,6 +165,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectLiveUserVo"/>
         <where>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="sendStartTime != null  and sendStartTime != ''"> and create_time >= #{sendStartTime}</if>
+            <if test="sendEndTime != null  and sendEndTime != ''"> and create_time &lt;= #{sendEndTime}</if>
             <if test="userPwd != null  and userPwd != ''"> and user_pwd = #{userPwd}</if>
             <if test="signature != null  and signature != ''"> and signature = #{signature}</if>
             <if test="isAuthentication != null "> and is_authentication = #{isAuthentication}</if>
@@ -476,8 +478,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 <if test="nickName != null and nickName != ''">#{nickName},</if>
                     <if test="userPwd != null">#{userPwd},</if>
                     <if test="signature != null">#{signature},</if>
-                    <if test="createTime != null">#{createTime},</if>
-                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                    <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
                     <if test="isAuthentication != null">#{isAuthentication},</if>
                     <if test="loginType != null">#{loginType},</if>
                     <if test="isEffect != null">#{isEffect},</if>
@@ -634,9 +636,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
             <if test="signature != null">signature = #{signature},</if>
 
-            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
 
-            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
 
             <if test="isAuthentication != null">is_authentication = #{isAuthentication},</if>
 

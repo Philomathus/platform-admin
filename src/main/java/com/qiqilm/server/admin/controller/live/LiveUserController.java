@@ -80,18 +80,17 @@ public class LiveUserController extends BaseController {
 	}
 
 	/**
-	 * 修改用户状态
+	 * 禁播
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
-	@Log( title = "修改用户状态", businessType = BusinessType.UPDATE )
+	@Log( title = "修改用户禁播状态", businessType = BusinessType.UPDATE )
 	@PutMapping("/banDetail")
 	public AjaxResult banDetail( LiveUser liveUser) {
-        LiveUser liveUser1 = liveUserService.selectLiveUserById(liveUser.getId());
-        liveUser1.setIsBan(liveUser.getIsBan());
-        return toAjax( liveUserService.updateLiveUser(liveUser1) );
+        return toAjax( liveUserService.updateLiveUser(liveUser) );
 	}
 
     @ApiOperation( "加入家族" )
+    @Log( title = "加入家族", businessType = BusinessType.UPDATE )
     @PutMapping( "/gofamiily" )
     public AjaxResult gofamiily( LiveUser user ) {
         return liveUserService.updateFamilyID(user.getFamilyId(),user.getId());

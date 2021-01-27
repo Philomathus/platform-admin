@@ -209,7 +209,7 @@ public class MemberInfoController extends BaseController {
     @ApiOperation( value = "会员银行卡列表", notes = "会员银行卡列表" )
     @RequestMapping( value = "/card-list", method = RequestMethod.GET )
     public PageBO<MemberCard> findMemberCardList(@RequestParam( "id" ) String memberId, ReqMemberInfo req ) {
-        return memberInfoService.findMemberCardPage( memberId, req.getPage(), req.getLimit() );
+        return memberInfoService.findMemberCardPage( memberId, req.getPage(), req.getLimit(),req.getOrderBy() );
     }
 
     @ApiOperation( value = "重置保险箱账户", notes = "重置保险箱账户" )

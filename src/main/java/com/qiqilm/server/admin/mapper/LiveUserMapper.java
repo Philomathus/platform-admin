@@ -62,12 +62,12 @@ public interface LiveUserMapper {
 	 */
 	public int deleteLiveUserByIds(Long[] ids );
 
-    @Select( "SELECT family_id FROM live_user where id = ${userId}" )
+    @Select( "SELECT family_id FROM 7700_live.live_user where id = ${userId}" )
     int getFamilyId(@Param( "userId" ) Long userId);
 
-    @Update( "update live_user set family_id = ${familyID} where id= ${userId}" )
+    @Update( "update 7700_live.live_user set family_id = ${familyID} where id= ${userId}" )
     int updateFamilyID( @Param( "familyID" ) Long familyID, @Param( "userId" ) Long userId );
 
-    @Select( "SELECT count(id) as num FROM live_user where family_id = ${family_id}" )
+    @Select( "SELECT count(id) as num FROM 7700_live.live_user where family_id = ${family_id}" )
     int getNumFamily(@Param( "family_id" ) Integer family_id);
 }

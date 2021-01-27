@@ -80,7 +80,7 @@ public class LiveProp extends BaseEntity {
 	 * 0:禁用;1:启用;默认启用
 	 */
 	@Excel( name = "0:禁用;1:启用;默认启用" )
-	private Integer isEffect;
+	private String isEffect;
 
 	/**
 	 * 大型道具类型 如："plane1","plane2","rocket1"
@@ -205,11 +205,11 @@ public class LiveProp extends BaseEntity {
 		return isAnimated;
 	}
 
-	public void setIsEffect( Integer isEffect ) {
+	public void setIsEffect( String isEffect ) {
 		this.isEffect = isEffect;
 	}
 
-	public Integer getIsEffect() {
+	public String getIsEffect() {
 		return isEffect;
 	}
 

@@ -25,4 +25,6 @@ public class ReqMemberInfo extends PageVO {
 
     private String user_name;
 
+    private String orderBy;
+
 }

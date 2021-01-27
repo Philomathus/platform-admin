@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveVideoChatVo">
-        select id, poscat_id, `group`, user_id, msg,  FROM_UNIXTIME(create_time) create_time ,  type, poscat_nick_name, user_nick_name, from_platform from 7700_live.live_video_chat
+        select id, poscat_id, `group`, user_id, msg,  create_time create_time ,  type, poscat_nick_name, user_nick_name, from_platform from 7700_live.live_video_chat
     </sql>
 
     <select id="selectLiveVideoChatList" parameterType="LiveVideoChat" resultMap="LiveVideoChatResult">
@@ -32,6 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="poscatNickName != null  and poscatNickName != ''"> and poscat_nick_name like concat('%', #{poscatNickName}, '%')</if>
             <if test="userNickName != null  and userNickName != ''"> and user_nick_name like concat('%', #{userNickName}, '%')</if>
             <if test="fromPlatform != null  and fromPlatform != ''"> and from_platform = #{fromPlatform}</if>
+            <if test="sendStartTime != null  and sendStartTime != ''"> and create_time >= #{sendStartTime}</if>
+            <if test="sendEndTime != null  and sendEndTime != ''"> and create_time &lt;= #{sendEndTime}</if>
         </where>
     </select>
 
@@ -58,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     <if test="group != null">#{group},</if>
                     <if test="userId != null">#{userId},</if>
                     <if test="msg != null">#{msg},</if>
-                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                <if test="createTime != null">#{createTime},</if>
                     <if test="type != null">#{type},</if>
                     <if test="poscatNickName != null">#{poscatNickName},</if>
                     <if test="userNickName != null">#{userNickName},</if>
@@ -77,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
             <if test="msg != null">msg = #{msg},</if>
 
-            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
 
             <if test="type != null">type = #{type},</if>
 

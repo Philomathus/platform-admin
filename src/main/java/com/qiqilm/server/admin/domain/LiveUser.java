@@ -607,10 +607,34 @@ public class LiveUser extends BaseEntity {
     /** 主播提现比例 */
     @Excel(name = "主播提现比例")
     private BigDecimal ticketCattyRatio;
+    /**
+     * 发送开始时间
+     */
+    private String sendStartTime;
 
+    /**
+     * 发送结束时间
+     */
+    private String sendEndTime;
     /** 主播禁播原因 */
     @Excel(name = "主播禁播原因")
     private String banRemark;
+
+    public String getSendStartTime() {
+        return sendStartTime;
+    }
+
+    public void setSendStartTime(String sendStartTime) {
+        this.sendStartTime = sendStartTime;
+    }
+
+    public String getSendEndTime() {
+        return sendEndTime;
+    }
+
+    public void setSendEndTime(String sendEndTime) {
+        this.sendEndTime = sendEndTime;
+    }
 
     public void setId(Long id) {
         this.id = id;
