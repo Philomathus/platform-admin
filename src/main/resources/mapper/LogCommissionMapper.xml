@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LogCommissionMapper">
+
+    <resultMap type="LogCommission" id="LogCommissionResult">
+        <result property="id"    column="id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="commission"    column="commission"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectLogCommissionVo">
+        select id, member_id, commission,  FROM_UNIXTIME(create_time) create_time   from 7700_main.log_commission
+    </sql>
+
+    <select id="selectLogCommissionList" parameterType="LogCommission" resultMap="LogCommissionResult">
+        <include refid="selectLogCommissionVo"/>
+        <where>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="commission != null "> and commission = #{commission}</if>
+        </where>
+    </select>
+
+    <select id="selectLogCommissionById" parameterType="String" resultMap="LogCommissionResult">
+        <include refid="selectLogCommissionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLogCommission" parameterType="LogCommission">
+        insert into 7700_main.log_commission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="commission != null">commission,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="memberId != null">#{memberId},</if>
+                    <if test="commission != null">#{commission},</if>
+                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+             </trim>
+    </insert>
+
+    <update id="updateLogCommission" parameterType="LogCommission">
+        update 7700_main.log_commission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null">member_id = #{memberId},</if>
+    
+            <if test="commission != null">commission = #{commission},</if>
+    
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLogCommissionById" parameterType="String">
+        delete from 7700_main.log_commission where id = #{id}
+    </delete>
+
+    <delete id="deleteLogCommissionByIds" parameterType="String">
+        delete from 7700_main.log_commission where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

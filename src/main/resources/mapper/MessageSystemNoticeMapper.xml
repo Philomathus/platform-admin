@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MessageSystemNoticeMapper">
+
+    <resultMap type="MessageSystemNotice" id="MessageSystemNoticeResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="device"    column="device"    />
+        <result property="action"    column="action"    />
+        <result property="pubdatetime"    column="pubDateTime"    />
+    </resultMap>
+
+    <sql id="selectMessageSystemNoticeVo">
+        select id, title, content, device, action, pubDateTime from message_system_notice
+    </sql>
+
+    <select id="selectMessageSystemNoticeList" parameterType="MessageSystemNotice" resultMap="MessageSystemNoticeResult">
+        <include refid="selectMessageSystemNoticeVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="device != null  and device != ''"> and device = #{device}</if>
+            <if test="action != null  and action != ''"> and action = #{action}</if>
+            <if test="pubdatetime != null "> and pubDateTime = #{pubdatetime}</if>
+        </where>
+    </select>
+
+    <select id="selectMessageSystemNoticeById" parameterType="String" resultMap="MessageSystemNoticeResult">
+        <include refid="selectMessageSystemNoticeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMessageSystemNotice" parameterType="MessageSystemNotice">
+        insert into message_system_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="device != null and device != ''">device,</if>
+            <if test="action != null and action != ''">action,</if>
+            <if test="pubdatetime != null">pubDateTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="device != null and device != ''">#{device},</if>
+            <if test="action != null and action != ''">#{action},</if>
+            <if test="pubdatetime != null">#{pubdatetime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMessageSystemNotice" parameterType="MessageSystemNotice">
+        update message_system_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="device != null and device != ''">device = #{device},</if>
+            <if test="action != null and action != ''">action = #{action},</if>
+            <if test="pubdatetime != null">pubDateTime = #{pubdatetime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMessageSystemNoticeById" parameterType="String">
+        delete from message_system_notice where id = #{id}
+    </delete>
+
+    <delete id="deleteMessageSystemNoticeByIds" parameterType="String">
+        delete from message_system_notice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

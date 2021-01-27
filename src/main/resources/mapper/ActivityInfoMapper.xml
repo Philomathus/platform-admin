@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ActivityInfoMapper">
+
+    <resultMap type="ActivityInfo" id="ActivityInfoResult">
+        <result property="id"    column="id"    />
+        <result property="icon"    column="icon"    />
+        <result property="title"    column="title"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="indexs"    column="indexs"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <sql id="selectActivityInfoVo">
+        select id, icon, title, ctime, indexs, type_id, content from activity_info
+    </sql>
+
+    <select id="selectActivityInfoList" parameterType="ActivityInfo" resultMap="ActivityInfoResult">
+        <include refid="selectActivityInfoVo"/>
+        <where>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="ctime != null "> and ctime = #{ctime}</if>
+            <if test="indexs != null "> and indexs = #{indexs}</if>
+            <if test="typeId != null  and typeId != ''"> and type_id = #{typeId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+
+    <select id="selectActivityInfoById" parameterType="String" resultMap="ActivityInfoResult">
+        <include refid="selectActivityInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertActivityInfo" parameterType="ActivityInfo">
+        insert into activity_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="icon != null">icon,</if>
+            <if test="title != null">title,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="indexs != null">indexs,</if>
+            <if test="typeId != null">type_id,</if>
+            <if test="content != null">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="title != null">#{title},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="indexs != null">#{indexs},</if>
+            <if test="typeId != null">#{typeId},</if>
+            <if test="content != null">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateActivityInfo" parameterType="ActivityInfo">
+        update activity_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="indexs != null">indexs = #{indexs},</if>
+            <if test="typeId != null">type_id = #{typeId},</if>
+            <if test="content != null">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteActivityInfoById" parameterType="String">
+        delete from activity_info where id = #{id}
+    </delete>
+
+    <delete id="deleteActivityInfoByIds" parameterType="String">
+        delete from activity_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
