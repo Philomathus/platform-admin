@@ -58,4 +58,12 @@ public interface ISystemIpWhiteService {
 	 * @return 结果
 	 */
 	public int deleteSystemIpWhiteById(String ipId);
+
+	/**
+	 * IP白名单判断重复
+	 *
+	 * @param IpAddress IP白名单IpAddress
+	 * @return 结果
+	 */
+	int exists(String IpAddress);
 }

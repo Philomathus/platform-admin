@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.utils.UuidUtil;
@@ -74,6 +75,7 @@ public class ActivityQuestInfoController extends BaseController {
 	@PostMapping
 	public AjaxResult add( @RequestBody ActivityQuestInfo activityQuestInfo) {
 		activityQuestInfo.setId(UuidUtil.getRandomUuidWithoutSeparator());
+		activityQuestInfo.setCtime(new Date());
 		return toAjax( activityQuestInfoService.insertActivityQuestInfo(activityQuestInfo) );
 	}
 

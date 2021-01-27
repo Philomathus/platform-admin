@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.utils.UuidUtil;
@@ -74,6 +75,7 @@ public class MessageSystemNoticeController extends BaseController {
 	@PostMapping
 	public AjaxResult add( @RequestBody MessageSystemNotice messageSystemNotice) {
 		messageSystemNotice.setId(UuidUtil.getRandomUuidWithoutSeparator());
+		messageSystemNotice.setCreateTime(new Date());
 		return toAjax( messageSystemNoticeService.insertMessageSystemNotice(messageSystemNotice) );
 	}
 

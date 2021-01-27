@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.factory.AsyncFactory;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginBody;
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.mapper.SystemIpWhiteMapper;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.utils.AsyncManager;
 import com.qiqilm.server.admin.utils.MessageUtils;
@@ -32,8 +33,8 @@ public class SysLoginService {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private ISysUserService       userService;
-	//	@Autowired
-	//	private SystemIpWhiteMapper   systemIpWhiteMapper;
+	@Autowired
+	private SystemIpWhiteMapper systemIpWhiteMapper;
 
 	/**
 	 * 登录验证
@@ -88,6 +89,8 @@ public class SysLoginService {
 		AsyncManager.me().execute( AsyncFactory.recordLogininfor( loginBody.getUsername(), AdminConstants.LOGIN_SUCCESS,
 				MessageUtils.message( "user.login.success" ) ) );
 		LoginUser loginUser = ( LoginUser ) authentication.getPrincipal();
+		//IP白名单记录登录数量
+//		systemIpWhiteMapper.incLoginCount( ipId );
 		// 生成token
 		String     token = tokenService.createToken( loginUser );
 		AjaxResult ajax  = AjaxResult.success();

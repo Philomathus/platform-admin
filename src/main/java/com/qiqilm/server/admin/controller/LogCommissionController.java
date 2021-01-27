@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -72,6 +73,7 @@ public class LogCommissionController extends BaseController {
 	@Log( title = "佣金领取日志", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody LogCommission logCommission) {
+		logCommission.setCreateTime(new Date());
 		return toAjax( logCommissionService.insertLogCommission(logCommission) );
 	}
 

@@ -1,7 +1,10 @@
 package com.qiqilm.server.admin.controller;
 
+import java.util.Date;
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,7 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 public class MessageOnSiteController extends BaseController {
 	@Autowired
 	private IMessageOnSiteService messageOnSiteService;
+
 
 	/**
 	 * 查询站内信息列表
@@ -74,6 +78,7 @@ public class MessageOnSiteController extends BaseController {
 	@PostMapping
 	public AjaxResult add( @RequestBody MessageOnSite messageOnSite) {
 		messageOnSite.setId(UuidUtil.getRandomUuidWithoutSeparator());
+		messageOnSite.setCreateTime(new Date());
 		return toAjax( messageOnSiteService.insertMessageOnSite(messageOnSite) );
 	}
 
