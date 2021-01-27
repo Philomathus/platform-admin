@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ConfigDomainMapper">
+	<resultMap type="ConfigDomain" id="ConfigDomainResult">
+		<result property="id" column="id"/>
+		<result property="domain" column="domain"/>
+		<result property="dcode" column="dcode"/>
+		<result property="dgroup" column="dgroup"/>
+		<result property="remark" column="remark"/>
+		<result property="sort" column="sort"/>
+		<result property="createBy" column="create_by"/>
+		<result property="createTime" column="create_time"/>
+		<result property="updateBy" column="update_by"/>
+		<result property="updateTime" column="update_time"/>
+	</resultMap>
+
+	<sql id="selectConfigDomainVo">
+		select id,
+			   domain,
+			   dcode,
+			   dgroup,
+			   remark,
+			   sort,
+			   create_by,
+			   create_time,
+			   update_by,
+			   update_time
+		from 7700_main.config_domain
+	</sql>
+
+	<select id="selectConfigDomainList" parameterType="ConfigDomain" resultMap="ConfigDomainResult">
+		<include refid="selectConfigDomainVo"/>
+		<where>
+			<if test="domain != null  and domain != ''">
+				and domain like concat('%', #{domain}, '%')
+			</if>
+			<if test="dcode != null  and dcode != ''">
+				and dcode like concat('%', #{dcode}, '%')
+			</if>
+			<if test="dgroup != null">
+				and dgroup = #{dgroup}
+			</if>
+		</where>
+		order by dgroup, sort
+	</select>
+
+	<select id="selectConfigDomainById" parameterType="Long" resultMap="ConfigDomainResult">
+		<include refid="selectConfigDomainVo"/>
+		where id = #{id}
+	</select>
+
+	<insert id="insertConfigDomain" parameterType="ConfigDomain" useGeneratedKeys="true" keyProperty="id">
+		insert into 7700_main.config_domain
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="domain != null and domain != ''">
+				domain,
+			</if>
+			<if test="dcode != null">
+				dcode,
+			</if>
+			<if test="dgroup != null">
+				dgroup,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="domain != null and domain != ''">
+				#{domain},
+			</if>
+			<if test="dcode != null">
+				#{dcode},
+			</if>
+			<if test="dgroup != null">
+				#{dgroup},
+			</if>
+			<if test="remark != null">
+				#{remark},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="createBy != null">
+				#{createBy},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateConfigDomain" parameterType="ConfigDomain">
+		update 7700_main.config_domain
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="domain != null and domain != ''">
+				domain = #{domain},
+			</if>
+
+			<if test="dcode != null">
+				dcode = #{dcode},
+			</if>
+
+			<if test="dgroup != null">
+				dgroup = #{dgroup},
+			</if>
+
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+
+			<if test="sort != null">
+				sort = #{sort},
+			</if>
+
+			<if test="createBy != null">
+				create_by = #{createBy},
+			</if>
+
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+
+			<if test="updateBy != null">
+				update_by = #{updateBy},
+			</if>
+
+			<if test="updateTime != null">
+				update_time = #{updateTime},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteConfigDomainById" parameterType="Long">
+		delete
+		from 7700_main.config_domain
+		where id = #{id}
+	</delete>
+
+	<delete id="deleteConfigDomainByIds" parameterType="String">
+		delete
+		from 7700_main.config_domain where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>
