@@ -23,7 +23,7 @@ public class H5Plugin extends BaseEntity {
 
     /** 1 启用 0 禁用 */
     @Excel(name = "1 启用 0 禁用")
-    private Long status;
+    private String status;
 
     /** 内容地址 */
     @Excel(name = "内容地址")
@@ -47,11 +47,11 @@ public class H5Plugin extends BaseEntity {
     public String getName() {
         return name;
     }
-    public void setStatus(Long status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Long getStatus() {
+    public String getStatus() {
         return status;
     }
     public void setConUrl(String conUrl) {

@@ -59,7 +59,7 @@ public class LiveVideoChat extends BaseEntity {
     @Excel(name = "平台会员ID")
     private String fromPlatform;
 
-
+    private String createTimes;
     public String getSendStartTime() {
         return sendStartTime;
     }
@@ -153,5 +153,13 @@ public class LiveVideoChat extends BaseEntity {
             .append("userNickName", getUserNickName())
             .append("fromPlatform", getFromPlatform())
             .toString();
+    }
+
+    public String getCreateTimes() {
+        return createTimes;
+    }
+
+    public void setCreateTimes( String createTimes ) {
+        this.createTimes = createTimes;
     }
 }
