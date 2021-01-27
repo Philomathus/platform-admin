@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="group"    column="group"    />
         <result property="userId"    column="user_id"    />
         <result property="msg"    column="msg"    />
-        <result property="createTime"    column="create_time"    />
+        <result property="createTimes"    column="create_time"    />
         <result property="type"    column="type"    />
         <result property="poscatNickName"    column="poscat_nick_name"    />
         <result property="userNickName"    column="user_nick_name"    />
