@@ -1,12 +1,16 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LiveFamily;
+import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
+import com.qiqilm.server.admin.mapper.LiveUserMapper;
+import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.LiveUserMapper;
-import com.qiqilm.server.admin.domain.LiveUser;
-import com.qiqilm.server.admin.service.ILiveUserService;
+
+import java.util.List;
 
 /**
  * //用户信息Service业务层处理
@@ -18,6 +22,8 @@ import com.qiqilm.server.admin.service.ILiveUserService;
 public class LiveUserServiceImpl implements ILiveUserService {
     @Autowired
     private LiveUserMapper liveUserMapper;
+    @Autowired
+    private LiveFamilyMapper liveFamilyMapper;
 
     /**
      * 查询//用户信息
@@ -85,5 +91,30 @@ public class LiveUserServiceImpl implements ILiveUserService {
     @Override
     public int deleteLiveUserById(Long id) {
         return liveUserMapper.deleteLiveUserById(id);
+    }
+
+    @Override
+    public AjaxResult updateFamilyID(Long familyID, Long userId) {
+        LiveFamily liveFamily = liveFamilyMapper.selectLiveFamilyById( familyID );
+        if ( liveFamily != null || familyID == 0 ) {
+            if ( familyID == 0 ) {
+                int oldFamilyID = liveUserMapper.getFamilyId( userId );
+                int i           = liveUserMapper.updateFamilyID( familyID, userId );
+                int num         = liveUserMapper.getNumFamily( oldFamilyID );
+                liveFamilyMapper.updateFamilyID( num, oldFamilyID );
+//                RedisCacheUtil.me.clear( userId, getTClassName() );
+            } else {
+                int oldFamilyID = liveUserMapper.getFamilyId( userId );
+                int i           = liveUserMapper.updateFamilyID( familyID, userId );
+                int num         = liveUserMapper.getNumFamily( oldFamilyID );
+                liveFamilyMapper.updateFamilyID( num, oldFamilyID );
+                int newnum = liveUserMapper.getNumFamily( familyID.intValue() );
+                liveFamilyMapper.updateFamilyID( newnum, familyID.intValue() );
+//                RedisCacheUtil.me.clear( userId, getTClassName() );
+            }
+            return AjaxResult.success();
+
+        }
+        return AjaxResult.error();
     }
 }

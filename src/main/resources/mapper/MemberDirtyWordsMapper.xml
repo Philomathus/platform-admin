@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MemberDirtyWordsMapper">
+
+    <resultMap type="MemberDirtyWords" id="MemberDirtyWordsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectMemberDirtyWordsVo">
+        select id, name from 7700_main.member_dirty_words
+    </sql>
+
+    <select id="selectMemberDirtyWordsById" resultType="com.qiqilm.server.admin.domain.MemberDirtyWords">
+        <include refid="selectMemberDirtyWordsVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    <update id="updateMemberDirtyWords" parameterType="MemberDirtyWords">
+        update 7700_main.member_dirty_words
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+
+        </trim>
+        where id =1
+    </update>
+
+
+</mapper>

@@ -12,8 +12,7 @@ import com.qiqilm.server.admin.mapper.SysUserRoleMapper;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.utils.SecurityUtils;
 import com.qiqilm.server.admin.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +25,9 @@ import java.util.List;
  *
  * @author 77tv
  */
+@Log4j2
 @Service
 public class SysUserServiceImpl implements ISysUserService {
-	private static final Logger log = LoggerFactory.getLogger( SysUserServiceImpl.class );
 
 	@Autowired
 	private SysUserMapper     userMapper;
@@ -85,7 +84,7 @@ public class SysUserServiceImpl implements ISysUserService {
 	@Override
 	public String selectUserRoleGroup( String userName ) {
 		List<SysRole> list   = roleMapper.selectRolesByUserName( userName );
-		StringBuffer  idsStr = new StringBuffer();
+		StringBuilder idsStr = new StringBuilder();
 		for ( SysRole role : list ) {
 			idsStr.append( role.getRoleName() ).append( "," );
 		}
@@ -293,20 +292,23 @@ public class SysUserServiceImpl implements ISysUserService {
 					user.setCreateBy( operName );
 					this.insertUser( user );
 					successNum++;
-					successMsg.append( "<br/>" + successNum + "、账号 " + user.getUserName() + " 导入成功" );
+					successMsg.append( "<br/>" ).append( successNum ).append( "、账号 " ).append( user.getUserName() ).append( " " +
+							"导入成功" );
 				} else if ( isUpdateSupport ) {
 					user.setUpdateBy( operName );
 					this.updateUser( user );
 					successNum++;
-					successMsg.append( "<br/>" + successNum + "、账号 " + user.getUserName() + " 更新成功" );
+					successMsg.append( "<br/>" ).append( successNum ).append( "、账号 " ).append( user.getUserName() ).append( " " +
+							"更新成功" );
 				} else {
 					failureNum++;
-					failureMsg.append( "<br/>" + failureNum + "、账号 " + user.getUserName() + " 已存在" );
+					failureMsg.append( "<br/>" ).append( failureNum ).append( "、账号 " ).append( user.getUserName() ).append( " " +
+							"已存在" );
 				}
 			} catch ( Exception e ) {
 				failureNum++;
 				String msg = "<br/>" + failureNum + "、账号 " + user.getUserName() + " 导入失败：";
-				failureMsg.append( msg + e.getMessage() );
+				failureMsg.append( msg ).append( e.getMessage() );
 				log.error( msg, e );
 			}
 		}

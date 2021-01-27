@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUser;
+
+import java.util.List;
 
 /**
  * //用户信息Service接口
@@ -58,4 +59,6 @@ public interface ILiveUserService {
 	 * @return 结果
 	 */
 	public int deleteLiveUserById(Long id);
+
+    public AjaxResult updateFamilyID(Long familyId, Long id);
 }

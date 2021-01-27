@@ -1,8 +1,11 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.LiveUser;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /**
  * //用户信息Mapper接口
@@ -58,4 +61,13 @@ public interface LiveUserMapper {
 	 * @return 结果
 	 */
 	public int deleteLiveUserByIds(Long[] ids );
+
+    @Select( "SELECT family_id FROM live_user where id = ${userId}" )
+    int getFamilyId(@Param( "userId" ) Long userId);
+
+    @Update( "update live_user set family_id = ${familyID} where id= ${userId}" )
+    int updateFamilyID( @Param( "familyID" ) Long familyID, @Param( "userId" ) Long userId );
+
+    @Select( "SELECT count(id) as num FROM live_user where family_id = ${family_id}" )
+    int getNumFamily(@Param( "family_id" ) Integer family_id);
 }

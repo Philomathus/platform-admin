@@ -2,14 +2,15 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
+import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
-import com.qiqilm.server.admin.domain.vo.ReqAddScore;
-import com.qiqilm.server.admin.domain.vo.ReqMemberInfo;
+import com.qiqilm.server.admin.domain.vo.*;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.exception.BusinessException;
@@ -110,7 +111,7 @@ public class MemberInfoController extends BaseController {
 
     @PutMapping("/change-status")
     @Log(title = "修改用户状态", businessType = BusinessType.UPDATE)
-    public Object changeStatus(@RequestBody ReqMemberInfo req) {
+    public Object changeStatus(ReqMemberInfo req) {
         RspBase rspBase = new RspBase();
         MemberInfo newMemberInfo = new MemberInfo();
         MemberInfo memberInfo = memberInfoService.selectMemberInfoById(req.getId());
@@ -151,7 +152,7 @@ public class MemberInfoController extends BaseController {
     @ApiOperation(value = "加分", notes = "人工入款")
     @RequestMapping(value = "/addScore", method = RequestMethod.POST)
     @Log(title = "加分", businessType = BusinessType.UPDATE)
-    public Object addScore(HttpServletRequest request, @RequestBody ReqAddScore req) throws Exception {
+    public Object addScore(HttpServletRequest request, ReqAddScore req) throws Exception {
         RspBase rspBase = new RspBase();
         if (req.getGoogleAuthCode() == null) {
             rspBase.setMsg("请输入google验证码");
@@ -188,4 +189,77 @@ public class MemberInfoController extends BaseController {
         return rspBase;
     }
 
+
+    /**
+     * 查询资金明细列表
+     *
+     * @return
+     */
+    @ApiOperation( value = "查询资金明细列表", notes = "查询资金明细列表" )
+    @RequestMapping( value = "/report", method = RequestMethod.GET )
+    public PageBO<WithdrawReport> findMemberCardList(@RequestParam( "id" ) String memberId, PageVO req ) {
+        return memberInfoService.withdrawReport( memberId, req.getPage(), req.getLimit() );
+    }
+
+    /**
+     * 会员银行卡列表
+     *
+     * @return
+     */
+    @ApiOperation( value = "会员银行卡列表", notes = "会员银行卡列表" )
+    @RequestMapping( value = "/card-list", method = RequestMethod.GET )
+    public PageBO<MemberCard> findMemberCardList(@RequestParam( "id" ) String memberId, ReqMemberInfo req ) {
+        return memberInfoService.findMemberCardPage( memberId, req.getPage(), req.getLimit() );
+    }
+
+    @ApiOperation( value = "重置保险箱账户", notes = "重置保险箱账户" )
+    @PostMapping( "/resetPassword" )
+    public Object resetPassword( HttpServletRequest request,
+                                 @RequestParam(value = "userId") String userId ) {
+        RspBase rspBase = new RspBase();
+        MemberInfo memberInfo=new MemberInfo();
+        memberInfo.setId(userId);
+        memberInfo.setBoxPass("");
+        memberInfoService.updateByPrimaryKeySelective(memberInfo);
+        rspBase.setCode( Constants.URC_SUCCESS );
+        rspBase.setData("成功");
+        return rspBase;
+    }
+    @ApiOperation( value = "重置体现", notes = "重置体现" )
+    @PostMapping( "/resettx" )
+    public Object resettx( HttpServletRequest request,
+                           MemberInfo memberInfo) throws Exception {
+        RspBase rspBase = new RspBase();
+        if (  memberInfo.getGoogleAuthCode() == null ) {
+            rspBase.setMsg( "请输入google验证码" );
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+        if ( !org.springframework.util.StringUtils.hasText( googleAuthSecret ) ) {
+            rspBase.setMsg( "未绑定google验证秘钥，无法审核" );
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        if ( googleAuthSecret.length() == 32 ) {
+            rspBase.setMsg(  "google验证秘钥未加密，请重新登录" );
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey/googleAuthPrivateKey" ) );
+
+        if ( !GoogleAuthUtil.verifyCode( googleAuthKey, memberInfo.getGoogleAuthCode()  )  ) {
+            rspBase.setMsg ( "google验证码不正确，请检查" );
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        memberInfo.setId(memberInfo.getId());
+        memberInfo.setWithdrawalPass("");
+        memberInfoService.updateByPrimaryKeySelective(memberInfo);
+        rspBase.setCode( Constants.URC_SUCCESS );
+        rspBase.setData("成功");
+        return rspBase;
+    }
 }

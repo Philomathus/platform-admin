@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,10 +72,11 @@ public class TokenService {
 	/**
 	 * 删除用户身份信息
 	 */
-	public void delLoginUser( String token ) {
-		if ( StringUtils.isNotEmpty( token ) ) {
-			String userKey = getTokenKey( token );
-			redisUtil.unlink( userKey );
+	public void delLoginUser( LoginUser loginUser ) {
+		if ( StringUtils.isNotEmpty( loginUser.getToken() ) ) {
+			String tokenKey = getTokenKey( loginUser.getToken() );
+			String userKey  = getUserKey( loginUser.getUser().getUserId() );
+			redisUtil.unlink( Arrays.asList( tokenKey, userKey ) );
 		}
 	}
 
@@ -151,10 +153,9 @@ public class TokenService {
 	 * @return 令牌
 	 */
 	private String createToken( Map<String, Object> claims ) {
-		String token = Jwts.builder()
+		return Jwts.builder()
 				.setClaims( claims )
 				.signWith( SignatureAlgorithm.HS512, secret ).compact();
-		return token;
 	}
 
 	/**
