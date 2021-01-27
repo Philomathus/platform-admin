@@ -80,4 +80,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{ipId}
         </foreach>
     </delete>
+
+    <update id="incLoginCount">
+        update system_ip_white set ip_count = ip_count + 1 where ip_id = #{id}
+    </update>
+
+    <select id="exists" resultType="java.lang.Integer">
+        select COUNT(1) from system_ip_white where ip_address = #{ip}
+    </select>
 </mapper>

@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.SystemIpWhiteMapper;
@@ -82,5 +84,16 @@ public class SystemIpWhiteServiceImpl implements ISystemIpWhiteService {
     @Override
     public int deleteSystemIpWhiteById(String ipId) {
         return systemIpWhiteMapper.deleteSystemIpWhiteById(ipId);
+    }
+
+    /**
+     * IP白名单判断重复
+     *
+     * @param IpAddress IP白名单IpAddress
+     * @return 结果
+     */
+    @Override
+    public int exists(String IpAddress) {
+        return systemIpWhiteMapper.exists(IpAddress);
     }
 }
