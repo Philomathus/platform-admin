@@ -28,7 +28,7 @@ public class LiveMount extends BaseEntity {
 
     /** 0:禁用;1:启用;默认启用 */
     @Excel(name = "0:禁用;1:启用;默认启用")
-    private Long status;
+    private String status;
 
     /** PC端图标 */
     @Excel(name = "PC端图标")
@@ -71,11 +71,11 @@ public class LiveMount extends BaseEntity {
     public String getName() {
         return name;
     }
-    public void setStatus(Long status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Long getStatus() {
+    public String getStatus() {
         return status;
     }
     public void setIconUrl(String iconUrl) {
