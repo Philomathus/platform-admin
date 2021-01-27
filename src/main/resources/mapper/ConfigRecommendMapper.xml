@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ConfigRecommendMapper">
+
+    <resultMap type="ConfigRecommend" id="ConfigRecommendResult">
+        <result property="id"    column="id"    />
+        <result property="level"    column="level"    />
+        <result property="name"    column="name"    />
+        <result property="bill"    column="bill"    />
+    </resultMap>
+
+    <sql id="selectConfigRecommendVo">
+        select id, level, name, bill from 7700_main.config_recommend
+    </sql>
+
+    <select id="selectConfigRecommendList" parameterType="ConfigRecommend" resultMap="ConfigRecommendResult">
+        <include refid="selectConfigRecommendVo"/>
+        <where>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="bill != null "> and bill = #{bill}</if>
+        </where>
+    </select>
+
+    <select id="selectConfigRecommendById" parameterType="String" resultMap="ConfigRecommendResult">
+        <include refid="selectConfigRecommendVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertConfigRecommend" parameterType="ConfigRecommend">
+        insert into 7700_main.config_recommend
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="level != null">level,</if>
+            <if test="name != null">name,</if>
+            <if test="bill != null">bill,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="level != null">#{level},</if>
+                    <if test="name != null">#{name},</if>
+                    <if test="bill != null">#{bill},</if>
+             </trim>
+    </insert>
+
+    <update id="updateConfigRecommend" parameterType="ConfigRecommend">
+        update 7700_main.config_recommend
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="level != null">level = #{level},</if>
+    
+            <if test="name != null">name = #{name},</if>
+    
+            <if test="bill != null">bill = #{bill},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteConfigRecommendById" parameterType="String">
+        delete from 7700_main.config_recommend where id = #{id}
+    </delete>
+
+    <delete id="deleteConfigRecommendByIds" parameterType="String">
+        delete from 7700_main.config_recommend where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

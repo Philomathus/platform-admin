@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.SystemIpWhiteMapper">
+
+    <resultMap type="SystemIpWhite" id="SystemIpWhiteResult">
+        <result property="ipId"    column="ip_id"    />
+        <result property="ipAddress"    column="ip_address"    />
+        <result property="ipStatus"    column="ip_status"    />
+        <result property="ipAdmin"    column="ip_admin"    />
+        <result property="mark"    column="mark"    />
+        <result property="ipCount"    column="ip_count"    />
+    </resultMap>
+
+    <sql id="selectSystemIpWhiteVo">
+        select ip_id, ip_address, ip_status, ip_admin, mark, ip_count from 7700_main.system_ip_white
+    </sql>
+
+    <select id="selectSystemIpWhiteList" parameterType="SystemIpWhite" resultMap="SystemIpWhiteResult">
+        <include refid="selectSystemIpWhiteVo"/>
+        <where>
+            <if test="ipAddress != null  and ipAddress != ''"> and ip_address = #{ipAddress}</if>
+            <if test="ipStatus != null  and ipStatus != ''"> and ip_status = #{ipStatus}</if>
+            <if test="ipAdmin != null  and ipAdmin != ''"> and ip_admin = #{ipAdmin}</if>
+            <if test="mark != null  and mark != ''"> and mark = #{mark}</if>
+            <if test="ipCount != null "> and ip_count = #{ipCount}</if>
+        </where>
+    </select>
+
+    <select id="selectSystemIpWhiteById" parameterType="String" resultMap="SystemIpWhiteResult">
+        <include refid="selectSystemIpWhiteVo"/>
+        where ip_id = #{ipId}
+    </select>
+
+    <insert id="insertSystemIpWhite" parameterType="SystemIpWhite">
+        insert into 7700_main.system_ip_white
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ipId != null">ip_id,</if>
+            <if test="ipAddress != null and ipAddress != ''">ip_address,</if>
+            <if test="ipStatus != null">ip_status,</if>
+            <if test="ipAdmin != null">ip_admin,</if>
+            <if test="mark != null">mark,</if>
+            <if test="ipCount != null">ip_count,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="ipId != null">#{ipId},</if>
+                    <if test="ipAddress != null and ipAddress != ''">#{ipAddress},</if>
+                    <if test="ipStatus != null">#{ipStatus},</if>
+                    <if test="ipAdmin != null">#{ipAdmin},</if>
+                    <if test="mark != null">#{mark},</if>
+                    <if test="ipCount != null">#{ipCount},</if>
+             </trim>
+    </insert>
+
+    <update id="updateSystemIpWhite" parameterType="SystemIpWhite">
+        update 7700_main.system_ip_white
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ipAddress != null and ipAddress != ''">ip_address = #{ipAddress},</if>
+    
+            <if test="ipStatus != null">ip_status = #{ipStatus},</if>
+    
+            <if test="ipAdmin != null">ip_admin = #{ipAdmin},</if>
+    
+            <if test="mark != null">mark = #{mark},</if>
+    
+            <if test="ipCount != null">ip_count = #{ipCount},</if>
+    
+        </trim>
+        where ip_id = #{ipId}
+    </update>
+
+    <delete id="deleteSystemIpWhiteById" parameterType="String">
+        delete from 7700_main.system_ip_white where ip_id = #{ipId}
+    </delete>
+
+    <delete id="deleteSystemIpWhiteByIds" parameterType="String">
+        delete from 7700_main.system_ip_white where ip_id in
+        <foreach item="ipId" collection="array" open="(" separator="," close=")">
+            #{ipId}
+        </foreach>
+    </delete>
+</mapper>

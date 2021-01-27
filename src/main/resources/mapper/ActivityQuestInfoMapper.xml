@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ActivityQuestInfoMapper">
+
+    <resultMap type="ActivityQuestInfo" id="ActivityQuestInfoResult">
+        <result property="id"    column="id"    />
+        <result property="icon"    column="icon"    />
+        <result property="title"    column="title"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="indexs"    column="indexs"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="target"    column="target"    />
+        <result property="reward"    column="reward"    />
+        <result property="detail"    column="detail"    />
+        <result property="content"    column="content"    />
+        <result property="gameId"    column="game_id"    />
+        <result property="kindId"    column="kind_id"    />
+        <result property="platformId"    column="platform_id"    />
+    </resultMap>
+
+    <sql id="selectActivityQuestInfoVo">
+        select id, icon, title, ctime, indexs, type_id, target, reward, detail, content, game_id, kind_id, platform_id from activity_quest_info
+    </sql>
+
+    <select id="selectActivityQuestInfoList" parameterType="ActivityQuestInfo" resultMap="ActivityQuestInfoResult">
+        <include refid="selectActivityQuestInfoVo"/>
+        <where>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="ctime != null "> and ctime = #{ctime}</if>
+            <if test="indexs != null "> and indexs = #{indexs}</if>
+            <if test="typeId != null  and typeId != ''"> and type_id = #{typeId}</if>
+            <if test="target != null "> and target = #{target}</if>
+            <if test="reward != null "> and reward = #{reward}</if>
+            <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
+            <if test="kindId != null  and kindId != ''"> and kind_id = #{kindId}</if>
+            <if test="platformId != null "> and platform_id = #{platformId}</if>
+        </where>
+    </select>
+
+    <select id="selectActivityQuestInfoById" parameterType="String" resultMap="ActivityQuestInfoResult">
+        <include refid="selectActivityQuestInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertActivityQuestInfo" parameterType="ActivityQuestInfo">
+        insert into activity_quest_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="icon != null">icon,</if>
+            <if test="title != null">title,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="indexs != null">indexs,</if>
+            <if test="typeId != null">type_id,</if>
+            <if test="target != null">target,</if>
+            <if test="reward != null">reward,</if>
+            <if test="detail != null">detail,</if>
+            <if test="content != null">content,</if>
+            <if test="gameId != null">game_id,</if>
+            <if test="kindId != null">kind_id,</if>
+            <if test="platformId != null">platform_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="title != null">#{title},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="indexs != null">#{indexs},</if>
+            <if test="typeId != null">#{typeId},</if>
+            <if test="target != null">#{target},</if>
+            <if test="reward != null">#{reward},</if>
+            <if test="detail != null">#{detail},</if>
+            <if test="content != null">#{content},</if>
+            <if test="gameId != null">#{gameId},</if>
+            <if test="kindId != null">#{kindId},</if>
+            <if test="platformId != null">#{platformId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateActivityQuestInfo" parameterType="ActivityQuestInfo">
+        update activity_quest_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="indexs != null">indexs = #{indexs},</if>
+            <if test="typeId != null">type_id = #{typeId},</if>
+            <if test="target != null">target = #{target},</if>
+            <if test="reward != null">reward = #{reward},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="gameId != null">game_id = #{gameId},</if>
+            <if test="kindId != null">kind_id = #{kindId},</if>
+            <if test="platformId != null">platform_id = #{platformId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteActivityQuestInfoById" parameterType="String">
+        delete from activity_quest_info where id = #{id}
+    </delete>
+
+    <delete id="deleteActivityQuestInfoByIds" parameterType="String">
+        delete from activity_quest_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

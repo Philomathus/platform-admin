@@ -220,7 +220,7 @@ public class MemberInfoController extends BaseController {
         MemberInfo memberInfo=new MemberInfo();
         memberInfo.setId(userId);
         memberInfo.setBoxPass("");
-        memberInfoService.updateByPrimaryKeySelective(memberInfo);
+        memberInfoService.updateMemberInfo(memberInfo);
         rspBase.setCode( Constants.URC_SUCCESS );
         rspBase.setData("成功");
         return rspBase;
@@ -257,7 +257,7 @@ public class MemberInfoController extends BaseController {
         }
         memberInfo.setId(memberInfo.getId());
         memberInfo.setWithdrawalPass("");
-        memberInfoService.updateByPrimaryKeySelective(memberInfo);
+        memberInfoService.updateMemberInfo(memberInfo);
         rspBase.setCode( Constants.URC_SUCCESS );
         rspBase.setData("成功");
         return rspBase;
