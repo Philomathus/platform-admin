@@ -9,7 +9,7 @@ import com.qiqilm.server.admin.domain.ActivityType;
 import com.qiqilm.server.admin.service.IActivityTypeService;
 
 /**
- * 【请填写功能名称】Serviceҵ��㴦��
+ * 活动类型Service
  *
  * @author 77tv
  * @date 2021-01-25
@@ -20,10 +20,10 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
     private ActivityTypeMapper activityTypeMapper;
 
     /**
-     * ��ѯ【请填写功能名称】
+     * ѯ活动类型
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id 活动类型ID
+     * @return 活动类型
      */
     @Override
     public ActivityType selectActivityTypeById(String id) {
@@ -31,10 +31,10 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
     }
 
     /**
-     * ��ѯ【请填写功能名称】�б�
+     * ѯ活动类型б
      *
-     * @param activityType 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param activityType 活动类型
+     * @return 活动类型
      */
     @Override
     public List<ActivityType> selectActivityTypeList(ActivityType activityType) {
@@ -42,10 +42,10 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
     }
 
     /**
-     * ����【请填写功能名称】
+     * 活动类型
      *
-     * @param activityType 【请填写功能名称】
-     * @return ���
+     * @param activityType 活动类型
+     * @return 
      */
     @Override
     public int insertActivityType(ActivityType activityType) {
@@ -54,10 +54,10 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
     }
 
     /**
-     * �޸�【请填写功能名称】
+     * ޸活动类型
      *
-     * @param activityType 【请填写功能名称】
-     * @return ���
+     * @param activityType 活动类型
+     * @return 
      */
     @Override
     public int updateActivityType(ActivityType activityType) {
@@ -65,10 +65,10 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
     }
 
     /**
-     * ����ɾ��【请填写功能名称】
+     * ɾ活动类型
      *
-     * @param ids ��Ҫɾ����【请填写功能名称】ID
-     * @return ���
+     * @param ids 活动类型ID
+     * @return 
      */
     @Override
     public int deleteActivityTypeByIds(String[] ids) {
@@ -76,10 +76,10 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
     }
 
     /**
-     * ɾ��【请填写功能名称】��Ϣ
+     * ɾ活动类型Ϣ
      *
-     * @param id 【请填写功能名称】ID
-     * @return ���
+     * @param id 活动类型ID
+     * @return 
      */
     @Override
     public int deleteActivityTypeById(String id) {

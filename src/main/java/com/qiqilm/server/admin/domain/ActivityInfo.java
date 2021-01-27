@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 activity_info
+ * 活动信息对象 activity_info
  *
  * @author 77tv
  * @date 2021-01-25

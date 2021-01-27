@@ -26,7 +26,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 活动类型Controller
  *
  * @author 77tv
  * @date 2021-01-25
@@ -41,7 +41,7 @@ public class ActivityTypeController extends BaseController {
 	private TokenService tokenService;
 
 	/**
-	 * ��ѯ【请填写功能名称】�б�
+	 * 查询活动类型
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:activityType:list')" )
 	@GetMapping( "/list" )
@@ -52,10 +52,10 @@ public class ActivityTypeController extends BaseController {
 	}
     
 	/**
-	 * ����【请填写功能名称】�б�
+	 * 导出活动类型
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:activityType:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "导出活动类型", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(ActivityType activityType) {
 		List<ActivityType>      list = activityTypeService.selectActivityTypeList(activityType);
@@ -64,7 +64,7 @@ public class ActivityTypeController extends BaseController {
 	}
 
 	/**
-	 * ��ȡ【请填写功能名称】��ϸ��Ϣ
+	 * 获取活动类型详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:activityType:query')" )
 	@GetMapping( value = "/{id}" )
@@ -73,10 +73,10 @@ public class ActivityTypeController extends BaseController {
 	}
 
 	/**
-	 * ����【请填写功能名称】
+	 * 新增活动类型
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:activityType:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "新增活动类型", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ActivityType activityType) {
 		activityType.setId(UuidUtil.getRandomUuidWithoutSeparator());
@@ -87,20 +87,20 @@ public class ActivityTypeController extends BaseController {
 	}
 
 	/**
-	 * �޸�【请填写功能名称】
+	 *修改活动类型
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:activityType:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "修改活动类型", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody ActivityType activityType) {
 		return toAjax( activityTypeService.updateActivityType(activityType) );
 	}
 
 	/**
-	 * ɾ��【请填写功能名称】
+	 * 删除活动类型
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:activityType:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "删除活动类型", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( activityTypeService.deleteActivityTypeByIds( ids ) );
