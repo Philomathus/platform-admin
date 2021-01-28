@@ -58,4 +58,6 @@ public interface LivePropMapper {
 	 * @return 结果
 	 */
 	public int deleteLivePropByIds(Long[] ids );
+
+	List<LiveProp> getList();
 }

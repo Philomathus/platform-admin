@@ -89,6 +89,7 @@ public class LiveUserController extends BaseController {
 		return toAjax( liveUserService.updateLiveUser( liveUser ) );
 	}
 
+
 	@ApiOperation( "加入家族" )
 	@Log( title = "加入家族", businessType = BusinessType.UPDATE )
 	@PutMapping( "/gofamiily" )

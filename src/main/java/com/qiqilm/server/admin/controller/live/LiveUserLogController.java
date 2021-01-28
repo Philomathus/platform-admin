@@ -29,7 +29,7 @@ public class LiveUserLogController extends BaseController {
 	/**
 	 * 查询//帐户资金变动日志列表
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveUserLog:list')" )
+//	@PreAuthorize( "@ss.hasPermi('admin:liveUserLog:list')" )
 	@GetMapping( "/list" )
     	public TableDataInfo list(LiveUserLog liveUserLog) {
 		startPage();

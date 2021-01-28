@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.GameInfoMapper">
+
+    <resultMap type="GameInfo" id="GameInfoResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="remark"    column="remark"    />
+        <result property="indexs"    column="indexs"    />
+        <result property="isWh"    column="is_wh"    />
+        <result property="isRecommend"    column="is_recommend"    />
+        <result property="status"    column="status"    />
+        <result property="icon"    column="icon"    />
+        <result property="isHot"    column="is_hot"    />
+        <result property="editionIcon"    column="edition_icon"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="kindId"    column="kind_id"    />
+        <result property="platformId"    column="platform_id"    />
+        <result property="screen"    column="screen"    />
+        <result property="highWide"    column="high_wide"    />
+        <result property="isFull"    column="is_full"    />
+        <result property="iconType"    column="icon_type"    />
+    </resultMap>
+
+    <sql id="selectGameInfoVo">
+        select id, name, remark, indexs, is_wh, is_recommend, status, icon, is_hot, edition_icon,  FROM_UNIXTIME(create_time) create_time ,  kind_id, platform_id, screen, high_wide, is_full, icon_type from 7700_main.game_info
+    </sql>
+
+    <select id="selectGameInfoList"  resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
+        select a.id, a.name,a.icon,a.edition_icon as editionIcon,a.indexs,a.is_full as isFull,a.is_wh as isWh,a.status,a.high_wide,b.name as platformName
+        from 7700_main.game_info a
+        left join  7700_main.game_platform b
+        on a.platform_id=b.id
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="platformId != null "> and platform_id = #{platformId}</if>
+        </where>
+    </select>
+
+    <select id="selectGameInfoById" parameterType="String" resultMap="GameInfoResult">
+        <include refid="selectGameInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertGameInfo" parameterType="GameInfo">
+        insert into 7700_main.game_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="remark != null">remark,</if>
+            <if test="indexs != null">indexs,</if>
+            <if test="isWh != null">is_wh,</if>
+            <if test="isRecommend != null">is_recommend,</if>
+            <if test="status != null">status,</if>
+            <if test="icon != null">icon,</if>
+            <if test="isHot != null">is_hot,</if>
+            <if test="editionIcon != null">edition_icon,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="kindId != null">kind_id,</if>
+            <if test="platformId != null">platform_id,</if>
+            <if test="screen != null">screen,</if>
+            <if test="highWide != null">high_wide,</if>
+            <if test="isFull != null">is_full,</if>
+            <if test="iconType != null">icon_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="indexs != null">#{indexs},</if>
+            <if test="isWh != null">#{isWh},</if>
+            <if test="isRecommend != null">#{isRecommend},</if>
+            <if test="status != null">#{status},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="isHot != null">#{isHot},</if>
+            <if test="editionIcon != null">#{editionIcon},</if>
+            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="kindId != null">#{kindId},</if>
+            <if test="platformId != null">#{platformId},</if>
+            <if test="screen != null">#{screen},</if>
+            <if test="highWide != null">#{highWide},</if>
+            <if test="isFull != null">#{isFull},</if>
+            <if test="iconType != null">#{iconType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGameInfo" parameterType="GameInfo">
+        update 7700_main.game_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+
+            <if test="remark != null">remark = #{remark},</if>
+
+            <if test="indexs != null">indexs = #{indexs},</if>
+
+            <if test="isWh != null">is_wh = #{isWh},</if>
+
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
+
+            <if test="status != null">status = #{status},</if>
+
+            <if test="icon != null">icon = #{icon},</if>
+
+            <if test="isHot != null">is_hot = #{isHot},</if>
+
+            <if test="editionIcon != null">edition_icon = #{editionIcon},</if>
+
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+
+            <if test="kindId != null">kind_id = #{kindId},</if>
+
+            <if test="platformId != null">platform_id = #{platformId},</if>
+
+            <if test="screen != null">screen = #{screen},</if>
+
+            <if test="highWide != null">high_wide = #{highWide},</if>
+
+            <if test="isFull != null">is_full = #{isFull},</if>
+
+            <if test="iconType != null">icon_type = #{iconType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateStatus" parameterType="GameInfo">
+        update 7700_main.game_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="changeIsWh" parameterType="GameInfo">
+        update 7700_main.game_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="isWh != null">is_wh = #{isWh},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <delete id="deleteGameInfoById" parameterType="String">
+        delete from 7700_main.game_info where id = #{id}
+    </delete>
+
+    <delete id="deleteGameInfoByIds" parameterType="String">
+        delete from 7700_main.game_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

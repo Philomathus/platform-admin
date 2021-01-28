@@ -87,8 +87,8 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
     }
 
     @Override
-    public AjaxResult getTitleIndex(String title) {
-        Integer index = configEnvironmentMapper.getTitleIndex(title);
+    public AjaxResult getTitleIndex(String title, String code) {
+        Integer index = configEnvironmentMapper.getTitleIndex(title,code);
         return AjaxResult.success(index);
     }
 }

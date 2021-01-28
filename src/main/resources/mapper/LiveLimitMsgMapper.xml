@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveLimitMsgMapper">
+
+    <resultMap type="LiveLimitMsg" id="LiveLimitMsgResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <sql id="selectLiveLimitMsgVo">
+        select id, name from 7700_live.live_limit_msg
+    </sql>
+
+    <select id="selectLiveLimitMsgList" parameterType="LiveLimitMsg" resultMap="LiveLimitMsgResult">
+        <include refid="selectLiveLimitMsgVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+
+    <delete id="deleteAll">
+        delete from 7700_live.live_limit_msg
+    </delete>
+    <insert id="insertBatch" parameterType="list">
+        insert into 7700_live.live_limit_msg(name)
+        <foreach collection="list" item="item" open="values" separator=",">
+            (#{item})
+        </foreach>
+    </insert>
+</mapper>
