@@ -109,4 +109,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="findMark" resultMap="LogMoneyResult">
+        select *
+        from log_money
+        where 1 = 1
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
+        <if test="mark != null">
+            and markorder = #{mark}
+        </if>
+        <if test="money != null and money > 0">
+            and income = #{money}
+        </if>
+        <if test="pay != null">
+            and pay = #{pay}
+        </if>
+    </select>
 </mapper>

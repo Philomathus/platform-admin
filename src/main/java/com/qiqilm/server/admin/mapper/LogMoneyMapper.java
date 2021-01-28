@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.LogMoney;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -58,4 +60,7 @@ public interface LogMoneyMapper {
 	 * @return 结果
 	 */
 	public int deleteLogMoneyByIds(String[] ids );
+
+	List<LogMoney> findMark(@Param( "userId" ) String userId, @Param( "mark" ) String mark,
+							@Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay );
 }
