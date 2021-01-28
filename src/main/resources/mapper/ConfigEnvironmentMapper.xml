@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper">
 
     <resultMap type="ConfigEnvironment" id="ConfigEnvironmentResult">
-        <result property="envTitle"    column="env_title"    />
-        <result property="envCode"    column="env_code"    />
-        <result property="envValue"    column="env_value"    />
-        <result property="envDes"    column="env_des"    />
-        <result property="envGroup"    column="env_group"    />
-        <result property="envSort"    column="env_sort"    />
-        <result property="envStatus"    column="env_status"    />
+        <result property="envTitle" column="env_title"/>
+        <result property="envCode" column="env_code"/>
+        <result property="envValue" column="env_value"/>
+        <result property="envDes" column="env_des"/>
+        <result property="envGroup" column="env_group"/>
+        <result property="envSort" column="env_sort"/>
+        <result property="envStatus" column="env_status"/>
     </resultMap>
 
     <sql id="selectConfigEnvironmentVo">
@@ -21,12 +21,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectConfigEnvironmentList" parameterType="ConfigEnvironment" resultMap="ConfigEnvironmentResult">
         <include refid="selectConfigEnvironmentVo"/>
         <where>
-            <if test="envTitle != null  and envTitle != ''"> and env_title = #{envTitle}</if>
-            <if test="envValue != null  and envValue != ''"> and env_value = #{envValue}</if>
-            <if test="envDes != null  and envDes != ''"> and env_des = #{envDes}</if>
-            <if test="envGroup != null "> and env_group = #{envGroup}</if>
-            <if test="envSort != null "> and env_sort = #{envSort}</if>
-            <if test="envStatus != null "> and env_status = #{envStatus}</if>
+            <if test="envTitle != null  and envTitle != ''">and env_title = #{envTitle}</if>
+            <if test="envValue != null  and envValue != ''">and env_value = #{envValue}</if>
+            <if test="envDes != null  and envDes != ''">and env_des = #{envDes}</if>
+            <if test="envGroup != null ">and env_group = #{envGroup}</if>
+            <if test="envSort != null ">and env_sort = #{envSort}</if>
+            <if test="envStatus != null ">and env_status = #{envStatus}</if>
         </where>
     </select>
 
@@ -45,16 +45,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="envGroup != null">env_group,</if>
             <if test="envSort != null">env_sort,</if>
             <if test="envStatus != null">env_status,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="envTitle != null">#{envTitle},</if>
-                <if test="envCode != null">#{envCode},</if>
-                    <if test="envValue != null">#{envValue},</if>
-                    <if test="envDes != null">#{envDes},</if>
-                    <if test="envGroup != null">#{envGroup},</if>
-                    <if test="envSort != null">#{envSort},</if>
-                    <if test="envStatus != null">#{envStatus},</if>
-             </trim>
+            <if test="envTitle != null">#{envTitle},</if>
+            <if test="envCode != null">#{envCode},</if>
+            <if test="envValue != null">#{envValue},</if>
+            <if test="envDes != null">#{envDes},</if>
+            <if test="envGroup != null">#{envGroup},</if>
+            <if test="envSort != null">#{envSort},</if>
+            <if test="envStatus != null">#{envStatus},</if>
+        </trim>
     </insert>
 
     <update id="updateConfigEnvironment" parameterType="ConfigEnvironment">
@@ -87,7 +87,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <select id="getTitleIndex" resultType="java.lang.Integer">
-        SELECT env_group FROM `config_environment` where env_title = #{title}
+        SELECT env_group FROM `config_environment`
+        <where>
+            <if test="title != null and title != ''">And env_title = #{title}</if>
+            <if test="code != null and code != ''">And env_code = #{code}</if>
+        </where>
     </select>
 
 </mapper>

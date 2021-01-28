@@ -107,8 +107,8 @@ public class ConfigEnvironmentController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:edit')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
 	@GetMapping("/getTitleIndex")
-	public AjaxResult getTitleIndex(String title) {
-        return  configEnvironmentService.getTitleIndex(title);
+	public AjaxResult getTitleIndex(String title, String code) {
+        return  configEnvironmentService.getTitleIndex(title,code);
 	}
 
 	/**
