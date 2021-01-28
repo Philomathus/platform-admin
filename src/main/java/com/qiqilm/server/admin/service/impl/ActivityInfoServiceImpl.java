@@ -9,7 +9,7 @@ import com.qiqilm.server.admin.domain.ActivityInfo;
 import com.qiqilm.server.admin.service.IActivityInfoService;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ * 活动信息Service业务层处理
  *
  * @author 77tv
  * @date 2021-01-25
@@ -20,10 +20,10 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
     private ActivityInfoMapper activityInfoMapper;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询活动信息
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id 活动信息ID
+     * @return 活动信息
      */
     @Override
     public ActivityInfo selectActivityInfoById(String id) {
@@ -31,10 +31,10 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询活动信息列表
      *
-     * @param activityInfo 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param activityInfo 活动信息
+     * @return 活动信息
      */
     @Override
     public List<ActivityInfo> selectActivityInfoList(ActivityInfo activityInfo) {
@@ -42,9 +42,9 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增活动信息
      *
-     * @param activityInfo 【请填写功能名称】
+     * @param activityInfo 活动信息
      * @return 结果
      */
     @Override
@@ -53,9 +53,9 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改活动信息
      *
-     * @param activityInfo 【请填写功能名称】
+     * @param activityInfo 活动信息
      * @return 结果
      */
     @Override
@@ -64,9 +64,9 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除活动信息
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的活动信息ID
      * @return 结果
      */
     @Override
@@ -75,9 +75,9 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除活动信息信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id 活动信息ID
      * @return 结果
      */
     @Override

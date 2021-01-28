@@ -24,7 +24,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 活动信息Controller
  *
  * @author 77tv
  * @date 2021-01-25
@@ -36,7 +36,7 @@ public class ActivityInfoController extends BaseController {
     private IActivityInfoService activityInfoService;
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询活动信息列表
      */
     @PreAuthorize("@ss.hasPermi('admin:activityInfo:list')")
     @GetMapping("/list")
@@ -47,10 +47,10 @@ public class ActivityInfoController extends BaseController {
     }
 
     /**
-     * 导出【请填写功能名称】列表
+     * 导出活动信息列表
      */
     @PreAuthorize("@ss.hasPermi('admin:activityInfo:export')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
+    @Log(title = "活动信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(ActivityInfo activityInfo) {
         List<ActivityInfo> list = activityInfoService.selectActivityInfoList(activityInfo);
@@ -59,7 +59,7 @@ public class ActivityInfoController extends BaseController {
     }
 
     /**
-     * 获取【请填写功能名称】详细信息
+     * 获取活动信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('admin:activityInfo:query')")
     @GetMapping(value = "/{id}")
@@ -68,10 +68,10 @@ public class ActivityInfoController extends BaseController {
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增活动信息
      */
     @PreAuthorize("@ss.hasPermi('admin:activityInfo:add')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
+    @Log(title = "活动信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ActivityInfo activityInfo) {
         activityInfo.setId(UuidUtil.getRandomUuidWithoutSeparator());
@@ -80,20 +80,20 @@ public class ActivityInfoController extends BaseController {
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改活动信息
      */
     @PreAuthorize("@ss.hasPermi('admin:activityInfo:edit')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
+    @Log(title = "活动信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ActivityInfo activityInfo) {
         return toAjax(activityInfoService.updateActivityInfo(activityInfo));
     }
 
     /**
-     * 删除【请填写功能名称】
+     * 删除活动信息
      */
     @PreAuthorize("@ss.hasPermi('admin:activityInfo:remove')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
+    @Log(title = "活动信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(activityInfoService.deleteActivityInfoByIds(ids));
