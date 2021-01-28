@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigEnvironment;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service接口
@@ -58,4 +59,6 @@ public interface IConfigEnvironmentService {
 	 * @return 结果
 	 */
 	public int deleteConfigEnvironmentById(String envCode);
+
+    public AjaxResult getTitleIndex(String title);
 }

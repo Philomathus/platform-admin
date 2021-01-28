@@ -5,6 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper">
 
     <resultMap type="ConfigEnvironment" id="ConfigEnvironmentResult">
+        <result property="envTitle"    column="env_title"    />
         <result property="envCode"    column="env_code"    />
         <result property="envValue"    column="env_value"    />
         <result property="envDes"    column="env_des"    />
@@ -14,12 +15,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectConfigEnvironmentVo">
-        select env_code, env_value, env_des, env_group, env_sort, env_status from 7700_main.config_environment
+        select env_title, env_code, env_value, env_des, env_group, env_sort, env_status from 7700_main.config_environment
     </sql>
 
     <select id="selectConfigEnvironmentList" parameterType="ConfigEnvironment" resultMap="ConfigEnvironmentResult">
         <include refid="selectConfigEnvironmentVo"/>
         <where>
+            <if test="envTitle != null  and envTitle != ''"> and env_title = #{envTitle}</if>
             <if test="envValue != null  and envValue != ''"> and env_value = #{envValue}</if>
             <if test="envDes != null  and envDes != ''"> and env_des = #{envDes}</if>
             <if test="envGroup != null "> and env_group = #{envGroup}</if>
@@ -36,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertConfigEnvironment" parameterType="ConfigEnvironment">
         insert into 7700_main.config_environment
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="envTitle != null">env_title,</if>
             <if test="envCode != null">env_code,</if>
             <if test="envValue != null">env_value,</if>
             <if test="envDes != null">env_des,</if>
@@ -44,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="envStatus != null">env_status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="envTitle != null">#{envTitle},</if>
                 <if test="envCode != null">#{envCode},</if>
                     <if test="envValue != null">#{envValue},</if>
                     <if test="envDes != null">#{envDes},</if>
@@ -56,16 +60,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateConfigEnvironment" parameterType="ConfigEnvironment">
         update 7700_main.config_environment
         <trim prefix="SET" suffixOverrides=",">
+            <if test="envTitle != null">env_title= #{envTitle},</if>
+
             <if test="envValue != null">env_value = #{envValue},</if>
-    
+
             <if test="envDes != null">env_des = #{envDes},</if>
-    
+
             <if test="envGroup != null">env_group = #{envGroup},</if>
-    
+
             <if test="envSort != null">env_sort = #{envSort},</if>
-    
+
             <if test="envStatus != null">env_status = #{envStatus},</if>
-    
+
         </trim>
         where env_code = #{envCode}
     </update>
@@ -80,4 +86,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{envCode}
         </foreach>
     </delete>
+    <select id="getTitleIndex" resultType="java.lang.Integer">
+        SELECT env_group FROM `config_environment` where env_title = #{title}
+    </select>
+
 </mapper>

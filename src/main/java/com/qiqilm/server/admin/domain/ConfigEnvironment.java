@@ -14,6 +14,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ConfigEnvironment extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    /** 参数标题  */
+    private String envTitle;
+
     /** 参数编码 */
     private String envCode;
 
@@ -36,6 +39,14 @@ public class ConfigEnvironment extends BaseEntity {
     /** 状态 1启用 0禁用 */
     @Excel(name = "状态 1启用 0禁用")
     private Integer envStatus;
+
+    public String getEnvTitle() {
+        return envTitle;
+    }
+
+    public void setEnvTitle(String envTitle) {
+        this.envTitle = envTitle;
+    }
 
     public void setEnvCode(String envCode) {
         this.envCode = envCode;

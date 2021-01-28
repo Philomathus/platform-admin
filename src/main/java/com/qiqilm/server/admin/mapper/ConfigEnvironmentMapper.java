@@ -1,8 +1,8 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.ConfigEnvironment;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -58,4 +58,6 @@ public interface ConfigEnvironmentMapper {
 	 * @return 结果
 	 */
 	public int deleteConfigEnvironmentByIds(String[] envCodes );
+
+    public Integer getTitleIndex(String title);
 }
