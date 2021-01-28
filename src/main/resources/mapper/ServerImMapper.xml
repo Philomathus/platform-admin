@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ServerImMapper">
+	<resultMap type="ServerIm" id="ServerImResult">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="appId" column="app_id"/>
+		<result property="appKey" column="app_key"/>
+		<result property="identify" column="identify"/>
+		<result property="fullGroup" column="full_group"/>
+		<result property="onlineGroup" column="online_group"/>
+		<result property="provider" column="provider"/>
+		<result property="isEffect" column="is_effect"/>
+	</resultMap>
+
+	<sql id="selectServerImVo">
+		select id,
+			   name,
+			   app_id,
+			   app_key,
+			   identify,
+			   full_group,
+			   online_group,
+			   provider,
+			   is_effect
+		from 7700_live.server_im
+	</sql>
+
+	<select id="selectServerImList" parameterType="ServerIm" resultMap="ServerImResult">
+		<include refid="selectServerImVo"/>
+		<where>
+		</where>
+	</select>
+
+	<select id="selectServerImById" parameterType="Long" resultMap="ServerImResult">
+		<include refid="selectServerImVo"/>
+		where id = #{id}
+	</select>
+
+	<insert id="insertServerIm" parameterType="ServerIm" useGeneratedKeys="true" keyProperty="id">
+		insert into 7700_live.server_im
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name,
+			</if>
+			<if test="appId != null and appId != ''">
+				app_id,
+			</if>
+			<if test="appKey != null and appKey != ''">
+				app_key,
+			</if>
+			<if test="identify != null and identify != ''">
+				identify,
+			</if>
+			<if test="fullGroup != null and fullGroup != ''">
+				full_group,
+			</if>
+			<if test="onlineGroup != null and onlineGroup != ''">
+				online_group,
+			</if>
+			<if test="provider != null">
+				provider,
+			</if>
+			<if test="isEffect != null">
+				is_effect,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				#{name},
+			</if>
+			<if test="appId != null and appId != ''">
+				#{appId},
+			</if>
+			<if test="appKey != null and appKey != ''">
+				#{appKey},
+			</if>
+			<if test="identify != null and identify != ''">
+				#{identify},
+			</if>
+			<if test="fullGroup != null and fullGroup != ''">
+				#{fullGroup},
+			</if>
+			<if test="onlineGroup != null and onlineGroup != ''">
+				#{onlineGroup},
+			</if>
+			<if test="provider != null">
+				#{provider},
+			</if>
+			<if test="isEffect != null">
+				#{isEffect},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateServerIm" parameterType="ServerIm">
+		update 7700_live.server_im
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+
+			<if test="appId != null and appId != ''">
+				app_id = #{appId},
+			</if>
+
+			<if test="appKey != null and appKey != ''">
+				app_key = #{appKey},
+			</if>
+
+			<if test="identify != null and identify != ''">
+				identify = #{identify},
+			</if>
+
+			<if test="fullGroup != null and fullGroup != ''">
+				full_group = #{fullGroup},
+			</if>
+
+			<if test="onlineGroup != null and onlineGroup != ''">
+				online_group = #{onlineGroup},
+			</if>
+
+			<if test="provider != null">
+				provider = #{provider},
+			</if>
+
+			<if test="isEffect != null">
+				is_effect = #{isEffect},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteServerImById" parameterType="Long">
+		delete
+		from 7700_live.server_im
+		where id = #{id}
+	</delete>
+
+	<delete id="deleteServerImByIds" parameterType="String">
+		delete
+		from 7700_live.server_im where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

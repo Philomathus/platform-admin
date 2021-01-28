@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * //用户信息Controller
+ * 主播用户信息Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -28,55 +28,55 @@ public class LiveUserController extends BaseController {
 	private ILiveUserService liveUserService;
 
 	/**
-	 * 查询//用户信息列表
+	 * 查询主播用户信息列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LiveUser liveUser) {
+	public TableDataInfo list( LiveUser liveUser ) {
 		startPage();
-		List<LiveUser> list = liveUserService.selectLiveUserList(liveUser);
+		List<LiveUser> list = liveUserService.selectLiveUserList( liveUser );
 		return getDataTable( list );
 	}
 
 	/**
-	 * 导出//用户信息列表
+	 * 导出主播用户信息列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:export')" )
-	@Log( title = "//用户信息", businessType = BusinessType.EXPORT )
+	@Log( title = "主播用户信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LiveUser liveUser) {
-		List<LiveUser>      list = liveUserService.selectLiveUserList(liveUser);
-		ExcelUtil<LiveUser> util = new ExcelUtil<LiveUser>(LiveUser. class);
+	public AjaxResult export( LiveUser liveUser ) {
+		List<LiveUser>      list = liveUserService.selectLiveUserList( liveUser );
+		ExcelUtil<LiveUser> util = new ExcelUtil<LiveUser>( LiveUser.class );
 		return util.exportExcel( list, "liveUser" );
 	}
 
 	/**
-	 * 获取//用户信息详细信息
+	 * 获取主播用户信息详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( liveUserService.selectLiveUserById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( liveUserService.selectLiveUserById( id ) );
 	}
 
 	/**
-	 * 新增//用户信息
+	 * 新增主播用户信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
-	@Log( title = "//用户信息", businessType = BusinessType.INSERT )
+	@Log( title = "主播用户信息", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LiveUser liveUser) {
-		return toAjax( liveUserService.insertLiveUser(liveUser) );
+	public AjaxResult add( @RequestBody LiveUser liveUser ) {
+		return toAjax( liveUserService.insertLiveUser( liveUser ) );
 	}
 
 	/**
-	 * 修改//用户信息
+	 * 修改主播用户信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
-	@Log( title = "//用户信息", businessType = BusinessType.UPDATE )
+	@Log( title = "主播用户信息", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LiveUser liveUser) {
-		return toAjax( liveUserService.updateLiveUser(liveUser) );
+	public AjaxResult edit( @RequestBody LiveUser liveUser ) {
+		return toAjax( liveUserService.updateLiveUser( liveUser ) );
 	}
 
 	/**
@@ -84,22 +84,23 @@ public class LiveUserController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
 	@Log( title = "修改用户禁播状态", businessType = BusinessType.UPDATE )
-	@PutMapping("/banDetail")
-	public AjaxResult banDetail( LiveUser liveUser) {
-        return toAjax( liveUserService.updateLiveUser(liveUser) );
+	@PutMapping( "/banDetail" )
+	public AjaxResult banDetail( LiveUser liveUser ) {
+		return toAjax( liveUserService.updateLiveUser( liveUser ) );
 	}
 
-    @ApiOperation( "加入家族" )
-    @Log( title = "加入家族", businessType = BusinessType.UPDATE )
-    @PutMapping( "/gofamiily" )
-    public AjaxResult gofamiily( LiveUser user ) {
-        return liveUserService.updateFamilyID(user.getFamilyId(),user.getId());
-    }
+	@ApiOperation( "加入家族" )
+	@Log( title = "加入家族", businessType = BusinessType.UPDATE )
+	@PutMapping( "/gofamiily" )
+	public AjaxResult gofamiily( LiveUser user ) {
+		return liveUserService.updateFamilyID( user.getFamilyId(), user.getId() );
+	}
+
 	/**
-	 * 删除//用户信息
+	 * 删除主播用户信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:remove')" )
-	@Log( title = "//用户信息", businessType = BusinessType.DELETE )
+	@Log( title = "主播用户信息", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( liveUserService.deleteLiveUserByIds( ids ) );

@@ -34,12 +34,24 @@ public class JsonUtil {
 		}
 		return map;
 	}
+
 	public static <T> T json2Object( String json, Class<T> valueType ) {
 		if ( StringUtils.hasText( json ) ) {
 			try {
 				return getObjectMapper().readValue( json, valueType );
 			} catch ( Exception e ) {
 				log.error( json + "转化为" + valueType + "对象失败", e.getMessage(), e );
+			}
+		}
+		return null;
+	}
+
+	public static <T> T json2Object( String json, TypeReference<T> valueType ) {
+		if ( StringUtils.hasText( json ) ) {
+			try {
+				return getObjectMapper().readValue( json, valueType );
+			} catch ( Exception e ) {
+				log.error( json + "转化为" + valueType + "对象失败", e.getMessage() );
 			}
 		}
 		return null;
@@ -73,6 +85,17 @@ public class JsonUtil {
 				return getObjectMapper().convertValue( map, valueType );
 			} catch ( Exception e ) {
 				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	public static <T> T map2Object( Map<?, ?> map, TypeReference<T> valueType ) {
+		if ( !CollectionUtils.isEmpty( map ) ) {
+			try {
+				return getObjectMapper().convertValue( map, valueType );
+			} catch ( Exception e ) {
+				log.error( map.toString() + "转化为" + valueType + "对象失败", e.getMessage() );
 			}
 		}
 		return null;

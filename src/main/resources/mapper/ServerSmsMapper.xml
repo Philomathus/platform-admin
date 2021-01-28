@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ServerSmsMapper">
+	<resultMap type="ServerSms" id="ServerSmsResult">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="provider" column="provider"/>
+		<result property="appKey" column="app_key"/>
+		<result property="appAccess" column="app_access"/>
+		<result property="region" column="region"/>
+		<result property="signature" column="signature"/>
+		<result property="template" column="template"/>
+		<result property="smsSdkAppid" column="sms_sdk_appid"/>
+		<result property="identify" column="identify"/>
+		<result property="isEffect" column="is_effect"/>
+	</resultMap>
+
+	<sql id="selectServerSmsVo">
+		select id,
+			   name,
+			   provider,
+			   app_key,
+			   app_access,
+			   region,
+			   signature,
+			   template,
+			   sms_sdk_appid,
+			   identify,
+			   is_effect
+		from 7700_live.server_sms
+	</sql>
+
+	<select id="selectServerSmsList" parameterType="ServerSms" resultMap="ServerSmsResult">
+		<include refid="selectServerSmsVo"/>
+		<where>
+			<if test="name != null  and name != ''">
+				and name like concat('%', #{name}, '%')
+			</if>
+			<if test="provider != null">
+				and provider = #{provider}
+			</if>
+			<if test="isEffect != null">
+				and is_effect = #{isEffect}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectServerSmsById" parameterType="Long" resultMap="ServerSmsResult">
+		<include refid="selectServerSmsVo"/>
+		where id = #{id}
+	</select>
+
+	<insert id="insertServerSms" parameterType="ServerSms" useGeneratedKeys="true" keyProperty="id">
+		insert into 7700_live.server_sms
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name,
+			</if>
+			<if test="provider != null">
+				provider,
+			</if>
+			<if test="appKey != null and appKey != ''">
+				app_key,
+			</if>
+			<if test="appAccess != null and appAccess != ''">
+				app_access,
+			</if>
+			<if test="region != null">
+				region,
+			</if>
+			<if test="signature != null">
+				signature,
+			</if>
+			<if test="template != null">
+				template,
+			</if>
+			<if test="smsSdkAppid != null">
+				sms_sdk_appid,
+			</if>
+			<if test="identify != null">
+				identify,
+			</if>
+			<if test="isEffect != null">
+				is_effect,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				#{name},
+			</if>
+			<if test="provider != null">
+				#{provider},
+			</if>
+			<if test="appKey != null and appKey != ''">
+				#{appKey},
+			</if>
+			<if test="appAccess != null and appAccess != ''">
+				#{appAccess},
+			</if>
+			<if test="region != null">
+				#{region},
+			</if>
+			<if test="signature != null">
+				#{signature},
+			</if>
+			<if test="template != null">
+				#{template},
+			</if>
+			<if test="smsSdkAppid != null">
+				#{smsSdkAppid},
+			</if>
+			<if test="identify != null">
+				#{identify},
+			</if>
+			<if test="isEffect != null">
+				#{isEffect},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateServerSms" parameterType="ServerSms">
+		update 7700_live.server_sms
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="provider != null">
+				provider = #{provider},
+			</if>
+			<if test="appKey != null and appKey != ''">
+				app_key = #{appKey},
+			</if>
+			<if test="appAccess != null and appAccess != ''">
+				app_access = #{appAccess},
+			</if>
+			<if test="region != null">
+				region = #{region},
+			</if>
+			<if test="signature != null">
+				signature = #{signature},
+			</if>
+			<if test="template != null">
+				template = #{template},
+			</if>
+			<if test="smsSdkAppid != null">
+				sms_sdk_appid = #{smsSdkAppid},
+			</if>
+			<if test="identify != null">
+				identify = #{identify},
+			</if>
+			<if test="isEffect != null">
+				is_effect = #{isEffect},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteServerSmsById" parameterType="Long">
+		delete
+		from 7700_live.server_sms
+		where id = #{id}
+	</delete>
+
+	<delete id="deleteServerSmsByIds" parameterType="String">
+		delete
+		from 7700_live.server_sms where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

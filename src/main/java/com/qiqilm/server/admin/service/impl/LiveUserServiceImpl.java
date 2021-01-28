@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveFamily;
 import com.qiqilm.server.admin.domain.LiveUser;
@@ -13,108 +14,107 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * //用户信息Service业务层处理
+ * 主播用户信息Service业务层处理
  *
  * @author 77tv
  * @date 2021-01-26
  */
 @Service
 public class LiveUserServiceImpl implements ILiveUserService {
-    @Autowired
-    private LiveUserMapper liveUserMapper;
-    @Autowired
-    private LiveFamilyMapper liveFamilyMapper;
+	@Autowired
+	private LiveUserMapper   liveUserMapper;
+	@Autowired
+	private LiveFamilyMapper liveFamilyMapper;
 
-    /**
-     * 查询//用户信息
-     *
-     * @param id //用户信息ID
-     * @return //用户信息
-     */
-    @Override
-    public LiveUser selectLiveUserById(Long id) {
-        return liveUserMapper.selectLiveUserById(id);
-    }
+	/**
+	 * 查询主播用户信息
+	 *
+	 * @param id 主播用户信息ID
+	 * @return 主播用户信息
+	 */
+	@Override
+	public LiveUser selectLiveUserById( Long id ) {
+		return liveUserMapper.selectLiveUserById( id );
+	}
 
-    /**
-     * 查询//用户信息列表
-     *
-     * @param liveUser //用户信息
-     * @return //用户信息
-     */
-    @Override
-    public List<LiveUser> selectLiveUserList(LiveUser liveUser) {
-        return liveUserMapper.selectLiveUserList(liveUser);
-    }
+	/**
+	 * 查询主播用户信息列表
+	 *
+	 * @param liveUser 主播用户信息
+	 * @return 主播用户信息
+	 */
+	@Override
+	public List<LiveUser> selectLiveUserList( LiveUser liveUser ) {
+		return liveUserMapper.selectLiveUserList( liveUser );
+	}
 
-    /**
-     * 新增//用户信息
-     *
-     * @param liveUser //用户信息
-     * @return 结果
-     */
-    @Override
-    public int insertLiveUser(LiveUser liveUser) {
-        liveUser.setCreateTime(DateUtils.getNowDate());
-        return liveUserMapper.insertLiveUser(liveUser);
-    }
+	/**
+	 * 新增主播用户信息
+	 *
+	 * @param liveUser 主播用户信息
+	 * @return 结果
+	 */
+	@Override
+	public int insertLiveUser( LiveUser liveUser ) {
+		liveUser.setCreateTime( DateUtils.getNowDate() );
+		return liveUserMapper.insertLiveUser( liveUser );
+	}
 
-    /**
-     * 修改//用户信息
-     *
-     * @param liveUser //用户信息
-     * @return 结果
-     */
-    @Override
-    public int updateLiveUser(LiveUser liveUser) {
-        liveUser.setUpdateTime(DateUtils.getNowDate());
-        return liveUserMapper.updateLiveUser(liveUser);
-    }
+	/**
+	 * 修改主播用户信息
+	 *
+	 * @param liveUser 主播用户信息
+	 * @return 结果
+	 */
+	@Override
+	public int updateLiveUser( LiveUser liveUser ) {
+		liveUser.setUpdateTime( DateUtils.getNowDate() );
+		return liveUserMapper.updateLiveUser( liveUser );
+	}
 
-    /**
-     * 批量删除//用户信息
-     *
-     * @param ids 需要删除的//用户信息ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLiveUserByIds(Long[] ids) {
-        return liveUserMapper.deleteLiveUserByIds(ids);
-    }
+	/**
+	 * 批量删除主播用户信息
+	 *
+	 * @param ids 需要删除的主播用户信息ID
+	 * @return 结果
+	 */
+	@Override
+	public int deleteLiveUserByIds( Long[] ids ) {
+		return liveUserMapper.deleteLiveUserByIds( ids );
+	}
 
-    /**
-     * 删除//用户信息信息
-     *
-     * @param id //用户信息ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLiveUserById(Long id) {
-        return liveUserMapper.deleteLiveUserById(id);
-    }
+	/**
+	 * 删除主播用户信息信息
+	 *
+	 * @param id 主播用户信息ID
+	 * @return 结果
+	 */
+	@Override
+	public int deleteLiveUserById( Long id ) {
+		return liveUserMapper.deleteLiveUserById( id );
+	}
 
-    @Override
-    public AjaxResult updateFamilyID(Long familyID, Long userId) {
-        LiveFamily liveFamily = liveFamilyMapper.selectLiveFamilyById( familyID );
-        if ( liveFamily != null || familyID == 0 ) {
-            if ( familyID == 0 ) {
-                int oldFamilyID = liveUserMapper.getFamilyId( userId );
-                int i           = liveUserMapper.updateFamilyID( familyID, userId );
-                int num         = liveUserMapper.getNumFamily( oldFamilyID );
-                liveFamilyMapper.updateFamilyID( num, oldFamilyID );
-//                RedisCacheUtil.me.clear( userId, getTClassName() );
-            } else {
-                int oldFamilyID = liveUserMapper.getFamilyId( userId );
-                int i           = liveUserMapper.updateFamilyID( familyID, userId );
-                int num         = liveUserMapper.getNumFamily( oldFamilyID );
-                liveFamilyMapper.updateFamilyID( num, oldFamilyID );
-                int newnum = liveUserMapper.getNumFamily( familyID.intValue() );
-                liveFamilyMapper.updateFamilyID( newnum, familyID.intValue() );
-//                RedisCacheUtil.me.clear( userId, getTClassName() );
-            }
-            return AjaxResult.success();
+	@Override
+	public AjaxResult updateFamilyID( Long familyID, Long userId ) {
+		LiveFamily liveFamily = liveFamilyMapper.selectLiveFamilyById( familyID );
+		if ( liveFamily != null || familyID == 0 ) {
+			if ( familyID == 0 ) {
+				int oldFamilyId = liveUserMapper.getFamilyId( userId );
+				int i           = liveUserMapper.updateFamilyID( familyID, userId );
+				int num         = liveUserMapper.getNumFamily( oldFamilyId );
+				liveFamilyMapper.updateFamilyID( num, oldFamilyId );
+			} else {
+				int oldFamilyId = liveUserMapper.getFamilyId( userId );
+				int i           = liveUserMapper.updateFamilyID( familyID, userId );
+				int num         = liveUserMapper.getNumFamily( oldFamilyId );
+				liveFamilyMapper.updateFamilyID( num, oldFamilyId );
+				int newnum = liveUserMapper.getNumFamily( familyID.intValue() );
+				liveFamilyMapper.updateFamilyID( newnum, familyID.intValue() );
+			}
+			RedisCacheUtil.me.clear( userId, LiveUser.class );
+			return AjaxResult.success();
 
-        }
-        return AjaxResult.error();
-    }
+		}
+		return AjaxResult.error();
+	}
 }

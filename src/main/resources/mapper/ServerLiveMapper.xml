@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ServerLiveMapper">
+	<resultMap type="ServerLive" id="ServerLiveResult">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="provider" column="provider"/>
+		<result property="secretId" column="secret_id"/>
+		<result property="secretKey" column="secret_key"/>
+		<result property="pushDomain" column="push_domain"/>
+		<result property="pullDomain" column="pull_domain"/>
+		<result property="securityKey" column="security_key"/>
+		<result property="licenceUrl" column="licence_url"/>
+		<result property="licenceKey" column="licence_key"/>
+		<result property="status" column="status"/>
+		<result property="pullKey" column="pull_key"/>
+		<result property="pushKey" column="push_key"/>
+		<result property="countNum" column="count_Num"/>
+	</resultMap>
+
+	<sql id="selectServerLiveVo">
+		select id,
+			   name,
+			   provider,
+			   secret_id,
+			   secret_key,
+			   push_domain,
+			   pull_domain,
+			   security_key,
+			   licence_url,
+			   licence_key,
+			   status,
+			   pull_key,
+			   push_key,
+			   count_Num
+		from 7700_live.server_live
+	</sql>
+
+	<select id="selectServerLiveList" parameterType="ServerLive" resultMap="ServerLiveResult">
+		<include refid="selectServerLiveVo"/>
+		<where>
+			<if test="name != null  and name != ''">
+				and name like concat('%', #{name}, '%')
+			</if>
+			<if test="provider != null">
+				and provider = #{provider}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectServerLiveById" parameterType="Long" resultMap="ServerLiveResult">
+		<include refid="selectServerLiveVo"/>
+		where id = #{id}
+	</select>
+
+	<insert id="insertServerLive" parameterType="ServerLive" useGeneratedKeys="true" keyProperty="id">
+		insert into 7700_live.server_live
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name,
+			</if>
+			<if test="provider != null">
+				provider,
+			</if>
+			<if test="secretId != null and secretId != ''">
+				secret_id,
+			</if>
+			<if test="secretKey != null and secretKey != ''">
+				secret_key,
+			</if>
+			<if test="pushDomain != null and pushDomain != ''">
+				push_domain,
+			</if>
+			<if test="pullDomain != null and pullDomain != ''">
+				pull_domain,
+			</if>
+			<if test="securityKey != null">
+				security_key,
+			</if>
+			<if test="licenceUrl != null">
+				licence_url,
+			</if>
+			<if test="licenceKey != null">
+				licence_key,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="pullKey != null">
+				pull_key,
+			</if>
+			<if test="pushKey != null">
+				push_key,
+			</if>
+			<if test="countNum != null">
+				count_Num,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				#{name},
+			</if>
+			<if test="provider != null">
+				#{provider},
+			</if>
+			<if test="secretId != null and secretId != ''">
+				#{secretId},
+			</if>
+			<if test="secretKey != null and secretKey != ''">
+				#{secretKey},
+			</if>
+			<if test="pushDomain != null and pushDomain != ''">
+				#{pushDomain},
+			</if>
+			<if test="pullDomain != null and pullDomain != ''">
+				#{pullDomain},
+			</if>
+			<if test="securityKey != null">
+				#{securityKey},
+			</if>
+			<if test="licenceUrl != null">
+				#{licenceUrl},
+			</if>
+			<if test="licenceKey != null">
+				#{licenceKey},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="pullKey != null">
+				#{pullKey},
+			</if>
+			<if test="pushKey != null">
+				#{pushKey},
+			</if>
+			<if test="countNum != null">
+				#{countNum},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateServerLive" parameterType="ServerLive">
+		update 7700_live.server_live
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="provider != null">
+				provider = #{provider},
+			</if>
+			<if test="secretId != null and secretId != ''">
+				secret_id = #{secretId},
+			</if>
+			<if test="secretKey != null and secretKey != ''">
+				secret_key = #{secretKey},
+			</if>
+			<if test="pushDomain != null and pushDomain != ''">
+				push_domain = #{pushDomain},
+			</if>
+			<if test="pullDomain != null and pullDomain != ''">
+				pull_domain = #{pullDomain},
+			</if>
+			<if test="securityKey != null">
+				security_key = #{securityKey},
+			</if>
+			<if test="licenceUrl != null">
+				licence_url = #{licenceUrl},
+			</if>
+			<if test="licenceKey != null">
+				licence_key = #{licenceKey},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="pullKey != null">
+				pull_key = #{pullKey},
+			</if>
+			<if test="pushKey != null">
+				push_key = #{pushKey},
+			</if>
+			<if test="countNum != null">
+				count_Num = #{countNum},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteServerLiveById" parameterType="Long">
+		delete
+		from 7700_live.server_live
+		where id = #{id}
+	</delete>
+
+	<delete id="deleteServerLiveByIds" parameterType="String">
+		delete
+		from 7700_live.server_live where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

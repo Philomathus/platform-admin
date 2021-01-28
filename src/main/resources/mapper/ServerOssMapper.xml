@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ServerOssMapper">
+	<resultMap type="ServerOss" id="ServerOssResult">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="accessKey" column="access_key"/>
+		<result property="accessSecret" column="access_secret"/>
+		<result property="endpoint" column="endpoint"/>
+		<result property="bucket" column="bucket"/>
+		<result property="vhost" column="vhost"/>
+		<result property="isEffect" column="is_effect"/>
+		<result property="createBy" column="creator"/>
+		<result property="createTime" column="create_time"/>
+		<result property="updateBy" column="updator"/>
+		<result property="updateTime" column="update_time"/>
+	</resultMap>
+
+	<sql id="selectServerOssVo">
+		select id,
+			   name,
+			   access_key,
+			   access_secret,
+			   endpoint,
+			   bucket,
+			   vhost,
+			   is_effect,
+			   creator,
+			   create_time,
+			   updator,
+			   update_time
+		from 7700_live.server_oss
+	</sql>
+
+	<select id="selectServerOssList" parameterType="ServerOss" resultMap="ServerOssResult">
+		<include refid="selectServerOssVo"/>
+		<where>
+			<if test="name != null  and name != ''">
+				and name like concat('%', #{name}, '%')
+			</if>
+		</where>
+	</select>
+
+	<select id="selectServerOssById" parameterType="Long" resultMap="ServerOssResult">
+		<include refid="selectServerOssVo"/>
+		where id = #{id}
+	</select>
+
+	<insert id="insertServerOss" parameterType="ServerOss" useGeneratedKeys="true" keyProperty="id">
+		insert into 7700_live.server_oss
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name,
+			</if>
+			<if test="accessKey != null and accessKey != ''">
+				access_key,
+			</if>
+			<if test="accessSecret != null and accessSecret != ''">
+				access_secret,
+			</if>
+			<if test="endpoint != null and endpoint != ''">
+				endpoint,
+			</if>
+			<if test="bucket != null and bucket != ''">
+				bucket,
+			</if>
+			<if test="vhost != null and vhost != ''">
+				vhost,
+			</if>
+			<if test="isEffect != null">
+				is_effect,
+			</if>
+			<if test="createBy != null">
+				creator,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateBy != null">
+				updator,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				#{name},
+			</if>
+			<if test="accessKey != null and accessKey != ''">
+				#{accessKey},
+			</if>
+			<if test="accessSecret != null and accessSecret != ''">
+				#{accessSecret},
+			</if>
+			<if test="endpoint != null and endpoint != ''">
+				#{endpoint},
+			</if>
+			<if test="bucket != null and bucket != ''">
+				#{bucket},
+			</if>
+			<if test="vhost != null and vhost != ''">
+				#{vhost},
+			</if>
+			<if test="isEffect != null">
+				#{isEffect},
+			</if>
+			<if test="createBy != null">
+				#{createBy},
+			</if>
+			<if test="createTime != null">
+				UNIX_TIMESTAMP(#{createTime}),
+			</if>
+			<if test="updateBy != null">
+				#{updateBy},
+			</if>
+			<if test="updateTime != null">
+				UNIX_TIMESTAMP(#{updateTime}),
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateServerOss" parameterType="ServerOss">
+		update 7700_live.server_oss
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+
+			<if test="accessKey != null and accessKey != ''">
+				access_key = #{accessKey},
+			</if>
+
+			<if test="accessSecret != null and accessSecret != ''">
+				access_secret = #{accessSecret},
+			</if>
+
+			<if test="endpoint != null and endpoint != ''">
+				endpoint = #{endpoint},
+			</if>
+
+			<if test="bucket != null and bucket != ''">
+				bucket = #{bucket},
+			</if>
+
+			<if test="vhost != null and vhost != ''">
+				vhost = #{vhost},
+			</if>
+
+			<if test="isEffect != null">
+				is_effect = #{isEffect},
+			</if>
+
+			<if test="createBy != null">
+				creator = #{createBy},
+			</if>
+
+			<if test="createTime != null">
+				create_time = UNIX_TIMESTAMP(#{createTime}),
+			</if>
+
+			<if test="updateBy != null">
+				updator = #{updateBy},
+			</if>
+
+			<if test="updateTime != null">
+				update_time = UNIX_TIMESTAMP(#{updateTime}),
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteServerOssById" parameterType="Long">
+		delete
+		from 7700_live.server_oss
+		where id = #{id}
+	</delete>
+
+	<delete id="deleteServerOssByIds" parameterType="String">
+		delete
+		from 7700_live.server_oss where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>
