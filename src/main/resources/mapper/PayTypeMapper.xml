@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayTypeMapper">
+
+    <resultMap type="PayType" id="PayTypeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="iconUrl"    column="icon_url"    />
+        <result property="indexes"    column="indexes"    />
+        <result property="isRecommend"    column="is_recommend"    />
+        <result property="status"    column="status"    />
+        <result property="isOnline"    column="is_online"    />
+        <result property="type"    column="type"    />
+        <result property="creator"    column="creator"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updator"    column="updator"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPayTypeVo">
+        select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, creator, create_time, updator, update_time from pay_type
+    </sql>
+
+    <select id="selectPayTypeList" parameterType="PayType" resultMap="PayTypeResult">
+        <include refid="selectPayTypeVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="iconUrl != null  and iconUrl != ''"> and icon_url = #{iconUrl}</if>
+            <if test="indexes != null "> and indexes = #{indexes}</if>
+            <if test="isRecommend != null "> and is_recommend = #{isRecommend}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="isOnline != null "> and is_online = #{isOnline}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="creator != null  and creator != ''"> and creator = #{creator}</if>
+            <if test="updator != null  and updator != ''"> and updator = #{updator}</if>
+        </where>
+    </select>
+
+    <select id="selectPayTypeById" parameterType="String" resultMap="PayTypeResult">
+        <include refid="selectPayTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPayType" parameterType="PayType">
+        insert into pay_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="iconUrl != null">icon_url,</if>
+            <if test="indexes != null">indexes,</if>
+            <if test="isRecommend != null">is_recommend,</if>
+            <if test="status != null">status,</if>
+            <if test="isOnline != null">is_online,</if>
+            <if test="type != null">type,</if>
+            <if test="creator != null">creator,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updator != null">updator,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="iconUrl != null">#{iconUrl},</if>
+            <if test="indexes != null">#{indexes},</if>
+            <if test="isRecommend != null">#{isRecommend},</if>
+            <if test="status != null">#{status},</if>
+            <if test="isOnline != null">#{isOnline},</if>
+            <if test="type != null">#{type},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updator != null">#{updator},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayType" parameterType="PayType">
+        update pay_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="iconUrl != null">icon_url = #{iconUrl},</if>
+            <if test="indexes != null">indexes = #{indexes},</if>
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isOnline != null">is_online = #{isOnline},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updator != null">updator = #{updator},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayTypeById" parameterType="String">
+        delete from pay_type where id = #{id}
+    </delete>
+
+    <delete id="deletePayTypeByIds" parameterType="String">
+        delete from pay_type where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

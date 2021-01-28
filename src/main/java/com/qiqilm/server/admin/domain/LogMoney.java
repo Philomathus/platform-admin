@@ -1,204 +1,168 @@
 package com.qiqilm.server.admin.domain;
 
+import java.math.BigDecimal;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.math.BigDecimal;
-
 /**
- * log_money
+ * 【请填写功能名称】对象 log_money
  *
  * @author 77tv
  * @date 2021-01-26
  */
 public class LogMoney extends BaseEntity {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 系统编号
-	 */
-	private String id;
+    /** 系统编号 */
+    private String id;
 
-	/**
-	 * 会员编号
-	 */
-	@Excel( name = "会员编号" )
-	private String userId;
+    /** 会员编号 */
+    @Excel(name = "会员编号")
+    private String userId;
 
-	/**
-	 * 账号
-	 */
-	@Excel( name = "账号" )
-	private String userName;
+    /** 账号 */
+    @Excel(name = "账号")
+    private String userName;
 
-	/**
-	 * 变化类型
-	 */
-	@Excel( name = "变化类型" )
-	private Integer type;
+    /** 变化类型 */
+    @Excel(name = "变化类型")
+    private Long type;
 
-	/**
-	 * 描述
-	 */
-	@Excel( name = "描述" )
-	private String des;
+    /** 描述 */
+    @Excel(name = "描述")
+    private String des;
 
-	/**
-	 * 收入
-	 */
-	@Excel( name = "收入" )
-	private BigDecimal income;
+    /** 收入 */
+    @Excel(name = "收入")
+    private BigDecimal income;
 
-	/**
-	 * 支出
-	 */
-	@Excel( name = "支出" )
-	private BigDecimal pay;
+    /** 支出 */
+    @Excel(name = "支出")
+    private BigDecimal pay;
 
-	/**
-	 * 余额
-	 */
-	@Excel( name = "余额" )
-	private BigDecimal total;
+    /** 余额 */
+    @Excel(name = "余额")
+    private BigDecimal total;
 
-	/**
-	 * $column.columnComment
-	 */
-	@Excel( name = "余额" )
-	private String agent;
+    /** $column.columnComment */
+    @Excel(name = "余额")
+    private String agent;
 
-	/**
-	 * 变化前余额
-	 */
-	@Excel( name = "变化前余额" )
-	private BigDecimal totalBefore;
+    /** 变化前余额 */
+    @Excel(name = "变化前余额")
+    private BigDecimal totalBefore;
 
-	/**
-	 * 备注信息
-	 */
-	@Excel( name = "备注信息" )
-	private String mark;
+    /** 备注信息 */
+    @Excel(name = "备注信息")
+    private String mark;
 
-	/**
-	 * 备注订单号
-	 */
-	@Excel( name = "备注订单号" )
-	private String markorder;
+    /** 备注订单号 */
+    @Excel(name = "备注订单号")
+    private String markorder;
 
-	public String getId() {
-		return id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setId( String id ) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public void setUserId( String userId ) {
-		this.userId = userId;
-	}
+    public String getUserName() {
+        return userName;
+    }
+    public void setType(Long type) {
+        this.type = type;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public Long getType() {
+        return type;
+    }
+    public void setDes(String des) {
+        this.des = des;
+    }
 
-	public void setUserName( String userName ) {
-		this.userName = userName;
-	}
+    public String getDes() {
+        return des;
+    }
+    public void setIncome(BigDecimal income) {
+        this.income = income;
+    }
 
-	public Integer getType() {
-		return type;
-	}
+    public BigDecimal getIncome() {
+        return income;
+    }
+    public void setPay(BigDecimal pay) {
+        this.pay = pay;
+    }
 
-	public void setType( Integer type ) {
-		this.type = type;
-	}
+    public BigDecimal getPay() {
+        return pay;
+    }
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
 
-	public String getDes() {
-		return des;
-	}
+    public BigDecimal getTotal() {
+        return total;
+    }
+    public void setAgent(String agent) {
+        this.agent = agent;
+    }
 
-	public void setDes( String des ) {
-		this.des = des;
-	}
+    public String getAgent() {
+        return agent;
+    }
+    public void setTotalBefore(BigDecimal totalBefore) {
+        this.totalBefore = totalBefore;
+    }
 
-	public BigDecimal getIncome() {
-		return income;
-	}
+    public BigDecimal getTotalBefore() {
+        return totalBefore;
+    }
+    public void setMark(String mark) {
+        this.mark = mark;
+    }
 
-	public void setIncome( BigDecimal income ) {
-		this.income = income;
-	}
+    public String getMark() {
+        return mark;
+    }
+    public void setMarkorder(String markorder) {
+        this.markorder = markorder;
+    }
 
-	public BigDecimal getPay() {
-		return pay;
-	}
+    public String getMarkorder() {
+        return markorder;
+    }
 
-	public void setPay( BigDecimal pay ) {
-		this.pay = pay;
-	}
-
-	public BigDecimal getTotal() {
-		return total;
-	}
-
-	public void setTotal( BigDecimal total ) {
-		this.total = total;
-	}
-
-	public String getAgent() {
-		return agent;
-	}
-
-	public void setAgent( String agent ) {
-		this.agent = agent;
-	}
-
-	public BigDecimal getTotalBefore() {
-		return totalBefore;
-	}
-
-	public void setTotalBefore( BigDecimal totalBefore ) {
-		this.totalBefore = totalBefore;
-	}
-
-	public String getMark() {
-		return mark;
-	}
-
-	public void setMark( String mark ) {
-		this.mark = mark;
-	}
-
-	public String getMarkorder() {
-		return markorder;
-	}
-
-	public void setMarkorder( String markorder ) {
-		this.markorder = markorder;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
-				.append( "id", getId() )
-				.append( "userId", getUserId() )
-				.append( "userName", getUserName() )
-				.append( "type", getType() )
-				.append( "des", getDes() )
-				.append( "income", getIncome() )
-				.append( "pay", getPay() )
-				.append( "total", getTotal() )
-				.append( "agent", getAgent() )
-				.append( "createTime", getCreateTime() )
-				.append( "totalBefore", getTotalBefore() )
-				.append( "mark", getMark() )
-				.append( "markorder", getMarkorder() )
-				.toString();
-	}
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("id", getId())
+            .append("userId", getUserId())
+            .append("userName", getUserName())
+            .append("type", getType())
+            .append("des", getDes())
+            .append("income", getIncome())
+            .append("pay", getPay())
+            .append("total", getTotal())
+            .append("agent", getAgent())
+            .append("createTime", getCreateTime())
+            .append("totalBefore", getTotalBefore())
+            .append("mark", getMark())
+            .append("markorder", getMarkorder())
+            .toString();
+    }
 }

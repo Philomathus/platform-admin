@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayAgentPlatformMapper">
+
+    <resultMap type="PayAgentPlatform" id="PayAgentPlatformResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="merId"    column="mer_id"    />
+        <result property="payOrderAddr"    column="pay_order_addr"    />
+        <result property="payOrderQueryAddr"    column="pay_order_query_addr"    />
+        <result property="headerKey"    column="header_key"    />
+        <result property="signMd5"    column="sign_md5"    />
+        <result property="signPublicKey"    column="sign_public_key"    />
+        <result property="signPrivateKey"    column="sign_private_key"    />
+        <result property="platWhiteIpList"    column="plat_white_ip_list"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectPayAgentPlatformVo">
+        select id, code, name, mer_id, pay_order_addr, pay_order_query_addr, header_key, sign_md5, sign_public_key, sign_private_key, plat_white_ip_list, status from pay_agent_platform
+    </sql>
+
+    <select id="selectPayAgentPlatformList" parameterType="PayAgentPlatform" resultMap="PayAgentPlatformResult">
+        <include refid="selectPayAgentPlatformVo"/>
+        <where>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="merId != null  and merId != ''"> and mer_id = #{merId}</if>
+            <if test="payOrderAddr != null  and payOrderAddr != ''"> and pay_order_addr = #{payOrderAddr}</if>
+            <if test="payOrderQueryAddr != null  and payOrderQueryAddr != ''"> and pay_order_query_addr = #{payOrderQueryAddr}</if>
+            <if test="headerKey != null  and headerKey != ''"> and header_key = #{headerKey}</if>
+            <if test="signMd5 != null  and signMd5 != ''"> and sign_md5 = #{signMd5}</if>
+            <if test="signPublicKey != null  and signPublicKey != ''"> and sign_public_key = #{signPublicKey}</if>
+            <if test="signPrivateKey != null  and signPrivateKey != ''"> and sign_private_key = #{signPrivateKey}</if>
+            <if test="platWhiteIpList != null  and platWhiteIpList != ''"> and plat_white_ip_list = #{platWhiteIpList}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPayAgentPlatformById" parameterType="Long" resultMap="PayAgentPlatformResult">
+        <include refid="selectPayAgentPlatformVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPayAgentPlatform" parameterType="PayAgentPlatform" useGeneratedKeys="true" keyProperty="id">
+        insert into pay_agent_platform
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="merId != null and merId != ''">mer_id,</if>
+            <if test="payOrderAddr != null and payOrderAddr != ''">pay_order_addr,</if>
+            <if test="payOrderQueryAddr != null">pay_order_query_addr,</if>
+            <if test="headerKey != null">header_key,</if>
+            <if test="signMd5 != null">sign_md5,</if>
+            <if test="signPublicKey != null">sign_public_key,</if>
+            <if test="signPrivateKey != null">sign_private_key,</if>
+            <if test="platWhiteIpList != null">plat_white_ip_list,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="merId != null and merId != ''">#{merId},</if>
+            <if test="payOrderAddr != null and payOrderAddr != ''">#{payOrderAddr},</if>
+            <if test="payOrderQueryAddr != null">#{payOrderQueryAddr},</if>
+            <if test="headerKey != null">#{headerKey},</if>
+            <if test="signMd5 != null">#{signMd5},</if>
+            <if test="signPublicKey != null">#{signPublicKey},</if>
+            <if test="signPrivateKey != null">#{signPrivateKey},</if>
+            <if test="platWhiteIpList != null">#{platWhiteIpList},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayAgentPlatform" parameterType="PayAgentPlatform">
+        update pay_agent_platform
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="merId != null and merId != ''">mer_id = #{merId},</if>
+            <if test="payOrderAddr != null and payOrderAddr != ''">pay_order_addr = #{payOrderAddr},</if>
+            <if test="payOrderQueryAddr != null">pay_order_query_addr = #{payOrderQueryAddr},</if>
+            <if test="headerKey != null">header_key = #{headerKey},</if>
+            <if test="signMd5 != null">sign_md5 = #{signMd5},</if>
+            <if test="signPublicKey != null">sign_public_key = #{signPublicKey},</if>
+            <if test="signPrivateKey != null">sign_private_key = #{signPrivateKey},</if>
+            <if test="platWhiteIpList != null">plat_white_ip_list = #{platWhiteIpList},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayAgentPlatformById" parameterType="Long">
+        delete from pay_agent_platform where id = #{id}
+    </delete>
+
+    <delete id="deletePayAgentPlatformByIds" parameterType="String">
+        delete from pay_agent_platform where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ConfigBankMapper">
+
+    <resultMap type="ConfigBank" id="ConfigBankResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="icon"    column="icon"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="url"    column="url"    />
+        <result property="indexs"    column="indexs"    />
+        <result property="bankAccount"    column="bank_account"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="accountName"    column="account_name"    />
+        <result property="bankAddress"    column="bank_address"    />
+        <result property="discountBill"    column="discount_bill"    />
+        <result property="openLevel"    column="open_level"    />
+    </resultMap>
+
+    <sql id="selectConfigBankVo">
+        select id, code, name, icon, create_by, create_time, update_by, update_time, url, indexs, bank_account, remark, status, account_name, bank_address, discount_bill, open_level from config_bank
+    </sql>
+
+    <select id="selectConfigBankList" parameterType="ConfigBank" resultMap="ConfigBankResult">
+        <include refid="selectConfigBankVo"/>
+        <where>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="indexs != null "> and indexs = #{indexs}</if>
+            <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="accountName != null  and accountName != ''"> and account_name like concat('%', #{accountName}, '%')</if>
+            <if test="bankAddress != null  and bankAddress != ''"> and bank_address = #{bankAddress}</if>
+            <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
+            <if test="openLevel != null "> and open_level = #{openLevel}</if>
+        </where>
+    </select>
+
+    <select id="selectConfigBankById" parameterType="String" resultMap="ConfigBankResult">
+        <include refid="selectConfigBankVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertConfigBank" parameterType="ConfigBank">
+        insert into config_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="icon != null">icon,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="url != null">url,</if>
+            <if test="indexs != null">indexs,</if>
+            <if test="bankAccount != null">bank_account,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="accountName != null">account_name,</if>
+            <if test="bankAddress != null">bank_address,</if>
+            <if test="discountBill != null">discount_bill,</if>
+            <if test="openLevel != null">open_level,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="url != null">#{url},</if>
+            <if test="indexs != null">#{indexs},</if>
+            <if test="bankAccount != null">#{bankAccount},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="accountName != null">#{accountName},</if>
+            <if test="bankAddress != null">#{bankAddress},</if>
+            <if test="discountBill != null">#{discountBill},</if>
+            <if test="openLevel != null">#{openLevel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateConfigBank" parameterType="ConfigBank">
+        update config_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="indexs != null">indexs = #{indexs},</if>
+            <if test="bankAccount != null">bank_account = #{bankAccount},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="accountName != null">account_name = #{accountName},</if>
+            <if test="bankAddress != null">bank_address = #{bankAddress},</if>
+            <if test="discountBill != null">discount_bill = #{discountBill},</if>
+            <if test="openLevel != null">open_level = #{openLevel},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteConfigBankById" parameterType="String">
+        delete from config_bank where id = #{id}
+    </delete>
+
+    <delete id="deleteConfigBankByIds" parameterType="String">
+        delete from config_bank where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -335,6 +335,18 @@ public class LiveUser extends BaseEntity {
     @Excel(name = "禁播状态 0-正常；1-禁播")
     private Integer isBan;
 
+    public String getIsBanStr() {
+        return isBanStr;
+    }
+
+    public void setIsBanStr(String isBanStr) {
+        this.isBanStr = isBanStr;
+    }
+
+    /** 禁播状态 0-正常；1-禁播 */
+    @Excel(name = "禁播状态 0-正常；1-禁播")
+    private String isBanStr;
+
     /** 禁播结束时间 */
     @Excel(name = "禁播结束时间")
     private Long banTime;

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayChannelNewMapper">
+
+    <resultMap type="PayChannelNew" id="PayChannelNewResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="payMethod"    column="pay_method"    />
+        <result property="payAttr"    column="pay_attr"    />
+        <result property="failNum"    column="fail_num"    />
+        <result property="successNum"    column="success_num"    />
+        <result property="totalSuccessMoney"    column="total_success_money"    />
+        <result property="rechargeMin"    column="recharge_min"    />
+        <result property="rechargeMax"    column="recharge_max"    />
+        <result property="status"    column="status"    />
+        <result property="isCanCallback"    column="is_can_callback"    />
+        <result property="indexes"    column="indexes"    />
+        <result property="openLevel"    column="open_level"    />
+        <result property="payPlatformId"    column="pay_platform_id"    />
+        <result property="payTypeId"    column="pay_type_id"    />
+        <result property="discountBill"    column="discount_bill"    />
+        <result property="quickAmount"    column="quick_amount"    />
+        <result property="inputType"    column="input_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="creator"    column="creator"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updator"    column="updator"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="payRate"    column="pay_rate"    />
+    </resultMap>
+
+    <sql id="selectPayChannelNewVo">
+        select id, name, pay_method, pay_attr, fail_num, success_num, total_success_money, recharge_min, recharge_max, status, is_can_callback, indexes, open_level, pay_platform_id, pay_type_id, discount_bill, quick_amount, input_type, remark, creator, create_time, updator, update_time, pay_rate from pay_channel_new
+    </sql>
+
+    <select id="selectPayChannelNewList" parameterType="PayChannelNew" resultMap="PayChannelNewResult">
+        <include refid="selectPayChannelNewVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="payMethod != null  and payMethod != ''"> and pay_method = #{payMethod}</if>
+            <if test="payAttr != null "> and pay_attr = #{payAttr}</if>
+            <if test="failNum != null "> and fail_num = #{failNum}</if>
+            <if test="successNum != null "> and success_num = #{successNum}</if>
+            <if test="totalSuccessMoney != null "> and total_success_money = #{totalSuccessMoney}</if>
+            <if test="rechargeMin != null "> and recharge_min = #{rechargeMin}</if>
+            <if test="rechargeMax != null "> and recharge_max = #{rechargeMax}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="isCanCallback != null "> and is_can_callback = #{isCanCallback}</if>
+            <if test="indexes != null "> and indexes = #{indexes}</if>
+            <if test="openLevel != null "> and open_level = #{openLevel}</if>
+            <if test="payPlatformId != null  and payPlatformId != ''"> and pay_platform_id = #{payPlatformId}</if>
+            <if test="payTypeId != null  and payTypeId != ''"> and pay_type_id = #{payTypeId}</if>
+            <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
+            <if test="quickAmount != null  and quickAmount != ''"> and quick_amount = #{quickAmount}</if>
+            <if test="inputType != null "> and input_type = #{inputType}</if>
+            <if test="creator != null  and creator != ''"> and creator = #{creator}</if>
+            <if test="updator != null  and updator != ''"> and updator = #{updator}</if>
+            <if test="payRate != null "> and pay_rate = #{payRate}</if>
+        </where>
+    </select>
+
+    <select id="selectPayChannelNewById" parameterType="Long" resultMap="PayChannelNewResult">
+        <include refid="selectPayChannelNewVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPayChannelNew" parameterType="PayChannelNew" useGeneratedKeys="true" keyProperty="id">
+        insert into pay_channel_new
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="payMethod != null">pay_method,</if>
+            <if test="payAttr != null">pay_attr,</if>
+            <if test="failNum != null">fail_num,</if>
+            <if test="successNum != null">success_num,</if>
+            <if test="totalSuccessMoney != null">total_success_money,</if>
+            <if test="rechargeMin != null">recharge_min,</if>
+            <if test="rechargeMax != null">recharge_max,</if>
+            <if test="status != null">status,</if>
+            <if test="isCanCallback != null">is_can_callback,</if>
+            <if test="indexes != null">indexes,</if>
+            <if test="openLevel != null">open_level,</if>
+            <if test="payPlatformId != null and payPlatformId != ''">pay_platform_id,</if>
+            <if test="payTypeId != null and payTypeId != ''">pay_type_id,</if>
+            <if test="discountBill != null">discount_bill,</if>
+            <if test="quickAmount != null and quickAmount != ''">quick_amount,</if>
+            <if test="inputType != null">input_type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="creator != null">creator,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updator != null">updator,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="payRate != null">pay_rate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="payMethod != null">#{payMethod},</if>
+            <if test="payAttr != null">#{payAttr},</if>
+            <if test="failNum != null">#{failNum},</if>
+            <if test="successNum != null">#{successNum},</if>
+            <if test="totalSuccessMoney != null">#{totalSuccessMoney},</if>
+            <if test="rechargeMin != null">#{rechargeMin},</if>
+            <if test="rechargeMax != null">#{rechargeMax},</if>
+            <if test="status != null">#{status},</if>
+            <if test="isCanCallback != null">#{isCanCallback},</if>
+            <if test="indexes != null">#{indexes},</if>
+            <if test="openLevel != null">#{openLevel},</if>
+            <if test="payPlatformId != null and payPlatformId != ''">#{payPlatformId},</if>
+            <if test="payTypeId != null and payTypeId != ''">#{payTypeId},</if>
+            <if test="discountBill != null">#{discountBill},</if>
+            <if test="quickAmount != null and quickAmount != ''">#{quickAmount},</if>
+            <if test="inputType != null">#{inputType},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updator != null">#{updator},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="payRate != null">#{payRate},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayChannelNew" parameterType="PayChannelNew">
+        update pay_channel_new
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="payMethod != null">pay_method = #{payMethod},</if>
+            <if test="payAttr != null">pay_attr = #{payAttr},</if>
+            <if test="failNum != null">fail_num = #{failNum},</if>
+            <if test="successNum != null">success_num = #{successNum},</if>
+            <if test="totalSuccessMoney != null">total_success_money = #{totalSuccessMoney},</if>
+            <if test="rechargeMin != null">recharge_min = #{rechargeMin},</if>
+            <if test="rechargeMax != null">recharge_max = #{rechargeMax},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isCanCallback != null">is_can_callback = #{isCanCallback},</if>
+            <if test="indexes != null">indexes = #{indexes},</if>
+            <if test="openLevel != null">open_level = #{openLevel},</if>
+            <if test="payPlatformId != null and payPlatformId != ''">pay_platform_id = #{payPlatformId},</if>
+            <if test="payTypeId != null and payTypeId != ''">pay_type_id = #{payTypeId},</if>
+            <if test="discountBill != null">discount_bill = #{discountBill},</if>
+            <if test="quickAmount != null and quickAmount != ''">quick_amount = #{quickAmount},</if>
+            <if test="inputType != null">input_type = #{inputType},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updator != null">updator = #{updator},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="payRate != null">pay_rate = #{payRate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayChannelNewById" parameterType="Long">
+        delete from pay_channel_new where id = #{id}
+    </delete>
+
+    <delete id="deletePayChannelNewByIds" parameterType="String">
+        delete from pay_channel_new where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

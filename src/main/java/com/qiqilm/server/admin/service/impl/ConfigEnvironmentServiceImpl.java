@@ -1,11 +1,13 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.ConfigEnvironment;
+import com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper;
+import com.qiqilm.server.admin.service.IConfigEnvironmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper;
-import com.qiqilm.server.admin.domain.ConfigEnvironment;
-import com.qiqilm.server.admin.service.IConfigEnvironmentService;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -82,5 +84,11 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
     @Override
     public int deleteConfigEnvironmentById(String envCode) {
         return configEnvironmentMapper.deleteConfigEnvironmentById(envCode);
+    }
+
+    @Override
+    public AjaxResult getTitleIndex(String title) {
+        Integer index = configEnvironmentMapper.getTitleIndex(title);
+        return AjaxResult.success(index);
     }
 }

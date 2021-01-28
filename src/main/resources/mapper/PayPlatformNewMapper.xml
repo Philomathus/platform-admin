@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayPlatformNewMapper">
+
+    <resultMap type="PayPlatformNew" id="PayPlatformNewResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="merId"    column="mer_id"    />
+        <result property="orgId"    column="org_id"    />
+        <result property="platPayUrl"    column="plat_pay_url"    />
+        <result property="platQueryUrl"    column="plat_query_url"    />
+        <result property="signMd5"    column="sign_md5"    />
+        <result property="signPublicKey"    column="sign_public_key"    />
+        <result property="signPrivateKey"    column="sign_private_key"    />
+        <result property="platWhiteIpList"    column="plat_white_ip_list"    />
+        <result property="creator"    column="creator"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updator"    column="updator"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPayPlatformNewVo">
+        select id, name, code, mer_id, org_id, plat_pay_url, plat_query_url, sign_md5, sign_public_key, sign_private_key, plat_white_ip_list, creator, create_time, updator, update_time from pay_platform_new
+    </sql>
+
+    <select id="selectPayPlatformNewList" parameterType="PayPlatformNew" resultMap="PayPlatformNewResult">
+        <include refid="selectPayPlatformNewVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="merId != null  and merId != ''"> and mer_id = #{merId}</if>
+            <if test="orgId != null  and orgId != ''"> and org_id = #{orgId}</if>
+            <if test="platPayUrl != null  and platPayUrl != ''"> and plat_pay_url = #{platPayUrl}</if>
+            <if test="platQueryUrl != null  and platQueryUrl != ''"> and plat_query_url = #{platQueryUrl}</if>
+            <if test="signMd5 != null  and signMd5 != ''"> and sign_md5 = #{signMd5}</if>
+            <if test="signPublicKey != null  and signPublicKey != ''"> and sign_public_key = #{signPublicKey}</if>
+            <if test="signPrivateKey != null  and signPrivateKey != ''"> and sign_private_key = #{signPrivateKey}</if>
+            <if test="platWhiteIpList != null  and platWhiteIpList != ''"> and plat_white_ip_list = #{platWhiteIpList}</if>
+            <if test="creator != null  and creator != ''"> and creator = #{creator}</if>
+            <if test="updator != null  and updator != ''"> and updator = #{updator}</if>
+        </where>
+    </select>
+
+    <select id="selectPayPlatformNewById" parameterType="Long" resultMap="PayPlatformNewResult">
+        <include refid="selectPayPlatformNewVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPayPlatformNew" parameterType="PayPlatformNew" useGeneratedKeys="true" keyProperty="id">
+        insert into pay_platform_new
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="merId != null and merId != ''">mer_id,</if>
+            <if test="orgId != null">org_id,</if>
+            <if test="platPayUrl != null and platPayUrl != ''">plat_pay_url,</if>
+            <if test="platQueryUrl != null">plat_query_url,</if>
+            <if test="signMd5 != null">sign_md5,</if>
+            <if test="signPublicKey != null">sign_public_key,</if>
+            <if test="signPrivateKey != null">sign_private_key,</if>
+            <if test="platWhiteIpList != null">plat_white_ip_list,</if>
+            <if test="creator != null">creator,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updator != null">updator,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="merId != null and merId != ''">#{merId},</if>
+            <if test="orgId != null">#{orgId},</if>
+            <if test="platPayUrl != null and platPayUrl != ''">#{platPayUrl},</if>
+            <if test="platQueryUrl != null">#{platQueryUrl},</if>
+            <if test="signMd5 != null">#{signMd5},</if>
+            <if test="signPublicKey != null">#{signPublicKey},</if>
+            <if test="signPrivateKey != null">#{signPrivateKey},</if>
+            <if test="platWhiteIpList != null">#{platWhiteIpList},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updator != null">#{updator},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayPlatformNew" parameterType="PayPlatformNew">
+        update pay_platform_new
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="merId != null and merId != ''">mer_id = #{merId},</if>
+            <if test="orgId != null">org_id = #{orgId},</if>
+            <if test="platPayUrl != null and platPayUrl != ''">plat_pay_url = #{platPayUrl},</if>
+            <if test="platQueryUrl != null">plat_query_url = #{platQueryUrl},</if>
+            <if test="signMd5 != null">sign_md5 = #{signMd5},</if>
+            <if test="signPublicKey != null">sign_public_key = #{signPublicKey},</if>
+            <if test="signPrivateKey != null">sign_private_key = #{signPrivateKey},</if>
+            <if test="platWhiteIpList != null">plat_white_ip_list = #{platWhiteIpList},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updator != null">updator = #{updator},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayPlatformNewById" parameterType="Long">
+        delete from pay_platform_new where id = #{id}
+    </delete>
+
+    <delete id="deletePayPlatformNewByIds" parameterType="String">
+        delete from pay_platform_new where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

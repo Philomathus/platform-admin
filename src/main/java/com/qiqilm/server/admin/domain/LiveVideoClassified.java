@@ -23,7 +23,7 @@ public class LiveVideoClassified extends BaseEntity {
 
     /** 是否有效 1-有效 0-无效 */
     @Excel(name = "是否有效 1-有效 0-无效")
-    private Integer isEffect;
+    private String isEffect;
 
     /** 从大到小排 */
     @Excel(name = "从大到小排")
@@ -39,7 +39,7 @@ public class LiveVideoClassified extends BaseEntity {
 
     /** 是否主播端显示 */
     @Excel(name = "是否主播端显示")
-    private Integer isHostShow;
+    private String isHostShow;
 
     /** 查询主播列表分页逻辑 */
     @Excel(name = "查询主播列表分页逻辑")
@@ -59,11 +59,11 @@ public class LiveVideoClassified extends BaseEntity {
     public String getTitle() {
         return title;
     }
-    public void setIsEffect(Integer isEffect) {
+    public void setIsEffect(String isEffect) {
         this.isEffect = isEffect;
     }
 
-    public Integer getIsEffect() {
+    public String getIsEffect() {
         return isEffect;
     }
     public void setSort(Long sort) {
@@ -87,11 +87,11 @@ public class LiveVideoClassified extends BaseEntity {
     public Long getClassfy() {
         return classfy;
     }
-    public void setIsHostShow(Integer isHostShow) {
+    public void setIsHostShow(String isHostShow) {
         this.isHostShow = isHostShow;
     }
 
-    public Integer getIsHostShow() {
+    public String getIsHostShow() {
         return isHostShow;
     }
     public void setSortDesc(String sortDesc) {

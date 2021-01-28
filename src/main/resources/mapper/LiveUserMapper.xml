@@ -86,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="deviceType"    column="device_type"    />
         <result property="videoCount"    column="video_count"    />
         <result property="isBan"    column="is_ban"    />
+        <result property="isBanStr"    column="is_ban"    />
         <result property="banTime"    column="ban_time"    />
         <result property="identifyNumber"    column="identify_number"    />
         <result property="authentListId"    column="authent_list_id"    />

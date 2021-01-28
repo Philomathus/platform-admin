@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayLogMapper">
+
+    <resultMap type="PayLog" id="PayLogResult">
+        <result property="id"    column="id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="memberAccount"    column="member_account"    />
+        <result property="platformId"    column="platform_id"    />
+        <result property="platformName"    column="platform_name"    />
+        <result property="channelId"    column="channel_id"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="money"    column="money"    />
+        <result property="success"    column="success"    />
+        <result property="failReason"    column="fail_reason"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectPayLogVo">
+        select id, member_id, member_account, platform_id, platform_name, channel_id, channel_name, money, success, fail_reason, create_time from pay_log
+    </sql>
+
+    <select id="selectPayLogList" parameterType="PayLog" resultMap="PayLogResult">
+        <include refid="selectPayLogVo"/>
+        <where>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="memberAccount != null  and memberAccount != ''"> and member_account = #{memberAccount}</if>
+            <if test="platformId != null  and platformId != ''"> and platform_id = #{platformId}</if>
+            <if test="platformName != null  and platformName != ''"> and platform_name like concat('%', #{platformName}, '%')</if>
+            <if test="channelId != null  and channelId != ''"> and channel_id = #{channelId}</if>
+            <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="success != null "> and success = #{success}</if>
+            <if test="failReason != null  and failReason != ''"> and fail_reason = #{failReason}</if>
+        </where>
+    </select>
+
+    <select id="selectPayLogById" parameterType="Long" resultMap="PayLogResult">
+        <include refid="selectPayLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPayLog" parameterType="PayLog" useGeneratedKeys="true" keyProperty="id">
+        insert into pay_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null and memberId != ''">member_id,</if>
+            <if test="memberAccount != null and memberAccount != ''">member_account,</if>
+            <if test="platformId != null and platformId != ''">platform_id,</if>
+            <if test="platformName != null and platformName != ''">platform_name,</if>
+            <if test="channelId != null and channelId != ''">channel_id,</if>
+            <if test="channelName != null and channelName != ''">channel_name,</if>
+            <if test="money != null">money,</if>
+            <if test="success != null">success,</if>
+            <if test="failReason != null">fail_reason,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberId != null and memberId != ''">#{memberId},</if>
+            <if test="memberAccount != null and memberAccount != ''">#{memberAccount},</if>
+            <if test="platformId != null and platformId != ''">#{platformId},</if>
+            <if test="platformName != null and platformName != ''">#{platformName},</if>
+            <if test="channelId != null and channelId != ''">#{channelId},</if>
+            <if test="channelName != null and channelName != ''">#{channelName},</if>
+            <if test="money != null">#{money},</if>
+            <if test="success != null">#{success},</if>
+            <if test="failReason != null">#{failReason},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayLog" parameterType="PayLog">
+        update pay_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null and memberId != ''">member_id = #{memberId},</if>
+            <if test="memberAccount != null and memberAccount != ''">member_account = #{memberAccount},</if>
+            <if test="platformId != null and platformId != ''">platform_id = #{platformId},</if>
+            <if test="platformName != null and platformName != ''">platform_name = #{platformName},</if>
+            <if test="channelId != null and channelId != ''">channel_id = #{channelId},</if>
+            <if test="channelName != null and channelName != ''">channel_name = #{channelName},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="success != null">success = #{success},</if>
+            <if test="failReason != null">fail_reason = #{failReason},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayLogById" parameterType="Long">
+        delete from pay_log where id = #{id}
+    </delete>
+
+    <delete id="deletePayLogByIds" parameterType="String">
+        delete from pay_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

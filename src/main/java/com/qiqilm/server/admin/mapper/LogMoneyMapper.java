@@ -1,66 +1,61 @@
 package com.qiqilm.server.admin.mapper;
 
-import com.qiqilm.server.admin.domain.LogMoney;
-import org.apache.ibatis.annotations.Param;
-
-import java.math.BigDecimal;
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.LogMoney;
+
 /**
- * LogMoneyMapper接口
+ * 【请填写功能名称】Mapper接口
  *
  * @author 77tv
  * @date 2021-01-26
  */
 public interface LogMoneyMapper {
 	/**
-	 * 查询LogMoney
+	 * 查询【请填写功能名称】
 	 *
-	 * @param id LogMoneyID
-	 * @return LogMoney
+	 * @param id 【请填写功能名称】ID
+	 * @return 【请填写功能名称】
 	 */
-	public LogMoney selectLogMoneyById( String id );
+	public LogMoney selectLogMoneyById(String id);
 
 	/**
-	 * 查询LogMoney列表
+	 * 查询【请填写功能名称】列表
 	 *
-	 * @param logMoney LogMoney
-	 * @return LogMoney集合
+	 * @param logMoney 【请填写功能名称】
+	 * @return 【请填写功能名称】集合
 	 */
-	public List<LogMoney> selectLogMoneyList( LogMoney logMoney );
+	public List<LogMoney> selectLogMoneyList(LogMoney logMoney);
 
 	/**
-	 * 新增LogMoney
+	 * 新增【请填写功能名称】
 	 *
-	 * @param logMoney LogMoney
+	 * @param logMoney 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int insertLogMoney( LogMoney logMoney );
+	public int insertLogMoney(LogMoney logMoney);
 
 	/**
-	 * 修改LogMoney
+	 * 修改【请填写功能名称】
 	 *
-	 * @param logMoney LogMoney
+	 * @param logMoney 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int updateLogMoney( LogMoney logMoney );
+	public int updateLogMoney(LogMoney logMoney);
 
 	/**
-	 * 删除LogMoney
+	 * 删除【请填写功能名称】
 	 *
-	 * @param id LogMoneyID
+	 * @param id 【请填写功能名称】ID
 	 * @return 结果
 	 */
-	public int deleteLogMoneyById( String id );
+	public int deleteLogMoneyById(String id);
 
 	/**
-	 * 批量删除LogMoney
+	 * 批量删除【请填写功能名称】
 	 *
 	 * @param ids 需要删除的数据ID
 	 * @return 结果
 	 */
-	public int deleteLogMoneyByIds( String[] ids );
-
-	List<LogMoney> findMark( @Param( "userId" ) String userId, @Param( "mark" ) String mark,
-							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay );
+	public int deleteLogMoneyByIds(String[] ids );
 }
