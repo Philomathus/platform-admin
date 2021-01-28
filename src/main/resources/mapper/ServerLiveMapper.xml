@@ -48,6 +48,7 @@
 				and provider = #{provider}
 			</if>
 		</where>
+		order by status desc
 	</select>
 
 	<select id="selectServerLiveById" parameterType="Long" resultMap="ServerLiveResult">
