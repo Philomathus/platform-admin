@@ -43,7 +43,17 @@ public class LivePropController extends BaseController {
 		List<LiveProp> list = livePropService.selectLivePropList(liveProp);
 		return getDataTable( list );
 	}
-    
+
+	/**
+	 * 查询礼物列列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveProp:list')" )
+	@GetMapping( "/getList" )
+	public TableDataInfo getList() {
+		List<LiveProp> list = livePropService.getList();
+		return getDataTable( list );
+	}
+
 	/**
 	 * 导出礼物列列表
 	 */

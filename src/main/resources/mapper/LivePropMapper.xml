@@ -133,4 +133,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="getList" resultMap="LivePropResult">
+         select id, name,diamonds from 7700_live.live_prop
+         where type=2 and is_Effect=0 order by id asc
+    </select>
 </mapper>
