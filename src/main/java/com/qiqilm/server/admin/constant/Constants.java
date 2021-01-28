@@ -42,12 +42,22 @@ public abstract class Constants {
 	public static final String  SESSION_CLICK_LOCK         = "CX:platform:lock:";
 	public static final String  USER_TOKEN_KEY             = "CX:platform:user-token:";
 	public static final String  TOKEN_USER_KEY             = "CX:platform:token-user:";
-	public static final String  ADMIN_SIGN                 = LIVE_PREX + "admin-sign:";
-	public static final String  TIME                       = "time";
 
+	// 主播签名
+	public static final String HOST_SIGN  = LIVE_PREX + "host-sign:";
+	public static final String USER_SIGN  = LIVE_PREX + "user-sign:";
+	public static final String ADMIN_SIGN = LIVE_PREX + "admin-sign:";
+
+	public static final String   TIME                        = "time";
 	public static final Duration SESSION_VALID_TIME_DURATION = Duration.ofHours( 1 );
+	public static final String   DISCOUNT_BILL_LIMIT         = "0.5";
 
-	public static final String DISCOUNT_BILL_LIMIT = "0.5";
+	// 直播间机器人投注信息
+	public static final String HOST_BET     = LIVE_PREX + "host-robot-bet:";
+	// 坐骑配置
+	public static final String LIVE_MOUNT   = LIVE_PREX + "mount";
+	// 进入日志临时缓存
+	public static final String LIVEENTERLOG = LIVE_PREX + "live-enter-log";
 
 	private Constants() {
 		throw new RuntimeException( "Constants.class can't be instantiated" );

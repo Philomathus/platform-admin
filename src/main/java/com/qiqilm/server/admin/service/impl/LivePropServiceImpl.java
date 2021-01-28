@@ -83,4 +83,9 @@ public class LivePropServiceImpl implements ILivePropService {
     public int deleteLivePropById(Long id) {
         return livePropMapper.deleteLivePropById(id);
     }
+
+    @Override
+    public List<LiveProp> getList( ) {
+        return livePropMapper.getList();
+    }
 }

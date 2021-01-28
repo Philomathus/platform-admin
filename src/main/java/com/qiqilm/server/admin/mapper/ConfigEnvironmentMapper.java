@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.ConfigEnvironment;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,5 +60,5 @@ public interface ConfigEnvironmentMapper {
 	 */
 	public int deleteConfigEnvironmentByIds(String[] envCodes );
 
-    public Integer getTitleIndex(String title);
+    public Integer getTitleIndex(@Param("title") String title,@Param("code") String code);
 }

@@ -1,5 +1,7 @@
 package com.qiqilm.server.admin.cache;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.qiqilm.server.admin.domain.ServerOss;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
@@ -25,8 +27,9 @@ public class RedisCacheUtil {
 		me = this;
 	}
 
-	public <T> T get( T t, Serializable cacheId, AbstractSupplier<T> supplier ) {
-		String keyM = "autoCache:" + t.getClass().getSimpleName() + ":" + cacheId;
+	public <T> T get( Serializable cacheId, Supplier<T> supplier ) {
+
+		String keyM = "autoCache:" + supplier.get().getClass().getSimpleName() + ":" + cacheId;
 
 		String s = redisUtil.strGet( keyM );
 
@@ -34,7 +37,7 @@ public class RedisCacheUtil {
 			return this.update( keyM, supplier );
 		} else {
 			try {
-				return JsonUtil.json2Object( s, supplier );
+				return JsonUtil.json2Object( s, new TypeReference<T>() {} );
 			} catch ( Exception e ) {
 				return this.update( keyM, supplier );
 			}
@@ -50,7 +53,7 @@ public class RedisCacheUtil {
 		if ( apply instanceof String ) {
 			valStr = ( String ) apply;
 		} else {
-			valStr = JsonUtil.object2Json( apply );
+			valStr = JsonUtil.object2Json( supplier );
 		}
 		redisUtil.strSet( keyM, valStr, Duration.ofDays( 1 ) );
 		return apply;

@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="dictLabel"  column="dict_label"  />
 		<result property="dictValue"  column="dict_value"  />
 		<result property="dictType"   column="dict_type"   />
+		<result property="color"   	  column="color"       />
 		<result property="cssClass"   column="css_class"   />
 		<result property="listClass"  column="list_class"  />
 		<result property="isDefault"  column="is_default"  />
@@ -21,7 +22,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<sql id="selectDictDataVo">
-        select dict_code, dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, create_time, remark
+        select dict_code, dict_sort, dict_label, dict_value, dict_type, color, css_class, list_class, is_default, status,
+			   create_by, create_time, remark
 		from sys_n_dict_data
     </sql>
 
@@ -78,6 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="dictLabel != null and dictLabel != ''">dict_label = #{dictLabel},</if>
  			<if test="dictValue != null and dictValue != ''">dict_value = #{dictValue},</if>
  			<if test="dictType != null and dictType != ''">dict_type = #{dictType},</if>
+			<if test="color != null">color = #{color},</if>
  			<if test="cssClass != null">css_class = #{cssClass},</if>
  			<if test="listClass != null">list_class = #{listClass},</if>
  			<if test="isDefault != null and isDefault != ''">is_default = #{isDefault},</if>
@@ -99,6 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="dictLabel != null and dictLabel != ''">dict_label,</if>
  			<if test="dictValue != null and dictValue != ''">dict_value,</if>
  			<if test="dictType != null and dictType != ''">dict_type,</if>
+			<if test="color != null and color != ''">color,</if>
  			<if test="cssClass != null and cssClass != ''">css_class,</if>
  			<if test="listClass != null and listClass != ''">list_class,</if>
  			<if test="isDefault != null and isDefault != ''">is_default,</if>
@@ -111,6 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		    <if test="dictLabel != null and dictLabel != ''">#{dictLabel},</if>
  			<if test="dictValue != null and dictValue != ''">#{dictValue},</if>
  			<if test="dictType != null and dictType != ''">#{dictType},</if>
+			<if test="color != null and color != ''">#{color},</if>
  			<if test="cssClass != null and cssClass != ''">#{cssClass},</if>
  			<if test="listClass != null and listClass != ''">#{listClass},</if>
  			<if test="isDefault != null and isDefault != ''">#{isDefault},</if>

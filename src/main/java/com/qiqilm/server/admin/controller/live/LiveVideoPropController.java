@@ -29,7 +29,7 @@ public class LiveVideoPropController extends BaseController {
 	/**
 	 * 查询送礼物列表
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+//	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
 	@GetMapping( "/list" )
     	public TableDataInfo list(LiveVideoProp liveVideoProp) {
 		startPage();

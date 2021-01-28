@@ -58,4 +58,6 @@ public interface ILivePropService {
 	 * @return 结果
 	 */
 	public int deleteLivePropById(Long id);
+
+	List<LiveProp> getList( );
 }

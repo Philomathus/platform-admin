@@ -111,13 +111,13 @@
 				#{createBy},
 			</if>
 			<if test="createTime != null">
-				UNIX_TIMESTAMP(#{createTime}),
+				#{createTime},
 			</if>
 			<if test="updateBy != null">
 				#{updateBy},
 			</if>
 			<if test="updateTime != null">
-				UNIX_TIMESTAMP(#{updateTime}),
+				#{updateTime},
 			</if>
 		</trim>
 	</insert>
@@ -158,7 +158,7 @@
 			</if>
 
 			<if test="createTime != null">
-				create_time = UNIX_TIMESTAMP(#{createTime}),
+				create_time = #{createTime},
 			</if>
 
 			<if test="updateBy != null">
@@ -166,7 +166,7 @@
 			</if>
 
 			<if test="updateTime != null">
-				update_time = UNIX_TIMESTAMP(#{updateTime}),
+				update_time = #{updateTime},
 			</if>
 		</trim>
 		where id = #{id}
@@ -185,4 +185,9 @@
 			#{id}
 		</foreach>
 	</delete>
+
+	<select id="selectServerOssByEffect" resultType="com.qiqilm.server.admin.domain.ServerOss">
+		<include refid="selectServerOssVo"/>
+		where is_effect = 1
+	</select>
 </mapper>
