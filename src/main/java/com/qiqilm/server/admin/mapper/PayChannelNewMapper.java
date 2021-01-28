@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.PayChannelNew;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -58,4 +59,6 @@ public interface PayChannelNewMapper {
 	 * @return 结果
 	 */
 	public int deletePayChannelNewByIds(Long[] ids );
+
+	List<PayChannelNew> findList(@Param("req") PayChannelNew req);
 }
