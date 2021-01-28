@@ -36,7 +36,7 @@ public class PayTypeController extends BaseController {
 	private IPayTypeService payTypeService;
 
 /**
- * 查询【请填写功能名称】列表
+ * 查询【支付类型】列表
  */
 @PreAuthorize( "@ss.hasPermi('pay:payType:list')" )
 @GetMapping( "/list" )
@@ -47,7 +47,7 @@ public class PayTypeController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【支付类型】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:export')" )
 	@Log( title = "【支付类型】", businessType = BusinessType.EXPORT )
@@ -59,7 +59,7 @@ public class PayTypeController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【支付类型】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:query')" )
 	@GetMapping( value = "/{id}" )
@@ -68,7 +68,7 @@ public class PayTypeController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【支付类型】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:add')" )
 	@Log( title = "【支付类型】", businessType = BusinessType.INSERT )
@@ -78,7 +78,7 @@ public class PayTypeController extends BaseController {
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【支付类型】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:edit')" )
 	@Log( title = "【支付类型】", businessType = BusinessType.UPDATE )
@@ -88,7 +88,7 @@ public class PayTypeController extends BaseController {
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【支付类型】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:remove')" )
 	@Log( title = "【支付类型】", businessType = BusinessType.DELETE )

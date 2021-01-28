@@ -98,6 +98,12 @@ public class PayChannelNew extends BaseEntity {
     @Excel(name = "修改人")
     private String updator;
 
+    @Excel(name = "支付平台名称")
+    private String payPlatformName;
+
+    @Excel(name = "支付类型名称")
+    private String payTypeName;
+
     /** 通道费率 */
     @Excel(name = "通道费率")
     private BigDecimal payRate;
