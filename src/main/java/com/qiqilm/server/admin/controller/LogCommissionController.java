@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.controller;
 import java.util.Date;
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,6 +75,7 @@ public class LogCommissionController extends BaseController {
 	@PostMapping
 	public AjaxResult add( @RequestBody LogCommission logCommission) {
 		logCommission.setCreateTime(new Date());
+		logCommission.setId(UuidUtil.getRandomUuidWithoutSeparator());
 		return toAjax( logCommissionService.insertLogCommission(logCommission) );
 	}
 
