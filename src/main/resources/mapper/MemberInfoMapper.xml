@@ -53,49 +53,56 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectMemberInfoList" parameterType="MemberInfo" resultMap="MemberInfoResult">
-        <include refid="selectMemberInfoVo"/>
+        SELECT a.* FROM
+        (<include refid="selectMemberInfoVo"/>)a
+
+
+        left join member_card b on a.id=b.member_id
         <where>
-            <if test="memberCode != null  and memberCode != ''"> and member_code = #{memberCode}</if>
-            <if test="cxAgent != null  and cxAgent != ''"> and cx_agent = #{cxAgent}</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
-            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="vip != null "> and vip = #{vip}</if>
-            <if test="totalAccount != null "> and total_account = #{totalAccount}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="email != null  and email != ''"> and email = #{email}</if>
-            <if test="password != null  and password != ''"> and password = #{password}</if>
-            <if test="isOnline != null "> and is_online = #{isOnline}</if>
-            <if test="sex != null "> and sex = #{sex}</if>
-            <if test="regTime != null "> and reg_time = #{regTime}</if>
-            <if test="registIp != null  and registIp != ''"> and regist_ip = #{registIp}</if>
-            <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
-            <if test="loginAddress != null  and loginAddress != ''"> and login_address = #{loginAddress}</if>
-            <if test="loginDev != null "> and login_dev = #{loginDev}</if>
-            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="birthDay != null  and birthDay != ''"> and birth_day = #{birthDay}</if>
-            <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
-            <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
-            <if test="headImg != null  and headImg != ''"> and head_img = #{headImg}</if>
-            <if test="onlineTime != null "> and online_time = #{onlineTime}</if>
-            <if test="linkUrl != null  and linkUrl != ''"> and link_url = #{linkUrl}</if>
-            <if test="loginTime != null "> and login_time = #{loginTime}</if>
-            <if test="boxAccount != null "> and box_account = #{boxAccount}</if>
-            <if test="boxPass != null  and boxPass != ''"> and box_pass = #{boxPass}</if>
-            <if test="cleanTime != null "> and clean_time = #{cleanTime}</if>
-            <if test="levelIntegral != null "> and level_integral = #{levelIntegral}</if>
-            <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
-            <if test="inviteMoney != null "> and invite_money = #{inviteMoney}</if>
-            <if test="codeAccount != null "> and code_account = #{codeAccount}</if>
-            <if test="pid != null "> and PID = #{pid}</if>
-            <if test="codeTotal != null "> and code_total = #{codeTotal}</if>
-            <if test="channelcode != null  and channelcode != ''"> and channelCode = #{channelcode}</if>
-            <if test="speak != null "> and speak = #{speak}</if>
-            <if test="loginNum != null "> and login_num = #{loginNum}</if>
-            <if test="version != null  and version != ''"> and version = #{version}</if>
-            <if test="withdrawalPass != null  and withdrawalPass != ''"> and withdrawal_pass = #{withdrawalPass}</if>
-            <if test="deviceId != null  and deviceId != ''"> and device_id = #{deviceId}</if>
+            <if test="bankAccount != null  and bankAccount != ''"> and b.bank_account = #{bankAccount}</if>
+            <if test="code != null  and code != ''"> and ( a.id = #{code} or a.phone = #{code} or a.user_name like concat('%', #{userName}, '%') )</if>
+            <if test="memberCode != null  and memberCode != ''"> and a.member_code = #{memberCode}</if>
+            <if test="cxAgent != null  and cxAgent != ''"> and a.cx_agent = #{cxAgent}</if>
+            <if test="userName != null  and userName != ''"> and a.user_name like concat('%', #{userName}, '%')</if>
+            <if test="realName != null  and realName != ''"> and a.real_name like concat('%', #{realName}, '%')</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="vip != null "> and a.vip = #{vip}</if>
+            <if test="totalAccount != null "> and a.total_account = #{totalAccount}</if>
+            <if test="phone != null  and phone != ''"> and a.phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and a.email = #{email}</if>
+            <if test="password != null  and password != ''"> and a.password = #{password}</if>
+            <if test="isOnline != null "> and a.is_online = #{isOnline}</if>
+            <if test="sex != null "> and a.sex = #{sex}</if>
+            <if test="regTime != null "> and a.reg_time = #{regTime}</if>
+            <if test="registIp != null  and registIp != ''"> and a.regist_ip = #{registIp}</if>
+            <if test="loginIp != null  and loginIp != ''"> and a.login_ip = #{loginIp}</if>
+            <if test="loginAddress != null  and loginAddress != ''"> and a.login_address = #{loginAddress}</if>
+            <if test="loginDev != null "> and a.login_dev = #{loginDev}</if>
+            <if test="nickName != null  and nickName != ''"> and a.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="birthDay != null  and birthDay != ''"> and a.birth_day = #{birthDay}</if>
+            <if test="qq != null  and qq != ''"> and a.qq = #{qq}</if>
+            <if test="wechat != null  and wechat != ''"> and a.wechat = #{wechat}</if>
+            <if test="headImg != null  and headImg != ''"> and a.head_img = #{headImg}</if>
+            <if test="onlineTime != null "> and a.online_time = #{onlineTime}</if>
+            <if test="linkUrl != null  and linkUrl != ''"> and a.link_url = #{linkUrl}</if>
+            <if test="loginTime != null "> and a.login_time = #{loginTime}</if>
+            <if test="boxAccount != null "> and a.box_account = #{boxAccount}</if>
+            <if test="boxPass != null  and boxPass != ''"> and a.box_pass = #{boxPass}</if>
+            <if test="cleanTime != null "> and a.clean_time = #{cleanTime}</if>
+            <if test="levelIntegral != null "> and a.level_integral = #{levelIntegral}</if>
+            <if test="inviterCode != null  and inviterCode != ''"> and a.inviter_code = #{inviterCode}</if>
+            <if test="inviteMoney != null "> and a.invite_money = #{inviteMoney}</if>
+            <if test="codeAccount != null "> and a.code_account = #{codeAccount}</if>
+            <if test="pid != null "> and a.PID = #{pid}</if>
+            <if test="codeTotal != null "> and a.code_total = #{codeTotal}</if>
+            <if test="channelcode != null  and channelcode != ''"> and a.channelCode = #{channelcode}</if>
+            <if test="speak != null "> and a.speak = #{speak}</if>
+            <if test="loginNum != null "> and a.login_num = #{loginNum}</if>
+            <if test="version != null  and version != ''"> and a.version = #{version}</if>
+            <if test="withdrawalPass != null  and withdrawalPass != ''"> and a.withdrawal_pass = #{withdrawalPass}</if>
+            <if test="deviceId != null  and deviceId != ''"> and a.device_id = #{deviceId}</if>
         </where>
+        GROUP BY a.id
     </select>
 
     <select id="selectMemberInfoById" parameterType="String" resultMap="MemberInfoResult">
@@ -250,4 +257,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectMaxMemberCode" resultType="java.lang.Integer">
+         select IFNULL( max(member_code),0) from member_info
+	</select>
+
+    <update id="updateMoneySelect">
+        update member_info
+        <set>
+            <if test="money != null">
+                total_account = total_account + #{money},
+            </if>
+            <if test="invite_money != null">
+                invite_money = invite_money + #{invite_money},
+            </if>
+            <if test="level_integral != null">
+                level_integral = level_integral + #{level_integral},
+            </if>
+
+            <if test="code_account != null">
+                code_account = code_account + #{code_account},
+            </if>
+
+            <if test="code_total != null">
+                code_total = code_total + #{code_total}
+            </if>
+
+        </set>
+        where id = #{userId}
+        <if test="money != null">
+            and total_account + #{money} >= 0
+        </if>
+    </update>
+    <insert id="call_pro_useranalysis" statementType="CALLABLE">
+        {call pro_useranalysis(#{userid,mode=IN,jdbcType=VARCHAR})}
+    </insert>
+
+    <select id="userWithdrawReportList" resultType="com.qiqilm.server.admin.domain.vo.WithdrawReport">
+		select * from report_analysisuser  ORDER BY rep_id asc
+	</select>
 </mapper>

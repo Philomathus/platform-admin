@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveFamilyMapper">
+
+    <resultMap type="LiveFamily" id="LiveFamilyResult">
+        <result property="id"    column="id"    />
+        <result property="logo"    column="logo"    />
+        <result property="name"    column="name"    />
+        <result property="notice"    column="notice"    />
+        <result property="manifesto"    column="manifesto"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userCount"    column="user_count"    />
+        <result property="createTimes"    column="create_time"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="createY"    column="create_y"    />
+        <result property="createM"    column="create_m"    />
+        <result property="createD"    column="create_d"    />
+        <result property="createW"    column="create_w"    />
+        <result property="memo"    column="memo"    />
+        <result property="status"    column="status"    />
+        <result property="contribution"    column="contribution"    />
+        <result property="familyLevel"    column="family_level"    />
+        <result property="videoTime"    column="video_time"    />
+        <result property="score"    column="score"    />
+        <result property="liveLevel"    column="live_level"    />
+        <result property="familyRecom"    column="family_recom"    />
+    </resultMap>
+
+    <sql id="selectLiveFamilyVo">
+        select id, logo, name, notice, manifesto, nick_name, user_id, user_count, create_time, create_date, create_y, create_m, create_d, create_w, memo, status, contribution, family_level, video_time, score, live_level, family_recom from 7700_live.live_family
+    </sql>
+
+    <select id="selectLiveFamilyList" parameterType="LiveFamily" resultMap="LiveFamilyResult">
+        <include refid="selectLiveFamilyVo"/>
+        <where>
+            <if test="logo != null  and logo != ''"> and logo = #{logo}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="notice != null  and notice != ''"> and notice = #{notice}</if>
+            <if test="manifesto != null  and manifesto != ''"> and manifesto = #{manifesto}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userCount != null "> and user_count = #{userCount}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="createY != null "> and create_y = #{createY}</if>
+            <if test="createM != null "> and create_m = #{createM}</if>
+            <if test="createD != null "> and create_d = #{createD}</if>
+            <if test="createW != null "> and create_w = #{createW}</if>
+            <if test="memo != null  and memo != ''"> and memo = #{memo}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="contribution != null "> and contribution = #{contribution}</if>
+            <if test="familyLevel != null "> and family_level = #{familyLevel}</if>
+            <if test="videoTime != null "> and video_time = #{videoTime}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="liveLevel != null "> and live_level = #{liveLevel}</if>
+            <if test="familyRecom != null  and familyRecom != ''"> and family_recom = #{familyRecom}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveFamilyById" parameterType="Long" resultMap="LiveFamilyResult">
+        <include refid="selectLiveFamilyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveFamily" parameterType="LiveFamily" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.live_family
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logo != null and logo != ''">logo,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="notice != null and notice != ''">notice,</if>
+            <if test="manifesto != null and manifesto != ''">manifesto,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userCount != null">user_count,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="createY != null">create_y,</if>
+            <if test="createM != null">create_m,</if>
+            <if test="createD != null">create_d,</if>
+            <if test="createW != null">create_w,</if>
+            <if test="memo != null and memo != ''">memo,</if>
+            <if test="status != null">status,</if>
+            <if test="contribution != null">contribution,</if>
+            <if test="familyLevel != null">family_level,</if>
+            <if test="videoTime != null">video_time,</if>
+            <if test="score != null">score,</if>
+            <if test="liveLevel != null">live_level,</if>
+            <if test="familyRecom != null and familyRecom != ''">family_recom,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logo != null and logo != ''">#{logo},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="notice != null and notice != ''">#{notice},</if>
+            <if test="manifesto != null and manifesto != ''">#{manifesto},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userCount != null">#{userCount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="createY != null">#{createY},</if>
+            <if test="createM != null">#{createM},</if>
+            <if test="createD != null">#{createD},</if>
+            <if test="createW != null">#{createW},</if>
+            <if test="memo != null and memo != ''">#{memo},</if>
+            <if test="status != null">#{status},</if>
+            <if test="contribution != null">#{contribution},</if>
+            <if test="familyLevel != null">#{familyLevel},</if>
+            <if test="videoTime != null">#{videoTime},</if>
+            <if test="score != null">#{score},</if>
+            <if test="liveLevel != null">#{liveLevel},</if>
+            <if test="familyRecom != null and familyRecom != ''">#{familyRecom},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLiveFamily" parameterType="LiveFamily">
+        update 7700_live.live_family
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logo != null and logo != ''">logo = #{logo},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="notice != null and notice != ''">notice = #{notice},</if>
+            <if test="manifesto != null and manifesto != ''">manifesto = #{manifesto},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userCount != null">user_count = #{userCount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="createY != null">create_y = #{createY},</if>
+            <if test="createM != null">create_m = #{createM},</if>
+            <if test="createD != null">create_d = #{createD},</if>
+            <if test="createW != null">create_w = #{createW},</if>
+            <if test="memo != null and memo != ''">memo = #{memo},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="contribution != null">contribution = #{contribution},</if>
+            <if test="familyLevel != null">family_level = #{familyLevel},</if>
+            <if test="videoTime != null">video_time = #{videoTime},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="liveLevel != null">live_level = #{liveLevel},</if>
+            <if test="familyRecom != null and familyRecom != ''">family_recom = #{familyRecom},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveFamilyById" parameterType="Long">
+        delete from 7700_live.live_family where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveFamilyByIds" parameterType="String">
+        delete from 7700_live.live_family where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

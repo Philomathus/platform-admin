@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveVideoChatMapper">
+
+    <resultMap type="LiveVideoChat" id="LiveVideoChatResult">
+        <result property="id"    column="id"    />
+        <result property="poscatId"    column="poscat_id"    />
+        <result property="group"    column="group"    />
+        <result property="userId"    column="user_id"    />
+        <result property="msg"    column="msg"    />
+        <result property="createTimes"    column="create_time"    />
+        <result property="type"    column="type"    />
+        <result property="poscatNickName"    column="poscat_nick_name"    />
+        <result property="userNickName"    column="user_nick_name"    />
+        <result property="fromPlatform"    column="from_platform"    />
+    </resultMap>
+
+    <sql id="selectLiveVideoChatVo">
+        select id, poscat_id, `group`, user_id, msg,  create_time create_time ,  type, poscat_nick_name, user_nick_name, from_platform from 7700_live.live_video_chat
+    </sql>
+
+    <select id="selectLiveVideoChatList" parameterType="LiveVideoChat" resultMap="LiveVideoChatResult">
+        <include refid="selectLiveVideoChatVo"/>
+        <where>
+            <if test="poscatId != null "> and poscat_id = #{poscatId}</if>
+            <if test="group != null  and group != ''"> and `group` = #{group}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="msg != null  and msg != ''"> and msg = #{msg}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="poscatNickName != null  and poscatNickName != ''"> and poscat_nick_name like concat('%', #{poscatNickName}, '%')</if>
+            <if test="userNickName != null  and userNickName != ''"> and user_nick_name like concat('%', #{userNickName}, '%')</if>
+            <if test="fromPlatform != null  and fromPlatform != ''"> and from_platform = #{fromPlatform}</if>
+            <if test="sendStartTime != null  and sendStartTime != ''"> and create_time >= #{sendStartTime}</if>
+            <if test="sendEndTime != null  and sendEndTime != ''"> and create_time &lt;= #{sendEndTime}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveVideoChatById" parameterType="Long" resultMap="LiveVideoChatResult">
+        <include refid="selectLiveVideoChatVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveVideoChat" parameterType="LiveVideoChat" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.live_video_chat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="poscatId != null">poscat_id,</if>
+            <if test="group != null">`group`,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="msg != null">msg,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="type != null">type,</if>
+            <if test="poscatNickName != null">poscat_nick_name,</if>
+            <if test="userNickName != null">user_nick_name,</if>
+            <if test="fromPlatform != null">from_platform,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="poscatId != null">#{poscatId},</if>
+                    <if test="group != null">#{group},</if>
+                    <if test="userId != null">#{userId},</if>
+                    <if test="msg != null">#{msg},</if>
+                <if test="createTime != null">#{createTime},</if>
+                    <if test="type != null">#{type},</if>
+                    <if test="poscatNickName != null">#{poscatNickName},</if>
+                    <if test="userNickName != null">#{userNickName},</if>
+                    <if test="fromPlatform != null">#{fromPlatform},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLiveVideoChat" parameterType="LiveVideoChat">
+        update 7700_live.live_video_chat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="poscatId != null">poscat_id = #{poscatId},</if>
+
+            <if test="group != null">`group` = #{group},</if>
+
+            <if test="userId != null">user_id = #{userId},</if>
+
+            <if test="msg != null">msg = #{msg},</if>
+
+            <if test="createTime != null">create_time = #{createTime},</if>
+
+            <if test="type != null">type = #{type},</if>
+
+            <if test="poscatNickName != null">poscat_nick_name = #{poscatNickName},</if>
+
+            <if test="userNickName != null">user_nick_name = #{userNickName},</if>
+
+            <if test="fromPlatform != null">from_platform = #{fromPlatform},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveVideoChatById" parameterType="Long">
+        delete from 7700_live.live_video_chat where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveVideoChatByIds" parameterType="String">
+        delete from 7700_live.live_video_chat where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

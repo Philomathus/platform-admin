@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MessageGameNoticeMapper">
+
+    <resultMap type="MessageGameNotice" id="MessageGameNoticeResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="device"    column="device"    />
+        <result property="action"    column="action"    />
+        <result property="pubdatetime"    column="pubDateTime"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <sql id="selectMessageGameNoticeVo">
+        select id, title, device, action, pubDateTime, content from message_game_notice
+    </sql>
+
+    <select id="selectMessageGameNoticeList" parameterType="MessageGameNotice" resultMap="MessageGameNoticeResult">
+        <include refid="selectMessageGameNoticeVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="device != null  and device != ''"> and device = #{device}</if>
+            <if test="action != null  and action != ''"> and action = #{action}</if>
+            <if test="pubdatetime != null "> and pubDateTime = #{pubdatetime}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+
+    <select id="selectMessageGameNoticeById" parameterType="String" resultMap="MessageGameNoticeResult">
+        <include refid="selectMessageGameNoticeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMessageGameNotice" parameterType="MessageGameNotice">
+        insert into message_game_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="device != null and device != ''">device,</if>
+            <if test="action != null and action != ''">action,</if>
+            <if test="pubdatetime != null">pubDateTime,</if>
+            <if test="content != null and content != ''">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="device != null and device != ''">#{device},</if>
+            <if test="action != null and action != ''">#{action},</if>
+            <if test="pubdatetime != null">#{pubdatetime},</if>
+            <if test="content != null and content != ''">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMessageGameNotice" parameterType="MessageGameNotice">
+        update message_game_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="device != null and device != ''">device = #{device},</if>
+            <if test="action != null and action != ''">action = #{action},</if>
+            <if test="pubdatetime != null">pubDateTime = #{pubdatetime},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMessageGameNoticeById" parameterType="String">
+        delete from message_game_notice where id = #{id}
+    </delete>
+
+    <delete id="deleteMessageGameNoticeByIds" parameterType="String">
+        delete from message_game_notice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

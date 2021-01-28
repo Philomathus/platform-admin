@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveUserLogMapper">
+
+    <resultMap type="LiveUserLog" id="LiveUserLogResult">
+        <result property="id"    column="id"    />
+        <result property="logInfo"    column="log_info"    />
+        <result property="logTime"    column="log_time"    />
+        <result property="logAdminId"    column="log_admin_id"    />
+        <result property="money"    column="money"    />
+        <result property="userId"    column="user_id"    />
+        <result property="pUserId"    column="p_user_id"    />
+        <result property="type"    column="type"    />
+        <result property="propId"    column="prop_id"    />
+        <result property="score"    column="score"    />
+        <result property="point"    column="point"    />
+        <result property="podcastId"    column="podcast_id"    />
+        <result property="diamonds"    column="diamonds"    />
+        <result property="ticket"    column="ticket"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="contributionId"    column="contribution_id"    />
+    </resultMap>
+
+    <sql id="selectLiveUserLogVo">
+        select id, log_info, log_time, log_admin_id, money, user_id, p_user_id, type, prop_id, score, point, podcast_id, diamonds, ticket, video_id, contribution_id from 7700_live.live_user_log
+    </sql>
+
+    <select id="selectLiveUserLogList" parameterType="LiveUserLog" resultMap="LiveUserLogResult">
+        <include refid="selectLiveUserLogVo"/>
+        <where>
+            <if test="logInfo != null  and logInfo != ''"> and log_info = #{logInfo}</if>
+            <if test="logTime != null "> and log_time = #{logTime}</if>
+            <if test="logAdminId != null "> and log_admin_id = #{logAdminId}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="pUserId != null  and pUserId != ''"> and p_user_id = #{pUserId}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="propId != null "> and prop_id = #{propId}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="point != null "> and point = #{point}</if>
+            <if test="podcastId != null "> and podcast_id = #{podcastId}</if>
+            <if test="diamonds != null "> and diamonds = #{diamonds}</if>
+            <if test="ticket != null "> and ticket = #{ticket}</if>
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+            <if test="contributionId != null "> and contribution_id = #{contributionId}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveUserLogById" parameterType="Long" resultMap="LiveUserLogResult">
+        <include refid="selectLiveUserLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveUserLog" parameterType="LiveUserLog" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.live_user_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logInfo != null and logInfo != ''">log_info,</if>
+            <if test="logTime != null">log_time,</if>
+            <if test="logAdminId != null">log_admin_id,</if>
+            <if test="money != null">money,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="pUserId != null">p_user_id,</if>
+            <if test="type != null">type,</if>
+            <if test="propId != null">prop_id,</if>
+            <if test="score != null">score,</if>
+            <if test="point != null">point,</if>
+            <if test="podcastId != null">podcast_id,</if>
+            <if test="diamonds != null">diamonds,</if>
+            <if test="ticket != null">ticket,</if>
+            <if test="videoId != null">video_id,</if>
+            <if test="contributionId != null">contribution_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="logInfo != null and logInfo != ''">#{logInfo},</if>
+                    <if test="logTime != null">#{logTime},</if>
+                    <if test="logAdminId != null">#{logAdminId},</if>
+                    <if test="money != null">#{money},</if>
+                    <if test="userId != null">#{userId},</if>
+                    <if test="pUserId != null">#{pUserId},</if>
+                    <if test="type != null">#{type},</if>
+                    <if test="propId != null">#{propId},</if>
+                    <if test="score != null">#{score},</if>
+                    <if test="point != null">#{point},</if>
+                    <if test="podcastId != null">#{podcastId},</if>
+                    <if test="diamonds != null">#{diamonds},</if>
+                    <if test="ticket != null">#{ticket},</if>
+                    <if test="videoId != null">#{videoId},</if>
+                    <if test="contributionId != null">#{contributionId},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLiveUserLog" parameterType="LiveUserLog">
+        update 7700_live.live_user_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logInfo != null and logInfo != ''">log_info = #{logInfo},</if>
+    
+            <if test="logTime != null">log_time = #{logTime},</if>
+    
+            <if test="logAdminId != null">log_admin_id = #{logAdminId},</if>
+    
+            <if test="money != null">money = #{money},</if>
+    
+            <if test="userId != null">user_id = #{userId},</if>
+    
+            <if test="pUserId != null">p_user_id = #{pUserId},</if>
+    
+            <if test="type != null">type = #{type},</if>
+    
+            <if test="propId != null">prop_id = #{propId},</if>
+    
+            <if test="score != null">score = #{score},</if>
+    
+            <if test="point != null">point = #{point},</if>
+    
+            <if test="podcastId != null">podcast_id = #{podcastId},</if>
+    
+            <if test="diamonds != null">diamonds = #{diamonds},</if>
+    
+            <if test="ticket != null">ticket = #{ticket},</if>
+    
+            <if test="videoId != null">video_id = #{videoId},</if>
+    
+            <if test="contributionId != null">contribution_id = #{contributionId},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveUserLogById" parameterType="Long">
+        delete from 7700_live.live_user_log where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveUserLogByIds" parameterType="String">
+        delete from 7700_live.live_user_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveVideoClassifiedMapper">
+
+    <resultMap type="LiveVideoClassified" id="LiveVideoClassifiedResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="isEffect"    column="is_effect"    />
+        <result property="sort"    column="sort"    />
+        <result property="img"    column="img"    />
+        <result property="classfy"    column="classfy"    />
+        <result property="isHostShow"    column="is_host_show"    />
+        <result property="sortDesc"    column="sort_desc"    />
+    </resultMap>
+
+    <sql id="selectLiveVideoClassifiedVo">
+        select id, title, is_effect, sort, img, classfy, is_host_show, sort_desc from 7700_live.live_video_classified
+    </sql>
+
+    <select id="selectLiveVideoClassifiedList" parameterType="LiveVideoClassified" resultMap="LiveVideoClassifiedResult">
+        <include refid="selectLiveVideoClassifiedVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="isEffect != null "> and is_effect = #{isEffect}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="img != null  and img != ''"> and img = #{img}</if>
+            <if test="classfy != null "> and classfy = #{classfy}</if>
+            <if test="isHostShow != null "> and is_host_show = #{isHostShow}</if>
+            <if test="sortDesc != null  and sortDesc != ''"> and sort_desc = #{sortDesc}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveVideoClassifiedById" parameterType="Long" resultMap="LiveVideoClassifiedResult">
+        <include refid="selectLiveVideoClassifiedVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveVideoClassified" parameterType="LiveVideoClassified" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.live_video_classified
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="isEffect != null">is_effect,</if>
+            <if test="sort != null">sort,</if>
+            <if test="img != null and img != ''">img,</if>
+            <if test="classfy != null">classfy,</if>
+            <if test="isHostShow != null">is_host_show,</if>
+            <if test="sortDesc != null">sort_desc,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="isEffect != null">#{isEffect},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="img != null and img != ''">#{img},</if>
+            <if test="classfy != null">#{classfy},</if>
+            <if test="isHostShow != null">#{isHostShow},</if>
+            <if test="sortDesc != null">#{sortDesc},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLiveVideoClassified" parameterType="LiveVideoClassified">
+        update 7700_live.live_video_classified
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="isEffect != null">is_effect = #{isEffect},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="img != null and img != ''">img = #{img},</if>
+            <if test="classfy != null">classfy = #{classfy},</if>
+            <if test="isHostShow != null">is_host_show = #{isHostShow},</if>
+            <if test="sortDesc != null">sort_desc = #{sortDesc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveVideoClassifiedById" parameterType="Long">
+        delete from 7700_live.live_video_classified where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveVideoClassifiedByIds" parameterType="String">
+        delete from 7700_live.live_video_classified where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

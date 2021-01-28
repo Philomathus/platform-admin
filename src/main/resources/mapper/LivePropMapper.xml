@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LivePropMapper">
+
+    <resultMap type="LiveProp" id="LivePropResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="score"    column="score"    />
+        <result property="diamonds"    column="diamonds"    />
+        <result property="icon"    column="icon"    />
+        <result property="ticket"    column="ticket"    />
+        <result property="isMuch"    column="is_much"    />
+        <result property="sort"    column="sort"    />
+        <result property="isRedEnvelope"    column="is_red_envelope"    />
+        <result property="isAnimated"    column="is_animated"    />
+        <result property="isEffect"    column="is_effect"    />
+        <result property="animType"    column="anim_type"    />
+        <result property="robotDiamonds"    column="robot_diamonds"    />
+        <result property="pcIcon"    column="pc_icon"    />
+        <result property="pcGif"    column="pc_gif"    />
+        <result property="gifGiftShowStyle"    column="gif_gift_show_style"    />
+        <result property="animatedUrl"    column="animated_url"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectLivePropVo">
+        select id, name, score, diamonds, icon, ticket, is_much, sort, is_red_envelope, is_animated, is_effect, anim_type, robot_diamonds, pc_icon, pc_gif, gif_gift_show_style, animated_url, type from 7700_live.live_prop
+    </sql>
+
+    <select id="selectLivePropList" parameterType="LiveProp" resultMap="LivePropResult">
+        <include refid="selectLivePropVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="diamonds != null "> and diamonds = #{diamonds}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="ticket != null "> and ticket = #{ticket}</if>
+            <if test="isMuch != null "> and is_much = #{isMuch}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="isRedEnvelope != null "> and is_red_envelope = #{isRedEnvelope}</if>
+            <if test="isAnimated != null "> and is_animated = #{isAnimated}</if>
+            <if test="isEffect != null "> and is_effect = #{isEffect}</if>
+            <if test="animType != null  and animType != ''"> and anim_type = #{animType}</if>
+            <if test="robotDiamonds != null "> and robot_diamonds = #{robotDiamonds}</if>
+            <if test="pcIcon != null  and pcIcon != ''"> and pc_icon = #{pcIcon}</if>
+            <if test="pcGif != null  and pcGif != ''"> and pc_gif = #{pcGif}</if>
+            <if test="gifGiftShowStyle != null "> and gif_gift_show_style = #{gifGiftShowStyle}</if>
+            <if test="animatedUrl != null  and animatedUrl != ''"> and animated_url = #{animatedUrl}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+
+    <select id="selectLivePropById" parameterType="Long" resultMap="LivePropResult">
+        <include refid="selectLivePropVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveProp" parameterType="LiveProp" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.live_prop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="score != null">score,</if>
+            <if test="diamonds != null">diamonds,</if>
+            <if test="icon != null and icon != ''">icon,</if>
+            <if test="ticket != null">ticket,</if>
+            <if test="isMuch != null">is_much,</if>
+            <if test="sort != null">sort,</if>
+            <if test="isRedEnvelope != null">is_red_envelope,</if>
+            <if test="isAnimated != null">is_animated,</if>
+            <if test="isEffect != null">is_effect,</if>
+            <if test="animType != null and animType != ''">anim_type,</if>
+            <if test="robotDiamonds != null">robot_diamonds,</if>
+            <if test="pcIcon != null and pcIcon != ''">pc_icon,</if>
+            <if test="pcGif != null and pcGif != ''">pc_gif,</if>
+            <if test="gifGiftShowStyle != null">gif_gift_show_style,</if>
+            <if test="animatedUrl != null">animated_url,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="score != null">#{score},</if>
+            <if test="diamonds != null">#{diamonds},</if>
+            <if test="icon != null and icon != ''">#{icon},</if>
+            <if test="ticket != null">#{ticket},</if>
+            <if test="isMuch != null">#{isMuch},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="isRedEnvelope != null">#{isRedEnvelope},</if>
+            <if test="isAnimated != null">#{isAnimated},</if>
+            <if test="isEffect != null">#{isEffect},</if>
+            <if test="animType != null and animType != ''">#{animType},</if>
+            <if test="robotDiamonds != null">#{robotDiamonds},</if>
+            <if test="pcIcon != null and pcIcon != ''">#{pcIcon},</if>
+            <if test="pcGif != null and pcGif != ''">#{pcGif},</if>
+            <if test="gifGiftShowStyle != null">#{gifGiftShowStyle},</if>
+            <if test="animatedUrl != null">#{animatedUrl},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLiveProp" parameterType="LiveProp">
+        update 7700_live.live_prop
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="diamonds != null">diamonds = #{diamonds},</if>
+            <if test="icon != null and icon != ''">icon = #{icon},</if>
+            <if test="ticket != null">ticket = #{ticket},</if>
+            <if test="isMuch != null">is_much = #{isMuch},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="isRedEnvelope != null">is_red_envelope = #{isRedEnvelope},</if>
+            <if test="isAnimated != null">is_animated = #{isAnimated},</if>
+            <if test="isEffect != null">is_effect = #{isEffect},</if>
+            <if test="animType != null and animType != ''">anim_type = #{animType},</if>
+            <if test="robotDiamonds != null">robot_diamonds = #{robotDiamonds},</if>
+            <if test="pcIcon != null and pcIcon != ''">pc_icon = #{pcIcon},</if>
+            <if test="pcGif != null and pcGif != ''">pc_gif = #{pcGif},</if>
+            <if test="gifGiftShowStyle != null">gif_gift_show_style = #{gifGiftShowStyle},</if>
+            <if test="animatedUrl != null">animated_url = #{animatedUrl},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLivePropById" parameterType="Long">
+        delete from 7700_live.live_prop where id = #{id}
+    </delete>
+
+    <delete id="deleteLivePropByIds" parameterType="String">
+        delete from 7700_live.live_prop where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

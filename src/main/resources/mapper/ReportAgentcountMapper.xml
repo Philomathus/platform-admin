@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ReportAgentcountMapper">
+
+    <resultMap type="ReportAgentcount" id="ReportAgentcountResult">
+        <result property="repId"    column="rep_id"    />
+        <result property="agentcode"    column="agentcode"    />
+        <result property="agentname"    column="agentname"    />
+        <result property="agenttime"    column="agenttime"    />
+        <result property="newmember"    column="newmember"    />
+        <result property="totalmember"    column="totalmember"    />
+        <result property="gsRukuanjine"    column="gs_rukuanjine"    />
+        <result property="xsRukuanjine"    column="xs_rukuanjine"    />
+        <result property="sgRukuanjine"    column="sg_rukuanjine"    />
+        <result property="totalfristRukuanjine"    column="totalfrist_rukuanjine"    />
+        <result property="chukuanjine"    column="chukuanjine"    />
+        <result property="totalRukuanjine"    column="total_rukuanjine"    />
+        <result property="totalChukuanjine"    column="total_chukuanjine"    />
+        <result property="totalEnterlivetimes"    column="total_enterlivetimes"    />
+        <result property="totalActiveandroid"    column="total_activeandroid"    />
+        <result property="totalActiveios"    column="total_activeios"    />
+        <result property="totalGiveprop"    column="total_giveprop"    />
+    </resultMap>
+
+    <sql id="selectReportAgentcountVo">
+        select rep_id, agentcode, agentname, agenttime, newmember, totalmember, gs_rukuanjine, xs_rukuanjine, sg_rukuanjine, totalfrist_rukuanjine, chukuanjine, total_rukuanjine, total_chukuanjine, total_enterlivetimes, total_activeandroid, total_activeios, total_giveprop from 7700_main.report_agentcount
+    </sql>
+
+    <select id="selectReportAgentcountList" parameterType="ReportAgentcount" resultMap="ReportAgentcountResult">
+        <include refid="selectReportAgentcountVo"/>
+        <where>
+            <if test="agentcode != null  and agentcode != ''"> and agentcode = #{agentcode}</if>
+            <if test="agentname != null  and agentname != ''"> and agentname like concat('%', #{agentname}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(agenttime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(agenttime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

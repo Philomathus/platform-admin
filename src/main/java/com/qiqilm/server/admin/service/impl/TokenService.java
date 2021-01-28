@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class TokenService {
 	private static final   Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
 
 	// 令牌自定义标识
-	@Value("${token.header}")
+	@Value( "${token.header}" )
 	private String header;
 	// 令牌秘钥
 	@Value( "${token.secret}" )
@@ -71,10 +72,11 @@ public class TokenService {
 	/**
 	 * 删除用户身份信息
 	 */
-	public void delLoginUser( String token ) {
-		if ( StringUtils.isNotEmpty( token ) ) {
-			String userKey = getTokenKey( token );
-			redisUtil.unlink( userKey );
+	public void delLoginUser( LoginUser loginUser ) {
+		if ( StringUtils.isNotEmpty( loginUser.getToken() ) ) {
+			String tokenKey = getTokenKey( loginUser.getToken() );
+			String userKey  = getUserKey( loginUser.getUser().getUserId() );
+			redisUtil.unlink( Arrays.asList( tokenKey, userKey ) );
 		}
 	}
 
@@ -116,9 +118,18 @@ public class TokenService {
 	public void refreshToken( LoginUser loginUser ) {
 		loginUser.setLoginTime( System.currentTimeMillis() );
 		loginUser.setExpireTime( loginUser.getLoginTime() + expireTime * MILLIS_MINUTE );
+
+		String userKey  = getUserKey( loginUser.getUser().getUserId() );
+		String oldToken = redisUtil.strGet( userKey );
+		if ( StringUtils.isNotEmpty( oldToken ) ) {
+			String oldTokenKey = getTokenKey( oldToken );
+			redisUtil.unlink( oldTokenKey );
+		}
+
 		// 根据uuid将loginUser缓存
-		String userKey = getTokenKey( loginUser.getToken() );
-		redisUtil.strSet( userKey, JsonUtil.object2Json( loginUser ), Duration.ofMinutes( expireTime ) );
+		String tokenKey = getTokenKey( loginUser.getToken() );
+		redisUtil.strSet( tokenKey, JsonUtil.object2Json( loginUser ), Duration.ofMinutes( expireTime ) );
+		redisUtil.strSet( userKey, loginUser.getToken(), Duration.ofMinutes( expireTime ) );
 	}
 
 	/**
@@ -142,10 +153,9 @@ public class TokenService {
 	 * @return 令牌
 	 */
 	private String createToken( Map<String, Object> claims ) {
-		String token = Jwts.builder()
+		return Jwts.builder()
 				.setClaims( claims )
 				.signWith( SignatureAlgorithm.HS512, secret ).compact();
-		return token;
 	}
 
 	/**
@@ -187,5 +197,9 @@ public class TokenService {
 
 	private String getTokenKey( String uuid ) {
 		return AdminConstants.LOGIN_TOKEN_KEY + uuid;
+	}
+
+	private String getUserKey( Long userId ) {
+		return AdminConstants.LOGIN_USER_TOEN_KEY + userId;
 	}
 }

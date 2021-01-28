@@ -25,6 +25,29 @@ public class MemberInfo extends BaseEntity {
     @Excel(name = "会员编号")
     private String memberCode;
 
+    /** 会员ID/账号/手机号 */
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    /** 会员编号 */
+    @Excel(name = "银行卡号")
+    private String bankAccount;
+
     /** 代理编号 */
     @Excel(name = "代理编号")
     private String cxAgent;
@@ -33,9 +56,19 @@ public class MemberInfo extends BaseEntity {
     @Excel(name = "账号")
     private String userName;
 
+    private Integer googleAuthCode;
+
     /** 姓名 */
     @Excel(name = "姓名")
     private String realName;
+
+    public Integer getGoogleAuthCode() {
+        return googleAuthCode;
+    }
+
+    public void setGoogleAuthCode(Integer googleAuthCode) {
+        this.googleAuthCode = googleAuthCode;
+    }
 
     /** 状态(0= 禁用 1=正常 2=测试号3=超管号) */
     @Excel(name = "状态(0= 禁用 1=正常 2=测试号3=超管号)")
