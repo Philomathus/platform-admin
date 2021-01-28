@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="group"    column="group"    />
         <result property="userId"    column="user_id"    />
         <result property="msg"    column="msg"    />
-        <result property="createTimes"    column="create_time"    />
+        <result property="createTime"    column="create_time"    />
         <result property="type"    column="type"    />
         <result property="poscatNickName"    column="poscat_nick_name"    />
         <result property="userNickName"    column="user_nick_name"    />
@@ -18,7 +18,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveVideoChatVo">
-        select id, poscat_id, `group`, user_id, msg,  create_time create_time ,  type, poscat_nick_name, user_nick_name, from_platform from 7700_live.live_video_chat
+        select id, poscat_id, `group`, user_id, msg,  create_time as createTimes,  type, poscat_nick_name, user_nick_name,
+        from_platform from 7700_live.live_video_chat
     </sql>
 
     <select id="selectLiveVideoChatList" parameterType="LiveVideoChat" resultMap="LiveVideoChatResult">
@@ -35,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sendStartTime != null  and sendStartTime != ''"> and create_time >= #{sendStartTime}</if>
             <if test="sendEndTime != null  and sendEndTime != ''"> and create_time &lt;= #{sendEndTime}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectLiveVideoChatById" parameterType="Long" resultMap="LiveVideoChatResult">
