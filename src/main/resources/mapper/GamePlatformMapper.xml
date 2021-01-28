@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.GamePlatformMapper">
+
+    <resultMap type="GamePlatform" id="GamePlatformResult">
+        <result property="id"    column="id"    />
+        <result property="agent"    column="agent"    />
+        <result property="name"    column="name"    />
+        <result property="apiUrl"    column="api_url"    />
+        <result property="recordUrl"    column="record_url"    />
+        <result property="des"    column="des"    />
+        <result property="md5"    column="md5"    />
+        <result property="linecode"    column="linecode"    />
+        <result property="rateClean"    column="rate_clean"    />
+        <result property="gameTypeid"    column="game_typeID"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="rateBeat"    column="rate_beat"    />
+    </resultMap>
+
+    <sql id="selectGamePlatformVo">
+        select id, agent, name, api_url, record_url, des, md5, linecode, rate_clean, game_typeID, status, create_by,  FROM_UNIXTIME(create_time) create_time ,  update_by,  FROM_UNIXTIME(update_time) update_time ,  rate_beat from 7700_main.game_platform
+    </sql>
+    <select id="getGameListInfo"  resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
+        select name as platformName
+        from 7700_main.game_platform
+    </select>
+    <select id="selectGamePlatformList" parameterType="GamePlatform" resultMap="GamePlatformResult">
+        <include refid="selectGamePlatformVo"/>
+        <where>
+            <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="apiUrl != null  and apiUrl != ''"> and api_url = #{apiUrl}</if>
+            <if test="recordUrl != null  and recordUrl != ''"> and record_url = #{recordUrl}</if>
+            <if test="des != null  and des != ''"> and des = #{des}</if>
+            <if test="md5 != null  and md5 != ''"> and md5 = #{md5}</if>
+            <if test="linecode != null  and linecode != ''"> and linecode = #{linecode}</if>
+            <if test="rateClean != null "> and rate_clean = #{rateClean}</if>
+            <if test="gameTypeid != null  and gameTypeid != ''"> and game_typeID = #{gameTypeid}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="rateBeat != null "> and rate_beat = #{rateBeat}</if>
+        </where>
+    </select>
+
+    <select id="selectGamePlatformById" parameterType="Long" resultMap="GamePlatformResult">
+        <include refid="selectGamePlatformVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertGamePlatform" parameterType="GamePlatform">
+        insert into 7700_main.game_platform
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="agent != null">agent,</if>
+            <if test="name != null">name,</if>
+            <if test="apiUrl != null">api_url,</if>
+            <if test="recordUrl != null">record_url,</if>
+            <if test="des != null">des,</if>
+            <if test="md5 != null">md5,</if>
+            <if test="linecode != null">linecode,</if>
+            <if test="rateClean != null">rate_clean,</if>
+            <if test="gameTypeid != null">game_typeID,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="rateBeat != null">rate_beat,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="agent != null">#{agent},</if>
+            <if test="name != null">#{name},</if>
+            <if test="apiUrl != null">#{apiUrl},</if>
+            <if test="recordUrl != null">#{recordUrl},</if>
+            <if test="des != null">#{des},</if>
+            <if test="md5 != null">#{md5},</if>
+            <if test="linecode != null">#{linecode},</if>
+            <if test="rateClean != null">#{rateClean},</if>
+            <if test="gameTypeid != null">#{gameTypeid},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="rateBeat != null">#{rateBeat},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGamePlatform" parameterType="GamePlatform">
+        update 7700_main.game_platform
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="agent != null">agent = #{agent},</if>
+
+            <if test="name != null">name = #{name},</if>
+
+            <if test="apiUrl != null">api_url = #{apiUrl},</if>
+
+            <if test="recordUrl != null">record_url = #{recordUrl},</if>
+
+            <if test="des != null">des = #{des},</if>
+
+            <if test="md5 != null">md5 = #{md5},</if>
+
+            <if test="linecode != null">linecode = #{linecode},</if>
+
+            <if test="rateClean != null">rate_clean = #{rateClean},</if>
+
+            <if test="gameTypeid != null">game_typeID = #{gameTypeid},</if>
+
+            <if test="status != null">status = #{status},</if>
+
+            <if test="createBy != null">create_by = #{createBy},</if>
+
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+
+            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
+
+            <if test="rateBeat != null">rate_beat = #{rateBeat},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGamePlatformById" parameterType="Long">
+        delete from 7700_main.game_platform where id = #{id}
+    </delete>
+
+    <delete id="deleteGamePlatformByIds" parameterType="String">
+        delete from 7700_main.game_platform where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
