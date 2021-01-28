@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Controller
+ * 主播时长Controller
  *
  * @author 77tv
  * @date 2021-01-27
@@ -27,7 +27,7 @@ public class LiveHostWageNoteController extends BaseController {
 	private ILiveHostWageNoteService liveHostWageNoteService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询主播时长列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:list')" )
 	@GetMapping( "/list" )
@@ -38,10 +38,10 @@ public class LiveHostWageNoteController extends BaseController {
 	}
 
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出主播时长列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "主播时长", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(LiveHostWageNote liveHostWageNote) {
 		List<LiveHostWageNote>      list = liveHostWageNoteService.selectLiveHostWageNoteList(liveHostWageNote);
@@ -50,7 +50,7 @@ public class LiveHostWageNoteController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取主播时长详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:query')" )
 	@GetMapping( value = "/{id}" )
@@ -59,30 +59,30 @@ public class LiveHostWageNoteController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增主播时长
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "主播时长", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody LiveHostWageNote liveHostWageNote) {
 		return toAjax( liveHostWageNoteService.insertLiveHostWageNote(liveHostWageNote) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改主播时长
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "主播时长", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LiveHostWageNote liveHostWageNote) {
 		return toAjax( liveHostWageNoteService.updateLiveHostWageNote(liveHostWageNote) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除主播时长
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "主播时长", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( liveHostWageNoteService.deleteLiveHostWageNoteByIds( ids ) );
