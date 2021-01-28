@@ -24,7 +24,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="device != null  and device != ''"> and device = #{device}</if>
             <if test="action != null  and action != ''"> and action = #{action}</if>
-            <if test="pubdatetime != null "> and pubDateTime = #{pubdatetime}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(pubDateTime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(pubDateTime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 
