@@ -243,7 +243,7 @@ public class VelocityUtils {
 	 */
 	public static String getParentMenuId( Map<String, String> paramsMap ) {
 		if ( !CollectionUtils.isEmpty( paramsMap ) && paramsMap.containsKey( GenConstants.PARENT_MENU_ID ) ) {
-			return paramsMap.get( GenConstants.PARENT_MENU_ID );
+			return String.valueOf(paramsMap.get( GenConstants.PARENT_MENU_ID ));
 		}
 		return DEFAULT_PARENT_MENU_ID;
 	}

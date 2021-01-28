@@ -420,7 +420,7 @@ public class GenTableServiceImpl implements IGenTableService {
 			String treeCode       = paramsMap.get( GenConstants.TREE_CODE );
 			String treeParentCode = paramsMap.get( GenConstants.TREE_PARENT_CODE );
 			String treeName       = paramsMap.get( GenConstants.TREE_NAME );
-			String parentMenuId   = paramsMap.get( GenConstants.PARENT_MENU_ID );
+			String parentMenuId   = String.valueOf(paramsMap.get( GenConstants.PARENT_MENU_ID ));
 			String parentMenuName = paramsMap.get( GenConstants.PARENT_MENU_NAME );
 
 			genTable.setTreeCode( treeCode );
