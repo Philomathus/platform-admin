@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayAgentLogMapper">
+
+    <resultMap type="PayAgentLog" id="PayAgentLogResult">
+        <result property="id"    column="id"    />
+        <result property="withdrawOrderNo"    column="withdraw_order_no"    />
+        <result property="payAgentOrderNo"    column="pay_agent_order_no"    />
+        <result property="payAgentPlatId"    column="pay_agent_plat_id"    />
+        <result property="payAgentPlatName"    column="pay_agent_plat_name"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="memberAccount"    column="member_account"    />
+        <result property="withdrawMoney"    column="withdraw_money"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="callbackTime"    column="callback_time"    />
+        <result property="callbackStatus"    column="callback_status"    />
+    </resultMap>
+
+    <sql id="selectPayAgentLogVo">
+        select id, withdraw_order_no, pay_agent_order_no, pay_agent_plat_id, pay_agent_plat_name, member_id, member_account, withdraw_money, create_time, callback_time, callback_status from pay_agent_log
+    </sql>
+
+    <select id="selectPayAgentLogList" parameterType="PayAgentLog" resultMap="PayAgentLogResult">
+        <include refid="selectPayAgentLogVo"/>
+        <where>
+            <if test="withdrawOrderNo != null  and withdrawOrderNo != ''"> and withdraw_order_no = #{withdrawOrderNo}</if>
+            <if test="payAgentOrderNo != null  and payAgentOrderNo != ''"> and pay_agent_order_no = #{payAgentOrderNo}</if>
+            <if test="payAgentPlatId != null  and payAgentPlatId != ''"> and pay_agent_plat_id = #{payAgentPlatId}</if>
+            <if test="payAgentPlatName != null  and payAgentPlatName != ''"> and pay_agent_plat_name like concat('%', #{payAgentPlatName}, '%')</if>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="memberAccount != null  and memberAccount != ''"> and member_account = #{memberAccount}</if>
+            <if test="withdrawMoney != null "> and withdraw_money = #{withdrawMoney}</if>
+            <if test="callbackTime != null "> and callback_time = #{callbackTime}</if>
+            <if test="callbackStatus != null "> and callback_status = #{callbackStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectPayAgentLogById" parameterType="Long" resultMap="PayAgentLogResult">
+        <include refid="selectPayAgentLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPayAgentLog" parameterType="PayAgentLog" useGeneratedKeys="true" keyProperty="id">
+        insert into pay_agent_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="withdrawOrderNo != null and withdrawOrderNo != ''">withdraw_order_no,</if>
+            <if test="payAgentOrderNo != null">pay_agent_order_no,</if>
+            <if test="payAgentPlatId != null and payAgentPlatId != ''">pay_agent_plat_id,</if>
+            <if test="payAgentPlatName != null and payAgentPlatName != ''">pay_agent_plat_name,</if>
+            <if test="memberId != null and memberId != ''">member_id,</if>
+            <if test="memberAccount != null and memberAccount != ''">member_account,</if>
+            <if test="withdrawMoney != null">withdraw_money,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="callbackTime != null">callback_time,</if>
+            <if test="callbackStatus != null">callback_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="withdrawOrderNo != null and withdrawOrderNo != ''">#{withdrawOrderNo},</if>
+            <if test="payAgentOrderNo != null">#{payAgentOrderNo},</if>
+            <if test="payAgentPlatId != null and payAgentPlatId != ''">#{payAgentPlatId},</if>
+            <if test="payAgentPlatName != null and payAgentPlatName != ''">#{payAgentPlatName},</if>
+            <if test="memberId != null and memberId != ''">#{memberId},</if>
+            <if test="memberAccount != null and memberAccount != ''">#{memberAccount},</if>
+            <if test="withdrawMoney != null">#{withdrawMoney},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="callbackTime != null">#{callbackTime},</if>
+            <if test="callbackStatus != null">#{callbackStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayAgentLog" parameterType="PayAgentLog">
+        update pay_agent_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="withdrawOrderNo != null and withdrawOrderNo != ''">withdraw_order_no = #{withdrawOrderNo},</if>
+            <if test="payAgentOrderNo != null">pay_agent_order_no = #{payAgentOrderNo},</if>
+            <if test="payAgentPlatId != null and payAgentPlatId != ''">pay_agent_plat_id = #{payAgentPlatId},</if>
+            <if test="payAgentPlatName != null and payAgentPlatName != ''">pay_agent_plat_name = #{payAgentPlatName},</if>
+            <if test="memberId != null and memberId != ''">member_id = #{memberId},</if>
+            <if test="memberAccount != null and memberAccount != ''">member_account = #{memberAccount},</if>
+            <if test="withdrawMoney != null">withdraw_money = #{withdrawMoney},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="callbackTime != null">callback_time = #{callbackTime},</if>
+            <if test="callbackStatus != null">callback_status = #{callbackStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayAgentLogById" parameterType="Long">
+        delete from pay_agent_log where id = #{id}
+    </delete>
+
+    <delete id="deletePayAgentLogByIds" parameterType="String">
+        delete from pay_agent_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

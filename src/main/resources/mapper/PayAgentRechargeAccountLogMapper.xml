@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayAgentRechargeAccountLogMapper">
+
+    <resultMap type="PayAgentRechargeAccountLog" id="PayAgentRechargeAccountLogResult">
+        <result property="orderNo"    column="order_no"    />
+        <result property="account"    column="account"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="bankId"    column="bank_id"    />
+        <result property="rechargeMoney"    column="recharge_money"    />
+        <result property="subMoney"    column="sub_money"    />
+        <result property="rechargeRealName"    column="recharge_real_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="opName"    column="op_name"    />
+    </resultMap>
+
+    <sql id="selectPayAgentRechargeAccountLogVo">
+        select order_no, account, nick_name, bank_id, recharge_money, sub_money, recharge_real_name, remark, status, create_time, update_time, op_name from pay_agent_recharge_account_log
+    </sql>
+
+    <select id="selectPayAgentRechargeAccountLogList" parameterType="PayAgentRechargeAccountLog" resultMap="PayAgentRechargeAccountLogResult">
+        <include refid="selectPayAgentRechargeAccountLogVo"/>
+        <where>
+            <if test="account != null  and account != ''"> and account = #{account}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="bankId != null "> and bank_id = #{bankId}</if>
+            <if test="rechargeMoney != null "> and recharge_money = #{rechargeMoney}</if>
+            <if test="subMoney != null "> and sub_money = #{subMoney}</if>
+            <if test="rechargeRealName != null  and rechargeRealName != ''"> and recharge_real_name like concat('%', #{rechargeRealName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectPayAgentRechargeAccountLogById" parameterType="String" resultMap="PayAgentRechargeAccountLogResult">
+        <include refid="selectPayAgentRechargeAccountLogVo"/>
+        where order_no = #{orderNo}
+    </select>
+
+    <insert id="insertPayAgentRechargeAccountLog" parameterType="PayAgentRechargeAccountLog">
+        insert into pay_agent_recharge_account_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">order_no,</if>
+            <if test="account != null and account != ''">account,</if>
+            <if test="nickName != null and nickName != ''">nick_name,</if>
+            <if test="bankId != null">bank_id,</if>
+            <if test="rechargeMoney != null">recharge_money,</if>
+            <if test="subMoney != null">sub_money,</if>
+            <if test="rechargeRealName != null and rechargeRealName != ''">recharge_real_name,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="opName != null">op_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="account != null and account != ''">#{account},</if>
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="bankId != null">#{bankId},</if>
+            <if test="rechargeMoney != null">#{rechargeMoney},</if>
+            <if test="subMoney != null">#{subMoney},</if>
+            <if test="rechargeRealName != null and rechargeRealName != ''">#{rechargeRealName},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="opName != null">#{opName},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayAgentRechargeAccountLog" parameterType="PayAgentRechargeAccountLog">
+        update pay_agent_recharge_account_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="account != null and account != ''">account = #{account},</if>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="bankId != null">bank_id = #{bankId},</if>
+            <if test="rechargeMoney != null">recharge_money = #{rechargeMoney},</if>
+            <if test="subMoney != null">sub_money = #{subMoney},</if>
+            <if test="rechargeRealName != null and rechargeRealName != ''">recharge_real_name = #{rechargeRealName},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="opName != null">op_name = #{opName},</if>
+        </trim>
+        where order_no = #{orderNo}
+    </update>
+
+    <delete id="deletePayAgentRechargeAccountLogById" parameterType="String">
+        delete from pay_agent_recharge_account_log where order_no = #{orderNo}
+    </delete>
+
+    <delete id="deletePayAgentRechargeAccountLogByIds" parameterType="String">
+        delete from pay_agent_recharge_account_log where order_no in
+        <foreach item="orderNo" collection="array" open="(" separator="," close=")">
+            #{orderNo}
+        </foreach>
+    </delete>
+</mapper>

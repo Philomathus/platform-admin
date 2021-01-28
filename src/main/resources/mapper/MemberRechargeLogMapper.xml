@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MemberRechargeLogMapper">
+
+    <resultMap type="MemberRechargeLog" id="MemberRechargeLogResult">
+        <result property="id"    column="id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="rechargeMoney"    column="recharge_money"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="bankAccount"    column="bank_account"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="opName"    column="op_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="bankAddress"    column="bank_address"    />
+        <result property="type"    column="type"    />
+        <result property="rechargeUserName"    column="recharge_user_name"    />
+        <result property="bankUserName"    column="bank_user_name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="discountBill"    column="discount_bill"    />
+        <result property="first"    column="first"    />
+    </resultMap>
+
+    <sql id="selectMemberRechargeLogVo">
+        select id, member_id, user_name, recharge_money, bank_name, bank_account, status, remark, op_name, create_time, update_time, bank_address, type, recharge_user_name, bank_user_name, order_no, discount_bill, first from member_recharge_log
+    </sql>
+
+    <select id="selectMemberRechargeLogList" parameterType="MemberRechargeLog" resultMap="MemberRechargeLogResult">
+        <include refid="selectMemberRechargeLogVo"/>
+        <where>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="rechargeMoney != null "> and recharge_money = #{rechargeMoney}</if>
+            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="bankAddress != null  and bankAddress != ''"> and bank_address = #{bankAddress}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="rechargeUserName != null  and rechargeUserName != ''"> and recharge_user_name like concat('%', #{rechargeUserName}, '%')</if>
+            <if test="bankUserName != null  and bankUserName != ''"> and bank_user_name like concat('%', #{bankUserName}, '%')</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
+            <if test="first != null "> and first = #{first}</if>
+        </where>
+    </select>
+
+    <select id="selectMemberRechargeLogById" parameterType="String" resultMap="MemberRechargeLogResult">
+        <include refid="selectMemberRechargeLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMemberRechargeLog" parameterType="MemberRechargeLog">
+        insert into member_recharge_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="rechargeMoney != null">recharge_money,</if>
+            <if test="bankName != null">bank_name,</if>
+            <if test="bankAccount != null">bank_account,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="opName != null">op_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="bankAddress != null">bank_address,</if>
+            <if test="type != null">type,</if>
+            <if test="rechargeUserName != null">recharge_user_name,</if>
+            <if test="bankUserName != null">bank_user_name,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="discountBill != null">discount_bill,</if>
+            <if test="first != null">first,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="rechargeMoney != null">#{rechargeMoney},</if>
+            <if test="bankName != null">#{bankName},</if>
+            <if test="bankAccount != null">#{bankAccount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="opName != null">#{opName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="bankAddress != null">#{bankAddress},</if>
+            <if test="type != null">#{type},</if>
+            <if test="rechargeUserName != null">#{rechargeUserName},</if>
+            <if test="bankUserName != null">#{bankUserName},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="discountBill != null">#{discountBill},</if>
+            <if test="first != null">#{first},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMemberRechargeLog" parameterType="MemberRechargeLog">
+        update member_recharge_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="rechargeMoney != null">recharge_money = #{rechargeMoney},</if>
+            <if test="bankName != null">bank_name = #{bankName},</if>
+            <if test="bankAccount != null">bank_account = #{bankAccount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="opName != null">op_name = #{opName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="bankAddress != null">bank_address = #{bankAddress},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="rechargeUserName != null">recharge_user_name = #{rechargeUserName},</if>
+            <if test="bankUserName != null">bank_user_name = #{bankUserName},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="discountBill != null">discount_bill = #{discountBill},</if>
+            <if test="first != null">first = #{first},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMemberRechargeLogById" parameterType="String">
+        delete from member_recharge_log where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberRechargeLogByIds" parameterType="String">
+        delete from member_recharge_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

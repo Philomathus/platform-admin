@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayAgentRechargeRecordMapper">
+
+    <resultMap type="PayAgentRechargeRecord" id="PayAgentRechargeRecordResult">
+        <result property="orderNo"    column="order_no"    />
+        <result property="rechargeAcount"    column="recharge_acount"    />
+        <result property="rechargeNickName"    column="recharge_nick_name"    />
+        <result property="type"    column="type"    />
+        <result property="remark"    column="remark"    />
+        <result property="money"    column="money"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="opName"    column="op_name"    />
+    </resultMap>
+
+    <sql id="selectPayAgentRechargeRecordVo">
+        select order_no, recharge_acount, recharge_nick_name, type, remark, money, create_time, op_name from pay_agent_recharge_record
+    </sql>
+
+    <select id="selectPayAgentRechargeRecordList" parameterType="PayAgentRechargeRecord" resultMap="PayAgentRechargeRecordResult">
+        <include refid="selectPayAgentRechargeRecordVo"/>
+        <where>
+            <if test="rechargeAcount != null  and rechargeAcount != ''"> and recharge_acount = #{rechargeAcount}</if>
+            <if test="rechargeNickName != null  and rechargeNickName != ''"> and recharge_nick_name like concat('%', #{rechargeNickName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectPayAgentRechargeRecordById" parameterType="String" resultMap="PayAgentRechargeRecordResult">
+        <include refid="selectPayAgentRechargeRecordVo"/>
+        where order_no = #{orderNo}
+    </select>
+
+    <insert id="insertPayAgentRechargeRecord" parameterType="PayAgentRechargeRecord">
+        insert into pay_agent_recharge_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">order_no,</if>
+            <if test="rechargeAcount != null and rechargeAcount != ''">recharge_acount,</if>
+            <if test="rechargeNickName != null">recharge_nick_name,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="money != null">money,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="opName != null and opName != ''">op_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="rechargeAcount != null and rechargeAcount != ''">#{rechargeAcount},</if>
+            <if test="rechargeNickName != null">#{rechargeNickName},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="money != null">#{money},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="opName != null and opName != ''">#{opName},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayAgentRechargeRecord" parameterType="PayAgentRechargeRecord">
+        update pay_agent_recharge_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rechargeAcount != null and rechargeAcount != ''">recharge_acount = #{rechargeAcount},</if>
+            <if test="rechargeNickName != null">recharge_nick_name = #{rechargeNickName},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="opName != null and opName != ''">op_name = #{opName},</if>
+        </trim>
+        where order_no = #{orderNo}
+    </update>
+
+    <delete id="deletePayAgentRechargeRecordById" parameterType="String">
+        delete from pay_agent_recharge_record where order_no = #{orderNo}
+    </delete>
+
+    <delete id="deletePayAgentRechargeRecordByIds" parameterType="String">
+        delete from pay_agent_recharge_record where order_no in
+        <foreach item="orderNo" collection="array" open="(" separator="," close=")">
+            #{orderNo}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayAgentRechargeAccountMapper">
+
+    <resultMap type="PayAgentRechargeAccount" id="PayAgentRechargeAccountResult">
+        <result property="id"    column="id"    />
+        <result property="account"    column="account"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="balanceAmount"    column="balance_amount"    />
+        <result property="rechargeNum"    column="recharge_num"    />
+        <result property="qqAccount"    column="qq_account"    />
+        <result property="wechatAccount"    column="wechat_account"    />
+        <result property="alipayAccount"    column="alipay_account"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="businessBeginTime"    column="business_begin_time"    />
+        <result property="businessEndTime"    column="business_end_time"    />
+        <result property="rechargeDiscountRate"    column="recharge_discount_rate"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="beforeLoginTime"    column="before_login_time"    />
+        <result property="loginTime"    column="login_time"    />
+    </resultMap>
+
+    <sql id="selectPayAgentRechargeAccountVo">
+        select id, account, nick_name, balance_amount, recharge_num, qq_account, wechat_account, alipay_account, mobile, business_begin_time, business_end_time, recharge_discount_rate, status, create_time, before_login_time, login_time from pay_agent_recharge_account
+    </sql>
+
+    <select id="selectPayAgentRechargeAccountList" parameterType="PayAgentRechargeAccount" resultMap="PayAgentRechargeAccountResult">
+        <include refid="selectPayAgentRechargeAccountVo"/>
+        <where>
+            <if test="account != null  and account != ''"> and account = #{account}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="balanceAmount != null "> and balance_amount = #{balanceAmount}</if>
+            <if test="rechargeNum != null "> and recharge_num = #{rechargeNum}</if>
+            <if test="qqAccount != null  and qqAccount != ''"> and qq_account = #{qqAccount}</if>
+            <if test="wechatAccount != null  and wechatAccount != ''"> and wechat_account = #{wechatAccount}</if>
+            <if test="alipayAccount != null  and alipayAccount != ''"> and alipay_account = #{alipayAccount}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="businessBeginTime != null "> and business_begin_time = #{businessBeginTime}</if>
+            <if test="businessEndTime != null "> and business_end_time = #{businessEndTime}</if>
+            <if test="rechargeDiscountRate != null "> and recharge_discount_rate = #{rechargeDiscountRate}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="beforeLoginTime != null "> and before_login_time = #{beforeLoginTime}</if>
+            <if test="loginTime != null "> and login_time = #{loginTime}</if>
+        </where>
+    </select>
+
+    <select id="selectPayAgentRechargeAccountById" parameterType="Long" resultMap="PayAgentRechargeAccountResult">
+        <include refid="selectPayAgentRechargeAccountVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPayAgentRechargeAccount" parameterType="PayAgentRechargeAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into pay_agent_recharge_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="account != null and account != ''">account,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="balanceAmount != null">balance_amount,</if>
+            <if test="rechargeNum != null">recharge_num,</if>
+            <if test="qqAccount != null">qq_account,</if>
+            <if test="wechatAccount != null">wechat_account,</if>
+            <if test="alipayAccount != null">alipay_account,</if>
+            <if test="mobile != null and mobile != ''">mobile,</if>
+            <if test="businessBeginTime != null">business_begin_time,</if>
+            <if test="businessEndTime != null">business_end_time,</if>
+            <if test="rechargeDiscountRate != null">recharge_discount_rate,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="beforeLoginTime != null">before_login_time,</if>
+            <if test="loginTime != null">login_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="account != null and account != ''">#{account},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="balanceAmount != null">#{balanceAmount},</if>
+            <if test="rechargeNum != null">#{rechargeNum},</if>
+            <if test="qqAccount != null">#{qqAccount},</if>
+            <if test="wechatAccount != null">#{wechatAccount},</if>
+            <if test="alipayAccount != null">#{alipayAccount},</if>
+            <if test="mobile != null and mobile != ''">#{mobile},</if>
+            <if test="businessBeginTime != null">#{businessBeginTime},</if>
+            <if test="businessEndTime != null">#{businessEndTime},</if>
+            <if test="rechargeDiscountRate != null">#{rechargeDiscountRate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="beforeLoginTime != null">#{beforeLoginTime},</if>
+            <if test="loginTime != null">#{loginTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayAgentRechargeAccount" parameterType="PayAgentRechargeAccount">
+        update pay_agent_recharge_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="account != null and account != ''">account = #{account},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="balanceAmount != null">balance_amount = #{balanceAmount},</if>
+            <if test="rechargeNum != null">recharge_num = #{rechargeNum},</if>
+            <if test="qqAccount != null">qq_account = #{qqAccount},</if>
+            <if test="wechatAccount != null">wechat_account = #{wechatAccount},</if>
+            <if test="alipayAccount != null">alipay_account = #{alipayAccount},</if>
+            <if test="mobile != null and mobile != ''">mobile = #{mobile},</if>
+            <if test="businessBeginTime != null">business_begin_time = #{businessBeginTime},</if>
+            <if test="businessEndTime != null">business_end_time = #{businessEndTime},</if>
+            <if test="rechargeDiscountRate != null">recharge_discount_rate = #{rechargeDiscountRate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="beforeLoginTime != null">before_login_time = #{beforeLoginTime},</if>
+            <if test="loginTime != null">login_time = #{loginTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayAgentRechargeAccountById" parameterType="Long">
+        delete from pay_agent_recharge_account where id = #{id}
+    </delete>
+
+    <delete id="deletePayAgentRechargeAccountByIds" parameterType="String">
+        delete from pay_agent_recharge_account where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
