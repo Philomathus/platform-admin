@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,9 +25,10 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 	@Autowired
 	private LiveVideoChatMapper liveVideoChatMapper;
 	@Autowired
-	private MemberInfoMapper    memberInfoMapper;
-	@Autowired
 	private MemberForbidUtil    memberForbidUtil;
+
+	@Autowired
+	private MemberInfoMapper memberInfoMapper;
 
 	/**
 	 * 查询会员发言
@@ -97,25 +99,38 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 
 	@Override
 	public void setSpeakForbid( List<LiveVideoChat> list ) {
-        if ( !list.isEmpty() ) {
-            Set<String> pUserIds = new HashSet<>();
-            list.forEach( videoChat -> {
-                if ( videoChat.getFromPlatform() != null ) {
-                    pUserIds.add( videoChat.getFromPlatform() );
+		if ( !list.isEmpty() ) {
+			Set<String> pUserIds = new HashSet<>();
+			list.forEach( videoChat -> {
+				if ( videoChat.getFromPlatform() != null ) {
+					pUserIds.add( videoChat.getFromPlatform() );
 
-                    long forbidExpire = memberForbidUtil.getUserForbidExpire( videoChat.getFromPlatform() );
-                    videoChat.setForbid( forbidExpire > 0 );
-                }
-            } );
+					long forbidExpire = memberForbidUtil.getUserForbidExpire( videoChat.getFromPlatform() );
+					videoChat.setForbid( forbidExpire > 0 );
+				}
+			} );
 
-            List<String> memberIdList = memberInfoMapper.selectMemberSpeak( pUserIds.toArray( new String[ 0 ] ) );
-            for ( String memberId : memberIdList ) {
-                for ( LiveVideoChat videoChat : list ) {
-                    if ( memberId.equals( videoChat.getFromPlatform() ) ) {
-                        videoChat.setNoSpeaking( true );
-                    }
-                }
-            }
-        }
+			List<String> memberIdList = memberInfoMapper.selectMemberSpeak( pUserIds.toArray( new String[ 0 ] ) );
+			for ( String memberId : memberIdList ) {
+				for ( LiveVideoChat videoChat : list ) {
+					if ( memberId.equals( videoChat.getFromPlatform() ) ) {
+						videoChat.setNoSpeaking( true );
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public String suspendUser( String pUserId,boolean flag,Integer num ) {
+		if ( memberForbidUtil.setPlatformUserSpeak( pUserId, flag )) {
+			memberInfoMapper.updateSpeak( pUserId, num );
+		}
+		return null;
+	}
+
+	@Override
+	public void forbidSendMsg( String pUserId, Integer forbidTime,Integer videoId ) {
+		memberForbidUtil.setUserForbid( pUserId, videoId, Duration.ofSeconds( forbidTime ) );
 	}
 }

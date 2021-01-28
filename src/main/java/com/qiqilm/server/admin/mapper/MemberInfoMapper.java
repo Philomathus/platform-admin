@@ -74,4 +74,6 @@ public interface MemberInfoMapper {
 	List<WithdrawReport> userWithdrawReportList();
 
 	List<String> selectMemberSpeak( String[] ids );
+
+	void updateSpeak(@Param( "pUserId" ) String pUserId, @Param( "speak" ) int speak );
 }

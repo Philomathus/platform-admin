@@ -1,22 +1,21 @@
 package com.qiqilm.server.admin.controller.live;
 
 import com.qiqilm.server.admin.annotation.Log;
-import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveVideoChat;
 import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILiveVideoChatService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * 会员发言Controller
@@ -44,6 +43,42 @@ public class LiveVideoChatController extends BaseController {
 		return getDataTable( list );
 	}
 
+	/**
+	 * 直播间用户封停
+	 *
+	 * @return
+	 */
+	@PostMapping( "suspendUser" )
+	@Log( title = "用户封停", businessType = BusinessType.UPDATE )
+	public AjaxResult suspendUser( HttpServletRequest request,
+						  @RequestBody Map<String, Object> requestMap ) {
+		String pUserId = ( String ) requestMap.get( "pUserId" );
+		boolean flag = ( boolean ) requestMap.get( "flag" );
+		int num = ( int ) requestMap.get( "num" );
+		if ( !StringUtils.hasText( pUserId ) ) {
+			return AjaxResult.error( "会员平台ID不得为空" );
+		}
+		liveVideoChatService.suspendUser(pUserId,flag,num);
+		return AjaxResult.success();
+	}
+
+	/**
+	 * 直播间用户禁言10分钟
+	 *
+	 * @return
+	 */
+	@PostMapping( "forbidSendMsg" )
+	@Log( title = "用户禁言", businessType = BusinessType.UPDATE )
+	public AjaxResult forbidSendMsg(@RequestBody Map<String, Object> requestMap ) {
+		String  pUserId    = ( String ) requestMap.get( "pUserId" );
+		Integer videoId    = ( Integer ) requestMap.get( "videoId" );
+		Integer forbidTime = 600;
+		if ( !StringUtils.hasText( pUserId ) ) {
+			return AjaxResult.error( "会员平台ID不得为空" );
+		}
+		liveVideoChatService.forbidSendMsg(pUserId,forbidTime,videoId);
+		return AjaxResult.success();
+	}
 	/**
 	 * 导出会员发言列表
 	 */

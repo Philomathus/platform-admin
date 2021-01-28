@@ -1,7 +1,9 @@
 package com.qiqilm.server.admin.cache;
 
 import com.qiqilm.server.admin.constant.Constants;
+import com.qiqilm.server.admin.enums.PlatformUserKey;
 import com.qiqilm.server.admin.utils.RedisUtil;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,5 +36,14 @@ public class MemberForbidUtil {
 	public long getUserSpeakIntervalExpire( String pUserId ) {
 		long expire = redisUtil.getExpire( CACHE_USER_SPEAK_INTERVAL + pUserId );
 		return expire > 0 ? expire : 0;
+	}
+
+	public boolean setPlatformUserSpeak( String pUserId, boolean speak ) {
+		String token = redisUtil.strGet( Constants.USER_TOKEN_KEY + pUserId );
+		if ( Strings.isBlank( token ) ) {
+			return false;
+		}
+		redisUtil.hSet( Constants.TOKEN_USER_KEY + token, PlatformUserKey.SPEAK.getKey(), speak + "" );
+		return true;
 	}
 }
