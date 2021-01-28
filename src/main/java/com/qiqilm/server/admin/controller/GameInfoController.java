@@ -70,6 +70,12 @@ public class GameInfoController extends BaseController {
 		return AjaxResult.success( gameInfoService.selectGameInfoById(id) );
 	}
 
+	@GetMapping( value = "/listGame" )
+	public AjaxResult getGameListInfo() {
+		return AjaxResult.success( gameInfoService.getGameListInfo() );
+	}
+
+
 	/**
 	 * 新增【请填写功能名称】
 	 */

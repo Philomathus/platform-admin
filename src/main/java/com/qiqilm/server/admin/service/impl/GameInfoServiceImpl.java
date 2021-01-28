@@ -60,6 +60,11 @@ public class GameInfoServiceImpl implements IGameInfoService {
         return gameInfoMapper.selectGameInfoList(gameInfo);
     }
 
+    @Override
+    public List<RspGameInfo> getGameListInfo() {
+        return gamePlatformMapper.getGameListInfo();
+    }
+
     /**
      * 新增【请填写功能名称】
      *

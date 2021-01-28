@@ -26,7 +26,10 @@
     <sql id="selectGamePlatformVo">
         select id, agent, name, api_url, record_url, des, md5, linecode, rate_clean, game_typeID, status, create_by,  FROM_UNIXTIME(create_time) create_time ,  update_by,  FROM_UNIXTIME(update_time) update_time ,  rate_beat from 7700_main.game_platform
     </sql>
-
+    <select id="getGameListInfo"  resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
+        select name as platformName
+        from 7700_main.game_platform
+    </select>
     <select id="selectGamePlatformList" parameterType="GamePlatform" resultMap="GamePlatformResult">
         <include refid="selectGamePlatformVo"/>
         <where>

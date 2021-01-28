@@ -34,6 +34,8 @@ public interface IGameInfoService {
 	 */
 	public List<RspGameInfo> selectGameInfoList(GameInfo gameInfo);
 
+	List<RspGameInfo> getGameListInfo();
+
 	/**
 	 * 新增【请填写功能名称】
 	 *
@@ -65,6 +67,7 @@ public interface IGameInfoService {
 	 * @return 结果
 	 */
 	public int deleteGameInfoById(String id);
+
 
 
 }

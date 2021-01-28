@@ -30,7 +30,7 @@ public interface GameInfoMapper {
 	 */
 	public List<RspGameInfo> selectGameInfoList(GameInfo gameInfo);
 
-
+	List<RspGameInfo> getGameListInfo();
 
 	public int updateStatus(GameInfo gameInfo);
 	int changeIsWh(GameInfo gameInfo);
