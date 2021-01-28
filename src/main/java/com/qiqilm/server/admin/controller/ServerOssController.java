@@ -10,7 +10,9 @@ import com.qiqilm.server.admin.service.IServerOssService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -73,5 +75,19 @@ public class ServerOssController extends BaseController {
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( serverOssService.deleteServerOssByIds( ids ) );
+	}
+
+	@PatchMapping( "/effect/{id}" )
+	@Log( title = "oss文件存储服务激活", businessType = BusinessType.UPDATE )
+	public AjaxResult effect( @PathVariable long id ) {
+		return toAjax( serverOssService.effect( id ) );
+	}
+
+	@PostMapping( "uploadOssTest" )
+	@Log( title = "oss文件存储服务配置", businessType = BusinessType.UPLOAD )
+	public AjaxResult uploadOssTest( @RequestParam( "file" ) MultipartFile file, String path, long id ) throws IOException {
+		String fileName = file.getOriginalFilename();
+		String fileKey  = path + "/" + fileName;
+		return AjaxResult.success( "上传成功", serverOssService.uploadOssTest( file.getInputStream(), fileKey, id ) );
 	}
 }

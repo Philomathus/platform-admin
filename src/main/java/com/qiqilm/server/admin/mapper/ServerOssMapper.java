@@ -58,4 +58,6 @@ public interface ServerOssMapper {
 	 * @return 结果
 	 */
 	public int deleteServerOssByIds(Long[] ids );
+
+	ServerOss selectServerOssByEffect();
 }

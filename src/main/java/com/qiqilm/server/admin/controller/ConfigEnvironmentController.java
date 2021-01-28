@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Controller
+ * 环境参数配置Controller
  *
  * @author 77tv
  * @date 2021-01-27
@@ -31,7 +31,7 @@ public class ConfigEnvironmentController extends BaseController {
     private HttpServletRequest request;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询环境参数配置列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:list')" )
 	@GetMapping( "/list" )
@@ -42,10 +42,10 @@ public class ConfigEnvironmentController extends BaseController {
 	}
 
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出环境参数配置列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "导出环境参数配置列表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(ConfigEnvironment configEnvironment) {
 		List<ConfigEnvironment>      list = configEnvironmentService.selectConfigEnvironmentList(configEnvironment);
@@ -54,7 +54,7 @@ public class ConfigEnvironmentController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取环境参数配置详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:query')" )
 	@GetMapping( value = "/{envCode}" )
@@ -63,30 +63,30 @@ public class ConfigEnvironmentController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增环境参数配置
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "新增环境参数配置", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ConfigEnvironment configEnvironment) {
 		return toAjax( configEnvironmentService.insertConfigEnvironment(configEnvironment) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改环境参数配置
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "修改环境参数配置", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody ConfigEnvironment configEnvironment) {
 		return toAjax( configEnvironmentService.updateConfigEnvironment(configEnvironment) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改环境参数配置
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "批量修改环境参数配置", businessType = BusinessType.UPDATE )
 	@PostMapping("/editList")
 	public AjaxResult edit(@RequestBody ArrayList<ConfigEnvironment> configEnvironments) {
         try {
@@ -102,20 +102,19 @@ public class ConfigEnvironmentController extends BaseController {
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 获取环境参数头所对应的index
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
 	@GetMapping("/getTitleIndex")
 	public AjaxResult getTitleIndex(String title, String code) {
         return  configEnvironmentService.getTitleIndex(title,code);
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除环境参数配置
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "环境参数配置", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{envCodes}" )
 	public AjaxResult remove( @PathVariable String[] envCodes ) {
 		return toAjax( configEnvironmentService.deleteConfigEnvironmentByIds( envCodes ) );
