@@ -61,7 +61,7 @@ public class RspGameInfo extends BaseEntity {
 
     /** 0 =横屏 1=竖屏 */
     @Excel(name = "0 =横屏 1=竖屏")
-    private Long screen;
+    private String screen;
 
     /** 高宽比 */
     @Excel(name = "高宽比")
@@ -69,7 +69,7 @@ public class RspGameInfo extends BaseEntity {
 
     /** 0 =不填充 1=填充 */
     @Excel(name = "0 =不填充 1=填充")
-    private Integer isFull;
+    private String isFull;
 
     public String getPlatformName() {
         return platformName;
@@ -161,11 +161,11 @@ public class RspGameInfo extends BaseEntity {
     public Long getPlatformId() {
         return platformId;
     }
-    public void setScreen(Long screen) {
+    public void setScreen(String screen) {
         this.screen = screen;
     }
 
-    public Long getScreen() {
+    public String getScreen() {
         return screen;
     }
     public void setHighWide(BigDecimal highWide) {
@@ -175,11 +175,11 @@ public class RspGameInfo extends BaseEntity {
     public BigDecimal getHighWide() {
         return highWide;
     }
-    public void setIsFull(Integer isFull) {
+    public void setIsFull(String isFull) {
         this.isFull = isFull;
     }
 
-    public Integer getIsFull() {
+    public String getIsFull() {
         return isFull;
     }
     public void setIconType(Long iconType) {

@@ -27,7 +27,7 @@
         select id, agent, name, api_url, record_url, des, md5, linecode, rate_clean, game_typeID, status, create_by,  FROM_UNIXTIME(create_time) create_time ,  update_by,  FROM_UNIXTIME(update_time) update_time ,  rate_beat from 7700_main.game_platform
     </sql>
     <select id="getGameListInfo"  resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
-        select name as platformName
+        select id, name as platformName
         from 7700_main.game_platform
     </select>
     <select id="selectGamePlatformList" parameterType="GamePlatform" resultMap="GamePlatformResult">
@@ -85,9 +85,9 @@
             <if test="gameTypeid != null">#{gameTypeid},</if>
             <if test="status != null">#{status},</if>
             <if test="createBy != null">#{createBy},</if>
-            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
-            <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="updateTime != null">#{updateTime},</if>
             <if test="rateBeat != null">#{rateBeat},</if>
         </trim>
     </insert>

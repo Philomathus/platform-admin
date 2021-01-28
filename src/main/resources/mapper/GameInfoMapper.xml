@@ -29,13 +29,13 @@
     </sql>
 
     <select id="selectGameInfoList"  resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
-        select a.id, a.name,a.icon,a.edition_icon as editionIcon,a.indexs,a.is_full as isFull,a.is_wh as isWh,a.status,a.high_wide,b.name as platformName
+        select a.id, a.name,a.icon,a.edition_icon as editionIcon,a.indexs,a.is_full as isFull,a.is_wh as isWh,a.status,a.high_wide as highWide,b.name as platformName
         from 7700_main.game_info a
         left join  7700_main.game_platform b
         on a.platform_id=b.id
         <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="platformId != null "> and platform_id = #{platformId}</if>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="platformId != null "> and a.platform_id = #{platformId}</if>
         </where>
     </select>
 
@@ -76,7 +76,7 @@
             <if test="icon != null">#{icon},</if>
             <if test="isHot != null">#{isHot},</if>
             <if test="editionIcon != null">#{editionIcon},</if>
-            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="createTime != null">#{createTime},</if>
             <if test="kindId != null">#{kindId},</if>
             <if test="platformId != null">#{platformId},</if>
             <if test="screen != null">#{screen},</if>
@@ -142,9 +142,7 @@
     </delete>
 
     <delete id="deleteGameInfoByIds" parameterType="String">
-        delete from 7700_main.game_info where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+        delete from 7700_main.game_info where id=#{id}
+
     </delete>
 </mapper>

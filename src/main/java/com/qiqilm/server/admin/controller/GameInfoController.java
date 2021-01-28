@@ -1,5 +1,8 @@
 package com.qiqilm.server.admin.controller;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.GameInfo;
@@ -8,6 +11,7 @@ import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
 import com.qiqilm.server.admin.service.IGameInfoService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.SecurityUtils;
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,8 +85,11 @@ public class GameInfoController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:game-info:add')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
-	@PostMapping
+	@PostMapping(value = "/add")
 	public AjaxResult add( @RequestBody GameInfo gameInfo) {
+
+         gameInfo.setCreateTime(new Date());
+		gameInfo.setId( UuidUtil.getRandomUuid() );
 		return toAjax( gameInfoService.insertGameInfo(gameInfo) );
 	}
 
@@ -101,8 +108,8 @@ public class GameInfoController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:game-info:remove')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable String[] ids ) {
-		return toAjax( gameInfoService.deleteGameInfoByIds( ids ) );
+	@DeleteMapping( "/{id}" )
+	public AjaxResult remove( @PathVariable String id ) {
+		return toAjax( gameInfoService.deleteGameInfoByIds( id) );
 	}
 }

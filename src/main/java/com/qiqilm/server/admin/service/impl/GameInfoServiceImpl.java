@@ -73,7 +73,6 @@ public class GameInfoServiceImpl implements IGameInfoService {
      */
     @Override
     public int insertGameInfo(GameInfo gameInfo) {
-        gameInfo.setCreateTime(DateUtils.getNowDate());
         return gameInfoMapper.insertGameInfo(gameInfo);
     }
 
@@ -95,8 +94,8 @@ public class GameInfoServiceImpl implements IGameInfoService {
      * @return 结果
      */
     @Override
-    public int deleteGameInfoByIds(String[] ids) {
-        return gameInfoMapper.deleteGameInfoByIds(ids);
+    public int deleteGameInfoByIds(String id) {
+        return gameInfoMapper.deleteGameInfoByIds(id);
     }
 
     /**

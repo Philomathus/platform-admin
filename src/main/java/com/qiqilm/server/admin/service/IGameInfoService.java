@@ -58,7 +58,7 @@ public interface IGameInfoService {
 	 * @param ids 需要删除的【请填写功能名称】ID
 	 * @return 结果
 	 */
-	public int deleteGameInfoByIds(String[] ids );
+	public int deleteGameInfoByIds(String id );
 
 	/**
 	 * 删除【请填写功能名称】信息
