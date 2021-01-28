@@ -58,4 +58,11 @@ public interface ILiveVideoChatService {
 	 * @return 结果
 	 */
 	public int deleteLiveVideoChatById(Long id);
+
+	/**
+	 * 设置禁言和封停
+	 *
+	 * @param list
+	 */
+	void setSpeakForbid( List<LiveVideoChat> list );
 }

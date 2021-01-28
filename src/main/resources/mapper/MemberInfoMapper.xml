@@ -296,4 +296,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="userWithdrawReportList" resultType="com.qiqilm.server.admin.domain.vo.WithdrawReport">
 		select * from report_analysisuser  ORDER BY rep_id asc
 	</select>
+
+    <select id="selectMemberSpeak" resultType="java.lang.String">
+        select id from member_info where speak = 1 and id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+	</select>
 </mapper>
