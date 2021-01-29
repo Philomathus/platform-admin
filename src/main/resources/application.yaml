@@ -54,6 +54,10 @@ spring:
       pool:
         size: 6
       thread-name-prefix: grap-task-
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 500MB
 mybatis:
   typeAliasesPackage: com.qiqilm.server.admin.domain
   mapperLocations: classpath:mapper/*.xml

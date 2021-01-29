@@ -7,9 +7,7 @@ import com.qiqilm.server.admin.core.page.PageDomain;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.page.TableSupport;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
-import com.qiqilm.server.admin.utils.SqlUtil;
-import com.qiqilm.server.admin.utils.StringUtils;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -58,15 +56,30 @@ public class BaseController {
 		}
 	}
 
+    /**
+     * 响应请求分页数据
+     */
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
+    protected TableDataInfo getDataTable( List<?> list ) {
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode( HttpStatus.SUCCESS );
+        rspData.setMsg( "查询成功" );
+        rspData.setRows( list );
+        rspData.setTotal( new PageInfo( list ).getTotal() );
+        return rspData;
+    }
+
 	/**
 	 * 响应请求分页数据
 	 */
 	@SuppressWarnings( { "rawtypes", "unchecked" } )
-	protected TableDataInfo getDataTable( List<?> list ) {
+	protected TableDataInfo getDataTable2( List<?> list ) {
 		TableDataInfo rspData = new TableDataInfo();
 		rspData.setCode( HttpStatus.SUCCESS );
 		rspData.setMsg( "查询成功" );
-		rspData.setRows( list );
+        String pageNum = ServletUtil.getParameter("pageNum");
+        String pageSize = ServletUtil.getParameter("pageSize");
+		rspData.setRows( PageUtil.pageBySubList(list, Integer.parseInt(pageSize), Integer.parseInt(pageNum)) );
 		rspData.setTotal( new PageInfo( list ).getTotal() );
 		return rspData;
 	}
