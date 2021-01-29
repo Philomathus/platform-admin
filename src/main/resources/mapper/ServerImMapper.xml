@@ -146,4 +146,9 @@
 			#{id}
 		</foreach>
 	</delete>
+
+	<select id="selectServerImByEffect" resultMap="ServerImResult">
+		<include refid="selectServerImVo"/>
+		where is_effect = 1
+	</select>
 </mapper>

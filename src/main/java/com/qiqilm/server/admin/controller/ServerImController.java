@@ -74,4 +74,11 @@ public class ServerImController extends BaseController {
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( serverImService.deleteServerImByIds( ids ) );
 	}
+
+	@PreAuthorize( "@ss.hasPermi('server:im:effect')" )
+	@Log( title = "IM即时通讯服务配置激活", businessType = BusinessType.UPDATE )
+	@PutMapping( "/effect/{id}" )
+	public AjaxResult effect( @PathVariable long id ) {
+		return serverImService.effect( id );
+	}
 }
