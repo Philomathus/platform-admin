@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveProplogMapper">
+
+    <resultMap type="LiveProplog" id="LiveProplogResult">
+        <result property="id"    column="id"    />
+        <result property="pUserId"    column="p_user_id"    />
+        <result property="pUserName"    column="p_user_name"    />
+        <result property="propId"    column="prop_id"    />
+        <result property="propName"    column="prop_name"    />
+        <result property="totalDiamonds"    column="total_diamonds"    />
+        <result property="totalTicket"    column="total_ticket"    />
+        <result property="currentDiamonds"    column="current_diamonds"    />
+        <result property="toUserId"    column="to_user_id"    />
+        <result property="createtime"    column="createtime"    />
+    </resultMap>
+
+    <sql id="selectLiveProplogVo">
+        select id, p_user_id, p_user_name, prop_id, prop_name, total_diamonds, total_ticket, current_diamonds, to_user_id, createtime from 7700_main.live_proplog
+    </sql>
+
+    <select id="selectLiveProplogList" parameterType="LiveProplog" resultMap="LiveProplogResult">
+        <include refid="selectLiveProplogVo"/>
+        <where>
+            <if test="pUserId != null  and pUserId != ''"> and p_user_id = #{pUserId}</if>
+            <if test="pUserName != null  and pUserName != ''"> and p_user_name like concat('%', #{pUserName}, '%')</if>
+            <if test="propId != null "> and prop_id = #{propId}</if>
+            <if test="propName != null  and propName != ''"> and prop_name like concat('%', #{propName}, '%')</if>
+            <if test="totalDiamonds != null "> and total_diamonds = #{totalDiamonds}</if>
+            <if test="totalTicket != null "> and total_ticket = #{totalTicket}</if>
+            <if test="currentDiamonds != null "> and current_diamonds = #{currentDiamonds}</if>
+            <if test="toUserId != null "> and to_user_id = #{toUserId}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+            <if test="startTime != null and startTime != ''"> and createtime >= #{startTime}</if>
+            <if test="endTime != null and endTime != ''"> and createtime &lt;= #{endTime}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveProplogById" parameterType="Long" resultMap="LiveProplogResult">
+        <include refid="selectLiveProplogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveProplog" parameterType="LiveProplog">
+        insert into 7700_main.live_proplog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="pUserId != null">p_user_id,</if>
+            <if test="pUserName != null">p_user_name,</if>
+            <if test="propId != null">prop_id,</if>
+            <if test="propName != null and propName != ''">prop_name,</if>
+            <if test="totalDiamonds != null">total_diamonds,</if>
+            <if test="totalTicket != null">total_ticket,</if>
+            <if test="currentDiamonds != null">current_diamonds,</if>
+            <if test="toUserId != null">to_user_id,</if>
+            <if test="createtime != null">createtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="pUserId != null">#{pUserId},</if>
+                    <if test="pUserName != null">#{pUserName},</if>
+                    <if test="propId != null">#{propId},</if>
+                    <if test="propName != null and propName != ''">#{propName},</if>
+                    <if test="totalDiamonds != null">#{totalDiamonds},</if>
+                    <if test="totalTicket != null">#{totalTicket},</if>
+                    <if test="currentDiamonds != null">#{currentDiamonds},</if>
+                    <if test="toUserId != null">#{toUserId},</if>
+                    <if test="createtime != null">#{createtime},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLiveProplog" parameterType="LiveProplog">
+        update 7700_main.live_proplog
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pUserId != null">p_user_id = #{pUserId},</if>
+
+            <if test="pUserName != null">p_user_name = #{pUserName},</if>
+
+            <if test="propId != null">prop_id = #{propId},</if>
+
+            <if test="propName != null and propName != ''">prop_name = #{propName},</if>
+
+            <if test="totalDiamonds != null">total_diamonds = #{totalDiamonds},</if>
+
+            <if test="totalTicket != null">total_ticket = #{totalTicket},</if>
+
+            <if test="currentDiamonds != null">current_diamonds = #{currentDiamonds},</if>
+
+            <if test="toUserId != null">to_user_id = #{toUserId},</if>
+
+            <if test="createtime != null">createtime = #{createtime},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveProplogById" parameterType="Long">
+        delete from 7700_main.live_proplog where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveProplogByIds" parameterType="String">
+        delete from 7700_main.live_proplog where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
