@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberGameDataMapper">
 
     <resultMap type="MemberGameData" id="MemberGameDataResult">
@@ -22,8 +22,112 @@
     </resultMap>
 
     <sql id="selectMemberGameDataVo">
-        select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from member_game_data
+        select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from 7700_main.member_game_data
     </sql>
 
+    <select id="selectMemberGameDataList" parameterType="MemberGameData" resultMap="MemberGameDataResult">
+        <include refid="selectMemberGameDataVo"/>
+        <where>
+            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
+            <if test="account != null  and account != ''"> and account = #{account}</if>
+            <if test="kindId != null  and kindId != ''"> and kind_id = #{kindId}</if>
+            <if test="cellScore != null  and cellScore != ''"> and cell_score = #{cellScore}</if>
+            <if test="allBet != null  and allBet != ''"> and all_bet = #{allBet}</if>
+            <if test="profit != null  and profit != ''"> and profit = #{profit}</if>
+            <if test="revenue != null  and revenue != ''"> and revenue = #{revenue}</if>
+            <if test="gameEndTime != null  and gameEndTime != ''"> and game_end_time = #{gameEndTime}</if>
+            <if test="platformId != null "> and platform_id = #{platformId}</if>
+            <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
+            <if test="platformType != null  and platformType != ''"> and platform_type = #{platformType}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="gameStartTime != null  and gameStartTime != ''"> and game_start_time = #{gameStartTime}</if>
+            <if test="startTime != null and startTime != ''"> and game_start_time >= #{startTime}</if>
+            <if test="endTime != null and endTime != ''"> and game_end_time &lt;= #{endTime}</if>
+        </where>
+    </select>
 
+    <select id="selectMemberGameDataById" parameterType="String" resultMap="MemberGameDataResult">
+        <include refid="selectMemberGameDataVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMemberGameData" parameterType="MemberGameData">
+        insert into 7700_main.member_game_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="gameId != null and gameId != ''">game_id,</if>
+            <if test="account != null">account,</if>
+            <if test="kindId != null">kind_id,</if>
+            <if test="cellScore != null">cell_score,</if>
+            <if test="allBet != null">all_bet,</if>
+            <if test="profit != null">profit,</if>
+            <if test="revenue != null">revenue,</if>
+            <if test="gameEndTime != null">game_end_time,</if>
+            <if test="platformId != null">platform_id,</if>
+            <if test="agent != null">agent,</if>
+            <if test="platformType != null">platform_type,</if>
+            <if test="status != null">status,</if>
+            <if test="gameStartTime != null">game_start_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="gameId != null and gameId != ''">#{gameId},</if>
+                    <if test="account != null">#{account},</if>
+                    <if test="kindId != null">#{kindId},</if>
+                    <if test="cellScore != null">#{cellScore},</if>
+                    <if test="allBet != null">#{allBet},</if>
+                    <if test="profit != null">#{profit},</if>
+                    <if test="revenue != null">#{revenue},</if>
+                    <if test="gameEndTime != null">#{gameEndTime},</if>
+                    <if test="platformId != null">#{platformId},</if>
+                    <if test="agent != null">#{agent},</if>
+                    <if test="platformType != null">#{platformType},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="gameStartTime != null">#{gameStartTime},</if>
+             </trim>
+    </insert>
+
+    <update id="updateMemberGameData" parameterType="MemberGameData">
+        update 7700_main.member_game_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gameId != null and gameId != ''">game_id = #{gameId},</if>
+
+            <if test="account != null">account = #{account},</if>
+
+            <if test="kindId != null">kind_id = #{kindId},</if>
+
+            <if test="cellScore != null">cell_score = #{cellScore},</if>
+
+            <if test="allBet != null">all_bet = #{allBet},</if>
+
+            <if test="profit != null">profit = #{profit},</if>
+
+            <if test="revenue != null">revenue = #{revenue},</if>
+
+            <if test="gameEndTime != null">game_end_time = #{gameEndTime},</if>
+
+            <if test="platformId != null">platform_id = #{platformId},</if>
+
+            <if test="agent != null">agent = #{agent},</if>
+
+            <if test="platformType != null">platform_type = #{platformType},</if>
+
+            <if test="status != null">status = #{status},</if>
+
+            <if test="gameStartTime != null">game_start_time = #{gameStartTime},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMemberGameDataById" parameterType="String">
+        delete from 7700_main.member_game_data where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberGameDataByIds" parameterType="String">
+        delete from 7700_main.member_game_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

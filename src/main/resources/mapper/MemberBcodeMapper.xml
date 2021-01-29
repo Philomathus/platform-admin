@@ -132,4 +132,7 @@
 			#{id}
 		</foreach>
 	</delete>
+    <select id="getTotalData" resultType="java.util.Map">
+        SELECT SUM(income)total,SUM(cur)cur from member_bcode
+    </select>
 </mapper>
