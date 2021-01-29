@@ -74,4 +74,24 @@ public class ServerSmsController extends BaseController {
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( serverSmsService.deleteServerSmsByIds( ids ) );
 	}
+
+	/**
+	 * 激活SMS短信服务配置
+	 */
+	@PreAuthorize( "@ss.hasPermi('server:sms:effect')" )
+	@Log( title = "SMS短信服务配置", businessType = BusinessType.EFFECT )
+	@PutMapping( "/effect/{id}" )
+	public AjaxResult effect( @PathVariable long id ) {
+		return toAjax( serverSmsService.effect( id ) );
+	}
+
+	/**
+	 * 测试SMS短信服务配置
+	 */
+	@PreAuthorize( "@ss.hasPermi('server:sms:smsTest')" )
+	@Log( title = "SMS短信服务配置", businessType = BusinessType.OTHER )
+	@PutMapping( "/smsTest/{id}/{mobile}" )
+	public AjaxResult smsTest( @PathVariable long id, @PathVariable String mobile ) {
+		return serverSmsService.smsTest( id, mobile );
+	}
 }

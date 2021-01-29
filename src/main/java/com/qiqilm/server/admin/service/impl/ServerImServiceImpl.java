@@ -1,20 +1,19 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
-import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ServerIm;
 import com.qiqilm.server.admin.mapper.ServerImMapper;
 import com.qiqilm.server.admin.service.IServerImService;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.TLSSigAPIv2;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +33,8 @@ public class ServerImServiceImpl implements IServerImService {
 	private LiveCacheUtil     liveCacheUtil;
 	@Autowired
 	private ServerImCacheUtil serverImCacheUtil;
+	@Autowired
+	private TokenService      tokenService;
 
 	/**
 	 * 查询IM即时通讯服务配置
@@ -43,7 +44,7 @@ public class ServerImServiceImpl implements IServerImService {
 	 */
 	@Override
 	public ServerIm selectServerImById( Long id ) {
-		return RedisCacheUtil.me.get( id, () -> serverImMapper.selectServerImById( id ) );
+		return serverImMapper.selectServerImById( id );
 	}
 
 	/**
@@ -65,6 +66,8 @@ public class ServerImServiceImpl implements IServerImService {
 	 */
 	@Override
 	public int insertServerIm( ServerIm serverIm ) {
+		LoginUser loginUser   = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		serverIm.setIdentify( loginUser.getUsername() );
 		return serverImMapper.insertServerIm( serverIm );
 	}
 
@@ -76,9 +79,12 @@ public class ServerImServiceImpl implements IServerImService {
 	 */
 	@Override
 	public int updateServerIm( ServerIm serverIm ) {
-		int i = serverImMapper.updateServerIm( serverIm );
-		if ( i > 0 ) {
-			RedisCacheUtil.me.clear( serverIm.getId(), ServerIm.class );
+		LoginUser loginUser   = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		serverIm.setIdentify( loginUser.getUsername() );
+		int       i           = serverImMapper.updateServerIm( serverIm );
+		ServerIm  newServerIm = serverImMapper.selectServerImById( serverIm.getId() );
+		if ( i > 0 && newServerIm.getIsEffect() == 1 ) {
+			serverImCacheUtil.setServerIm( newServerIm );
 		}
 		return i;
 	}
@@ -91,11 +97,7 @@ public class ServerImServiceImpl implements IServerImService {
 	 */
 	@Override
 	public int deleteServerImByIds( Long[] ids ) {
-		int i = serverImMapper.deleteServerImByIds( ids );
-		if ( i > 0 ) {
-			Arrays.stream( ids ).forEach( id -> RedisCacheUtil.me.clear( id, ServerIm.class ) );
-		}
-		return i;
+		return serverImMapper.deleteServerImByIds( ids );
 	}
 
 	/**
@@ -106,11 +108,7 @@ public class ServerImServiceImpl implements IServerImService {
 	 */
 	@Override
 	public int deleteServerImById( Long id ) {
-		int i = serverImMapper.deleteServerImById( id );
-		if ( i > 0 ) {
-			RedisCacheUtil.me.clear( id, ServerIm.class );
-		}
-		return i;
+		return serverImMapper.deleteServerImById( id );
 	}
 
 	@Override
@@ -134,7 +132,7 @@ public class ServerImServiceImpl implements IServerImService {
 			String timSdkappid = serverImCacheUtil.getValue( "tim_sdkappid" );
 			String timSdkKey   = serverImCacheUtil.getValue( "tim_sdk_key" );
 			String identifier  = serverImCacheUtil.getValue( "tim_identifier" );
-			String singn       = TLSSigAPIv2.genSig( timSdkappid, timSdkKey, identifier,
+			String singn = TLSSigAPIv2.genSig( timSdkappid, timSdkKey, identifier,
 					TimeUnit.DAYS.toSeconds( 365 ) );
 			liveCacheUtil.addAdminSign( identifier, singn );
 

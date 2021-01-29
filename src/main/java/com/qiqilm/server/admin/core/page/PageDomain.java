@@ -32,7 +32,7 @@ public class PageDomain {
 		if ( StringUtils.isEmpty( orderByColumn ) ) {
 			return "";
 		}
-		return StringUtils.toUnderScoreCase( orderByColumn ) + " " + isAsc;
+		return StringUtils.toUnderScoreCase( orderByColumn ) + " " + ( StringUtils.isEmpty( isAsc ) ? "asc" : isAsc );
 	}
 
 	public Integer getPageNum() {

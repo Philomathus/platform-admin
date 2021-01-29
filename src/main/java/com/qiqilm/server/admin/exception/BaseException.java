@@ -54,6 +54,10 @@ public class BaseException extends RuntimeException {
 		this( null, null, null, defaultMessage );
 	}
 
+	public BaseException( Throwable e ) {
+		super( e );
+	}
+
 	@Override
 	public String getMessage() {
 		String message = null;

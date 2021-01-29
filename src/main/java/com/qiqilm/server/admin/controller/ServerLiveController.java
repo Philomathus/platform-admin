@@ -76,7 +76,7 @@ public class ServerLiveController extends BaseController {
 	}
 
 	@PreAuthorize( "@ss.hasPermi('server:live:effect')" )
-	@Log( title = "直播流服务配置状态修改", businessType = BusinessType.UPDATE )
+	@Log( title = "直播流服务配置", businessType = BusinessType.EFFECT )
 	@PutMapping( "/changeStatus/{id}/{status}" )
 	public AjaxResult changeStatus( @PathVariable long id, @PathVariable int status ) {
 		return  toAjax(serverLiveService.changeStatus( id, status ));

@@ -43,7 +43,6 @@
 				and dgroup = #{dgroup}
 			</if>
 		</where>
-		order by dgroup, sort
 	</select>
 
 	<select id="selectConfigDomainById" parameterType="Long" resultMap="ConfigDomainResult">

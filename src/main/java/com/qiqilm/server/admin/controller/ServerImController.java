@@ -76,7 +76,7 @@ public class ServerImController extends BaseController {
 	}
 
 	@PreAuthorize( "@ss.hasPermi('server:im:effect')" )
-	@Log( title = "IM即时通讯服务配置激活", businessType = BusinessType.UPDATE )
+	@Log( title = "IM即时通讯服务配置", businessType = BusinessType.EFFECT )
 	@PutMapping( "/effect/{id}" )
 	public AjaxResult effect( @PathVariable long id ) {
 		return serverImService.effect( id );

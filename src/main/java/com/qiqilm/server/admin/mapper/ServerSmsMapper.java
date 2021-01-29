@@ -58,4 +58,6 @@ public interface ServerSmsMapper {
 	 * @return 结果
 	 */
 	public int deleteServerSmsByIds(Long[] ids );
+
+	List<ServerSms> selectServerSmsByEffect();
 }
