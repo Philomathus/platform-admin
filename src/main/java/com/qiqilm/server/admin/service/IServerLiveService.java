@@ -1,8 +1,8 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.ServerLive;
+
+import java.util.List;
 
 /**
  * 直播流服务配置Service接口
@@ -17,7 +17,7 @@ public interface IServerLiveService {
 	 * @param id 直播流服务配置ID
 	 * @return 直播流服务配置
 	 */
-	public ServerLive selectServerLiveById(Long id);
+	public ServerLive selectServerLiveById( Long id );
 
 	/**
 	 * 查询直播流服务配置列表
@@ -25,7 +25,7 @@ public interface IServerLiveService {
 	 * @param serverLive 直播流服务配置
 	 * @return 直播流服务配置集合
 	 */
-	public List<ServerLive> selectServerLiveList(ServerLive serverLive);
+	public List<ServerLive> selectServerLiveList( ServerLive serverLive );
 
 	/**
 	 * 新增直播流服务配置
@@ -33,7 +33,7 @@ public interface IServerLiveService {
 	 * @param serverLive 直播流服务配置
 	 * @return 结果
 	 */
-	public int insertServerLive(ServerLive serverLive);
+	public int insertServerLive( ServerLive serverLive );
 
 	/**
 	 * 修改直播流服务配置
@@ -41,7 +41,7 @@ public interface IServerLiveService {
 	 * @param serverLive 直播流服务配置
 	 * @return 结果
 	 */
-	public int updateServerLive(ServerLive serverLive);
+	public int updateServerLive( ServerLive serverLive );
 
 	/**
 	 * 批量删除直播流服务配置
@@ -49,7 +49,7 @@ public interface IServerLiveService {
 	 * @param ids 需要删除的直播流服务配置ID
 	 * @return 结果
 	 */
-	public int deleteServerLiveByIds(Long[] ids );
+	public int deleteServerLiveByIds( Long[] ids );
 
 	/**
 	 * 删除直播流服务配置信息
@@ -57,5 +57,7 @@ public interface IServerLiveService {
 	 * @param id 直播流服务配置ID
 	 * @return 结果
 	 */
-	public int deleteServerLiveById(Long id);
+	public int deleteServerLiveById( Long id );
+
+	int changeStatus( long id, int status );
 }

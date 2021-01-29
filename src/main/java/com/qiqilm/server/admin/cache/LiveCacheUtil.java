@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -97,4 +98,48 @@ public class LiveCacheUtil {
 		return getConfInt( code ) > 0;
 	}
 
+
+	public void setLock( String key, String identify, int seconds ) {
+		setRedis( key + ":lock", identify, "lock", seconds );
+	}
+
+	public void setLock( String key, String identify ) {
+		setRedis( key + ":lock", identify, "lock" );
+	}
+
+	public boolean isLock( String key, String identify ) {
+		String redis = getRedis( key + ":lock", identify );
+		return Strings.isNotBlank( redis );
+	}
+
+	public synchronized boolean checkAndSetLock( String key, String identify ) {
+		boolean lock = isLock( key, identify );
+		if ( !lock ) {
+			setLock( key, identify );
+		}
+		return lock;
+	}
+
+	public synchronized boolean checkAndSetLock( String key, String identify, int seconds ) {
+		boolean lock = isLock( key, identify );
+		if ( !lock ) {
+			setLock( key, identify, seconds );
+		}
+		return lock;
+	}
+
+	/**
+	 * 添加管理员签名
+	 */
+	public void addAdminSign( String adminKey, String sign ) {
+		String signKey = Constants.ADMIN_SIGN + adminKey;
+		redisUtil.strSet( signKey, sign, Duration.ofDays( 300 ) );
+	}
+
+	/**
+	 * 获取管理员签名
+	 */
+	public String getAdminSign( String adminKey ) {
+		return redisUtil.strGet( Constants.ADMIN_SIGN + adminKey );
+	}
 }

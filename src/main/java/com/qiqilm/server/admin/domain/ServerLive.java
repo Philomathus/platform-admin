@@ -211,4 +211,68 @@ public class ServerLive extends BaseEntity {
 				.append( "countNum", getCountNum() )
 				.toString();
 	}
+
+	public String[] toCodes() {
+		switch ( provider ) {
+		case 0:
+			// 腾讯
+			return new String[]{ "qcloud_secret_id", "qcloud_secret_key", "qcloud_security_key", "tpush_domain", "tpull_domain",
+					"qcloud_licence_url", "qcloud_licence_key", "video_type" };
+		case 1:
+			// 阿里
+			return new String[]{ "tpush_domain", "tpull_domain", "video_type", "pullKey", "pushKey" };
+		case 2:
+			// 网易
+			return new String[]{ "c163_app_key", "c163_app_secret", "video_type" };
+		case 3:
+			// 百度
+			return new String[]{ "tpush_domain", "tpull_domain", "video_type", "qcloud_secret_id", "qcloud_secret_key" };
+		default:
+			return null;
+		}
+	}
+
+	public String getVal( String code ) {
+		switch ( code ) {
+		case "qcloud_secret_id":
+		case "aliyun_access_key":
+		case "c163_app_key":
+			return secretId;
+		case "qcloud_secret_key":
+		case "aliyun_access_secret":
+		case "c163_app_secret":
+			return secretKey;
+		case "qcloud_security_key":
+			return securityKey;
+		case "tpush_domain":
+			return pushDomain;
+		case "tpull_domain":
+			return pullDomain;
+		case "qcloud_licence_url":
+			return licenceUrl;
+		case "qcloud_licence_key":
+			return licenceKey;
+		case "pullKey":
+			return pullKey;
+		case "pushKey":
+			return pushKey;
+		case "video_type":
+			//video_type 腾讯云 1 网易云 3
+			//提供商 0 腾讯云 1 阿里云 2 网易云
+			switch ( provider ) {
+			case 0:
+				return "1";
+			case 1:
+				return "2";
+			case 2:
+				return "3";
+			case 3:
+				return "4";
+			default:
+				return null;
+			}
+		default:
+			return null;
+		}
+	}
 }
