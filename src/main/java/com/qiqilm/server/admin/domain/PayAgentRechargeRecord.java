@@ -1,8 +1,11 @@
 package com.qiqilm.server.admin.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class PayAgentRechargeRecord extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -38,48 +42,8 @@ public class PayAgentRechargeRecord extends BaseEntity {
     @Excel(name = "操作人")
     private String opName;
 
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
-    }
-
-    public String getOrderNo() {
-        return orderNo;
-    }
-    public void setRechargeAcount(String rechargeAcount) {
-        this.rechargeAcount = rechargeAcount;
-    }
-
-    public String getRechargeAcount() {
-        return rechargeAcount;
-    }
-    public void setRechargeNickName(String rechargeNickName) {
-        this.rechargeNickName = rechargeNickName;
-    }
-
-    public String getRechargeNickName() {
-        return rechargeNickName;
-    }
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
-    public void setMoney(BigDecimal money) {
-        this.money = money;
-    }
-
-    public BigDecimal getMoney() {
-        return money;
-    }
-    public void setOpName(String opName) {
-        this.opName = opName;
-    }
-
-    public String getOpName() {
-        return opName;
-    }
+    @Excel(name = "操作时间")
+    public Date createTime;
 
     @Override
     public String toString() {

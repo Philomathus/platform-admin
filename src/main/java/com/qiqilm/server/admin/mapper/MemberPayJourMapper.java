@@ -3,6 +3,9 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.MemberPayJour;
+import com.qiqilm.server.admin.domain.req.ReqPayJour;
+import com.qiqilm.server.admin.domain.rsp.RspPayJour;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -22,10 +25,12 @@ public interface MemberPayJourMapper {
 	/**
 	 * 查询【请填写功能名称】列表
 	 *
-	 * @param memberPayJour 【请填写功能名称】
+	 * @param req 【请填写功能名称】
 	 * @return 【请填写功能名称】集合
 	 */
-	public List<MemberPayJour> selectMemberPayJourList(MemberPayJour memberPayJour);
+	public List<MemberPayJour> selectMemberPayJourList( @Param( "req" ) MemberPayJour req);
+
+	List<RspPayJour> findList( @Param( "req" ) ReqPayJour req );
 
 	/**
 	 * 新增【请填写功能名称】

@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.PayType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,5 +94,15 @@ public class PayAgentRechargeAccountController extends BaseController {
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( payAgentRechargeAccountService.deletePayAgentRechargeAccountByIds( ids ) );
+	}
+
+	/**
+	 * 状态修改
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccount:edit')" )
+	@Log( title = "代充人", businessType = BusinessType.UPDATE )
+	@PutMapping( "/changeStatus" )
+	public AjaxResult changeStatus( @RequestBody PayAgentRechargeAccount payAgentRechargeAccount ) {
+		return toAjax( payAgentRechargeAccountService.updatePayAgentRechargeAccount(payAgentRechargeAccount));
 	}
 }

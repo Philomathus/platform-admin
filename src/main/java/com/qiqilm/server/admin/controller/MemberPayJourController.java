@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.req.ReqPayJour;
+import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +40,9 @@ public class MemberPayJourController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(MemberPayJour memberPayJour) {
+    	public TableDataInfo list(ReqPayJour memberPayJour) {
 		startPage();
-		List<MemberPayJour> list = memberPayJourService.selectMemberPayJourList(memberPayJour);
+		List<RspPayJour> list = memberPayJourService.findList(memberPayJour);
 		return getDataTable( list );
 	}
     

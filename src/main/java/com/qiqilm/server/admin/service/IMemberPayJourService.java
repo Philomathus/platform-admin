@@ -3,6 +3,9 @@ package com.qiqilm.server.admin.service;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.MemberPayJour;
+import com.qiqilm.server.admin.domain.req.ReqPayJour;
+import com.qiqilm.server.admin.domain.rsp.RspPayJour;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Service接口
@@ -26,6 +29,9 @@ public interface IMemberPayJourService {
 	 * @return 【请填写功能名称】集合
 	 */
 	public List<MemberPayJour> selectMemberPayJourList(MemberPayJour memberPayJour);
+
+
+	List<RspPayJour> findList( ReqPayJour req );
 
 	/**
 	 * 新增【请填写功能名称】

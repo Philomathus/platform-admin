@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.PayType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,5 +94,15 @@ public class ConfigBankController extends BaseController {
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( configBankService.deleteConfigBankByIds( ids ) );
+	}
+
+	/**
+	 * 支付状态修改
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:configBank:edit')" )
+	@Log( title = "支付类型", businessType = BusinessType.UPDATE )
+	@PutMapping( "/changeStatus" )
+	public AjaxResult changeStatus( @RequestBody ConfigBank configBank ) {
+		return toAjax(configBankService.updateConfigBank(configBank));
 	}
 }

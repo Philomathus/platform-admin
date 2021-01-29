@@ -5,6 +5,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class PayAgentRechargeAccount extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -68,7 +70,7 @@ public class PayAgentRechargeAccount extends BaseEntity {
 
     /** 状态 1正常 0拉黑 */
     @Excel(name = "状态 1正常 0拉黑")
-    private Integer status;
+    private String status;
 
     /** 上次登录时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -80,111 +82,7 @@ public class PayAgentRechargeAccount extends BaseEntity {
     @Excel(name = "本次登录时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date loginTime;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public Long getId() {
-        return id;
-    }
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-    public void setBalanceAmount(BigDecimal balanceAmount) {
-        this.balanceAmount = balanceAmount;
-    }
-
-    public BigDecimal getBalanceAmount() {
-        return balanceAmount;
-    }
-    public void setRechargeNum(Long rechargeNum) {
-        this.rechargeNum = rechargeNum;
-    }
-
-    public Long getRechargeNum() {
-        return rechargeNum;
-    }
-    public void setQqAccount(String qqAccount) {
-        this.qqAccount = qqAccount;
-    }
-
-    public String getQqAccount() {
-        return qqAccount;
-    }
-    public void setWechatAccount(String wechatAccount) {
-        this.wechatAccount = wechatAccount;
-    }
-
-    public String getWechatAccount() {
-        return wechatAccount;
-    }
-    public void setAlipayAccount(String alipayAccount) {
-        this.alipayAccount = alipayAccount;
-    }
-
-    public String getAlipayAccount() {
-        return alipayAccount;
-    }
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-    public void setBusinessBeginTime(Date businessBeginTime) {
-        this.businessBeginTime = businessBeginTime;
-    }
-
-    public Date getBusinessBeginTime() {
-        return businessBeginTime;
-    }
-    public void setBusinessEndTime(Date businessEndTime) {
-        this.businessEndTime = businessEndTime;
-    }
-
-    public Date getBusinessEndTime() {
-        return businessEndTime;
-    }
-    public void setRechargeDiscountRate(BigDecimal rechargeDiscountRate) {
-        this.rechargeDiscountRate = rechargeDiscountRate;
-    }
-
-    public BigDecimal getRechargeDiscountRate() {
-        return rechargeDiscountRate;
-    }
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-    public void setBeforeLoginTime(Date beforeLoginTime) {
-        this.beforeLoginTime = beforeLoginTime;
-    }
-
-    public Date getBeforeLoginTime() {
-        return beforeLoginTime;
-    }
-    public void setLoginTime(Date loginTime) {
-        this.loginTime = loginTime;
-    }
-
-    public Date getLoginTime() {
-        return loginTime;
-    }
 
     @Override
     public String toString() {
