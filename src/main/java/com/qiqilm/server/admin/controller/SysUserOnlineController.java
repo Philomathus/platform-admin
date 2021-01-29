@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.SysUserOnline;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ISysUserOnlineService;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
@@ -34,11 +35,13 @@ public class SysUserOnlineController extends BaseController {
 	private ISysUserOnlineService userOnlineService;
 	@Autowired
 	private StringRedisTemplate   stringRedisTemplate;
+	@Autowired
+    private MemberInfoMapper memberInfoMapper;
 
 	@PreAuthorize( "@ss.hasPermi('monitor:online:list')" )
 	@GetMapping( "/list" )
 	public TableDataInfo list( String ipaddr, String userName ) {
-		Map<String, LoginUser> loginUserList = stringRedisTemplate.execute( ( RedisCallback<Map<String, LoginUser>> )
+        Map<String, LoginUser> loginUserList = stringRedisTemplate.execute( ( RedisCallback<Map<String, LoginUser>> )
 				connection -> {
 					Map<String, LoginUser> resultMap = new HashMap<>();
 /*					Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
@@ -77,7 +80,7 @@ public class SysUserOnlineController extends BaseController {
 		}
 		userOnlineList.removeAll( Collections.singleton( null ) );
 		Collections.reverse( userOnlineList );
-		return getDataTable( userOnlineList );
+		return getDataTable2( userOnlineList );
 	}
 
 	/**
