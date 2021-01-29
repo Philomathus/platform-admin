@@ -121,7 +121,7 @@
         from game_platform
         <where>
             <if test="req.platformName != null and req.platformName !=''">
-                and id = #{req.platformName}
+                and name = #{req.platformName}
             </if>
         </where>
     </select>
