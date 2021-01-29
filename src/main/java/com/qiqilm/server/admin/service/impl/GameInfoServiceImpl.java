@@ -108,4 +108,9 @@ public class GameInfoServiceImpl implements IGameInfoService {
     public int deleteGameInfoById(String id) {
         return gameInfoMapper.deleteGameInfoById(id);
     }
+
+    @Override
+    public List<GameInfo> selectGameInfo() {
+        return gameInfoMapper.selectGameInfo();
+    }
 }

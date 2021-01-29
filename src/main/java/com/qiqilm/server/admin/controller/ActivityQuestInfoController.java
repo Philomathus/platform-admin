@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.qiqilm.server.admin.domain.ActivityQuestType;
 import com.qiqilm.server.admin.domain.ActivityType;
+import com.qiqilm.server.admin.domain.GameInfo;
 import com.qiqilm.server.admin.service.IActivityQuestTypeService;
 import com.qiqilm.server.admin.service.IActivityTypeService;
+import com.qiqilm.server.admin.service.IGameInfoService;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class ActivityQuestInfoController extends BaseController {
 
 	@Autowired
 	private IActivityQuestTypeService activityQuestTypeService;
+
+	@Autowired
+	private IGameInfoService gameInfoService;
 
 	/**
 	 * 查询任务信息列表列表
@@ -115,5 +120,16 @@ public class ActivityQuestInfoController extends BaseController {
 	public AjaxResult findActivityQuestType() {
 		List<ActivityQuestType> activityQuestType = activityQuestTypeService.selectActivityQuestType();
 		return AjaxResult.success(activityQuestType);
+	}
+
+	/**
+	 * 所属游戏下拉框
+	 *
+	 * @return
+	 */
+	@GetMapping("/gameInfo")
+	public AjaxResult findgameInfo() {
+		List<GameInfo> gameInfo = gameInfoService.selectGameInfo();
+		return AjaxResult.success(gameInfo);
 	}
 }

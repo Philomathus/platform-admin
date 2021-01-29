@@ -68,6 +68,7 @@ public interface IGameInfoService {
 	 */
 	public int deleteGameInfoById(String id);
 
-
+    //给任务信息做的所属游戏下拉框
+	List<GameInfo> selectGameInfo();
 
 }

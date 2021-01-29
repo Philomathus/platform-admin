@@ -66,5 +66,7 @@ public interface GameInfoMapper {
 	 */
 	public int deleteGameInfoByIds(String id);
 
+	//给任务信息做的所属游戏下拉框
+	List<GameInfo> selectGameInfo();
 
 }

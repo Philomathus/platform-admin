@@ -44,6 +44,11 @@
         where id = #{id}
     </select>
 
+    <select id="selectGameInfo" parameterType="GameInfo" resultMap="GameInfoResult">
+        <include refid="selectGameInfoVo"/>
+    </select>
+
+
     <insert id="insertGameInfo" parameterType="GameInfo">
         insert into 7700_main.game_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
