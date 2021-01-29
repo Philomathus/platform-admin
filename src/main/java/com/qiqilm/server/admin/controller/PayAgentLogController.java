@@ -22,7 +22,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 【代付下单日志】Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -34,7 +34,7 @@ public class PayAgentLogController extends BaseController {
 	private IPayAgentLogService payAgentLogService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【代付下单日志】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentLog:list')" )
 	@GetMapping( "/list" )
@@ -45,10 +45,10 @@ public class PayAgentLogController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【代付下单日志】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentLog:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【代付下单日志】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(PayAgentLog payAgentLog) {
 		List<PayAgentLog>      list = payAgentLogService.selectPayAgentLogList(payAgentLog);
@@ -57,7 +57,7 @@ public class PayAgentLogController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【代付下单日志】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentLog:query')" )
 	@GetMapping( value = "/{id}" )
@@ -66,30 +66,30 @@ public class PayAgentLogController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【代付下单日志】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentLog:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【代付下单日志】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayAgentLog payAgentLog) {
 		return toAjax( payAgentLogService.insertPayAgentLog(payAgentLog) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【代付下单日志】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentLog:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【代付下单日志】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayAgentLog payAgentLog) {
 		return toAjax( payAgentLogService.updatePayAgentLog(payAgentLog) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【代付下单日志】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentLog:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【代付下单日志】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( payAgentLogService.deletePayAgentLogByIds( ids ) );

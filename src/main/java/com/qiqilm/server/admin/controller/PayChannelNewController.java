@@ -24,7 +24,7 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 【请填写功能名称】Controller
+ * 【支付通道】Controller
  *
  * @author 77tv
  * @date 2021-01-27
@@ -41,7 +41,7 @@ public class PayChannelNewController extends BaseController {
 
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【支付通道】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:list')" )
 	@GetMapping( "/list" )
@@ -52,10 +52,10 @@ public class PayChannelNewController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【支付通道】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【支付通道】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(PayChannelNew payChannelNew) {
 		List<PayChannelNew>      list = payChannelNewService.selectPayChannelNewList(payChannelNew);
@@ -64,7 +64,7 @@ public class PayChannelNewController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【支付通道】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:query')" )
 	@GetMapping( value = "/{id}" )
@@ -73,37 +73,37 @@ public class PayChannelNewController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【支付通道】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【支付通道】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayChannelNew payChannelNew) {
 		return toAjax( payChannelNewService.insertPayChannelNew(payChannelNew) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【支付通道】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【支付通道】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayChannelNew payChannelNew) {
 		return toAjax( payChannelNewService.updatePayChannelNew(payChannelNew) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【支付通道】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【支付通道】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( payChannelNewService.deletePayChannelNewByIds( ids ) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【支付通道】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:edit')" )
 	@Log( title = "【修改状态】", businessType = BusinessType.UPDATE )
