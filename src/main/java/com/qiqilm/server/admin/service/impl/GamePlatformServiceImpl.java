@@ -1,11 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.mapper.GamePlatformMapper;
 import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +23,8 @@ import org.springframework.stereotype.Service;
 public class GamePlatformServiceImpl implements IGamePlatformService {
     @Autowired
     private GamePlatformMapper gamePlatformMapper;
-
+    @Autowired
+    private TokenService tokenService;
     /**
      * 查询【请填写功能名称】
      *
@@ -32,6 +36,11 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
         return gamePlatformMapper.selectGamePlatformById(id);
     }
 
+
+    @Override
+    public int changeStatus(GamePlatform gamePlatform) {
+        return gamePlatformMapper.changeStattus(gamePlatform);
+    }
     /**
      * 查询【请填写功能名称】列表
      *
@@ -43,6 +52,8 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
         return gamePlatformMapper.selectGamePlatformList(gamePlatform);
     }
 
+
+
     /**
      * 新增【请填写功能名称】
      *
@@ -52,6 +63,9 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
     @Override
     public int insertGamePlatform(GamePlatform gamePlatform) {
         gamePlatform.setCreateTime(DateUtils.getNowDate());
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String        username  = loginUser.getUsername();
+        gamePlatform.setCreateBy(username);
         return gamePlatformMapper.insertGamePlatform(gamePlatform);
     }
 
@@ -63,7 +77,10 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
      */
     @Override
     public int updateGamePlatform(GamePlatform gamePlatform) {
-        gamePlatform.setUpdateTime(DateUtils.getNowDate());
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String        username  = loginUser.getUsername();
+        gamePlatform.setUpdateBy(username);
+        gamePlatform.setUpdateTime(new Date());
         return gamePlatformMapper.updateGamePlatform(gamePlatform);
     }
 

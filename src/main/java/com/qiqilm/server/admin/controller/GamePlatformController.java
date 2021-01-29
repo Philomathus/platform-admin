@@ -72,7 +72,12 @@ public class GamePlatformController extends BaseController {
 	public AjaxResult edit( @RequestBody GamePlatform gamePlatform) {
 		return toAjax( gamePlatformService.updateGamePlatform(gamePlatform) );
 	}
-
+	@PreAuthorize( "@ss.hasPermi('web:game-platform:edit')" )
+	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@PutMapping("/changeStatus")
+	public AjaxResult changeStatus( @RequestBody GamePlatform gamePlatform) {
+		return toAjax( gamePlatformService.changeStatus(gamePlatform) );
+	}
 	/**
 	 * 删除【请填写功能名称】
 	 */

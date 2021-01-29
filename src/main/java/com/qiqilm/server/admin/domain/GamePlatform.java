@@ -56,7 +56,7 @@ public class GamePlatform extends BaseEntity {
 
     /** 状态(1启用0停用) */
     @Excel(name = "状态(1启用0停用)")
-    private Long status;
+    private String status;
 
     /** 打码比例 */
     @Excel(name = "打码比例")
@@ -132,11 +132,11 @@ public class GamePlatform extends BaseEntity {
     public String getGameTypeid() {
         return gameTypeid;
     }
-    public void setStatus(Long status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Long getStatus() {
+    public String getStatus() {
         return status;
     }
     public void setRateBeat(BigDecimal rateBeat) {

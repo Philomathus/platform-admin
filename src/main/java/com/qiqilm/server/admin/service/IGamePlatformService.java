@@ -27,7 +27,7 @@ public interface IGamePlatformService {
 	 * @return 【请填写功能名称】集合
 	 */
 	public List<GamePlatform> selectGamePlatformList(GamePlatform gamePlatform);
-
+	int changeStatus(GamePlatform gamePlatform);
 	/**
 	 * 新增【请填写功能名称】
 	 *
@@ -59,4 +59,6 @@ public interface IGamePlatformService {
 	 * @return 结果
 	 */
 	public int deleteGamePlatformById(Long id);
+
+
 }

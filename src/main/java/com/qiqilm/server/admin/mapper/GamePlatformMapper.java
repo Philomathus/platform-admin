@@ -25,6 +25,8 @@ public interface GamePlatformMapper {
 	 */
 	public GamePlatform selectGamePlatformById(Long id);
 
+	int changeStattus(GamePlatform gamePlatform);
+
 	/**
 	 * 查询【请填写功能名称】列表
 	 *

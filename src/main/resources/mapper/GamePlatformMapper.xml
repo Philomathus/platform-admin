@@ -24,7 +24,7 @@
     </resultMap>
 
     <sql id="selectGamePlatformVo">
-        select id, agent, name, api_url, record_url, des, md5, linecode, rate_clean, game_typeID, status, create_by,  FROM_UNIXTIME(create_time) create_time ,  update_by,  FROM_UNIXTIME(update_time) update_time ,  rate_beat from 7700_main.game_platform
+        select id, agent, name, api_url, record_url, des, md5, linecode, rate_clean, game_typeID, status, create_by,create_time,update_by,update_time , rate_beat from 7700_main.game_platform
     </sql>
     <select id="getGameListInfo"  resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
         select id, name as platformName
@@ -35,17 +35,16 @@
         <where>
             <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="apiUrl != null  and apiUrl != ''"> and api_url = #{apiUrl}</if>
-            <if test="recordUrl != null  and recordUrl != ''"> and record_url = #{recordUrl}</if>
-            <if test="des != null  and des != ''"> and des = #{des}</if>
-            <if test="md5 != null  and md5 != ''"> and md5 = #{md5}</if>
-            <if test="linecode != null  and linecode != ''"> and linecode = #{linecode}</if>
-            <if test="rateClean != null "> and rate_clean = #{rateClean}</if>
-            <if test="gameTypeid != null  and gameTypeid != ''"> and game_typeID = #{gameTypeid}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="rateBeat != null "> and rate_beat = #{rateBeat}</if>
         </where>
     </select>
+
+    <update id="changeStattus" parameterType="GamePlatform">
+        update 7700_main.game_platform
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
 
     <select id="selectGamePlatformById" parameterType="Long" resultMap="GamePlatformResult">
         <include refid="selectGamePlatformVo"/>
@@ -96,35 +95,19 @@
         update 7700_main.game_platform
         <trim prefix="SET" suffixOverrides=",">
             <if test="agent != null">agent = #{agent},</if>
-
             <if test="name != null">name = #{name},</if>
-
             <if test="apiUrl != null">api_url = #{apiUrl},</if>
-
             <if test="recordUrl != null">record_url = #{recordUrl},</if>
-
             <if test="des != null">des = #{des},</if>
-
             <if test="md5 != null">md5 = #{md5},</if>
-
             <if test="linecode != null">linecode = #{linecode},</if>
-
             <if test="rateClean != null">rate_clean = #{rateClean},</if>
-
             <if test="gameTypeid != null">game_typeID = #{gameTypeid},</if>
-
             <if test="status != null">status = #{status},</if>
-
             <if test="createBy != null">create_by = #{createBy},</if>
-
-            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
-
             <if test="updateBy != null">update_by = #{updateBy},</if>
-
-            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
-
+            <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="rateBeat != null">rate_beat = #{rateBeat},</if>
-
         </trim>
         where id = #{id}
     </update>
