@@ -58,4 +58,7 @@ public interface IActivityTypeService {
 	 * @return 结果
 	 */
 	public int deleteActivityTypeById(String id);
+
+	//给活动信息做的下拉框
+	List<ActivityType> selectActivityType();
 }

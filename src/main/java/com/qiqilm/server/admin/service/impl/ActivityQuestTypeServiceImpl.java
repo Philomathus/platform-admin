@@ -85,4 +85,9 @@ public class ActivityQuestTypeServiceImpl implements IActivityQuestTypeService {
     public int deleteActivityQuestTypeById(String id) {
         return activityQuestTypeMapper.deleteActivityQuestTypeById(id);
     }
+
+    @Override
+    public List<ActivityQuestType> selectActivityQuestType() {
+        return activityQuestTypeMapper.selectActivityQuestType();
+    }
 }

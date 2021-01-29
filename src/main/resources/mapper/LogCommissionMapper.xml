@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLogCommissionVo">
-        select id, member_id, commission,  FROM_UNIXTIME(create_time) create_time   from 7700_main.log_commission
+        select id, member_id, commission, create_time from 7700_main.log_commission
     </sql>
 
     <select id="selectLogCommissionList" parameterType="LogCommission" resultMap="LogCommissionResult">

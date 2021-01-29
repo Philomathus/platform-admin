@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ActivityQuestType;
+import com.qiqilm.server.admin.domain.ActivityType;
 
 /**
  * 任务类型Mapper接口
@@ -58,4 +59,7 @@ public interface ActivityQuestTypeMapper {
 	 * @return 结果
 	 */
 	public int deleteActivityQuestTypeByIds(String[] ids );
+
+	//给任务信息做的下拉框
+	List<ActivityQuestType> selectActivityQuestType();
 }

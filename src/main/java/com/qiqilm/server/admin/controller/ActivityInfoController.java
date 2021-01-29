@@ -1,8 +1,13 @@
 package com.qiqilm.server.admin.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.ActivityType;
+import com.qiqilm.server.admin.domain.PayPlatformNew;
+import com.qiqilm.server.admin.service.IActivityTypeService;
+import com.qiqilm.server.admin.utils.StringUtils;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +39,9 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 public class ActivityInfoController extends BaseController {
     @Autowired
     private IActivityInfoService activityInfoService;
+
+    @Autowired
+    private IActivityTypeService activityTypeService;
 
     /**
      * 查询活动信息列表
@@ -98,4 +106,16 @@ public class ActivityInfoController extends BaseController {
     public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(activityInfoService.deleteActivityInfoByIds(ids));
     }
+
+    /**
+     * 活动类型下拉框
+     *
+     * @return
+     */
+    @GetMapping("/activityType")
+    public AjaxResult findActivityType() {
+        List<ActivityType> activityType = activityTypeService.selectActivityType();
+        return AjaxResult.success(activityType);
+    }
+
 }

@@ -29,6 +29,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <select id="selectActivityQuestType" parameterType="ActivityQuestType" resultMap="ActivityQuestTypeResult">
+        <include refid="selectActivityQuestTypeVo"/>
+    </select>
+
     <insert id="insertActivityQuestType" parameterType="ActivityQuestType">
         insert into activity_quest_type
         <trim prefix="(" suffix=")" suffixOverrides=",">

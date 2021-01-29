@@ -85,4 +85,9 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
     public int deleteActivityTypeById(String id) {
         return activityTypeMapper.deleteActivityTypeById(id);
     }
+
+    @Override
+    public List<ActivityType> selectActivityType() {
+        return activityTypeMapper.selectActivityType();
+    }
 }

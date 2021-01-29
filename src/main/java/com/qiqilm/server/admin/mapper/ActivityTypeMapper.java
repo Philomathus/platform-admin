@@ -58,4 +58,7 @@ public interface ActivityTypeMapper {
 	 * @return 结果
 	 */
 	public int deleteActivityTypeByIds(String[] ids );
+
+	//给活动信息做的下拉框
+	List<ActivityType> selectActivityType();
 }
