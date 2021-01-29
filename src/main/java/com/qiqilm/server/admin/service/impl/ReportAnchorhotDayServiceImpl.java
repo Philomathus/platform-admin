@@ -61,7 +61,7 @@ public class ReportAnchorhotDayServiceImpl implements IReportAnchorhotDayService
 			reportAnchorhotDay.setNum(  year  +"-"+ week );
 			return reportAnchorhotDayMapper.selectReportAnchorhotDayByWeek( reportAnchorhotDay );
 		} else if ( reportAnchorhotDay.getType() == 2 ) {
-			int month = ca.get(Calendar.MONTH);//获取是第几周
+			int month = ca.get(Calendar.MONTH)+1;//获取是第几周
 			reportAnchorhotDay.setNum(  year  +"-"+ month );
 			return reportAnchorhotDayMapper.selectReportAnchorhotDayListByMonth( reportAnchorhotDay );
 		}
