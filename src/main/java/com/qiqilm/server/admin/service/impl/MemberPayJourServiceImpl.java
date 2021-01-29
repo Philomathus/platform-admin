@@ -1,6 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.domain.req.ReqPayJour;
+import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +42,11 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
     @Override
     public List<MemberPayJour> selectMemberPayJourList(MemberPayJour memberPayJour) {
         return memberPayJourMapper.selectMemberPayJourList(memberPayJour);
+    }
+
+    @Override
+    public List<RspPayJour> findList(ReqPayJour req) {
+        return memberPayJourMapper.findList(req);
     }
 
     /**

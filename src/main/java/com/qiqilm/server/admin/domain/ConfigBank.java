@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.domain;
 import java.math.BigDecimal;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class ConfigBank extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -44,7 +46,7 @@ public class ConfigBank extends BaseEntity {
 
     /** 状态(1启用0停用) */
     @Excel(name = "状态(1启用0停用)")
-    private Long status;
+    private String status;
 
     /** 开户人姓名 */
     @Excel(name = "开户人姓名")
@@ -62,90 +64,7 @@ public class ConfigBank extends BaseEntity {
     @Excel(name = "开放层级")
     private Long openLevel;
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
-    public String getId() {
-        return id;
-    }
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getCode() {
-        return code;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-    public void setIndexs(Long indexs) {
-        this.indexs = indexs;
-    }
-
-    public Long getIndexs() {
-        return indexs;
-    }
-    public void setBankAccount(String bankAccount) {
-        this.bankAccount = bankAccount;
-    }
-
-    public String getBankAccount() {
-        return bankAccount;
-    }
-    public void setStatus(Long status) {
-        this.status = status;
-    }
-
-    public Long getStatus() {
-        return status;
-    }
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
-    }
-
-    public String getAccountName() {
-        return accountName;
-    }
-    public void setBankAddress(String bankAddress) {
-        this.bankAddress = bankAddress;
-    }
-
-    public String getBankAddress() {
-        return bankAddress;
-    }
-    public void setDiscountBill(BigDecimal discountBill) {
-        this.discountBill = discountBill;
-    }
-
-    public BigDecimal getDiscountBill() {
-        return discountBill;
-    }
-    public void setOpenLevel(Long openLevel) {
-        this.openLevel = openLevel;
-    }
-
-    public Long getOpenLevel() {
-        return openLevel;
-    }
 
     @Override
     public String toString() {
