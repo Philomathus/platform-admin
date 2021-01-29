@@ -56,7 +56,7 @@ public class LiveProp extends BaseEntity {
 	 * 1:可以连续发送多个;用于小金额礼物
 	 */
 	@Excel( name = "1:可以连续发送多个;用于小金额礼物" )
-	private Integer isMuch;
+	private String isMuch;
 
 	/**
 	 * 排序，从大到小;越大越靠前
@@ -74,7 +74,7 @@ public class LiveProp extends BaseEntity {
 	 * 0:普通礼物 1:gif礼物 2:大型动画礼物
 	 */
 	@Excel( name = "0:普通礼物 1:gif礼物 2:大型动画礼物" )
-	private Long isAnimated;
+	private String isAnimated;
 
 	/**
 	 * 0:禁用;1:启用;默认启用
@@ -122,8 +122,8 @@ public class LiveProp extends BaseEntity {
 	/**
 	 * 0:礼物；1:打赏
 	 */
-	@Excel( name = "0:礼物；1:打赏" )
-	private Long type;
+	@Excel( name = "0:礼物；1:打赏;2守护" )
+	private String type;
 
 	public void setId( Long id ) {
 		this.id = id;
@@ -173,11 +173,11 @@ public class LiveProp extends BaseEntity {
 		return ticket;
 	}
 
-	public void setIsMuch( Integer isMuch ) {
+	public void setIsMuch( String isMuch ) {
 		this.isMuch = isMuch;
 	}
 
-	public Integer getIsMuch() {
+	public String getIsMuch() {
 		return isMuch;
 	}
 
@@ -197,11 +197,11 @@ public class LiveProp extends BaseEntity {
 		return isRedEnvelope;
 	}
 
-	public void setIsAnimated( Long isAnimated ) {
+	public void setIsAnimated( String isAnimated ) {
 		this.isAnimated = isAnimated;
 	}
 
-	public Long getIsAnimated() {
+	public String getIsAnimated() {
 		return isAnimated;
 	}
 
@@ -261,11 +261,11 @@ public class LiveProp extends BaseEntity {
 		return animatedUrl;
 	}
 
-	public void setType( Long type ) {
+	public void setType( String type ) {
 		this.type = type;
 	}
 
-	public Long getType() {
+	public String getType() {
 		return type;
 	}
 
