@@ -35,7 +35,12 @@ public class BaseController {
 		binder.registerCustomEditor( Date.class, new PropertyEditorSupport() {
 			@Override
 			public void setAsText( String text ) {
-				setValue( DateFormatUtils.parse( text ) );
+				if(text.indexOf( " " ) > 0){
+					setValue( DateFormatUtils.parse( text ) );
+				}else{
+					setValue( DateFormatUtils.parse( text,DateFormatUtils.SPLIT_PATTERN_DATE ) );
+				}
+
 			}
 		} );
 	}

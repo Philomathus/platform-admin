@@ -1,99 +1,110 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.ReportAnchorhotDayMapper">
 
-    <resultMap type="ReportAnchorhotDay" id="ReportAnchorhotDayResult">
-        <result property="repId"    column="rep_id"    />
-        <result property="anchorid"    column="anchorid"    />
-        <result property="nickname"    column="nickname"    />
-        <result property="dayTicket"    column="day_ticket"    />
-        <result property="sort"    column="sort"    />
-        <result property="dayTicketUpdiff"    column="day_ticket_updiff"    />
-        <result property="repdate"    column="repdate"    />
-        <result property="num"    column="num"    />
-        <result property="reptime"    column="reptime"    />
-        <result property="headImage"    column="head_image"    />
-    </resultMap>
+	<resultMap type="ReportAnchorhotDay" id="ReportAnchorhotDayResult">
+		<result property="repId" column="rep_id"/>
+		<result property="anchorid" column="anchorid"/>
+		<result property="nickname" column="nickname"/>
+		<result property="dayTicket" column="day_ticket"/>
+		<result property="sort" column="sort"/>
+		<result property="dayTicketUpdiff" column="day_ticket_updiff"/>
+		<result property="repdate" column="repdate"/>
+		<result property="num" column="num"/>
+		<result property="reptime" column="reptime"/>
+		<result property="headImage" column="head_image"/>
+	</resultMap>
 
-    <sql id="selectReportAnchorhotDayVo">
+	<sql id="selectReportAnchorhotDayVo">
         select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from 7700_live.report_anchorhot_day
     </sql>
 
-    <select id="selectReportAnchorhotDayList" parameterType="ReportAnchorhotDay" resultMap="ReportAnchorhotDayResult">
-        <include refid="selectReportAnchorhotDayVo"/>
-        <where>
-            <if test="reptime != null "> and reptime = #{reptime}</if>
-        </where>
-    </select>
+	<select id="selectReportAnchorhotDayList" parameterType="ReportAnchorhotDay" resultMap="ReportAnchorhotDayResult">
+		<include refid="selectReportAnchorhotDayVo"/>
+		<where>
+			<if test="reptime != null ">and reptime = #{reptime}</if>
+		</where>
+	</select>
 
-    <select id="selectReportAnchorhotDayById" parameterType="String" resultMap="ReportAnchorhotDayResult">
-        <include refid="selectReportAnchorhotDayVo"/>
-        where rep_id = #{repId}
-    </select>
+	<select id="selectReportAnchorhotDayById" parameterType="String" resultMap="ReportAnchorhotDayResult">
+		<include refid="selectReportAnchorhotDayVo"/>
+		where rep_id = #{repId}
+	</select>
 
-    <insert id="insertReportAnchorhotDay" parameterType="ReportAnchorhotDay">
-        insert into 7700_live.report_anchorhot_day
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="repId != null">rep_id,</if>
-            <if test="anchorid != null">anchorid,</if>
-            <if test="nickname != null">nickname,</if>
-            <if test="dayTicket != null">day_ticket,</if>
-            <if test="sort != null">sort,</if>
-            <if test="dayTicketUpdiff != null">day_ticket_updiff,</if>
-            <if test="repdate != null">repdate,</if>
-            <if test="num != null">num,</if>
-            <if test="reptime != null">reptime,</if>
-            <if test="headImage != null">head_image,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="repId != null">#{repId},</if>
-                    <if test="anchorid != null">#{anchorid},</if>
-                    <if test="nickname != null">#{nickname},</if>
-                    <if test="dayTicket != null">#{dayTicket},</if>
-                    <if test="sort != null">#{sort},</if>
-                    <if test="dayTicketUpdiff != null">#{dayTicketUpdiff},</if>
-                    <if test="repdate != null">#{repdate},</if>
-                    <if test="num != null">#{num},</if>
-                    <if test="reptime != null">#{reptime},</if>
-                    <if test="headImage != null">#{headImage},</if>
-             </trim>
-    </insert>
+	<insert id="insertReportAnchorhotDay" parameterType="ReportAnchorhotDay">
+		insert into 7700_live.report_anchorhot_day
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="repId != null">rep_id,</if>
+			<if test="anchorid != null">anchorid,</if>
+			<if test="nickname != null">nickname,</if>
+			<if test="dayTicket != null">day_ticket,</if>
+			<if test="sort != null">sort,</if>
+			<if test="dayTicketUpdiff != null">day_ticket_updiff,</if>
+			<if test="repdate != null">repdate,</if>
+			<if test="num != null">num,</if>
+			<if test="reptime != null">reptime,</if>
+			<if test="headImage != null">head_image,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="repId != null">#{repId},</if>
+			<if test="anchorid != null">#{anchorid},</if>
+			<if test="nickname != null">#{nickname},</if>
+			<if test="dayTicket != null">#{dayTicket},</if>
+			<if test="sort != null">#{sort},</if>
+			<if test="dayTicketUpdiff != null">#{dayTicketUpdiff},</if>
+			<if test="repdate != null">#{repdate},</if>
+			<if test="num != null">#{num},</if>
+			<if test="reptime != null">#{reptime},</if>
+			<if test="headImage != null">#{headImage},</if>
+		</trim>
+	</insert>
 
-    <update id="updateReportAnchorhotDay" parameterType="ReportAnchorhotDay">
-        update 7700_live.report_anchorhot_day
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="anchorid != null">anchorid = #{anchorid},</if>
-    
-            <if test="nickname != null">nickname = #{nickname},</if>
-    
-            <if test="dayTicket != null">day_ticket = #{dayTicket},</if>
-    
-            <if test="sort != null">sort = #{sort},</if>
-    
-            <if test="dayTicketUpdiff != null">day_ticket_updiff = #{dayTicketUpdiff},</if>
-    
-            <if test="repdate != null">repdate = #{repdate},</if>
-    
-            <if test="num != null">num = #{num},</if>
-    
-            <if test="reptime != null">reptime = #{reptime},</if>
-    
-            <if test="headImage != null">head_image = #{headImage},</if>
-    
-        </trim>
-        where rep_id = #{repId}
-    </update>
+	<update id="updateReportAnchorhotDay" parameterType="ReportAnchorhotDay">
+		update 7700_live.report_anchorhot_day
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="anchorid != null">anchorid = #{anchorid},</if>
 
-    <delete id="deleteReportAnchorhotDayById" parameterType="String">
+			<if test="nickname != null">nickname = #{nickname},</if>
+
+			<if test="dayTicket != null">day_ticket = #{dayTicket},</if>
+
+			<if test="sort != null">sort = #{sort},</if>
+
+			<if test="dayTicketUpdiff != null">day_ticket_updiff = #{dayTicketUpdiff},</if>
+
+			<if test="repdate != null">repdate = #{repdate},</if>
+
+			<if test="num != null">num = #{num},</if>
+
+			<if test="reptime != null">reptime = #{reptime},</if>
+
+			<if test="headImage != null">head_image = #{headImage},</if>
+
+		</trim>
+		where rep_id = #{repId}
+	</update>
+
+	<delete id="deleteReportAnchorhotDayById" parameterType="String">
         delete from 7700_live.report_anchorhot_day where rep_id = #{repId}
     </delete>
 
-    <delete id="deleteReportAnchorhotDayByIds" parameterType="String">
-        delete from 7700_live.report_anchorhot_day where rep_id in
-        <foreach item="repId" collection="array" open="(" separator="," close=")">
-            #{repId}
-        </foreach>
-    </delete>
+	<delete id="deleteReportAnchorhotDayByIds" parameterType="String">
+		delete from 7700_live.report_anchorhot_day where rep_id in
+		<foreach item="repId" collection="array" open="(" separator="," close=")">
+			#{repId}
+		</foreach>
+	</delete>
+
+	<select id="selectReportAnchorhotDayByDay" resultMap="ReportAnchorhotDayResult">
+		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from 7700_live.report_anchorhot_day  where num= #{num} ORDER BY sort
+    </select>
+	<select id="selectReportAnchorhotDayByWeek" resultMap="ReportAnchorhotDayResult">
+		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from 7700_live.report_anchorhot_week  where num=#{num} ORDER BY sort
+	</select>
+
+	<select id="selectReportAnchorhotDayListByMonth" resultMap="ReportAnchorhotDayResult">
+		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from 7700_live.report_anchorhot_month  where num= #{num} ORDER BY sort
+	</select>
 </mapper>

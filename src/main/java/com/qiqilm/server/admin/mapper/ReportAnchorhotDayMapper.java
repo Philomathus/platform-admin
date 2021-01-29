@@ -58,4 +58,10 @@ public interface ReportAnchorhotDayMapper {
 	 * @return 结果
 	 */
 	public int deleteReportAnchorhotDayByIds(String[] repIds );
+
+	List<ReportAnchorhotDay> selectReportAnchorhotDayByDay( ReportAnchorhotDay reportAnchorhotDay );
+
+	List<ReportAnchorhotDay> selectReportAnchorhotDayByWeek( ReportAnchorhotDay reportAnchorhotDay );
+
+	List<ReportAnchorhotDay> selectReportAnchorhotDayListByMonth( ReportAnchorhotDay reportAnchorhotDay );
 }
