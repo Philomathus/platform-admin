@@ -5,8 +5,12 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigGametype;
+import com.qiqilm.server.admin.domain.GamePlatform;
+import com.qiqilm.server.admin.domain.GameType;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IConfigGametypeService;
+import com.qiqilm.server.admin.service.IGamePlatformService;
+import com.qiqilm.server.admin.service.IGameTypeService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +29,8 @@ import java.util.List;
 public class ConfigGametypeController extends BaseController {
 	@Autowired
 	private IConfigGametypeService configGametypeService;
-
+	@Autowired
+	private IGamePlatformService gamePlatformService;
 /**
  * 查询【请填写功能名称】列表
  */
@@ -36,7 +41,12 @@ public class ConfigGametypeController extends BaseController {
 		List<ConfigGametype> list = configGametypeService.selectConfigGametypeList(configGametype);
 		return getDataTable( list );
 	}
-    
+	@GetMapping( "/listGameType" )
+
+	public AjaxResult list(GamePlatform gamePlatform) {
+		List<GamePlatform> list = gamePlatformService.selectGamePlatformList(gamePlatform);
+		return AjaxResult.success( list );
+	}
 	/**
 	 * 导出【请填写功能名称】列表
 	 */

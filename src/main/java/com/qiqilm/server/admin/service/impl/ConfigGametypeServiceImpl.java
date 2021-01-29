@@ -3,7 +3,9 @@ package com.qiqilm.server.admin.service.impl;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ConfigGametype;
+import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.mapper.ConfigGametypeMapper;
+import com.qiqilm.server.admin.mapper.GamePlatformMapper;
 import com.qiqilm.server.admin.service.IConfigGametypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,8 @@ import org.springframework.stereotype.Service;
 public class ConfigGametypeServiceImpl implements IConfigGametypeService {
     @Autowired
     private ConfigGametypeMapper configGametypeMapper;
-
+    @Autowired
+    private GamePlatformMapper gamePlatformMapper;
     /**
      * 查询【请填写功能名称】
      *
@@ -28,7 +31,9 @@ public class ConfigGametypeServiceImpl implements IConfigGametypeService {
      */
     @Override
     public ConfigGametype selectConfigGametypeById(String id) {
-        return configGametypeMapper.selectConfigGametypeById(id);
+        ConfigGametype configGametype = configGametypeMapper.selectConfigGametypeById(id);
+//        configGametype.setPlatformName(configGametype.getPlatformId());
+        return configGametype;
     }
 
     /**
@@ -50,6 +55,13 @@ public class ConfigGametypeServiceImpl implements IConfigGametypeService {
      */
     @Override
     public int insertConfigGametype(ConfigGametype configGametype) {
+
+        GamePlatform gamePlatform= gamePlatformMapper.findAgentList(configGametype);
+        configGametype.setPlatformId( gamePlatform.getAgent() );
+        configGametype.setPlatformName(gamePlatform.getName());
+
+        configGametype.setId(  gamePlatform.getAgent() + "-" + configGametype.getSonPlatformId() );
+
         return configGametypeMapper.insertConfigGametype(configGametype);
     }
 
