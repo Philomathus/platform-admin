@@ -41,7 +41,7 @@ public class LiveVideoController extends BaseController {
 	 * 导出直播列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:export')" )
-	@Log( title = "导出直播列表", businessType = BusinessType.EXPORT )
+	@Log( title = "直播", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(LiveVideo liveVideo) {
 		List<LiveVideo>      list = liveVideoService.selectLiveVideoList(liveVideo);
@@ -62,7 +62,7 @@ public class LiveVideoController extends BaseController {
 	 * 新增直播
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:add')" )
-	@Log( title = "新增直播", businessType = BusinessType.INSERT )
+	@Log( title = "直播", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody LiveVideo liveVideo) {
 		return toAjax( liveVideoService.insertLiveVideo(liveVideo) );
@@ -72,7 +72,7 @@ public class LiveVideoController extends BaseController {
 	 * 修改直播
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:edit')" )
-	@Log( title = "修改直播", businessType = BusinessType.UPDATE )
+	@Log( title = "直播", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LiveVideo liveVideo) {
 		return toAjax( liveVideoService.updateLiveVideo(liveVideo) );
@@ -82,7 +82,7 @@ public class LiveVideoController extends BaseController {
 	 * 删除直播
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:remove')" )
-	@Log( title = "删除直播", businessType = BusinessType.DELETE )
+	@Log( title = "直播", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( liveVideoService.deleteLiveVideoByIds( ids ) );
