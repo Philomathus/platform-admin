@@ -1,8 +1,12 @@
 package com.qiqilm.server.admin.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,6 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class PayLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -53,77 +58,12 @@ public class PayLog extends BaseEntity {
     /** 失败原因 */
     @Excel(name = "失败原因")
     private String failReason;
+    @Excel(name = "创建时间")
+    private Date createTime;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
-
-    public String getMemberId() {
-        return memberId;
-    }
-    public void setMemberAccount(String memberAccount) {
-        this.memberAccount = memberAccount;
-    }
-
-    public String getMemberAccount() {
-        return memberAccount;
-    }
-    public void setPlatformId(String platformId) {
-        this.platformId = platformId;
-    }
-
-    public String getPlatformId() {
-        return platformId;
-    }
-    public void setPlatformName(String platformName) {
-        this.platformName = platformName;
-    }
-
-    public String getPlatformName() {
-        return platformName;
-    }
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getChannelId() {
-        return channelId;
-    }
-    public void setChannelName(String channelName) {
-        this.channelName = channelName;
-    }
-
-    public String getChannelName() {
-        return channelName;
-    }
-    public void setMoney(BigDecimal money) {
-        this.money = money;
-    }
-
-    public BigDecimal getMoney() {
-        return money;
-    }
-    public void setSuccess(Integer success) {
-        this.success = success;
-    }
-
-    public Integer getSuccess() {
-        return success;
-    }
-    public void setFailReason(String failReason) {
-        this.failReason = failReason;
-    }
-
-    public String getFailReason() {
-        return failReason;
-    }
+    private Integer countTotal;//总成功笔数
+    private BigDecimal countSuccessMoney;//总成功金额
+    private Integer countSuccess;//成功笔数
 
     @Override
     public String toString() {

@@ -186,7 +186,7 @@
 		</foreach>
 	</delete>
 
-	<select id="selectServerOssByEffect" resultType="com.qiqilm.server.admin.domain.ServerOss">
+	<select id="selectServerOssByEffect" resultMap="ServerOssResult">
 		<include refid="selectServerOssVo"/>
 		where is_effect = 1
 	</select>

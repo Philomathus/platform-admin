@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.PayPlatformNew;
+import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
+import com.qiqilm.server.admin.service.IPayTypeService;
 import com.qiqilm.server.admin.utils.StringUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +36,8 @@ public class PayChannelNewController extends BaseController {
 	private IPayChannelNewService payChannelNewService;
 	@Autowired
 	private IPayPlatformNewService payPlatformNewService;
+	@Autowired
+	private IPayTypeService payTypeService;
 
 
 	/**
@@ -102,9 +106,10 @@ public class PayChannelNewController extends BaseController {
 	 * 修改【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
-	@PutMapping("changeStatus")
+	@Log( title = "【修改状态】", businessType = BusinessType.UPDATE )
+	@PutMapping("/changeStatus")
 	public AjaxResult changeStatus( @RequestBody PayChannelNew payChannelNew) {
+		System.out.println(payChannelNew.getStatus());
 		return toAjax( payChannelNewService.updatePayChannelNew(payChannelNew) );
 	}
 
@@ -118,6 +123,36 @@ public class PayChannelNewController extends BaseController {
 	{
 		PayPlatformNew payPlatformNew=new PayPlatformNew();
 		List<PayPlatformNew> data = payPlatformNewService.selectPayPlatformNewList(payPlatformNew);
+		if ( StringUtils.isNull( data ) ) {
+			data = new ArrayList<>();
+		}
+		return AjaxResult.success(data);
+	}
+	/**
+	 * 支付通道选择列表
+	 *
+	 * @return
+	 */
+	@GetMapping("/effect-pay-Channels")
+	public AjaxResult findEffectPayChannels()
+	{
+		PayChannelNew payChannelNew=new PayChannelNew();
+		List<PayChannelNew> data = payChannelNewService.selectPayChannelNewList(payChannelNew);
+		if ( StringUtils.isNull( data ) ) {
+			data = new ArrayList<>();
+		}
+		return AjaxResult.success(data);
+	}
+	/**
+	 * 支付类型选择列表
+	 *
+	 * @return
+	 */
+	@GetMapping("/effect-pay-type")
+	public AjaxResult findEffectPayType()
+	{
+		PayType payType=new PayType();
+		List<PayType> data = payTypeService.selectPayTypeList(payType);
 		if ( StringUtils.isNull( data ) ) {
 			data = new ArrayList<>();
 		}

@@ -61,6 +61,52 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="findList" parameterType="PayChannelNew" resultType="PayChannelNew">
+        SELECT
+        c.id,
+        c.name,
+        c.pay_method payMethod,
+        c.fail_num failNum,
+        c.success_num successNum,
+        c.total_success_money totalSuccessMoney,
+        c.recharge_min rechargeMin,
+        c.recharge_max rechargeMax,
+        c.status,
+        c.is_can_callback isCanCallback,
+        c.discount_bill discountBill,
+        c.indexes,
+        c.open_level openLevel,
+        c.pay_platform_id payPlatformId,
+        c.pay_type_id payTypeId,
+        t.name payTypeName,
+        p.name payPlatformName,
+        c.quick_amount quickAmount,
+        c.input_type inputType,
+        c.pay_rate payRate,
+        c.remark,
+        c.creator,
+        c.create_time createTime,
+        c.updator,
+        c.update_time updateTime
+        FROM pay_channel_new c
+        LEFT JOIN pay_type t ON c.pay_type_id = t.id
+        LEFT JOIN pay_platform_new p ON c.pay_platform_id = p.id
+        WHERE 1 = 1
+        <if test="req.name != null and req.name != ''">
+            and c.name like concat ('%',#{req.name},'%')
+        </if>
+        <if test="req.payPlatformId != null and req.payPlatformId != ''">
+            and c.pay_platform_id = #{req.payPlatformId}
+        </if>
+        <if test="req.payTypeId != null and req.payTypeId != ''">
+            and c.pay_type_id = #{req.payTypeId}
+        </if>
+        <if test="req.status != null">
+            and c.status = #{req.status}
+        </if>
+        ORDER BY c.create_time desc
+    </select>
+
     <select id="selectPayChannelNewById" parameterType="Long" resultMap="PayChannelNewResult">
         <include refid="selectPayChannelNewVo"/>
         where id = #{id}

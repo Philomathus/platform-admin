@@ -38,7 +38,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
      */
     @Override
     public List<PayChannelNew> selectPayChannelNewList(PayChannelNew payChannelNew) {
-        return payChannelNewMapper.selectPayChannelNewList(payChannelNew);
+        return payChannelNewMapper.findList(payChannelNew);
     }
 
     /**

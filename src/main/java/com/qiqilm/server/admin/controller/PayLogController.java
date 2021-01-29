@@ -22,7 +22,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 【支付日志】Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -34,7 +34,7 @@ public class PayLogController extends BaseController {
 	private IPayLogService payLogService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【支付日志】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:list')" )
 	@GetMapping( "/list" )
@@ -45,10 +45,10 @@ public class PayLogController extends BaseController {
 	}
 
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【支付日志】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【支付日志】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(PayLog payLog) {
 		List<PayLog>      list = payLogService.selectPayLogList(payLog);
@@ -57,7 +57,7 @@ public class PayLogController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【支付日志】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:query')" )
 	@GetMapping( value = "/{id}" )
@@ -66,30 +66,30 @@ public class PayLogController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【支付日志】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【支付日志】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayLog payLog) {
 		return toAjax( payLogService.insertPayLog(payLog) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【支付日志】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【支付日志】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayLog payLog) {
 		return toAjax( payLogService.updatePayLog(payLog) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【支付日志】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【支付日志】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( payLogService.deletePayLogByIds( ids ) );

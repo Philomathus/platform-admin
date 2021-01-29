@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.CollectionUtils;
@@ -16,7 +17,7 @@ public class JsonUtil {
 	public JsonUtil() {
 	}
 
-	private static ObjectMapper getObjectMapper() {
+	public static ObjectMapper getObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false );
 		return objectMapper;
@@ -33,6 +34,17 @@ public class JsonUtil {
 			}
 		}
 		return map;
+	}
+
+	public static <T> T json2Object( String json, JavaType javaType ) {
+		if ( StringUtils.hasText( json ) ) {
+			try {
+				return getObjectMapper().readValue( json, javaType );
+			} catch ( Exception e ) {
+				log.error( json + "转化为" + javaType + "对象失败", e.getMessage(), e );
+			}
+		}
+		return null;
 	}
 
 	public static <T> T json2Object( String json, Class<T> valueType ) {

@@ -1,0 +1,97 @@
+package com.qiqilm.server.admin.controller.live;
+
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.qiqilm.server.admin.annotation.Log;
+import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.domain.ReportAnchorhotDay;
+import com.qiqilm.server.admin.service.IReportAnchorhotDayService;
+import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+/**
+ * 贡献榜Controller
+ *
+ * @author 77tv
+ * @date 2021-01-28
+ */
+@RestController
+@RequestMapping( "/admin/reportAnchorhotDay" )
+public class ReportAnchorhotDayController extends BaseController {
+	@Autowired
+	private IReportAnchorhotDayService reportAnchorhotDayService;
+
+	/**
+	 * 查询贡献榜列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:reportAnchorhotDay:list')" )
+	@GetMapping( "/list" )
+    	public TableDataInfo list(ReportAnchorhotDay reportAnchorhotDay) {
+		startPage();
+		List<ReportAnchorhotDay> list = reportAnchorhotDayService.selectReportAnchorhotDayList(reportAnchorhotDay);
+		return getDataTable( list );
+	}
+    
+	/**
+	 * 导出贡献榜列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:reportAnchorhotDay:export')" )
+	@Log( title = "贡献榜", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export(ReportAnchorhotDay reportAnchorhotDay) {
+		List<ReportAnchorhotDay>      list = reportAnchorhotDayService.selectReportAnchorhotDayList(reportAnchorhotDay);
+		ExcelUtil<ReportAnchorhotDay> util = new ExcelUtil<ReportAnchorhotDay>(ReportAnchorhotDay. class);
+		return util.exportExcel( list, "reportAnchorhotDay" );
+	}
+
+	/**
+	 * 获取贡献榜详细信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:reportAnchorhotDay:query')" )
+	@GetMapping( value = "/{repId}" )
+	public AjaxResult getInfo( @PathVariable( "repId" ) String repId) {
+		return AjaxResult.success( reportAnchorhotDayService.selectReportAnchorhotDayById(repId) );
+	}
+
+	/**
+	 * 新增贡献榜
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:reportAnchorhotDay:add')" )
+	@Log( title = "贡献榜", businessType = BusinessType.INSERT )
+	@PostMapping
+	public AjaxResult add( @RequestBody ReportAnchorhotDay reportAnchorhotDay) {
+		return toAjax( reportAnchorhotDayService.insertReportAnchorhotDay(reportAnchorhotDay) );
+	}
+
+	/**
+	 * 修改贡献榜
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:reportAnchorhotDay:edit')" )
+	@Log( title = "贡献榜", businessType = BusinessType.UPDATE )
+	@PutMapping
+	public AjaxResult edit( @RequestBody ReportAnchorhotDay reportAnchorhotDay) {
+		return toAjax( reportAnchorhotDayService.updateReportAnchorhotDay(reportAnchorhotDay) );
+	}
+
+	/**
+	 * 删除贡献榜
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:reportAnchorhotDay:remove')" )
+	@Log( title = "贡献榜", businessType = BusinessType.DELETE )
+	@DeleteMapping( "/{repIds}" )
+	public AjaxResult remove( @PathVariable String[] repIds ) {
+		return toAjax( reportAnchorhotDayService.deleteReportAnchorhotDayByIds( repIds ) );
+	}
+}
