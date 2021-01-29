@@ -116,6 +116,16 @@
         delete from 7700_main.game_platform where id = #{id}
     </delete>
 
+    <select id="findAgentList" resultType="com.qiqilm.server.admin.domain.GamePlatform">
+        select agent,name
+        from game_platform
+        <where>
+            <if test="req.platformName != null and req.platformName !=''">
+                and name = #{req.platformName}
+            </if>
+        </where>
+    </select>
+
     <delete id="deleteGamePlatformByIds" parameterType="String">
         delete from 7700_main.game_platform where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
