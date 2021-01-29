@@ -1,17 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.domain.ReportAnchorhotDay;
+import com.qiqilm.server.admin.mapper.ReportAnchorhotDayMapper;
+import com.qiqilm.server.admin.service.IReportAnchorhotDayService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.ReportAnchorhotDayMapper;
-import com.qiqilm.server.admin.domain.ReportAnchorhotDay;
-import com.qiqilm.server.admin.service.IReportAnchorhotDayService;
-import sun.util.locale.provider.CalendarDataUtility;
 
 /**
  * 贡献榜Service业务层处理
