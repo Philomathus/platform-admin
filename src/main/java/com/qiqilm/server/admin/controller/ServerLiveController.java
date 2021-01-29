@@ -74,4 +74,11 @@ public class ServerLiveController extends BaseController {
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( serverLiveService.deleteServerLiveByIds( ids ) );
 	}
+
+	@PreAuthorize( "@ss.hasPermi('server:live:effect')" )
+	@Log( title = "直播流服务配置状态修改", businessType = BusinessType.UPDATE )
+	@PutMapping( "/changeStatus/{id}/{status}" )
+	public AjaxResult changeStatus( @PathVariable long id, @PathVariable int status ) {
+		return  toAjax(serverLiveService.changeStatus( id, status ));
+	}
 }

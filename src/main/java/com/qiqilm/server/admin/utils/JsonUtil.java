@@ -102,6 +102,17 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static <T> T map2Object( Map map, JavaType javaType ) {
+		if ( !CollectionUtils.isEmpty( map ) ) {
+			try {
+				return getObjectMapper().convertValue( map, javaType );
+			} catch ( Exception e ) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
 	public static <T> T map2Object( Map<?, ?> map, TypeReference<T> valueType ) {
 		if ( !CollectionUtils.isEmpty( map ) ) {
 			try {

@@ -141,4 +141,25 @@ public class ServerIm extends BaseEntity {
 				.append( "isEffect", getIsEffect() )
 				.toString();
 	}
+
+	public String[] toCodes() {
+		return new String[]{ "tim_sdkappid", "tim_sdk_key", "full_group_id", "on_line_group_id", "tim_identifier" };
+	}
+
+	public String getVal(String code) {
+		switch (code){
+		case "tim_sdkappid":
+			return appId;
+		case "tim_sdk_key":
+			return appKey;
+		case "tim_identifier":
+			return identify;
+		case "full_group_id":
+			return fullGroup;
+		case "on_line_group_id":
+			return onlineGroup;
+		default:
+			return null;
+		}
+	}
 }

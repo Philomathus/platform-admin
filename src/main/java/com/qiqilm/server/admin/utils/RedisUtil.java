@@ -295,7 +295,7 @@ public class RedisUtil {
 	/**
 	 * 批量添加 hash 的 键值对 有则覆盖,没有则添加
 	 */
-	public void hMSet( String key, Map<Object, Object> map ) {
+	public void hMSet( String key, Map<?, ?> map ) {
 		stringRedisTemplate.opsForHash().putAll( key, map );
 	}
 

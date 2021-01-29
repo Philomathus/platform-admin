@@ -1,12 +1,14 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 贡献榜对象 report_anchorhot_day
@@ -50,7 +52,7 @@ public class ReportAnchorhotDay extends BaseEntity {
     private String num;
 
     /** 更新日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "更新日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date reptime;
 
@@ -58,6 +60,7 @@ public class ReportAnchorhotDay extends BaseEntity {
     @Excel(name = "主播头像")
     private String headImage;
 
+    private Integer type;
     public void setRepId(String repId) {
         this.repId = repId;
     }
@@ -143,5 +146,13 @@ public class ReportAnchorhotDay extends BaseEntity {
             .append("reptime", getReptime())
             .append("headImage", getHeadImage())
             .toString();
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType( Integer type ) {
+        this.type = type;
     }
 }

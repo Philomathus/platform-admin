@@ -2,14 +2,14 @@ package com.qiqilm.server.admin.domain;
 
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 member_game_data
+ * 会员注单数据对象 member_game_data
  *
  * @author 77tv
- * @date 2021-01-26
+ * @date 2021-01-29
  */
 public class MemberGameData extends BaseEntity {
     private static final long serialVersionUID = 1L;
@@ -68,6 +68,37 @@ public class MemberGameData extends BaseEntity {
     /** 游戏开始时间 */
     @Excel(name = "游戏开始时间")
     private String gameStartTime;
+    /**
+     * 选择日期
+     */
+    private String[] selectDate;
+
+    private String startTime;
+    private String endTime;
+
+    public String[] getSelectDate() {
+        return selectDate;
+    }
+
+    public void setSelectDate(String[] selectDate) {
+        this.selectDate = selectDate;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -170,7 +201,7 @@ public class MemberGameData extends BaseEntity {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("gameId", getGameId())
             .append("account", getAccount())

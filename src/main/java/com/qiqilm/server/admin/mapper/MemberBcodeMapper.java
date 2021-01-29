@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.MemberBcode;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * MemberBcodeMapper接口
@@ -58,4 +59,6 @@ public interface MemberBcodeMapper {
 	 * @return 结果
 	 */
 	public int deleteMemberBcodeByIds(String[] ids );
+
+    Map getTotalData();
 }

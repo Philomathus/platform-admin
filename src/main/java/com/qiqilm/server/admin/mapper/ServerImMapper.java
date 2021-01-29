@@ -58,4 +58,6 @@ public interface ServerImMapper {
 	 * @return 结果
 	 */
 	public int deleteServerImByIds( Long[] ids );
+
+	List<ServerIm> selectServerImByEffect();
 }
