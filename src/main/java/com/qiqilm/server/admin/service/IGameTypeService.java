@@ -58,4 +58,5 @@ public interface IGameTypeService {
 	 * @return 结果
 	 */
 	public int deleteGameTypeById( String id );
+
 }
