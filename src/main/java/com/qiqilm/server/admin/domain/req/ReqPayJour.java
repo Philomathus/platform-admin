@@ -9,8 +9,10 @@ public class ReqPayJour {
 	private String  search;
 	private String  platform_id;
 	private String  trade_sn;
-
-	private String startDate;
+    private String[] selectDate;
+    private String selectStartDate;
+    private String selectEndDate;
+    private String startDate;
 	private String endDate;
 
 

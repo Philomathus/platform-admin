@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -58,4 +59,6 @@ public interface MemberRechargeLogMapper {
 	 * @return 结果
 	 */
 	public int deleteMemberRechargeLogByIds(String[] ids );
+
+    public Map listCount(MemberRechargeLog memberRechargeLog);
 }

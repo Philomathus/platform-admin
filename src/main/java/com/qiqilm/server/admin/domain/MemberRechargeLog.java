@@ -1,10 +1,11 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
 
 /**
  * 【请填写功能名称】对象 member_recharge_log
@@ -37,6 +38,8 @@ public class MemberRechargeLog extends BaseEntity {
     /** 银行账号 */
     @Excel(name = "银行账号")
     private String bankAccount;
+
+    private String[] selectDate;
 
     /** 状态(0已提交1初级审核通过2审核不通过3终极审核通过4入库失败) */
     @Excel(name = "状态(0已提交1初级审核通过2审核不通过3终极审核通过4入库失败)")
@@ -73,6 +76,32 @@ public class MemberRechargeLog extends BaseEntity {
     /** 是否首次1是0否 */
     @Excel(name = "是否首次1是0否")
     private Long first;
+    private String startDate;
+    private String endDate;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String[] getSelectDate() {
+        return selectDate;
+    }
+
+    public void setSelectDate(String[] selectDate) {
+        this.selectDate = selectDate;
+    }
 
     public void setId(String id) {
         this.id = id;

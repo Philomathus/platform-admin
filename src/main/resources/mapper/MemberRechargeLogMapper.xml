@@ -46,6 +46,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
             <if test="first != null "> and first = #{first}</if>
+            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+                and update_time <![CDATA[ >= ]]> #{startDate} and update_time <![CDATA[ <= ]]> #{endDate}
+            </if>
         </where>
     </select>
 
@@ -132,4 +135,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <sql id="whereCount">
+        <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+        <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+        <if test="rechargeMoney != null "> and recharge_money = #{rechargeMoney}</if>
+        <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+        <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
+        <if test="status != null "> and status = #{status}</if>
+        <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+        <if test="bankAddress != null  and bankAddress != ''"> and bank_address = #{bankAddress}</if>
+        <if test="type != null "> and type = #{type}</if>
+        <if test="rechargeUserName != null  and rechargeUserName != ''"> and recharge_user_name like concat('%', #{rechargeUserName}, '%')</if>
+        <if test="bankUserName != null  and bankUserName != ''"> and bank_user_name like concat('%', #{bankUserName}, '%')</if>
+        <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+        <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
+        <if test="first != null "> and first = #{first}</if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            and update_time <![CDATA[ >= ]]> #{startDate} and update_time <![CDATA[ <= ]]> #{endDate}
+        </if>
+    </sql>
+
+    <sql id="totalCount">
+        SELECT COUNT(*) total,SUM(recharge_money) totalMoney FROM `member_recharge_log`
+        <where>
+            <include refid="whereCount"></include>
+        </where>
+    </sql>
+    <sql id="successMoney">
+        SELECT COUNT(*) totalSuccess,SUM(recharge_money) successMoney FROM `member_recharge_log`
+        <where>
+            <include refid="whereCount"></include>
+            and status = 3
+        </where>
+    </sql>
+    <select id="listCount" parameterType="MemberRechargeLog" resultType="java.util.Map">
+        select a.total,b.successMoney,totalSuccess/total successRate from (<include refid="totalCount"></include>)a left join (<include refid="successMoney"></include>)b on 1=1
+    </select>
 </mapper>

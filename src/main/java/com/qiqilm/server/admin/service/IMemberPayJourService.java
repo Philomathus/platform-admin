@@ -1,11 +1,12 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.req.ReqPayJour;
 import com.qiqilm.server.admin.domain.rsp.RspPayJour;
-import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Service接口
@@ -31,7 +32,7 @@ public interface IMemberPayJourService {
 	public List<MemberPayJour> selectMemberPayJourList(MemberPayJour memberPayJour);
 
 
-	List<RspPayJour> findList( ReqPayJour req );
+    public List<RspPayJour> findList( ReqPayJour req );
 
 	/**
 	 * 新增【请填写功能名称】
@@ -64,4 +65,12 @@ public interface IMemberPayJourService {
 	 * @return 结果
 	 */
 	public int deleteMemberPayJourById(String id);
+
+    /**
+     * 数列表
+     *
+     * @param memberPayJour 会员支付的
+     * @return {@link TableDataInfo}
+     */
+    public Map listCount(ReqPayJour memberPayJour);
 }

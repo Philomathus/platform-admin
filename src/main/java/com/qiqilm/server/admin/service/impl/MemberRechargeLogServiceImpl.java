@@ -1,12 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
+import com.qiqilm.server.admin.domain.MemberRechargeLog;
+import com.qiqilm.server.admin.mapper.MemberRechargeLogMapper;
+import com.qiqilm.server.admin.service.IMemberRechargeLogService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.MemberRechargeLogMapper;
-import com.qiqilm.server.admin.domain.MemberRechargeLog;
-import com.qiqilm.server.admin.service.IMemberRechargeLogService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -38,6 +40,11 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
      */
     @Override
     public List<MemberRechargeLog> selectMemberRechargeLogList(MemberRechargeLog memberRechargeLog) {
+        String[] selectDate = memberRechargeLog.getSelectDate();
+        if (selectDate!=null && selectDate.length>0) {
+            memberRechargeLog.setStartDate(selectDate[0]);
+            memberRechargeLog.setEndDate(selectDate[1]);
+        }
         return memberRechargeLogMapper.selectMemberRechargeLogList(memberRechargeLog);
     }
 
@@ -85,5 +92,15 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
     @Override
     public int deleteMemberRechargeLogById(String id) {
         return memberRechargeLogMapper.deleteMemberRechargeLogById(id);
+    }
+
+    @Override
+    public Map listCount(MemberRechargeLog memberRechargeLog) {
+        String[] selectDate = memberRechargeLog.getSelectDate();
+        if (selectDate!=null && selectDate.length>0) {
+            memberRechargeLog.setStartDate(selectDate[0]);
+            memberRechargeLog.setEndDate(selectDate[1]);
+        }
+        return memberRechargeLogMapper.listCount(memberRechargeLog);
     }
 }

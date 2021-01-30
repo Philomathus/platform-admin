@@ -1,15 +1,16 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
-
+import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.req.ReqPayJour;
 import com.qiqilm.server.admin.domain.rsp.RspPayJour;
+import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
+import com.qiqilm.server.admin.service.IMemberPayJourService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
-import com.qiqilm.server.admin.domain.MemberPayJour;
-import com.qiqilm.server.admin.service.IMemberPayJourService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -46,6 +47,11 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 
     @Override
     public List<RspPayJour> findList(ReqPayJour req) {
+        String[] selectDate = req.getSelectDate();
+        if (selectDate!=null && selectDate.length>0) {
+            req.setStartDate(selectDate[0]);
+            req.setEndDate(selectDate[1]);
+        }
         return memberPayJourMapper.findList(req);
     }
 
@@ -93,5 +99,15 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
     @Override
     public int deleteMemberPayJourById(String id) {
         return memberPayJourMapper.deleteMemberPayJourById(id);
+    }
+
+    @Override
+    public Map listCount(ReqPayJour req) {
+        String[] selectDate = req.getSelectDate();
+        if (selectDate!=null && selectDate.length>0) {
+            req.setStartDate(selectDate[0]);
+            req.setEndDate(selectDate[1]);
+        }
+        return memberPayJourMapper.listCount(req);
     }
 }

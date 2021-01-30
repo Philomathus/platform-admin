@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Service接口
@@ -58,4 +59,6 @@ public interface IMemberRechargeLogService {
 	 * @return 结果
 	 */
 	public int deleteMemberRechargeLogById(String id);
+
+    public Map listCount(MemberRechargeLog memberRechargeLog);
 }
