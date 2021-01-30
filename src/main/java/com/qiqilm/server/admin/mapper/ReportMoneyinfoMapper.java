@@ -26,4 +26,5 @@ public interface ReportMoneyinfoMapper {
 	String calldataProrepPlamcom(@Param( "statimedateta" ) String statimedateta, @Param( "endtimedateta" ) String endtimedateta);
 
 
+	ReportMoneyinfo countMoneyInfoData(ReportMoneyinfo reportMoneyinfo);
 }

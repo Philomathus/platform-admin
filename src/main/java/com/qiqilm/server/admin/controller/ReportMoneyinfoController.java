@@ -2,7 +2,10 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.ReportMoneyinfo;
+import com.qiqilm.server.admin.domain.ReportPlamGames;
 import com.qiqilm.server.admin.service.IReportMoneyinfoService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +39,11 @@ public class ReportMoneyinfoController extends BaseController {
 		List<ReportMoneyinfo> list = reportMoneyinfoService.selectReportMoneyinfoList(reportMoneyinfo);
 		return getDataTable( list );
 	}
-
+	@GetMapping( value = "/count" )
+	public AjaxResult countMoneyData(ReportMoneyinfo reportMoneyinfo) {
+		ReportMoneyinfo reportMoneyinfo1 = reportMoneyinfoService.countMoneyData(reportMoneyinfo);
+		return AjaxResult.success(reportMoneyinfo1);
+	}
 
 
 }

@@ -40,6 +40,10 @@ public class ReportIncomeDayServiceImpl implements IReportIncomeDayService {
         return allList;
     }
 
+    @Override
+    public ReportIncomeDay countSuccessData(ReportIncomeDay reportIncomeDay) {
+        return reportIncomeDayMapper.countSuccessMoney(reportIncomeDay);
+    }
 
 
 }

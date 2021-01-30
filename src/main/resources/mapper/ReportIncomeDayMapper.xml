@@ -27,5 +27,11 @@
     <select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">
         {call prorep_incomeday(#{timedateta,mode=IN,jdbcType=VARCHAR},#{timedateta,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}
     </select>
-
+    <select id="countSuccessMoney" resultType="com.qiqilm.server.admin.domain.ReportIncomeDay">
+        select sum(money) as countSuccessMoney
+        from 7700_main.report_income_day
+        <where>
+            <if test="paydate != null  and paydate != ''"> and paydate = #{paydate}</if>
+        </where>
+    </select>
 </mapper>

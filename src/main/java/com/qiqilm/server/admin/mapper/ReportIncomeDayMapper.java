@@ -23,4 +23,5 @@ public interface ReportIncomeDayMapper {
 	public List<ReportIncomeDay> selectReportIncomeDayList(ReportIncomeDay reportIncomeDay);
 	String calldataProrepPlamcom(@Param( "timedateta" ) String timedateta);
 
+    ReportIncomeDay countSuccessMoney(ReportIncomeDay reportIncomeDay);
 }

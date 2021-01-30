@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.ReportMoneyinfo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,10 @@ public class ReportIncomeDayController extends BaseController {
 		List<ReportIncomeDay> list = reportIncomeDayService.selectReportIncomeDayList(reportIncomeDay);
 		return getDataTable( list );
 	}
-
+	@GetMapping( value = "/count" )
+	public AjaxResult countMoneyData(ReportIncomeDay reportIncomeDay) {
+		ReportIncomeDay reportIncomeDay1 = reportIncomeDayService.countSuccessData(reportIncomeDay);
+		return AjaxResult.success(reportIncomeDay1);
+	}
 
 }
