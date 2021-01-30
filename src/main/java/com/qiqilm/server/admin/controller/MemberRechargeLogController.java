@@ -22,7 +22,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 【公司入款信息】Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -34,7 +34,7 @@ public class MemberRechargeLogController extends BaseController {
 	private IMemberRechargeLogService memberRechargeLogService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【公司入款信息】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:list')" )
 	@GetMapping( "/list" )
@@ -45,10 +45,10 @@ public class MemberRechargeLogController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【公司入款信息】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【公司入款信息】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(MemberRechargeLog memberRechargeLog) {
 		List<MemberRechargeLog>      list = memberRechargeLogService.selectMemberRechargeLogList(memberRechargeLog);
@@ -57,7 +57,7 @@ public class MemberRechargeLogController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【公司入款信息】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:query')" )
 	@GetMapping( value = "/{id}" )
@@ -66,30 +66,30 @@ public class MemberRechargeLogController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【公司入款信息】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【公司入款信息】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody MemberRechargeLog memberRechargeLog) {
 		return toAjax( memberRechargeLogService.insertMemberRechargeLog(memberRechargeLog) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【公司入款信息】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【公司入款信息】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody MemberRechargeLog memberRechargeLog) {
 		return toAjax( memberRechargeLogService.updateMemberRechargeLog(memberRechargeLog) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【公司入款信息】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【公司入款信息】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( memberRechargeLogService.deleteMemberRechargeLogByIds( ids ) );

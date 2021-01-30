@@ -77,15 +77,19 @@ public class ServerOssController extends BaseController {
 		return toAjax( serverOssService.deleteServerOssByIds( ids ) );
 	}
 
+	@PreAuthorize( "@ss.hasPermi('server:oss:effect')" )
 	@PatchMapping( "/effect/{id}" )
-	@Log( title = "oss文件存储服务激活", businessType = BusinessType.UPDATE )
+	@Log( title = "oss文件存储服务配置", businessType = BusinessType.EFFECT )
 	public AjaxResult effect( @PathVariable long id ) {
 		return toAjax( serverOssService.effect( id ) );
 	}
 
-	@PostMapping( "uploadOssTest" )
+	@PreAuthorize( "@ss.hasPermi('server:oss:ossTest')" )
+	@PostMapping( "/ossTest/{path}/{id}" )
 	@Log( title = "oss文件存储服务配置", businessType = BusinessType.UPLOAD )
-	public AjaxResult uploadOssTest( @RequestParam( "file" ) MultipartFile file, String path, long id ) throws IOException {
+	public AjaxResult uploadOssTest( @RequestParam( "file" ) MultipartFile file,
+									 @PathVariable String path,
+									 @PathVariable long id ) throws IOException {
 		String fileName = file.getOriginalFilename();
 		String fileKey  = path + "/" + fileName;
 		return AjaxResult.success( "上传成功", serverOssService.uploadOssTest( file.getInputStream(), fileKey, id ) );

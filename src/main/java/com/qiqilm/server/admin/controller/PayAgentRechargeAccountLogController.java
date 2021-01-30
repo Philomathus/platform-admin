@@ -22,7 +22,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 【代充人入款】Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -34,7 +34,7 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	private IPayAgentRechargeAccountLogService payAgentRechargeAccountLogService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【代充人入款】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:list')" )
 	@GetMapping( "/list" )
@@ -45,10 +45,10 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【代充人入款】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【代充人入款】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
 		List<PayAgentRechargeAccountLog>      list = payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogList(payAgentRechargeAccountLog);
@@ -57,7 +57,7 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【代充人入款】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:query')" )
 	@GetMapping( value = "/{orderNo}" )
@@ -66,30 +66,30 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【代充人入款】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【代充人入款】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
 		return toAjax( payAgentRechargeAccountLogService.insertPayAgentRechargeAccountLog(payAgentRechargeAccountLog) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【代充人入款】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【代充人入款】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
 		return toAjax( payAgentRechargeAccountLogService.updatePayAgentRechargeAccountLog(payAgentRechargeAccountLog) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【代充人入款】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【代充人入款】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{orderNos}" )
 	public AjaxResult remove( @PathVariable String[] orderNos ) {
 		return toAjax( payAgentRechargeAccountLogService.deletePayAgentRechargeAccountLogByIds( orderNos ) );

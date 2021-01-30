@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.req.ReqPayJour;
+import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +24,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 【线上充值信息】Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -34,21 +36,21 @@ public class MemberPayJourController extends BaseController {
 	private IMemberPayJourService memberPayJourService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【线上充值信息】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(MemberPayJour memberPayJour) {
+    	public TableDataInfo list(ReqPayJour memberPayJour) {
 		startPage();
-		List<MemberPayJour> list = memberPayJourService.selectMemberPayJourList(memberPayJour);
+		List<RspPayJour> list = memberPayJourService.findList(memberPayJour);
 		return getDataTable( list );
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【线上充值信息】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【线上充值信息】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(MemberPayJour memberPayJour) {
 		List<MemberPayJour>      list = memberPayJourService.selectMemberPayJourList(memberPayJour);
@@ -57,7 +59,7 @@ public class MemberPayJourController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【线上充值信息】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:query')" )
 	@GetMapping( value = "/{id}" )
@@ -66,30 +68,30 @@ public class MemberPayJourController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【线上充值信息】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【线上充值信息】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody MemberPayJour memberPayJour) {
 		return toAjax( memberPayJourService.insertMemberPayJour(memberPayJour) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【线上充值信息】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【线上充值信息】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody MemberPayJour memberPayJour) {
 		return toAjax( memberPayJourService.updateMemberPayJour(memberPayJour) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【线上充值信息】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【线上充值信息】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( memberPayJourService.deleteMemberPayJourByIds( ids ) );

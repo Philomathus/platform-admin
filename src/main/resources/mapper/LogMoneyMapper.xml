@@ -36,7 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="total != null "> and total = #{total}</if>
             <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
             <if test="totalBefore != null "> and total_before = #{totalBefore}</if>
-            <if test="mark != null  and mark != ''"> and mark = #{mark}</if>
+            <if test="mark != null  and mark != ''"> and mark like concat('%', #{mark}, '%')}</if>
             <if test="markorder != null  and markorder != ''"> and markorder = #{markorder}</if>
         </where>
     </select>

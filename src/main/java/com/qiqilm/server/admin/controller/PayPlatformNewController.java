@@ -34,7 +34,7 @@ public class PayPlatformNewController extends BaseController {
 	private IPayPlatformNewService payPlatformNewService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【支付平台】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:list')" )
 	@GetMapping( "/list" )
@@ -45,10 +45,10 @@ public class PayPlatformNewController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【支付平台】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【支付平台】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(PayPlatformNew payPlatformNew) {
 		List<PayPlatformNew>      list = payPlatformNewService.selectPayPlatformNewList(payPlatformNew);
@@ -57,7 +57,7 @@ public class PayPlatformNewController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【支付平台】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:query')" )
 	@GetMapping( value = "/{id}" )
@@ -66,30 +66,30 @@ public class PayPlatformNewController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【支付平台】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【支付平台】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayPlatformNew payPlatformNew) {
 		return toAjax( payPlatformNewService.insertPayPlatformNew(payPlatformNew) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【支付平台】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【支付平台】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayPlatformNew payPlatformNew) {
 		return toAjax( payPlatformNewService.updatePayPlatformNew(payPlatformNew) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【支付平台】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【支付平台】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( payPlatformNewService.deletePayPlatformNewByIds( ids ) );

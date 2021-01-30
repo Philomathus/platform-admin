@@ -42,7 +42,7 @@ public class LiveUserController extends BaseController {
 	 * 导出主播用户信息列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:export')" )
-	@Log( title = "主播用户信息", businessType = BusinessType.EXPORT )
+	@Log( title = "导出主播用户信息列表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export( LiveUser liveUser ) {
 		List<LiveUser>      list = liveUserService.selectLiveUserList( liveUser );
@@ -63,7 +63,7 @@ public class LiveUserController extends BaseController {
 	 * 新增主播用户信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
-	@Log( title = "主播用户信息", businessType = BusinessType.INSERT )
+	@Log( title = "新增主播用户信息", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody LiveUser liveUser ) {
 		return toAjax( liveUserService.insertLiveUser( liveUser ) );
@@ -73,7 +73,7 @@ public class LiveUserController extends BaseController {
 	 * 修改主播用户信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
-	@Log( title = "主播用户信息", businessType = BusinessType.UPDATE )
+	@Log( title = "修改主播用户信息", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LiveUser liveUser ) {
 		return toAjax( liveUserService.updateLiveUser( liveUser ) );

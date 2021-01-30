@@ -579,15 +579,16 @@ export default {
     handleDelete(row) {
       const ${pkColumn.javaField}s = row.${pkColumn.javaField} || this.ids;
       this.$confirm('是否确认删除${functionName}编号为"' + ${pkColumn.javaField}s + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return del${BusinessName}(${pkColumn.javaField}s);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return del${BusinessName}(${pkColumn.javaField}s);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      }).catch(() => {
+	  })
     },
 #if($table.sub)
 	/** ${subTable.functionName}序号 */
@@ -627,14 +628,15 @@ export default {
     handleExport() {
       const queryParams = this.queryParams;
       this.$confirm('是否确认导出所有${functionName}数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return export${BusinessName}(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return export${BusinessName}(queryParams);
+      }).then(response => {
+        this.download(response.msg);
+      }).catch(() => {
+      })
     }
   }
 };

@@ -22,7 +22,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 【会员资金信息】Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -34,7 +34,7 @@ public class LogMoneyController extends BaseController {
 	private ILogMoneyService logMoneyService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【会员资金信息】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:list')" )
 	@GetMapping( "/list" )
@@ -45,10 +45,10 @@ public class LogMoneyController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【会员资金信息】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【会员资金信息】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(LogMoney logMoney) {
 		List<LogMoney>      list = logMoneyService.selectLogMoneyList(logMoney);
@@ -57,7 +57,7 @@ public class LogMoneyController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【会员资金信息】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:query')" )
 	@GetMapping( value = "/{id}" )
@@ -66,30 +66,30 @@ public class LogMoneyController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【会员资金信息】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【会员资金信息】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody LogMoney logMoney) {
 		return toAjax( logMoneyService.insertLogMoney(logMoney) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【会员资金信息】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【会员资金信息】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LogMoney logMoney) {
 		return toAjax( logMoneyService.updateLogMoney(logMoney) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【会员资金信息】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【会员资金信息】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( logMoneyService.deleteLogMoneyByIds( ids ) );

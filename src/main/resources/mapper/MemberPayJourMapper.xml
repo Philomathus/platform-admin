@@ -63,6 +63,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="findList" resultType="com.qiqilm.server.admin.domain.rsp.RspPayJour">
+        select j.*, p.name platform_name, c.name channel_name, c.pay_rate from
+        (select *
+        from member_pay_jour
+        where 1=1
+        <if test="req.status != null and req.status lt 2">
+            and status = #{req.status}
+        </if>
+        <if test="req.status != null and req.status == 2">
+            and status = '1' and is_patch_order = 1
+        </if>
+        <if test="req.platform_id != null and req.platform_id != ''">
+            and platform_id = #{req.platform_id}
+        </if>
+        <if test="req.trade_sn != null and req.trade_sn != ''">
+            and (trade_sn = #{req.trade_sn} or order_no = #{req.trade_sn})
+        </if>
+        <if test="req.search != null and req.search != ''">
+            and (member_id = #{req.search} or user_name = #{req.search})
+        </if>
+        <if test="req.startDate != null and req.startDate != '' and req.endDate != null and req.endDate != ''">
+            and update_time <![CDATA[ >= ]]> #{req.startDate} and update_time <![CDATA[ <= ]]> #{req.endDate}
+        </if>
+        ) j left join pay_platform_new p on j.platform_id = p.id
+        left join pay_channel_new c on j.channel_id = c.id
+        order by j.update_time desc
+    </select>
+
     <select id="selectMemberPayJourById" parameterType="String" resultMap="MemberPayJourResult">
         <include refid="selectMemberPayJourVo"/>
         where id = #{id}

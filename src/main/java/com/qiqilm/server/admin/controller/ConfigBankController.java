@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.PayType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 【公司入款银行列表】Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -34,7 +35,7 @@ public class ConfigBankController extends BaseController {
 	private IConfigBankService configBankService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【公司入款银行列表】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:list')" )
 	@GetMapping( "/list" )
@@ -45,10 +46,10 @@ public class ConfigBankController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【公司入款银行列表】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【公司入款银行列表】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(ConfigBank configBank) {
 		List<ConfigBank>      list = configBankService.selectConfigBankList(configBank);
@@ -57,7 +58,7 @@ public class ConfigBankController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【公司入款银行列表】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:query')" )
 	@GetMapping( value = "/{id}" )
@@ -66,32 +67,42 @@ public class ConfigBankController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【公司入款银行列表】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【公司入款银行列表】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ConfigBank configBank) {
 		return toAjax( configBankService.insertConfigBank(configBank) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【公司入款银行列表】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【公司入款银行列表】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody ConfigBank configBank) {
 		return toAjax( configBankService.updateConfigBank(configBank) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【公司入款银行列表】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【公司入款银行列表】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( configBankService.deleteConfigBankByIds( ids ) );
+	}
+
+	/**
+	 * 支付状态修改
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:configBank:edit')" )
+	@Log( title = "支付类型", businessType = BusinessType.UPDATE )
+	@PutMapping( "/changeStatus" )
+	public AjaxResult changeStatus( @RequestBody ConfigBank configBank ) {
+		return toAjax(configBankService.updateConfigBank(configBank));
 	}
 }

@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.PayType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 【代充人管理】Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -34,7 +35,7 @@ public class PayAgentRechargeAccountController extends BaseController {
 	private IPayAgentRechargeAccountService payAgentRechargeAccountService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询【代充人管理】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccount:list')" )
 	@GetMapping( "/list" )
@@ -45,10 +46,10 @@ public class PayAgentRechargeAccountController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 * 导出【代充人管理】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccount:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【代充人管理】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(PayAgentRechargeAccount payAgentRechargeAccount) {
 		List<PayAgentRechargeAccount>      list = payAgentRechargeAccountService.selectPayAgentRechargeAccountList(payAgentRechargeAccount);
@@ -57,7 +58,7 @@ public class PayAgentRechargeAccountController extends BaseController {
 	}
 
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取【代充人管理】详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccount:query')" )
 	@GetMapping( value = "/{id}" )
@@ -66,32 +67,42 @@ public class PayAgentRechargeAccountController extends BaseController {
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增【代充人管理】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccount:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "【代充人管理】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayAgentRechargeAccount payAgentRechargeAccount) {
 		return toAjax( payAgentRechargeAccountService.insertPayAgentRechargeAccount(payAgentRechargeAccount) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改【代充人管理】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccount:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "【代充人管理】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayAgentRechargeAccount payAgentRechargeAccount) {
 		return toAjax( payAgentRechargeAccountService.updatePayAgentRechargeAccount(payAgentRechargeAccount) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除【代充人管理】
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccount:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "【代充人管理】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( payAgentRechargeAccountService.deletePayAgentRechargeAccountByIds( ids ) );
+	}
+
+	/**
+	 * 状态修改
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccount:edit')" )
+	@Log( title = "代充人", businessType = BusinessType.UPDATE )
+	@PutMapping( "/changeStatus" )
+	public AjaxResult changeStatus( @RequestBody PayAgentRechargeAccount payAgentRechargeAccount ) {
+		return toAjax( payAgentRechargeAccountService.updatePayAgentRechargeAccount(payAgentRechargeAccount));
 	}
 }

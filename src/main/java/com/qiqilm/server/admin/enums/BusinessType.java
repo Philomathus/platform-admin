@@ -60,4 +60,9 @@ public enum BusinessType {
 	 * 上传文件
 	 */
 	UPLOAD,
+
+	/**
+	 * 状态激活
+	 */
+	EFFECT,
 }

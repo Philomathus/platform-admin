@@ -36,12 +36,12 @@ public class LiveVideoClassifiedController extends BaseController {
 		List<LiveVideoClassified> list = liveVideoClassifiedService.selectLiveVideoClassifiedList(liveVideoClassified);
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出分类列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:export')" )
-	@Log( title = "分类", businessType = BusinessType.EXPORT )
+	@Log( title = "导出分类列表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(LiveVideoClassified liveVideoClassified) {
 		List<LiveVideoClassified>      list = liveVideoClassifiedService.selectLiveVideoClassifiedList(liveVideoClassified);
@@ -62,7 +62,7 @@ public class LiveVideoClassifiedController extends BaseController {
 	 * 新增分类
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:add')" )
-	@Log( title = "分类", businessType = BusinessType.INSERT )
+	@Log( title = "新增分类", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody LiveVideoClassified liveVideoClassified) {
 		return toAjax( liveVideoClassifiedService.insertLiveVideoClassified(liveVideoClassified) );
@@ -72,7 +72,7 @@ public class LiveVideoClassifiedController extends BaseController {
 	 * 修改分类
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:edit')" )
-	@Log( title = "分类", businessType = BusinessType.UPDATE )
+	@Log( title = "修改分类", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LiveVideoClassified liveVideoClassified) {
 		return toAjax( liveVideoClassifiedService.updateLiveVideoClassified(liveVideoClassified) );
@@ -82,7 +82,7 @@ public class LiveVideoClassifiedController extends BaseController {
 	 * 删除分类
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:remove')" )
-	@Log( title = "分类", businessType = BusinessType.DELETE )
+	@Log( title = "删除分类", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( liveVideoClassifiedService.deleteLiveVideoClassifiedByIds( ids ) );

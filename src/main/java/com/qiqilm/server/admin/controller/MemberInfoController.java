@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Controller
+ * 用户信息Controller
  *
  * @author 77tv
  * @date 2021-01-25
@@ -48,7 +48,7 @@ public class MemberInfoController extends BaseController {
     private RedisUtil redisUtil;
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询用户信息列表
      */
     @PreAuthorize("@ss.hasPermi('admin:memberInfo:list')")
     @GetMapping("/list")
@@ -59,7 +59,7 @@ public class MemberInfoController extends BaseController {
     }
 
     /**
-     * 导出【请填写功能名称】列表
+     * 导出用户信息列表
      */
     @PreAuthorize("@ss.hasPermi('admin:memberInfo:export')")
     @Log(title = "导出", businessType = BusinessType.EXPORT)
@@ -71,7 +71,7 @@ public class MemberInfoController extends BaseController {
     }
 
     /**
-     * 获取【请填写功能名称】详细信息
+     * 获取用户信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('admin:memberInfo:query')")
     @GetMapping(value = "/{id}")
@@ -80,30 +80,30 @@ public class MemberInfoController extends BaseController {
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增用户信息
      */
     @PreAuthorize("@ss.hasPermi('admin:memberInfo:add')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
+    @Log(title = "用户信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MemberInfo memberInfo) {
         return toAjax(memberInfoService.insertMemberInfo(memberInfo));
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改用户信息
      */
     @PreAuthorize("@ss.hasPermi('admin:memberInfo:edit')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
+    @Log(title = "用户信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody MemberInfo memberInfo) {
         return toAjax(memberInfoService.updateMemberInfo(memberInfo));
     }
 
     /**
-     * 删除【请填写功能名称】
+     * 删除用户信息
      */
     @PreAuthorize("@ss.hasPermi('admin:memberInfo:remove')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
+    @Log(title = "用户信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(memberInfoService.deleteMemberInfoByIds(ids));
