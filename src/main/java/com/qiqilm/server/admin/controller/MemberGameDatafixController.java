@@ -50,7 +50,7 @@ public class MemberGameDatafixController extends BaseController {
 	 * 新增【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:memberGameDatafix:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "新增补单", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody MemberGameDatafix memberGameDatafix) {
 		memberGameDatafix.setId(UuidUtil.getRandomUuidWithoutSeparator());

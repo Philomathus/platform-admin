@@ -57,7 +57,7 @@ public class GamePlatformController extends BaseController {
 	 * 新增【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:game-platform:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "游戏平台新增", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody GamePlatform gamePlatform) {
 		return toAjax( gamePlatformService.insertGamePlatform(gamePlatform) );
@@ -67,13 +67,13 @@ public class GamePlatformController extends BaseController {
 	 * 修改【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:game-platform:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "游戏平台新增", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody GamePlatform gamePlatform) {
 		return toAjax( gamePlatformService.updateGamePlatform(gamePlatform) );
 	}
 	@PreAuthorize( "@ss.hasPermi('web:game-platform:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "游戏平台修改状态", businessType = BusinessType.UPDATE )
 	@PutMapping("/changeStatus")
 	public AjaxResult changeStatus( @RequestBody GamePlatform gamePlatform) {
 		return toAjax( gamePlatformService.changeStatus(gamePlatform) );
@@ -82,7 +82,7 @@ public class GamePlatformController extends BaseController {
 	 * 删除【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:game-platform:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "游戏平台删除", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( gamePlatformService.deleteGamePlatformByIds( ids ) );
