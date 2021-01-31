@@ -65,4 +65,14 @@ public enum BusinessType {
 	 * 状态激活
 	 */
 	EFFECT,
+
+	/**
+	 * 审核
+	 */
+	AUDIT,
+
+	/**
+	 * 下单
+	 */
+	ORDER,
 }

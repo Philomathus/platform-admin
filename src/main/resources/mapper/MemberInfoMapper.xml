@@ -307,4 +307,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="updateSpeak">
         update member_info set speak = #{speak} where id = #{pUserId}
     </select>
+
+    <select id="selectTotalAccountById" resultType="java.math.BigDecimal">
+        select total_account from member_info where id = #{id}
+    </select>
 </mapper>

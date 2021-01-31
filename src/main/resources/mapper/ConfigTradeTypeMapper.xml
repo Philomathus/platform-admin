@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ConfigTradeTypeMapper">
+	<resultMap type="ConfigTradeType" id="ConfigTradeTypeResult">
+		<result property="type" column="type"/>
+		<result property="name" column="name"/>
+		<result property="des" column="des"/>
+	</resultMap>
+
+	<sql id="selectConfigTradeTypeVo">
+		select type, name, des
+		from 7700_main.config_trade_type
+	</sql>
+
+	<select id="selectConfigTradeTypeList" parameterType="ConfigTradeType" resultMap="ConfigTradeTypeResult">
+		<include refid="selectConfigTradeTypeVo"/>
+		<where>
+			<if test="type != null">
+				and type = #{type}
+			</if>
+			<if test="name != null  and name != ''">
+				and name like concat('%', #{name}, '%')
+			</if>
+			<if test="des != null  and des != ''">
+				and des like concat('%', #{des}, '%')
+			</if>
+		</where>
+		<if test="params != null and params.orderBy != null">
+			order by #{params.orderBy}
+		</if>
+	</select>
+
+	<select id="selectConfigTradeTypeById" parameterType="Long" resultMap="ConfigTradeTypeResult">
+		<include refid="selectConfigTradeTypeVo"/>
+		where type = #{type}
+	</select>
+
+	<insert id="insertConfigTradeType" parameterType="ConfigTradeType">
+		insert into 7700_main.config_trade_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="type != null">
+				type,
+			</if>
+			<if test="name != null and name != ''">
+				name,
+			</if>
+			<if test="des != null and des != ''">
+				des,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="name != null and name != ''">
+				#{name},
+			</if>
+			<if test="des != null and des != ''">
+				#{des},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateConfigTradeType" parameterType="ConfigTradeType">
+		update 7700_main.config_trade_type
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="des != null and des != ''">
+				des = #{des},
+			</if>
+		</trim>
+		where type = #{type}
+	</update>
+
+	<delete id="deleteConfigTradeTypeById" parameterType="Long">
+		delete
+		from 7700_main.config_trade_type
+		where type = #{type}
+	</delete>
+
+	<delete id="deleteConfigTradeTypeByIds" parameterType="String">
+		delete
+		from 7700_main.config_trade_type where type in
+		<foreach item="type" collection="array" open="(" separator="," close=")">
+			#{type}
+		</foreach>
+	</delete>
+</mapper>

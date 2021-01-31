@@ -64,10 +64,12 @@ public interface MemberInfoMapper {
 
 	int selectMaxMemberCode();
 
-	int updateMoneySelect( @Param( "userId" ) String userId, @Param( "money" ) BigDecimal money,
+	int updateMoneySelect( @Param( "userId" ) String userId,
+						   @Param( "money" ) BigDecimal money,
 						   @Param( "invite_money" ) BigDecimal invite_money,
 						   @Param( "level_integral" ) BigDecimal level_integral,
-						   @Param( "code_account" ) BigDecimal code_account, @Param( "code_total" ) BigDecimal code_total );
+						   @Param( "code_account" ) BigDecimal code_account,
+						   @Param( "code_total" ) BigDecimal code_total );
 
 	void call_pro_useranalysis( @Param( "userid" ) String userId );
 
@@ -76,4 +78,6 @@ public interface MemberInfoMapper {
 	List<String> selectMemberSpeak( String[] ids );
 
 	void updateSpeak(@Param( "pUserId" ) String pUserId, @Param( "speak" ) int speak );
+
+	BigDecimal selectTotalAccountById( String memberId );
 }

@@ -34,6 +34,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="withdrawMoney != null "> and withdraw_money = #{withdrawMoney}</if>
             <if test="callbackTime != null "> and callback_time = #{callbackTime}</if>
             <if test="callbackStatus != null "> and callback_status = #{callbackStatus}</if>
+
+            <if test="createTime != null "> and create_time &lt;= #{createTime}</if>
         </where>
     </select>
 
@@ -97,4 +99,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectByWithdrawOrderNo" resultMap="PayAgentLogResult">
+        <include refid="selectPayAgentLogVo"/>
+        where withdraw_order_no = #{merOrderNo}
+	</select>
 </mapper>

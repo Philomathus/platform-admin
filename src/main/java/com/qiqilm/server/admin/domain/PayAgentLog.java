@@ -5,15 +5,17 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 pay_agent_log
+ * 代付信息日志对象 pay_agent_log
  *
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class PayAgentLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -29,8 +31,7 @@ public class PayAgentLog extends BaseEntity {
     private String payAgentOrderNo;
 
     /** 三方代付平台ID */
-    @Excel(name = "三方代付平台ID")
-    private String payAgentPlatId;
+    private Long payAgentPlatId;
 
     /** 三方代付平台名称 */
     @Excel(name = "三方代付平台名称")
@@ -54,79 +55,8 @@ public class PayAgentLog extends BaseEntity {
     private Date callbackTime;
 
     /** 回调状态 0 回调中 1 成功 2失败 */
-    @Excel(name = "回调状态 0 回调中 1 成功 2失败")
-    private Long callbackStatus;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public void setWithdrawOrderNo(String withdrawOrderNo) {
-        this.withdrawOrderNo = withdrawOrderNo;
-    }
-
-    public String getWithdrawOrderNo() {
-        return withdrawOrderNo;
-    }
-    public void setPayAgentOrderNo(String payAgentOrderNo) {
-        this.payAgentOrderNo = payAgentOrderNo;
-    }
-
-    public String getPayAgentOrderNo() {
-        return payAgentOrderNo;
-    }
-    public void setPayAgentPlatId(String payAgentPlatId) {
-        this.payAgentPlatId = payAgentPlatId;
-    }
-
-    public String getPayAgentPlatId() {
-        return payAgentPlatId;
-    }
-    public void setPayAgentPlatName(String payAgentPlatName) {
-        this.payAgentPlatName = payAgentPlatName;
-    }
-
-    public String getPayAgentPlatName() {
-        return payAgentPlatName;
-    }
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
-
-    public String getMemberId() {
-        return memberId;
-    }
-    public void setMemberAccount(String memberAccount) {
-        this.memberAccount = memberAccount;
-    }
-
-    public String getMemberAccount() {
-        return memberAccount;
-    }
-    public void setWithdrawMoney(BigDecimal withdrawMoney) {
-        this.withdrawMoney = withdrawMoney;
-    }
-
-    public BigDecimal getWithdrawMoney() {
-        return withdrawMoney;
-    }
-    public void setCallbackTime(Date callbackTime) {
-        this.callbackTime = callbackTime;
-    }
-
-    public Date getCallbackTime() {
-        return callbackTime;
-    }
-    public void setCallbackStatus(Long callbackStatus) {
-        this.callbackStatus = callbackStatus;
-    }
-
-    public Long getCallbackStatus() {
-        return callbackStatus;
-    }
+    @Excel(name = "回调状态")
+    private Integer callbackStatus;
 
     @Override
     public String toString() {

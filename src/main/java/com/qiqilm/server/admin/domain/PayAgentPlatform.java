@@ -60,10 +60,8 @@ public class PayAgentPlatform extends BaseEntity {
     private String platWhiteIpList;
 
     /** 状态 1启用 0禁用 */
-    @Excel(name = "状态 1启用 0禁用")
-    private String status;
-
-
+    @Excel(name = "状态")
+    private Integer status;
 
     @Override
     public String toString() {

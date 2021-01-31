@@ -1,32 +1,28 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
- * 【会员提现信息】Controller
+ * 会员提现信息Controller
  *
  * @author 77tv
  * @date 2021-01-26
  */
+@Log4j2
 @RestController
 @RequestMapping( "/pay/memberWithdrawLog" )
 public class MemberWithdrawLogController extends BaseController {
@@ -34,64 +30,62 @@ public class MemberWithdrawLogController extends BaseController {
 	private IMemberWithdrawLogService memberWithdrawLogService;
 
 	/**
-	 * 查询【会员提现信息】列表
+	 * 查询会员提现信息列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(MemberWithdrawLog memberWithdrawLog) {
+	public TableDataInfo list( MemberWithdrawLog memberWithdrawLog ) {
 		startPage();
-		List<MemberWithdrawLog> list = memberWithdrawLogService.selectMemberWithdrawLogList(memberWithdrawLog);
+		List<MemberWithdrawLog> list = memberWithdrawLogService.selectMemberWithdrawLogList( memberWithdrawLog );
 		return getDataTable( list );
-	}
-    
-	/**
-	 * 导出【会员提现信息】列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:export')" )
-	@Log( title = "【会员提现信息】", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public AjaxResult export(MemberWithdrawLog memberWithdrawLog) {
-		List<MemberWithdrawLog>      list = memberWithdrawLogService.selectMemberWithdrawLogList(memberWithdrawLog);
-		ExcelUtil<MemberWithdrawLog> util = new ExcelUtil<MemberWithdrawLog>(MemberWithdrawLog. class);
-		return util.exportExcel( list, "memberWithdrawLog" );
 	}
 
 	/**
-	 * 获取【会员提现信息】详细信息
+	 * 获取会员提现信息详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( memberWithdrawLogService.selectMemberWithdrawLogById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( memberWithdrawLogService.selectMemberWithdrawLogById( id ) );
 	}
 
 	/**
-	 * 新增【会员提现信息】
+	 * 导出会员提现信息列表
 	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:add')" )
-	@Log( title = "【会员提现信息】", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody MemberWithdrawLog memberWithdrawLog) {
-		return toAjax( memberWithdrawLogService.insertMemberWithdrawLog(memberWithdrawLog) );
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:export')" )
+	@Log( title = "会员提现信息", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export( MemberWithdrawLog memberWithdrawLog ) {
+		List<MemberWithdrawLog>      list = memberWithdrawLogService.selectMemberWithdrawLogList( memberWithdrawLog );
+		ExcelUtil<MemberWithdrawLog> util = new ExcelUtil<>( MemberWithdrawLog.class );
+		return util.exportExcel( list, "memberWithdrawLog" );
 	}
 
-	/**
-	 * 修改【会员提现信息】
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:edit')" )
-	@Log( title = "【会员提现信息】", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody MemberWithdrawLog memberWithdrawLog) {
-		return toAjax( memberWithdrawLogService.updateMemberWithdrawLog(memberWithdrawLog) );
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:refused')" )
+	@Log( title = "会员提现拒绝", businessType = BusinessType.AUDIT )
+	@PutMapping( "/refused" )
+	public AjaxResult refused( @RequestBody ReqMemberWithdrawLog req ) {
+		return memberWithdrawLogService.refused( req );
 	}
 
-	/**
-	 * 删除【会员提现信息】
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:remove')" )
-	@Log( title = "【会员提现信息】", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable String[] ids ) {
-		return toAjax( memberWithdrawLogService.deleteMemberWithdrawLogByIds( ids ) );
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:lock')" )
+	@Log( title = "会员提现锁定", businessType = BusinessType.AUDIT )
+	@PutMapping( "/lock" )
+	public AjaxResult lock( @RequestBody ReqMemberWithdrawLog req ) {
+		return memberWithdrawLogService.lock( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:unlock')" )
+	@Log( title = "会员提现解锁", businessType = BusinessType.AUDIT )
+	@PutMapping( "/unlock" )
+	public AjaxResult unlock( @RequestBody ReqMemberWithdrawLog req ) {
+		return memberWithdrawLogService.unlock( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:artificial')" )
+	@Log( title = "会员提现人工出款", businessType = BusinessType.AUDIT )
+	@PutMapping( "/artificial" )
+	public AjaxResult artificial( @RequestBody ReqMemberWithdrawLog req ) {
+		return memberWithdrawLogService.artificial( req );
 	}
 }

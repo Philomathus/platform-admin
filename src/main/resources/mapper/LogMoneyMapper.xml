@@ -1,130 +1,157 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.LogMoneyMapper">
+	<resultMap type="LogMoney" id="LogMoneyResult">
+		<result property="id" column="id"/>
+		<result property="userId" column="user_id"/>
+		<result property="userName" column="user_name"/>
+		<result property="type" column="type"/>
+		<result property="des" column="des"/>
+		<result property="income" column="income"/>
+		<result property="pay" column="pay"/>
+		<result property="total" column="total"/>
+		<result property="createTime" column="create_time"/>
+		<result property="totalBefore" column="total_before"/>
+		<result property="mark" column="mark"/>
+		<result property="markorder" column="markorder"/>
+	</resultMap>
 
-    <resultMap type="LogMoney" id="LogMoneyResult">
-        <result property="id"    column="id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="userName"    column="user_name"    />
-        <result property="type"    column="type"    />
-        <result property="des"    column="des"    />
-        <result property="income"    column="income"    />
-        <result property="pay"    column="pay"    />
-        <result property="total"    column="total"    />
-        <result property="agent"    column="agent"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="totalBefore"    column="total_before"    />
-        <result property="mark"    column="mark"    />
-        <result property="markorder"    column="markorder"    />
-    </resultMap>
+	<sql id="selectLogMoneyVo">
+		select id,
+			   user_id,
+			   user_name,
+			   type,
+			   des,
+			   income,
+			   pay,
+			   total,
+			   create_time,
+			   total_before,
+			   mark,
+			   markorder
+		from 7700_main.log_money
+	</sql>
 
-    <sql id="selectLogMoneyVo">
-        select id, user_id, user_name, type, des, income, pay, total, agent, create_time, total_before, mark, markorder from log_money
-    </sql>
+	<select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
+		<include refid="selectLogMoneyVo"/>
+		<where>
+			<if test="userId != null  and userId != ''">
+				and user_id = #{userId}
+			</if>
+			<if test="userName != null  and userName != ''">
+				and user_name = #{userName}
+			</if>
+			<if test="types != null and types.length != 0">
+				and type in
+				<foreach item="id" collection="types" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="mark != null  and mark != ''">
+				and mark like concat('%', #{mark}, '%')
+			</if>
+		</where>
+	</select>
 
-    <select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
-        <include refid="selectLogMoneyVo"/>
-        <where>
-            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
-            <if test="type != null "> and type = #{type}</if>
-            <if test="des != null  and des != ''"> and des = #{des}</if>
-            <if test="income != null "> and income = #{income}</if>
-            <if test="pay != null "> and pay = #{pay}</if>
-            <if test="total != null "> and total = #{total}</if>
-            <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
-            <if test="totalBefore != null "> and total_before = #{totalBefore}</if>
-            <if test="mark != null  and mark != ''"> and mark like concat('%', #{mark}, '%')}</if>
-            <if test="markorder != null  and markorder != ''"> and markorder = #{markorder}</if>
-        </where>
-    </select>
+	<insert id="insertLogMoney" parameterType="LogMoney">
+		insert into log_money
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="des != null">
+				des,
+			</if>
+			<if test="income != null">
+				income,
+			</if>
+			<if test="pay != null">
+				pay,
+			</if>
+			<if test="total != null">
+				total,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="totalBefore != null">
+				total_before,
+			</if>
+			<if test="mark != null">
+				mark,
+			</if>
+			<if test="markorder != null">
+				markorder,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="userName != null">
+				#{userName},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="des != null">
+				#{des},
+			</if>
+			<if test="income != null">
+				#{income},
+			</if>
+			<if test="pay != null">
+				#{pay},
+			</if>
+			<if test="total != null">
+				#{total},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="totalBefore != null">
+				#{totalBefore},
+			</if>
+			<if test="mark != null">
+				#{mark},
+			</if>
+			<if test="markorder != null">
+				#{markorder},
+			</if>
+		</trim>
+	</insert>
 
-    <select id="selectLogMoneyById" parameterType="String" resultMap="LogMoneyResult">
-        <include refid="selectLogMoneyVo"/>
-        where id = #{id}
-    </select>
-
-    <insert id="insertLogMoney" parameterType="LogMoney">
-        insert into log_money
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
-            <if test="userId != null">user_id,</if>
-            <if test="userName != null">user_name,</if>
-            <if test="type != null">type,</if>
-            <if test="des != null">des,</if>
-            <if test="income != null">income,</if>
-            <if test="pay != null">pay,</if>
-            <if test="total != null">total,</if>
-            <if test="agent != null">agent,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="totalBefore != null">total_before,</if>
-            <if test="mark != null">mark,</if>
-            <if test="markorder != null">markorder,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
-            <if test="userId != null">#{userId},</if>
-            <if test="userName != null">#{userName},</if>
-            <if test="type != null">#{type},</if>
-            <if test="des != null">#{des},</if>
-            <if test="income != null">#{income},</if>
-            <if test="pay != null">#{pay},</if>
-            <if test="total != null">#{total},</if>
-            <if test="agent != null">#{agent},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="totalBefore != null">#{totalBefore},</if>
-            <if test="mark != null">#{mark},</if>
-            <if test="markorder != null">#{markorder},</if>
-         </trim>
-    </insert>
-
-    <update id="updateLogMoney" parameterType="LogMoney">
-        update log_money
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="userId != null">user_id = #{userId},</if>
-            <if test="userName != null">user_name = #{userName},</if>
-            <if test="type != null">type = #{type},</if>
-            <if test="des != null">des = #{des},</if>
-            <if test="income != null">income = #{income},</if>
-            <if test="pay != null">pay = #{pay},</if>
-            <if test="total != null">total = #{total},</if>
-            <if test="agent != null">agent = #{agent},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="totalBefore != null">total_before = #{totalBefore},</if>
-            <if test="mark != null">mark = #{mark},</if>
-            <if test="markorder != null">markorder = #{markorder},</if>
-        </trim>
-        where id = #{id}
-    </update>
-
-    <delete id="deleteLogMoneyById" parameterType="String">
-        delete from log_money where id = #{id}
-    </delete>
-
-    <delete id="deleteLogMoneyByIds" parameterType="String">
-        delete from log_money where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
-
-    <select id="findMark" resultMap="LogMoneyResult">
-        select *
-        from log_money
-        where 1 = 1
-        <if test="userId != null">
-            and user_id = #{userId}
-        </if>
-        <if test="mark != null">
-            and markorder = #{mark}
-        </if>
-        <if test="money != null and money > 0">
-            and income = #{money}
-        </if>
-        <if test="pay != null">
-            and pay = #{pay}
-        </if>
-    </select>
+	<select id="findMark" resultMap="LogMoneyResult">
+		<include refid="selectLogMoneyVo"/>
+		where 1 = 1
+		<if test="userId != null">
+			and user_id = #{userId}
+		</if>
+		<if test="mark != null">
+			and markorder = #{mark}
+		</if>
+		<if test="money != null and money > 0">
+			and income = #{money}
+		</if>
+		<if test="pay != null">
+			and pay = #{pay}
+		</if>
+	</select>
 </mapper>

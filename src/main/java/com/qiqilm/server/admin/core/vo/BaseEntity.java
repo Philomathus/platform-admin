@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.core.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +19,7 @@ public class BaseEntity implements Serializable {
 	/**
 	 * 搜索值
 	 */
+	@JsonIgnore
 	private String searchValue;
 
 	/**
@@ -50,6 +52,7 @@ public class BaseEntity implements Serializable {
 	/**
 	 * 请求参数
 	 */
+	@JsonIgnore
 	private Map<String, Object> params;
 
 	public String getSearchValue() {
