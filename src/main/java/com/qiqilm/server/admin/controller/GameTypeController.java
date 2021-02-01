@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.controller;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.GamePlatform;
+import com.qiqilm.server.admin.domain.rsp.RspTypeGames;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,5 +102,15 @@ public class GameTypeController extends BaseController {
 	@PutMapping("/changeStatus")
 	public AjaxResult changeStatus( @RequestBody GameType gameType) {
 		return toAjax( gameTypeService.updateGameType(gameType) );
+	}
+
+	/**
+	 * 获取游戏类型详细信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('game:type:edit')" )
+	@GetMapping( value = "/getRelationGame/{id}" )
+	public AjaxResult getRelationGame( @PathVariable( "id" ) String id) {
+		RspTypeGames rspTypeGames=gameTypeService.findTypeGames(id);
+		return AjaxResult.success(rspTypeGames);
 	}
 }

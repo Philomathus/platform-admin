@@ -1,6 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.GameType;
+import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
+import com.qiqilm.server.admin.domain.rsp.RspTypeGames;
+import com.qiqilm.server.admin.mapper.GameInfoMapper;
 import com.qiqilm.server.admin.mapper.GameTypeMapper;
 import com.qiqilm.server.admin.service.IGameTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,8 @@ import java.util.List;
 public class GameTypeServiceImpl implements IGameTypeService {
 	@Autowired
 	private GameTypeMapper gameTypeMapper;
-
+	@Autowired
+	private GameInfoMapper gameInfoMapper;
 	/**
 	 * 查询游戏类型
 	 *
@@ -83,5 +87,15 @@ public class GameTypeServiceImpl implements IGameTypeService {
 	@Override
 	public int deleteGameTypeById( String id ) {
 		return gameTypeMapper.deleteGameTypeById( id );
+	}
+
+	@Override
+	public RspTypeGames findTypeGames(String id) {
+		List<RspGameInfo> allGameList = gameInfoMapper.findTypeGames();
+		List<String> typeGameList = gameInfoMapper.findTypeHasGames(id);
+		RspTypeGames rspTypeGames = new RspTypeGames();
+		rspTypeGames.setAll_games(allGameList);
+		rspTypeGames.setType_games(typeGameList);
+		return rspTypeGames;
 	}
 }

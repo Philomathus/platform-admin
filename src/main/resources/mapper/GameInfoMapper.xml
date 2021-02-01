@@ -150,4 +150,20 @@
         delete from 7700_main.game_info where id=#{id}
 
     </delete>
+
+    <select id="findTypeGames" resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
+        select id,name
+        from game_info
+        where status = 1
+        order by indexs asc
+    </select>
+
+
+    <select id="findTypeHasGames" resultType="java.lang.String">
+        select id
+        from game_info
+        where status = 1
+        and id in (select game_id from game_type_with where type_id = #{id})
+        order by indexs asc
+    </select>
 </mapper>

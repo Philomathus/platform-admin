@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.GameTypeWithMapper">
+
+    <resultMap type="GameTypeWith" id="GameTypeWithResult">
+        <result property="id"    column="id"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="gameId"    column="game_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="kindId"    column="kind_id"    />
+    </resultMap>
+
+    <sql id="selectGameTypeWithVo">
+        select id, type_id, game_id,  FROM_UNIXTIME(create_time) create_time ,  kind_id from 7700_main.game_type_with
+    </sql>
+
+    <select id="selectGameTypeWithList" parameterType="GameTypeWith" resultMap="GameTypeWithResult">
+        <include refid="selectGameTypeWithVo"/>
+        <where>
+            <if test="typeId != null  and typeId != ''"> and type_id = #{typeId}</if>
+            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
+            <if test="kindId != null  and kindId != ''"> and kind_id = #{kindId}</if>
+        </where>
+    </select>
+
+    <select id="selectGameTypeWithById" parameterType="String" resultMap="GameTypeWithResult">
+        <include refid="selectGameTypeWithVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertGameTypeWith" parameterType="GameTypeWith">
+        insert into 7700_main.game_type_with
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="typeId != null">type_id,</if>
+            <if test="gameId != null">game_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="kindId != null">kind_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="typeId != null">#{typeId},</if>
+            <if test="gameId != null">#{gameId},</if>
+            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="kindId != null">#{kindId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGameTypeWith" parameterType="GameTypeWith">
+        update 7700_main.game_type_with
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeId != null">type_id = #{typeId},</if>
+
+            <if test="gameId != null">game_id = #{gameId},</if>
+
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+
+            <if test="kindId != null">kind_id = #{kindId},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGameTypeWithById" parameterType="String">
+        delete from 7700_main.game_type_with where id = #{id}
+    </delete>
+
+    <delete id="deleteGameTypeWithByIds" parameterType="String">
+        delete from 7700_main.game_type_with where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>
