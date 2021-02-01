@@ -49,7 +49,7 @@ public class PayType extends BaseEntity {
 
     /** 支付类型 1线上支付 2线下支付 3 代充支付 */
     @Excel(name = "支付类型 1线上支付 2线下支付 3 代充支付")
-    private Long type;
+    private String type;
 
     /** 创建人 */
     @Excel(name = "创建人")

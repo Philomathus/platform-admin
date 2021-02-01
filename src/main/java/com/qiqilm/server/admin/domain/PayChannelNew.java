@@ -32,7 +32,7 @@ public class PayChannelNew extends BaseEntity {
 
     /** 支付属性  0http 1支付宝sdk 2第三方app */
     @Excel(name = "支付属性  0http 1支付宝sdk 2第三方app")
-    private Long payAttr;
+    private String payAttr;
 
     /** 失败次数 */
     @Excel(name = "失败次数")
@@ -88,7 +88,7 @@ public class PayChannelNew extends BaseEntity {
 
     /** 输入类型 (自定义金额+快捷金额1 仅快捷金额0) */
     @Excel(name = "输入类型 (自定义金额+快捷金额1 仅快捷金额0)")
-    private Long inputType;
+    private String inputType;
 
     /** 创建人 */
     @Excel(name = "创建人")
