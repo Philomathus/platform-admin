@@ -86,6 +86,42 @@ public class ReportMoneyinfo extends BaseEntity {
     @Excel(name = "合计剩余偏差")
     private BigDecimal totalLast;
 
+    private BigDecimal paymentAmount;//入款总额
+    private BigDecimal outMoney;//出款总额
+    private BigDecimal countMoney;//合计
+    private BigDecimal totalAccountGifts;//送礼总金额
+    public BigDecimal getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount(BigDecimal paymentAmount) {
+        this.paymentAmount = paymentAmount;
+    }
+
+    public BigDecimal getOutMoney() {
+        return outMoney;
+    }
+
+    public void setOutMoney(BigDecimal outMoney) {
+        this.outMoney = outMoney;
+    }
+
+    public BigDecimal getCountMoney() {
+        return countMoney;
+    }
+
+    public void setCountMoney(BigDecimal countMoney) {
+        this.countMoney = countMoney;
+    }
+
+    public BigDecimal getTotalAccountGifts() {
+        return totalAccountGifts;
+    }
+
+    public void setTotalAccountGifts(BigDecimal totalAccountGifts) {
+        this.totalAccountGifts = totalAccountGifts;
+    }
+
     public void setRepId(String repId) {
         this.repId = repId;
     }

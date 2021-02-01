@@ -35,6 +35,14 @@ public class ReportIncomeDay extends BaseEntity {
     @Excel(name = "收款通道")
     private String paychancl;
 
+    public BigDecimal getCountSuccessMoney() {
+        return countSuccessMoney;
+    }
+
+    public void setCountSuccessMoney(BigDecimal countSuccessMoney) {
+        this.countSuccessMoney = countSuccessMoney;
+    }
+
     /** 收款商户 */
     @Excel(name = "收款商户")
     private String paycard;
@@ -42,6 +50,8 @@ public class ReportIncomeDay extends BaseEntity {
     /** 时间 */
     @Excel(name = "时间")
     private String paydate;
+
+    private BigDecimal countSuccessMoney;
 
     public void setReppayId(String reppayId) {
         this.reppayId = reppayId;

@@ -51,7 +51,7 @@ public class GameInfoController extends BaseController {
 		return getDataTable( list );
 	}
 	@PreAuthorize( "@ss.hasPermi('web:game-info:edit')" )
-	@Log( title = "角色管理", businessType = BusinessType.UPDATE )
+	@Log( title = "游戏信息修改状态", businessType = BusinessType.UPDATE )
 	@PutMapping( "/changeStatus" )
 	public AjaxResult changeStatus( @RequestBody GameInfo gameInfo ) {
 
@@ -59,7 +59,7 @@ public class GameInfoController extends BaseController {
 	}
 
 	@PreAuthorize( "@ss.hasPermi('web:game-info:edit')" )
-	@Log( title = "角色管理", businessType = BusinessType.UPDATE )
+	@Log( title = "游戏信息修改是否维护", businessType = BusinessType.UPDATE )
 	@PutMapping( "/changeIsWh" )
 	public AjaxResult changeIsWh( @RequestBody GameInfo gameInfo ) {
 
@@ -84,7 +84,7 @@ public class GameInfoController extends BaseController {
 	 * 新增【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:game-info:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "游戏信息新增", businessType = BusinessType.INSERT )
 	@PostMapping(value = "/add")
 	public AjaxResult add( @RequestBody GameInfo gameInfo) {
 
@@ -97,7 +97,7 @@ public class GameInfoController extends BaseController {
 	 * 修改【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:game-info:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "游戏信息编辑", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody GameInfo gameInfo) {
 		return toAjax( gameInfoService.updateGameInfo(gameInfo) );
@@ -107,7 +107,7 @@ public class GameInfoController extends BaseController {
 	 * 删除【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:game-info:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "游戏信息删除", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{id}" )
 	public AjaxResult remove( @PathVariable String id ) {
 		return toAjax( gameInfoService.deleteGameInfoByIds( id) );

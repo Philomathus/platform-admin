@@ -47,17 +47,8 @@ public class ConfigGametypeController extends BaseController {
 		List<GamePlatform> list = gamePlatformService.selectGamePlatformList(gamePlatform);
 		return AjaxResult.success( list );
 	}
-	/**
-	 * 导出【请填写功能名称】列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('web:config-gametype:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public AjaxResult export(ConfigGametype configGametype) {
-		List<ConfigGametype>      list = configGametypeService.selectConfigGametypeList(configGametype);
-		ExcelUtil<ConfigGametype> util = new ExcelUtil<ConfigGametype>(ConfigGametype. class);
-		return util.exportExcel( list, "config-gametype" );
-	}
+
+
 
 	/**
 	 * 获取【请填写功能名称】详细信息
@@ -72,7 +63,7 @@ public class ConfigGametypeController extends BaseController {
 	 * 新增【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:config-gametype:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "游戏配置新增", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ConfigGametype configGametype) {
 		return toAjax( configGametypeService.insertConfigGametype(configGametype) );
@@ -82,7 +73,7 @@ public class ConfigGametypeController extends BaseController {
 	 * 修改【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:config-gametype:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "游戏配置编辑", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody ConfigGametype configGametype) {
 		return toAjax( configGametypeService.updateConfigGametype(configGametype) );
@@ -92,7 +83,7 @@ public class ConfigGametypeController extends BaseController {
 	 * 删除【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:config-gametype:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
+	@Log( title = "游戏配置删除", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( configGametypeService.deleteConfigGametypeByIds( ids ) );

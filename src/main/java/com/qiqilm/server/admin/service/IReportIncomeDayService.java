@@ -22,4 +22,5 @@ public interface IReportIncomeDayService {
 	 */
 	public List<ReportIncomeDay> selectReportIncomeDayList(ReportIncomeDay reportIncomeDay);
 
+    ReportIncomeDay countSuccessData(ReportIncomeDay reportIncomeDay);
 }

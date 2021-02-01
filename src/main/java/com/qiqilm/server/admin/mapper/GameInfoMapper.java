@@ -69,4 +69,8 @@ public interface GameInfoMapper {
 	//给任务信息做的所属游戏下拉框
 	List<GameInfo> selectGameInfo();
 
+
+	List<RspGameInfo> findTypeGames();
+
+	List<String> findTypeHasGames(String id);
 }

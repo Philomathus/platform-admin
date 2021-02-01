@@ -62,7 +62,7 @@ public class MemberInfoController extends BaseController {
      * 导出用户信息列表
      */
     @PreAuthorize("@ss.hasPermi('admin:memberInfo:export')")
-    @Log(title = "用户信息", businessType = BusinessType.EXPORT)
+    @Log(title = "导出", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(MemberInfo memberInfo) {
         List<MemberInfo> list = memberInfoService.selectMemberInfoList(memberInfo);

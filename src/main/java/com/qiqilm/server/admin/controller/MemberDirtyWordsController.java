@@ -49,7 +49,7 @@ public class MemberDirtyWordsController extends BaseController {
 	 * 修改【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:memberDirtyWords:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
+	@Log( title = "编辑脏字昵称", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody MemberDirtyWords memberDirtyWords) {
 		return toAjax( memberDirtyWordsService.updateMemberDirtyWords(memberDirtyWords) );

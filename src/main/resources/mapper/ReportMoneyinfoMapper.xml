@@ -40,7 +40,19 @@
             </if>
         </where>
     </select>
-
+    <select id="countMoneyInfoData" resultType="com.qiqilm.server.admin.domain.ReportMoneyinfo">
+        select
+        sum(total_rukuanjine) as paymentAmount,sum(total_chukuanjine) as outMoney,sum(total_giveprop) as totalAccountGifts
+        FROM report_moneyinfo
+        <where>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(reptime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(reptime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
     <select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">
         {call prorep_moneyinfo(#{statimedateta,mode=IN,jdbcType=VARCHAR},#{endtimedateta,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}
     </select>
