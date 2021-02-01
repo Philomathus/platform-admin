@@ -20,18 +20,10 @@
     <select id="selectMemberGameDatafixList" parameterType="MemberGameDatafix" resultMap="MemberGameDatafixResult">
         <include refid="selectMemberGameDatafixVo"/>
         <where>
-            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
-            <if test="gameStartTime != null  and gameStartTime != ''"> and game_start_time = #{gameStartTime}</if>
-            <if test="gameEndTime != null  and gameEndTime != ''"> and game_end_time = #{gameEndTime}</if>
-            <if test="platformId != null "> and platform_id = #{platformId}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
 
-    <select id="selectMemberGameDatafixById" parameterType="String" resultMap="MemberGameDatafixResult">
-        <include refid="selectMemberGameDatafixVo"/>
-        where id = #{id}
-    </select>
 
     <insert id="insertMemberGameDatafix" parameterType="MemberGameDatafix">
         insert into 7700_main.member_game_datafix
@@ -53,31 +45,4 @@
         </trim>
     </insert>
 
-    <update id="updateMemberGameDatafix" parameterType="MemberGameDatafix">
-        update 7700_main.member_game_datafix
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="userId != null">user_id = #{userId},</if>
-
-            <if test="gameStartTime != null">game_start_time = #{gameStartTime},</if>
-
-            <if test="gameEndTime != null">game_end_time = #{gameEndTime},</if>
-
-            <if test="platformId != null">platform_id = #{platformId},</if>
-
-            <if test="status != null">status = #{status},</if>
-
-        </trim>
-        where id = #{id}
-    </update>
-
-    <delete id="deleteMemberGameDatafixById" parameterType="String">
-        delete from 7700_main.member_game_datafix where id = #{id}
-    </delete>
-
-    <delete id="deleteMemberGameDatafixByIds" parameterType="String">
-        delete from 7700_main.member_game_datafix where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
 </mapper>

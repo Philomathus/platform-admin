@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,15 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
 
         return allList;
     }
-
+//统计表头数据
+    @Override
+    public ReportMoneyinfo countMoneyData(ReportMoneyinfo reportMoneyinfo) {
+        ReportMoneyinfo reportMoneyinfo1=reportMoneyinfoMapper.countMoneyInfoData(reportMoneyinfo);
+        BigDecimal paymentAmount = reportMoneyinfo1.getPaymentAmount();//入款总金额
+        BigDecimal outMoney = reportMoneyinfo1.getOutMoney();//出款总金额
+        reportMoneyinfo1.setCountMoney(paymentAmount.subtract(outMoney));
+        return reportMoneyinfo1;
+    }
 
 
 }

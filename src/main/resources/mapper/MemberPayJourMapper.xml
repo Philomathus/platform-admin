@@ -1,243 +1,407 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberPayJourMapper">
+	<resultMap type="MemberPayJour" id="MemberPayJourResult">
+		<result property="id" column="id"/>
+		<result property="memberId" column="member_id"/>
+		<result property="platformId" column="platform_id"/>
+		<result property="channelId" column="channel_id"/>
+		<result property="paymentMethod" column="payment_method"/>
+		<result property="orderNo" column="order_no"/>
+		<result property="tradeSn" column="trade_sn"/>
+		<result property="money" column="money"/>
+		<result property="subMoney" column="sub_money"/>
+		<result property="paymentCode" column="payment_code"/>
+		<result property="paymentTime" column="payment_time"/>
+		<result property="payTime" column="pay_time"/>
+		<result property="status" column="status"/>
+		<result property="isPatchOrder" column="is_patch_order"/>
+		<result property="remark" column="remark"/>
+		<result property="platformRate" column="platform_rate"/>
+		<result property="currentSuccessRate" column="current_success_rate"/>
+		<result property="manWork" column="man_work"/>
+		<result property="userName" column="user_name"/>
+		<result property="createTimes" column="create_time"/>
+		<result property="updateTimes" column="update_time"/>
+		<result property="first" column="first"/>
+	</resultMap>
 
-    <resultMap type="MemberPayJour" id="MemberPayJourResult">
-        <result property="id" column="id"/>
-        <result property="memberId" column="member_id"/>
-        <result property="platformId" column="platform_id"/>
-        <result property="channelId" column="channel_id"/>
-        <result property="paymentMethod" column="payment_method"/>
-        <result property="orderNo" column="order_no"/>
-        <result property="tradeSn" column="trade_sn"/>
-        <result property="money" column="money"/>
-        <result property="subMoney" column="sub_money"/>
-        <result property="paymentCode" column="payment_code"/>
-        <result property="paymentTime" column="payment_time"/>
-        <result property="payTime" column="pay_time"/>
-        <result property="status" column="status"/>
-        <result property="isPatchOrder" column="is_patch_order"/>
-        <result property="remark" column="remark"/>
-        <result property="province" column="province"/>
-        <result property="city" column="city"/>
-        <result property="area" column="area"/>
-        <result property="platformRate" column="platform_rate"/>
-        <result property="currentSuccessRate" column="current_success_rate"/>
-        <result property="manWork" column="man_work"/>
-        <result property="userName" column="user_name"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="first" column="first"/>
-    </resultMap>
+	<sql id="selectMemberPayJourVo">
+		select id,
+			   member_id,
+			   platform_id,
+			   channel_id,
+			   payment_method,
+			   order_no,
+			   trade_sn,
+			   money,
+			   sub_money,
+			   payment_code,
+			   payment_time,
+			   pay_time,
+			   status,
+			   is_patch_order,
+			   remark,
+			   platform_rate,
+			   current_success_rate,
+			   man_work,
+			   user_name,
+			   create_time,
+			   update_time,
+			   first
+		from member_pay_jour
+	</sql>
 
-    <sql id="selectMemberPayJourVo">
-        select id, member_id, platform_id, channel_id, payment_method, order_no, trade_sn, money, sub_money, payment_code, payment_time, pay_time, status, is_patch_order, remark, province, city, area, platform_rate, current_success_rate, man_work, user_name, create_time, update_time, first from member_pay_jour
-    </sql>
+	<select id="selectMemberPayJourList" parameterType="MemberPayJour" resultMap="MemberPayJourResult">
+		<include refid="selectMemberPayJourVo"/>
+		<where>
+			<if test="memberId != null  and memberId != ''">
+				and member_id = #{memberId}
+			</if>
+			<if test="platformId != null  and platformId != ''">
+				and platform_id = #{platformId}
+			</if>
+			<if test="channelId != null  and channelId != ''">
+				and channel_id = #{channelId}
+			</if>
+			<if test="paymentMethod != null  and paymentMethod != ''">
+				and payment_method = #{paymentMethod}
+			</if>
+			<if test="orderNo != null  and orderNo != ''">
+				and order_no = #{orderNo}
+			</if>
+			<if test="tradeSn != null  and tradeSn != ''">
+				and trade_sn = #{tradeSn}
+			</if>
+			<if test="money != null">
+				and money = #{money}
+			</if>
+			<if test="subMoney != null">
+				and sub_money = #{subMoney}
+			</if>
+			<if test="paymentCode != null  and paymentCode != ''">
+				and payment_code = #{paymentCode}
+			</if>
+			<if test="paymentTime != null  and paymentTime != ''">
+				and payment_time = #{paymentTime}
+			</if>
+			<if test="payTime != null  and payTime != ''">
+				and pay_time = #{payTime}
+			</if>
+			<if test="status != null  and status != ''">
+				and status = #{status}
+			</if>
+			<if test="isPatchOrder != null">
+				and is_patch_order = #{isPatchOrder}
+			</if>
+			<if test="platformRate != null">
+				and platform_rate = #{platformRate}
+			</if>
+			<if test="currentSuccessRate != null">
+				and current_success_rate = #{currentSuccessRate}
+			</if>
+			<if test="manWork != null  and manWork != ''">
+				and man_work = #{manWork}
+			</if>
+			<if test="userName != null  and userName != ''">
+				and user_name like concat('%', #{userName}, '%')
+			</if>
+			<if test="first != null">
+				and first = #{first}
+			</if>
+		</where>
+	</select>
 
-    <select id="selectMemberPayJourList" parameterType="MemberPayJour" resultMap="MemberPayJourResult">
-        <include refid="selectMemberPayJourVo"/>
-        <where>
-            <if test="memberId != null  and memberId != ''">and member_id = #{memberId}</if>
-            <if test="platformId != null  and platformId != ''">and platform_id = #{platformId}</if>
-            <if test="channelId != null  and channelId != ''">and channel_id = #{channelId}</if>
-            <if test="paymentMethod != null  and paymentMethod != ''">and payment_method = #{paymentMethod}</if>
-            <if test="orderNo != null  and orderNo != ''">and order_no = #{orderNo}</if>
-            <if test="tradeSn != null  and tradeSn != ''">and trade_sn = #{tradeSn}</if>
-            <if test="money != null ">and money = #{money}</if>
-            <if test="subMoney != null ">and sub_money = #{subMoney}</if>
-            <if test="paymentCode != null  and paymentCode != ''">and payment_code = #{paymentCode}</if>
-            <if test="paymentTime != null  and paymentTime != ''">and payment_time = #{paymentTime}</if>
-            <if test="payTime != null  and payTime != ''">and pay_time = #{payTime}</if>
-            <if test="status != null  and status != ''">and status = #{status}</if>
-            <if test="isPatchOrder != null ">and is_patch_order = #{isPatchOrder}</if>
-            <if test="province != null  and province != ''">and province = #{province}</if>
-            <if test="city != null  and city != ''">and city = #{city}</if>
-            <if test="area != null  and area != ''">and area = #{area}</if>
-            <if test="platformRate != null ">and platform_rate = #{platformRate}</if>
-            <if test="currentSuccessRate != null ">and current_success_rate = #{currentSuccessRate}</if>
-            <if test="manWork != null  and manWork != ''">and man_work = #{manWork}</if>
-            <if test="userName != null  and userName != ''">and user_name like concat('%', #{userName}, '%')</if>
-            <if test="first != null ">and first = #{first}</if>
-        </where>
-    </select>
+	<select id="selectMemberPayJourById" parameterType="String" resultMap="MemberPayJourResult">
+		<include refid="selectMemberPayJourVo"/>
+		where id = #{id}
+	</select>
 
-    <select id="findList" resultType="com.qiqilm.server.admin.domain.rsp.RspPayJour">
-        select j.*, p.name platform_name, c.name channel_name, c.pay_rate from
-        (select *
-        from member_pay_jour
-        where 1=1
-        <if test="req.status != null and req.status lt 2">
-            and status = #{req.status}
-        </if>
-        <if test="req.status != null and req.status == 2">
-            and status = '1' and is_patch_order = 1
-        </if>
-        <if test="req.platform_id != null and req.platform_id != ''">
-            and platform_id = #{req.platform_id}
-        </if>
-        <if test="req.trade_sn != null and req.trade_sn != ''">
-            and (trade_sn = #{req.trade_sn} or order_no = #{req.trade_sn})
-        </if>
-        <if test="req.search != null and req.search != ''">
-            and (member_id = #{req.search} or user_name = #{req.search})
-        </if>
-        <if test="req.startDate != null and req.startDate != '' and req.endDate != null and req.endDate != ''">
-            and update_time <![CDATA[ >= ]]> #{req.startDate} and update_time <![CDATA[ <= ]]> #{req.endDate}
-        </if>
-        ) j left join pay_platform_new p on j.platform_id = p.id
-        left join pay_channel_new c on j.channel_id = c.id
-        order by j.update_time desc
-    </select>
+	<insert id="insertMemberPayJour" parameterType="MemberPayJour">
+		insert into member_pay_jour
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="memberId != null">
+				member_id,
+			</if>
+			<if test="platformId != null">
+				platform_id,
+			</if>
+			<if test="channelId != null">
+				channel_id,
+			</if>
+			<if test="paymentMethod != null">
+				payment_method,
+			</if>
+			<if test="orderNo != null">
+				order_no,
+			</if>
+			<if test="tradeSn != null">
+				trade_sn,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="subMoney != null">
+				sub_money,
+			</if>
+			<if test="paymentCode != null">
+				payment_code,
+			</if>
+			<if test="paymentTime != null">
+				payment_time,
+			</if>
+			<if test="payTime != null">
+				pay_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="isPatchOrder != null">
+				is_patch_order,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="platformRate != null">
+				platform_rate,
+			</if>
+			<if test="currentSuccessRate != null">
+				current_success_rate,
+			</if>
+			<if test="manWork != null">
+				man_work,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="first != null">
+				first,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="memberId != null">
+				#{memberId},
+			</if>
+			<if test="platformId != null">
+				#{platformId},
+			</if>
+			<if test="channelId != null">
+				#{channelId},
+			</if>
+			<if test="paymentMethod != null">
+				#{paymentMethod},
+			</if>
+			<if test="orderNo != null">
+				#{orderNo},
+			</if>
+			<if test="tradeSn != null">
+				#{tradeSn},
+			</if>
+			<if test="money != null">
+				#{money},
+			</if>
+			<if test="subMoney != null">
+				#{subMoney},
+			</if>
+			<if test="paymentCode != null">
+				#{paymentCode},
+			</if>
+			<if test="paymentTime != null">
+				#{paymentTime},
+			</if>
+			<if test="payTime != null">
+				#{payTime},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="isPatchOrder != null">
+				#{isPatchOrder},
+			</if>
+			<if test="remark != null">
+				#{remark},
+			</if>
+			<if test="platformRate != null">
+				#{platformRate},
+			</if>
+			<if test="currentSuccessRate != null">
+				#{currentSuccessRate},
+			</if>
+			<if test="manWork != null">
+				#{manWork},
+			</if>
+			<if test="userName != null">
+				#{userName},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+			<if test="first != null">
+				#{first},
+			</if>
+		</trim>
+	</insert>
 
-    <select id="selectMemberPayJourById" parameterType="String" resultMap="MemberPayJourResult">
-        <include refid="selectMemberPayJourVo"/>
-        where id = #{id}
-    </select>
+	<update id="updateMemberPayJour" parameterType="MemberPayJour">
+		update member_pay_jour
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="memberId != null">
+				member_id = #{memberId},
+			</if>
+			<if test="platformId != null">
+				platform_id = #{platformId},
+			</if>
+			<if test="channelId != null">
+				channel_id = #{channelId},
+			</if>
+			<if test="paymentMethod != null">
+				payment_method = #{paymentMethod},
+			</if>
+			<if test="orderNo != null">
+				order_no = #{orderNo},
+			</if>
+			<if test="tradeSn != null">
+				trade_sn = #{tradeSn},
+			</if>
+			<if test="money != null">
+				money = #{money},
+			</if>
+			<if test="subMoney != null">
+				sub_money = #{subMoney},
+			</if>
+			<if test="paymentCode != null">
+				payment_code = #{paymentCode},
+			</if>
+			<if test="paymentTime != null">
+				payment_time = #{paymentTime},
+			</if>
+			<if test="payTime != null">
+				pay_time = #{payTime},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="isPatchOrder != null">
+				is_patch_order = #{isPatchOrder},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="platformRate != null">
+				platform_rate = #{platformRate},
+			</if>
+			<if test="currentSuccessRate != null">
+				current_success_rate = #{currentSuccessRate},
+			</if>
+			<if test="manWork != null">
+				man_work = #{manWork},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime},
+			</if>
+			<if test="first != null">
+				first = #{first},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
 
-    <insert id="insertMemberPayJour" parameterType="MemberPayJour">
-        insert into member_pay_jour
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
-            <if test="memberId != null">member_id,</if>
-            <if test="platformId != null">platform_id,</if>
-            <if test="channelId != null">channel_id,</if>
-            <if test="paymentMethod != null">payment_method,</if>
-            <if test="orderNo != null">order_no,</if>
-            <if test="tradeSn != null">trade_sn,</if>
-            <if test="money != null">money,</if>
-            <if test="subMoney != null">sub_money,</if>
-            <if test="paymentCode != null">payment_code,</if>
-            <if test="paymentTime != null">payment_time,</if>
-            <if test="payTime != null">pay_time,</if>
-            <if test="status != null">status,</if>
-            <if test="isPatchOrder != null">is_patch_order,</if>
-            <if test="remark != null">remark,</if>
-            <if test="province != null">province,</if>
-            <if test="city != null">city,</if>
-            <if test="area != null">area,</if>
-            <if test="platformRate != null">platform_rate,</if>
-            <if test="currentSuccessRate != null">current_success_rate,</if>
-            <if test="manWork != null">man_work,</if>
-            <if test="userName != null">user_name,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="updateTime != null">update_time,</if>
-            <if test="first != null">first,</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
-            <if test="memberId != null">#{memberId},</if>
-            <if test="platformId != null">#{platformId},</if>
-            <if test="channelId != null">#{channelId},</if>
-            <if test="paymentMethod != null">#{paymentMethod},</if>
-            <if test="orderNo != null">#{orderNo},</if>
-            <if test="tradeSn != null">#{tradeSn},</if>
-            <if test="money != null">#{money},</if>
-            <if test="subMoney != null">#{subMoney},</if>
-            <if test="paymentCode != null">#{paymentCode},</if>
-            <if test="paymentTime != null">#{paymentTime},</if>
-            <if test="payTime != null">#{payTime},</if>
-            <if test="status != null">#{status},</if>
-            <if test="isPatchOrder != null">#{isPatchOrder},</if>
-            <if test="remark != null">#{remark},</if>
-            <if test="province != null">#{province},</if>
-            <if test="city != null">#{city},</if>
-            <if test="area != null">#{area},</if>
-            <if test="platformRate != null">#{platformRate},</if>
-            <if test="currentSuccessRate != null">#{currentSuccessRate},</if>
-            <if test="manWork != null">#{manWork},</if>
-            <if test="userName != null">#{userName},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="updateTime != null">#{updateTime},</if>
-            <if test="first != null">#{first},</if>
-        </trim>
-    </insert>
+	<select id="findList" resultType="com.qiqilm.server.admin.domain.rsp.RspPayJour">
+		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
+		<include refid="selectMemberPayJourVo"/>
+		<where>
+			<include refid="listWhere"/>
+		</where>
+		) j
+				left join pay_platform_new p on j.platform_id = p.id
+				left join pay_channel_new c on j.channel_id = c.id
+				order by j.update_time desc
+	</select>
 
-    <update id="updateMemberPayJour" parameterType="MemberPayJour">
-        update member_pay_jour
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="memberId != null">member_id = #{memberId},</if>
-            <if test="platformId != null">platform_id = #{platformId},</if>
-            <if test="channelId != null">channel_id = #{channelId},</if>
-            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
-            <if test="orderNo != null">order_no = #{orderNo},</if>
-            <if test="tradeSn != null">trade_sn = #{tradeSn},</if>
-            <if test="money != null">money = #{money},</if>
-            <if test="subMoney != null">sub_money = #{subMoney},</if>
-            <if test="paymentCode != null">payment_code = #{paymentCode},</if>
-            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
-            <if test="payTime != null">pay_time = #{payTime},</if>
-            <if test="status != null">status = #{status},</if>
-            <if test="isPatchOrder != null">is_patch_order = #{isPatchOrder},</if>
-            <if test="remark != null">remark = #{remark},</if>
-            <if test="province != null">province = #{province},</if>
-            <if test="city != null">city = #{city},</if>
-            <if test="area != null">area = #{area},</if>
-            <if test="platformRate != null">platform_rate = #{platformRate},</if>
-            <if test="currentSuccessRate != null">current_success_rate = #{currentSuccessRate},</if>
-            <if test="manWork != null">man_work = #{manWork},</if>
-            <if test="userName != null">user_name = #{userName},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="updateTime != null">update_time = #{updateTime},</if>
-            <if test="first != null">first = #{first},</if>
-        </trim>
-        where id = #{id}
-    </update>
+	<sql id="listWhere">
+		<if test="req.status != null and req.status lt 2">
+			and status = #{req.status}
+		</if>
+		<if test="req.status != null and req.status == 2">
+			and status = '1' and is_patch_order = 1
+		</if>
+		<if test="req.platformId != null and req.platformId != ''">
+			and platform_id = #{req.platformId}
+		</if>
+		<if test="req.searchOrderNo != null and req.searchOrderNo != ''">
+			and (trade_sn = #{req.searchOrderNo} or order_no = #{req.searchOrderNo})
+		</if>
+		<if test="req.searchValue != null and req.searchValue != ''">
+			and (member_id = #{req.searchValue} or user_name = #{req.searchValue})
+		</if>
+		<if test="req.selectStartDate != null and req.selectStartDate != ''">
+			and update_time <![CDATA[ >= ]]> #{req.selectStartDate} and update_time <![CDATA[ <= ]]> #{req.selectEndDate}
+		</if>
+	</sql>
 
-    <delete id="deleteMemberPayJourById" parameterType="String">
-        delete from member_pay_jour where id = #{id}
-    </delete>
+	<sql id="transactionsTotal">
+		select count(*) total,sum(sub_money) totalMoney
+		from member_pay_jour
+		where 1=1
+		<include refid="listWhere"/>
+	</sql>
 
-    <delete id="deleteMemberPayJourByIds" parameterType="String">
-        delete from member_pay_jour where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
-    <sql id="countWhere">
-        <if test="req.status != null and req.status lt 2">
-            and status = #{req.status}
-        </if>
-        <if test="req.status != null and req.status == 2">
-            and status = '1' and is_patch_order = 1
-        </if>
-        <if test="req.platform_id != null and req.platform_id != ''">
-            and platform_id = #{req.platform_id}
-        </if>
-        <if test="req.trade_sn != null and req.trade_sn != ''">
-            and (trade_sn = #{req.trade_sn} or order_no = #{req.trade_sn})
-        </if>
-        <if test="req.search != null and req.search != ''">
-            and (member_id = #{req.search} or user_name = #{req.search})
-        </if>
-        <if test="req.startDate != null and req.startDate != '' and req.endDate != null and req.endDate != ''">
-            and update_time <![CDATA[ >= ]]> #{req.startDate} and update_time <![CDATA[ <= ]]> #{req.endDate}
-        </if>
-    </sql>
-    <sql id="transactionsTotal">
-        select count(*) total,sum(sub_money) totalMoney
-        from member_pay_jour
-        where 1=1
-        <include refid="countWhere"></include>
-    </sql>
-    <sql id="replenishmentTotal">
-        select sum(sub_money) replenishmentTotalMoney
-        from member_pay_jour
-        where 1=1
-        <include refid="countWhere"></include>
-        and is_patch_order = 1
-    </sql>
-    <sql id="failureRate">
-        select count(*) failCount
-        from member_pay_jour
-        where 1=1
-        <include refid="countWhere"></include>
-        and status = 0
-    </sql>
-    <select id="listCount" resultType="java.util.Map">
-        select *,1 - c.failCount/a.total failRate from (<include refid="transactionsTotal"/>)a left join (<include refid="replenishmentTotal"/>)b on 1=1
-        left join (<include refid="failureRate"/>)c on 1=1
-    </select>
+	<sql id="replenishmentTotal">
+		select sum(sub_money) replenishmentTotalMoney
+		from member_pay_jour
+		where 1=1
+		<include refid="listWhere"/>
+		and is_patch_order = 1
+	</sql>
 
+	<sql id="failureRate">
+		select count(*) failCount
+		from member_pay_jour
+		where 1=1
+		<include refid="listWhere"/>
+		and status = 0
+	</sql>
+
+	<select id="listCount" resultType="java.util.Map">
+		select *, 1 - c.failCount / a.total failRate from (<include refid="transactionsTotal"/>)a
+			left join (<include refid="replenishmentTotal"/>)b on 1 = 1
+			left join (<include refid="failureRate"/>)c on 1 = 1
+	</select>
+
+	<select id="selectById" resultType="com.qiqilm.server.admin.domain.rsp.RspPayJour">
+		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
+		<include refid="selectMemberPayJourVo"/>
+		) j
+				left join pay_platform_new p on j.platform_id = p.id
+				left join pay_channel_new c on j.channel_id = c.id
+				where j.id = #{id}
+	</select>
+
+	<select id="findByOrderNo" resultMap="MemberPayJourResult">
+		<include refid="selectMemberPayJourVo"/>
+		where order_no = #{orderNo}
+	</select>
 </mapper>

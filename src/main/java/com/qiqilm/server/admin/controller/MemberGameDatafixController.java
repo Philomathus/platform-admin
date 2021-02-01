@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,55 +44,19 @@ public class MemberGameDatafixController extends BaseController {
 		List<MemberGameDatafix> list = memberGameDatafixService.selectMemberGameDatafixList(memberGameDatafix);
 		return getDataTable( list );
 	}
-    
-	/**
-	 * 导出【请填写功能名称】列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:memberGameDatafix:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public AjaxResult export(MemberGameDatafix memberGameDatafix) {
-		List<MemberGameDatafix>      list = memberGameDatafixService.selectMemberGameDatafixList(memberGameDatafix);
-		ExcelUtil<MemberGameDatafix> util = new ExcelUtil<MemberGameDatafix>(MemberGameDatafix. class);
-		return util.exportExcel( list, "memberGameDatafix" );
-	}
 
-	/**
-	 * 获取【请填写功能名称】详细信息
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:memberGameDatafix:query')" )
-	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( memberGameDatafixService.selectMemberGameDatafixById(id) );
-	}
 
 	/**
 	 * 新增【请填写功能名称】
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:memberGameDatafix:add')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
+	@Log( title = "新增补单", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody MemberGameDatafix memberGameDatafix) {
+		memberGameDatafix.setId(UuidUtil.getRandomUuidWithoutSeparator());
+		memberGameDatafix.setStatus(0);
 		return toAjax( memberGameDatafixService.insertMemberGameDatafix(memberGameDatafix) );
 	}
 
-	/**
-	 * 修改【请填写功能名称】
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:memberGameDatafix:edit')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody MemberGameDatafix memberGameDatafix) {
-		return toAjax( memberGameDatafixService.updateMemberGameDatafix(memberGameDatafix) );
-	}
 
-	/**
-	 * 删除【请填写功能名称】
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:memberGameDatafix:remove')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable String[] ids ) {
-		return toAjax( memberGameDatafixService.deleteMemberGameDatafixByIds( ids ) );
-	}
 }

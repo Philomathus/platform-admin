@@ -42,6 +42,10 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
         return allList;
     }
 
+    @Override
+    public ReportPlamGames countBetData(ReportPlamGames reportPlamGames) {
+        return reportPlamGamesMapper.countBetData(reportPlamGames);
+    }
 
 
 }

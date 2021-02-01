@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -45,4 +46,37 @@ public class LogServiceImpl implements ILogService {
 		log.setMarkorder( markorder );
 		logMoneyMapper.insertLogMoney( log );
 	}
+
+	//备注行为enumTrans 现在金额totalNow   变动金额change  游戏agent  订单备注 name    变动订单号orderId
+	@Override
+	public void logMoneyAll( String userid, String username, EnumMoney enumTrans, BigDecimal totalNow, BigDecimal change,
+							 String agent, String name, String orderId ) {
+		int i = change.compareTo( BigDecimal.ZERO );
+		if ( i == 0 ) {
+			return;
+		}
+		if ( !StringUtils.hasText( orderId ) ) {
+			orderId = UuidUtil.getRandomUuidWithoutSeparator();
+		}
+		LogMoney log = new LogMoney();
+		log.setId( orderId );
+		log.setUserId( userid );
+		log.setUserName( username );
+		log.setCreateTime( new Date() );
+		log.setIncome( BigDecimal.ZERO );
+		log.setPay( BigDecimal.ZERO );
+		if ( i > 0 ) {
+			log.setIncome( change );
+		} else {
+			log.setPay( change.negate() );
+		}
+		log.setTotal( totalNow );
+		log.setTotalBefore( totalNow.subtract( change ) );
+		log.setType( enumTrans.getType() );
+		log.setDes( enumTrans.getDes() );
+		log.setMark( name );
+		log.setMarkorder( orderId );
+		logMoneyMapper.insertLogMoney( log );
+	}
+
 }

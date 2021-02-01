@@ -24,4 +24,5 @@ public interface ReportPlamGamesMapper {
 	public List<ReportPlamGames> selectReportPlamGamesList(ReportPlamGames reportPlamGames);
 	String calldataProrepPlamcom(@Param( "timedateta" ) String timedateta);
 
+    ReportPlamGames countBetData(ReportPlamGames reportPlamGames);
 }

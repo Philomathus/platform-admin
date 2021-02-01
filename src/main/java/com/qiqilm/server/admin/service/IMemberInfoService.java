@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
@@ -38,7 +39,7 @@ public interface IMemberInfoService {
 	 * @param memberInfo 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int insertMemberInfo(MemberInfo memberInfo);
+	public AjaxResult insertMemberInfo(MemberInfo memberInfo);
 
 	/**
 	 * 修改【请填写功能名称】

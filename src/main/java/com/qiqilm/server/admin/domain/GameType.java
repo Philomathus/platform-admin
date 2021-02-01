@@ -29,7 +29,7 @@ public class GameType extends BaseEntity {
 	 * 状态(1启用0停用)
 	 */
 	@Excel( name = "状态(1启用0停用)" )
-	private Integer status;
+	private String status;
 
 	/**
 	 * 排序号
@@ -70,11 +70,11 @@ public class GameType extends BaseEntity {
 		this.name = name;
 	}
 
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus( Integer status ) {
+	public void setStatus( String status ) {
 		this.status = status;
 	}
 

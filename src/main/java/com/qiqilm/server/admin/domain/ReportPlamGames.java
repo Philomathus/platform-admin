@@ -64,6 +64,24 @@ public class ReportPlamGames extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "日期", width = 30, dateFormat = "yyyy-MM-dd")
     private String begindate;
+    private Integer countBetPeople;
+    private BigDecimal countBetMoney;
+
+    public Integer getCountBetPeople() {
+        return countBetPeople;
+    }
+
+    public void setCountBetPeople(Integer countBetPeople) {
+        this.countBetPeople = countBetPeople;
+    }
+
+    public BigDecimal getCountBetMoney() {
+        return countBetMoney;
+    }
+
+    public void setCountBetMoney(BigDecimal countBetMoney) {
+        this.countBetMoney = countBetMoney;
+    }
 
     public void setGameUuid(String gameUuid) {
         this.gameUuid = gameUuid;

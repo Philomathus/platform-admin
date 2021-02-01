@@ -35,7 +35,7 @@ public class MemberGameDatafix extends BaseEntity {
 
     /** 0:未处理1已处理 */
     @Excel(name = "0:未处理1已处理")
-    private Long status;
+    private Integer status;
 
     public void setId(String id) {
         this.id = id;
@@ -72,11 +72,11 @@ public class MemberGameDatafix extends BaseEntity {
     public Long getPlatformId() {
         return platformId;
     }
-    public void setStatus(Long status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Long getStatus() {
+    public Integer getStatus() {
         return status;
     }
 

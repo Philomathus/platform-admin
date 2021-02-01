@@ -23,4 +23,5 @@ public interface IReportMoneyinfoService {
     public List<ReportMoneyinfo> selectReportMoneyinfoList(ReportMoneyinfo reportMoneyinfo);
 
 
+    ReportMoneyinfo countMoneyData(ReportMoneyinfo reportMoneyinfo);
 }

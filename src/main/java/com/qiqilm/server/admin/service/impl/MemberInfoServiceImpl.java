@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.PageBO;
@@ -11,10 +13,12 @@ import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
+import com.qiqilm.server.admin.utils.NameUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -40,6 +44,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	private ILogService            logService;
 	@Autowired
     private MemberCardMapper  memberCardMapper;
+	@Autowired
+    private MemberCacheManager memberCacheManager;
 
 	/**
 	 * 查询会员信息
@@ -70,9 +76,37 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	 * @return 结果
 	 */
 	@Override
-	public int insertMemberInfo( MemberInfo memberInfo ) {
-		return memberInfoMapper.insertMemberInfo( memberInfo );
+	public AjaxResult insertMemberInfo( MemberInfo memberInfo ) {
+        if(memberInfoMapper.selectMemberInfoList(memberInfo).size()>0){
+            return AjaxResult.error("此账号已经存在");
+        }
+        MemberInfo member =memberCacheManager.createMember();
+        if(StringUtils.isEmpty(member.getId())){
+            return AjaxResult.error("注册redis存在问题，请联系管理员");
+        }
+
+        member.setIsOnline((long) 0);
+        member.setVip((long) 1);//默认vip1
+        member.setStatus((long) 1);
+        member.setTotalAccount(BigDecimal.ZERO);
+        member.setPassword(memberInfo.getPassword());
+        member.setUserName(memberInfo.getUserName());
+        member.setRegTime(new Date());
+        member.setLevelIntegral(BigDecimal.ZERO);
+        member.setBoxAccount(BigDecimal.ZERO);
+        member.setCodeAccount(BigDecimal.ZERO);
+        member.setCodeTotal(BigDecimal.ZERO);
+        member.setInviteMoney(memberInfo.getInviteMoney());
+        member.setInviterCode(memberInfo.getInviterCode());
+        member.setNickName(NameUtil.nickNameRandom() );
+        member.setLoginNum((long) 0);
+        if (memberInfoMapper.insertMemberInfo( member )>0) {
+            return AjaxResult.success("添加成功");
+        }else {
+            return AjaxResult.success("添加失败");
+        }
 	}
+
 
 	/**
 	 * 修改会员信息

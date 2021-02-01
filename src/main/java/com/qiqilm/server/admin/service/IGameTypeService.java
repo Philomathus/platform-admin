@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.domain.GameType;
+import com.qiqilm.server.admin.domain.rsp.RspTypeGames;
 
 import java.util.List;
 
@@ -58,4 +59,6 @@ public interface IGameTypeService {
 	 * @return 结果
 	 */
 	public int deleteGameTypeById( String id );
+
+	RspTypeGames findTypeGames(String id);
 }
