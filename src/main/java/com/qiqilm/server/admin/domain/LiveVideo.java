@@ -1,12 +1,13 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 直播对象 live_video
@@ -57,8 +58,8 @@ public class LiveVideo extends BaseEntity {
     private String city;
 
     /** 开始时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date beginTime;
 
     /** 结束时间 */
@@ -152,6 +153,7 @@ public class LiveVideo extends BaseEntity {
     @Excel(name = "竞拍id")
     private Long paiId;
 
+    private String name;
     /** 性别 0:未知, 1-男，2-女 */
     @Excel(name = "性别 0:未知, 1-男，2-女")
     private Integer sex;
@@ -331,6 +333,8 @@ public class LiveVideo extends BaseEntity {
     /** 彩票名称 */
     @Excel(name = "彩票名称")
     private String lotteryName;
+
+    private String liveStatus = "";
 
     public void setId(Long id) {
         this.id = id;
@@ -962,5 +966,21 @@ public class LiveVideo extends BaseEntity {
             .append("hostName", getHostName())
             .append("lotteryName", getLotteryName())
             .toString();
+    }
+
+    public String getLiveStatus() {
+        return liveStatus;
+    }
+
+    public void setLiveStatus( String liveStatus ) {
+        this.liveStatus = liveStatus;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
     }
 }
