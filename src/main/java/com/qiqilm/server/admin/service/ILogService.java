@@ -10,4 +10,10 @@ public interface ILogService {
 	 */
 	void logmarkMoney( String userid, String username, EnumMoney enumTrans, BigDecimal totalNow, BigDecimal totalold,
 					   String mark, String ordermk );
+
+	/**
+	 * 资金日志通用    现在金额totalNow   变动金额change   订单备注 name    变动订单号orderId
+	 */
+	void logMoneyAll( String userid, String username, EnumMoney enumTrans, BigDecimal totalNow, BigDecimal change, String agent,
+					  String name, String orderId );
 }

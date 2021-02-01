@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.domain.rsp;
 
-
 import com.qiqilm.server.admin.annotation.Excel;
 import lombok.Data;
 import org.springframework.util.StringUtils;
@@ -113,9 +112,4 @@ public class RspPayJour {
 
 	@Excel(name = "回调时间")
 	private String update_time;
-
-	private Integer countTotal;
-	private BigDecimal successCountMoney;
-	private Integer successCount;
-	private BigDecimal replenishment;
 }

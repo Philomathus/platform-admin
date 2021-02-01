@@ -77,7 +77,9 @@ public interface MemberInfoMapper {
 
 	List<String> selectMemberSpeak( String[] ids );
 
-	void updateSpeak(@Param( "pUserId" ) String pUserId, @Param( "speak" ) int speak );
+	void updateSpeak( @Param( "pUserId" ) String pUserId, @Param( "speak" ) int speak );
 
 	BigDecimal selectTotalAccountById( String memberId );
+
+	MemberInfo findRecommendByInviterCode( String inviterCode );
 }

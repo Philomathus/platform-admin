@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ * 支付类型Service业务层处理
  *
  * @author 77tv
  * @date 2021-01-25
@@ -21,10 +21,10 @@ public class PayTypeServiceImpl implements IPayTypeService {
     private PayTypeMapper payTypeMapper;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询支付类型
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id 支付类型ID
+     * @return 支付类型
      */
     @Override
     public PayType selectPayTypeById(String id) {
@@ -32,10 +32,10 @@ public class PayTypeServiceImpl implements IPayTypeService {
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询支付类型列表
      *
-     * @param payType 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param payType 支付类型
+     * @return 支付类型
      */
     @Override
     public List<PayType> selectPayTypeList(PayType payType) {
@@ -43,9 +43,9 @@ public class PayTypeServiceImpl implements IPayTypeService {
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增支付类型
      *
-     * @param payType 【请填写功能名称】
+     * @param payType 支付类型
      * @return 结果
      */
     @Override
@@ -55,9 +55,9 @@ public class PayTypeServiceImpl implements IPayTypeService {
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改支付类型
      *
-     * @param payType 【请填写功能名称】
+     * @param payType 支付类型
      * @return 结果
      */
     @Override
@@ -67,9 +67,9 @@ public class PayTypeServiceImpl implements IPayTypeService {
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除支付类型
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的支付类型ID
      * @return 结果
      */
     @Override
@@ -78,9 +78,9 @@ public class PayTypeServiceImpl implements IPayTypeService {
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除支付类型信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id 支付类型ID
      * @return 结果
      */
     @Override

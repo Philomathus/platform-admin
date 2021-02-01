@@ -5,109 +5,93 @@ import com.qiqilm.server.admin.domain.req.ReqPayJour;
 import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ * 线上充值信息Service业务层处理
  *
  * @author 77tv
  * @date 2021-01-26
  */
 @Service
 public class MemberPayJourServiceImpl implements IMemberPayJourService {
-    @Autowired
-    private MemberPayJourMapper memberPayJourMapper;
+	@Autowired
+	private MemberPayJourMapper memberPayJourMapper;
 
-    /**
-     * 查询【请填写功能名称】
-     *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
-     */
-    @Override
-    public MemberPayJour selectMemberPayJourById(String id) {
-        return memberPayJourMapper.selectMemberPayJourById(id);
-    }
+	/**
+	 * 查询线上充值信息
+	 *
+	 * @param id 线上充值信息ID
+	 * @return 线上充值信息
+	 */
+	@Override
+	public MemberPayJour selectMemberPayJourById( String id ) {
+		return memberPayJourMapper.selectMemberPayJourById( id );
+	}
 
-    /**
-     * 查询【请填写功能名称】列表
-     *
-     * @param memberPayJour 【请填写功能名称】
-     * @return 【请填写功能名称】
-     */
-    @Override
-    public List<MemberPayJour> selectMemberPayJourList(MemberPayJour memberPayJour) {
-        return memberPayJourMapper.selectMemberPayJourList(memberPayJour);
-    }
+	/**
+	 * 查询线上充值信息列表
+	 *
+	 * @param memberPayJour 线上充值信息
+	 * @return 线上充值信息
+	 */
+	@Override
+	public List<MemberPayJour> selectMemberPayJourList( MemberPayJour memberPayJour ) {
+		return memberPayJourMapper.selectMemberPayJourList( memberPayJour );
+	}
 
-    @Override
-    public List<RspPayJour> findList(ReqPayJour req) {
-        String[] selectDate = req.getSelectDate();
-        if (selectDate!=null && selectDate.length>0) {
-            req.setStartDate(selectDate[0]);
-            req.setEndDate(selectDate[1]);
-        }
-        return memberPayJourMapper.findList(req);
-    }
+	@Override
+	public List<RspPayJour> findList( ReqPayJour req ) {
+		String[] selectDate = req.getSelectDate();
+		if ( selectDate != null && selectDate.length > 0 ) {
+			req.setSelectStartDate( selectDate[ 0 ] );
+			req.setSelectEndDate( selectDate[ 1 ] );
+		}
+		return memberPayJourMapper.findList( req );
+	}
 
-    /**
-     * 新增【请填写功能名称】
-     *
-     * @param memberPayJour 【请填写功能名称】
-     * @return 结果
-     */
-    @Override
-    public int insertMemberPayJour(MemberPayJour memberPayJour) {
-        memberPayJour.setCreateTime(DateUtils.getNowDate());
-        return memberPayJourMapper.insertMemberPayJour(memberPayJour);
-    }
+	/**
+	 * 新增线上充值信息
+	 *
+	 * @param memberPayJour 线上充值信息
+	 * @return 结果
+	 */
+	@Override
+	public int insertMemberPayJour( MemberPayJour memberPayJour ) {
+		memberPayJour.setCreateTimes( DateFormatUtils.formate( new Date() ) );
+		return memberPayJourMapper.insertMemberPayJour( memberPayJour );
+	}
 
-    /**
-     * 修改【请填写功能名称】
-     *
-     * @param memberPayJour 【请填写功能名称】
-     * @return 结果
-     */
-    @Override
-    public int updateMemberPayJour(MemberPayJour memberPayJour) {
-        memberPayJour.setUpdateTime(DateUtils.getNowDate());
-        return memberPayJourMapper.updateMemberPayJour(memberPayJour);
-    }
+	/**
+	 * 修改线上充值信息
+	 *
+	 * @param memberPayJour 线上充值信息
+	 * @return 结果
+	 */
+	@Override
+	public int updateMemberPayJour( MemberPayJour memberPayJour ) {
+		return memberPayJourMapper.updateMemberPayJour( memberPayJour );
+	}
 
-    /**
-     * 批量删除【请填写功能名称】
-     *
-     * @param ids 需要删除的【请填写功能名称】ID
-     * @return 结果
-     */
-    @Override
-    public int deleteMemberPayJourByIds(String[] ids) {
-        return memberPayJourMapper.deleteMemberPayJourByIds(ids);
-    }
+	@Override
+	public Map listCount( ReqPayJour req ) {
+		String[] selectDate = req.getSelectDate();
+		if ( selectDate != null && selectDate.length > 0 ) {
+			req.setSelectStartDate( selectDate[ 0 ] );
+			req.setSelectEndDate( selectDate[ 1 ] );
+		}
+		return memberPayJourMapper.listCount( req );
+	}
 
-    /**
-     * 删除【请填写功能名称】信息
-     *
-     * @param id 【请填写功能名称】ID
-     * @return 结果
-     */
-    @Override
-    public int deleteMemberPayJourById(String id) {
-        return memberPayJourMapper.deleteMemberPayJourById(id);
-    }
-
-    @Override
-    public Map listCount(ReqPayJour req) {
-        String[] selectDate = req.getSelectDate();
-        if (selectDate!=null && selectDate.length>0) {
-            req.setStartDate(selectDate[0]);
-            req.setEndDate(selectDate[1]);
-        }
-        return memberPayJourMapper.listCount(req);
-    }
+	@Override
+	public RspPayJour selectById( String id ) {
+		return memberPayJourMapper.selectById(id);
+	}
 }
