@@ -20,12 +20,14 @@ import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 用户信息Controller
@@ -86,9 +88,52 @@ public class MemberInfoController extends BaseController {
     @Log(title = "用户信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MemberInfo memberInfo) {
-        return toAjax(memberInfoService.insertMemberInfo(memberInfo));
+        String userName = memberInfo.getUserName();
+        String password = memberInfo.getPassword();
+        if(userName==null){
+            return AjaxResult.error("账号信息为空");
+        }
+        if(userName.length()<6||userName.length()>15){
+            return AjaxResult.error("账号长度必须大于等于6小于15");
+        }
+        userName = userName.toLowerCase();
+        if(!this.checkABC(userName)){
+            return AjaxResult.error("第一个字符须字母");
+        }
+        if(!this.checkUserName(userName)){
+            return AjaxResult.error("账号不合合法");
+        }
+
+        if (StringUtils.isEmpty(password)){
+            return AjaxResult.error("密码不能为空");
+        }
+
+        if(password.length()<6||password.length()>15){
+            return AjaxResult.error("密码长度必须大于等于6小于15");
+        }
+        return memberInfoService.insertMemberInfo(memberInfo);
+    }
+    /**
+     * 注册账号检查
+     * @param username
+     */
+    private boolean checkABC(String username){
+        if(username.length()<1){
+            return  false;
+        }
+        Pattern pattern = Pattern.compile("[a-z]");
+        return pattern.matcher(username.substring(0,1)).find();
     }
 
+
+    /**
+     * 注册账号检查
+     * @param username
+     */
+    private boolean checkUserName(String username){
+        Pattern pattern = Pattern.compile("[0-9a-z.@]");
+        return pattern.matcher(username).find();
+    }
     /**
      * 修改用户信息
      */
