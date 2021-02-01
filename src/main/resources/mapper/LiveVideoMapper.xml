@@ -20,6 +20,7 @@
 		<result property="voteNumber"    column="vote_Number"    />
 		<result property="isLivePay"    column="is_live_pay"    />
 		<result property="name"    column="name"    />
+		<result property="liveImage"    column="live_image"    />
 	</resultMap>
 
 	<sql id="selectLiveVideoVo">
@@ -35,7 +36,7 @@
 			is_recommend,
 			live_fee,
 			host_name,
-			lottery_name,vote_Number,is_live_pay,s.name
+			lottery_name,vote_Number,is_live_pay,s.name,live_image
 		FROM
 			7700_live.live_video v INNER JOIN 7700_live.server_live s on(v.pai_id=s.id)
     </sql>
