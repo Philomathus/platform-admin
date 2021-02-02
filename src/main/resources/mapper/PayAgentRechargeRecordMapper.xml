@@ -67,6 +67,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <update id="updateByBalanceAmount">
+        update pay_agent_recharge_account
+        <set>
+            <if test="BalanceAmount != null and BalanceAmount != ''">
+                balance_amount = balance_amount + #{BalanceAmount}
+            </if>
+        </set>
+        where account = #{Account}
+    </update>
+    <update id="updateByBalanceAmountLess">
+        update pay_agent_recharge_account
+        <set>
+            balance_amount = balance_amount - #{BalanceAmount}
+        </set>
+        where account = #{Account} and balance_amount - #{BalanceAmount} >= 0
+    </update>
+
     <update id="updatePayAgentRechargeRecord" parameterType="PayAgentRechargeRecord">
         update pay_agent_recharge_record
         <trim prefix="SET" suffixOverrides=",">

@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.PayAgentRechargeRecord;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -58,4 +60,10 @@ public interface PayAgentRechargeRecordMapper {
 	 * @return 结果
 	 */
 	public int deletePayAgentRechargeRecordByIds(String[] orderNos );
+
+	//根据account存入加钱
+	int updateByBalanceAmount(@Param("Account") String Account, @Param("BalanceAmount") BigDecimal BalanceAmount);
+	//根据account存入減钱
+
+	int updateByBalanceAmountLess(@Param("Account") String Account,@Param("BalanceAmount") BigDecimal BalanceAmount);
 }
