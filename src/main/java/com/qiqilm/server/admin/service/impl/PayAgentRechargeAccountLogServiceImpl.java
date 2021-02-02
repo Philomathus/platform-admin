@@ -3,7 +3,9 @@ package com.qiqilm.server.admin.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
@@ -222,5 +224,11 @@ public class PayAgentRechargeAccountLogServiceImpl implements IPayAgentRechargeA
         payAgentRechargeTradeLog.setName( "申请存入" );
         payAgentRechargeTradeLogMapper.insertPayAgentRechargeTradeLog(payAgentRechargeTradeLog);
         return AjaxResult.success();
+    }
+
+    @Override
+    public AjaxResult statistic(PayAgentRechargeAccountLog rechargeAccountLog) {
+        PayAgentRechargeAccountLog payAgentRechargeAccountLog = payAgentRechargeAccountLogMapper.sumMoney(rechargeAccountLog);
+        return AjaxResult.success(payAgentRechargeAccountLog);
     }
 }

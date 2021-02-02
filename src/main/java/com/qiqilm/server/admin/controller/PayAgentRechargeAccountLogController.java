@@ -1,27 +1,20 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
-import com.qiqilm.server.admin.domain.req.ReqPayAgentRechargeAccountLog;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccountLog;
+import com.qiqilm.server.admin.domain.PayAgentRechargeLog;
+import com.qiqilm.server.admin.domain.req.ReqPayAgentRechargeAccountLog;
+import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 【代充人入款】Controller
@@ -122,6 +115,15 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	@PutMapping( "/artificial" )
 	public AjaxResult artificial( @RequestBody ReqPayAgentRechargeAccountLog req ) {
 		return payAgentRechargeAccountLogService.artificial( req );
+	}
+
+	/**
+	 * 统计按钮【代充人入款】
+	 */
+	@PreAuthorize("@ss.hasPermi('pay:payAgentRechargeAccountLog:list')")
+	@GetMapping("/statistic")
+	public AjaxResult count(PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
+		return payAgentRechargeAccountLogService.statistic(payAgentRechargeAccountLog);
 	}
 
 }

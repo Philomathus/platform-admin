@@ -68,4 +68,9 @@ public interface IPayAgentRechargeAccountLogService {
 	AjaxResult unlock( ReqPayAgentRechargeAccountLog req );
 
 	AjaxResult artificial( ReqPayAgentRechargeAccountLog req );
+
+	//统计
+	AjaxResult	statistic(PayAgentRechargeAccountLog rechargeAccountLog);
+
+
 }

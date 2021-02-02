@@ -120,4 +120,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </set>
         where account = #{Account}
     </update>
+
+    <select id="sumMoney" parameterType="PayAgentRechargeAccountLog" resultType="PayAgentRechargeAccountLog">
+        select sum(recharge_money) as  countMoney,count(order_no) as countNumber
+        from pay_agent_recharge_account_log
+        <where>
+            <if test="account != null  and account != ''"> and account = #{account}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="bankId != null "> and bank_id = #{bankId}</if>
+            <if test="rechargeMoney != null "> and recharge_money = #{rechargeMoney}</if>
+            <if test="subMoney != null "> and sub_money = #{subMoney}</if>
+            <if test="rechargeRealName != null  and rechargeRealName != ''"> and recharge_real_name like concat('%', #{rechargeRealName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(update_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(update_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
 </mapper>

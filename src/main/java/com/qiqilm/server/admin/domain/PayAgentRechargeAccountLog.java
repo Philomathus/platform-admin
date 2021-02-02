@@ -61,6 +61,8 @@ public class PayAgentRechargeAccountLog extends BaseEntity {
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date updateTime;
 
+    private Integer countNumber;
+    private BigDecimal countMoney;
 
 
     @Override

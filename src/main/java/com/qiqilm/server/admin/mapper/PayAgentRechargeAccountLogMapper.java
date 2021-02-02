@@ -63,4 +63,8 @@ public interface PayAgentRechargeAccountLogMapper {
 
 	//根据account存入加钱
 	int updateByBalanceAmount(@Param("Account") String Account, @Param("BalanceAmount") BigDecimal BalanceAmount);
+
+	 //统计
+	 PayAgentRechargeAccountLog sumMoney(PayAgentRechargeAccountLog payAgentRechargeAccountLog);
+
 }
