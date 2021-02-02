@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.GameInfo;
 import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -73,4 +74,7 @@ public interface GameInfoMapper {
 	List<RspGameInfo> findTypeGames();
 
 	List<String> findTypeHasGames(String id);
+
+	List<RspGameInfo> findListByType(@Param("typeId") String gameTypeId);
+	List<RspGameInfo> findTypeList();
 }

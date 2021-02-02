@@ -2,47 +2,47 @@ package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
 
-import com.qiqilm.server.admin.domain.GameTypeWith;
-import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
+import com.qiqilm.server.admin.domain.ConfigVip;
+import com.qiqilm.server.admin.domain.rsp.RspVipSet;
 
 /**
  * 【请填写功能名称】Mapper接口
  *
  * @author 77tv
- * @date 2021-02-01
+ * @date 2021-02-02
  */
-public interface GameTypeWithMapper {
+public interface ConfigVipMapper {
 	/**
 	 * 查询【请填写功能名称】
 	 *
 	 * @param id 【请填写功能名称】ID
 	 * @return 【请填写功能名称】
 	 */
-	public GameTypeWith selectGameTypeWithById(String id);
+	public ConfigVip selectConfigVipById(String id);
 
 	/**
 	 * 查询【请填写功能名称】列表
 	 *
-	 * @param gameTypeWith 【请填写功能名称】
+	 * @param configVip 【请填写功能名称】
 	 * @return 【请填写功能名称】集合
 	 */
-	public List<GameTypeWith> selectGameTypeWithList(GameTypeWith gameTypeWith);
+	public List<ConfigVip> selectConfigVipList(ConfigVip configVip);
 
 	/**
 	 * 新增【请填写功能名称】
 	 *
-	 * @param gameTypeWith 【请填写功能名称】
+	 * @param configVip 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int insertGameTypeWith(GameTypeWith gameTypeWith);
+	public int insertConfigVip(ConfigVip configVip);
 
 	/**
 	 * 修改【请填写功能名称】
 	 *
-	 * @param gameTypeWith 【请填写功能名称】
+	 * @param configVip 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int updateGameTypeWith(GameTypeWith gameTypeWith);
+	public int updateConfigVip(ConfigVip configVip);
 
 	/**
 	 * 删除【请填写功能名称】
@@ -50,7 +50,7 @@ public interface GameTypeWithMapper {
 	 * @param id 【请填写功能名称】ID
 	 * @return 结果
 	 */
-	public int deleteGameTypeWithById(String id);
+	public int deleteConfigVipById(String id);
 
 	/**
 	 * 批量删除【请填写功能名称】
@@ -58,8 +58,7 @@ public interface GameTypeWithMapper {
 	 * @param ids 需要删除的数据ID
 	 * @return 结果
 	 */
-	public int deleteGameTypeWithByIds(String[] ids );
+	public int deleteConfigVipByIds(String[] ids );
 
-
-    void deleteTypeGames(String typeId);
+	List<RspVipSet> findListForCache();
 }

@@ -132,4 +132,12 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="findSimpleList" resultType="com.qiqilm.server.admin.domain.GamePlatform">
+        select id, agent, name, api_url as apiUrl, record_url as recordUrl, des, md5, linecode, rate_clean as rateClean,
+        game_typeID as gameTypeid, status, create_by as createBy,create_time as createTime,update_by as updateBy,update_time asupdateTime, rate_beat as rateBeat
+        from game_platform
+        where status =1
+    </select>
+
 </mapper>

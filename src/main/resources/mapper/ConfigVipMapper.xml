@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ConfigVipMapper">
+
+    <resultMap type="ConfigVip" id="ConfigVipResult">
+        <result property="id"    column="id"    />
+        <result property="levelFlag"    column="level_flag"    />
+        <result property="dmMoney"    column="dm_money"    />
+        <result property="jjcj"    column="jjcj"    />
+        <result property="zfl"    column="zfl"    />
+        <result property="yfl"    column="yfl"    />
+        <result property="tdjs"    column="tdjs"    />
+        <result property="zskf"    column="zskf"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="opName"    column="op_name"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="levelMoney"    column="level_money"    />
+    </resultMap>
+
+    <sql id="selectConfigVipVo">
+        select id, level_flag, dm_money, jjcj, zfl, yfl, tdjs, zskf,  FROM_UNIXTIME(create_time) create_time ,  op_name,  FROM_UNIXTIME(update_time) update_time ,  level_money from 7700_main.config_vip
+    </sql>
+
+    <select id="selectConfigVipList" parameterType="ConfigVip" resultMap="ConfigVipResult">
+        <include refid="selectConfigVipVo"/>
+        <where>
+            <if test="levelFlag != null "> and level_flag = #{levelFlag}</if>
+            <if test="dmMoney != null "> and dm_money = #{dmMoney}</if>
+            <if test="jjcj != null "> and jjcj = #{jjcj}</if>
+            <if test="zfl != null "> and zfl = #{zfl}</if>
+            <if test="yfl != null "> and yfl = #{yfl}</if>
+            <if test="tdjs != null "> and tdjs = #{tdjs}</if>
+            <if test="zskf != null "> and zskf = #{zskf}</if>
+            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="levelMoney != null "> and level_money = #{levelMoney}</if>
+        </where>
+    </select>
+
+    <select id="selectConfigVipById" parameterType="String" resultMap="ConfigVipResult">
+        <include refid="selectConfigVipVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertConfigVip" parameterType="ConfigVip">
+        insert into 7700_main.config_vip
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="levelFlag != null">level_flag,</if>
+            <if test="dmMoney != null">dm_money,</if>
+            <if test="jjcj != null">jjcj,</if>
+            <if test="zfl != null">zfl,</if>
+            <if test="yfl != null">yfl,</if>
+            <if test="tdjs != null">tdjs,</if>
+            <if test="zskf != null">zskf,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="opName != null">op_name,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="levelMoney != null">level_money,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="levelFlag != null">#{levelFlag},</if>
+            <if test="dmMoney != null">#{dmMoney},</if>
+            <if test="jjcj != null">#{jjcj},</if>
+            <if test="zfl != null">#{zfl},</if>
+            <if test="yfl != null">#{yfl},</if>
+            <if test="tdjs != null">#{tdjs},</if>
+            <if test="zskf != null">#{zskf},</if>
+            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="opName != null">#{opName},</if>
+            <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="levelMoney != null">#{levelMoney},</if>
+        </trim>
+    </insert>
+
+    <update id="updateConfigVip" parameterType="ConfigVip">
+        update 7700_main.config_vip
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="levelFlag != null">level_flag = #{levelFlag},</if>
+
+            <if test="dmMoney != null">dm_money = #{dmMoney},</if>
+
+            <if test="jjcj != null">jjcj = #{jjcj},</if>
+
+            <if test="zfl != null">zfl = #{zfl},</if>
+
+            <if test="yfl != null">yfl = #{yfl},</if>
+
+            <if test="tdjs != null">tdjs = #{tdjs},</if>
+
+            <if test="zskf != null">zskf = #{zskf},</if>
+
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+
+            <if test="opName != null">op_name = #{opName},</if>
+
+            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
+
+            <if test="levelMoney != null">level_money = #{levelMoney},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteConfigVipById" parameterType="String">
+        delete from 7700_main.config_vip where id = #{id}
+    </delete>
+
+    <delete id="deleteConfigVipByIds" parameterType="String">
+        delete from 7700_main.config_vip where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findListForCache" resultType="com.qiqilm.server.admin.domain.rsp.RspVipSet">
+        select level_flag ,jjcj,zfl,yfl,level_money from config_vip order by level_flag
+    </select>
+</mapper>

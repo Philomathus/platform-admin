@@ -70,4 +70,7 @@ public interface GamePlatformMapper {
 	public int deleteGamePlatformByIds(Long[] ids );
 
 	GamePlatform findAgentList(@Param("req") ConfigGametype configGametype);
+
+
+	List<GamePlatform> findSimpleList();
 }
