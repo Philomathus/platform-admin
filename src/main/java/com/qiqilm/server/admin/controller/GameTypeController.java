@@ -111,10 +111,6 @@ public class GameTypeController extends BaseController {
 	}
 	@RequestMapping( value = "/add-type-games", method = RequestMethod.POST )
 	public void addTypeGames(HttpServletRequest request, @RequestBody ReqTypeGame dto ) {
-		ReqTypeGame reqTypeGame=new ReqTypeGame();
-//		gameTypeService.deleteTypeGames( dto.getType_id() );
-//		gameTypeService.addTypeGames( dto.getType_id(), dto.getIds() );
-//		gameCacheManager.initGameGroup();
 		gameTypeService.addTypeGames(dto);
 
 	}
