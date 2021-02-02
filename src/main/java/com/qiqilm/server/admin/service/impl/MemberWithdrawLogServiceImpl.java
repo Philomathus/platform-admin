@@ -208,4 +208,21 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
 		return AjaxResult.error( "更新订单状态失败" );
 	}
+
+    /**
+     * 取报告
+     *
+     * @param id id
+     * @return {@link AjaxResult}
+     */
+    @Override
+    public AjaxResult withdrawReport(String id) {
+        memberInfoMapper.call_pro_useranalysis(id);
+        return AjaxResult.success(memberInfoMapper.userWithdrawReportList());
+    }
+
+    @Override
+    public AjaxResult getTotal(MemberWithdrawLog memberWithdrawLog ) {
+        return AjaxResult.success(memberWithdrawLogMapper.getTotal(memberWithdrawLog));
+    }
 }

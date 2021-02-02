@@ -246,4 +246,49 @@
 		<include refid="selectMemberWithdrawLogVo"/>
 		where order_no = #{orderNo}
 	</select>
+
+    <sql id="whereTotal">
+        <if test="status != null and status == -1">
+            member_id not in (select member_id
+            from `7700_main`.member_withdraw_log
+            WHERE `status` in (3, 6)
+            GROUP BY member_id
+            HAVING count(1) &gt; 1)
+        </if>
+        <if test="status != null and status != -1">
+            and `status` = #{status}
+        </if>
+        <if test="searchValue != null and searchValue != ''">
+            and (order_no = #{searchValue} or member_id = #{searchValue} or account = #{searchValue}
+            or bank_user_name = #{searchValue})
+        </if>
+        <if test="priceMin != null and priceMax != null  and priceMin != ''  and priceMax != ''">
+            and withdraw_money &gt;= #{priceMin}
+            and withdraw_money &lt;= #{priceMax}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and update_time >= #{startTime}
+            and update_time &lt;= #{endTime}
+        </if>
+    </sql>
+    <sql id="getTotalSql">
+        select count(*) total from `7700_main`.member_withdraw_log
+        <where>
+            <include refid="whereTotal"></include>
+        </where>
+    </sql>
+    <sql id="getSuccessTotalSql">
+        select count(*) successTotal from `7700_main`.member_withdraw_log
+        <where>
+            <include refid="whereTotal"></include>
+            <if test="status != null and searchValue != ''">
+                and status = 3
+            </if>
+        </where>
+    </sql>
+    <select id="getTotal" parameterType="MemberWithdrawLog" resultType="java.util.Map">
+        select a.total,b.successTotal,b.successTotal/a.total successRate from (<include refid="getTotalSql"></include>)a left join (<include
+            refid="getSuccessTotalSql"></include>)b on 1=1
+    </select>
+
 </mapper>

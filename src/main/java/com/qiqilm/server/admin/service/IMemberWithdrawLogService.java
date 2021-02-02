@@ -1,10 +1,10 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+
+import java.util.List;
 
 /**
  * 会员提现信息Service接口
@@ -36,4 +36,8 @@ public interface IMemberWithdrawLogService {
 	AjaxResult unlock( ReqMemberWithdrawLog req );
 
 	AjaxResult artificial( ReqMemberWithdrawLog req );
+
+    AjaxResult withdrawReport(String id);
+
+    AjaxResult getTotal(MemberWithdrawLog memberWithdrawLog );
 }

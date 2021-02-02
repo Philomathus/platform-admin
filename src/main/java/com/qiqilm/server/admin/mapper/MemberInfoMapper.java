@@ -82,4 +82,6 @@ public interface MemberInfoMapper {
 	BigDecimal selectTotalAccountById( String memberId );
 
 	MemberInfo findRecommendByInviterCode( String inviterCode );
+
+
 }

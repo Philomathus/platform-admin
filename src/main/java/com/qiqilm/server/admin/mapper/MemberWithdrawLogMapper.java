@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 会员提现信息Mapper接口
@@ -44,4 +45,6 @@ public interface MemberWithdrawLogMapper {
 	public int updateMemberWithdrawLog(MemberWithdrawLog memberWithdrawLog);
 
 	MemberWithdrawLog selectByOrderNo( String orderNo );
+
+    Map getTotal(MemberWithdrawLog memberWithdrawLog);
 }
