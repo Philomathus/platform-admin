@@ -3,17 +3,11 @@ package com.qiqilm.server.admin.controller;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.GamePlatform;
+import com.qiqilm.server.admin.domain.req.ReqTypeGame;
 import com.qiqilm.server.admin.domain.rsp.RspTypeGames;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -22,6 +16,8 @@ import com.qiqilm.server.admin.domain.GameType;
 import com.qiqilm.server.admin.service.IGameTypeService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 游戏类型Controller
@@ -112,5 +108,14 @@ public class GameTypeController extends BaseController {
 	public AjaxResult getRelationGame( @PathVariable( "id" ) String id) {
 		RspTypeGames rspTypeGames=gameTypeService.findTypeGames(id);
 		return AjaxResult.success(rspTypeGames);
+	}
+	@RequestMapping( value = "/add-type-games", method = RequestMethod.POST )
+	public void addTypeGames(HttpServletRequest request, @RequestBody ReqTypeGame dto ) {
+		ReqTypeGame reqTypeGame=new ReqTypeGame();
+//		gameTypeService.deleteTypeGames( dto.getType_id() );
+//		gameTypeService.addTypeGames( dto.getType_id(), dto.getIds() );
+//		gameCacheManager.initGameGroup();
+		gameTypeService.addTypeGames(dto);
+
 	}
 }
