@@ -8,8 +8,7 @@ import java.util.List;
 @Data
 public class ReqTypeGame {
 
-    List<ReqTypeGameInfo> all_games;
-
+    private String typeId;
     List<String> type_games;
 
 

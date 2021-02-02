@@ -2,17 +2,13 @@ package com.qiqilm.server.admin.domain.rsp;
 
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
 
 import java.math.BigDecimal;
-
-/**
- * 【请填写功能名称】对象 game_info
- *
- * @author 77tv
- * @date 2021-01-27
- */
+@Data
 public class RspGameInfo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -57,7 +53,7 @@ public class RspGameInfo extends BaseEntity {
 
     /** 游戏平台(1开元) */
     @Excel(name = "游戏平台(1开元)")
-    private Long platformId;
+    private Integer platformId;
 
     /** 0 =横屏 1=竖屏 */
     @Excel(name = "0 =横屏 1=竖屏")
@@ -83,133 +79,133 @@ public class RspGameInfo extends BaseEntity {
     @Excel(name = "图标类型", readConverterExp = "0==热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞")
     private Long iconType;
     private String  platformName;
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setIndexs(Long indexs) {
-        this.indexs = indexs;
-    }
-
-    public Long getIndexs() {
-        return indexs;
-    }
-    public void setIsWh(String isWh) {
-        this.isWh = isWh;
-    }
-
-    public String getIsWh() {
-        return isWh;
-    }
-    public void setIsRecommend(Long isRecommend) {
-        this.isRecommend = isRecommend;
-    }
-
-    public Long getIsRecommend() {
-        return isRecommend;
-    }
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-    public void setIsHot(Long isHot) {
-        this.isHot = isHot;
-    }
-
-    public Long getIsHot() {
-        return isHot;
-    }
-    public void setEditionIcon(String editionIcon) {
-        this.editionIcon = editionIcon;
-    }
-
-    public String getEditionIcon() {
-        return editionIcon;
-    }
-    public void setKindId(String kindId) {
-        this.kindId = kindId;
-    }
-
-    public String getKindId() {
-        return kindId;
-    }
-    public void setPlatformId(Long platformId) {
-        this.platformId = platformId;
-    }
-
-    public Long getPlatformId() {
-        return platformId;
-    }
-    public void setScreen(String screen) {
-        this.screen = screen;
-    }
-
-    public String getScreen() {
-        return screen;
-    }
-    public void setHighWide(BigDecimal highWide) {
-        this.highWide = highWide;
-    }
-
-    public BigDecimal getHighWide() {
-        return highWide;
-    }
-    public void setIsFull(String isFull) {
-        this.isFull = isFull;
-    }
-
-    public String getIsFull() {
-        return isFull;
-    }
-    public void setIconType(Long iconType) {
-        this.iconType = iconType;
-    }
-
-    public Long getIconType() {
-        return iconType;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("remark", getRemark())
-            .append("indexs", getIndexs())
-            .append("isWh", getIsWh())
-            .append("isRecommend", getIsRecommend())
-            .append("status", getStatus())
-            .append("icon", getIcon())
-            .append("isHot", getIsHot())
-            .append("editionIcon", getEditionIcon())
-            .append("createTime", getCreateTime())
-            .append("kindId", getKindId())
-            .append("platformId", getPlatformId())
-            .append("screen", getScreen())
-            .append("highWide", getHighWide())
-            .append("isFull", getIsFull())
-            .append("iconType", getIconType())
-            .toString();
-    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//    public String getId() {
+//        return id;
+//    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//    public void setIndexs(Long indexs) {
+//        this.indexs = indexs;
+//    }
+//
+//    public Long getIndexs() {
+//        return indexs;
+//    }
+//    public void setIsWh(String isWh) {
+//        this.isWh = isWh;
+//    }
+//
+//    public String getIsWh() {
+//        return isWh;
+//    }
+//    public void setIsRecommend(Long isRecommend) {
+//        this.isRecommend = isRecommend;
+//    }
+//
+//    public Long getIsRecommend() {
+//        return isRecommend;
+//    }
+//    public void setStatus(String status) {
+//        this.status = status;
+//    }
+//
+//    public String getStatus() {
+//        return status;
+//    }
+//    public void setIcon(String icon) {
+//        this.icon = icon;
+//    }
+//
+//    public String getIcon() {
+//        return icon;
+//    }
+//    public void setIsHot(Long isHot) {
+//        this.isHot = isHot;
+//    }
+//
+//    public Long getIsHot() {
+//        return isHot;
+//    }
+//    public void setEditionIcon(String editionIcon) {
+//        this.editionIcon = editionIcon;
+//    }
+//
+//    public String getEditionIcon() {
+//        return editionIcon;
+//    }
+//    public void setKindId(String kindId) {
+//        this.kindId = kindId;
+//    }
+//
+//    public String getKindId() {
+//        return kindId;
+//    }
+//    public void setPlatformId(Integer platform_id) {
+//        this.platform_id = platform_id;
+//    }
+//
+//    public Integer getPlatformId() {
+//        return platform_id;
+//    }
+//    public void setScreen(String screen) {
+//        this.screen = screen;
+//    }
+//
+//    public String getScreen() {
+//        return screen;
+//    }
+//    public void setHighWide(BigDecimal highWide) {
+//        this.highWide = highWide;
+//    }
+//
+//    public BigDecimal getHighWide() {
+//        return highWide;
+//    }
+//    public void setIsFull(String isFull) {
+//        this.isFull = isFull;
+//    }
+//
+//    public String getIsFull() {
+//        return isFull;
+//    }
+//    public void setIconType(Long iconType) {
+//        this.iconType = iconType;
+//    }
+//
+//    public Long getIconType() {
+//        return iconType;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+//            .append("id", getId())
+//            .append("name", getName())
+//            .append("remark", getRemark())
+//            .append("indexs", getIndexs())
+//            .append("isWh", getIsWh())
+//            .append("isRecommend", getIsRecommend())
+//            .append("status", getStatus())
+//            .append("icon", getIcon())
+//            .append("isHot", getIsHot())
+//            .append("editionIcon", getEditionIcon())
+//            .append("createTime", getCreateTime())
+//            .append("kindId", getKindId())
+//            .append("platformId", getPlatformId())
+//            .append("screen", getScreen())
+//            .append("highWide", getHighWide())
+//            .append("isFull", getIsFull())
+//            .append("iconType", getIconType())
+//            .toString();
+//    }
 }

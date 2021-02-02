@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="selectGameTypeWithVo">
-        select id, type_id, game_id,  FROM_UNIXTIME(create_time) create_time ,  kind_id from 7700_main.game_type_with
+        select id, type_id, game_id, create_time create_time,kind_id from 7700_main.game_type_with
     </sql>
 
     <select id="selectGameTypeWithList" parameterType="GameTypeWith" resultMap="GameTypeWithResult">
@@ -43,7 +43,7 @@
             <if test="id != null">#{id},</if>
             <if test="typeId != null">#{typeId},</if>
             <if test="gameId != null">#{gameId},</if>
-            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="createTime != null">#{createTime},</if>
             <if test="kindId != null">#{kindId},</if>
         </trim>
     </insert>
@@ -52,13 +52,9 @@
         update 7700_main.game_type_with
         <trim prefix="SET" suffixOverrides=",">
             <if test="typeId != null">type_id = #{typeId},</if>
-
             <if test="gameId != null">game_id = #{gameId},</if>
-
-            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
-
+            <if test="createTime != null">create_time=#{createTime},</if>
             <if test="kindId != null">kind_id = #{kindId},</if>
-
         </trim>
         where id = #{id}
     </update>
@@ -74,5 +70,9 @@
         </foreach>
     </delete>
 
+    <delete id="deleteTypeGames">
+        delete from 7700_main.game_type_with
+        where type_id = #{typeId}
+    </delete>
 
 </mapper>

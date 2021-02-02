@@ -17,8 +17,8 @@
 		from game_type
 	</sql>
 
-	<select id="selectGameTypeList" parameterType="GameType" resultMap="GameTypeResult">
-		<include refid="selectGameTypeVo"/>
+	<select id="selectGameTypeList" resultType="com.qiqilm.server.admin.domain.GameType">
+		select id, name, status, indexs, icon, game_type as gameType,icon_type as iconType from game_type
 		<where>
 			<if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
 		</where>
