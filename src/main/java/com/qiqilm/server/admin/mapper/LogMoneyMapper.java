@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员资金信息Mapper接口
@@ -32,4 +33,6 @@ public interface LogMoneyMapper {
 
 	List<LogMoney> findMark( @Param( "userId" ) String userId, @Param( "mark" ) String mark,
 							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay );
+
+    Map totalCount(LogMoney logMoney);
 }

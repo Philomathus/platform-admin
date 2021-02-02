@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
+import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LogMoney;
+
+import java.util.List;
 
 /**
  *  会员资金信息Service接口
@@ -20,4 +22,9 @@ public interface ILogMoneyService {
 	 */
 	public List<LogMoney> selectLogMoneyList(LogMoney logMoney);
 
+    /**
+     * @param logMoney 日志的钱
+     * @return {@link TableDataInfo}
+     */
+    AjaxResult totalCount(LogMoney logMoney);
 }

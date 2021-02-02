@@ -154,4 +154,32 @@
 			and pay = #{pay}
 		</if>
 	</select>
+    <sql id="whereCount">
+        <if test="userId != null  and userId != ''">
+            and user_id = #{userId}
+        </if>
+        <if test="userName != null  and userName != ''">
+            and user_name = #{userName}
+        </if>
+        <if test="types != null and types.length != 0">
+            and type in
+            <foreach item="id" collection="types" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="createTime != null">
+            and create_time = #{createTime}
+        </if>
+        <if test="mark != null  and mark != ''">
+            and mark like concat('%', #{mark}, '%')
+        </if>
+    </sql>
+    <select id="totalCount" parameterType="LogMoney" resultType="java.util.Map">
+        select COUNT(income) totalIncome,
+        COUNT(pay) totalPay
+        from 7700_main.log_money
+        <where>
+            <include refid="whereCount"></include>
+        </where>
+    </select>
 </mapper>

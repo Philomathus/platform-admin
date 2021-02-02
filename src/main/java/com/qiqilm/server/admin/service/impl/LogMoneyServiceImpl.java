@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LogMoney;
 import com.qiqilm.server.admin.mapper.LogMoneyMapper;
 import com.qiqilm.server.admin.service.ILogMoneyService;
@@ -29,4 +30,9 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
 	public List<LogMoney> selectLogMoneyList( LogMoney logMoney ) {
 		return logMoneyMapper.selectLogMoneyList( logMoney );
 	}
+
+    @Override
+    public AjaxResult totalCount(LogMoney logMoney) {
+        return AjaxResult.success(logMoneyMapper.totalCount( logMoney ));
+    }
 }
