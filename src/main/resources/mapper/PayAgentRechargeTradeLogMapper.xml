@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayAgentRechargeTradeLogMapper">
+
+    <resultMap type="PayAgentRechargeTradeLog" id="PayAgentRechargeTradeLogResult">
+        <result property="orderNo"    column="order_no"    />
+        <result property="name"    column="name"    />
+        <result property="account"    column="account"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="income"    column="income"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPayAgentRechargeTradeLogVo">
+        select order_no, name, account, nick_name, income, create_time ,  remark from pay_agent_recharge_trade_log
+    </sql>
+
+    <select id="selectPayAgentRechargeTradeLogList" parameterType="PayAgentRechargeTradeLog" resultMap="PayAgentRechargeTradeLogResult">
+        <include refid="selectPayAgentRechargeTradeLogVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="account != null  and account != ''"> and account = #{account}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="income != null "> and income = #{income}</if>
+        </where>
+    </select>
+
+    <select id="selectPayAgentRechargeTradeLogById" parameterType="String" resultMap="PayAgentRechargeTradeLogResult">
+        <include refid="selectPayAgentRechargeTradeLogVo"/>
+        where order_no = #{orderNo}
+    </select>
+
+    <insert id="insertPayAgentRechargeTradeLog" parameterType="PayAgentRechargeTradeLog">
+        insert into  pay_agent_recharge_trade_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">order_no,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="account != null and account != ''">account,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="income != null">income,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="orderNo != null">#{orderNo},</if>
+                    <if test="name != null and name != ''">#{name},</if>
+                    <if test="account != null and account != ''">#{account},</if>
+                    <if test="nickName != null">#{nickName},</if>
+                    <if test="income != null">#{income},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePayAgentRechargeTradeLog" parameterType="PayAgentRechargeTradeLog">
+        update pay_agent_recharge_trade_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+    
+            <if test="account != null and account != ''">account = #{account},</if>
+    
+            <if test="nickName != null">nick_name = #{nickName},</if>
+    
+            <if test="income != null">income = #{income},</if>
+    
+            <if test="createTime != null">create_time = #{createTime},</if>
+    
+            <if test="remark != null">remark = #{remark},</if>
+    
+        </trim>
+        where order_no = #{orderNo}
+    </update>
+
+    <delete id="deletePayAgentRechargeTradeLogById" parameterType="String">
+        delete from pay_agent_recharge_trade_log where order_no = #{orderNo}
+    </delete>
+
+    <delete id="deletePayAgentRechargeTradeLogByIds" parameterType="String">
+        delete from  pay_agent_recharge_trade_log where order_no in
+        <foreach item="orderNo" collection="array" open="(" separator="," close=")">
+            #{orderNo}
+        </foreach>
+    </delete>
+</mapper>
