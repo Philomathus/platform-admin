@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.domain;
 import java.math.BigDecimal;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class PayAgentRechargeLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -38,48 +40,10 @@ public class PayAgentRechargeLog extends BaseEntity {
     @Excel(name = "上分金额")
     private BigDecimal money;
 
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
-    }
+    private Integer countNumber;
+    private BigDecimal countMoney;
 
-    public String getOrderNo() {
-        return orderNo;
-    }
-    public void setRechargeAcount(String rechargeAcount) {
-        this.rechargeAcount = rechargeAcount;
-    }
 
-    public String getRechargeAcount() {
-        return rechargeAcount;
-    }
-    public void setRechargeNickName(String rechargeNickName) {
-        this.rechargeNickName = rechargeNickName;
-    }
-
-    public String getRechargeNickName() {
-        return rechargeNickName;
-    }
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
-
-    public String getMemberId() {
-        return memberId;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-    public void setMoney(BigDecimal money) {
-        this.money = money;
-    }
-
-    public BigDecimal getMoney() {
-        return money;
-    }
 
     @Override
     public String toString() {

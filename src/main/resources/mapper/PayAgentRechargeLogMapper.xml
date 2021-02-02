@@ -79,4 +79,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{orderNo}
         </foreach>
     </delete>
+
+    <select id="count" parameterType="PayAgentRechargeLog" resultMap="PayAgentRechargeLogResult">
+        select count(order_no) as countNumber,sum(money) as countMoney
+        from pay_agent_recharge_log
+        <where>
+            <if test="rechargeAcount != null  and rechargeAcount != ''"> and recharge_acount = #{rechargeAcount}</if>
+            <if test="rechargeNickName != null  and rechargeNickName != ''"> and recharge_nick_name like concat('%', #{rechargeNickName}, '%')</if>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+        </where>
+    </select>
 </mapper>

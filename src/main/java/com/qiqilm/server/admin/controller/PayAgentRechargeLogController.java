@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.ReportPlamGames;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,70 +29,80 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
  * @date 2021-01-26
  */
 @RestController
-@RequestMapping( "/pay/payAgentRechargeLog" )
+@RequestMapping("/pay/payAgentRechargeLog")
 public class PayAgentRechargeLogController extends BaseController {
-	@Autowired
-	private IPayAgentRechargeLogService payAgentRechargeLogService;
+    @Autowired
+    private IPayAgentRechargeLogService payAgentRechargeLogService;
 
-	/**
-	 * 查询【代充信息日志】列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeLog:list')" )
-	@GetMapping( "/list" )
-    	public TableDataInfo list(PayAgentRechargeLog payAgentRechargeLog) {
-		startPage();
-		List<PayAgentRechargeLog> list = payAgentRechargeLogService.selectPayAgentRechargeLogList(payAgentRechargeLog);
-		return getDataTable( list );
-	}
-    
-	/**
-	 * 导出【代充信息日志】列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeLog:export')" )
-	@Log( title = "【代充信息日志】", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public AjaxResult export(PayAgentRechargeLog payAgentRechargeLog) {
-		List<PayAgentRechargeLog>      list = payAgentRechargeLogService.selectPayAgentRechargeLogList(payAgentRechargeLog);
-		ExcelUtil<PayAgentRechargeLog> util = new ExcelUtil<PayAgentRechargeLog>(PayAgentRechargeLog. class);
-		return util.exportExcel( list, "payAgentRechargeLog" );
-	}
+    /**
+     * 查询【代充信息日志】列表
+     */
+    @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeLog:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(PayAgentRechargeLog payAgentRechargeLog) {
+        startPage();
+        List<PayAgentRechargeLog> list = payAgentRechargeLogService.selectPayAgentRechargeLogList(payAgentRechargeLog);
+        return getDataTable(list);
+    }
 
-	/**
-	 * 获取【代充信息日志】详细信息
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeLog:query')" )
-	@GetMapping( value = "/{orderNo}" )
-	public AjaxResult getInfo( @PathVariable( "orderNo" ) String orderNo) {
-		return AjaxResult.success( payAgentRechargeLogService.selectPayAgentRechargeLogById(orderNo) );
-	}
+    /**
+     * 导出【代充信息日志】列表
+     */
+    @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeLog:export')")
+    @Log(title = "【代充信息日志】", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public AjaxResult export(PayAgentRechargeLog payAgentRechargeLog) {
+        List<PayAgentRechargeLog> list = payAgentRechargeLogService.selectPayAgentRechargeLogList(payAgentRechargeLog);
+        ExcelUtil<PayAgentRechargeLog> util = new ExcelUtil<PayAgentRechargeLog>(PayAgentRechargeLog.class);
+        return util.exportExcel(list, "payAgentRechargeLog");
+    }
 
-	/**
-	 * 新增【代充信息日志】
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeLog:add')" )
-	@Log( title = "【代充信息日志】", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody PayAgentRechargeLog payAgentRechargeLog) {
-		return toAjax( payAgentRechargeLogService.insertPayAgentRechargeLog(payAgentRechargeLog) );
-	}
+    /**
+     * 获取【代充信息日志】详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeLog:query')")
+    @GetMapping(value = "/{orderNo}")
+    public AjaxResult getInfo(@PathVariable("orderNo") String orderNo) {
+        return AjaxResult.success(payAgentRechargeLogService.selectPayAgentRechargeLogById(orderNo));
+    }
 
-	/**
-	 * 修改【代充信息日志】
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeLog:edit')" )
-	@Log( title = "【代充信息日志】", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody PayAgentRechargeLog payAgentRechargeLog) {
-		return toAjax( payAgentRechargeLogService.updatePayAgentRechargeLog(payAgentRechargeLog) );
-	}
+    /**
+     * 新增【代充信息日志】
+     */
+    @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeLog:add')")
+    @Log(title = "【代充信息日志】", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody PayAgentRechargeLog payAgentRechargeLog) {
+        return toAjax(payAgentRechargeLogService.insertPayAgentRechargeLog(payAgentRechargeLog));
+    }
 
-	/**
-	 * 删除【代充信息日志】
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeLog:remove')" )
-	@Log( title = "【代充信息日志】", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{orderNos}" )
-	public AjaxResult remove( @PathVariable String[] orderNos ) {
-		return toAjax( payAgentRechargeLogService.deletePayAgentRechargeLogByIds( orderNos ) );
-	}
+    /**
+     * 修改【代充信息日志】
+     */
+    @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeLog:edit')")
+    @Log(title = "【代充信息日志】", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody PayAgentRechargeLog payAgentRechargeLog) {
+        return toAjax(payAgentRechargeLogService.updatePayAgentRechargeLog(payAgentRechargeLog));
+    }
+
+    /**
+     * 删除【代充信息日志】
+     */
+    @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeLog:remove')")
+    @Log(title = "【代充信息日志】", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{orderNos}")
+    public AjaxResult remove(@PathVariable String[] orderNos) {
+        return toAjax(payAgentRechargeLogService.deletePayAgentRechargeLogByIds(orderNos));
+    }
+
+    /**
+     * 统计按钮【代充信息日志】
+     */
+    @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeLog:list')")
+    @GetMapping("/count")
+    public AjaxResult count(PayAgentRechargeLog payAgentRechargeLog) {
+        PayAgentRechargeLog payAgentRechargeLogtwo = payAgentRechargeLogService.count(payAgentRechargeLog);
+        return AjaxResult.success(payAgentRechargeLogtwo);
+    }
 }

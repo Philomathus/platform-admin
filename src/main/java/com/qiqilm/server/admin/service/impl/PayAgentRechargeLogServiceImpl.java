@@ -85,4 +85,9 @@ public class PayAgentRechargeLogServiceImpl implements IPayAgentRechargeLogServi
     public int deletePayAgentRechargeLogById(String orderNo) {
         return payAgentRechargeLogMapper.deletePayAgentRechargeLogById(orderNo);
     }
+
+    @Override
+    public PayAgentRechargeLog count(PayAgentRechargeLog payAgentRechargeLog) {
+        return payAgentRechargeLogMapper.count(payAgentRechargeLog);
+    }
 }
