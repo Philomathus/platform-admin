@@ -1,8 +1,12 @@
 package com.qiqilm.server.admin.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,6 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class PayAgentRechargeAccountLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -44,75 +49,19 @@ public class PayAgentRechargeAccountLog extends BaseEntity {
 
     /** 状态(0已提交1锁定2已拒绝3已存入4存入失败) */
     @Excel(name = "状态(0已提交1锁定2已拒绝3已存入4存入失败)")
-    private Long status;
+    private String status;
 
     /** 审核人 */
     @Excel(name = "审核人")
     private String opName;
 
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
-    }
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private Date createTime;
 
-    public String getOrderNo() {
-        return orderNo;
-    }
-    public void setAccount(String account) {
-        this.account = account;
-    }
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private Date updateTime;
 
-    public String getAccount() {
-        return account;
-    }
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
 
-    public String getNickName() {
-        return nickName;
-    }
-    public void setBankId(Long bankId) {
-        this.bankId = bankId;
-    }
-
-    public Long getBankId() {
-        return bankId;
-    }
-    public void setRechargeMoney(BigDecimal rechargeMoney) {
-        this.rechargeMoney = rechargeMoney;
-    }
-
-    public BigDecimal getRechargeMoney() {
-        return rechargeMoney;
-    }
-    public void setSubMoney(BigDecimal subMoney) {
-        this.subMoney = subMoney;
-    }
-
-    public BigDecimal getSubMoney() {
-        return subMoney;
-    }
-    public void setRechargeRealName(String rechargeRealName) {
-        this.rechargeRealName = rechargeRealName;
-    }
-
-    public String getRechargeRealName() {
-        return rechargeRealName;
-    }
-    public void setStatus(Long status) {
-        this.status = status;
-    }
-
-    public Long getStatus() {
-        return status;
-    }
-    public void setOpName(String opName) {
-        this.opName = opName;
-    }
-
-    public String getOpName() {
-        return opName;
-    }
 
     @Override
     public String toString() {

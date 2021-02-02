@@ -1,14 +1,17 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.GameType;
+import com.qiqilm.server.admin.domain.req.ReqTypeGame;
 import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
 import com.qiqilm.server.admin.domain.rsp.RspTypeGames;
 import com.qiqilm.server.admin.mapper.GameInfoMapper;
 import com.qiqilm.server.admin.mapper.GameTypeMapper;
+import com.qiqilm.server.admin.mapper.GameTypeWithMapper;
 import com.qiqilm.server.admin.service.IGameTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +26,10 @@ public class GameTypeServiceImpl implements IGameTypeService {
 	private GameTypeMapper gameTypeMapper;
 	@Autowired
 	private GameInfoMapper gameInfoMapper;
+//	@Autowired
+//	private GameCacheManager gameCacheManager;
+    @Autowired
+    private GameTypeWithMapper gameTypeWithMapper;
 	/**
 	 * 查询游戏类型
 	 *
@@ -97,5 +104,22 @@ public class GameTypeServiceImpl implements IGameTypeService {
 		rspTypeGames.setAll_games(allGameList);
 		rspTypeGames.setType_games(typeGameList);
 		return rspTypeGames;
+	}
+
+	@Override
+	public void addTypeGames(ReqTypeGame dto) {
+
+//		gameTypeWithMapper.deleteTypeGames(typeId);
+//		for (String id:ids){
+//			GameInfo gameInfo = gameInfoMapper.selectByPrimaryKey(id);
+//			GameTypeWith typeGame = new GameTypeWith();
+//			typeGame.setId(UuidUtil.getRandomUuidWithoutSeparator());
+//			typeGame.setType_id(typeId);
+//			typeGame.setCreate_time(new Date());
+//			typeGame.setGame_id(id);
+//			typeGame.setKind_id(gameInfo!=null?gameInfo.getKind_id().toString():"");
+//			typeGameMapper.insert(typeGame);
+//		}
+//		gameCacheManager.initGameGroup();
 	}
 }

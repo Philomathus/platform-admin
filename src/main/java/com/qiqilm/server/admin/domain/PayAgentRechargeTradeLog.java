@@ -11,53 +11,48 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 pay_agent_recharge_record
+ * 【请填写功能名称】对象 pay_agent_recharge_trade_log
  *
  * @author 77tv
- * @date 2021-01-26
+ * @date 2021-02-01
  */
 @Data
-public class PayAgentRechargeRecord extends BaseEntity {
+public class PayAgentRechargeTradeLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 订单号主键 */
+    /** 订单主键 */
     private String orderNo;
+
+    /** 名称 */
+    @Excel(name = "名称")
+    private String name;
 
     /** 代充账号 */
     @Excel(name = "代充账号")
-    private String rechargeAcount;
+    private String account;
 
     /** 代充昵称 */
     @Excel(name = "代充昵称")
-    private String rechargeNickName;
+    private String nickName;
 
-    /** 存入(提出)类型 */
-    @Excel(name = "存入(提出)类型")
-    private String type;
+    /** 收入（支出） */
+    @Excel(name = "收入", readConverterExp = "支=出")
+    private BigDecimal income;
 
-    /** 存入(提出)金额 */
-    @Excel(name = "存入(提出)金额")
-    private BigDecimal money;
-
-    /** 操作人 */
-    @Excel(name = "操作人")
-    private String opName;
-
-    @Excel(name = "操作时间")
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
-    public Date createTime;
+    private Date createTime;
+
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("orderNo", getOrderNo())
-            .append("rechargeAcount", getRechargeAcount())
-            .append("rechargeNickName", getRechargeNickName())
-            .append("type", getType())
-            .append("remark", getRemark())
-            .append("money", getMoney())
+            .append("name", getName())
+            .append("account", getAccount())
+            .append("nickName", getNickName())
+            .append("income", getIncome())
             .append("createTime", getCreateTime())
-            .append("opName", getOpName())
+            .append("remark", getRemark())
             .toString();
     }
 }

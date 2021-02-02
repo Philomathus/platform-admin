@@ -50,6 +50,24 @@ public class MemberWithdrawLogController extends BaseController {
 	}
 
 	/**
+	 * 获取会员提现信息统计
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
+	@GetMapping( value = "/countTotal" )
+	public AjaxResult getTotal(MemberWithdrawLog memberWithdrawLog ) {
+		return memberWithdrawLogService.getTotal(memberWithdrawLog) ;
+	}
+
+	/**
+	 * 获取会员提现信息详细信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
+	@GetMapping( value = "/report/{id}" )
+	public AjaxResult getReport( @PathVariable( "id" ) String id ) {
+		return memberWithdrawLogService.withdrawReport( id ) ;
+	}
+
+	/**
 	 * 导出会员提现信息列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:export')" )

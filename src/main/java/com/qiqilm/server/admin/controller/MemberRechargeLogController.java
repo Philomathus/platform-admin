@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
+import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberRechargeLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 【公司入款信息】Controller
+ * 公司入款信息Controller
  *
  * @author 77tv
  * @date 2021-01-26
@@ -28,74 +29,71 @@ public class MemberRechargeLogController extends BaseController {
 	private IMemberRechargeLogService memberRechargeLogService;
 
 	/**
-	 * 查询【公司入款信息】列表
+	 * 查询公司入款信息列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(MemberRechargeLog memberRechargeLog) {
+	public TableDataInfo list( ReqMemberRechargeLog req ) {
 		startPage();
-		List<MemberRechargeLog> list = memberRechargeLogService.selectMemberRechargeLogList(memberRechargeLog);
+		List<MemberRechargeLog> list = memberRechargeLogService.selectMemberRechargeLogList( req );
 		return getDataTable( list );
 	}
 
-
 	/**
-	 * 查询【公司入款信息】列表统计
+	 * 查询公司入款信息列表统计
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:list')" )
 	@GetMapping( "/listCount" )
-    	public Map listCount(MemberRechargeLog memberRechargeLog) {
-        return memberRechargeLogService.listCount(memberRechargeLog);
+	public Map listCount( ReqMemberRechargeLog req ) {
+		return memberRechargeLogService.listCount( req );
 	}
 
 	/**
-	 * 导出【公司入款信息】列表
+	 * 导出公司入款信息列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:export')" )
-	@Log( title = "【公司入款信息】", businessType = BusinessType.EXPORT )
+	@Log( title = "公司入款信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(MemberRechargeLog memberRechargeLog) {
-		List<MemberRechargeLog>      list = memberRechargeLogService.selectMemberRechargeLogList(memberRechargeLog);
-		ExcelUtil<MemberRechargeLog> util = new ExcelUtil<MemberRechargeLog>(MemberRechargeLog. class);
+	public AjaxResult export( ReqMemberRechargeLog req ) {
+		List<MemberRechargeLog>      list = memberRechargeLogService.selectMemberRechargeLogList( req );
+		ExcelUtil<MemberRechargeLog> util = new ExcelUtil<>( MemberRechargeLog.class );
 		return util.exportExcel( list, "memberRechargeLog" );
 	}
 
 	/**
-	 * 获取【公司入款信息】详细信息
+	 * 获取公司入款信息详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( memberRechargeLogService.selectMemberRechargeLogById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( memberRechargeLogService.selectMemberRechargeLogById( id ) );
 	}
 
-	/**
-	 * 新增【公司入款信息】
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:add')" )
-	@Log( title = "【公司入款信息】", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody MemberRechargeLog memberRechargeLog) {
-		return toAjax( memberRechargeLogService.insertMemberRechargeLog(memberRechargeLog) );
+	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:firstAudit')" )
+	@Log( title = "公司入款信息初审", businessType = BusinessType.AUDIT )
+	@PutMapping( "/firstAudit" )
+	public AjaxResult firstAudit( @RequestBody ReqMemberRechargeLog req ) {
+		return memberRechargeLogService.firstAudit( req );
 	}
 
-	/**
-	 * 修改【公司入款信息】
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:edit')" )
-	@Log( title = "【公司入款信息】", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody MemberRechargeLog memberRechargeLog) {
-		return toAjax( memberRechargeLogService.updateMemberRechargeLog(memberRechargeLog) );
+	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:finalAudit')" )
+	@Log( title = "公司入款信息终审", businessType = BusinessType.AUDIT )
+	@PutMapping( "/finalAudit" )
+	public AjaxResult finalAudit( @RequestBody ReqMemberRechargeLog req ) {
+		return memberRechargeLogService.finalAudit( req );
 	}
 
-	/**
-	 * 删除【公司入款信息】
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:remove')" )
-	@Log( title = "【公司入款信息】", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable String[] ids ) {
-		return toAjax( memberRechargeLogService.deleteMemberRechargeLogByIds( ids ) );
+	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:refusedAudit')" )
+	@Log( title = "公司入款信息拒绝审核", businessType = BusinessType.AUDIT )
+	@PutMapping( "/refusedAudit" )
+	public AjaxResult refusedAudit( @RequestBody ReqMemberRechargeLog req ) {
+		return memberRechargeLogService.refusedAudit( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:recoverAudit')" )
+	@Log( title = "公司入款信息恢复审核", businessType = BusinessType.AUDIT )
+	@PutMapping( "/recoverAudit" )
+	public AjaxResult recoverAudit( @RequestBody ReqMemberRechargeLog req ) {
+		return memberRechargeLogService.recoverAudit( req );
 	}
 }

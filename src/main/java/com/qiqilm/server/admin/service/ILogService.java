@@ -16,4 +16,11 @@ public interface ILogService {
 	 */
 	void logMoneyAll( String userid, String username, EnumMoney enumTrans, BigDecimal totalNow, BigDecimal change, String agent,
 					  String name, String orderId );
+
+	/**
+	 * 资金增加
+	 */
+	void logMoneyAdd( String businessId, String userid, String username, EnumMoney enumTrans, BigDecimal add, BigDecimal old,
+					  String mark, String markorder );
+
 }

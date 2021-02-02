@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.domain.req.ReqPayAgentRechargeAccountLog;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -94,4 +96,32 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	public AjaxResult remove( @PathVariable String[] orderNos ) {
 		return toAjax( payAgentRechargeAccountLogService.deletePayAgentRechargeAccountLogByIds( orderNos ) );
 	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:refused')" )
+	@Log( title = "代充人入款拒绝", businessType = BusinessType.AUDIT )
+	@PutMapping( "/refused" )
+	public AjaxResult refused( @RequestBody ReqPayAgentRechargeAccountLog req ) {
+		return payAgentRechargeAccountLogService.refused( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:lock')" )
+	@Log( title = "代充人入款锁定", businessType = BusinessType.AUDIT )
+	@PutMapping( "/lock" )
+	public AjaxResult lock( @RequestBody ReqPayAgentRechargeAccountLog req ) {
+		return payAgentRechargeAccountLogService.lock( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:unlock')" )
+	@Log( title = "代充人入款解锁", businessType = BusinessType.AUDIT )
+	@PutMapping( "/unlock" )
+	public AjaxResult unlock( @RequestBody ReqPayAgentRechargeAccountLog req ) {
+		return payAgentRechargeAccountLogService.unlock( req );
+	}
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:artificial')" )
+	@Log( title = "代充人入款存入", businessType = BusinessType.AUDIT )
+	@PutMapping( "/artificial" )
+	public AjaxResult artificial( @RequestBody ReqPayAgentRechargeAccountLog req ) {
+		return payAgentRechargeAccountLogService.artificial( req );
+	}
+
 }

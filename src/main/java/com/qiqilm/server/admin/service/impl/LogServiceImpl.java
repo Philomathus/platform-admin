@@ -79,4 +79,26 @@ public class LogServiceImpl implements ILogService {
 		logMoneyMapper.insertLogMoney( log );
 	}
 
+	@Override
+	public void logMoneyAdd( String businessId, String userid, String username, EnumMoney enumTrans, BigDecimal add,
+							 BigDecimal old, String mark, String markorder ) {
+		if ( businessId == null ) {
+			businessId = UuidUtil.getRandomUuidWithoutSeparator();
+		}
+		LogMoney log = new LogMoney();
+		log.setId( businessId );
+		log.setUserId( userid );
+		log.setUserName( username );
+		log.setCreateTime( new Date() );
+		log.setIncome( add );
+		log.setPay( BigDecimal.ZERO );
+
+		log.setTotal( old.add( add ) );
+		log.setType( enumTrans.getType() );
+		log.setDes( enumTrans.getDes() );
+		log.setTotalBefore( old );
+		log.setMark( mark );
+		log.setMarkorder( markorder );
+		logMoneyMapper.insertLogMoney( log );
+	}
 }

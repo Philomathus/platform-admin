@@ -197,7 +197,7 @@ public class PayServiceImpl implements IPayService {
 				recommendUserLog.setCode( memberInfo.getMemberCode() );
 				recommendUserLog.setOrderMoney( payJour.getMoney() );
 				recommendMapper.insertMemberRecommend( recommendUserLog );
-				if ( !org.apache.commons.lang3.StringUtils.isEmpty( rd1.getInviterCode() ) ) {
+				if ( StringUtils.hasText( rd1.getInviterCode() ) ) {
 					rd2 = memberInfoMapper.findRecommendByInviterCode( memberInfo.getInviterCode() );
 				}
 			}
