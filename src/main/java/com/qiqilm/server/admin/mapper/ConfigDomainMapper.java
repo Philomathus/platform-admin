@@ -58,4 +58,10 @@ public interface ConfigDomainMapper {
 	 * @return 结果
 	 */
 	public int deleteConfigDomainByIds(Long[] ids );
+
+	List<String> selectDomainsByCode( String code );
+
+	List<ConfigDomain> selectConfigDomainByIds( Long[] ids );
+
+	int existsConfigDomain( ConfigDomain configDomain );
 }

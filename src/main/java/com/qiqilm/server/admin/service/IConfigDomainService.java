@@ -58,4 +58,6 @@ public interface IConfigDomainService {
 	 * @return 结果
 	 */
 	public int deleteConfigDomainById(Long id);
+
+	int existsConfigDomain( ConfigDomain configDomain );
 }
