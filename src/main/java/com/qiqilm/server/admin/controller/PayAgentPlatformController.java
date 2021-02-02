@@ -56,7 +56,7 @@ public class PayAgentPlatformController extends BaseController {
 	@GetMapping( "/effect-pay-agents" )
 	public AjaxResult findAgents() {
 		PayAgentPlatform payAgentPlatform = new PayAgentPlatform();
-		payAgentPlatform.setStatus( 1 );
+		payAgentPlatform.setStatus("1");
 		return AjaxResult.success( payAgentPlatformService.selectPayAgentPlatformList( payAgentPlatform ) );
 	}
 

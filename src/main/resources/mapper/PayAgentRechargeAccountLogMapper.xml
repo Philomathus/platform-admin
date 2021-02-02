@@ -102,4 +102,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{orderNo}
         </foreach>
     </delete>
+
+    <update id="updateByBalanceAmount">
+        update pay_agent_recharge_account
+        <set>
+            <if test="BalanceAmount != null and BalanceAmount != ''">
+                balance_amount = balance_amount + #{BalanceAmount}
+            </if>
+        </set>
+        where account = #{Account}
+    </update>
 </mapper>

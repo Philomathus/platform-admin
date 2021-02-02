@@ -9,7 +9,7 @@ import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
 
 /**
- * 支付平台Service业务层处理
+ * 【支付平台】Service业务层处理
  *
  * @author 77tv
  * @date 2021-01-27
@@ -20,10 +20,10 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
     private PayPlatformNewMapper payPlatformNewMapper;
 
     /**
-     * 查询支付平台
+     * 查询【支付平台】
      *
-     * @param id 支付平台ID
-     * @return 支付平台
+     * @param id 【支付平台】ID
+     * @return 【支付平台】
      */
     @Override
     public PayPlatformNew selectPayPlatformNewById(Long id) {
@@ -31,10 +31,10 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
     }
 
     /**
-     * 查询支付平台列表
+     * 查询【支付平台】列表
      *
-     * @param payPlatformNew 支付平台
-     * @return 支付平台
+     * @param payPlatformNew 【支付平台】
+     * @return 【支付平台】
      */
     @Override
     public List<PayPlatformNew> selectPayPlatformNewList(PayPlatformNew payPlatformNew) {
@@ -42,9 +42,9 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
     }
 
     /**
-     * 新增支付平台
+     * 新增【支付平台】
      *
-     * @param payPlatformNew 支付平台
+     * @param payPlatformNew 【支付平台】
      * @return 结果
      */
     @Override
@@ -54,9 +54,9 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
     }
 
     /**
-     * 修改支付平台
+     * 修改【支付平台】
      *
-     * @param payPlatformNew 支付平台
+     * @param payPlatformNew 【支付平台】
      * @return 结果
      */
     @Override
@@ -66,9 +66,9 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
     }
 
     /**
-     * 批量删除支付平台
+     * 批量删除【支付平台】
      *
-     * @param ids 需要删除的支付平台ID
+     * @param ids 需要删除的【支付平台】ID
      * @return 结果
      */
     @Override
@@ -77,9 +77,9 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
     }
 
     /**
-     * 删除支付平台信息
+     * 删除【支付平台】信息
      *
-     * @param id 支付平台ID
+     * @param id 【支付平台】ID
      * @return 结果
      */
     @Override

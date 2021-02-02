@@ -61,7 +61,7 @@ public class PayAgentPlatform extends BaseEntity {
 
     /** 状态 1启用 0禁用 */
     @Excel(name = "状态")
-    private Integer status;
+    private String status;
 
     @Override
     public String toString() {
