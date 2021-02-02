@@ -24,7 +24,7 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 支付类型Controller
  *
  * @author 77tv
  * @date 2021-01-25
@@ -36,7 +36,7 @@ public class PayTypeController extends BaseController {
 	private IPayTypeService payTypeService;
 
 /**
- * 查询【支付类型】列表
+ * 查询支付类型列表
  */
 @PreAuthorize( "@ss.hasPermi('pay:payType:list')" )
 @GetMapping( "/list" )
@@ -47,10 +47,10 @@ public class PayTypeController extends BaseController {
 	}
     
 	/**
-	 * 导出【支付类型】列表
+	 * 导出支付类型列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:export')" )
-	@Log( title = "【支付类型】", businessType = BusinessType.EXPORT )
+	@Log( title = "支付类型", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(PayType payType) {
 		List<PayType>      list = payTypeService.selectPayTypeList(payType);
@@ -59,7 +59,7 @@ public class PayTypeController extends BaseController {
 	}
 
 	/**
-	 * 获取【支付类型】详细信息
+	 * 获取支付类型详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:query')" )
 	@GetMapping( value = "/{id}" )
@@ -68,30 +68,30 @@ public class PayTypeController extends BaseController {
 	}
 
 	/**
-	 * 新增【支付类型】
+	 * 新增支付类型
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:add')" )
-	@Log( title = "【支付类型】", businessType = BusinessType.INSERT )
+	@Log( title = "支付类型", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayType payType) {
 		return toAjax( payTypeService.insertPayType(payType) );
 	}
 
 	/**
-	 * 修改【支付类型】
+	 * 修改支付类型
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:edit')" )
-	@Log( title = "【支付类型】", businessType = BusinessType.UPDATE )
+	@Log( title = "支付类型", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayType payType) {
 		return toAjax( payTypeService.updatePayType(payType) );
 	}
 
 	/**
-	 * 删除【支付类型】
+	 * 删除支付类型
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:remove')" )
-	@Log( title = "【支付类型】", businessType = BusinessType.DELETE )
+	@Log( title = "支付类型", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( payTypeService.deletePayTypeByIds( ids ) );

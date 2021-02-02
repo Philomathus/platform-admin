@@ -46,22 +46,6 @@ public interface MemberInfoMapper {
 	 */
 	public int updateMemberInfo( MemberInfo memberInfo );
 
-	/**
-	 * 删除会员信息
-	 *
-	 * @param id 会员信息ID
-	 * @return 结果
-	 */
-	public int deleteMemberInfoById( String id );
-
-	/**
-	 * 批量删除会员信息
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deleteMemberInfoByIds( String[] ids );
-
 	int selectMaxMemberCode();
 
 	int updateMoneySelect( @Param( "userId" ) String userId,

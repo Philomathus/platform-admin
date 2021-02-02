@@ -43,9 +43,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	@Autowired
 	private ILogService            logService;
 	@Autowired
-    private MemberCardMapper  memberCardMapper;
+	private MemberCardMapper       memberCardMapper;
 	@Autowired
-    private MemberCacheManager memberCacheManager;
+	private MemberCacheManager     memberCacheManager;
 
 	/**
 	 * 查询会员信息
@@ -77,36 +77,35 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	 */
 	@Override
 	public AjaxResult insertMemberInfo( MemberInfo memberInfo ) {
-        if(memberInfoMapper.selectMemberInfoList(memberInfo).size()>0){
-            return AjaxResult.error("此账号已经存在");
-        }
-        MemberInfo member =memberCacheManager.createMember();
-        if(StringUtils.isEmpty(member.getId())){
-            return AjaxResult.error("注册redis存在问题，请联系管理员");
-        }
+		if ( memberInfoMapper.selectMemberInfoList( memberInfo ).size() > 0 ) {
+			return AjaxResult.error( "此账号已经存在" );
+		}
+		MemberInfo member = memberCacheManager.createMember();
+		if ( StringUtils.isEmpty( member.getId() ) ) {
+			return AjaxResult.error( "注册redis存在问题，请联系管理员" );
+		}
 
-        member.setIsOnline((long) 0);
-        member.setVip((long) 1);//默认vip1
-        member.setStatus((long) 1);
-        member.setTotalAccount(BigDecimal.ZERO);
-        member.setPassword(memberInfo.getPassword());
-        member.setUserName(memberInfo.getUserName());
-        member.setRegTime(new Date());
-        member.setLevelIntegral(BigDecimal.ZERO);
-        member.setBoxAccount(BigDecimal.ZERO);
-        member.setCodeAccount(BigDecimal.ZERO);
-        member.setCodeTotal(BigDecimal.ZERO);
-        member.setInviteMoney(memberInfo.getInviteMoney());
-        member.setInviterCode(memberInfo.getInviterCode());
-        member.setNickName(NameUtil.nickNameRandom() );
-        member.setLoginNum((long) 0);
-        if (memberInfoMapper.insertMemberInfo( member )>0) {
-            return AjaxResult.success("添加成功");
-        }else {
-            return AjaxResult.success("添加失败");
-        }
+		member.setIsOnline( 0 );
+		member.setVip( 1 );//默认vip1
+		member.setStatus( 1 );
+		member.setTotalAccount( BigDecimal.ZERO );
+		member.setPassword( memberInfo.getPassword() );
+		member.setUserName( memberInfo.getUserName() );
+		member.setRegTime( new Date() );
+		member.setLevelIntegral( BigDecimal.ZERO );
+		member.setBoxAccount( BigDecimal.ZERO );
+		member.setCodeAccount( BigDecimal.ZERO );
+		member.setCodeTotal( BigDecimal.ZERO );
+		member.setInviteMoney( memberInfo.getInviteMoney() );
+		member.setInviterCode( memberInfo.getInviterCode() );
+		member.setNickName( NameUtil.nickNameRandom() );
+		member.setLoginNum( 0 );
+		if ( memberInfoMapper.insertMemberInfo( member ) > 0 ) {
+			return AjaxResult.success( "添加成功" );
+		} else {
+			return AjaxResult.success( "添加失败" );
+		}
 	}
-
 
 	/**
 	 * 修改会员信息
@@ -117,28 +116,6 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	@Override
 	public int updateMemberInfo( MemberInfo memberInfo ) {
 		return memberInfoMapper.updateMemberInfo( memberInfo );
-	}
-
-	/**
-	 * 批量删除会员信息
-	 *
-	 * @param ids 需要删除的会员信息 ID
-	 * @return 结果
-	 */
-	@Override
-	public int deleteMemberInfoByIds( String[] ids ) {
-		return memberInfoMapper.deleteMemberInfoByIds( ids );
-	}
-
-	/**
-	 * 删除会员信息 信息
-	 *
-	 * @param id 会员信息 ID
-	 * @return 结果
-	 */
-	@Override
-	public int deleteMemberInfoById( String id ) {
-		return memberInfoMapper.deleteMemberInfoById( id );
 	}
 
 	@Override
@@ -180,7 +157,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			}
 		}
 
-		if (total != null ) {
+		if ( total != null ) {
 			BigDecimal now = total.add( money );
 			if ( beatNum != null && beatNum.compareTo( BigDecimal.ZERO ) > 0 ) {
 				MemberBcode codeFlow = new MemberBcode();
@@ -218,30 +195,26 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 		return rspBase;
 	}
 
-    @Override
-    public PageBO<WithdrawReport> withdrawReport(String memberid, Integer pageNum, Integer pageSize ) {
-        memberInfoMapper.call_pro_useranalysis(memberid);
-        PageBO<WithdrawReport> pageBO = new PageBO<>();
-        pageNum = 1;
-        pageSize = 100;
-        Page page   = PageHelper.startPage( pageNum, pageSize, true );
-        pageBO.setData( memberInfoMapper.userWithdrawReportList());
-        pageBO.setCount( page.getTotal() );
-        return pageBO;
-    }
+	@Override
+	public PageBO<WithdrawReport> withdrawReport( String memberid, Integer pageNum, Integer pageSize ) {
+		memberInfoMapper.call_pro_useranalysis( memberid );
+		PageBO<WithdrawReport> pageBO = new PageBO<>();
+		pageNum = 1;
+		pageSize = 100;
+		Page page = PageHelper.startPage( pageNum, pageSize, true );
+		pageBO.setData( memberInfoMapper.userWithdrawReportList() );
+		pageBO.setCount( page.getTotal() );
+		return pageBO;
+	}
 
 
-    @Override
-    public PageBO<MemberCard> findMemberCardPage(String memberid, Integer pageNum, Integer pageSize, String orderBy) {
-        PageBO<MemberCard> pageBO = new PageBO<>();
-        Page               page   = PageHelper.startPage( pageNum, pageSize, orderBy );
-        pageBO.setData( memberCardMapper.findList( memberid ) );
-        pageBO.setCount( page.getTotal() );
-        return pageBO;
-    }
-    @Override
-    public int updateByPrimaryKeySelective(MemberInfo record) {
-        return memberInfoMapper.updateMemberInfo(record);
-    }
+	@Override
+	public PageBO<MemberCard> findMemberCardPage( String memberid, Integer pageNum, Integer pageSize, String orderBy ) {
+		PageBO<MemberCard> pageBO = new PageBO<>();
+		Page               page   = PageHelper.startPage( pageNum, pageSize, orderBy );
+		pageBO.setData( memberCardMapper.findList( memberid ) );
+		pageBO.setCount( page.getTotal() );
+		return pageBO;
+	}
 
 }

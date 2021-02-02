@@ -247,17 +247,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteMemberInfoById" parameterType="String">
-        delete from member_info where id = #{id}
-    </delete>
-
-    <delete id="deleteMemberInfoByIds" parameterType="String">
-        delete from member_info where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
-
     <select id="selectMaxMemberCode" resultType="java.lang.Integer">
          select IFNULL( max(member_code),0) from member_info
 	</select>

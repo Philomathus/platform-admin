@@ -56,7 +56,7 @@ public class LogMoneyController extends BaseController {
 	@GetMapping( "/export" )
 	public AjaxResult export( LogMoney logMoney ) {
 		List<LogMoney>      list = logMoneyService.selectLogMoneyList( logMoney );
-		ExcelUtil<LogMoney> util = new ExcelUtil<LogMoney>( LogMoney.class );
+		ExcelUtil<LogMoney> util = new ExcelUtil<>( LogMoney.class );
 		return util.exportExcel( list, "会员资金信息" );
 	}
 }
