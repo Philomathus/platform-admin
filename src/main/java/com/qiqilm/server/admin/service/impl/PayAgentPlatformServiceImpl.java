@@ -41,7 +41,12 @@ public class PayAgentPlatformServiceImpl implements IPayAgentPlatformService {
 	 */
 	@Override
 	public PayAgentPlatform selectPayAgentPlatformById( Long id ) {
-		return payAgentPlatformMapper.selectPayAgentPlatformById( id );
+		PayAgentPlatform agentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(id);
+		agentPlatform.setSignMd5( "*********" );
+		agentPlatform.setHeaderKey( "*********" );
+		agentPlatform.setSignPublicKey( "*********" );
+		agentPlatform.setSignPrivateKey( "*********" );
+		return agentPlatform;
 	}
 
 	/**
