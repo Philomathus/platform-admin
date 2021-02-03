@@ -34,7 +34,7 @@ public interface IConfigEnvironmentService {
 	 * @param configEnvironment 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int insertConfigEnvironment(ConfigEnvironment configEnvironment);
+	public AjaxResult insertConfigEnvironment(ConfigEnvironment configEnvironment);
 
 	/**
 	 * 修改【请填写功能名称】

@@ -2,7 +2,9 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigEnvironment;
+import com.qiqilm.server.admin.domain.SysDictData;
 import com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper;
+import com.qiqilm.server.admin.mapper.SysDictDataMapper;
 import com.qiqilm.server.admin.service.IConfigEnvironmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.List;
 public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
     @Autowired
     private ConfigEnvironmentMapper configEnvironmentMapper;
+    @Autowired
+    private SysDictDataMapper dictDataMapper;
 
     /**
      * 查询【请填写功能名称】
@@ -49,10 +53,38 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
      * @return 结果
      */
     @Override
-    public int insertConfigEnvironment(ConfigEnvironment configEnvironment) {
-        return configEnvironmentMapper.insertConfigEnvironment(configEnvironment);
+    public AjaxResult insertConfigEnvironment(ConfigEnvironment configEnvironment) {
+        if (configEnvironment.getMenuType().equals("M")) {
+            //判断名称是否存在
+            if (configEnvironmentMapper.checkType(configEnvironment.getEnvTitle())!=0){
+                return AjaxResult.error("名称已存在");
+            }
+            //判断编码是否存在
+            if (configEnvironmentMapper.checkCode(configEnvironment.getEnvCode())!=0){
+                return AjaxResult.error("编码已存在");
+            }
+            SysDictData dictData = new SysDictData();
+            dictData.setDictSort(configEnvironment.getEnvSort());
+            dictData.setDictLabel(configEnvironment.getEnvTitle());
+            dictData.setDictValue(String.valueOf(configEnvironment.getEnvSort()));
+            dictData.setDictType("config_environment_group");
+            dictData.setStatus(String.valueOf(0));
+            return toAjax(dictDataMapper.insertDictData(dictData));
+        }else {
+            //判断名称是否存在
+            if (configEnvironmentMapper.checkType2(configEnvironment.getEnvTitle())!=0){
+                return AjaxResult.error("名称已存在");
+            }
+            //判断编码是否存在
+            if (configEnvironmentMapper.checkCode2(configEnvironment.getEnvCode())!=0){
+                return AjaxResult.error("编码已存在");
+            }
+            return toAjax(configEnvironmentMapper.insertConfigEnvironment(configEnvironment));
+        }
     }
-
+    public AjaxResult toAjax( int rows ) {
+        return rows > 0 ? AjaxResult.success() : AjaxResult.error();
+    }
     /**
      * 修改【请填写功能名称】
      *
