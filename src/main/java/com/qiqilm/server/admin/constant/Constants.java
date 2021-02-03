@@ -22,6 +22,7 @@ public abstract class Constants {
 	 * 直播
 	 */
 	public static final String  LIVE_PREX                  = "live:";
+	public static final String  CONFIG_PREX                = "config:";
 	public static final String  LIVE_PREX_CONFIG           = "autoCache:LiveMConfig:map";
 	//token  过期时间
 	public static final Integer session_valid_time         = 3600 * 7 * 24;
