@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.domain.GameType;
 import com.qiqilm.server.admin.domain.MemberGameData;
+import com.qiqilm.server.admin.mapper.GameTypeMapper;
 import com.qiqilm.server.admin.mapper.MemberGameDataMapper;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ import java.util.List;
 public class MemberGameDataServiceImpl implements IMemberGameDataService {
     @Autowired
     private MemberGameDataMapper memberGameDataMapper;
+
+    @Autowired
+    private GameTypeMapper gameTypeMapper;
 
     /**
      * 查询会员注单数据
@@ -42,7 +47,16 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             memberGameData.setStartTime(memberGameData.getSelectDate()[0] + " 00:00:00");
             memberGameData.setEndTime(memberGameData.getSelectDate()[1] + " 23:59:59");
         }
-        return memberGameDataMapper.selectMemberGameDataList(memberGameData);
+        List<MemberGameData> memberGameDatas = memberGameDataMapper.selectMemberGameDataList(memberGameData);
+        List<GameType> gameTypes = gameTypeMapper.selectGameTypeName();
+        for (MemberGameData me : memberGameDatas) {
+            for (GameType ge : gameTypes) {
+                if (me.getPlatformType().equals(ge.getId())) {
+                    me.setPlatformType(ge.getName());
+                }
+            }
+        }
+        return memberGameDatas;
     }
 
     /**

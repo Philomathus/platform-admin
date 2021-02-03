@@ -20,6 +20,14 @@ public interface GameTypeMapper {
 	public GameType selectGameTypeById( String id );
 
 	/**
+	 * 查询游戏类型id和name
+	 *
+	 * @param id 游戏类型ID
+	 * @return 游戏类型
+	 */
+	public List<GameType> selectGameTypeName();
+
+	/**
 	 * 查询游戏类型列表
 	 *
 	 * @param gameType 游戏类型
