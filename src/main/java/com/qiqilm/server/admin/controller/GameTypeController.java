@@ -101,7 +101,7 @@ public class GameTypeController extends BaseController {
 	/**
 	 * 获取游戏类型详细信息
 	 */
-	@PreAuthorize( "@ss.hasPermi('game:type:edit')" )
+	@PreAuthorize( "@ss.hasPermi('game:type:query')" )
 	@GetMapping( value = "/getRelationGame/{id}" )
 	public AjaxResult getRelationGame( @PathVariable( "id" ) String id ) {
 		RspTypeGames rspTypeGames = gameTypeService.findTypeGames( id );
