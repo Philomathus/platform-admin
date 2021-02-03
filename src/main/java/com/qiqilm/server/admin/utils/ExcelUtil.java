@@ -159,7 +159,7 @@ public class ExcelUtil<T> {
 	 * @return 字典标签
 	 */
 	public static String convertDictByExp( String dictValue, String dictType, String separator ) {
-		return com.qiqilm.server.admin.utils.DictUtils.getDictLabel( dictType, dictValue, separator );
+		return DictUtils.getDictLabel( dictType, dictValue, separator );
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class ExcelUtil<T> {
 	 * @return 字典值
 	 */
 	public static String reverseDictByExp( String dictLabel, String dictType, String separator ) {
-		return com.qiqilm.server.admin.utils.DictUtils.getDictValue( dictType, dictLabel, separator );
+		return DictUtils.getDictValue( dictType, dictLabel, separator );
 	}
 
 	public void init( List<T> list, String sheetName, Type type ) {
