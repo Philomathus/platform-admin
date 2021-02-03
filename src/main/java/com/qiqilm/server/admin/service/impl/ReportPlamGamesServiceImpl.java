@@ -6,7 +6,10 @@ import com.qiqilm.server.admin.mapper.ReportPlamGamesMapper;
 import com.qiqilm.server.admin.service.IReportPlamGamesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,6 +47,7 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 
     @Override
     public ReportPlamGames countBetData(ReportPlamGames reportPlamGames) {
+
         return reportPlamGamesMapper.countBetData(reportPlamGames);
     }
 

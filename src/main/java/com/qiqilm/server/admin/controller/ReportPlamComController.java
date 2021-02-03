@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -44,9 +45,29 @@ public class ReportPlamComController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list(ReportPlamCom reportPlamCom){
+	public TableDataInfo list(ReportPlamCom reportPlamCom) throws ParseException {
 		startPage();
+		Date d = new Date();
+		log.info( "游戏投注报表统计" );
+		String myString = reportPlamCom.getReporttime();
+		if (!StringUtils.isEmpty(myString)){
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date dd = simpleDateFormat.parse(myString);
+			boolean flag = dd.before(d);
+			if(!flag){
+				reportPlamCom.setReporttime(null);
+			}
+		}else{
+			reportPlamCom.setReporttime(getYestoday());
+		}
 		List<ReportPlamCom> list = reportPlamComService.selectReportPlamComList(reportPlamCom);
 		return getDataTable( list );
+	}
+	//获取昨天数据
+	private static String getYestoday(){
+		Calendar cal=Calendar.getInstance();
+		cal.add(Calendar.DATE,-1);
+		Date time=cal.getTime();
+		return new SimpleDateFormat("yyyy-MM-dd").format(time);
 	}
 }
