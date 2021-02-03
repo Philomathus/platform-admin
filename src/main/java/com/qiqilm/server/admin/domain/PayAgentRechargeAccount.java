@@ -55,14 +55,14 @@ public class PayAgentRechargeAccount extends BaseEntity {
     private String mobile;
 
     /** 开店时间 */
-    @JsonFormat(pattern = "HH:mm:ss")
-    @Excel(name = "开店时间", width = 30, dateFormat = "HH:mm:ss")
-    private Date businessBeginTime;
+    /*@JsonFormat(pattern = "HH:mm:ss")
+    @Excel(name = "开店时间", width = 30, dateFormat = "HH:mm:ss")*/
+    private String businessBeginTime;
 
     /** 关店时间 */
-    @JsonFormat(pattern = "HH:mm:ss")
-    @Excel(name = "关店时间", width = 30, dateFormat = "HH:mm:ss")
-    private Date businessEndTime;
+   /* @JsonFormat(pattern = "HH:mm:ss")
+    @Excel(name = "关店时间", width = 30, dateFormat = "HH:mm:ss")*/
+    private String businessEndTime;
 
     /** 充值优惠比例 */
     @Excel(name = "充值优惠比例")
