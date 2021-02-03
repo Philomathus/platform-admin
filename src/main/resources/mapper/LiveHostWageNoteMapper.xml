@@ -112,4 +112,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="beforeNote" resultMap="LiveHostWageNoteResult">
+        select * from 7700_live.live_host_wage_note  l where l.host_id=#{userId}  ORDER BY create_time desc LIMIT 1
+    </select>
 </mapper>

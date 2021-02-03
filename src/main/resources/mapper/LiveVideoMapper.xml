@@ -23,6 +23,92 @@
 		<result property="liveImage"    column="live_image"    />
 	</resultMap>
 
+	<resultMap type="LiveVideo" id="LiveVideoResultAll">
+		<result property="id"    column="id"    />
+		<result property="title"    column="title"    />
+		<result property="userId"    column="user_id"    />
+		<result property="liveIn"    column="live_in"    />
+		<result property="watchNumber"    column="watch_number"    />
+		<result property="virtualWatchNumber"    column="virtual_watch_number"    />
+		<result property="voteNumber"    column="vote_number"    />
+		<result property="cateId"    column="cate_id"    />
+		<result property="province"    column="province"    />
+		<result property="city"    column="city"    />
+		<result property="createTime"    column="create_time"    />
+		<result property="beginTime"    column="begin_time"    />
+		<result property="endTime"    column="end_time"    />
+		<result property="endDate"    column="end_date"    />
+		<result property="groupId"    column="group_id"    />
+		<result property="destroyGroupStatus"    column="destroy_group_status"    />
+		<result property="longPollingKey"    column="long_polling_key"    />
+		<result property="maxWatchNumber"    column="max_watch_number"    />
+		<result property="roomType"    column="room_type"    />
+		<result property="isPlayback"    column="is_playback"    />
+		<result property="videoVid"    column="video_vid"    />
+		<result property="monitorTime"    column="monitor_time"    />
+		<result property="isDelete"    column="is_delete"    />
+		<result property="robotNum"    column="robot_num"    />
+		<result property="robotTime"    column="robot_time"    />
+		<result property="channelid"    column="channelid"    />
+		<result property="isAborted"    column="is_aborted"    />
+		<result property="isDelVod"    column="is_del_vod"    />
+		<result property="onlineStatus"    column="online_status"    />
+		<result property="tipoffCount"    column="tipoff_count"    />
+		<result property="privateKey"    column="private_key"    />
+		<result property="shareType"    column="share_type"    />
+		<result property="sort"    column="sort"    />
+		<result property="paiId"    column="pai_id"    />
+		<result property="sex"    column="sex"    />
+		<result property="videoType"    column="video_type"    />
+		<result property="sortNum"    column="sort_num"    />
+		<result property="createType"    column="create_type"    />
+		<result property="maxRobotNum"    column="max_robot_num"    />
+		<result property="shareCount"    column="share_count"    />
+		<result property="likeCount"    column="like_count"    />
+		<result property="fansCount"    column="fans_count"    />
+		<result property="sortInit"    column="sort_init"    />
+		<result property="pushRtmp"    column="push_rtmp"    />
+		<result property="playFlv"    column="play_flv"    />
+		<result property="playRtmp"    column="play_rtmp"    />
+		<result property="playMp4"    column="play_mp4"    />
+		<result property="playHls"    column="play_hls"    />
+		<result property="xpoint"    column="xpoint"    />
+		<result property="ypoint"    column="ypoint"    />
+		<result property="headImage"    column="head_image"    />
+		<result property="thumbHeadImage"    column="thumb_head_image"    />
+		<result property="playUrl"    column="play_url"    />
+		<result property="isRecommend"    column="is_recommend"    />
+		<result property="liveImage"    column="live_image"    />
+		<result property="virtualNumber"    column="virtual_number"    />
+		<result property="livePayTime"    column="live_pay_time"    />
+		<result property="isLivePay"    column="is_live_pay"    />
+		<result property="liveFee"    column="live_fee"    />
+		<result property="liveIsMention"    column="live_is_mention"    />
+		<result property="livePayType"    column="live_pay_type"    />
+		<result property="livePayCount"    column="live_pay_count"    />
+		<result property="propTable"    column="prop_table"    />
+		<result property="roomTitle"    column="room_title"    />
+		<result property="payRoomId"    column="pay_room_id"    />
+		<result property="lenTime"    column="len_time"    />
+		<result property="isConcatvideo"    column="is_concatvideo"    />
+		<result property="stick"    column="stick"    />
+		<result property="classifiedId"    column="classified_id"    />
+		<result property="gameLogId"    column="game_log_id"    />
+		<result property="bankerStatus"    column="banker_status"    />
+		<result property="bankerId"    column="banker_id"    />
+		<result property="autoStart"    column="auto_start"    />
+		<result property="autoGameId"    column="auto_game_id"    />
+		<result property="lotteryId"    column="lottery_id"    />
+		<result property="newPlayFlv"    column="new_play_flv"    />
+		<result property="nPlayFlv"    column="n_play_flv"    />
+		<result property="hostName"    column="host_name"    />
+		<result property="lotteryName"    column="lottery_name"    />
+	</resultMap>
+
+	<sql id="selectLiveVideoVoById">
+        select id, title, user_id, live_in, watch_number, virtual_watch_number, vote_number, cate_id, province, city,  FROM_UNIXTIME(create_time) create_time ,  begin_time, end_time, end_date, group_id, destroy_group_status, long_polling_key, max_watch_number, room_type, is_playback, video_vid, monitor_time, is_delete, robot_num, robot_time, channelid, is_aborted, is_del_vod, online_status, tipoff_count, private_key, share_type, sort, pai_id, sex, video_type, sort_num, create_type, max_robot_num, share_count, like_count, fans_count, sort_init, push_rtmp, play_flv, play_rtmp, play_mp4, play_hls, xpoint, ypoint, head_image, thumb_head_image, play_url, is_recommend, live_image, virtual_number, live_pay_time, is_live_pay, live_fee, live_is_mention, live_pay_type, live_pay_count, prop_table, room_title, pay_room_id, len_time, is_concatvideo, stick, classified_id, game_log_id, banker_status, banker_id, auto_start, auto_game_id, lottery_id, new_play_flv, n_play_flv, host_name, lottery_name from 7700_live.live_video
+    </sql>
+
 	<sql id="selectLiveVideoVo">
         SELECT
 			v.id,
@@ -52,8 +138,8 @@
 		</where>
 	</select>
 
-	<select id="selectLiveVideoById" parameterType="Long" resultMap="LiveVideoResult">
-		<include refid="selectLiveVideoVo"/>
+	<select id="selectLiveVideoById" parameterType="Long" resultMap="LiveVideoResultAll">
+		<include refid="selectLiveVideoVoById"/>
 		where id = #{id}
 	</select>
 

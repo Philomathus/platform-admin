@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryBetMapper">
+
+    <resultMap type="LotteryBet" id="LotteryBetResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="lotteryId"    column="lottery_id"    />
+        <result property="issue"    column="issue"    />
+        <result property="methodId"    column="method_id"    />
+        <result property="betSelect"    column="bet_select"    />
+        <result property="chip"    column="chip"    />
+        <result property="betTime"    column="bet_time"    />
+        <result property="status"    column="status"    />
+        <result property="prize"    column="prize"    />
+        <result property="cost"    column="cost"    />
+        <result property="lotteryName"    column="lottery_name"    />
+        <result property="puserId"    column="puser_id"    />
+        <result property="anchor"    column="anchor"    />
+        <result property="code"    column="code"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectLotteryBetVo">
+        select id, user_id, lottery_id, issue, method_id, bet_select, chip, bet_time, status, prize, cost, lottery_name, puser_id, anchor, code,  FROM_UNIXTIME(update_time) update_time   from 7700_live.lottery_bet
+    </sql>
+
+    <select id="selectLotteryBetList" parameterType="LotteryBet" resultMap="LotteryBetResult">
+        <include refid="selectLotteryBetVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="lotteryId != null "> and lottery_id = #{lotteryId}</if>
+            <if test="issue != null  and issue != ''"> and issue = #{issue}</if>
+            <if test="methodId != null  and methodId != ''"> and method_id = #{methodId}</if>
+            <if test="betSelect != null  and betSelect != ''"> and bet_select = #{betSelect}</if>
+            <if test="chip != null "> and chip = #{chip}</if>
+            <if test="betTime != null "> and bet_time = #{betTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="prize != null "> and prize = #{prize}</if>
+            <if test="cost != null "> and cost = #{cost}</if>
+            <if test="lotteryName != null  and lotteryName != ''"> and lottery_name like concat('%', #{lotteryName}, '%')</if>
+            <if test="puserId != null  and puserId != ''"> and puser_id = #{puserId}</if>
+            <if test="anchor != null "> and anchor = #{anchor}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+        </where>
+    </select>
+
+    <select id="selectLotteryBetById" parameterType="String" resultMap="LotteryBetResult">
+        <include refid="selectLotteryBetVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLotteryBet" parameterType="LotteryBet">
+        insert into 7700_live.lottery_bet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="lotteryId != null">lottery_id,</if>
+            <if test="issue != null">issue,</if>
+            <if test="methodId != null">method_id,</if>
+            <if test="betSelect != null">bet_select,</if>
+            <if test="chip != null">chip,</if>
+            <if test="betTime != null">bet_time,</if>
+            <if test="status != null">status,</if>
+            <if test="prize != null">prize,</if>
+            <if test="cost != null">cost,</if>
+            <if test="lotteryName != null">lottery_name,</if>
+            <if test="puserId != null">puser_id,</if>
+            <if test="anchor != null">anchor,</if>
+            <if test="code != null">code,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="userId != null">#{userId},</if>
+                    <if test="lotteryId != null">#{lotteryId},</if>
+                    <if test="issue != null">#{issue},</if>
+                    <if test="methodId != null">#{methodId},</if>
+                    <if test="betSelect != null">#{betSelect},</if>
+                    <if test="chip != null">#{chip},</if>
+                    <if test="betTime != null">#{betTime},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="prize != null">#{prize},</if>
+                    <if test="cost != null">#{cost},</if>
+                    <if test="lotteryName != null">#{lotteryName},</if>
+                    <if test="puserId != null">#{puserId},</if>
+                    <if test="anchor != null">#{anchor},</if>
+                    <if test="code != null">#{code},</if>
+                <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+             </trim>
+    </insert>
+
+    <update id="updateLotteryBet" parameterType="LotteryBet">
+        update 7700_live.lottery_bet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+    
+            <if test="lotteryId != null">lottery_id = #{lotteryId},</if>
+    
+            <if test="issue != null">issue = #{issue},</if>
+    
+            <if test="methodId != null">method_id = #{methodId},</if>
+    
+            <if test="betSelect != null">bet_select = #{betSelect},</if>
+    
+            <if test="chip != null">chip = #{chip},</if>
+    
+            <if test="betTime != null">bet_time = #{betTime},</if>
+    
+            <if test="status != null">status = #{status},</if>
+    
+            <if test="prize != null">prize = #{prize},</if>
+    
+            <if test="cost != null">cost = #{cost},</if>
+    
+            <if test="lotteryName != null">lottery_name = #{lotteryName},</if>
+    
+            <if test="puserId != null">puser_id = #{puserId},</if>
+    
+            <if test="anchor != null">anchor = #{anchor},</if>
+    
+            <if test="code != null">code = #{code},</if>
+    
+            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLotteryBetById" parameterType="String">
+        delete from 7700_live.lottery_bet where id = #{id}
+    </delete>
+
+    <delete id="deleteLotteryBetByIds" parameterType="String">
+        delete from 7700_live.lottery_bet where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="sumBatCostPrize" resultType="java.util.HashMap">
+        select sum(cost) as cost, anchor from 7700_live.lottery_bet where anchor = #{anchor} and update_time >=#{beginTime} and
+         update_time <![CDATA[ <= ]]> #{endTime} GROUP BY anchor
+    </select>
+</mapper>
