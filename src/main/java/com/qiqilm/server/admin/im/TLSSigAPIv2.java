@@ -1,7 +1,8 @@
-package com.qiqilm.server.admin.utils;
+package com.qiqilm.server.admin.im;
 
 // 使用旧版本 base64 编解码实现增强兼容性
 
+import com.qiqilm.server.admin.utils.JsonUtil;
 import org.springframework.util.Base64Utils;
 
 import javax.crypto.Mac;
@@ -15,7 +16,6 @@ import java.util.Map;
 import java.util.zip.Deflater;
 
 public class TLSSigAPIv2 {
-
 
 	private static String hmacsha256( String timSdkappid, String timSdkKey, String identifier, long currTime, long expire,
 									  String base64Userbuf ) {
