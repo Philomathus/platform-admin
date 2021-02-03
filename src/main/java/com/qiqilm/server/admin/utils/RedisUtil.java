@@ -992,24 +992,9 @@ public class RedisUtil {
 		return stringRedisTemplate.opsForZSet().intersectAndStore( key, otherKeys, destKey, aggregate, weights );
 	}
 
-	public Double hSubtract( String key, Object hashKey, BigDecimal reduce ) {
-		BigDecimal number = reduce.negate();
-		return stringRedisTemplate.execute( (RedisCallback<Double>) connection -> {
-			StringRedisConnection stringRedisConn = ( StringRedisConnection ) connection;
-			String                value           = stringRedisConn.hGet( key, hashKey.toString() );
-			BigDecimal curValue = new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-			curValue = curValue.add(number);
-			if (  curValue.compareTo(BigDecimal.ZERO) >= 0 ) {
-				return stringRedisConn.hIncrBy( key, hashKey.toString(), number.doubleValue() );
-			}
-			return null;
-		} );
-	}
-
     public boolean lock( EnumLock mode, String userId, String value, int timeOut ) {
-        Boolean getLock = this.strSetIfAbsent( Constants.SESSION_CLICK_LOCK.concat( mode.getKey() ).concat( userId ), value
-                , Duration.ofSeconds( timeOut ) );
-        return getLock;
+		return this.strSetIfAbsent( Constants.SESSION_CLICK_LOCK.concat( mode.getKey() ).concat( userId ), value
+				, Duration.ofSeconds( timeOut ) );
     }
 
     public void unLock(EnumLock mode, String userId ) {
