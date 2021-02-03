@@ -105,7 +105,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	 */
 	@Override
 	public int insertLiveVideo( LiveVideo liveVideo ) {
-		liveVideo.setCreateTime( DateUtils.getNowDate() );
+		//liveVideo.setCreateTime( DateUtils.getNowDate() );
 		return liveVideoMapper.insertLiveVideo( liveVideo );
 	}
 
@@ -316,7 +316,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			}
 			newHostWageNote.setLiveTimeSec( liveTimeSec );
 			newHostWageNote.setStartTime( videoBeginTime );
-			newHostWageNote.setCreateTime( new Date());
+
+			newHostWageNote.setCreateTimes(DateFormatUtils.formate(new Date()));
 
 			Map<String, Object> costMap = lotteryBetMapper.sumBatCostPrize( video.getUserId(),
 					newHostWageNote.getStartTime(), newHostWageNote.getEndTime() );

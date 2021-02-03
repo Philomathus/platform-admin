@@ -115,7 +115,7 @@
 			title,
 			watch_number,
 			cate_id,
-			begin_time,
+			v.begin_time,
 			room_type,
 			sort,
 			pai_id,

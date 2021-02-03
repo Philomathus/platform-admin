@@ -66,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     <if test="liveTimeSec != null">#{liveTimeSec},</if>
                     <if test="ticket != null">#{ticket},</if>
                     <if test="beforeTotalTicket != null">#{beforeTotalTicket},</if>
-                <if test="createTime != null and createTime != ''">UNIX_TIMESTAMP(#{createTime}),</if>
+                <if test="createTime != null and createTime != ''">#{createTimes},</if>
                     <if test="remark != null">#{remark},</if>
                     <if test="cpCost != null">#{cpCost},</if>
                     <if test="cpPrize != null">#{cpPrize},</if>
@@ -90,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
             <if test="beforeTotalTicket != null">before_total_ticket = #{beforeTotalTicket},</if>
     
-            <if test="createTime != null and createTime != ''">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="createTime != null and createTime != ''">create_time = #{createTimes},</if>
     
             <if test="remark != null">remark = #{remark},</if>
     
