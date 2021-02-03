@@ -14,6 +14,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ConfigEnvironment extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 菜单类型 M是类型C是属性
+     */
+    private String menuType;
     /** 参数标题  */
     private String envTitle;
 
@@ -39,6 +43,14 @@ public class ConfigEnvironment extends BaseEntity {
     /** 状态 1启用 0禁用 */
     @Excel(name = "状态 1启用 0禁用")
     private Integer envStatus;
+
+    public String getMenuType() {
+        return menuType;
+    }
+
+    public void setMenuType(String menuType) {
+        this.menuType = menuType;
+    }
 
     public String getEnvTitle() {
         return envTitle;

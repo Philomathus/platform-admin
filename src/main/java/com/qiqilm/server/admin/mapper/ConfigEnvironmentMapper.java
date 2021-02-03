@@ -61,4 +61,12 @@ public interface ConfigEnvironmentMapper {
 	public int deleteConfigEnvironmentByIds(String[] envCodes );
 
     public Integer getTitleIndex(@Param("title") String title,@Param("code") String code);
+
+    public int checkType(String envTitle);
+
+    public int checkCode(String envValue);
+
+    public int checkType2(String envTitle);
+
+    public int checkCode2(String envCode);
 }

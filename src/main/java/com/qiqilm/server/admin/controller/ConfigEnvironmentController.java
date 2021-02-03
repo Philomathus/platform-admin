@@ -69,7 +69,7 @@ public class ConfigEnvironmentController extends BaseController {
 	@Log( title = "新增环境参数配置", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ConfigEnvironment configEnvironment) {
-		return toAjax( configEnvironmentService.insertConfigEnvironment(configEnvironment) );
+		return configEnvironmentService.insertConfigEnvironment(configEnvironment);
 	}
 
 	/**
