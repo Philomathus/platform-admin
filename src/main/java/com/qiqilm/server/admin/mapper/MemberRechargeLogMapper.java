@@ -1,61 +1,50 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
+import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * 【请填写功能名称】Mapper接口
+ * 公司入款信息Mapper接口
  *
  * @author 77tv
  * @date 2021-01-26
  */
 public interface MemberRechargeLogMapper {
 	/**
-	 * 查询【请填写功能名称】
+	 * 查询公司入款信息
 	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 【请填写功能名称】
+	 * @param id 公司入款信息ID
+	 * @return 公司入款信息
 	 */
-	public MemberRechargeLog selectMemberRechargeLogById(String id);
+	public MemberRechargeLog selectMemberRechargeLogById( String id );
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询公司入款信息列表
 	 *
-	 * @param memberRechargeLog 【请填写功能名称】
-	 * @return 【请填写功能名称】集合
+	 * @param req 公司入款信息
+	 * @return 公司入款信息集合
 	 */
-	public List<MemberRechargeLog> selectMemberRechargeLogList(MemberRechargeLog memberRechargeLog);
+	public List<MemberRechargeLog> selectMemberRechargeLogList( @Param( "req" ) ReqMemberRechargeLog req );
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增公司入款信息
 	 *
-	 * @param memberRechargeLog 【请填写功能名称】
+	 * @param memberRechargeLog 公司入款信息
 	 * @return 结果
 	 */
-	public int insertMemberRechargeLog(MemberRechargeLog memberRechargeLog);
+	public int insertMemberRechargeLog( MemberRechargeLog memberRechargeLog );
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改公司入款信息
 	 *
-	 * @param memberRechargeLog 【请填写功能名称】
+	 * @param memberRechargeLog 公司入款信息
 	 * @return 结果
 	 */
-	public int updateMemberRechargeLog(MemberRechargeLog memberRechargeLog);
+	public int updateMemberRechargeLog( MemberRechargeLog memberRechargeLog );
 
-	/**
-	 * 删除【请填写功能名称】
-	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 结果
-	 */
-	public int deleteMemberRechargeLogById(String id);
-
-	/**
-	 * 批量删除【请填写功能名称】
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deleteMemberRechargeLogByIds(String[] ids );
+	public Map listCount( @Param( "req" ) ReqMemberRechargeLog req );
 }

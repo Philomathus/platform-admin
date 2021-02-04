@@ -1,61 +1,50 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 
+import java.util.List;
+import java.util.Map;
+
 /**
- * 【请填写功能名称】Mapper接口
+ * 会员提现信息Mapper接口
  *
  * @author 77tv
- * @date 2021-01-26
+ * @date 2021-01-31
  */
 public interface MemberWithdrawLogMapper {
 	/**
-	 * 查询【请填写功能名称】
+	 * 查询会员提现信息
 	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 【请填写功能名称】
+	 * @param id 会员提现信息ID
+	 * @return 会员提现信息
 	 */
 	public MemberWithdrawLog selectMemberWithdrawLogById(String id);
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询会员提现信息列表
 	 *
-	 * @param memberWithdrawLog 【请填写功能名称】
-	 * @return 【请填写功能名称】集合
+	 * @param memberWithdrawLog 会员提现信息
+	 * @return 会员提现信息集合
 	 */
 	public List<MemberWithdrawLog> selectMemberWithdrawLogList(MemberWithdrawLog memberWithdrawLog);
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增会员提现信息
 	 *
-	 * @param memberWithdrawLog 【请填写功能名称】
+	 * @param memberWithdrawLog 会员提现信息
 	 * @return 结果
 	 */
 	public int insertMemberWithdrawLog(MemberWithdrawLog memberWithdrawLog);
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改会员提现信息
 	 *
-	 * @param memberWithdrawLog 【请填写功能名称】
+	 * @param memberWithdrawLog 会员提现信息
 	 * @return 结果
 	 */
 	public int updateMemberWithdrawLog(MemberWithdrawLog memberWithdrawLog);
 
-	/**
-	 * 删除【请填写功能名称】
-	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 结果
-	 */
-	public int deleteMemberWithdrawLogById(String id);
+	MemberWithdrawLog selectByOrderNo( String orderNo );
 
-	/**
-	 * 批量删除【请填写功能名称】
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deleteMemberWithdrawLogByIds(String[] ids );
+    Map getTotal(MemberWithdrawLog memberWithdrawLog);
 }

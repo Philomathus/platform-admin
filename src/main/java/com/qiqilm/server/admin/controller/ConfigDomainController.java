@@ -30,9 +30,9 @@ public class ConfigDomainController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('config:domain:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list(ConfigDomain configDomain) {
+	public TableDataInfo list( ConfigDomain configDomain ) {
 		startPage();
-		List<ConfigDomain> list = configDomainService.selectConfigDomainList(configDomain);
+		List<ConfigDomain> list = configDomainService.selectConfigDomainList( configDomain );
 		return getDataTable( list );
 	}
 
@@ -41,8 +41,17 @@ public class ConfigDomainController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('config:domain:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( configDomainService.selectConfigDomainById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( configDomainService.selectConfigDomainById( id ) );
+	}
+
+	/**
+	 * 获取域名所在分组是否存在
+	 */
+	@PreAuthorize( "@ss.hasPermi('config:domain:query')" )
+	@GetMapping( "/exists" )
+	public AjaxResult exists( ConfigDomain configDomain ) {
+		return AjaxResult.success( configDomainService.existsConfigDomain( configDomain ) );
 	}
 
 	/**
@@ -51,8 +60,8 @@ public class ConfigDomainController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('config:domain:add')" )
 	@Log( title = "域名配置", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody ConfigDomain configDomain) {
-		return toAjax( configDomainService.insertConfigDomain(configDomain) );
+	public AjaxResult add( @RequestBody ConfigDomain configDomain ) {
+		return toAjax( configDomainService.insertConfigDomain( configDomain ) );
 	}
 
 	/**
@@ -61,8 +70,8 @@ public class ConfigDomainController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('config:domain:edit')" )
 	@Log( title = "域名配置", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody ConfigDomain configDomain) {
-		return toAjax( configDomainService.updateConfigDomain(configDomain) );
+	public AjaxResult edit( @RequestBody ConfigDomain configDomain ) {
+		return toAjax( configDomainService.updateConfigDomain( configDomain ) );
 	}
 
 	/**

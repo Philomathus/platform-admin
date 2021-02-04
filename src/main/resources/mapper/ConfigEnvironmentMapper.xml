@@ -93,5 +93,17 @@
             <if test="code != null and code != ''">And env_code = #{code}</if>
         </where>
     </select>
+    <select id="checkType" resultType="int">
+        SELECT COUNT(*) FROM `sys_n_dict_type` where dict_type=#{envTitle}
+    </select>
+    <select id="checkCode" resultType="int">
+        SELECT COUNT(*) FROM `sys_n_dict_type` where dict_name=#{envValue}
+    </select>
+    <select id="checkType2" resultType="int">
+        SELECT COUNT(*) FROM `config_environment` where env_title=#{envTitle}
+    </select>
+    <select id="checkCode2" resultType="int">
+        SELECT COUNT(*) FROM `config_environment` where env_code=#{envValue}
+    </select>
 
 </mapper>

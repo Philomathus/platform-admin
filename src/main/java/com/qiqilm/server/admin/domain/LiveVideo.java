@@ -1,12 +1,13 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 直播对象 live_video
@@ -57,8 +58,8 @@ public class LiveVideo extends BaseEntity {
     private String city;
 
     /** 开始时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date beginTime;
 
     /** 结束时间 */
@@ -106,7 +107,7 @@ public class LiveVideo extends BaseEntity {
 
     /** 1:删除;0:未删除;私有聊天或小于5分钟的视频，不保存 */
     @Excel(name = "1:删除;0:未删除;私有聊天或小于5分钟的视频，不保存")
-    private Integer isDelete;
+    private Boolean isDelete;
 
     /** 聊天群中机器人数量 */
     @Excel(name = "聊天群中机器人数量")
@@ -122,11 +123,11 @@ public class LiveVideo extends BaseEntity {
 
     /** 1:被服务器异常终止结束(主要是心跳超时) */
     @Excel(name = "1:被服务器异常终止结束(主要是心跳超时)")
-    private Integer isAborted;
+    private Boolean isAborted;
 
     /** 1:表示已经清空了,录制视频;0:未做清空操作 */
     @Excel(name = "1:表示已经清空了,录制视频;0:未做清空操作")
-    private Integer isDelVod;
+    private Boolean isDelVod;
 
     /** 主播在线状态;1:在线(默认); 0:离开 */
     @Excel(name = "主播在线状态;1:在线(默认); 0:离开")
@@ -152,6 +153,7 @@ public class LiveVideo extends BaseEntity {
     @Excel(name = "竞拍id")
     private Long paiId;
 
+    private String name;
     /** 性别 0:未知, 1-男，2-女 */
     @Excel(name = "性别 0:未知, 1-男，2-女")
     private Integer sex;
@@ -246,7 +248,7 @@ public class LiveVideo extends BaseEntity {
 
     /** 是否收费模式  1是 0否 */
     @Excel(name = "是否收费模式  1是 0否")
-    private Integer isLivePay;
+    private Boolean isLivePay;
 
     /** 付费直播 收取多少费用； 每分钟收取多少钻石，主播端设置 */
     @Excel(name = "付费直播 收取多少费用； 每分钟收取多少钻石，主播端设置")
@@ -331,6 +333,8 @@ public class LiveVideo extends BaseEntity {
     /** 彩票名称 */
     @Excel(name = "彩票名称")
     private String lotteryName;
+
+    private String liveStatus = "";
 
     public void setId(Long id) {
         this.id = id;
@@ -479,11 +483,11 @@ public class LiveVideo extends BaseEntity {
     public Date getMonitorTime() {
         return monitorTime;
     }
-    public void setIsDelete(Integer isDelete) {
+    public void setIsDelete(Boolean isDelete) {
         this.isDelete = isDelete;
     }
 
-    public Integer getIsDelete() {
+    public Boolean getIsDelete() {
         return isDelete;
     }
     public void setRobotNum(Long robotNum) {
@@ -507,18 +511,18 @@ public class LiveVideo extends BaseEntity {
     public String getChannelid() {
         return channelid;
     }
-    public void setIsAborted(Integer isAborted) {
+    public void setIsAborted(Boolean isAborted) {
         this.isAborted = isAborted;
     }
 
-    public Integer getIsAborted() {
+    public Boolean getIsAborted() {
         return isAborted;
     }
-    public void setIsDelVod(Integer isDelVod) {
+    public void setIsDelVod(Boolean isDelVod) {
         this.isDelVod = isDelVod;
     }
 
-    public Integer getIsDelVod() {
+    public Boolean getIsDelVod() {
         return isDelVod;
     }
     public void setOnlineStatus(Integer onlineStatus) {
@@ -724,11 +728,11 @@ public class LiveVideo extends BaseEntity {
     public Long getLivePayTime() {
         return livePayTime;
     }
-    public void setIsLivePay(Integer isLivePay) {
+    public void setIsLivePay(Boolean isLivePay) {
         this.isLivePay = isLivePay;
     }
 
-    public Integer getIsLivePay() {
+    public Boolean getIsLivePay() {
         return isLivePay;
     }
     public void setLiveFee(Long liveFee) {
@@ -962,5 +966,21 @@ public class LiveVideo extends BaseEntity {
             .append("hostName", getHostName())
             .append("lotteryName", getLotteryName())
             .toString();
+    }
+
+    public String getLiveStatus() {
+        return liveStatus;
+    }
+
+    public void setLiveStatus( String liveStatus ) {
+        this.liveStatus = liveStatus;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
     }
 }

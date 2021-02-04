@@ -58,4 +58,6 @@ public interface PayAgentRechargeLogMapper {
 	 * @return 结果
 	 */
 	public int deletePayAgentRechargeLogByIds(String[] orderNos );
+
+	PayAgentRechargeLog count(PayAgentRechargeLog payAgentRechargeLog);
 }

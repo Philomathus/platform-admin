@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,11 +11,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 【请填写功能名称】对象 member_info
+ * 会员信息对象 member_info
  *
  * @author 77tv
  * @date 2021-01-25
  */
+@Data
 public class MemberInfo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -27,22 +29,6 @@ public class MemberInfo extends BaseEntity {
 
     /** 会员ID/账号/手机号 */
     private String code;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getBankAccount() {
-        return bankAccount;
-    }
-
-    public void setBankAccount(String bankAccount) {
-        this.bankAccount = bankAccount;
-    }
 
     /** 会员编号 */
     @Excel(name = "银行卡号")
@@ -62,21 +48,13 @@ public class MemberInfo extends BaseEntity {
     @Excel(name = "姓名")
     private String realName;
 
-    public Integer getGoogleAuthCode() {
-        return googleAuthCode;
-    }
-
-    public void setGoogleAuthCode(Integer googleAuthCode) {
-        this.googleAuthCode = googleAuthCode;
-    }
-
     /** 状态(0= 禁用 1=正常 2=测试号3=超管号) */
-    @Excel(name = "状态(0= 禁用 1=正常 2=测试号3=超管号)")
-    private Long status;
+    @Excel(name = "状态")
+    private Integer status;
 
     /** 会员vip */
     @Excel(name = "会员vip")
-    private Long vip;
+    private Integer vip;
 
     /** 余额 */
     @Excel(name = "余额")
@@ -95,16 +73,16 @@ public class MemberInfo extends BaseEntity {
     private String password;
 
     /** 是否在线(1是0否) */
-    @Excel(name = "是否在线(1是0否)")
-    private Long isOnline;
+    @Excel(name = "是否在线")
+    private Integer isOnline;
 
     /** 性别(1男0女) */
-    @Excel(name = "性别(1男0女)")
-    private Long sex;
+    @Excel(name = "性别")
+    private Integer sex;
 
     /** 注册时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "注册时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "注册时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date regTime;
 
     /** 注册ip */
@@ -120,8 +98,8 @@ public class MemberInfo extends BaseEntity {
     private String loginAddress;
 
     /** 登录设备(1 ios 2 android) */
-    @Excel(name = "登录设备(1 ios 2 android)")
-    private Long loginDev;
+    @Excel(name = "登录设备")
+    private Integer loginDev;
 
     /** 昵称 */
     @Excel(name = "昵称")
@@ -145,15 +123,15 @@ public class MemberInfo extends BaseEntity {
 
     /** 在线时长 */
     @Excel(name = "在线时长")
-    private Long onlineTime;
+    private Integer onlineTime;
 
     /** 股东网址 */
     @Excel(name = "股东网址")
     private String linkUrl;
 
     /** 登录时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "登录时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
 
     /** 保险箱余额 */
@@ -165,8 +143,8 @@ public class MemberInfo extends BaseEntity {
     private String boxPass;
 
     /** 上次洗码时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "上次洗码时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "上次洗码时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date cleanTime;
 
     /** 总的充值金额 */
@@ -198,312 +176,24 @@ public class MemberInfo extends BaseEntity {
     private String channelcode;
 
     /** 0=正常 1 =禁言 */
-    @Excel(name = "0=正常 1 =禁言")
+    @Excel(name = "是否禁言")
     private Integer speak;
 
     /** 登陆次数 */
     @Excel(name = "登陆次数")
-    private Long loginNum;
+    private Integer loginNum;
 
     /** 客户端版本号 */
     @Excel(name = "客户端版本号")
     private String version;
 
     /** 提现密码(md5加密) */
-    @Excel(name = "提现密码(md5加密)")
+    @Excel(name = "提现密码")
     private String withdrawalPass;
 
     /** 设备ID */
     @Excel(name = "设备ID")
     private String deviceId;
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-    public void setMemberCode(String memberCode) {
-        this.memberCode = memberCode;
-    }
-
-    public String getMemberCode() {
-        return memberCode;
-    }
-    public void setCxAgent(String cxAgent) {
-        this.cxAgent = cxAgent;
-    }
-
-    public String getCxAgent() {
-        return cxAgent;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-    public void setStatus(Long status) {
-        this.status = status;
-    }
-
-    public Long getStatus() {
-        return status;
-    }
-    public void setVip(Long vip) {
-        this.vip = vip;
-    }
-
-    public Long getVip() {
-        return vip;
-    }
-    public void setTotalAccount(BigDecimal totalAccount) {
-        this.totalAccount = totalAccount;
-    }
-
-    public BigDecimal getTotalAccount() {
-        return totalAccount;
-    }
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-    public void setIsOnline(Long isOnline) {
-        this.isOnline = isOnline;
-    }
-
-    public Long getIsOnline() {
-        return isOnline;
-    }
-    public void setSex(Long sex) {
-        this.sex = sex;
-    }
-
-    public Long getSex() {
-        return sex;
-    }
-    public void setRegTime(Date regTime) {
-        this.regTime = regTime;
-    }
-
-    public Date getRegTime() {
-        return regTime;
-    }
-    public void setRegistIp(String registIp) {
-        this.registIp = registIp;
-    }
-
-    public String getRegistIp() {
-        return registIp;
-    }
-    public void setLoginIp(String loginIp) {
-        this.loginIp = loginIp;
-    }
-
-    public String getLoginIp() {
-        return loginIp;
-    }
-    public void setLoginAddress(String loginAddress) {
-        this.loginAddress = loginAddress;
-    }
-
-    public String getLoginAddress() {
-        return loginAddress;
-    }
-    public void setLoginDev(Long loginDev) {
-        this.loginDev = loginDev;
-    }
-
-    public Long getLoginDev() {
-        return loginDev;
-    }
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-    public void setBirthDay(String birthDay) {
-        this.birthDay = birthDay;
-    }
-
-    public String getBirthDay() {
-        return birthDay;
-    }
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-
-    public String getQq() {
-        return qq;
-    }
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
-    }
-
-    public String getWechat() {
-        return wechat;
-    }
-    public void setHeadImg(String headImg) {
-        this.headImg = headImg;
-    }
-
-    public String getHeadImg() {
-        return headImg;
-    }
-    public void setOnlineTime(Long onlineTime) {
-        this.onlineTime = onlineTime;
-    }
-
-    public Long getOnlineTime() {
-        return onlineTime;
-    }
-    public void setLinkUrl(String linkUrl) {
-        this.linkUrl = linkUrl;
-    }
-
-    public String getLinkUrl() {
-        return linkUrl;
-    }
-    public void setLoginTime(Date loginTime) {
-        this.loginTime = loginTime;
-    }
-
-    public Date getLoginTime() {
-        return loginTime;
-    }
-    public void setBoxAccount(BigDecimal boxAccount) {
-        this.boxAccount = boxAccount;
-    }
-
-    public BigDecimal getBoxAccount() {
-        return boxAccount;
-    }
-    public void setBoxPass(String boxPass) {
-        this.boxPass = boxPass;
-    }
-
-    public String getBoxPass() {
-        return boxPass;
-    }
-    public void setCleanTime(Date cleanTime) {
-        this.cleanTime = cleanTime;
-    }
-
-    public Date getCleanTime() {
-        return cleanTime;
-    }
-    public void setLevelIntegral(BigDecimal levelIntegral) {
-        this.levelIntegral = levelIntegral;
-    }
-
-    public BigDecimal getLevelIntegral() {
-        return levelIntegral;
-    }
-    public void setInviterCode(String inviterCode) {
-        this.inviterCode = inviterCode;
-    }
-
-    public String getInviterCode() {
-        return inviterCode;
-    }
-    public void setInviteMoney(BigDecimal inviteMoney) {
-        this.inviteMoney = inviteMoney;
-    }
-
-    public BigDecimal getInviteMoney() {
-        return inviteMoney;
-    }
-    public void setCodeAccount(BigDecimal codeAccount) {
-        this.codeAccount = codeAccount;
-    }
-
-    public BigDecimal getCodeAccount() {
-        return codeAccount;
-    }
-    public void setPid(Long pid) {
-        this.pid = pid;
-    }
-
-    public Long getPid() {
-        return pid;
-    }
-    public void setCodeTotal(BigDecimal codeTotal) {
-        this.codeTotal = codeTotal;
-    }
-
-    public BigDecimal getCodeTotal() {
-        return codeTotal;
-    }
-    public void setChannelcode(String channelcode) {
-        this.channelcode = channelcode;
-    }
-
-    public String getChannelcode() {
-        return channelcode;
-    }
-    public void setSpeak(Integer speak) {
-        this.speak = speak;
-    }
-
-    public Integer getSpeak() {
-        return speak;
-    }
-    public void setLoginNum(Long loginNum) {
-        this.loginNum = loginNum;
-    }
-
-    public Long getLoginNum() {
-        return loginNum;
-    }
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-    public void setWithdrawalPass(String withdrawalPass) {
-        this.withdrawalPass = withdrawalPass;
-    }
-
-    public String getWithdrawalPass() {
-        return withdrawalPass;
-    }
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
 
     @Override
     public String toString() {

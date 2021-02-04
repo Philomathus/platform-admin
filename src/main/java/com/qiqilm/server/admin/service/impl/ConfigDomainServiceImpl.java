@@ -1,9 +1,11 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.domain.ConfigDomain;
 import com.qiqilm.server.admin.mapper.ConfigDomainMapper;
 import com.qiqilm.server.admin.service.IConfigDomainService;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,9 @@ import java.util.List;
 @Service
 public class ConfigDomainServiceImpl implements IConfigDomainService {
 	@Autowired
-	private ConfigDomainMapper configDomainMapper;
+	private ConfigDomainMapper    configDomainMapper;
+	@Autowired
+	private ConfigDomainCacheUtil configDomainCacheUtil;
 
 	/**
 	 * 查询域名配置
@@ -27,8 +31,8 @@ public class ConfigDomainServiceImpl implements IConfigDomainService {
 	 * @return 域名配置
 	 */
 	@Override
-	public ConfigDomain selectConfigDomainById(Long id) {
-		return configDomainMapper.selectConfigDomainById(id);
+	public ConfigDomain selectConfigDomainById( Long id ) {
+		return configDomainMapper.selectConfigDomainById( id );
 	}
 
 	/**
@@ -38,8 +42,8 @@ public class ConfigDomainServiceImpl implements IConfigDomainService {
 	 * @return 域名配置
 	 */
 	@Override
-	public List<ConfigDomain> selectConfigDomainList(ConfigDomain configDomain) {
-		return configDomainMapper.selectConfigDomainList(configDomain);
+	public List<ConfigDomain> selectConfigDomainList( ConfigDomain configDomain ) {
+		return configDomainMapper.selectConfigDomainList( configDomain );
 	}
 
 	/**
@@ -49,9 +53,13 @@ public class ConfigDomainServiceImpl implements IConfigDomainService {
 	 * @return 结果
 	 */
 	@Override
-	public int insertConfigDomain(ConfigDomain configDomain) {
-		configDomain.setCreateTime(DateUtils.getNowDate());
-		return configDomainMapper.insertConfigDomain(configDomain);
+	public int insertConfigDomain( ConfigDomain configDomain ) {
+		configDomain.setCreateTime( DateUtils.getNowDate() );
+		int i = configDomainMapper.insertConfigDomain( configDomain );
+		if ( i > 0 && StringUtils.isNotBlank( configDomain.getDcode() ) ) {
+			configDomainCacheUtil.setValue( configDomain.getDcode(), configDomain.getDomain() );
+		}
+		return i;
 	}
 
 	/**
@@ -61,9 +69,13 @@ public class ConfigDomainServiceImpl implements IConfigDomainService {
 	 * @return 结果
 	 */
 	@Override
-	public int updateConfigDomain(ConfigDomain configDomain) {
-		configDomain.setUpdateTime(DateUtils.getNowDate());
-		return configDomainMapper.updateConfigDomain(configDomain);
+	public int updateConfigDomain( ConfigDomain configDomain ) {
+		configDomain.setUpdateTime( DateUtils.getNowDate() );
+		int i = configDomainMapper.updateConfigDomain( configDomain );
+		if ( i > 0 && StringUtils.isNotBlank( configDomain.getDcode() ) ) {
+			configDomainCacheUtil.refreshKey( configDomain.getDcode() );
+		}
+		return i;
 	}
 
 	/**
@@ -73,8 +85,17 @@ public class ConfigDomainServiceImpl implements IConfigDomainService {
 	 * @return 结果
 	 */
 	@Override
-	public int deleteConfigDomainByIds(Long[] ids) {
-		return configDomainMapper.deleteConfigDomainByIds(ids);
+	public int deleteConfigDomainByIds( Long[] ids ) {
+		List<ConfigDomain> configDomainList = configDomainMapper.selectConfigDomainByIds( ids );
+		int                i                = configDomainMapper.deleteConfigDomainByIds( ids );
+		if ( i > 0 ) {
+			for ( ConfigDomain configDomain : configDomainList ) {
+				if ( StringUtils.isNotBlank( configDomain.getDcode() ) ) {
+					configDomainCacheUtil.deleteValue( configDomain.getDcode(), configDomain.getDomain() );
+				}
+			}
+		}
+		return i;
 	}
 
 	/**
@@ -84,7 +105,17 @@ public class ConfigDomainServiceImpl implements IConfigDomainService {
 	 * @return 结果
 	 */
 	@Override
-	public int deleteConfigDomainById(Long id) {
-		return configDomainMapper.deleteConfigDomainById(id);
+	public int deleteConfigDomainById( Long id ) {
+		ConfigDomain configDomain = this.selectConfigDomainById( id );
+		int          i            = configDomainMapper.deleteConfigDomainById( id );
+		if ( i > 0 && StringUtils.isNotBlank( configDomain.getDcode() ) ) {
+			configDomainCacheUtil.deleteValue( configDomain.getDcode(), configDomain.getDomain() );
+		}
+		return i;
+	}
+
+	@Override
+	public int existsConfigDomain( ConfigDomain configDomain ) {
+		return configDomainMapper.existsConfigDomain( configDomain );
 	}
 }

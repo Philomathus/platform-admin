@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.utils.Threads;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ForkJoinPoolFactoryBean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -54,5 +55,11 @@ public class ThreadPoolConfig {
 				Threads.printException( r, t );
 			}
 		};
+	}
+
+	@Bean
+	public ForkJoinPoolFactoryBean forkJoinPoolFactoryBean() {
+		final ForkJoinPoolFactoryBean poolFactory = new ForkJoinPoolFactoryBean();
+		return poolFactory;
 	}
 }

@@ -27,6 +27,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="money != null "> and money = #{money}</if>
             <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 
@@ -58,6 +66,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="opName != null and opName != ''">#{opName},</if>
          </trim>
     </insert>
+
+    <update id="updateByBalanceAmount">
+        update pay_agent_recharge_account
+        <set>
+            <if test="BalanceAmount != null and BalanceAmount != ''">
+                balance_amount = balance_amount + #{BalanceAmount}
+            </if>
+        </set>
+        where account = #{Account}
+    </update>
+    <update id="updateByBalanceAmountLess">
+        update pay_agent_recharge_account
+        <set>
+            balance_amount = balance_amount - #{BalanceAmount}
+        </set>
+        where account = #{Account} and balance_amount - #{BalanceAmount} >= 0
+    </update>
 
     <update id="updatePayAgentRechargeRecord" parameterType="PayAgentRechargeRecord">
         update pay_agent_recharge_record

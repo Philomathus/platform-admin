@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
@@ -43,6 +44,7 @@ public class PayAgentRechargeRecord extends BaseEntity {
     private String opName;
 
     @Excel(name = "操作时间")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
     public Date createTime;
 
     @Override

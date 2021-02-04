@@ -58,6 +58,11 @@ public class LiveVideoController extends BaseController {
 		return AjaxResult.success( liveVideoService.selectLiveVideoById(id) );
 	}
 
+	@GetMapping( value = "close/{id}" )
+	public AjaxResult close(@PathVariable( "id" ) Long id){
+		return AjaxResult.success( liveVideoService.close(id,"admin") );
+	}
+
 	/**
 	 * 新增直播
 	 */
@@ -87,4 +92,6 @@ public class LiveVideoController extends BaseController {
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( liveVideoService.deleteLiveVideoByIds( ids ) );
 	}
+
+
 }

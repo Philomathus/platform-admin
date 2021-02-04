@@ -118,35 +118,27 @@
 			<if test="domain != null and domain != ''">
 				domain = #{domain},
 			</if>
-
 			<if test="dcode != null">
 				dcode = #{dcode},
 			</if>
-
 			<if test="dgroup != null">
 				dgroup = #{dgroup},
 			</if>
-
 			<if test="remark != null">
 				remark = #{remark},
 			</if>
-
 			<if test="sort != null">
 				sort = #{sort},
 			</if>
-
 			<if test="createBy != null">
 				create_by = #{createBy},
 			</if>
-
 			<if test="createTime != null">
 				create_time = #{createTime},
 			</if>
-
 			<if test="updateBy != null">
 				update_by = #{updateBy},
 			</if>
-
 			<if test="updateTime != null">
 				update_time = #{updateTime},
 			</if>
@@ -167,4 +159,22 @@
 			#{id}
 		</foreach>
 	</delete>
+
+	<select id="selectDomainsByCode" resultType="java.lang.String">
+		select domain
+		from 7700_main.config_domain
+		where dcode = #{code}
+	</select>
+
+	<select id="selectConfigDomainByIds" resultType="com.qiqilm.server.admin.domain.ConfigDomain">
+		<include refid="selectConfigDomainVo"/>
+		where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+
+	<select id="existsConfigDomain" parameterType="ConfigDomain" resultType="_int">
+		SELECT IFNULL((SELECT 1 FROM 7700_main.config_domain WHERE dgroup = #{dgroup} AND domain = #{domain}), 0)
+	</select>
 </mapper>

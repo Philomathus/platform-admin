@@ -1,25 +1,20 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccountLog;
+import com.qiqilm.server.admin.domain.PayAgentRechargeLog;
+import com.qiqilm.server.admin.domain.req.ReqPayAgentRechargeAccountLog;
+import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 【代充人入款】Controller
@@ -94,4 +89,41 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	public AjaxResult remove( @PathVariable String[] orderNos ) {
 		return toAjax( payAgentRechargeAccountLogService.deletePayAgentRechargeAccountLogByIds( orderNos ) );
 	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:refused')" )
+	@Log( title = "代充人入款拒绝", businessType = BusinessType.AUDIT )
+	@PutMapping( "/refused" )
+	public AjaxResult refused( @RequestBody ReqPayAgentRechargeAccountLog req ) {
+		return payAgentRechargeAccountLogService.refused( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:lock')" )
+	@Log( title = "代充人入款锁定", businessType = BusinessType.AUDIT )
+	@PutMapping( "/lock" )
+	public AjaxResult lock( @RequestBody ReqPayAgentRechargeAccountLog req ) {
+		return payAgentRechargeAccountLogService.lock( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:unlock')" )
+	@Log( title = "代充人入款解锁", businessType = BusinessType.AUDIT )
+	@PutMapping( "/unlock" )
+	public AjaxResult unlock( @RequestBody ReqPayAgentRechargeAccountLog req ) {
+		return payAgentRechargeAccountLogService.unlock( req );
+	}
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:artificial')" )
+	@Log( title = "代充人入款存入", businessType = BusinessType.AUDIT )
+	@PutMapping( "/artificial" )
+	public AjaxResult artificial( @RequestBody ReqPayAgentRechargeAccountLog req ) {
+		return payAgentRechargeAccountLogService.artificial( req );
+	}
+
+	/**
+	 * 统计按钮【代充人入款】
+	 */
+	@PreAuthorize("@ss.hasPermi('pay:payAgentRechargeAccountLog:list')")
+	@GetMapping("/statistic")
+	public AjaxResult count(PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
+		return payAgentRechargeAccountLogService.statistic(payAgentRechargeAccountLog);
+	}
+
 }

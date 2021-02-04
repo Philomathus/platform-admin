@@ -1,66 +1,38 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.LogMoney;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
 /**
- * 【请填写功能名称】Mapper接口
+ * 会员资金信息Mapper接口
  *
  * @author 77tv
- * @date 2021-01-26
+ * @date 2021-01-29
  */
 public interface LogMoneyMapper {
-	/**
-	 * 查询【请填写功能名称】
-	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 【请填写功能名称】
-	 */
-	public LogMoney selectLogMoneyById(String id);
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询 会员资金信息列表
 	 *
-	 * @param logMoney 【请填写功能名称】
-	 * @return 【请填写功能名称】集合
+	 * @param logMoney 会员资金信息
+	 * @return 会员资金信息集合
 	 */
-	public List<LogMoney> selectLogMoneyList(LogMoney logMoney);
+	public List<LogMoney> selectLogMoneyList( LogMoney logMoney );
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增会员资金信息
 	 *
-	 * @param logMoney 【请填写功能名称】
+	 * @param logMoney 会员资金信息
 	 * @return 结果
 	 */
-	public int insertLogMoney(LogMoney logMoney);
+	public int insertLogMoney( LogMoney logMoney );
 
-	/**
-	 * 修改【请填写功能名称】
-	 *
-	 * @param logMoney 【请填写功能名称】
-	 * @return 结果
-	 */
-	public int updateLogMoney(LogMoney logMoney);
+	List<LogMoney> findMark( @Param( "userId" ) String userId, @Param( "mark" ) String mark,
+							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay );
 
-	/**
-	 * 删除【请填写功能名称】
-	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 结果
-	 */
-	public int deleteLogMoneyById(String id);
-
-	/**
-	 * 批量删除【请填写功能名称】
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deleteLogMoneyByIds(String[] ids );
-
-	List<LogMoney> findMark(@Param( "userId" ) String userId, @Param( "mark" ) String mark,
-							@Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay );
+    Map totalCount(LogMoney logMoney);
 }

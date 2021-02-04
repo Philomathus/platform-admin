@@ -1,19 +1,20 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.math.BigDecimal;
+
 /**
- * 【请填写功能名称】对象 member_recharge_log
+ * 会员充值记录对象 member_recharge_log
  *
  * @author 77tv
  * @date 2021-01-26
  */
 public class MemberRechargeLog extends BaseEntity {
-    private static final long serialVersionUID = 1L;
+    private static final Long serialVersionUID = 1L;
 
     /** 系统编号 */
     private String id;
@@ -38,9 +39,11 @@ public class MemberRechargeLog extends BaseEntity {
     @Excel(name = "银行账号")
     private String bankAccount;
 
+    private String[] selectDate;
+
     /** 状态(0已提交1初级审核通过2审核不通过3终极审核通过4入库失败) */
-    @Excel(name = "状态(0已提交1初级审核通过2审核不通过3终极审核通过4入库失败)")
-    private Long status;
+    @Excel(name = "状态")
+    private Integer status;
 
     /** 操作人 */
     @Excel(name = "操作人")
@@ -51,8 +54,8 @@ public class MemberRechargeLog extends BaseEntity {
     private String bankAddress;
 
     /** 充值类型(1线下，10线上) */
-    @Excel(name = "充值类型(1线下，10线上)")
-    private Long type;
+    @Excel(name = "充值类型")
+    private Integer type;
 
     /** 存款人姓名 */
     @Excel(name = "存款人姓名")
@@ -71,8 +74,34 @@ public class MemberRechargeLog extends BaseEntity {
     private BigDecimal discountBill;
 
     /** 是否首次1是0否 */
-    @Excel(name = "是否首次1是0否")
-    private Long first;
+    @Excel(name = "是否首次")
+    private Integer first;
+    private String startDate;
+    private String endDate;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String[] getSelectDate() {
+        return selectDate;
+    }
+
+    public void setSelectDate(String[] selectDate) {
+        this.selectDate = selectDate;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -116,11 +145,11 @@ public class MemberRechargeLog extends BaseEntity {
     public String getBankAccount() {
         return bankAccount;
     }
-    public void setStatus(Long status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Long getStatus() {
+    public Integer getStatus() {
         return status;
     }
     public void setOpName(String opName) {
@@ -137,11 +166,11 @@ public class MemberRechargeLog extends BaseEntity {
     public String getBankAddress() {
         return bankAddress;
     }
-    public void setType(Long type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
-    public Long getType() {
+    public Integer getType() {
         return type;
     }
     public void setRechargeUserName(String rechargeUserName) {
@@ -172,11 +201,11 @@ public class MemberRechargeLog extends BaseEntity {
     public BigDecimal getDiscountBill() {
         return discountBill;
     }
-    public void setFirst(Long first) {
+    public void setFirst(Integer first) {
         this.first = first;
     }
 
-    public Long getFirst() {
+    public Integer getFirst() {
         return first;
     }
 

@@ -58,4 +58,6 @@ public interface IPayAgentRechargeLogService {
 	 * @return 结果
 	 */
 	public int deletePayAgentRechargeLogById(String orderNo);
+
+	PayAgentRechargeLog count(PayAgentRechargeLog payAgentRechargeLog);
 }

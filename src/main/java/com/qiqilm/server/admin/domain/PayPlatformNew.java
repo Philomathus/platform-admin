@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,11 +12,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-27
  */
+@Data
 public class PayPlatformNew extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 主键 */
-    private Long id;
+    private String id;
 
     /** 平台名称 */
     @Excel(name = "平台名称")
@@ -65,97 +67,7 @@ public class PayPlatformNew extends BaseEntity {
     @Excel(name = "修改人")
     private String updator;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public Long getId() {
-        return id;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getCode() {
-        return code;
-    }
-    public void setMerId(String merId) {
-        this.merId = merId;
-    }
-
-    public String getMerId() {
-        return merId;
-    }
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
-    }
-
-    public String getOrgId() {
-        return orgId;
-    }
-    public void setPlatPayUrl(String platPayUrl) {
-        this.platPayUrl = platPayUrl;
-    }
-
-    public String getPlatPayUrl() {
-        return platPayUrl;
-    }
-    public void setPlatQueryUrl(String platQueryUrl) {
-        this.platQueryUrl = platQueryUrl;
-    }
-
-    public String getPlatQueryUrl() {
-        return platQueryUrl;
-    }
-    public void setSignMd5(String signMd5) {
-        this.signMd5 = signMd5;
-    }
-
-    public String getSignMd5() {
-        return signMd5;
-    }
-    public void setSignPublicKey(String signPublicKey) {
-        this.signPublicKey = signPublicKey;
-    }
-
-    public String getSignPublicKey() {
-        return signPublicKey;
-    }
-    public void setSignPrivateKey(String signPrivateKey) {
-        this.signPrivateKey = signPrivateKey;
-    }
-
-    public String getSignPrivateKey() {
-        return signPrivateKey;
-    }
-    public void setPlatWhiteIpList(String platWhiteIpList) {
-        this.platWhiteIpList = platWhiteIpList;
-    }
-
-    public String getPlatWhiteIpList() {
-        return platWhiteIpList;
-    }
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-    public void setUpdator(String updator) {
-        this.updator = updator;
-    }
-
-    public String getUpdator() {
-        return updator;
-    }
 
     @Override
     public String toString() {

@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayAgentRechargeRecord;
 
 /**
@@ -58,4 +59,9 @@ public interface IPayAgentRechargeRecordService {
 	 * @return 结果
 	 */
 	public int deletePayAgentRechargeRecordById(String orderNo);
+
+	AjaxResult deposit(PayAgentRechargeRecord dto);
+
+	AjaxResult proposed(PayAgentRechargeRecord dto);
+
 }

@@ -81,4 +81,11 @@ public class ServerLiveController extends BaseController {
 	public AjaxResult changeStatus( @PathVariable long id, @PathVariable int status ) {
 		return  toAjax(serverLiveService.changeStatus( id, status ));
 	}
+
+	@PreAuthorize( "@ss.hasPermi('server:live:list')" )
+	@GetMapping( "/getAlllist" )
+	public TableDataInfo getAlllist( ServerLive serverLive ) {
+		List<ServerLive> list = serverLiveService.selectServerLiveList( serverLive );
+		return getDataTable( list );
+	}
 }

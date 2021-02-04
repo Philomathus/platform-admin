@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccountLog;
+import com.qiqilm.server.admin.domain.req.ReqPayAgentRechargeAccountLog;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service接口
@@ -58,4 +60,17 @@ public interface IPayAgentRechargeAccountLogService {
 	 * @return 结果
 	 */
 	public int deletePayAgentRechargeAccountLogById(String orderNo);
+
+	AjaxResult refused(ReqPayAgentRechargeAccountLog req );
+
+	AjaxResult lock( ReqPayAgentRechargeAccountLog req );
+
+	AjaxResult unlock( ReqPayAgentRechargeAccountLog req );
+
+	AjaxResult artificial( ReqPayAgentRechargeAccountLog req );
+
+	//统计
+	AjaxResult	statistic(PayAgentRechargeAccountLog rechargeAccountLog);
+
+
 }

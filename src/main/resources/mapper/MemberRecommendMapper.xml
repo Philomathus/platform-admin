@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MemberRecommendMapper">
+	<resultMap type="MemberRecommend" id="MemberRecommendResult">
+		<result property="id" column="id"/>
+		<result property="memberId" column="member_id"/>
+		<result property="code" column="code"/>
+		<result property="inviterId" column="inviter_id"/>
+		<result property="commission" column="commission"/>
+		<result property="createTime" column="create_time"/>
+		<result property="status" column="status"/>
+		<result property="orderMoney" column="order_money"/>
+		<result property="level" column="level"/>
+		<result property="memberName" column="member_name"/>
+		<result property="inviter" column="inviter"/>
+	</resultMap>
+
+	<sql id="selectMemberRecommendVo">
+		select id,
+			   member_id,
+			   code,
+			   inviter_id,
+			   commission,
+			   create_time,
+			   status,
+			   order_money,
+			   level,
+			   member_name,
+			   inviter
+		from 7700_main.member_recommend
+	</sql>
+
+	<select id="selectMemberRecommendList" parameterType="MemberRecommend" resultMap="MemberRecommendResult">
+		<include refid="selectMemberRecommendVo"/>
+		<where>
+			<if test="memberId != null  and memberId != ''">
+				and member_id = #{memberId}
+			</if>
+			<if test="code != null  and code != ''">
+				and code = #{code}
+			</if>
+			<if test="inviterId != null  and inviterId != ''">
+				and inviter_id = #{inviterId}
+			</if>
+			<if test="commission != null">
+				and commission = #{commission}
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+			<if test="orderMoney != null">
+				and order_money = #{orderMoney}
+			</if>
+			<if test="level != null">
+				and level = #{level}
+			</if>
+			<if test="memberName != null  and memberName != ''">
+				and member_name like concat('%', #{memberName}, '%')
+			</if>
+			<if test="inviter != null  and inviter != ''">
+				and inviter = #{inviter}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMemberRecommendById" parameterType="String" resultMap="MemberRecommendResult">
+		<include refid="selectMemberRecommendVo"/>
+		where id = #{id}
+	</select>
+
+	<insert id="insertMemberRecommend" parameterType="MemberRecommend">
+		insert into 7700_main.member_recommend
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="memberId != null">
+				member_id,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="inviterId != null">
+				inviter_id,
+			</if>
+			<if test="commission != null">
+				commission,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="orderMoney != null">
+				order_money,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+			<if test="memberName != null">
+				member_name,
+			</if>
+			<if test="inviter != null">
+				inviter,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="memberId != null">
+				#{memberId},
+			</if>
+			<if test="code != null">
+				#{code},
+			</if>
+			<if test="inviterId != null">
+				#{inviterId},
+			</if>
+			<if test="commission != null">
+				#{commission},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="orderMoney != null">
+				#{orderMoney},
+			</if>
+			<if test="level != null">
+				#{level},
+			</if>
+			<if test="memberName != null">
+				#{memberName},
+			</if>
+			<if test="inviter != null">
+				#{inviter},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateMemberRecommend" parameterType="MemberRecommend">
+		update 7700_main.member_recommend
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="memberId != null">
+				member_id = #{memberId},
+			</if>
+			<if test="code != null">
+				code = #{code},
+			</if>
+			<if test="inviterId != null">
+				inviter_id = #{inviterId},
+			</if>
+			<if test="commission != null">
+				commission = #{commission},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="orderMoney != null">
+				order_money = #{orderMoney},
+			</if>
+			<if test="level != null">
+				level = #{level},
+			</if>
+			<if test="memberName != null">
+				member_name = #{memberName},
+			</if>
+			<if test="inviter != null">
+				inviter = #{inviter},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteMemberRecommendById" parameterType="String">
+		delete
+		from 7700_main.member_recommend
+		where id = #{id}
+	</delete>
+
+	<delete id="deleteMemberRecommendByIds" parameterType="String">
+		delete
+		from 7700_main.member_recommend where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

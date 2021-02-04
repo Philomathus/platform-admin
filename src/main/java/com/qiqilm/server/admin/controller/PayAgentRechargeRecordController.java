@@ -94,4 +94,24 @@ public class PayAgentRechargeRecordController extends BaseController {
 	public AjaxResult remove( @PathVariable String[] orderNos ) {
 		return toAjax( payAgentRechargeRecordService.deletePayAgentRechargeRecordByIds( orderNos ) );
 	}
+
+	/**
+	 * 人工存入
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeRecord:deposit')" )
+	@Log( title = "【人工存入】", businessType = BusinessType.OTHER )
+	@PutMapping( "/deposit" )
+	public AjaxResult deposit(PayAgentRechargeRecord payAgentRechargeRecord) {
+		return payAgentRechargeRecordService.deposit(payAgentRechargeRecord) ;
+	}
+
+	/**
+	 * 人工提出
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeRecord:proposed')" )
+	@Log( title = "【人工提出】", businessType = BusinessType.OTHER )
+	@PutMapping( "/proposed" )
+	public AjaxResult proposed( PayAgentRechargeRecord payAgentRechargeRecord) {
+		return  payAgentRechargeRecordService.proposed(payAgentRechargeRecord) ;
+	}
 }

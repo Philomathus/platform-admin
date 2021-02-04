@@ -1,67 +1,61 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.req.ReqPayJour;
 import com.qiqilm.server.admin.domain.rsp.RspPayJour;
-import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * 【请填写功能名称】Service接口
+ * 线上充值信息Service接口
  *
  * @author 77tv
  * @date 2021-01-26
  */
 public interface IMemberPayJourService {
 	/**
-	 * 查询【请填写功能名称】
+	 * 查询线上充值信息
 	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 【请填写功能名称】
+	 * @param id 线上充值信息ID
+	 * @return 线上充值信息
 	 */
 	public MemberPayJour selectMemberPayJourById(String id);
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询线上充值信息列表
 	 *
-	 * @param memberPayJour 【请填写功能名称】
-	 * @return 【请填写功能名称】集合
+	 * @param memberPayJour 线上充值信息
+	 * @return 线上充值信息集合
 	 */
 	public List<MemberPayJour> selectMemberPayJourList(MemberPayJour memberPayJour);
 
-
-	List<RspPayJour> findList( ReqPayJour req );
-
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增线上充值信息
 	 *
-	 * @param memberPayJour 【请填写功能名称】
+	 * @param memberPayJour 线上充值信息
 	 * @return 结果
 	 */
 	public int insertMemberPayJour(MemberPayJour memberPayJour);
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改线上充值信息
 	 *
-	 * @param memberPayJour 【请填写功能名称】
+	 * @param memberPayJour 线上充值信息
 	 * @return 结果
 	 */
 	public int updateMemberPayJour(MemberPayJour memberPayJour);
 
-	/**
-	 * 批量删除【请填写功能名称】
-	 *
-	 * @param ids 需要删除的【请填写功能名称】ID
-	 * @return 结果
-	 */
-	public int deleteMemberPayJourByIds(String[] ids );
+	public List<RspPayJour> findList( ReqPayJour req );
 
-	/**
-	 * 删除【请填写功能名称】信息
-	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 结果
-	 */
-	public int deleteMemberPayJourById(String id);
+    /**
+     * 数列表
+     *
+     * @param memberPayJour 会员支付的
+     * @return {@link TableDataInfo}
+     */
+    public Map listCount(ReqPayJour memberPayJour);
+
+	RspPayJour selectById( String id );
 }

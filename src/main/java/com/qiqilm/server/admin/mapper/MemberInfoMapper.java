@@ -46,28 +46,14 @@ public interface MemberInfoMapper {
 	 */
 	public int updateMemberInfo( MemberInfo memberInfo );
 
-	/**
-	 * 删除会员信息
-	 *
-	 * @param id 会员信息ID
-	 * @return 结果
-	 */
-	public int deleteMemberInfoById( String id );
-
-	/**
-	 * 批量删除会员信息
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deleteMemberInfoByIds( String[] ids );
-
 	int selectMaxMemberCode();
 
-	int updateMoneySelect( @Param( "userId" ) String userId, @Param( "money" ) BigDecimal money,
+	int updateMoneySelect( @Param( "userId" ) String userId,
+						   @Param( "money" ) BigDecimal money,
 						   @Param( "invite_money" ) BigDecimal invite_money,
 						   @Param( "level_integral" ) BigDecimal level_integral,
-						   @Param( "code_account" ) BigDecimal code_account, @Param( "code_total" ) BigDecimal code_total );
+						   @Param( "code_account" ) BigDecimal code_account,
+						   @Param( "code_total" ) BigDecimal code_total );
 
 	void call_pro_useranalysis( @Param( "userid" ) String userId );
 
@@ -75,5 +61,11 @@ public interface MemberInfoMapper {
 
 	List<String> selectMemberSpeak( String[] ids );
 
-	void updateSpeak(@Param( "pUserId" ) String pUserId, @Param( "speak" ) int speak );
+	void updateSpeak( @Param( "pUserId" ) String pUserId, @Param( "speak" ) int speak );
+
+	BigDecimal selectTotalAccountById( String memberId );
+
+	MemberInfo findRecommendByInviterCode( String inviterCode );
+
+	BigDecimal getMemberMoney( String userId );
 }
