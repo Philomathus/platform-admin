@@ -60,4 +60,6 @@ public interface ILiveVideoService {
 	public int deleteLiveVideoById(Long id);
 
 	public boolean close( Long id, String cause );
+
+	public String livePay( Long room_id, Integer live_fee, Integer live_pay_type );
 }

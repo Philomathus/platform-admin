@@ -244,7 +244,7 @@ public class LiveVideo extends BaseEntity {
 
     /** 开始收费时间 */
     @Excel(name = "开始收费时间")
-    private Long livePayTime;
+    private int livePayTime;
 
     /** 是否收费模式  1是 0否 */
     @Excel(name = "是否收费模式  1是 0否")
@@ -252,7 +252,7 @@ public class LiveVideo extends BaseEntity {
 
     /** 付费直播 收取多少费用； 每分钟收取多少钻石，主播端设置 */
     @Excel(name = "付费直播 收取多少费用； 每分钟收取多少钻石，主播端设置")
-    private Long liveFee;
+    private Integer liveFee;
 
     /** 是否已经提档 1是、0否 */
     @Excel(name = "是否已经提档 1是、0否")
@@ -721,11 +721,11 @@ public class LiveVideo extends BaseEntity {
     public Long getVirtualNumber() {
         return virtualNumber;
     }
-    public void setLivePayTime(Long livePayTime) {
+    public void setLivePayTime(int livePayTime) {
         this.livePayTime = livePayTime;
     }
 
-    public Long getLivePayTime() {
+    public int getLivePayTime() {
         return livePayTime;
     }
     public void setIsLivePay(Boolean isLivePay) {
@@ -735,11 +735,11 @@ public class LiveVideo extends BaseEntity {
     public Boolean getIsLivePay() {
         return isLivePay;
     }
-    public void setLiveFee(Long liveFee) {
+    public void setLiveFee(Integer liveFee) {
         this.liveFee = liveFee;
     }
 
-    public Long getLiveFee() {
+    public Integer getLiveFee() {
         return liveFee;
     }
     public void setLiveIsMention(Integer liveIsMention) {
