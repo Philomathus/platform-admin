@@ -113,8 +113,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 			} catch ( InterruptedException | ExecutionException e ) {
 				throw new IllegalStateException( e );
 			}
-		} ).collect( Collectors.toSet() );
-
+		} ).filter( Objects::nonNull ).collect( Collectors.toSet() );
 		return AjaxResult.success( resultSet );
 	}
 
@@ -337,8 +336,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
 						( long ) EnumGamePlatform.KY_CHESS.getType() );
 				String resAll = PostData.getAllBalance( gamePlatform.getAgent(), userId, gamePlatform.getDes(),
-						gamePlatform.getMd5(),
-						gamePlatform.getApiUrl() );
+						gamePlatform.getMd5(), gamePlatform.getApiUrl() );
 
 				GameApiRes gameApiResAll = JsonUtil.json2Object( resAll, GameApiRes.class );
 				BigDecimal backMoney = gameApiResAll.getD().getCode() != 0 ? BigDecimal.ZERO :

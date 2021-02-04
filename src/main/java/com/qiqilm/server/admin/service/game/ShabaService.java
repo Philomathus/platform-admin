@@ -106,7 +106,8 @@ public class ShabaService {
 		if ( error_code == 0 ) {
 			ArrayList list = ( ArrayList ) resultMap.get( "Data" );
 			resultMap = ( Map<String, Object> ) list.get( 0 );
-			return new BigDecimal( String.valueOf( resultMap.get( "balance" ) ) );
+			return resultMap.get( "balance" ) == null ? BigDecimal.ZERO : new BigDecimal( String.valueOf( resultMap.get(
+					"balance" ) ) );
 		}
 		log.warn( "shaba 查询余额 失败->{}", JsonUtil.object2Json( resultMap ) );
 		return BigDecimal.ZERO;
