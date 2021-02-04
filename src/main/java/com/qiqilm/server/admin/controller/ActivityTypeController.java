@@ -82,7 +82,7 @@ public class ActivityTypeController extends BaseController {
 		activityType.setId(UuidUtil.getRandomUuidWithoutSeparator());
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String username = loginUser.getUser().getUserName();
-		activityType.setName(username);
+		activityType.setCreateBy(username);
 		return toAjax( activityTypeService.insertActivityType(activityType) );
 	}
 
