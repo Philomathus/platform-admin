@@ -32,6 +32,10 @@ public class MemberGameDataController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:list')" )
 	@GetMapping( "/list" )
     	public TableDataInfo list(MemberGameData memberGameData) {
+        if (memberGameData.getSelectDate() != null) {
+            memberGameData.setStartTime(memberGameData.getSelectDate()[0] + " 00:00:00");
+            memberGameData.setEndTime(memberGameData.getSelectDate()[1] + " 23:59:59");
+        }
 		startPage();
 		List<MemberGameData> list = memberGameDataService.selectMemberGameDataList(memberGameData);
 		return getDataTable( list );
