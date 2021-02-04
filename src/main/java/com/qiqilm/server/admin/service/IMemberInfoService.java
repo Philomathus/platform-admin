@@ -55,4 +55,8 @@ public interface IMemberInfoService {
     PageBO<WithdrawReport> withdrawReport(String memberId, Integer page, Integer limit);
 
     PageBO<MemberCard> findMemberCardPage(String memberid, Integer page, Integer pageSize, String orderBy);
+
+	void outGameFail( String orderId, String userId, Integer platformId );
+
+	void outGMGameSucess( String orderId, String userId, Integer platformId, BigDecimal money, String account );
 }

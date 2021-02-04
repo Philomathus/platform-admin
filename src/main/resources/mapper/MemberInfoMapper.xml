@@ -304,4 +304,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="findRecommendByInviterCode" resultType="com.qiqilm.server.admin.domain.MemberInfo">
         select id ,user_name,cx_agent, inviter_code from member_info where member_code = #{inviterCode}
 	</select>
+
+    <select id="getMemberMoney" resultType="java.math.BigDecimal">
+        select total_account from member_info where id = #{userId}
+	</select>
 </mapper>
