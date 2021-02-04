@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.service.IGameBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +28,8 @@ public class GameController extends BaseController {
 	 * 查询用户游戏余额(积分明细)
 	 */
 	@PreAuthorize( "@ss.hasPermi('game:base:balance')" )
-	@GetMapping( "/balance" )
-	public AjaxResult balance( String userId ) {
+	@GetMapping( "/balance/{userId}" )
+	public AjaxResult balance( @PathVariable String userId ) {
 		return gameBaseService.balance( userId );
 	}
 
@@ -37,8 +38,8 @@ public class GameController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('game:base:esc')" )
 	@Log( title = "游戏人工下分", businessType = BusinessType.AUDIT )
-	@GetMapping( "/esc" )
-	public AjaxResult esc( String userId, Integer platformId ) {
+	@GetMapping( "/esc/{platformId}/{userId}" )
+	public AjaxResult esc( @PathVariable String userId,@PathVariable Integer platformId ) {
 		return gameBaseService.esc( userId, platformId );
 	}
 }
