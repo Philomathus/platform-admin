@@ -35,7 +35,6 @@
         {call prorep_plamgame(#{timedateta,mode=IN,jdbcType=VARCHAR},#{timedateta,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
-
     <select id="countBetData" resultType="com.qiqilm.server.admin.domain.ReportPlamGames">
         select sum(gamecell) as countBetMoney,sum(gamepepole) as countBetPeople
         from 7700_main.report_plam_games

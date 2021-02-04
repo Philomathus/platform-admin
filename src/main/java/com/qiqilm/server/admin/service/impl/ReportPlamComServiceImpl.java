@@ -1,5 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ReportPlamCom;
@@ -7,6 +9,7 @@ import com.qiqilm.server.admin.mapper.ReportPlamComMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.service.IReportPlamComService;
+import org.springframework.util.StringUtils;
 
 /**
  * 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间Service业务层处理
@@ -29,15 +32,22 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 	@Override
 	public List<ReportPlamCom> selectReportPlamComList(ReportPlamCom reportPlamCom) {
 		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
-		if(reportPlamCom.getParams().get(0)!=null){
-			String startTime = (String) reportPlamCom.getParams().get(0);
-			if(allList.isEmpty()){
-				getCalldataProrepPlamcom(startTime);
-				allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
+		return allList;
+	}
+
+	@Override
+	public Object storage(ReportPlamCom reportPlamCom) {
+		Date d = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateNowStr = sdf.format(d);
+		reportPlamCom.setReporttime(dateNowStr);
+		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
+		if (allList.size()==0) {
+			if (reportPlamCom.getReporttime() == null || reportPlamCom.getReporttime().equals(dateNowStr)) {
+				return getCalldataProrepPlamcom(dateNowStr);
 			}
 		}
-
-		return allList;
+		return null;
 	}
 
 	private String getCalldataProrepPlamcom(String a){
