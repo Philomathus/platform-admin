@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,10 @@ public class JsonUtil {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false );
 		return objectMapper;
+	}
+
+	public static JavaType getJavaType( String className ) {
+		return TypeFactory.defaultInstance().constructFromCanonical( className );
 	}
 
 	public static Map json2Map( String json ) {

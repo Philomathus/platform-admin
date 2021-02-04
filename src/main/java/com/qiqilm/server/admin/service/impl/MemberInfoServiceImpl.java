@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +41,10 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	private LogMoneyMapper         logMoneyMapper;
 	@Autowired
 	private MemberBcodeMapper      codeFlowMapper;
+	@Resource
+	private MemberGameMoneyMapper  gameMoneyMapper;
+	@Resource
+	private LogGameOrderMapper     logGameOrderMapper;
 	@Autowired
 	private ILogService            logService;
 	@Autowired
@@ -217,4 +222,45 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 		return pageBO;
 	}
 
+	@Override
+	public void outGameFail( String orderId, String userId, Integer platformId ) {
+		MemberGameMoney myGameMoney = new MemberGameMoney();
+		myGameMoney.setId( userId + "_" + platformId );
+		myGameMoney.setStatus( 2 );
+		myGameMoney.setOderSn( "" );
+		gameMoneyMapper.updateMemberGameMoney( myGameMoney );
+
+		LogGameOrder logOrder = new LogGameOrder();
+		logOrder.setId( orderId );
+		logOrder.setStatus( 1 );
+		logOrder.setETime( new Date() );
+		logGameOrderMapper.updateLogGameOrder( logOrder );
+	}
+
+	@Override
+	public void outGMGameSucess( String orderId, String userId, Integer platformId, BigDecimal money, String account ) {
+		MemberGameMoney myGameMoney = new MemberGameMoney();
+		myGameMoney.setId( userId + "_" + platformId );
+		myGameMoney.setStatus( 0 );
+		myGameMoney.setOderSn( "" );
+		myGameMoney.setMoney( BigDecimal.ZERO );
+		int i = gameMoneyMapper.updateMemberGameMoney( myGameMoney );
+
+		Date         date     = new Date();
+		LogGameOrder logOrder = new LogGameOrder();
+		logOrder.setId( orderId );
+		logOrder.setBTime( date );
+		logOrder.setETime( date );
+		logOrder.setMemberId( userId );
+		logOrder.setMoney( money );
+		logOrder.setStatus( 2 );
+		logOrder.setType( 2 );
+		logOrder.setUserName( account );
+		logOrder.setPlatformId( platformId );
+		int i1 = logGameOrderMapper.insertLogGameOrder( logOrder );
+
+		if ( money.compareTo( BigDecimal.ZERO ) > 0 && i > 0 && i1 > 0 ) {
+			memberInfoMapper.updateMoneySelect( userId, money, null, null, null, null );
+		}
+	}
 }

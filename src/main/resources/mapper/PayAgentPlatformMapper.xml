@@ -36,7 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="signPublicKey != null  and signPublicKey != ''"> and sign_public_key = #{signPublicKey}</if>
             <if test="signPrivateKey != null  and signPrivateKey != ''"> and sign_private_key = #{signPrivateKey}</if>
             <if test="platWhiteIpList != null  and platWhiteIpList != ''"> and plat_white_ip_list = #{platWhiteIpList}</if>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="status != null and status != '' "> and status = #{status}</if>
         </where>
     </select>
 
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="signPublicKey != null">sign_public_key,</if>
             <if test="signPrivateKey != null">sign_private_key,</if>
             <if test="platWhiteIpList != null">plat_white_ip_list,</if>
-            <if test="status != null">status,</if>
+            <if test="status != null and status != ''">status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="code != null and code != ''">#{code},</if>
@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="signPublicKey != null">#{signPublicKey},</if>
             <if test="signPrivateKey != null">#{signPrivateKey},</if>
             <if test="platWhiteIpList != null">#{platWhiteIpList},</if>
-            <if test="status != null">#{status},</if>
+            <if test="status != null and status != ''">#{status},</if>
          </trim>
     </insert>
 
@@ -88,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="signPublicKey != null">sign_public_key = #{signPublicKey},</if>
             <if test="signPrivateKey != null">sign_private_key = #{signPrivateKey},</if>
             <if test="platWhiteIpList != null">plat_white_ip_list = #{platWhiteIpList},</if>
-            <if test="status != null">status = #{status},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
         </trim>
         where id = #{id}
     </update>

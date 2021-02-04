@@ -54,6 +54,8 @@ public class LiveHostWageNote extends BaseEntity {
     @Excel(name = "彩票派奖")
     private BigDecimal cpPrize;
 
+    private String createTimes;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -141,5 +143,13 @@ public class LiveHostWageNote extends BaseEntity {
             .append("cpCost", getCpCost())
             .append("cpPrize", getCpPrize())
             .toString();
+    }
+
+    public String getCreateTimes() {
+        return createTimes;
+    }
+
+    public void setCreateTimes( String createTimes ) {
+        this.createTimes = createTimes;
     }
 }

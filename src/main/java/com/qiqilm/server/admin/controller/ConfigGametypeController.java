@@ -6,12 +6,9 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigGametype;
 import com.qiqilm.server.admin.domain.GamePlatform;
-import com.qiqilm.server.admin.domain.GameType;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IConfigGametypeService;
 import com.qiqilm.server.admin.service.IGamePlatformService;
-import com.qiqilm.server.admin.service.IGameTypeService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,70 +16,70 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Controller
+ * 游戏字典Controller
  *
  * @author 77tv
  * @date 2021-01-26
  */
 @RestController
-@RequestMapping( "/web/config-gametype" )
+@RequestMapping( "/game/config-gametype" )
 public class ConfigGametypeController extends BaseController {
 	@Autowired
 	private IConfigGametypeService configGametypeService;
 	@Autowired
-	private IGamePlatformService gamePlatformService;
-/**
- * 查询【请填写功能名称】列表
- */
-@PreAuthorize( "@ss.hasPermi('web:config-gametype:list')" )
-@GetMapping( "/list" )
-    	public TableDataInfo list(ConfigGametype configGametype) {
+	private IGamePlatformService   gamePlatformService;
+
+	/**
+	 * 查询游戏字典列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('game:config-gametype:list')" )
+	@GetMapping( "/list" )
+	public TableDataInfo list( ConfigGametype configGametype ) {
 		startPage();
-		List<ConfigGametype> list = configGametypeService.selectConfigGametypeList(configGametype);
+		List<ConfigGametype> list = configGametypeService.selectConfigGametypeList( configGametype );
 		return getDataTable( list );
 	}
-	@GetMapping( "/listGameType" )
 
-	public AjaxResult list(GamePlatform gamePlatform) {
-		List<GamePlatform> list = gamePlatformService.selectGamePlatformList(gamePlatform);
+	@GetMapping( "/listGameType" )
+	public AjaxResult list( GamePlatform gamePlatform ) {
+		List<GamePlatform> list = gamePlatformService.selectGamePlatformList( gamePlatform );
 		return AjaxResult.success( list );
 	}
 
 
-
 	/**
-	 * 获取【请填写功能名称】详细信息
+	 * 获取游戏字典详细信息
 	 */
-	@PreAuthorize( "@ss.hasPermi('web:config-gametype:query')" )
+	@PreAuthorize( "@ss.hasPermi('game:config-gametype:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( configGametypeService.selectConfigGametypeById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( configGametypeService.selectConfigGametypeById( id ) );
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增游戏字典
 	 */
-	@PreAuthorize( "@ss.hasPermi('web:config-gametype:add')" )
+	@PreAuthorize( "@ss.hasPermi('game:config-gametype:add')" )
 	@Log( title = "游戏配置新增", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody ConfigGametype configGametype) {
-		return toAjax( configGametypeService.insertConfigGametype(configGametype) );
+	public AjaxResult add( @RequestBody ConfigGametype configGametype ) {
+		return toAjax( configGametypeService.insertConfigGametype( configGametype ) );
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改游戏字典
 	 */
-	@PreAuthorize( "@ss.hasPermi('web:config-gametype:edit')" )
+	@PreAuthorize( "@ss.hasPermi('game:config-gametype:edit')" )
 	@Log( title = "游戏配置编辑", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody ConfigGametype configGametype) {
-		return toAjax( configGametypeService.updateConfigGametype(configGametype) );
+	public AjaxResult edit( @RequestBody ConfigGametype configGametype ) {
+		return toAjax( configGametypeService.updateConfigGametype( configGametype ) );
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除游戏字典
 	 */
-	@PreAuthorize( "@ss.hasPermi('web:config-gametype:remove')" )
+	@PreAuthorize( "@ss.hasPermi('game:config-gametype:remove')" )
 	@Log( title = "游戏配置删除", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {

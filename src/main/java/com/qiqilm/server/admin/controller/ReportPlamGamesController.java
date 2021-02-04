@@ -7,11 +7,15 @@ import com.qiqilm.server.admin.domain.ReportPlamGames;
 import com.qiqilm.server.admin.service.IReportPlamGamesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,26 +25,53 @@ import java.util.List;
  * @date 2021-01-26
  */
 @RestController
-	@RequestMapping( "/admin/report-plam-games" )
+@RequestMapping("/admin/report-plam-games")
 public class ReportPlamGamesController extends BaseController {
-	@Autowired
-	private IReportPlamGamesService reportPlamGamesService;
+    @Autowired
+    private IReportPlamGamesService reportPlamGamesService;
 
-/**
- * 查询【请填写功能名称】列表
- */
-@PreAuthorize( "@ss.hasPermi('admin:report-plam-games:list')" )
-@GetMapping( "/list" )
-    	public TableDataInfo list(ReportPlamGames reportPlamGames) {
-		startPage();
-		List<ReportPlamGames> list = reportPlamGamesService.selectReportPlamGamesList(reportPlamGames);
-		return getDataTable( list );
-	}
+    /**
+     * 查询【请填写功能名称】列表
+     */
+    @PreAuthorize("@ss.hasPermi('admin:report-plam-games:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ReportPlamGames reportPlamGames) throws ParseException {
+        startPage();
+        Date d = new Date();
+        String myString = reportPlamGames.getBegindate();
+        if (!StringUtils.isEmpty(myString)) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date dd = simpleDateFormat.parse(myString);
+            boolean flag = dd.before(d);
+            if (!flag) {
+                reportPlamGames.setBegindate(null);
+            }
+        } else {
+            reportPlamGames.setBegindate(getYestoday());
+        }
+        List<ReportPlamGames> list = reportPlamGamesService.selectReportPlamGamesList(reportPlamGames);
+        return getDataTable(list);
+    }
 
-	@GetMapping( value = "/count" )
-	public AjaxResult countBetData(ReportPlamGames reportPlamGames) {
-		ReportPlamGames reportPlamGames1 = reportPlamGamesService.countBetData(reportPlamGames);
-		return AjaxResult.success(reportPlamGames1);
-	}
-
+    @PreAuthorize("@ss.hasPermi('admin:report-plam-games:list')")
+    @GetMapping("/storage")
+    public AjaxResult storage(ReportPlamGames reportPlamGames){
+        return AjaxResult.success( reportPlamGamesService.storage(reportPlamGames));
+    }
+    @GetMapping(value = "/count")
+    public AjaxResult countBetData(ReportPlamGames reportPlamGames) {
+        String myString = reportPlamGames.getBegindate();
+        if (StringUtils.isEmpty(myString)){
+            reportPlamGames.setBegindate(getYestoday());
+        }
+        ReportPlamGames reportPlamGames1 = reportPlamGamesService.countBetData(reportPlamGames);
+        return AjaxResult.success(reportPlamGames1);
+    }
+    //获取昨天数据
+    private static String getYestoday(){
+        Calendar cal=Calendar.getInstance();
+        cal.add(Calendar.DATE,-1);
+        Date time=cal.getTime();
+        return new SimpleDateFormat("yyyy-MM-dd").format(time);
+    }
 }

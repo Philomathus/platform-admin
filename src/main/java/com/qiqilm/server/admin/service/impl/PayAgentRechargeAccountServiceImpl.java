@@ -1,6 +1,12 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import com.qiqilm.server.admin.constant.Constants;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +15,7 @@ import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountService;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ * 【代充人】Service业务层处理
  *
  * @author 77tv
  * @date 2021-01-26
@@ -18,12 +24,14 @@ import com.qiqilm.server.admin.service.IPayAgentRechargeAccountService;
 public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAccountService {
     @Autowired
     private PayAgentRechargeAccountMapper payAgentRechargeAccountMapper;
+    @Autowired
+    private MemberInfoMapper memberInfoMapper;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询【代充人】
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id 【代充人】ID
+     * @return 【代充人】
      */
     @Override
     public PayAgentRechargeAccount selectPayAgentRechargeAccountById(Long id) {
@@ -31,10 +39,10 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询【代充人】列表
      *
-     * @param payAgentRechargeAccount 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param payAgentRechargeAccount 【代充人】
+     * @return 【代充人】
      */
     @Override
     public List<PayAgentRechargeAccount> selectPayAgentRechargeAccountList(PayAgentRechargeAccount payAgentRechargeAccount) {
@@ -42,21 +50,31 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增【代充人】
      *
-     * @param payAgentRechargeAccount 【请填写功能名称】
+     * @param payAgentRechargeAccount 【代充人】
      * @return 结果
      */
     @Override
-    public int insertPayAgentRechargeAccount(PayAgentRechargeAccount payAgentRechargeAccount) {
+    public AjaxResult insertPayAgentRechargeAccount(PayAgentRechargeAccount payAgentRechargeAccount) {
         payAgentRechargeAccount.setCreateTime(DateUtils.getNowDate());
-        return payAgentRechargeAccountMapper.insertPayAgentRechargeAccount(payAgentRechargeAccount);
+        if ( payAgentRechargeAccount.getRechargeDiscountRate() != null
+                && payAgentRechargeAccount.getRechargeDiscountRate().compareTo( new BigDecimal( Constants.DISCOUNT_BILL_LIMIT ) ) >= 0 ) {
+            return  AjaxResult.error( String.format( "充值优惠彩金比例不得大于%s，请重新设置！", Constants.DISCOUNT_BILL_LIMIT ) );
+
+        }
+        MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(payAgentRechargeAccount.getAccount());
+        payAgentRechargeAccount.setNickName(memberInfo.getNickName());
+        payAgentRechargeAccount.setBalanceAmount( BigDecimal.ZERO );
+        payAgentRechargeAccount.setRechargeNum( 0 );
+        payAgentRechargeAccountMapper.insertPayAgentRechargeAccount(payAgentRechargeAccount);
+        return  AjaxResult.success();
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改【代充人】
      *
-     * @param payAgentRechargeAccount 【请填写功能名称】
+     * @param payAgentRechargeAccount 【代充人】
      * @return 结果
      */
     @Override
@@ -65,9 +83,9 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除【代充人】
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的【代充人】ID
      * @return 结果
      */
     @Override
@@ -76,9 +94,9 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除【代充人】信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id 【代充人】ID
      * @return 结果
      */
     @Override

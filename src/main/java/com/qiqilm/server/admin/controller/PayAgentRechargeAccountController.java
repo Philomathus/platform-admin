@@ -73,7 +73,7 @@ public class PayAgentRechargeAccountController extends BaseController {
 	@Log( title = "【代充人管理】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayAgentRechargeAccount payAgentRechargeAccount) {
-		return toAjax( payAgentRechargeAccountService.insertPayAgentRechargeAccount(payAgentRechargeAccount) );
+		return payAgentRechargeAccountService.insertPayAgentRechargeAccount(payAgentRechargeAccount) ;
 	}
 
 	/**

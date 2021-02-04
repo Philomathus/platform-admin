@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="totalSuccessMoney != null "> and total_success_money = #{totalSuccessMoney}</if>
             <if test="rechargeMin != null "> and recharge_min = #{rechargeMin}</if>
             <if test="rechargeMax != null "> and recharge_max = #{rechargeMax}</if>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="status != null and status != '' "> and status = #{status}</if>
             <if test="isCanCallback != null "> and is_can_callback = #{isCanCallback}</if>
             <if test="indexes != null "> and indexes = #{indexes}</if>
             <if test="openLevel != null "> and open_level = #{openLevel}</if>
@@ -101,7 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="req.payTypeId != null and req.payTypeId != ''">
             and c.pay_type_id = #{req.payTypeId}
         </if>
-        <if test="req.status != null">
+        <if test="req.status != null and status != ''">
             and c.status = #{req.status}
         </if>
         ORDER BY c.create_time desc
@@ -123,7 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="totalSuccessMoney != null">total_success_money,</if>
             <if test="rechargeMin != null">recharge_min,</if>
             <if test="rechargeMax != null">recharge_max,</if>
-            <if test="status != null">status,</if>
+            <if test="status != null and status != ''">status,</if>
             <if test="isCanCallback != null">is_can_callback,</if>
             <if test="indexes != null">indexes,</if>
             <if test="openLevel != null">open_level,</if>
@@ -148,7 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="totalSuccessMoney != null">#{totalSuccessMoney},</if>
             <if test="rechargeMin != null">#{rechargeMin},</if>
             <if test="rechargeMax != null">#{rechargeMax},</if>
-            <if test="status != null">#{status},</if>
+            <if test="status != null and status != ''">#{status},</if>
             <if test="isCanCallback != null">#{isCanCallback},</if>
             <if test="indexes != null">#{indexes},</if>
             <if test="openLevel != null">#{openLevel},</if>
@@ -177,7 +177,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="totalSuccessMoney != null">total_success_money = #{totalSuccessMoney},</if>
             <if test="rechargeMin != null">recharge_min = #{rechargeMin},</if>
             <if test="rechargeMax != null">recharge_max = #{rechargeMax},</if>
-            <if test="status != null">status = #{status},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
             <if test="isCanCallback != null">is_can_callback = #{isCanCallback},</if>
             <if test="indexes != null">indexes = #{indexes},</if>
             <if test="openLevel != null">open_level = #{openLevel},</if>

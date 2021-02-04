@@ -170,5 +170,12 @@ public class GameCacheManager {
         }
     }
 
+    public String getICGToken() {
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        return operations.get( Constants.PLATFORM_TOKEN.concat( "icg" ) );
+    }
 
+    public Long add( String useID, String game ) {
+        return stringRedisTemplate.opsForSet().add( Constants.PLATFORM_TOKEN.concat( game ).concat( ":users" ), useID );
+    }
 }
