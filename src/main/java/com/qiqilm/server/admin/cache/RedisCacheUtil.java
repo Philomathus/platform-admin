@@ -26,19 +26,14 @@ public class RedisCacheUtil {
 	}
 
 	public <T> T get( Serializable cacheId, Supplier<T> supplier ) {
-
 		Class<?> tClass = supplier.get().getClass();
-
 		String keyM = "autoCache:" + tClass.getSimpleName() + ":" + cacheId;
-
 		String s = redisUtil.strGet( keyM );
-
 		if ( Objects.isNull( s ) ) {
 			return this.update( keyM, supplier );
 		} else {
 			try {
-				return JsonUtil.json2Object( s, JsonUtil.getObjectMapper().getTypeFactory()
-						.constructFromCanonical( tClass.getName() ) );
+				return JsonUtil.json2Object( s, JsonUtil.getJavaType( tClass.getName() ) );
 			} catch ( Exception e ) {
 				return this.update( keyM, supplier );
 			}

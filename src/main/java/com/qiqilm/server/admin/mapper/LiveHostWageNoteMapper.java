@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.LiveHostWageNote;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -58,4 +59,6 @@ public interface LiveHostWageNoteMapper {
 	 * @return 结果
 	 */
 	public int deleteLiveHostWageNoteByIds(Long[] ids );
+
+	LiveHostWageNote beforeNote( @Param( "userId" ) Long userId );
 }

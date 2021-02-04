@@ -23,21 +23,21 @@ import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 游戏补单Controller
  *
  * @author 77tv
  * @date 2021-01-29
  */
 @RestController
-@RequestMapping( "/admin/memberGameDatafix" )
+@RequestMapping( "/game/memberGameDatafix" )
 public class MemberGameDatafixController extends BaseController {
 	@Autowired
 	private IMemberGameDatafixService memberGameDatafixService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询游戏补单列表
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:memberGameDatafix:list')" )
+	@PreAuthorize( "@ss.hasPermi('game:memberGameDatafix:list')" )
 	@GetMapping( "/list" )
     	public TableDataInfo list(MemberGameDatafix memberGameDatafix) {
 		startPage();
@@ -47,9 +47,9 @@ public class MemberGameDatafixController extends BaseController {
 
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增游戏补单
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:memberGameDatafix:add')" )
+	@PreAuthorize( "@ss.hasPermi('game:memberGameDatafix:add')" )
 	@Log( title = "新增补单", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody MemberGameDatafix memberGameDatafix) {

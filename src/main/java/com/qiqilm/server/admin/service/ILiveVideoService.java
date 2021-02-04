@@ -58,4 +58,6 @@ public interface ILiveVideoService {
 	 * @return 结果
 	 */
 	public int deleteLiveVideoById(Long id);
+
+	public boolean close( Long id, String cause );
 }

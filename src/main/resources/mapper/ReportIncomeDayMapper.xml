@@ -21,12 +21,7 @@
     <select id="selectReportIncomeDayList" parameterType="ReportIncomeDay" resultMap="ReportIncomeDayResult">
         <include refid="selectReportIncomeDayVo"/>
         <where>
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(paydate,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-            </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(paydate,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-            </if>
+            <if test="paydate != null  and paydate != ''"> and paydate = #{paydate}</if>
         </where>
     </select>
     <select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">

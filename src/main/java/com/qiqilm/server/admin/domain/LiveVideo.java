@@ -107,7 +107,7 @@ public class LiveVideo extends BaseEntity {
 
     /** 1:删除;0:未删除;私有聊天或小于5分钟的视频，不保存 */
     @Excel(name = "1:删除;0:未删除;私有聊天或小于5分钟的视频，不保存")
-    private Integer isDelete;
+    private Boolean isDelete;
 
     /** 聊天群中机器人数量 */
     @Excel(name = "聊天群中机器人数量")
@@ -123,11 +123,11 @@ public class LiveVideo extends BaseEntity {
 
     /** 1:被服务器异常终止结束(主要是心跳超时) */
     @Excel(name = "1:被服务器异常终止结束(主要是心跳超时)")
-    private Integer isAborted;
+    private Boolean isAborted;
 
     /** 1:表示已经清空了,录制视频;0:未做清空操作 */
     @Excel(name = "1:表示已经清空了,录制视频;0:未做清空操作")
-    private Integer isDelVod;
+    private Boolean isDelVod;
 
     /** 主播在线状态;1:在线(默认); 0:离开 */
     @Excel(name = "主播在线状态;1:在线(默认); 0:离开")
@@ -248,7 +248,7 @@ public class LiveVideo extends BaseEntity {
 
     /** 是否收费模式  1是 0否 */
     @Excel(name = "是否收费模式  1是 0否")
-    private Integer isLivePay;
+    private Boolean isLivePay;
 
     /** 付费直播 收取多少费用； 每分钟收取多少钻石，主播端设置 */
     @Excel(name = "付费直播 收取多少费用； 每分钟收取多少钻石，主播端设置")
@@ -483,11 +483,11 @@ public class LiveVideo extends BaseEntity {
     public Date getMonitorTime() {
         return monitorTime;
     }
-    public void setIsDelete(Integer isDelete) {
+    public void setIsDelete(Boolean isDelete) {
         this.isDelete = isDelete;
     }
 
-    public Integer getIsDelete() {
+    public Boolean getIsDelete() {
         return isDelete;
     }
     public void setRobotNum(Long robotNum) {
@@ -511,18 +511,18 @@ public class LiveVideo extends BaseEntity {
     public String getChannelid() {
         return channelid;
     }
-    public void setIsAborted(Integer isAborted) {
+    public void setIsAborted(Boolean isAborted) {
         this.isAborted = isAborted;
     }
 
-    public Integer getIsAborted() {
+    public Boolean getIsAborted() {
         return isAborted;
     }
-    public void setIsDelVod(Integer isDelVod) {
+    public void setIsDelVod(Boolean isDelVod) {
         this.isDelVod = isDelVod;
     }
 
-    public Integer getIsDelVod() {
+    public Boolean getIsDelVod() {
         return isDelVod;
     }
     public void setOnlineStatus(Integer onlineStatus) {
@@ -728,11 +728,11 @@ public class LiveVideo extends BaseEntity {
     public Long getLivePayTime() {
         return livePayTime;
     }
-    public void setIsLivePay(Integer isLivePay) {
+    public void setIsLivePay(Boolean isLivePay) {
         this.isLivePay = isLivePay;
     }
 
-    public Integer getIsLivePay() {
+    public Boolean getIsLivePay() {
         return isLivePay;
     }
     public void setLiveFee(Long liveFee) {
