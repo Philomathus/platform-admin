@@ -36,7 +36,7 @@ public class PayAgentRechargeAccount extends BaseEntity {
 
     /** 代充次数 */
     @Excel(name = "代充次数")
-    private Long rechargeNum;
+    private Integer rechargeNum;
 
     /** QQ号 */
     @Excel(name = "QQ号")
