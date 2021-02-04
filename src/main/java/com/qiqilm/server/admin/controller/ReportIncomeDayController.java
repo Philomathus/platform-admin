@@ -1,10 +1,16 @@
 package com.qiqilm.server.admin.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ReportMoneyinfo;
+import com.qiqilm.server.admin.domain.ReportPlamCom;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,15 +45,37 @@ public class ReportIncomeDayController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:reportIncomeDay:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(ReportIncomeDay reportIncomeDay) {
+    	public TableDataInfo list(ReportIncomeDay reportIncomeDay) throws ParseException {
 		startPage();
+		Date d = new Date();
+		String myString = reportIncomeDay.getPaydate();
+		if (!StringUtils.isEmpty(myString)){
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date dd = simpleDateFormat.parse(myString);
+			boolean flag = dd.before(d);
+			if(!flag){
+				reportIncomeDay.setPaydate(null);
+			}
+		}else{
+			reportIncomeDay.setPaydate(getYestoday());
+		}
 		List<ReportIncomeDay> list = reportIncomeDayService.selectReportIncomeDayList(reportIncomeDay);
 		return getDataTable( list );
 	}
 	@GetMapping( value = "/count" )
 	public AjaxResult countMoneyData(ReportIncomeDay reportIncomeDay) {
+		String myString = reportIncomeDay.getPaydate();
+		if (StringUtils.isEmpty(myString)){
+			reportIncomeDay.setPaydate(getYestoday());
+		}
 		ReportIncomeDay reportIncomeDay1 = reportIncomeDayService.countSuccessData(reportIncomeDay);
 		return AjaxResult.success(reportIncomeDay1);
 	}
-
+	//获取昨天数据
+	private static String getYestoday(){
+		Calendar cal=Calendar.getInstance();
+		cal.add(Calendar.DATE,-1);
+		Date time=cal.getTime();
+		return new SimpleDateFormat("yyyy-MM-dd").format(time);
+	}
 }

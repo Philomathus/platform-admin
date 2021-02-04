@@ -7,6 +7,8 @@ import com.qiqilm.server.admin.service.IReportPlamGamesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,19 +34,29 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
     @Override
     public List<ReportPlamGames> selectReportPlamGamesList(ReportPlamGames reportPlamGames) {
         List<ReportPlamGames> allList =reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
-        if(reportPlamGames.getBegindate()!=null){
-            if(allList.isEmpty()){
-                reportPlamGamesMapper.calldataProrepPlamcom(reportPlamGames.getBegindate());
-                allList =reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
-            }
-        }
 
         return allList;
     }
 
     @Override
     public ReportPlamGames countBetData(ReportPlamGames reportPlamGames) {
+
         return reportPlamGamesMapper.countBetData(reportPlamGames);
+    }
+
+    @Override
+    public Object storage(ReportPlamGames reportPlamGames) {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateNowStr = sdf.format(d);
+        reportPlamGames.setBegindate(dateNowStr);
+        List<ReportPlamGames> allList =reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
+        if (allList.size()==0) {
+            if (reportPlamGames.getBegindate() == null || reportPlamGames.getBegindate().equals(dateNowStr)) {
+                return reportPlamGamesMapper.calldataProrepPlamcom(dateNowStr);
+            }
+        }
+        return null;
     }
 
 

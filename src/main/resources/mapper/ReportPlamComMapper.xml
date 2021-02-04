@@ -22,16 +22,13 @@
 	<select id="selectReportPlamComList" parameterType="ReportPlamCom" resultMap="ReportPlamComResult">
 		<include refid="selectReportPlamComVo"/>
 		<where>
-			<if test="classOne != null  and classOne != ''"> and class_one = #{classOne}</if>
-			<if test="classOnename != null  and classOnename != ''"> and class_onename like concat('%', #{classOnename}, '%')</if>
-			<if test="classTwo != null  and classTwo != ''"> and class_two = #{classTwo}</if>
 			<if test="classTwoname != null  and classTwoname != ''"> and class_twoname like concat('%', #{classTwoname}, '%')</if>
-			<if test="type != null  and type != ''"> and type = #{type}</if>
-			<if test="tValue != null "> and t_value = #{tValue}</if>
 			<if test="reporttime != null  and reporttime != ''"> and reporttime = #{reporttime}</if>
 		</where>
 	</select>
 	<select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">
 		{call prorep_plamcom(#{timedateta,mode=IN,jdbcType=VARCHAR},#{timedateta,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}
 	</select>
+
+
 </mapper>
