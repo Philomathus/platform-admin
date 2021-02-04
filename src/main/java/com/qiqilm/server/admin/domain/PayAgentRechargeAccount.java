@@ -84,6 +84,7 @@ public class PayAgentRechargeAccount extends BaseEntity {
     @Excel(name = "本次登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
 
