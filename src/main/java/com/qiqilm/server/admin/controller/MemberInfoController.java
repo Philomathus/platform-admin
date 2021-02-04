@@ -34,7 +34,7 @@ import java.util.List;
  * @date 2021-01-25
  */
 @RestController
-@RequestMapping("/admin/memberInfo")
+@RequestMapping("/member/memberInfo")
 public class MemberInfoController extends BaseController {
     @Autowired
     private IMemberInfoService memberInfoService;
