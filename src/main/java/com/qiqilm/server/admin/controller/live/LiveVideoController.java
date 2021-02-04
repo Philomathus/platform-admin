@@ -59,9 +59,14 @@ public class LiveVideoController extends BaseController {
 		return AjaxResult.success( liveVideoService.selectLiveVideoById( id ) );
 	}
 
-	@GetMapping( value = "close/{id}" )
-	public AjaxResult close( @PathVariable( "id" ) Long id ) {
-		return AjaxResult.success( liveVideoService.close( id, "admin" ) );
+	@GetMapping( value = "close/{ids}" )
+	public AjaxResult close( @PathVariable( "ids" ) String ids ) {
+		String[] allId = ids.split(",");
+		for (int i = 0; i < allId.length; i++) {
+			String id=allId[i];
+			liveVideoService.close( Long.valueOf(id), "origin" );
+		}
+		return AjaxResult.success();
 	}
 
 	/**
