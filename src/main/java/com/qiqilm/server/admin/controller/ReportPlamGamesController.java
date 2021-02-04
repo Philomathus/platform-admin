@@ -53,7 +53,11 @@ public class ReportPlamGamesController extends BaseController {
         return getDataTable(list);
     }
 
-
+    @PreAuthorize("@ss.hasPermi('admin:report-plam-games:list')")
+    @GetMapping("/storage")
+    public AjaxResult storage(ReportPlamGames reportPlamGames){
+        return AjaxResult.success( reportPlamGamesService.storage(reportPlamGames));
+    }
     @GetMapping(value = "/count")
     public AjaxResult countBetData(ReportPlamGames reportPlamGames) {
         String myString = reportPlamGames.getBegindate();

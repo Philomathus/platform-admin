@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.ReportMoneyinfo;
+import com.qiqilm.server.admin.domain.ReportPlamCom;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
 import com.qiqilm.server.admin.service.IReportMoneyinfoService;
 import lombok.extern.log4j.Log4j2;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -43,6 +45,12 @@ public class ReportMoneyinfoController extends BaseController {
 	public AjaxResult countMoneyData(ReportMoneyinfo reportMoneyinfo) {
 		ReportMoneyinfo reportMoneyinfo1 = reportMoneyinfoService.countMoneyData(reportMoneyinfo);
 		return AjaxResult.success(reportMoneyinfo1);
+	}
+
+	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:list')" )
+	@GetMapping( "/storage" )
+	public AjaxResult storage(ReportMoneyinfo reportMoneyinfo) throws ParseException {
+		return AjaxResult.success( reportMoneyinfoService.storage(reportMoneyinfo));
 	}
 
 

@@ -22,4 +22,5 @@ public interface IReportAgentcountService {
 	public List<ReportAgentcount> selectReportAgentcountList(ReportAgentcount reportAgentcount);
 
 
+    Object storage(ReportAgentcount reportAgentcount);
 }

@@ -31,21 +31,23 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 	 */
 	@Override
 	public List<ReportPlamCom> selectReportPlamComList(ReportPlamCom reportPlamCom) {
+		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
+		return allList;
+	}
+
+	@Override
+	public Object storage(ReportPlamCom reportPlamCom) {
 		Date d = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String dateNowStr = sdf.format(d);
-		if(dateNowStr.equals(reportPlamCom.getReporttime())){
-			if(reportPlamCom.getReporttime()!=null){
-				String result = getCalldataProrepPlamcom(reportPlamCom.getReporttime());
+		reportPlamCom.setReporttime(dateNowStr);
+		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
+		if (allList.size()==0) {
+			if (reportPlamCom.getReporttime() == null || reportPlamCom.getReporttime().equals(dateNowStr)) {
+				return getCalldataProrepPlamcom(dateNowStr);
 			}
 		}
-		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
-		if (reportPlamCom.getReporttime()!=null)
-			if(allList.isEmpty()){
-				getCalldataProrepPlamcom(reportPlamCom.getReporttime());
-				allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
-			}
-		return allList;
+		return null;
 	}
 
 	private String getCalldataProrepPlamcom(String a){

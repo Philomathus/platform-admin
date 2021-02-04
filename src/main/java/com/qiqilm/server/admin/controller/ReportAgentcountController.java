@@ -1,7 +1,9 @@
 package com.qiqilm.server.admin.controller;
 
+import java.text.ParseException;
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.ReportMoneyinfo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +45,11 @@ public class ReportAgentcountController extends BaseController {
 		List<ReportAgentcount> list = reportAgentcountService.selectReportAgentcountList(reportAgentcount);
 		return getDataTable( list );
 	}
-    
+	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
+	@GetMapping( "/storage" )
+	public AjaxResult storage(ReportAgentcount reportAgentcount) throws ParseException {
+		return AjaxResult.success( reportAgentcountService.storage(reportAgentcount));
+	}
 
 
 }

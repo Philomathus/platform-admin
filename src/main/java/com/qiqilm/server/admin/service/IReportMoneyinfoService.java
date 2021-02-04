@@ -24,4 +24,6 @@ public interface IReportMoneyinfoService {
 
 
     ReportMoneyinfo countMoneyData(ReportMoneyinfo reportMoneyinfo);
+
+    Object storage(ReportMoneyinfo reportMoneyinfo);
 }

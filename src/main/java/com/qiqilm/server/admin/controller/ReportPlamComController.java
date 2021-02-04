@@ -48,7 +48,6 @@ public class ReportPlamComController extends BaseController {
 	public TableDataInfo list(ReportPlamCom reportPlamCom) throws ParseException {
 		startPage();
 		Date d = new Date();
-		log.info( "游戏投注报表统计" );
 		String myString = reportPlamCom.getReporttime();
 		if (!StringUtils.isEmpty(myString)){
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -63,6 +62,14 @@ public class ReportPlamComController extends BaseController {
 		List<ReportPlamCom> list = reportPlamComService.selectReportPlamComList(reportPlamCom);
 		return getDataTable( list );
 	}
+
+
+	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
+	@GetMapping( "/storage" )
+	public AjaxResult storage(ReportPlamCom reportPlamCom) throws ParseException {
+		return AjaxResult.success( reportPlamComService.storage(reportPlamCom));
+	}
+
 	//获取昨天数据
 	private static String getYestoday(){
 		Calendar cal=Calendar.getInstance();
