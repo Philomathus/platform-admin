@@ -130,4 +130,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <select id="getCount" resultType="java.util.Map">
+        select SUM(cell_score) totalSuccessBet,SUM(all_bet) totalBet,SUM(profit) totalIncome from 7700_main.member_game_data
+        <where>
+            <include refid="whereCount"></include>
+        </where>
+    </select>
 </mapper>

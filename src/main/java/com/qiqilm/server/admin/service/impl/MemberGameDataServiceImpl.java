@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.GameType;
 import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.mapper.GameTypeMapper;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员注单数据Service业务层处理
@@ -101,5 +103,12 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
     @Override
     public int deleteMemberGameDataById(String id) {
         return memberGameDataMapper.deleteMemberGameDataById(id);
+    }
+
+    @Override
+    public AjaxResult getCount(MemberGameData memberGameData) {
+
+        Map map = memberGameDataMapper.getCount(memberGameData);
+        return AjaxResult.success(map);
     }
 }

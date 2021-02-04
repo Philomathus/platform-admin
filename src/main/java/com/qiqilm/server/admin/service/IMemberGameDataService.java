@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberGameData;
 
 import java.util.List;
@@ -58,4 +59,7 @@ public interface IMemberGameDataService {
 	 * @return 结果
 	 */
 	public int deleteMemberGameDataById(String id);
+
+    AjaxResult getCount(MemberGameData memberGameData);
+
 }
