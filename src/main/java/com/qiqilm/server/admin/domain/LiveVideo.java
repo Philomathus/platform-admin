@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -335,6 +336,9 @@ public class LiveVideo extends BaseEntity {
     private String lotteryName;
 
     private String liveStatus = "";
+
+    @JsonIgnore
+    private String[] types;
 
     public void setId(Long id) {
         this.id = id;
@@ -982,5 +986,13 @@ public class LiveVideo extends BaseEntity {
 
     public void setName( String name ) {
         this.name = name;
+    }
+
+    public String[] getTypes() {
+        return types;
+    }
+
+    public void setTypes( String[] types ) {
+        this.types = types;
     }
 }
