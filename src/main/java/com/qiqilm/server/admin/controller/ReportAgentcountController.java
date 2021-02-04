@@ -40,7 +40,7 @@ public class ReportAgentcountController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(ReportAgentcount reportAgentcount) {
+    	public TableDataInfo list(ReportAgentcount reportAgentcount) throws ParseException {
 		startPage();
 		List<ReportAgentcount> list = reportAgentcountService.selectReportAgentcountList(reportAgentcount);
 		return getDataTable( list );

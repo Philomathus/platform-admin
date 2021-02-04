@@ -36,13 +36,13 @@ public class ReportMoneyinfoController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list(ReportMoneyinfo reportMoneyinfo) {
+	public TableDataInfo list(ReportMoneyinfo reportMoneyinfo) throws ParseException {
 		startPage();
 		List<ReportMoneyinfo> list = reportMoneyinfoService.selectReportMoneyinfoList(reportMoneyinfo);
 		return getDataTable( list );
 	}
 	@GetMapping( value = "/count" )
-	public AjaxResult countMoneyData(ReportMoneyinfo reportMoneyinfo) {
+	public AjaxResult countMoneyData(ReportMoneyinfo reportMoneyinfo) throws ParseException {
 		ReportMoneyinfo reportMoneyinfo1 = reportMoneyinfoService.countMoneyData(reportMoneyinfo);
 		return AjaxResult.success(reportMoneyinfo1);
 	}

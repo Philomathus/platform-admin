@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ReportAgentcount;
@@ -19,7 +20,7 @@ public interface IReportAgentcountService {
 	 * @param reportAgentcount 代理统计，主要用于代理渠道的统计
 	 * @return 代理统计，主要用于代理渠道的统计集合
 	 */
-	public List<ReportAgentcount> selectReportAgentcountList(ReportAgentcount reportAgentcount);
+	public List<ReportAgentcount> selectReportAgentcountList(ReportAgentcount reportAgentcount) throws ParseException;
 
 
     Object storage(ReportAgentcount reportAgentcount);
