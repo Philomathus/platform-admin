@@ -31,7 +31,7 @@
 			   total_before,
 			   mark,
 			   markorder
-		from 7700_main.log_money
+		from db_cx001.log_money
 	</sql>
 
 	<select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
@@ -177,7 +177,7 @@
     <select id="totalCount" parameterType="LogMoney" resultType="java.util.Map">
         select COUNT(income) totalIncome,
         COUNT(pay) totalPay
-        from 7700_main.log_money
+        from db_cx001.log_money
         <where>
             <include refid="whereCount"></include>
         </where>

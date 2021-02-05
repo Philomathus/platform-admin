@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveUserLogVo">
-        select id, log_info, log_time, log_admin_id, money, user_id, p_user_id, type, prop_id, score, point, podcast_id, diamonds, ticket, video_id, contribution_id from 7700_live.live_user_log
+        select id, log_info, log_time, log_admin_id, money, user_id, p_user_id, type, prop_id, score, point, podcast_id, diamonds, ticket, video_id, contribution_id from cx_live.live_user_log
     </sql>
 
     <select id="selectLiveUserLogList" parameterType="LiveUserLog" resultMap="LiveUserLogResult">
@@ -54,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveUserLog" parameterType="LiveUserLog" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.live_user_log
+        insert into cx_live.live_user_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="logInfo != null and logInfo != ''">log_info,</if>
             <if test="logTime != null">log_time,</if>
@@ -92,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveUserLog" parameterType="LiveUserLog">
-        update 7700_live.live_user_log
+        update cx_live.live_user_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="logInfo != null and logInfo != ''">log_info = #{logInfo},</if>
     
@@ -129,11 +129,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLiveUserLogById" parameterType="Long">
-        delete from 7700_live.live_user_log where id = #{id}
+        delete from cx_live.live_user_log where id = #{id}
     </delete>
 
     <delete id="deleteLiveUserLogByIds" parameterType="String">
-        delete from 7700_live.live_user_log where id in
+        delete from cx_live.live_user_log where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

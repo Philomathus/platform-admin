@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveHostWageNoteVo">
-        select id, family_id, host_id, start_time, end_time, live_time_sec, ticket, before_total_ticket,  FROM_UNIXTIME(create_time) create_time ,  remark, cp_cost, cp_prize from 7700_live.live_host_wage_note
+        select id, family_id, host_id, start_time, end_time, live_time_sec, ticket, before_total_ticket,  FROM_UNIXTIME(create_time) create_time ,  remark, cp_cost, cp_prize from cx_live.live_host_wage_note
     </sql>
 
     <select id="selectLiveHostWageNoteList" parameterType="LiveHostWageNote" resultMap="LiveHostWageNoteResult">
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveHostWageNote" parameterType="LiveHostWageNote" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.live_host_wage_note
+        insert into cx_live.live_host_wage_note
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="familyId != null">family_id,</if>
             <if test="hostId != null">host_id,</if>
@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveHostWageNote" parameterType="LiveHostWageNote">
-        update 7700_live.live_host_wage_note
+        update cx_live.live_host_wage_note
         <trim prefix="SET" suffixOverrides=",">
             <if test="familyId != null">family_id = #{familyId},</if>
     
@@ -103,17 +103,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLiveHostWageNoteById" parameterType="Long">
-        delete from 7700_live.live_host_wage_note where id = #{id}
+        delete from cx_live.live_host_wage_note where id = #{id}
     </delete>
 
     <delete id="deleteLiveHostWageNoteByIds" parameterType="String">
-        delete from 7700_live.live_host_wage_note where id in
+        delete from cx_live.live_host_wage_note where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
     <select id="beforeNote" resultMap="LiveHostWageNoteResult">
-        select * from 7700_live.live_host_wage_note  l where l.host_id=#{userId}  ORDER BY create_time desc LIMIT 1
+        select * from cx_live.live_host_wage_note  l where l.host_id=#{userId}  ORDER BY create_time desc LIMIT 1
     </select>
 </mapper>
