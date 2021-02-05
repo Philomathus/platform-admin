@@ -1,9 +1,14 @@
 package com.qiqilm.server.admin.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.qiqilm.server.admin.constant.AdminConstants;
 import com.qiqilm.server.admin.domain.SysDictData;
-import com.fasterxml.jackson.core.type.TypeReference;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -130,7 +135,17 @@ public class DictUtils {
 	 * 清空字典缓存
 	 */
 	public static void clearDictCache() {
-		Collection<String> keys = SpringUtils.getBean( RedisUtil.class ).keys( AdminConstants.SYS_DICT_KEY + "*" );
+		Collection<String> keys = SpringUtils.getBean( StringRedisTemplate.class )
+				.execute( ( RedisCallback<List<String>> ) connection -> {
+					List<String> resultList = new ArrayList<>();
+					Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
+							.match( AdminConstants.SYS_DICT_KEY + "*" ).count( 5 ).build() );
+					while ( cursor.hasNext() ) {
+						String key = new String( cursor.next() );
+						resultList.add( key );
+					}
+					return resultList;
+				} );
 		SpringUtils.getBean( RedisUtil.class ).unlink( keys );
 	}
 

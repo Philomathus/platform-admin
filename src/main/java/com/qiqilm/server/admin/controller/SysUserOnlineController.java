@@ -50,13 +50,6 @@ public class SysUserOnlineController extends BaseController {
 						LoginUser user = JsonUtil.json2Object( stringRedisTemplate.opsForValue().get( key ), LoginUser.class );
 						resultMap.put( user.getToken(), user );
 					}
-					//                    Set<String> keys = stringRedisTemplate.keys(AdminConstants.LOGIN_TOKEN_KEY + "*");
-					//                    for (String key : keys) {
-					//                        LoginUser user = JsonUtil.json2Object( stringRedisTemplate.opsForValue().get( key
-					//                        ), LoginUser.class );
-					//                        resultMap.put( user.getToken(), user );
-					//                    }
-
 					return resultMap;
 				} );
 		List<SysUserOnline> userOnlineList = new ArrayList<>();
