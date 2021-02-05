@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberGameData;
+import com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
@@ -40,7 +41,10 @@ public class MemberGameDataController extends BaseController {
         List<MemberGameData> list = memberGameDataService.selectMemberGameDataList(memberGameData);
 		return getDataTable( list );
 	}
-
+	@PutMapping(value = "/getLotteryBetData")
+	public AjaxResult getBetData( MemberGameData memberGameData ) {
+		return memberGameDataService.getBetData( memberGameData);
+	}
 	/**
 	 * 查询会员注单数据统计
 	 */

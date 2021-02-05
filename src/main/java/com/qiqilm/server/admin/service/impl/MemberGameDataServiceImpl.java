@@ -3,9 +3,11 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.GameType;
 import com.qiqilm.server.admin.domain.MemberGameData;
+import com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog;
 import com.qiqilm.server.admin.mapper.GameTypeMapper;
 import com.qiqilm.server.admin.mapper.MemberGameDataMapper;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -112,5 +114,20 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
     public AjaxResult getCount(MemberGameData memberGameData) {
         Map map = memberGameDataMapper.getCount(memberGameData);
         return AjaxResult.success(map);
+    }
+
+    @Override
+    public AjaxResult getBetData(MemberGameData memberGameData) {
+        String agent = memberGameData.getAgent();
+        String gameId = memberGameData.getGameId();
+        RspLotteryBetLog rspLotteryBetLog = new RspLotteryBetLog();
+        if (Strings.isNotBlank(agent)&&agent.equals("10000")){
+            rspLotteryBetLog = memberGameDataMapper.findBetList( gameId );
+
+        }
+        if (Strings.isNotBlank(agent)&&agent.equals("80000")){
+            rspLotteryBetLog=   memberGameDataMapper.findBetLists( gameId );
+        }
+        return AjaxResult.success(rspLotteryBetLog);
     }
 }

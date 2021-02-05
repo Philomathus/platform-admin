@@ -153,4 +153,39 @@
             <include refid="whereCount"></include>
         </where>
     </select>
+    <select id="findBetList" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog">
+        SELECT
+        l.id,
+        l.userid,
+        l.issue,
+        l.per_price,
+        l.bet_amount,
+        l.prize,
+        l.bet_select,
+        l.code,
+        l.bet_time,
+        c.son_platform_name
+        FROM
+        lottery_betlog10000 l
+        LEFT JOIN config_gametype c ON l.lottery_id = c.son_platform_id
+        WHERE l.id=#{gameId}
+    </select>
+    <select id="findBetLists" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog">
+        SELECT
+        l.id,
+        l.userid,
+        l.issue,
+        l.per_price,
+        l.bet_amount,
+        l.prize,
+        l.bet_select,
+        l.code,
+        l.bet_time,
+        c.son_platform_name
+        FROM
+        lottery_betlog80000 l
+        LEFT JOIN config_gametype c ON l.lottery_id = c.son_platform_id
+        WHERE l.id=#{gameId}
+    </select>
+
 </mapper>

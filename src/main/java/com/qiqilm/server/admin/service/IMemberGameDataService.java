@@ -61,4 +61,6 @@ public interface IMemberGameDataService {
 	public int deleteMemberGameDataById(String id);
 
     public AjaxResult getCount(MemberGameData memberGameData);
+
+	AjaxResult getBetData(MemberGameData memberGameData);
 }

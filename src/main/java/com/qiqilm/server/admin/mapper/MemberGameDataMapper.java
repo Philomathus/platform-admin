@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberGameData;
+import com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog;
 
 import java.util.List;
 import java.util.Map;
@@ -61,4 +62,8 @@ public interface MemberGameDataMapper {
 	public int deleteMemberGameDataByIds(String[] ids );
 
     public Map getCount(MemberGameData memberGameData);
+
+    RspLotteryBetLog findBetList(String gameId);
+
+	RspLotteryBetLog findBetLists(String gameId);
 }
