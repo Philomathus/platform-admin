@@ -1,7 +1,10 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.PayPlatformNewMapper;
@@ -18,6 +21,8 @@ import com.qiqilm.server.admin.service.IPayPlatformNewService;
 public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
     @Autowired
     private PayPlatformNewMapper payPlatformNewMapper;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询【支付平台】
@@ -50,6 +55,9 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
     @Override
     public int insertPayPlatformNew(PayPlatformNew payPlatformNew) {
         payPlatformNew.setCreateTime(DateUtils.getNowDate());
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String        username  = loginUser.getUsername();
+        payPlatformNew.setCreator(username);
         return payPlatformNewMapper.insertPayPlatformNew(payPlatformNew);
     }
 
@@ -62,6 +70,9 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
     @Override
     public int updatePayPlatformNew(PayPlatformNew payPlatformNew) {
         payPlatformNew.setUpdateTime(DateUtils.getNowDate());
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String        username  = loginUser.getUsername();
+        payPlatformNew.setUpdator( username );
         return payPlatformNewMapper.updatePayPlatformNew(payPlatformNew);
     }
 

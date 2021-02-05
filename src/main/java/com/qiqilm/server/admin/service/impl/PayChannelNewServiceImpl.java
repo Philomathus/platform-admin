@@ -1,7 +1,11 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.PayChannelNewMapper;
@@ -18,6 +22,8 @@ import com.qiqilm.server.admin.service.IPayChannelNewService;
 public class PayChannelNewServiceImpl implements IPayChannelNewService {
     @Autowired
     private PayChannelNewMapper payChannelNewMapper;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询【请填写功能名称】
@@ -50,6 +56,13 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
     @Override
     public int insertPayChannelNew(PayChannelNew payChannelNew) {
         payChannelNew.setCreateTime(DateUtils.getNowDate());
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String        username  = loginUser.getUsername();
+        payChannelNew.setCreator(username);
+        payChannelNew.setStatus( "0" );
+        payChannelNew.setFailNum( 0 );
+        payChannelNew.setSuccessNum( 0 );
+        payChannelNew.setTotalSuccessMoney( BigDecimal.ZERO );
         return payChannelNewMapper.insertPayChannelNew(payChannelNew);
     }
 
@@ -62,6 +75,9 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
     @Override
     public int updatePayChannelNew(PayChannelNew payChannelNew) {
         payChannelNew.setUpdateTime(DateUtils.getNowDate());
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String        username  = loginUser.getUsername();
+        payChannelNew.setUpdator( username );
         return payChannelNewMapper.updatePayChannelNew(payChannelNew);
     }
 
