@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-27
  */
+@Data
 public class ServerIm extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -54,78 +56,6 @@ public class ServerIm extends BaseEntity {
 	 * 状态
 	 */
 	private Integer isEffect;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId( Long id ) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName( String name ) {
-		this.name = name;
-	}
-
-	public String getAppId() {
-		return appId;
-	}
-
-	public void setAppId( String appId ) {
-		this.appId = appId;
-	}
-
-	public String getAppKey() {
-		return appKey;
-	}
-
-	public void setAppKey( String appKey ) {
-		this.appKey = appKey;
-	}
-
-	public String getIdentify() {
-		return identify;
-	}
-
-	public void setIdentify( String identify ) {
-		this.identify = identify;
-	}
-
-	public String getFullGroup() {
-		return fullGroup;
-	}
-
-	public void setFullGroup( String fullGroup ) {
-		this.fullGroup = fullGroup;
-	}
-
-	public String getOnlineGroup() {
-		return onlineGroup;
-	}
-
-	public void setOnlineGroup( String onlineGroup ) {
-		this.onlineGroup = onlineGroup;
-	}
-
-	public Integer getProvider() {
-		return provider;
-	}
-
-	public void setProvider( Integer provider ) {
-		this.provider = provider;
-	}
-
-	public Integer getIsEffect() {
-		return isEffect;
-	}
-
-	public void setIsEffect( Integer isEffect ) {
-		this.isEffect = isEffect;
-	}
 
 	@Override
 	public String toString() {
