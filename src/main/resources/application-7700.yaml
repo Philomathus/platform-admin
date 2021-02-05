@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://47.254.238.161:3306/7700_main?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://172.31.131.36:3306/7700_main?useUnicode=true&characterEncoding=utf-8
     username: root
     password: 77lm@20210107
   redis:
-    host: 47.254.238.161
+    host: 172.31.131.36
     port: 6379
     password: 75a2-4e0e-9897-0347cc
