@@ -7,6 +7,3 @@ spring:
     password: tv77_redis:^&*B2(vBvfi#h
     port: 6379
     host: r-j6cjbpr49a0sffxuzv.redis.rds.aliyuncs.com
-
-domainTxtUploadUrl: http://172.21.136.230:41006/upload/oss?path=77ym
-domainTxtUrl: https://77live.jiayiss.com/77ym/77.txt
