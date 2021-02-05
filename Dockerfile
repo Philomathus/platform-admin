@@ -8,7 +8,7 @@ WORKDIR /opt/platform-admin
 
 CMD ["java", \
 	"-Xmx2500m", \
-	"-Dspring.profiles.active=release", \
+	"-Dspring.profiles.active=7700", \
 	"-Djava.io.tmpdir=/opt/platform-admin/tmp/", \
 	"-Djava.library.path=/usr/local/lib/", \
 	"-Djava.security.egd=file:/dev/./urandom", \
