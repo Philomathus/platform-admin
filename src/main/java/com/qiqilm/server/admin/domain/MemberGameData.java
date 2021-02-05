@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-29
  */
+@Data
 public class MemberGameData extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -75,6 +77,9 @@ public class MemberGameData extends BaseEntity {
 
     private String startTime;
     private String endTime;
+
+    private String platformName;
+    private String sonPlatformName;
 
     public String[] getSelectDate() {
         return selectDate;

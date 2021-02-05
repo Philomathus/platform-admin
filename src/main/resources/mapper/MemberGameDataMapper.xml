@@ -19,31 +19,59 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="platformType"    column="platform_type"    />
         <result property="status"    column="status"    />
         <result property="gameStartTime"    column="game_start_time"    />
+<!--        <result property="platformName"    column="platform_name"    />-->
+<!--        <result property="sonPlatformName"    column="son_platform_name"    />-->
     </resultMap>
 
     <sql id="selectMemberGameDataVo">
         select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from 7700_main.member_game_data
     </sql>
 
+<!--    <select id="selectMemberGameDataList" parameterType="MemberGameData" resultMap="MemberGameDataResult">-->
+<!--        <include refid="selectMemberGameDataVo"/>-->
+<!--        <where>-->
+<!--            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>-->
+<!--            <if test="account != null  and account != ''"> and account = #{account}</if>-->
+<!--            <if test="kindId != null  and kindId != ''"> and kind_id = #{kindId}</if>-->
+<!--            <if test="cellScore != null  and cellScore != ''"> and cell_score = #{cellScore}</if>-->
+<!--            <if test="allBet != null  and allBet != ''"> and all_bet = #{allBet}</if>-->
+<!--            <if test="profit != null  and profit != ''"> and profit = #{profit}</if>-->
+<!--            <if test="revenue != null  and revenue != ''"> and revenue = #{revenue}</if>-->
+<!--            <if test="gameEndTime != null  and gameEndTime != ''"> and game_end_time = #{gameEndTime}</if>-->
+<!--            <if test="platformId != null "> and platform_id = #{platformId}</if>-->
+<!--            <if test="agent != null  and agent != ''"> and agent = #{agent}</if>-->
+<!--            <if test="platformType != null  and platformType != ''"> and platform_type = #{platformType}</if>-->
+<!--            <if test="status != null "> and status = #{status}</if>-->
+<!--            <if test="gameStartTime != null  and gameStartTime != ''"> and game_start_time = #{gameStartTime}</if>-->
+<!--            <if test="startTime != null and startTime != ''"> and game_start_time >= #{startTime}</if>-->
+<!--            <if test="endTime != null and endTime != ''"> and game_end_time &lt;= #{endTime}</if>-->
+<!--        </where>-->
+<!--    </select>-->
+
     <select id="selectMemberGameDataList" parameterType="MemberGameData" resultMap="MemberGameDataResult">
-        <include refid="selectMemberGameDataVo"/>
-        <where>
-            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
-            <if test="account != null  and account != ''"> and account = #{account}</if>
-            <if test="kindId != null  and kindId != ''"> and kind_id = #{kindId}</if>
-            <if test="cellScore != null  and cellScore != ''"> and cell_score = #{cellScore}</if>
-            <if test="allBet != null  and allBet != ''"> and all_bet = #{allBet}</if>
-            <if test="profit != null  and profit != ''"> and profit = #{profit}</if>
-            <if test="revenue != null  and revenue != ''"> and revenue = #{revenue}</if>
-            <if test="gameEndTime != null  and gameEndTime != ''"> and game_end_time = #{gameEndTime}</if>
-            <if test="platformId != null "> and platform_id = #{platformId}</if>
-            <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
-            <if test="platformType != null  and platformType != ''"> and platform_type = #{platformType}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="gameStartTime != null  and gameStartTime != ''"> and game_start_time = #{gameStartTime}</if>
-            <if test="startTime != null and startTime != ''"> and game_start_time >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''"> and game_end_time &lt;= #{endTime}</if>
-        </where>
+        select t3.*
+        from
+        (SELECT m1.*,cg.platform_name,cg.son_platform_name
+        from
+        (select *
+        from member_game_data m1
+        where 1=1
+        <if test="account != null and account != ''">
+            and account = #{account}
+        </if>
+        <if test="agent != null and agent != ''">
+            and agent = #{agent}
+        </if>
+        ) m1 left join config_gametype cg
+        ON m1.agent = cg.platform_id
+        and m1.kind_id = cg.son_platform_id) t3
+        where 1=1
+        <if test="startTime != null and startTime != ''"> and game_start_time >= #{startTime}</if>
+       <if test="endTime != null and endTime != ''"> and game_end_time &lt;= #{endTime}</if>
+        <if test="sonPlatformName != null and sonPlatformName != ''">
+            and t3.son_platform_name = #{sonPlatformName}
+        </if>
+        order by t3.game_end_time desc
     </select>
 
     <select id="selectMemberGameDataById" parameterType="String" resultMap="MemberGameDataResult">
