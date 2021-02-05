@@ -4,8 +4,6 @@ import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.annotation.Excel.ColumnType;
 import com.qiqilm.server.admin.annotation.Excel.Type;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -155,8 +153,8 @@ public class SysUser extends BaseEntity {
 		this.avatar = avatar;
 	}
 
-	@JsonIgnore
-	@JsonProperty
+	//	@JsonIgnore
+	//	@JsonProperty
 	public String getPassword() {
 		return password;
 	}

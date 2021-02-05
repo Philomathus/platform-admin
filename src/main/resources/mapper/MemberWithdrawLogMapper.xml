@@ -1,251 +1,251 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper">
-	<resultMap type="MemberWithdrawLog" id="MemberWithdrawLogResult">
-		<result property="id" column="id"/>
-		<result property="memberId" column="member_id"/>
-		<result property="withdrawMoney" column="withdraw_money"/>
-		<result property="bankName" column="bank_name"/>
-		<result property="bankAccount" column="bank_account"/>
-		<result property="bankAddress" column="bank_address"/>
-		<result property="bankUserName" column="bank_user_name"/>
-		<result property="status" column="status"/>
-		<result property="type" column="type"/>
-		<result property="createTime" column="create_time"/>
-		<result property="opName" column="op_name"/>
-		<result property="updateTime" column="update_time"/>
-		<result property="orderNo" column="order_no"/>
-		<result property="remark" column="remark"/>
-		<result property="account" column="account"/>
-		<result property="first" column="first"/>
-		<result property="rechargeWithdrawRate" column="recharge_withdraw_rate"/>
-	</resultMap>
+    <resultMap type="MemberWithdrawLog" id="MemberWithdrawLogResult">
+        <result property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="withdrawMoney" column="withdraw_money"/>
+        <result property="bankName" column="bank_name"/>
+        <result property="bankAccount" column="bank_account"/>
+        <result property="bankAddress" column="bank_address"/>
+        <result property="bankUserName" column="bank_user_name"/>
+        <result property="status" column="status"/>
+        <result property="type" column="type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="opName" column="op_name"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="remark" column="remark"/>
+        <result property="account" column="account"/>
+        <result property="first" column="first"/>
+        <result property="rechargeWithdrawRate" column="recharge_withdraw_rate"/>
+    </resultMap>
 
-	<sql id="selectMemberWithdrawLogVo">
-		select id,
-			   member_id,
-			   withdraw_money,
-			   bank_name,
-			   bank_account,
-			   bank_address,
-			   bank_user_name,
-			   status,
-			   type,
-			   create_time,
-			   op_name,
-			   update_time,
-			   order_no,
-			   remark,
-			   account,
-			   first,
-			   recharge_withdraw_rate
-		from `7700_main`.member_withdraw_log
-	</sql>
+    <sql id="selectMemberWithdrawLogVo">
+        select id,
+        member_id,
+        withdraw_money,
+        bank_name,
+        bank_account,
+        bank_address,
+        bank_user_name,
+        status,
+        type,
+        create_time,
+        op_name,
+        update_time,
+        order_no,
+        remark,
+        account,
+        first,
+        recharge_withdraw_rate
+        from `7700_main`.member_withdraw_log
+    </sql>
 
-	<select id="selectMemberWithdrawLogList" parameterType="MemberWithdrawLog" resultMap="MemberWithdrawLogResult">
-		<include refid="selectMemberWithdrawLogVo"/>
-		<where>
-			<if test="status != null and status == -1">
-				member_id not in (select member_id
-								  from `7700_main`.member_withdraw_log
-								  WHERE `status` in (3, 6)
-								  GROUP BY member_id
-								  HAVING count(1) &gt; 1)
-			</if>
-			<if test="status != null and status != -1">
-				and `status` = #{status}
-			</if>
-			<if test="searchValue != null and searchValue != ''">
-				and (order_no = #{searchValue} or member_id = #{searchValue} or account = #{searchValue}
-						or bank_user_name = #{searchValue})
-			</if>
-			<if test="priceMin != null and priceMax != null  and priceMin != ''  and priceMax != ''">
-				and withdraw_money &gt;= #{priceMin}
-				and withdraw_money &lt;= #{priceMax}
-			</if>
-			<if test="startTime != null and startTime != ''">
-				and update_time >= #{startTime}
-				and update_time &lt;= #{endTime}
-			</if>
-		</where>
-	</select>
+    <select id="selectMemberWithdrawLogList" parameterType="MemberWithdrawLog" resultMap="MemberWithdrawLogResult">
+        <include refid="selectMemberWithdrawLogVo"/>
+        <where>
+            <if test="status != null and status == -1">
+                member_id not in (select member_id
+                from `7700_main`.member_withdraw_log
+                WHERE `status` in (3, 6)
+                GROUP BY member_id
+                HAVING count(1) &gt; 1)
+            </if>
+            <if test="status != null and status != -1">
+                and `status` = #{status}
+            </if>
+            <if test="searchValue != null and searchValue != ''">
+                and (order_no = #{searchValue} or member_id = #{searchValue} or account = #{searchValue}
+                or bank_user_name = #{searchValue})
+            </if>
+            <if test="priceMin != null and priceMax != null  and priceMin != ''  and priceMax != ''">
+                and withdraw_money &gt;= #{priceMin}
+                and withdraw_money &lt;= #{priceMax}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and update_time >= #{startTime}
+                and update_time &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
 
-	<select id="selectMemberWithdrawLogById" parameterType="String" resultMap="MemberWithdrawLogResult">
-		<include refid="selectMemberWithdrawLogVo"/>
-		where id = #{id}
-	</select>
+    <select id="selectMemberWithdrawLogById" parameterType="String" resultMap="MemberWithdrawLogResult">
+        <include refid="selectMemberWithdrawLogVo"/>
+        where id = #{id}
+    </select>
 
-	<insert id="insertMemberWithdrawLog" parameterType="MemberWithdrawLog">
-		insert into 7700_main.member_withdraw_log
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
-			<if test="memberId != null">
-				member_id,
-			</if>
-			<if test="withdrawMoney != null">
-				withdraw_money,
-			</if>
-			<if test="bankName != null">
-				bank_name,
-			</if>
-			<if test="bankAccount != null">
-				bank_account,
-			</if>
-			<if test="bankAddress != null">
-				bank_address,
-			</if>
-			<if test="bankUserName != null">
-				bank_user_name,
-			</if>
-			<if test="status != null">
-				status,
-			</if>
-			<if test="type != null">
-				type,
-			</if>
-			<if test="createTime != null">
-				create_time,
-			</if>
-			<if test="opName != null">
-				op_name,
-			</if>
-			<if test="updateTime != null">
-				update_time,
-			</if>
-			<if test="orderNo != null">
-				order_no,
-			</if>
-			<if test="remark != null">
-				remark,
-			</if>
-			<if test="account != null">
-				account,
-			</if>
-			<if test="first != null">
-				first,
-			</if>
-			<if test="rechargeWithdrawRate != null">
-				recharge_withdraw_rate,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id},
-			</if>
-			<if test="memberId != null">
-				#{memberId},
-			</if>
-			<if test="withdrawMoney != null">
-				#{withdrawMoney},
-			</if>
-			<if test="bankName != null">
-				#{bankName},
-			</if>
-			<if test="bankAccount != null">
-				#{bankAccount},
-			</if>
-			<if test="bankAddress != null">
-				#{bankAddress},
-			</if>
-			<if test="bankUserName != null">
-				#{bankUserName},
-			</if>
-			<if test="status != null">
-				#{status},
-			</if>
-			<if test="type != null">
-				#{type},
-			</if>
-			<if test="createTime != null">
-				#{createTime},
-			</if>
-			<if test="opName != null">
-				#{opName},
-			</if>
-			<if test="updateTime != null">
-				#{updateTime},
-			</if>
-			<if test="orderNo != null">
-				#{orderNo},
-			</if>
-			<if test="remark != null">
-				#{remark},
-			</if>
-			<if test="account != null">
-				#{account},
-			</if>
-			<if test="first != null">
-				#{first},
-			</if>
-			<if test="rechargeWithdrawRate != null">
-				#{rechargeWithdrawRate},
-			</if>
-		</trim>
-	</insert>
+    <insert id="insertMemberWithdrawLog" parameterType="MemberWithdrawLog">
+        insert into 7700_main.member_withdraw_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="withdrawMoney != null">
+                withdraw_money,
+            </if>
+            <if test="bankName != null">
+                bank_name,
+            </if>
+            <if test="bankAccount != null">
+                bank_account,
+            </if>
+            <if test="bankAddress != null">
+                bank_address,
+            </if>
+            <if test="bankUserName != null">
+                bank_user_name,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="opName != null">
+                op_name,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="orderNo != null">
+                order_no,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="first != null">
+                first,
+            </if>
+            <if test="rechargeWithdrawRate != null">
+                recharge_withdraw_rate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="memberId != null">
+                #{memberId},
+            </if>
+            <if test="withdrawMoney != null">
+                #{withdrawMoney},
+            </if>
+            <if test="bankName != null">
+                #{bankName},
+            </if>
+            <if test="bankAccount != null">
+                #{bankAccount},
+            </if>
+            <if test="bankAddress != null">
+                #{bankAddress},
+            </if>
+            <if test="bankUserName != null">
+                #{bankUserName},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="opName != null">
+                #{opName},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="account != null">
+                #{account},
+            </if>
+            <if test="first != null">
+                #{first},
+            </if>
+            <if test="rechargeWithdrawRate != null">
+                #{rechargeWithdrawRate},
+            </if>
+        </trim>
+    </insert>
 
-	<update id="updateMemberWithdrawLog" parameterType="MemberWithdrawLog">
-		update 7700_main.member_withdraw_log
-		<trim prefix="SET" suffixOverrides=",">
-			<if test="memberId != null">
-				member_id = #{memberId},
-			</if>
-			<if test="withdrawMoney != null">
-				withdraw_money = #{withdrawMoney},
-			</if>
-			<if test="bankName != null">
-				bank_name = #{bankName},
-			</if>
-			<if test="bankAccount != null">
-				bank_account = #{bankAccount},
-			</if>
-			<if test="bankAddress != null">
-				bank_address = #{bankAddress},
-			</if>
-			<if test="bankUserName != null">
-				bank_user_name = #{bankUserName},
-			</if>
-			<if test="status != null">
-				status = #{status},
-			</if>
-			<if test="type != null">
-				type = #{type},
-			</if>
-			<if test="createTime != null">
-				create_time = #{createTime},
-			</if>
-			<if test="opName != null">
-				op_name = #{opName},
-			</if>
-			<if test="updateTime != null">
-				update_time = #{updateTime},
-			</if>
-			<if test="orderNo != null">
-				order_no = #{orderNo},
-			</if>
-			<if test="remark != null">
-				remark = #{remark},
-			</if>
-			<if test="account != null">
-				account = #{account},
-			</if>
-			<if test="first != null">
-				first = #{first},
-			</if>
-			<if test="rechargeWithdrawRate != null">
-				recharge_withdraw_rate = #{rechargeWithdrawRate},
-			</if>
-		</trim>
-		where id = #{id}
-	</update>
+    <update id="updateMemberWithdrawLog" parameterType="MemberWithdrawLog">
+        update 7700_main.member_withdraw_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null">
+                member_id = #{memberId},
+            </if>
+            <if test="withdrawMoney != null">
+                withdraw_money = #{withdrawMoney},
+            </if>
+            <if test="bankName != null">
+                bank_name = #{bankName},
+            </if>
+            <if test="bankAccount != null">
+                bank_account = #{bankAccount},
+            </if>
+            <if test="bankAddress != null">
+                bank_address = #{bankAddress},
+            </if>
+            <if test="bankUserName != null">
+                bank_user_name = #{bankUserName},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="opName != null">
+                op_name = #{opName},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="orderNo != null">
+                order_no = #{orderNo},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="account != null">
+                account = #{account},
+            </if>
+            <if test="first != null">
+                first = #{first},
+            </if>
+            <if test="rechargeWithdrawRate != null">
+                recharge_withdraw_rate = #{rechargeWithdrawRate},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
 
-	<select id="selectByOrderNo" resultMap="MemberWithdrawLogResult">
-		<include refid="selectMemberWithdrawLogVo"/>
-		where order_no = #{orderNo}
-	</select>
+    <select id="selectByOrderNo" resultMap="MemberWithdrawLogResult">
+        <include refid="selectMemberWithdrawLogVo"/>
+        where order_no = #{orderNo}
+    </select>
 
     <sql id="whereTotal">
         <if test="status != null and status == -1">
@@ -272,23 +272,21 @@
         </if>
     </sql>
     <sql id="getTotalSql">
-        select count(*) total from `7700_main`.member_withdraw_log
+        select count(*) numberTotal from `7700_main`.member_withdraw_log
         <where>
             <include refid="whereTotal"></include>
         </where>
     </sql>
     <sql id="getSuccessTotalSql">
-        select count(*) successTotal from `7700_main`.member_withdraw_log
+        select count(*) total ,sum(withdraw_money) successTotal from `7700_main`.member_withdraw_log
         <where>
             <include refid="whereTotal"></include>
-            <if test="status != null and searchValue != ''">
-                and status = 3
-            </if>
+               (status = 3 or status = 6)
         </where>
     </sql>
     <select id="getTotal" parameterType="MemberWithdrawLog" resultType="java.util.Map">
-        select a.total,b.successTotal,b.successTotal/a.total successRate from (<include refid="getTotalSql"></include>)a left join (<include
-            refid="getSuccessTotalSql"></include>)b on 1=1
+        select b.total,b.successTotal,b.total/a.numberTotal successRate from (<include refid="getTotalSql"></include>)a
+        left join (<include refid="getSuccessTotalSql"></include>)b on 1=1
     </select>
 
 </mapper>

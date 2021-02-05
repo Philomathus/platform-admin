@@ -2,16 +2,17 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.domain.SysUser;
-import com.qiqilm.server.admin.service.ISysUserService;
-import com.qiqilm.server.admin.service.impl.TokenService;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.utils.SecurityUtils;
-import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.SysUser;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.ISysUserService;
+import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * 个人信息 业务处理
@@ -31,9 +32,10 @@ public class SysProfileController extends BaseController {
 	 */
 	@GetMapping
 	public AjaxResult profile() {
-		LoginUser  loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		SysUser    user      = loginUser.getUser();
-		AjaxResult ajax      = AjaxResult.success( user );
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		SysUser   user      = loginUser.getUser();
+		user.setPassword( null );
+		AjaxResult ajax = AjaxResult.success( user );
 		ajax.put( "roleGroup", userService.selectUserRoleGroup( loginUser.getUsername() ) );
 		return ajax;
 	}
@@ -60,7 +62,14 @@ public class SysProfileController extends BaseController {
 	 */
 	@Log( title = "个人信息", businessType = BusinessType.UPDATE )
 	@PutMapping( "/updatePwd" )
-	public AjaxResult updatePwd( String oldPassword, String newPassword ) {
+	public AjaxResult updatePwd( @RequestBody String data ) throws Exception {
+		String decryptStr = RSACoder.decryptByPrivateKey( data, AuthUtil.getSecurityKeyStr( "secretkey/loginPrivateKey" ) );
+
+		Map<String, String> requestMap = JsonUtil.json2Map( decryptStr );
+
+		String oldPassword = requestMap.get( "oldPwd" );
+		String newPassword = requestMap.get( "newPwd" );
+
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUsername();
 		String    password  = loginUser.getPassword();

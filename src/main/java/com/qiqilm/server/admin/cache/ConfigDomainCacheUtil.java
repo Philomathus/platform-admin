@@ -17,7 +17,7 @@ public class ConfigDomainCacheUtil {
 	@Autowired
 	private RedisUtil redisUtil;
 
-	public boolean setValue( String code,String domain ) {
+	public boolean setValue( String code, String domain ) {
 		return redisUtil.sAdd( CONFIG_DOMAIN + code, domain ) > 0;
 	}
 
@@ -32,6 +32,9 @@ public class ConfigDomainCacheUtil {
 	}
 
 	public String getValue( String code ) {
+		if ( !redisUtil.exists( CONFIG_DOMAIN + code ) ) {
+			this.refreshKey( code );
+		}
 		return redisUtil.sRandom( CONFIG_DOMAIN + code );
 	}
 }

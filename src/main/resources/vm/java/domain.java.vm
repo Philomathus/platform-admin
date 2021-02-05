@@ -5,6 +5,7 @@ import ${import};
 #end
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 #if($table.crud || $table.sub)
@@ -22,6 +23,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 #elseif($table.tree)
 #set($Entity="TreeEntity")
 #end
+@Data
 public class ${ClassName} extends ${Entity} {
     private static final long serialVersionUID = 1L;
 
@@ -51,33 +53,6 @@ public class ${ClassName} extends ${Entity} {
 #if($table.sub)
     /** $table.subTable.functionName信息 */
     private List<${subClassName}> ${subclassName}List;
-
-#end
-#foreach ($column in $columns)
-#if(!$table.isSuperColumn($column.javaField))
-#if($column.javaField.length() > 2 && $column.javaField.substring(1,2).matches("[A-Z]"))
-#set($AttrName=$column.javaField)
-#else
-#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
-#end
-    public void set${AttrName}($column.javaType $column.javaField) {
-        this.$column.javaField = $column.javaField;
-    }
-
-    public $column.javaType get${AttrName}() {
-        return $column.javaField;
-    }
-#end
-#end
-
-#if($table.sub)
-    public List<${subClassName}> get${subClassName}List() {
-        return ${subclassName}List;
-    }
-
-    public void set${subClassName}List(List<${subClassName}> ${subclassName}List) {
-        this.${subclassName}List = ${subclassName}List;
-    }
 
 #end
     @Override

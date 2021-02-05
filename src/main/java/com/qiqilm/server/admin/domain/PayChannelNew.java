@@ -36,11 +36,11 @@ public class PayChannelNew extends BaseEntity {
 
     /** 失败次数 */
     @Excel(name = "失败次数")
-    private Long failNum;
+    private Integer failNum;
 
     /** 成功次数 */
     @Excel(name = "成功次数")
-    private Long successNum;
+    private Integer successNum;
 
     /** 累计成功金额 */
     @Excel(name = "累计成功金额")

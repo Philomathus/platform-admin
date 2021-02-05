@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-29
  */
+@Data
 public class ConfigTradeType extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -32,29 +34,7 @@ public class ConfigTradeType extends BaseEntity {
 	@Excel( name = "交易说明" )
 	private String des;
 
-	public Long getType() {
-		return type;
-	}
 
-	public void setType( Long type ) {
-		this.type = type;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName( String name ) {
-		this.name = name;
-	}
-
-	public String getDes() {
-		return des;
-	}
-
-	public void setDes( String des ) {
-		this.des = des;
-	}
 
 	@Override
 	public String toString() {

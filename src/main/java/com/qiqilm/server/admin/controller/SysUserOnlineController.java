@@ -8,13 +8,14 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.SysUserOnline;
 import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ISysUserOnlineService;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
@@ -35,27 +36,20 @@ public class SysUserOnlineController extends BaseController {
 	private ISysUserOnlineService userOnlineService;
 	@Autowired
 	private StringRedisTemplate   stringRedisTemplate;
-	@Autowired
-    private MemberInfoMapper memberInfoMapper;
 
 	@PreAuthorize( "@ss.hasPermi('monitor:online:list')" )
 	@GetMapping( "/list" )
 	public TableDataInfo list( String ipaddr, String userName ) {
-        Map<String, LoginUser> loginUserList = stringRedisTemplate.execute( ( RedisCallback<Map<String, LoginUser>> )
+		Map<String, LoginUser> loginUserList = stringRedisTemplate.execute( ( RedisCallback<Map<String, LoginUser>> )
 				connection -> {
 					Map<String, LoginUser> resultMap = new HashMap<>();
-/*					Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
-							.match( AdminConstants.LOGIN_TOKEN_KEY + "*" ).count( 100 ).build() );*/
-                    Set<String> keys = stringRedisTemplate.keys(AdminConstants.LOGIN_TOKEN_KEY + "*");
-                    for (String key : keys) {
-                        LoginUser user = JsonUtil.json2Object( stringRedisTemplate.opsForValue().get( key ), LoginUser.class );
-                        resultMap.put( user.getToken(), user );
-                    }
-/*                    while ( cursor.hasNext() ) {
-                        String    key  = new String( cursor.next() );
-                        LoginUser user = JsonUtil.json2Object( stringRedisTemplate.opsForValue().get( key ), LoginUser.class );
-                        resultMap.put( user.getToken(), user );
-                    }*/
+					Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
+							.match( AdminConstants.LOGIN_TOKEN_KEY + "*" ).count( 3 ).build() );
+					while ( cursor.hasNext() ) {
+						String    key  = new String( cursor.next() );
+						LoginUser user = JsonUtil.json2Object( stringRedisTemplate.opsForValue().get( key ), LoginUser.class );
+						resultMap.put( user.getToken(), user );
+					}
 					return resultMap;
 				} );
 		List<SysUserOnline> userOnlineList = new ArrayList<>();

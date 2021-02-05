@@ -1,7 +1,10 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.PayAgentRechargeBankMapper;
@@ -9,7 +12,7 @@ import com.qiqilm.server.admin.domain.PayAgentRechargeBank;
 import com.qiqilm.server.admin.service.IPayAgentRechargeBankService;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ * 【代充银行列表】Service业务层处理
  *
  * @author 77tv
  * @date 2021-01-26
@@ -18,12 +21,14 @@ import com.qiqilm.server.admin.service.IPayAgentRechargeBankService;
 public class PayAgentRechargeBankServiceImpl implements IPayAgentRechargeBankService {
     @Autowired
     private PayAgentRechargeBankMapper payAgentRechargeBankMapper;
+    @Autowired
+    private TokenService tokenService;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询【代充银行列表】
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id 【代充银行列表】ID
+     * @return 【代充银行列表】
      */
     @Override
     public PayAgentRechargeBank selectPayAgentRechargeBankById(Long id) {
@@ -31,10 +36,10 @@ public class PayAgentRechargeBankServiceImpl implements IPayAgentRechargeBankSer
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询【代充银行列表】列表
      *
-     * @param payAgentRechargeBank 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param payAgentRechargeBank 【代充银行列表】
+     * @return 【代充银行列表】
      */
     @Override
     public List<PayAgentRechargeBank> selectPayAgentRechargeBankList(PayAgentRechargeBank payAgentRechargeBank) {
@@ -42,33 +47,41 @@ public class PayAgentRechargeBankServiceImpl implements IPayAgentRechargeBankSer
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增【代充银行列表】
      *
-     * @param payAgentRechargeBank 【请填写功能名称】
+     * @param payAgentRechargeBank 【代充银行列表】
      * @return 结果
      */
     @Override
     public int insertPayAgentRechargeBank(PayAgentRechargeBank payAgentRechargeBank) {
         payAgentRechargeBank.setCreateTime(DateUtils.getNowDate());
+        payAgentRechargeBank.setStatus( "1" );
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String        username  = loginUser.getUsername();
+        payAgentRechargeBank.setCreator( username );
         return payAgentRechargeBankMapper.insertPayAgentRechargeBank(payAgentRechargeBank);
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改【代充银行列表】
      *
-     * @param payAgentRechargeBank 【请填写功能名称】
+     * @param payAgentRechargeBank 【代充银行列表】
      * @return 结果
      */
     @Override
     public int updatePayAgentRechargeBank(PayAgentRechargeBank payAgentRechargeBank) {
         payAgentRechargeBank.setUpdateTime(DateUtils.getNowDate());
+        payAgentRechargeBank.setStatus( "1" );
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String        username  = loginUser.getUsername();
+        payAgentRechargeBank.setUpdator(username);
         return payAgentRechargeBankMapper.updatePayAgentRechargeBank(payAgentRechargeBank);
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除【代充银行列表】
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的【代充银行列表】ID
      * @return 结果
      */
     @Override
@@ -77,9 +90,9 @@ public class PayAgentRechargeBankServiceImpl implements IPayAgentRechargeBankSer
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除【代充银行列表】信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id 【代充银行列表】ID
      * @return 结果
      */
     @Override

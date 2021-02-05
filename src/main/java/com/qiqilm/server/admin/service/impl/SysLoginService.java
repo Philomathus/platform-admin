@@ -7,8 +7,7 @@ import com.qiqilm.server.admin.core.vo.LoginBody;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.mapper.SystemIpWhiteMapper;
 import com.qiqilm.server.admin.service.ISysUserService;
-import com.qiqilm.server.admin.utils.AsyncManager;
-import com.qiqilm.server.admin.utils.MessageUtils;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +33,7 @@ public class SysLoginService {
 	@Autowired
 	private ISysUserService       userService;
 	@Autowired
-	private SystemIpWhiteMapper systemIpWhiteMapper;
+	private SystemIpWhiteMapper   systemIpWhiteMapper;
 
 	/**
 	 * 登录验证
@@ -45,7 +44,6 @@ public class SysLoginService {
 	 */
 	public AjaxResult login( String ip, LoginBody loginBody ) throws Exception {
 		String googleAuthSecret = userService.selectGoogleAuthKeyByUserName( loginBody.getUsername() );
-/*
 		if ( StringUtils.isBlank( googleAuthSecret ) ) {
 			return AjaxResult.error( "请联系管理员绑定google验证秘钥" );
 		}
@@ -56,7 +54,6 @@ public class SysLoginService {
 					MessageUtils.message( "user.google.auth.error" ) ) );
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
-*/
 
 		// 用户验证
 		Authentication authentication = null;
@@ -77,20 +74,20 @@ public class SysLoginService {
 			}
 		}
 
-		//		log.info( "管理员{}登录IP:{}", loginBody.getUsername(), ip );
-		//		String ipId = systemIpWhiteMapper.selectEffectIp( ip );
-		//		if ( StringUtils.isBlank( ipId ) ) {
-		//			AsyncManager.me().execute( AsyncFactory.recordLogininfor( loginBody.getUsername(), AdminConstants.LOGIN_FAIL,
-		//					MessageUtils.message( "user.block.ip" ), ip ) );
-		//			log.warn( "限制IP:{}登录", ip );
-		//			return AjaxResult.error( "您所在区域无法登录本系统IP：" + ip );
-		//		}
+		log.info( "管理员{}登录IP:{}", loginBody.getUsername(), ip );
+		String ipId = systemIpWhiteMapper.selectEffectIp( ip );
+		if ( StringUtils.isBlank( ipId ) ) {
+			AsyncManager.me().execute( AsyncFactory.recordLogininfor( loginBody.getUsername(), AdminConstants.LOGIN_FAIL,
+					MessageUtils.message( "user.block.ip" ), ip ) );
+			log.warn( "限制IP:{}登录", ip );
+			return AjaxResult.error( "您所在区域无法登录本系统IP：" + ip );
+		}
 
 		AsyncManager.me().execute( AsyncFactory.recordLogininfor( loginBody.getUsername(), AdminConstants.LOGIN_SUCCESS,
 				MessageUtils.message( "user.login.success" ) ) );
 		LoginUser loginUser = ( LoginUser ) authentication.getPrincipal();
 		//IP白名单记录登录数量
-//		systemIpWhiteMapper.incLoginCount( ipId );
+		systemIpWhiteMapper.incLoginCount( ipId );
 		// 生成token
 		String     token = tokenService.createToken( loginUser );
 		AjaxResult ajax  = AjaxResult.success();
