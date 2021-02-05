@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUser;
-
+import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import java.util.List;
 
 /**
@@ -61,4 +61,6 @@ public interface ILiveUserService {
 	public int deleteLiveUserById(Long id);
 
     public AjaxResult updateFamilyID(Long familyId, Long id);
+
+    List<RspLotteryBet> selectAnchorAward(LiveUser liveUser);
 }

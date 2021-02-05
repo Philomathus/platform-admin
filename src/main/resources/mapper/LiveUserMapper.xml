@@ -943,4 +943,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <select id="selectAnchorAward" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBet">
+        select
+        sum(a.cost) as cost,
+        sum(a.prize) as prize,
+        a.anchor,
+        a.update_time as updateTime,
+        b.id,
+        b.nick_name as nickName
+        FROM
+        7700_live.lottery_bet a
+        LEFT JOIN 7700_live.live_user b ON a.anchor = b.id
+        <where>
+            <if test="nickName != null  and nickName != ''"> and b.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="sendStartTime != null  and sendStartTime != ''"> and a.update_time>= #{sendStartTime}</if>
+            <if test="sendEndTime != null  and sendEndTime != ''"> and a.update_time &lt;= #{sendEndTime}</if>
+            <if test="id != null  and id != ''"> and b.id = #{id}</if>
+        </where>
+    </select>
 </mapper>
