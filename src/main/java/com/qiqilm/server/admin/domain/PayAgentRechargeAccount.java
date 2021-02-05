@@ -36,7 +36,7 @@ public class PayAgentRechargeAccount extends BaseEntity {
 
     /** 代充次数 */
     @Excel(name = "代充次数")
-    private Long rechargeNum;
+    private Integer rechargeNum;
 
     /** QQ号 */
     @Excel(name = "QQ号")
@@ -55,14 +55,16 @@ public class PayAgentRechargeAccount extends BaseEntity {
     private String mobile;
 
     /** 开店时间 */
-    @JsonFormat(pattern = "HH:mm:ss")
+    /*@JsonFormat(pattern = "HH:mm:ss")
+    */
     @Excel(name = "开店时间", width = 30, dateFormat = "HH:mm:ss")
-    private Date businessBeginTime;
+    private String businessBeginTime;
 
     /** 关店时间 */
-    @JsonFormat(pattern = "HH:mm:ss")
+   /* @JsonFormat(pattern = "HH:mm:ss")
+    */
     @Excel(name = "关店时间", width = 30, dateFormat = "HH:mm:ss")
-    private Date businessEndTime;
+    private String businessEndTime;
 
     /** 充值优惠比例 */
     @Excel(name = "充值优惠比例")
@@ -82,6 +84,7 @@ public class PayAgentRechargeAccount extends BaseEntity {
     @Excel(name = "本次登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
 

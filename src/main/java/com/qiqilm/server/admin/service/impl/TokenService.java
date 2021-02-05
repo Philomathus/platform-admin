@@ -24,9 +24,9 @@ import java.util.Map;
  */
 @Component
 public class TokenService {
-	protected static final long MILLIS_SECOND     = 1000;
-	protected static final long MILLIS_MINUTE     = 60 * MILLIS_SECOND;
-	private static final   Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+	protected static final long MILLIS_SECOND     = 1000L;
+	protected static final long MILLIS_MINUTE     = 2 * 60 * MILLIS_SECOND;
+	private static final   Long MILLIS_MINUTE_SIX = 60 * 60 * 1000L;
 
 	// 令牌自定义标识
 	@Value( "${token.header}" )
@@ -98,14 +98,14 @@ public class TokenService {
 	}
 
 	/**
-	 * 验证令牌有效期，相差不足20分钟，自动刷新缓存
+	 * 验证令牌有效期，相差不足1小时，自动刷新缓存
 	 *
 	 * @return 令牌
 	 */
 	public void verifyToken( LoginUser loginUser ) {
 		long expireTime  = loginUser.getExpireTime();
 		long currentTime = System.currentTimeMillis();
-		if ( expireTime - currentTime <= MILLIS_MINUTE_TEN ) {
+		if ( expireTime - currentTime <= MILLIS_MINUTE_SIX ) {
 			refreshToken( loginUser );
 		}
 	}

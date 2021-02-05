@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="url != null  and url != ''"> and url = #{url}</if>
             <if test="indexs != null "> and indexs = #{indexs}</if>
             <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="status != null and status != '' "> and status = #{status}</if>
             <if test="accountName != null  and accountName != ''"> and account_name like concat('%', #{accountName}, '%')</if>
             <if test="bankAddress != null  and bankAddress != ''"> and bank_address = #{bankAddress}</if>
             <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="indexs != null">indexs,</if>
             <if test="bankAccount != null">bank_account,</if>
             <if test="remark != null">remark,</if>
-            <if test="status != null">status,</if>
+            <if test="status != null and status != ''">status,</if>
             <if test="accountName != null">account_name,</if>
             <if test="bankAddress != null">bank_address,</if>
             <if test="discountBill != null">discount_bill,</if>
@@ -84,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="indexs != null">#{indexs},</if>
             <if test="bankAccount != null">#{bankAccount},</if>
             <if test="remark != null">#{remark},</if>
-            <if test="status != null">#{status},</if>
+            <if test="status != null and status != ''">#{status},</if>
             <if test="accountName != null">#{accountName},</if>
             <if test="bankAddress != null">#{bankAddress},</if>
             <if test="discountBill != null">#{discountBill},</if>
@@ -106,7 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="indexs != null">indexs = #{indexs},</if>
             <if test="bankAccount != null">bank_account = #{bankAccount},</if>
             <if test="remark != null">remark = #{remark},</if>
-            <if test="status != null">status = #{status},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
             <if test="accountName != null">account_name = #{accountName},</if>
             <if test="bankAddress != null">bank_address = #{bankAddress},</if>
             <if test="discountBill != null">discount_bill = #{discountBill},</if>

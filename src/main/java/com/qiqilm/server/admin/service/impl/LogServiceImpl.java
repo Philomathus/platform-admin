@@ -1,9 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.LogMoney;
+import com.qiqilm.server.admin.domain.MemberActionLogs;
+import com.qiqilm.server.admin.enums.EnumAction;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.LogMoneyMapper;
+import com.qiqilm.server.admin.mapper.MemberActionLogsMapper;
 import com.qiqilm.server.admin.service.ILogService;
+import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.utils.UserDataUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +20,9 @@ import java.util.Date;
 @Service
 public class LogServiceImpl implements ILogService {
 	@Autowired
-	private LogMoneyMapper logMoneyMapper;
+	private LogMoneyMapper         logMoneyMapper;
+	@Autowired
+	private MemberActionLogsMapper actionLogsMapper;
 
 	@Override
 	public void logmarkMoney( String userid, String username, EnumMoney enumTrans, BigDecimal totalNow, BigDecimal totalold,
@@ -100,5 +107,23 @@ public class LogServiceImpl implements ILogService {
 		log.setMark( mark );
 		log.setMarkorder( markorder );
 		logMoneyMapper.insertLogMoney( log );
+	}
+
+	@Override
+	public void logMemberAction( String userid, String username, EnumAction enumAction, String params1, String params2,
+								 String params3, String params4 ) {
+		MemberActionLogs log = new MemberActionLogs();
+		log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+		log.setUserId( userid );
+		log.setUserName( username );
+		log.setType( enumAction.getType() );
+		log.setDes( enumAction.getDes() );
+		log.setParam1( params1 );
+		log.setParam2( params2 );
+		log.setParam3( params3 );
+		log.setParam4( params4 );
+		log.setParamIp( UserDataUtil.getIp( ServletUtil.getHttpServletRequest() ) );
+		log.setcTime( new Date() );
+		actionLogsMapper.insertMemberActionLogs( log );
 	}
 }

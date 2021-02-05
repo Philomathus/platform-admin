@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import com.qiqilm.server.admin.enums.EnumAction;
 import com.qiqilm.server.admin.enums.EnumMoney;
 
 import java.math.BigDecimal;
@@ -23,4 +24,9 @@ public interface ILogService {
 	void logMoneyAdd( String businessId, String userid, String username, EnumMoney enumTrans, BigDecimal add, BigDecimal old,
 					  String mark, String markorder );
 
+	/**
+	 * 会员行为日志
+	 */
+	void logMemberAction( String userid, String username, EnumAction enumAction, String params1, String params2, String params3,
+						  String params4 );
 }

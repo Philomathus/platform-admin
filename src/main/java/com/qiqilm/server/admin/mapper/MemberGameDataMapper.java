@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.MemberGameData;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 会员注单数据Mapper接口
@@ -58,4 +59,7 @@ public interface MemberGameDataMapper {
 	 * @return 结果
 	 */
 	public int deleteMemberGameDataByIds(String[] ids );
+
+    public Map getCount(MemberGameData memberGameData);
+
 }

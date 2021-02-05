@@ -25,4 +25,6 @@ public interface IReportPlamGamesService {
 	public List<ReportPlamGames> selectReportPlamGamesList(ReportPlamGames reportPlamGames);
 
 	ReportPlamGames countBetData(ReportPlamGames reportPlamGames);
+
+    Object storage(ReportPlamGames reportPlamGames);
 }
