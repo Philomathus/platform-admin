@@ -360,6 +360,7 @@ public class RedisUtil {
 	/**
 	 * 获取 key 下的 所有 hashkey 字段名 <br/> 已过期！请使用 {@link #hScan}
 	 */
+	@Deprecated
 	public Set<Object> hKeys( String key ) {
 		return stringRedisTemplate.opsForHash().keys( key );
 	}
