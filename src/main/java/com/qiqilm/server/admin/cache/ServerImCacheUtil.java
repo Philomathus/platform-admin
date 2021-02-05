@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,12 +18,12 @@ import java.util.Map;
 @Log4j2
 @Component
 public class ServerImCacheUtil {
-	public static final String SERVER_IM = Constants.LIVE_PREX + "serverIm:effect";
+	public static final String SERVER_IM = Constants.CONFIG_PREX + "serverIm:effect";
 
 	@Autowired
-	private ServerImMapper serverImMapper;
-	@Autowired
 	private RedisUtil      redisUtil;
+	@Autowired
+	private ServerImMapper serverImMapper;
 
 	public void setServerIm( ServerIm serverIm ) {
 		Map<String, String> serverImMap = new HashMap<>();
@@ -41,7 +42,11 @@ public class ServerImCacheUtil {
 
 	private void exists() {
 		if ( !redisUtil.exists( SERVER_IM ) ) {
-			ServerIm serverIm = serverImMapper.selectServerImByEffect().get( 0 );
+			List<ServerIm> serverImList = serverImMapper.selectServerImByEffect();
+			if ( serverImList.isEmpty() ) {
+				return;
+			}
+			ServerIm serverIm = serverImList.get( 0 );
 			if ( serverIm != null ) {
 				this.setServerIm( serverIm );
 			}

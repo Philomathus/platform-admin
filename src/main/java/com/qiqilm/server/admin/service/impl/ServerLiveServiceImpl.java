@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
-import com.qiqilm.server.admin.cache.VideoStreamUtil;
+import com.qiqilm.server.admin.cache.ServerLiveCacheUtil;
 import com.qiqilm.server.admin.domain.ServerLive;
 import com.qiqilm.server.admin.mapper.ServerLiveMapper;
 import com.qiqilm.server.admin.service.IServerLiveService;
@@ -20,9 +20,9 @@ import java.util.List;
 @Service
 public class ServerLiveServiceImpl implements IServerLiveService {
 	@Autowired
-	private ServerLiveMapper serverLiveMapper;
+	private ServerLiveMapper    serverLiveMapper;
 	@Autowired
-	private VideoStreamUtil  videoStreamUtil;
+	private ServerLiveCacheUtil serverLiveCacheUtil;
 
 	/**
 	 * 查询直播流服务配置
@@ -111,10 +111,10 @@ public class ServerLiveServiceImpl implements IServerLiveService {
 		if ( update > 0 && status > 0 ) {
 			// 更新到redis
 			ServerLive serverLive = this.selectServerLiveById( id );
-			videoStreamUtil.setServerLive( serverLive );
+			serverLiveCacheUtil.setServerLive( serverLive );
 		}
 		if ( update > 0 && status <= 0 ) {
-			videoStreamUtil.clear( id );
+			serverLiveCacheUtil.clear( id );
 		}
 		return update;
 	}

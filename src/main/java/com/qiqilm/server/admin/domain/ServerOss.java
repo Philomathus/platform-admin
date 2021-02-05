@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-27
  */
+@Data
 public class ServerOss extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -50,70 +52,6 @@ public class ServerOss extends BaseEntity {
 	 */
 	private Integer isEffect;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId( Long id ) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName( String name ) {
-		this.name = name;
-	}
-
-	public String getAccessKey() {
-		return accessKey;
-	}
-
-	public void setAccessKey( String accessKey ) {
-		this.accessKey = accessKey;
-	}
-
-	public String getAccessSecret() {
-		return accessSecret;
-	}
-
-	public void setAccessSecret( String accessSecret ) {
-		this.accessSecret = accessSecret;
-	}
-
-	public String getEndpoint() {
-		return endpoint;
-	}
-
-	public void setEndpoint( String endpoint ) {
-		this.endpoint = endpoint;
-	}
-
-	public String getBucket() {
-		return bucket;
-	}
-
-	public void setBucket( String bucket ) {
-		this.bucket = bucket;
-	}
-
-	public String getVhost() {
-		return vhost;
-	}
-
-	public void setVhost( String vhost ) {
-		this.vhost = vhost;
-	}
-
-	public Integer getIsEffect() {
-		return isEffect;
-	}
-
-	public void setIsEffect( Integer isEffect ) {
-		this.isEffect = isEffect;
-	}
-
 	@Override
 	public String toString() {
 		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
@@ -130,5 +68,28 @@ public class ServerOss extends BaseEntity {
 				.append( "updateBy", getUpdateBy() )
 				.append( "updateTime", getUpdateTime() )
 				.toString();
+	}
+
+	public String[] toCodes() {
+		return new String[]{ "id", "name", "accessKey", "accessSecret", "endpoint", "bucket" };
+	}
+
+	public String getVal( String code ) {
+		switch ( code ) {
+		case "id":
+			return id + "";
+		case "name":
+			return name;
+		case "accessKey":
+			return accessKey;
+		case "accessSecret":
+			return accessSecret;
+		case "endpoint":
+			return endpoint;
+		case "bucket":
+			return bucket;
+		default:
+			return null;
+		}
 	}
 }

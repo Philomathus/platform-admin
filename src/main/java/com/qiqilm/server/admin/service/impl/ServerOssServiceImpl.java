@@ -2,7 +2,8 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import com.qiqilm.server.admin.cache.RedisCacheUtil;
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.cache.ServerOssCacheUtil;
 import com.qiqilm.server.admin.domain.ServerOss;
 import com.qiqilm.server.admin.mapper.ServerOssMapper;
 import com.qiqilm.server.admin.service.IServerOssService;
@@ -23,7 +24,11 @@ import java.util.List;
 @Service
 public class ServerOssServiceImpl implements IServerOssService {
 	@Autowired
-	private ServerOssMapper serverOssMapper;
+	private ServerOssMapper       serverOssMapper;
+	@Autowired
+	private ServerOssCacheUtil    serverOssCacheUtil;
+	@Autowired
+	private ConfigDomainCacheUtil configDomainCacheUtil;
 
 	/**
 	 * 查询oss文件存储服务配置
@@ -68,7 +73,11 @@ public class ServerOssServiceImpl implements IServerOssService {
 	@Override
 	public int updateServerOss( ServerOss serverOss ) {
 		serverOss.setUpdateTime( DateUtils.getNowDate() );
-		return serverOssMapper.updateServerOss( serverOss );
+		int i = serverOssMapper.updateServerOss( serverOss );
+		if ( i > 0 ) {
+			serverOssCacheUtil.clear();
+		}
+		return i;
 	}
 
 	/**
@@ -109,19 +118,14 @@ public class ServerOssServiceImpl implements IServerOssService {
 		update.setIsEffect( 1 );
 		int i = serverOssMapper.updateServerOss( update );
 		if ( i > 0 ) {
-			RedisCacheUtil.me.clear( "effect", ServerOss.class );
+			serverOssCacheUtil.clear();
 		}
 		return i;
 	}
 
 	@Override
-	public ServerOss effect() {
-		return RedisCacheUtil.me.get( "effect", () -> serverOssMapper.selectServerOssByEffect() );
-	}
-
-	@Override
 	public String uploadInputStream( InputStream inputStream, String fileKey ) {
-		ServerOss serverOss = this.effect();
+		ServerOss serverOss = serverOssCacheUtil.getAllValue();
 		return this.uploadOss( inputStream, fileKey, serverOss );
 	}
 
@@ -139,6 +143,6 @@ public class ServerOssServiceImpl implements IServerOssService {
 		ossClient.putObject( serverOss.getBucket(), fileKey, inputStream );
 		// 关闭client
 		ossClient.shutdown();
-		return "https://" + serverOss.getVhost() + "/" + fileKey;
+		return configDomainCacheUtil.getValue( "domain.oss" ) + "/" + fileKey;
 	}
 }
