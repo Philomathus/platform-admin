@@ -3,10 +3,12 @@ package com.qiqilm.server.admin.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.qiqilm.server.admin.constant.AdminConstants;
 import com.qiqilm.server.admin.domain.SysDictData;
+import com.qiqilm.server.admin.mapper.SysDictDataMapper;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,6 +42,13 @@ public class DictUtils {
 	 * @return dictDatas 字典数据列表
 	 */
 	public static List<SysDictData> getDictCache( String key ) {
+		if ( !SpringUtils.getBean( RedisUtil.class ).exists( getCacheKey( key ) ) ) {
+			List<SysDictData> dictDataList = SpringUtils.getBean( SysDictDataMapper.class )
+					.selectDictDataByType( getCacheKey( key ) );
+			if ( !CollectionUtils.isEmpty( dictDataList ) ) {
+				setDictCache( getCacheKey( key ), dictDataList );
+			}
+		}
 		String cacheObj = SpringUtils.getBean( RedisUtil.class ).strGet( getCacheKey( key ) );
 		if ( StringUtils.isNotNull( cacheObj ) ) {
 			return JsonUtil.json2Array( cacheObj, new TypeReference<List<SysDictData>>() {} );

@@ -29,18 +29,6 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
 	private SysDictDataMapper dictDataMapper;
 
 	/**
-	 * 项目启动时，初始化字典到缓存
-	 */
-	@PostConstruct
-	public void init() {
-		List<SysDictType> dictTypeList = dictTypeMapper.selectDictTypeAll();
-		for ( SysDictType dictType : dictTypeList ) {
-			List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType( dictType.getDictType() );
-			DictUtils.setDictCache( dictType.getDictType(), dictDatas );
-		}
-	}
-
-	/**
 	 * 根据条件分页查询字典类型
 	 *
 	 * @param dictType 字典类型信息
@@ -71,11 +59,6 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
 	public List<SysDictData> selectDictDataByType( String dictType ) {
 		List<SysDictData> dictDatas = DictUtils.getDictCache( dictType );
 		if ( StringUtils.isNotEmpty( dictDatas ) ) {
-			return dictDatas;
-		}
-		dictDatas = dictDataMapper.selectDictDataByType( dictType );
-		if ( StringUtils.isNotEmpty( dictDatas ) ) {
-			DictUtils.setDictCache( dictType, dictDatas );
 			return dictDatas;
 		}
 		return null;
