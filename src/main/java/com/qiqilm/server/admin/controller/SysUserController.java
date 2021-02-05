@@ -49,14 +49,6 @@ public class SysUserController extends BaseController {
     public TableDataInfo list(SysUser user) {
         startPage();
         List<SysUser> list = userService.selectUserList(user);
-        for (SysUser li : list) {
-            String google = userService.selectGoogleAuthKeyByUserName(li.getUserName());
-            if (google == null || "".equals(google)) {
-                li.setGoogleAuthSecret(null);
-            } else {
-                li.setGoogleAuthSecret("1");
-            }
-        }
         return getDataTable(list);
     }
 
