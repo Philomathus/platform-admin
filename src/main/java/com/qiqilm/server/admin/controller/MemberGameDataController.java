@@ -31,42 +31,43 @@ public class MemberGameDataController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(MemberGameData memberGameData) {
-        if (memberGameData.getSelectDate() != null) {
-            memberGameData.setStartTime(memberGameData.getSelectDate()[0] + " 00:00:00");
-            memberGameData.setEndTime(memberGameData.getSelectDate()[1] + " 23:59:59");
-        }
-        startPage();
-        List<MemberGameData> list = memberGameDataService.selectMemberGameDataList(memberGameData);
+	public TableDataInfo list( MemberGameData memberGameData ) {
+		if ( memberGameData.getSelectDate() != null ) {
+			memberGameData.setStartTime( memberGameData.getSelectDate()[ 0 ] );
+			memberGameData.setEndTime( memberGameData.getSelectDate()[ 1 ] );
+		}
+		startPage();
+		List<MemberGameData> list = memberGameDataService.selectMemberGameDataList( memberGameData );
 		return getDataTable( list );
 	}
-	@PutMapping(value = "/getLotteryBetData")
+
+	@PutMapping( value = "/getLotteryBetData" )
 	public AjaxResult getBetData( MemberGameData memberGameData ) {
-		return memberGameDataService.getBetData( memberGameData);
+		return memberGameDataService.getBetData( memberGameData );
 	}
 
-    /**
-     * 查询会员注单数据统计
-     */
-    @PreAuthorize( "@ss.hasPermi('member:memberGameData:list')" )
-    @GetMapping( "/getCount" )
-    public AjaxResult getCount(MemberGameData memberGameData) {
-        if (memberGameData.getSelectDate() != null) {
-            memberGameData.setStartTime(memberGameData.getSelectDate()[0] + " 00:00:00");
-            memberGameData.setEndTime(memberGameData.getSelectDate()[1] + " 23:59:59");
-        }
-        return memberGameDataService.getCount(memberGameData);
-    }
+	/**
+	 * 查询会员注单数据统计
+	 */
+	@PreAuthorize( "@ss.hasPermi('member:memberGameData:list')" )
+	@GetMapping( "/getCount" )
+	public AjaxResult getCount( MemberGameData memberGameData ) {
+		if ( memberGameData.getSelectDate() != null ) {
+			memberGameData.setStartTime( memberGameData.getSelectDate()[ 0 ] );
+			memberGameData.setEndTime( memberGameData.getSelectDate()[ 1 ] );
+		}
+		return memberGameDataService.getCount( memberGameData );
+	}
 
-    /**
+	/**
 	 * 导出会员注单数据列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:export')" )
 	@Log( title = "会员注单数据", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(MemberGameData memberGameData) {
-		List<MemberGameData>      list = memberGameDataService.selectMemberGameDataList(memberGameData);
-		ExcelUtil<MemberGameData> util = new ExcelUtil<MemberGameData>(MemberGameData. class);
+	public AjaxResult export( MemberGameData memberGameData ) {
+		List<MemberGameData>      list = memberGameDataService.selectMemberGameDataList( memberGameData );
+		ExcelUtil<MemberGameData> util = new ExcelUtil<MemberGameData>( MemberGameData.class );
 		return util.exportExcel( list, "memberGameData" );
 	}
 
@@ -75,8 +76,8 @@ public class MemberGameDataController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( memberGameDataService.selectMemberGameDataById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( memberGameDataService.selectMemberGameDataById( id ) );
 	}
 
 	/**
@@ -85,8 +86,8 @@ public class MemberGameDataController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:add')" )
 	@Log( title = "会员注单数据", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody MemberGameData memberGameData) {
-		return toAjax( memberGameDataService.insertMemberGameData(memberGameData) );
+	public AjaxResult add( @RequestBody MemberGameData memberGameData ) {
+		return toAjax( memberGameDataService.insertMemberGameData( memberGameData ) );
 	}
 
 	/**
@@ -95,8 +96,8 @@ public class MemberGameDataController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:edit')" )
 	@Log( title = "会员注单数据", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody MemberGameData memberGameData) {
-		return toAjax( memberGameDataService.updateMemberGameData(memberGameData) );
+	public AjaxResult edit( @RequestBody MemberGameData memberGameData ) {
+		return toAjax( memberGameDataService.updateMemberGameData( memberGameData ) );
 	}
 
 	/**
