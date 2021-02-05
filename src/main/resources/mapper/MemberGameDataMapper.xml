@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberGameDataMapper">
 
     <resultMap type="MemberGameData" id="MemberGameDataResult">
-        <result property="id"    column="id"    />
-        <result property="gameId"    column="game_id"    />
-        <result property="account"    column="account"    />
-        <result property="kindId"    column="kind_id"    />
-        <result property="cellScore"    column="cell_score"    />
-        <result property="allBet"    column="all_bet"    />
-        <result property="profit"    column="profit"    />
-        <result property="revenue"    column="revenue"    />
-        <result property="gameEndTime"    column="game_end_time"    />
-        <result property="platformId"    column="platform_id"    />
-        <result property="agent"    column="agent"    />
-        <result property="platformType"    column="platform_type"    />
-        <result property="status"    column="status"    />
-        <result property="gameStartTime"    column="game_start_time"    />
+        <result property="id" column="id"/>
+        <result property="gameId" column="game_id"/>
+        <result property="account" column="account"/>
+        <result property="kindId" column="kind_id"/>
+        <result property="cellScore" column="cell_score"/>
+        <result property="allBet" column="all_bet"/>
+        <result property="profit" column="profit"/>
+        <result property="revenue" column="revenue"/>
+        <result property="gameEndTime" column="game_end_time"/>
+        <result property="platformId" column="platform_id"/>
+        <result property="agent" column="agent"/>
+        <result property="platformType" column="platform_type"/>
+        <result property="status" column="status"/>
+        <result property="gameStartTime" column="game_start_time"/>
     </resultMap>
 
     <sql id="selectMemberGameDataVo">
@@ -28,21 +28,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectMemberGameDataList" parameterType="MemberGameData" resultMap="MemberGameDataResult">
         <include refid="selectMemberGameDataVo"/>
         <where>
-            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
-            <if test="account != null  and account != ''"> and account = #{account}</if>
-            <if test="kindId != null  and kindId != ''"> and kind_id = #{kindId}</if>
-            <if test="cellScore != null  and cellScore != ''"> and cell_score = #{cellScore}</if>
-            <if test="allBet != null  and allBet != ''"> and all_bet = #{allBet}</if>
-            <if test="profit != null  and profit != ''"> and profit = #{profit}</if>
-            <if test="revenue != null  and revenue != ''"> and revenue = #{revenue}</if>
-            <if test="gameEndTime != null  and gameEndTime != ''"> and game_end_time = #{gameEndTime}</if>
-            <if test="platformId != null "> and platform_id = #{platformId}</if>
-            <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
-            <if test="platformType != null  and platformType != ''"> and platform_type = #{platformType}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="gameStartTime != null  and gameStartTime != ''"> and game_start_time = #{gameStartTime}</if>
-            <if test="startTime != null and startTime != ''"> and game_start_time >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''"> and game_end_time &lt;= #{endTime}</if>
+            <if test="gameId != null  and gameId != ''">and game_id = #{gameId}</if>
+            <if test="account != null  and account != ''">and account = #{account}</if>
+            <if test="kindId != null  and kindId != ''">and kind_id = #{kindId}</if>
+            <if test="cellScore != null  and cellScore != ''">and cell_score = #{cellScore}</if>
+            <if test="allBet != null  and allBet != ''">and all_bet = #{allBet}</if>
+            <if test="profit != null  and profit != ''">and profit = #{profit}</if>
+            <if test="revenue != null  and revenue != ''">and revenue = #{revenue}</if>
+            <if test="gameEndTime != null  and gameEndTime != ''">and game_end_time = #{gameEndTime}</if>
+            <if test="platformId != null ">and platform_id = #{platformId}</if>
+            <if test="agent != null  and agent != ''">and agent = #{agent}</if>
+            <if test="platformType != null  and platformType != ''">and platform_type = #{platformType}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="gameStartTime != null  and gameStartTime != ''">and game_start_time = #{gameStartTime}</if>
+            <if test="startTime != null and startTime != ''">and game_start_time >= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and game_end_time &lt;= #{endTime}</if>
         </where>
     </select>
 
@@ -68,23 +68,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="platformType != null">platform_type,</if>
             <if test="status != null">status,</if>
             <if test="gameStartTime != null">game_start_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id != null">#{id},</if>
-                    <if test="gameId != null and gameId != ''">#{gameId},</if>
-                    <if test="account != null">#{account},</if>
-                    <if test="kindId != null">#{kindId},</if>
-                    <if test="cellScore != null">#{cellScore},</if>
-                    <if test="allBet != null">#{allBet},</if>
-                    <if test="profit != null">#{profit},</if>
-                    <if test="revenue != null">#{revenue},</if>
-                    <if test="gameEndTime != null">#{gameEndTime},</if>
-                    <if test="platformId != null">#{platformId},</if>
-                    <if test="agent != null">#{agent},</if>
-                    <if test="platformType != null">#{platformType},</if>
-                    <if test="status != null">#{status},</if>
-                    <if test="gameStartTime != null">#{gameStartTime},</if>
-             </trim>
+            <if test="id != null">#{id},</if>
+            <if test="gameId != null and gameId != ''">#{gameId},</if>
+            <if test="account != null">#{account},</if>
+            <if test="kindId != null">#{kindId},</if>
+            <if test="cellScore != null">#{cellScore},</if>
+            <if test="allBet != null">#{allBet},</if>
+            <if test="profit != null">#{profit},</if>
+            <if test="revenue != null">#{revenue},</if>
+            <if test="gameEndTime != null">#{gameEndTime},</if>
+            <if test="platformId != null">#{platformId},</if>
+            <if test="agent != null">#{agent},</if>
+            <if test="platformType != null">#{platformType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="gameStartTime != null">#{gameStartTime},</if>
+        </trim>
     </insert>
 
     <update id="updateMemberGameData" parameterType="MemberGameData">
@@ -152,5 +152,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <include refid="whereCount"></include>
         </where>
+    </select>
+    <select id="findBetList" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog">
+        SELECT
+        l.id,
+        l.userid,
+        l.issue,
+        l.per_price,
+        l.bet_amount,
+        l.prize,
+        l.bet_select,
+        l.code,
+        l.bet_time,
+        c.son_platform_name
+        FROM
+        lottery_betlog10000 l
+        LEFT JOIN config_gametype c ON l.lottery_id = c.son_platform_id
+        WHERE l.id=#{gameId}
+    </select>
+    <select id="findBetLists" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog">
+        SELECT
+        l.id,
+        l.userid,
+        l.issue,
+        l.per_price,
+        l.bet_amount,
+        l.prize,
+        l.bet_select,
+        l.code,
+        l.bet_time,
+        c.son_platform_name
+        FROM
+        lottery_betlog80000 l
+        LEFT JOIN config_gametype c ON l.lottery_id = c.son_platform_id
+        WHERE l.id=#{gameId}
     </select>
 </mapper>

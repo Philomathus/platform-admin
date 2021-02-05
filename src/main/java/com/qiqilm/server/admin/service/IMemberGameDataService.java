@@ -60,6 +60,8 @@ public interface IMemberGameDataService {
 	 */
 	public int deleteMemberGameDataById(String id);
 
-    AjaxResult getCount(MemberGameData memberGameData);
+    public AjaxResult getCount(MemberGameData memberGameData);
+
+	AjaxResult getBetData(MemberGameData memberGameData);
 
 }

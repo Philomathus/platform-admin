@@ -36,9 +36,13 @@ public class MemberGameDataController extends BaseController {
             memberGameData.setStartTime(memberGameData.getSelectDate()[0] + " 00:00:00");
             memberGameData.setEndTime(memberGameData.getSelectDate()[1] + " 23:59:59");
         }
-		startPage();
-		List<MemberGameData> list = memberGameDataService.selectMemberGameDataList(memberGameData);
+        startPage();
+        List<MemberGameData> list = memberGameDataService.selectMemberGameDataList(memberGameData);
 		return getDataTable( list );
+	}
+	@PutMapping(value = "/getLotteryBetData")
+	public AjaxResult getBetData( MemberGameData memberGameData ) {
+		return memberGameDataService.getBetData( memberGameData);
 	}
 
     /**
