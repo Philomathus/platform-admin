@@ -98,7 +98,7 @@ public class DictUtils {
 			List<SysDictData> dictDataList = sysDictDataMapper.selectDictDataByType( key );
 			log.warn( JsonUtil.object2Json( dictDataList ) );
 			if ( !CollectionUtils.isEmpty( dictDataList ) ) {
-				setDictCache( getCacheKey( key ), dictDataList );
+				setDictCache( key, dictDataList );
 			}
 		}
 		String cacheObj = redisUtil.strGet( getCacheKey( key ) );
