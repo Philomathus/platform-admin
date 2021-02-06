@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.qiqilm.server.admin.constant.AdminConstants;
 import com.qiqilm.server.admin.domain.SysDictData;
 import com.qiqilm.server.admin.mapper.SysDictDataMapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.ScanOptions;
@@ -19,6 +20,7 @@ import java.util.List;
  *
  * @author 77tv
  */
+@Log4j2
 public class DictUtils {
 	/**
 	 * 分隔符
@@ -45,6 +47,7 @@ public class DictUtils {
 		if ( !SpringUtils.getBean( RedisUtil.class ).exists( getCacheKey( key ) ) ) {
 			List<SysDictData> dictDataList = SpringUtils.getBean( SysDictDataMapper.class )
 					.selectDictDataByType( getCacheKey( key ) );
+			log.warn( "{}", JsonUtil.object2Json( dictDataList ) );
 			if ( !CollectionUtils.isEmpty( dictDataList ) ) {
 				setDictCache( getCacheKey( key ), dictDataList );
 			}
