@@ -149,20 +149,22 @@ public class RequestLogAspect {
 
     private Map<String, Object> buildRequestParam(String[] paramNames, Object[] paramValues) {
         Map<String, Object> requestParams = new HashMap<>();
-        for (int i = 0; i < paramNames.length; i++) {
-            Object value = paramValues[i];
+        if (paramNames != null) {
+            for (int i = 0; i < paramNames.length; i++) {
+                Object value = paramValues[i];
 
-            //如果是文件对象
-            if (value instanceof MultipartFile) {
-                MultipartFile file = (MultipartFile) value;
-                value = file.getOriginalFilename();  //获取文件名
+                //如果是文件对象
+                if (value instanceof MultipartFile) {
+                    MultipartFile file = (MultipartFile) value;
+                    value = file.getOriginalFilename();  //获取文件名
+                }
+
+                requestParams.put(paramNames[i], value);
             }
-
-            requestParams.put(paramNames[i], value);
         }
-
         return requestParams;
     }
+
     public static final String getTime() {
         return dateTimeNow("yyyy-MM-dd HH:mm:ss");
     }
@@ -170,9 +172,11 @@ public class RequestLogAspect {
     public static final String dateTimeNow(final String format) {
         return parseDateToStr(format, new Date());
     }
+
     public static final String parseDateToStr(final String format, final Date date) {
         return new SimpleDateFormat(format).format(date);
     }
+
     /**
      * 获取exception的字符串
      *

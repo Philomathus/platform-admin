@@ -1,8 +1,8 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.LiveHostWageNote;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service接口
@@ -58,4 +58,8 @@ public interface ILiveHostWageNoteService {
 	 * @return 结果
 	 */
 	public int deleteLiveHostWageNoteById(Long id);
+
+    public List<LiveHostWageNote> familyPage(LiveHostWageNote dto);
+
+    public List<LiveHostWageNote> getPage(LiveHostWageNote dto);
 }
