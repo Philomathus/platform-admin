@@ -1,9 +1,10 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.LiveHostWageNote;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -60,5 +61,11 @@ public interface LiveHostWageNoteMapper {
 	 */
 	public int deleteLiveHostWageNoteByIds(Long[] ids );
 
-	LiveHostWageNote beforeNote( @Param( "userId" ) Long userId );
+    public LiveHostWageNote beforeNote( @Param( "userId" ) Long userId );
+
+    public List<LiveHostWageNote> familyPage(@Param("countTime") String countTime,@Param("dto") LiveHostWageNote dto);
+
+    public List<Map<String, Object>> selectFamilyName();
+
+    public List<LiveHostWageNote> selectListMt(@Param("dto") LiveHostWageNote dto);
 }
