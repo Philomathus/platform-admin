@@ -16,10 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 直播Service业务层处理
@@ -353,5 +350,60 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				}
 			} );
 		}
+	}
+
+	@Override
+	public String livePay( Long room_id, Integer live_fee, Integer live_pay_type ) {
+		LiveVideo video = liveVideoMapper.selectLiveVideoById( room_id );
+
+		if ( Objects.isNull( live_fee ) || Objects.isNull( live_pay_type ) ) {
+			throw new RuntimeException( "参数错误" );
+		}
+
+		int payMin = live_pay_type == 0 ? global.getConfInt( "live_pay_min" ) : global.getConfInt( "live_pay_scene_min" );
+		//付费最高
+		int payMax = live_pay_type == 0 ? global.getConfInt( "live_pay_max" ) : global.getConfInt( "live_pay_scene_max" );
+		//付费最低
+
+		String coinName = global.getConf( "diamond_name" );
+
+		if ( payMin != 0 && live_fee < payMin ) {
+			throw new RuntimeException( "按" + ( live_pay_type == 0 ? "时" : "场" ) + "收费不能低于" + payMin + coinName );
+		}
+
+		if ( payMax != 0 && live_fee > payMax ) {
+			throw new RuntimeException( "按" + ( live_pay_type == 0 ? "时" : "场" ) + "收费不能高于" + payMax + coinName );
+		}
+
+		String msg = "";
+		if ( Objects.nonNull( room_id ) && live_fee > 0 ) {
+			LiveVideo updateVideo = new LiveVideo();
+			updateVideo.setId( video.getId() );
+
+			Boolean isLivePay = video.getIsLivePay();
+			if ( isLivePay ) {
+				updateVideo.setLivePayTime( ( int ) ( System.currentTimeMillis() / 1000 ) );
+				msg = "切换之按" + ( live_pay_type == 0 ? "时" : "场" ) + "收费;" + live_fee + coinName
+						+ "/每" + ( live_pay_type == 0 ? "分钟" : "场" );
+			} else {
+				updateVideo.setIsLivePay( video.getIsLivePay() );
+				msg = "按" + ( live_pay_type == 0 ? "时" : "场" ) + "收费开启成功;" + live_fee + coinName
+						+ "/每" + ( live_pay_type == 0 ? "分钟" : "场" );
+			}
+			updateVideo.setLivePayType( live_pay_type );
+			updateVideo.setLiveFee( live_fee );
+			updateVideo.setLivePayTime( ( int ) ( System.currentTimeMillis() / 1000 ) );
+			updateVideo.setCateId( 4L );// 设置主题ID为收费直播
+			liveVideoMapper.updateLiveVideo( updateVideo );
+			//im
+			HashMap<String, Object> ext = new HashMap<>();
+			ext.put( "type", live_pay_type == 0 ? 32 : 40 );
+			ext.put( "room_id", room_id );
+			ext.put( "live_fee", live_fee );
+			imApi.sendGroupMessage( video.getGroupId(), room_id.toString(),
+					MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) ) );
+			return msg;
+		}
+		throw new RuntimeException( "切换失败" );
 	}
 }

@@ -76,7 +76,7 @@ public class ExcelUtil<T> {
 	/**
 	 * 统计列表
 	 */
-	private              Map<Integer, Double>   statistics    = new HashMap<Integer, Double>();
+	private              Map<Integer, Double>   statistics    = new HashMap<>();
 
 	public ExcelUtil( Class<T> clazz ) {
 		this.clazz = clazz;
@@ -151,18 +151,6 @@ public class ExcelUtil<T> {
 	}
 
 	/**
-	 * 解析字典值
-	 *
-	 * @param dictValue 字典值
-	 * @param dictType  字典类型
-	 * @param separator 分隔符
-	 * @return 字典标签
-	 */
-	public static String convertDictByExp( String dictValue, String dictType, String separator ) {
-		return DictUtils.getDictLabel( dictType, dictValue, separator );
-	}
-
-	/**
 	 * 反向解析值字典值
 	 *
 	 * @param dictLabel 字典标签
@@ -171,7 +159,19 @@ public class ExcelUtil<T> {
 	 * @return 字典值
 	 */
 	public static String reverseDictByExp( String dictLabel, String dictType, String separator ) {
-		return DictUtils.getDictValue( dictType, dictLabel, separator );
+		return SpringUtils.getBean( DictUtils.class ).getDictValue( dictType, dictLabel, separator );
+	}
+
+	/**
+	 * 解析字典值
+	 *
+	 * @param dictValue 字典值
+	 * @param dictType  字典类型
+	 * @param separator 分隔符
+	 * @return 字典标签
+	 */
+	public static String convertDictByExp( String dictValue, String dictType, String separator ) {
+		return SpringUtils.getBean( DictUtils.class ).getDictLabel( dictType, dictValue, separator );
 	}
 
 	public void init( List<T> list, String sheetName, Type type ) {

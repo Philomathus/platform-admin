@@ -19,6 +19,9 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
 	@Autowired
 	private SysDictDataMapper dictDataMapper;
 
+	@Autowired
+	private DictUtils dictUtils;
+
 	/**
 	 * 根据条件分页查询字典数据
 	 *
@@ -63,7 +66,7 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
 	public int deleteDictDataByIds( Long[] dictCodes ) {
 		int row = dictDataMapper.deleteDictDataByIds( dictCodes );
 		if ( row > 0 ) {
-			DictUtils.clearDictCache();
+			dictUtils.clearDictCache();
 		}
 		return row;
 	}
@@ -78,7 +81,7 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
 	public int insertDictData( SysDictData dictData ) {
 		int row = dictDataMapper.insertDictData( dictData );
 		if ( row > 0 ) {
-			DictUtils.clearDictCache();
+			dictUtils.clearDictCache();
 		}
 		return row;
 	}
@@ -93,7 +96,7 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
 	public int updateDictData( SysDictData dictData ) {
 		int row = dictDataMapper.updateDictData( dictData );
 		if ( row > 0 ) {
-			DictUtils.clearDictCache();
+			dictUtils.clearDictCache();
 		}
 		return row;
 	}

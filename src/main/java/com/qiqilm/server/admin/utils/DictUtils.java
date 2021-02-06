@@ -5,12 +5,15 @@ import com.qiqilm.server.admin.constant.AdminConstants;
 import com.qiqilm.server.admin.domain.SysDictData;
 import com.qiqilm.server.admin.mapper.SysDictDataMapper;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,11 +24,20 @@ import java.util.List;
  * @author 77tv
  */
 @Log4j2
+@Component
 public class DictUtils {
+
 	/**
 	 * 分隔符
 	 */
 	public static final String SEPARATOR = ",";
+
+	@Autowired
+	private SysDictDataMapper   sysDictDataMapper;
+	@Resource
+	private StringRedisTemplate stringRedisTemplate;
+	@Resource
+	private RedisUtil           redisUtil;
 
 	/**
 	 * 设置字典缓存
@@ -33,8 +45,46 @@ public class DictUtils {
 	 * @param key       参数键
 	 * @param dictDatas 字典数据列表
 	 */
-	public static void setDictCache( String key, List<SysDictData> dictDatas ) {
-		SpringUtils.getBean( RedisUtil.class ).strSet( getCacheKey( key ), JsonUtil.object2Json( dictDatas ) );
+	public void setDictCache( String key, List<SysDictData> dictDatas ) {
+		redisUtil.strSet( getCacheKey( key ), JsonUtil.object2Json( dictDatas ) );
+	}
+
+	/**
+	 * 根据字典类型和字典标签获取字典值
+	 *
+	 * @param dictType  字典类型
+	 * @param dictLabel 字典标签
+	 * @return 字典值
+	 */
+	public String getDictValue( String dictType, String dictLabel ) {
+		return getDictValue( dictType, dictLabel, SEPARATOR );
+	}
+
+	/**
+	 * 清空字典缓存
+	 */
+	public void clearDictCache() {
+		Collection<String> keys = stringRedisTemplate.execute( ( RedisCallback<List<String>> ) connection -> {
+			List<String> resultList = new ArrayList<>();
+			Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
+					.match( AdminConstants.SYS_DICT_KEY + "*" ).count( 5 ).build() );
+			while ( cursor.hasNext() ) {
+				String key = new String( cursor.next() );
+				resultList.add( key );
+			}
+			return resultList;
+		} );
+		redisUtil.unlink( keys );
+	}
+
+	/**
+	 * 设置cache key
+	 *
+	 * @param configKey 参数键
+	 * @return 缓存键key
+	 */
+	public String getCacheKey( String configKey ) {
+		return AdminConstants.SYS_DICT_KEY + configKey;
 	}
 
 	/**
@@ -43,16 +93,14 @@ public class DictUtils {
 	 * @param key 参数键
 	 * @return dictDatas 字典数据列表
 	 */
-	public static List<SysDictData> getDictCache( String key ) {
-		if ( !SpringUtils.getBean( RedisUtil.class ).exists( getCacheKey( key ) ) ) {
-			List<SysDictData> dictDataList = SpringUtils.getBean( SysDictDataMapper.class )
-					.selectDictDataByType( getCacheKey( key ) );
-			log.warn( "{}", SpringUtils.getBean( SysDictDataMapper.class ) );
+	public List<SysDictData> getDictCache( String key ) {
+		if ( !redisUtil.exists( getCacheKey( key ) ) ) {
+			List<SysDictData> dictDataList = sysDictDataMapper.selectDictDataByType( getCacheKey( key ) );
 			if ( !CollectionUtils.isEmpty( dictDataList ) ) {
 				setDictCache( getCacheKey( key ), dictDataList );
 			}
 		}
-		String cacheObj = SpringUtils.getBean( RedisUtil.class ).strGet( getCacheKey( key ) );
+		String cacheObj = redisUtil.strGet( getCacheKey( key ) );
 		if ( StringUtils.isNotNull( cacheObj ) ) {
 			return JsonUtil.json2Array( cacheObj, new TypeReference<List<SysDictData>>() {} );
 		}
@@ -66,19 +114,8 @@ public class DictUtils {
 	 * @param dictValue 字典值
 	 * @return 字典标签
 	 */
-	public static String getDictLabel( String dictType, String dictValue ) {
+	public String getDictLabel( String dictType, String dictValue ) {
 		return getDictLabel( dictType, dictValue, SEPARATOR );
-	}
-
-	/**
-	 * 根据字典类型和字典标签获取字典值
-	 *
-	 * @param dictType  字典类型
-	 * @param dictLabel 字典标签
-	 * @return 字典值
-	 */
-	public static String getDictValue( String dictType, String dictLabel ) {
-		return getDictValue( dictType, dictLabel, SEPARATOR );
 	}
 
 	/**
@@ -89,7 +126,7 @@ public class DictUtils {
 	 * @param separator 分隔符
 	 * @return 字典标签
 	 */
-	public static String getDictLabel( String dictType, String dictValue, String separator ) {
+	public String getDictLabel( String dictType, String dictValue, String separator ) {
 		StringBuilder     propertyString = new StringBuilder();
 		List<SysDictData> datas          = getDictCache( dictType );
 
@@ -120,7 +157,7 @@ public class DictUtils {
 	 * @param separator 分隔符
 	 * @return 字典值
 	 */
-	public static String getDictValue( String dictType, String dictLabel, String separator ) {
+	public String getDictValue( String dictType, String dictLabel, String separator ) {
 		StringBuilder     propertyString = new StringBuilder();
 		List<SysDictData> datas          = getDictCache( dictType );
 
@@ -141,33 +178,5 @@ public class DictUtils {
 			}
 		}
 		return StringUtils.stripEnd( propertyString.toString(), separator );
-	}
-
-	/**
-	 * 清空字典缓存
-	 */
-	public static void clearDictCache() {
-		Collection<String> keys = SpringUtils.getBean( StringRedisTemplate.class )
-				.execute( ( RedisCallback<List<String>> ) connection -> {
-					List<String> resultList = new ArrayList<>();
-					Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
-							.match( AdminConstants.SYS_DICT_KEY + "*" ).count( 5 ).build() );
-					while ( cursor.hasNext() ) {
-						String key = new String( cursor.next() );
-						resultList.add( key );
-					}
-					return resultList;
-				} );
-		SpringUtils.getBean( RedisUtil.class ).unlink( keys );
-	}
-
-	/**
-	 * 设置cache key
-	 *
-	 * @param configKey 参数键
-	 * @return 缓存键key
-	 */
-	public static String getCacheKey( String configKey ) {
-		return AdminConstants.SYS_DICT_KEY + configKey;
 	}
 }

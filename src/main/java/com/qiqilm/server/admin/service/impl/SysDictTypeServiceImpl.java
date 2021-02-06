@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -27,6 +26,9 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
 	private SysDictTypeMapper dictTypeMapper;
 	@Autowired
 	private SysDictDataMapper dictDataMapper;
+
+	@Autowired
+	private DictUtils dictUtils;
 
 	/**
 	 * 根据条件分页查询字典类型
@@ -57,7 +59,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
 	 */
 	@Override
 	public List<SysDictData> selectDictDataByType( String dictType ) {
-		List<SysDictData> dictDatas = DictUtils.getDictCache( dictType );
+		List<SysDictData> dictDatas = dictUtils.getDictCache( dictType );
 		if ( StringUtils.isNotEmpty( dictDatas ) ) {
 			return dictDatas;
 		}
@@ -102,7 +104,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
 		}
 		int count = dictTypeMapper.deleteDictTypeByIds( dictIds );
 		if ( count > 0 ) {
-			DictUtils.clearDictCache();
+			dictUtils.clearDictCache();
 		}
 		return count;
 	}
@@ -112,7 +114,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
 	 */
 	@Override
 	public void clearCache() {
-		DictUtils.clearDictCache();
+		dictUtils.clearDictCache();
 	}
 
 	/**
@@ -125,7 +127,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
 	public int insertDictType( SysDictType dictType ) {
 		int row = dictTypeMapper.insertDictType( dictType );
 		if ( row > 0 ) {
-			DictUtils.clearDictCache();
+			dictUtils.clearDictCache();
 		}
 		return row;
 	}
@@ -137,13 +139,13 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
 	 * @return 结果
 	 */
 	@Override
-	@Transactional
+	@Transactional( rollbackFor = Exception.class )
 	public int updateDictType( SysDictType dictType ) {
 		SysDictType oldDict = dictTypeMapper.selectDictTypeById( dictType.getDictId() );
 		dictDataMapper.updateDictDataType( oldDict.getDictType(), dictType.getDictType() );
 		int row = dictTypeMapper.updateDictType( dictType );
 		if ( row > 0 ) {
-			DictUtils.clearDictCache();
+			dictUtils.clearDictCache();
 		}
 		return row;
 	}
@@ -156,9 +158,9 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
 	 */
 	@Override
 	public String checkDictTypeUnique( SysDictType dict ) {
-		Long        dictId   = StringUtils.isNull( dict.getDictId() ) ? -1L : dict.getDictId();
+		long        dictId   = StringUtils.isNull( dict.getDictId() ) ? -1L : dict.getDictId();
 		SysDictType dictType = dictTypeMapper.checkDictTypeUnique( dict.getDictType() );
-		if ( StringUtils.isNotNull( dictType ) && dictType.getDictId().longValue() != dictId.longValue() ) {
+		if ( StringUtils.isNotNull( dictType ) && dictType.getDictId() != dictId ) {
 			return UserConstants.NOT_UNIQUE;
 		}
 		return UserConstants.UNIQUE;
