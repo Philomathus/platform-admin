@@ -97,7 +97,7 @@ public class DictUtils {
 		if ( !redisUtil.exists( getCacheKey( key ) ) ) {
 			List<SysDictData> dictDataList = sysDictDataMapper.selectDictDataByType( key );
 			if ( !CollectionUtils.isEmpty( dictDataList ) ) {
-				setDictCache( getCacheKey( key ), dictDataList );
+				setDictCache( key, dictDataList );
 			}
 		}
 		String cacheObj = redisUtil.strGet( getCacheKey( key ) );
