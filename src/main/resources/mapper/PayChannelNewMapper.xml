@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="findList" parameterType="PayChannelNew" resultType="PayChannelNew">
+    <select id="findList" parameterType="PayChannelNew" resultType="com.qiqilm.server.admin.domain.PayChannelNew">
         SELECT
         c.id,
         c.name,
@@ -101,7 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="req.payTypeId != null and req.payTypeId != ''">
             and c.pay_type_id = #{req.payTypeId}
         </if>
-        <if test="req.status != null and status != ''">
+        <if test="req.status != null and req.status != ''">
             and c.status = #{req.status}
         </if>
         ORDER BY c.create_time desc

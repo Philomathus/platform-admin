@@ -10,8 +10,11 @@ import com.qiqilm.server.admin.service.ILiveHostWageNoteService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +39,38 @@ public class LiveHostWageNoteController extends BaseController {
 		List<LiveHostWageNote> list = liveHostWageNoteService.selectLiveHostWageNoteList(liveHostWageNote);
 		return getDataTable( list );
 	}
+
+    @PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:list')" )
+    @GetMapping( "familyPage" )
+    public TableDataInfo familyPage(LiveHostWageNote dto ) {
+        if(dto.getSelectDate()==null||dto.getSelectDate().length==0||dto.getSelectDate()[0]==null){
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateNowStr = sdf.format(d);
+            dto.getSelectDate()[0] = dateNowStr;
+            dto.getSelectDate()[1] = dateNowStr;
+        }
+        dto.setStartTime(dto.getSelectDate()[0]);
+        dto.setEndTime(dto.getSelectDate()[1]);
+//        startPage();
+        List<LiveHostWageNote> list = liveHostWageNoteService.familyPage(dto);
+        return getDataTable( list );
+    }
+
+    @PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:list')" )
+    @GetMapping( "getPage" )
+    public TableDataInfo getPage(LiveHostWageNote dto ) {
+        if(StringUtils.isEmpty(dto.getStartTime())){
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateNowStr = sdf.format(d);
+            dto.setStartTime(dateNowStr);
+            dto.setEndTime(dateNowStr);
+        }
+        startPage();
+        List<LiveHostWageNote> list = liveHostWageNoteService.getPage(dto);
+        return getDataTable( list );
+    }
 
 	/**
 	 * 导出主播时长列表

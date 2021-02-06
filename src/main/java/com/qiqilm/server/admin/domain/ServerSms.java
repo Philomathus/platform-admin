@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-27
  */
+@Data
 public class ServerSms extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -68,94 +70,6 @@ public class ServerSms extends BaseEntity {
 	 */
 	private Integer isEffect;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId( Long id ) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName( String name ) {
-		this.name = name;
-	}
-
-	public Integer getProvider() {
-		return provider;
-	}
-
-	public void setProvider( Integer provider ) {
-		this.provider = provider;
-	}
-
-	public String getAppKey() {
-		return appKey;
-	}
-
-	public void setAppKey( String appKey ) {
-		this.appKey = appKey;
-	}
-
-	public String getAppAccess() {
-		return appAccess;
-	}
-
-	public void setAppAccess( String appAccess ) {
-		this.appAccess = appAccess;
-	}
-
-	public String getRegion() {
-		return region;
-	}
-
-	public void setRegion( String region ) {
-		this.region = region;
-	}
-
-	public String getSignature() {
-		return signature;
-	}
-
-	public void setSignature( String signature ) {
-		this.signature = signature;
-	}
-
-	public String getTemplate() {
-		return template;
-	}
-
-	public void setTemplate( String template ) {
-		this.template = template;
-	}
-
-	public String getSmsSdkAppid() {
-		return smsSdkAppid;
-	}
-
-	public void setSmsSdkAppid( String smsSdkAppid ) {
-		this.smsSdkAppid = smsSdkAppid;
-	}
-
-	public String getIdentify() {
-		return identify;
-	}
-
-	public void setIdentify( String identify ) {
-		this.identify = identify;
-	}
-
-	public Integer getIsEffect() {
-		return isEffect;
-	}
-
-	public void setIsEffect( Integer isEffect ) {
-		this.isEffect = isEffect;
-	}
-
 	@Override
 	public String toString() {
 		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
@@ -171,5 +85,34 @@ public class ServerSms extends BaseEntity {
 				.append( "identify", getIdentify() )
 				.append( "isEffect", getIsEffect() )
 				.toString();
+	}
+
+	public String[] toCodes() {
+		return new String[]{ "id", "name", "provider", "appKey", "appAccess", "region", "signature", "template", "smsSdkAppid" };
+	}
+
+	public String getVal( String code ) {
+		switch ( code ) {
+		case "id":
+			return id + "";
+		case "name":
+			return name;
+		case "provider":
+			return provider + "";
+		case "appKey":
+			return appKey;
+		case "appAccess":
+			return appAccess;
+		case "region":
+			return region;
+		case "signature":
+			return signature;
+		case "template":
+			return template;
+		case "smsSdkAppid":
+			return smsSdkAppid;
+		default:
+			return null;
+		}
 	}
 }

@@ -16,8 +16,8 @@ import java.util.Map;
  */
 @Log4j2
 @Component
-public class VideoStreamUtil {
-	public static final String SERVER_LIVE = Constants.LIVE_PREX + "serverLive:";
+public class ServerLiveCacheUtil {
+	public static final String SERVER_LIVE = Constants.CONFIG_PREX + "serverLive:";
 
 	@Autowired
 	private RedisUtil        redisUtil;

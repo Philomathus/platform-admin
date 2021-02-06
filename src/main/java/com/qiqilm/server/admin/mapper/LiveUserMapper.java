@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -70,4 +71,6 @@ public interface LiveUserMapper {
 
     @Select( "SELECT count(id) as num FROM 7700_live.live_user where family_id = ${family_id}" )
     int getNumFamily(@Param( "family_id" ) Integer family_id);
+
+    List<RspLotteryBet> selectAnchorAward(LiveUser liveUser);
 }

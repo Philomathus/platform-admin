@@ -62,8 +62,6 @@ public interface IServerOssService {
 
 	int effect( long id );
 
-	ServerOss effect();
-
 	String uploadInputStream( InputStream inputStream, String fileKey );
 
 	String uploadOssTest( InputStream inputStream, String fileKey, long id );
