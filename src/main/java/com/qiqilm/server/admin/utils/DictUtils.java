@@ -47,7 +47,7 @@ public class DictUtils {
 		if ( !SpringUtils.getBean( RedisUtil.class ).exists( getCacheKey( key ) ) ) {
 			List<SysDictData> dictDataList = SpringUtils.getBean( SysDictDataMapper.class )
 					.selectDictDataByType( getCacheKey( key ) );
-			log.warn( "{}", JsonUtil.object2Json( dictDataList ) );
+			log.warn( "{}", SpringUtils.getBean( SysDictDataMapper.class ) );
 			if ( !CollectionUtils.isEmpty( dictDataList ) ) {
 				setDictCache( getCacheKey( key ), dictDataList );
 			}
