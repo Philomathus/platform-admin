@@ -3,7 +3,6 @@ server:
 logging:
   level:
     root: info
-    com.qiqilm.server.admin.mapper: debug
 spring:
   # 资源信息
   messages:
@@ -12,7 +11,7 @@ spring:
   profiles:
     active: "@spring.profiles.active@"
   application:
-    name: platform-web
+    name: platform-admin
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver

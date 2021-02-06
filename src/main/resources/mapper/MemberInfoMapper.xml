@@ -60,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join member_card b on a.id=b.member_id
         <where>
             <if test="bankAccount != null  and bankAccount != ''"> and b.bank_account = #{bankAccount}</if>
-            <if test="code != null  and code != ''"> and ( a.id = #{code} or a.phone = #{code} or a.user_name like concat('%', #{userName}, '%') )</if>
+            <if test="code != null  and code != ''"> and ( a.id = #{code} or a.phone = #{code} or a.user_name like concat('%', #{code}, '%') )</if>
             <if test="memberCode != null  and memberCode != ''"> and a.member_code = #{memberCode}</if>
             <if test="cxAgent != null  and cxAgent != ''"> and a.cx_agent = #{cxAgent}</if>
             <if test="userName != null  and userName != ''"> and a.user_name like concat('%', #{userName}, '%')</if>
