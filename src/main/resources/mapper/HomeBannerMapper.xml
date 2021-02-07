@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.HomeBannerMapper">
+	<resultMap type="HomeBanner" id="HomeBannerResult">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="indexs" column="indexs"/>
+		<result property="status" column="status"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="coverImg" column="cover_img"/>
+	</resultMap>
+
+	<sql id="selectHomeBannerVo">
+		select id, name, indexs, status, FROM_UNIXTIME(update_time) update_time, cover_img
+		from 7700_main.home_banner
+	</sql>
+
+	<select id="selectHomeBannerList" parameterType="HomeBanner" resultMap="HomeBannerResult">
+		<include refid="selectHomeBannerVo"/>
+		<where>
+			<if test="name != null  and name != ''">
+				and name like concat('%', #{name}, '%')
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectHomeBannerById" parameterType="String" resultMap="HomeBannerResult">
+		<include refid="selectHomeBannerVo"/>
+		where id = #{id}
+	</select>
+
+	<insert id="insertHomeBanner" parameterType="HomeBanner">
+		insert into 7700_main.home_banner
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null and name != ''">
+				name,
+			</if>
+			<if test="indexs != null">
+				indexs,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="coverImg != null and coverImg != ''">
+				cover_img,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="name != null and name != ''">
+				#{name},
+			</if>
+			<if test="indexs != null">
+				#{indexs},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="updateTime != null">
+				UNIX_TIMESTAMP(#{updateTime}),
+			</if>
+			<if test="coverImg != null and coverImg != ''">
+				#{coverImg},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateHomeBanner" parameterType="HomeBanner">
+		update 7700_main.home_banner
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+
+			<if test="indexs != null">
+				indexs = #{indexs},
+			</if>
+
+			<if test="status != null">
+				status = #{status},
+			</if>
+
+			<if test="updateTime != null">
+				update_time = UNIX_TIMESTAMP(#{updateTime}),
+			</if>
+
+			<if test="coverImg != null and coverImg != ''">
+				cover_img = #{coverImg},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteHomeBannerById" parameterType="String">
+		delete
+		from 7700_main.home_banner
+		where id = #{id}
+	</delete>
+
+	<delete id="deleteHomeBannerByIds" parameterType="String">
+		delete
+		from 7700_main.home_banner where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>
