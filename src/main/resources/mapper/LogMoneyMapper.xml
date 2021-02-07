@@ -175,8 +175,8 @@
         </if>
     </sql>
     <select id="totalCount" parameterType="LogMoney" resultType="java.util.Map">
-        select COUNT(income) totalIncome,
-        COUNT(pay) totalPay
+        select sum(income) totalIncome,
+        sum(pay) totalPay
         from db_cx001.log_money
         <where>
             <include refid="whereCount"></include>

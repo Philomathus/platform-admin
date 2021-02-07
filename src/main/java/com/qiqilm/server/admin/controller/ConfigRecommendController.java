@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.qiqilm.server.admin.utils.UuidUtil;
@@ -73,7 +74,10 @@ public class ConfigRecommendController extends BaseController {
 	@Log( title = "推广设置", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ConfigRecommend configRecommend) {
-		configRecommend.setId(UuidUtil.getRandomUuidWithoutSeparator());
+		ConfigRecommend a = new ConfigRecommend();
+		List<ConfigRecommend> list = configRecommendService.selectConfigRecommendList(a);
+		configRecommend.setId(String.valueOf(list.size()+1));
+//		configRecommend.setId(UuidUtil.getRandomUuidWithoutSeparator());
 		return toAjax( configRecommendService.insertConfigRecommend(configRecommend) );
 	}
 

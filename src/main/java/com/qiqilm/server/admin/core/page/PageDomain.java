@@ -26,13 +26,13 @@ public class PageDomain {
 	/**
 	 * 排序的方向desc或者asc
 	 */
-	private String isAsc = "asc";
+	private String isAsc = "";
 
 	public String getOrderBy() {
 		if ( StringUtils.isEmpty( orderByColumn ) ) {
 			return "";
 		}
-		return StringUtils.toUnderScoreCase( orderByColumn ) + " " + ( StringUtils.isEmpty( isAsc ) ? "asc" : isAsc );
+		return StringUtils.toUnderScoreCase( orderByColumn ) + " " + ( StringUtils.isEmpty( isAsc ) ? "" : isAsc );
 	}
 
 	public Integer getPageNum() {

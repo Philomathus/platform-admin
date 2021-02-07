@@ -7,3 +7,8 @@ spring:
     host: 192.168.1.168
     port: 6379
     password: 75a2-4e0e-9897-0347cc
+
+mybatis:
+  # spring boot集成mybatis的方式打印sql
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
