@@ -1,12 +1,16 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
+import com.qiqilm.server.admin.cache.LiveCacheUtil;
+import com.qiqilm.server.admin.domain.LiveHostWageNote;
+import com.qiqilm.server.admin.mapper.LiveHostWageNoteMapper;
+import com.qiqilm.server.admin.service.ILiveHostWageNoteService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.LiveHostWageNoteMapper;
-import com.qiqilm.server.admin.domain.LiveHostWageNote;
-import com.qiqilm.server.admin.service.ILiveHostWageNoteService;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -18,6 +22,8 @@ import com.qiqilm.server.admin.service.ILiveHostWageNoteService;
 public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
     @Autowired
     private LiveHostWageNoteMapper liveHostWageNoteMapper;
+    @Autowired
+    private LiveCacheUtil liveCacheUtil;
 
     /**
      * 查询【请填写功能名称】
@@ -84,5 +90,53 @@ public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
     @Override
     public int deleteLiveHostWageNoteById(Long id) {
         return liveHostWageNoteMapper.deleteLiveHostWageNoteById(id);
+    }
+
+    @Override
+    public List<LiveHostWageNote> familyPage(LiveHostWageNote dto) {
+        BigDecimal ticketCattyRatio = liveCacheUtil.getConfBd("ticket_catty_ratio");
+        List<LiveHostWageNote> liveHostWageNotes = liveHostWageNoteMapper.familyPage(dto.getSelectDate()[0] + "-" + dto.getSelectDate()[1],dto );
+        for (LiveHostWageNote liveHostWageNote : liveHostWageNotes) {
+            if (liveHostWageNote.getAllticket()!=null) {
+                BigDecimal allTicket=new BigDecimal(liveHostWageNote.getAllticket());
+                //判断是否是散户
+                if (liveHostWageNote.getFamilyId()==0  && dto.getSettlementRate()!=null){
+                    liveHostWageNote.setAllticketRes(allTicket.multiply(dto.getSettlementRate()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    liveHostWageNote.setSettlementRate(dto.getSettlementRate());
+                }else {
+                    liveHostWageNote.setAllticketRes(allTicket.multiply(ticketCattyRatio).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    liveHostWageNote.setSettlementRate(ticketCattyRatio);
+                }
+            }
+        }
+        return liveHostWageNotes;
+    }
+
+    @Override
+    public List<LiveHostWageNote> getPage(LiveHostWageNote dto) {
+        BigDecimal ticketCattyRatio = liveCacheUtil.getConfBd("ticket_catty_ratio");
+        List<LiveHostWageNote> liveHostWageNotes = liveHostWageNoteMapper.selectListMt(dto);
+        List<Map<String, Object>> mapLists = liveHostWageNoteMapper.selectFamilyName();
+        for (LiveHostWageNote liveHostWageNote : liveHostWageNotes) {
+            if (liveHostWageNote.getAllticket()!=null) {
+                BigDecimal allTicket=new BigDecimal(liveHostWageNote.getAllticket());
+                //判断是否是散户
+                if (liveHostWageNote.getFamilyId()==0  && dto.getSettlementRate()!=null){
+                    liveHostWageNote.setAllticketRes(allTicket.multiply(dto.getSettlementRate()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    liveHostWageNote.setSettlementRate(dto.getSettlementRate());
+                }else {
+                    liveHostWageNote.setAllticketRes(allTicket.multiply(ticketCattyRatio).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    liveHostWageNote.setSettlementRate(ticketCattyRatio);
+
+                }
+            }
+
+            for (Map<String, Object> mapList : mapLists) {
+                if(mapList.get("id").equals(liveHostWageNote.getFamilyId())){
+                    liveHostWageNote.setFamilyName(mapList.get("name").toString());
+                }
+            }
+        }
+        return liveHostWageNotes;
     }
 }

@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.LiveHostWageNoteMapper">
 
     <resultMap type="LiveHostWageNote" id="LiveHostWageNoteResult">
-        <result property="id"    column="id"    />
-        <result property="familyId"    column="family_id"    />
-        <result property="hostId"    column="host_id"    />
-        <result property="startTime"    column="start_time"    />
-        <result property="endTime"    column="end_time"    />
-        <result property="liveTimeSec"    column="live_time_sec"    />
-        <result property="ticket"    column="ticket"    />
-        <result property="beforeTotalTicket"    column="before_total_ticket"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="remark"    column="remark"    />
-        <result property="cpCost"    column="cp_cost"    />
-        <result property="cpPrize"    column="cp_prize"    />
+        <result property="id" column="id"/>
+        <result property="familyId" column="family_id"/>
+        <result property="hostId" column="host_id"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="liveTimeSec" column="live_time_sec"/>
+        <result property="ticket" column="ticket"/>
+        <result property="beforeTotalTicket" column="before_total_ticket"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="cpCost" column="cp_cost"/>
+        <result property="cpPrize" column="cp_prize"/>
+
+        <result column="allCpCost" property="allCpCost"/>
+        <result column="allPrize" property="allPrize"/>
+        <result column="alltime" property="alltime"/>
+        <result column="shijian" property="shijian"/>
+        <result column="alltime" property="alltimeDes"/>
+        <result column="allticket" property="allticket"/>
+        <result column="timedata" property="timedata"/>
+        <result column="familyName" property="familyName"/>
+        <result column="familyNickName" property="familyNickName"/>
+        <result column="ticket" property="nickName"/>
+        <result column="allticket" property="allticketRes"/>
+
     </resultMap>
 
     <sql id="selectLiveHostWageNoteVo">
@@ -26,15 +39,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectLiveHostWageNoteList" parameterType="LiveHostWageNote" resultMap="LiveHostWageNoteResult">
         <include refid="selectLiveHostWageNoteVo"/>
         <where>
-            <if test="familyId != null "> and family_id = #{familyId}</if>
-            <if test="hostId != null "> and host_id = #{hostId}</if>
-            <if test="startTime != null  and startTime != ''"> and start_time = #{startTime}</if>
-            <if test="endTime != null  and endTime != ''"> and end_time = #{endTime}</if>
-            <if test="liveTimeSec != null "> and live_time_sec = #{liveTimeSec}</if>
-            <if test="ticket != null "> and ticket = #{ticket}</if>
-            <if test="beforeTotalTicket != null "> and before_total_ticket = #{beforeTotalTicket}</if>
-            <if test="cpCost != null "> and cp_cost = #{cpCost}</if>
-            <if test="cpPrize != null "> and cp_prize = #{cpPrize}</if>
+            <if test="familyId != null ">and family_id = #{familyId}</if>
+            <if test="hostId != null ">and host_id = #{hostId}</if>
+            <if test="startTime != null  and startTime != ''">and start_time = #{startTime}</if>
+            <if test="endTime != null  and endTime != ''">and end_time = #{endTime}</if>
+            <if test="liveTimeSec != null ">and live_time_sec = #{liveTimeSec}</if>
+            <if test="ticket != null ">and ticket = #{ticket}</if>
+            <if test="beforeTotalTicket != null ">and before_total_ticket = #{beforeTotalTicket}</if>
+            <if test="cpCost != null ">and cp_cost = #{cpCost}</if>
+            <if test="cpPrize != null ">and cp_prize = #{cpPrize}</if>
         </where>
     </select>
 
@@ -57,47 +70,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="cpCost != null">cp_cost,</if>
             <if test="cpPrize != null">cp_prize,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="familyId != null">#{familyId},</if>
-                    <if test="hostId != null">#{hostId},</if>
-                    <if test="startTime != null and startTime != ''">#{startTime},</if>
-                    <if test="endTime != null and endTime != ''">#{endTime},</if>
-                    <if test="liveTimeSec != null">#{liveTimeSec},</if>
-                    <if test="ticket != null">#{ticket},</if>
-                    <if test="beforeTotalTicket != null">#{beforeTotalTicket},</if>
-                <if test="createTime != null and createTime != ''">#{createTimes},</if>
-                    <if test="remark != null">#{remark},</if>
-                    <if test="cpCost != null">#{cpCost},</if>
-                    <if test="cpPrize != null">#{cpPrize},</if>
-             </trim>
+            <if test="familyId != null">#{familyId},</if>
+            <if test="hostId != null">#{hostId},</if>
+            <if test="startTime != null and startTime != ''">#{startTime},</if>
+            <if test="endTime != null and endTime != ''">#{endTime},</if>
+            <if test="liveTimeSec != null">#{liveTimeSec},</if>
+            <if test="ticket != null">#{ticket},</if>
+            <if test="beforeTotalTicket != null">#{beforeTotalTicket},</if>
+            <if test="createTime != null and createTime != ''">#{createTimes},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="cpCost != null">#{cpCost},</if>
+            <if test="cpPrize != null">#{cpPrize},</if>
+        </trim>
     </insert>
 
     <update id="updateLiveHostWageNote" parameterType="LiveHostWageNote">
         update 7700_live.live_host_wage_note
         <trim prefix="SET" suffixOverrides=",">
             <if test="familyId != null">family_id = #{familyId},</if>
-    
+
             <if test="hostId != null">host_id = #{hostId},</if>
-    
+
             <if test="startTime != null and startTime != ''">start_time = #{startTime},</if>
-    
+
             <if test="endTime != null and endTime != ''">end_time = #{endTime},</if>
-    
+
             <if test="liveTimeSec != null">live_time_sec = #{liveTimeSec},</if>
-    
+
             <if test="ticket != null">ticket = #{ticket},</if>
-    
+
             <if test="beforeTotalTicket != null">before_total_ticket = #{beforeTotalTicket},</if>
-    
+
             <if test="createTime != null and createTime != ''">create_time = #{createTimes},</if>
-    
+
             <if test="remark != null">remark = #{remark},</if>
-    
+
             <if test="cpCost != null">cp_cost = #{cpCost},</if>
-    
+
             <if test="cpPrize != null">cp_prize = #{cpPrize},</if>
-    
+
         </trim>
         where id = #{id}
     </update>
@@ -115,5 +128,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="beforeNote" resultMap="LiveHostWageNoteResult">
         select * from 7700_live.live_host_wage_note  l where l.host_id=#{userId}  ORDER BY create_time desc LIMIT 1
+    </select>
+    <select id="familyPage" resultMap="LiveHostWageNoteResult">
+        SELECT lhwn.family_id,SUM(lhwn.live_time_sec) as alltime,sum(lhwn.ticket) as allticket,sum(lhwn.cp_cost) as
+        allCpCost,sum(lhwn.cp_prize) as allPrize,SUBSTR(lhwn.create_time,1,10) as shijian, #{countTime} timedata,
+        lf.nick_name as familyNickName,lf.name as familyName
+        FROM 7700_live.live_host_wage_note lhwn
+        left join 7700_live.live_family lf on lhwn.family_id=lf.id
+        <where>
+<!--            <if test="dto.settlementRate!=null"></if>-->
+            <if test="dto.familyId!=null">and lhwn.family_id = #{dto.familyId}</if>
+<!--            <if test="dto.familyName!=null">and lf.name like concat('%',#{dto.familyName},'%')</if>-->
+            <if test="dto.familyNickName!=null">and lf.nick_name like concat('%',#{dto.familyNickName},'%')</if>
+            <if test="dto.startTime!=null">and lhwn.start_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and lhwn.start_time &lt;= #{dto.endTime}</if>
+        </where>
+        group by lhwn.family_id
+    </select>
+    <select id="selectFamilyName" resultType="java.util.Map">
+        select id,nick_name,name from 7700_live.live_family
+    </select>
+    <select id="selectListMt" resultType="com.qiqilm.server.admin.domain.LiveHostWageNote">
+        select m.nick_name,o.family_id as familyId, host_id,SUM(o.live_time_sec) as alltime,sum(o.ticket) as allticket,sum(o.cp_cost) as allCpCost,sum(o.cp_prize) as allPrize,SUBSTR(o.create_time,1,10) as shijian
+        from 7700_live.live_host_wage_note o left join
+        7700_live.live_user m on o.host_id=m.id
+        where o.family_id=#{dto.familyId}
+        group by o.host_id
     </select>
 </mapper>
