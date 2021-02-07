@@ -153,6 +153,6 @@
         from 7700_live.live_host_wage_note o left join
         7700_live.live_user m on o.host_id=m.id
         where o.family_id=#{dto.familyId}
-        group by o.host_id limit 10
+        group by o.host_id
     </select>
 </mapper>

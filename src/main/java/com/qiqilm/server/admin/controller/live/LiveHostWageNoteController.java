@@ -52,7 +52,7 @@ public class LiveHostWageNoteController extends BaseController {
         }
         dto.setStartTime(dto.getSelectDate()[0]);
         dto.setEndTime(dto.getSelectDate()[1]);
-        startPage();
+//        startPage();
         List<LiveHostWageNote> list = liveHostWageNoteService.familyPage(dto);
         return getDataTable( list );
     }

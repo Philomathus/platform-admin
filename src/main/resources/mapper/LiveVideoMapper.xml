@@ -135,6 +135,13 @@
 				v.id=#{hostName,jdbcType=VARCHAR}</if>
 			<if test="cateId != null ">and cate_id = #{cateId}</if>
 			<if test="paiId != null ">and pai_id = #{paiId}</if>
+
+			<if test="types != null and types.length != 0">
+				and cate_id in
+				<foreach item="id" collection="types" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
 		</where>
 	</select>
 

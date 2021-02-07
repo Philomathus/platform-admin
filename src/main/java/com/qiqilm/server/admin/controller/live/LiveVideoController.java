@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 直播Controller
@@ -26,14 +27,14 @@ public class LiveVideoController extends BaseController {
 	@Autowired
 	private ILiveVideoService liveVideoService;
 
-/**
- * 查询直播列表
- */
-@PreAuthorize( "@ss.hasPermi('admin:liveVideo:list')" )
-@GetMapping( "/list" )
-    	public TableDataInfo list(LiveVideo liveVideo) {
+	/**
+	 * 查询直播列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:list')" )
+	@GetMapping( "/list" )
+	public TableDataInfo list( LiveVideo liveVideo ) {
 		startPage();
-		List<LiveVideo> list = liveVideoService.selectLiveVideoList(liveVideo);
+		List<LiveVideo> list = liveVideoService.selectLiveVideoList( liveVideo );
 		return getDataTable( list );
 	}
 
@@ -43,9 +44,9 @@ public class LiveVideoController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:export')" )
 	@Log( title = "直播", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LiveVideo liveVideo) {
-		List<LiveVideo>      list = liveVideoService.selectLiveVideoList(liveVideo);
-		ExcelUtil<LiveVideo> util = new ExcelUtil<LiveVideo>(LiveVideo. class);
+	public AjaxResult export( LiveVideo liveVideo ) {
+		List<LiveVideo>      list = liveVideoService.selectLiveVideoList( liveVideo );
+		ExcelUtil<LiveVideo> util = new ExcelUtil<LiveVideo>( LiveVideo.class );
 		return util.exportExcel( list, "liveVideo" );
 	}
 
@@ -54,13 +55,18 @@ public class LiveVideoController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( liveVideoService.selectLiveVideoById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( liveVideoService.selectLiveVideoById( id ) );
 	}
 
-	@GetMapping( value = "close/{id}" )
-	public AjaxResult close(@PathVariable( "id" ) Long id){
-		return AjaxResult.success( liveVideoService.close(id,"admin") );
+	@GetMapping( value = "close/{ids}" )
+	public AjaxResult close( @PathVariable( "ids" ) String ids ) {
+		String[] allId = ids.split(",");
+		for (int i = 0; i < allId.length; i++) {
+			String id=allId[i];
+			liveVideoService.close( Long.valueOf(id), "origin" );
+		}
+		return AjaxResult.success();
 	}
 
 	/**
@@ -69,8 +75,8 @@ public class LiveVideoController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:add')" )
 	@Log( title = "直播", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LiveVideo liveVideo) {
-		return toAjax( liveVideoService.insertLiveVideo(liveVideo) );
+	public AjaxResult add( @RequestBody LiveVideo liveVideo ) {
+		return toAjax( liveVideoService.insertLiveVideo( liveVideo ) );
 	}
 
 	/**
@@ -79,8 +85,8 @@ public class LiveVideoController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:edit')" )
 	@Log( title = "直播", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LiveVideo liveVideo) {
-		return toAjax( liveVideoService.updateLiveVideo(liveVideo) );
+	public AjaxResult edit( @RequestBody LiveVideo liveVideo ) {
+		return toAjax( liveVideoService.updateLiveVideo( liveVideo ) );
 	}
 
 	/**
@@ -94,4 +100,23 @@ public class LiveVideoController extends BaseController {
 	}
 
 
+	//@PreAuthorize( "@ss.hasPermi('admin:liveVideo:edit')" )
+	@Log( title = "直播付费", businessType = BusinessType.UPDATE )
+	@PutMapping("/livePay")
+	public AjaxResult livePay( @RequestBody LiveVideo record ) {
+		if ( Objects.nonNull( record ) && Objects.nonNull( record.getIsLivePay() ) && Objects.nonNull( record.getLiveFee() )
+				&& record.getIsLivePay() && record.getLiveFee() > 0
+		) {
+			try {
+				liveVideoService.livePay( record.getId(), record.getLiveFee(), 1 );
+				AjaxResult.success();
+			} catch ( Exception e ) {
+				return AjaxResult.error();
+			}
+		} else {
+			int i = liveVideoService.updateLiveVideo( record );
+			return i > 0 ? AjaxResult.success() : AjaxResult.error();
+		}
+		return null;
+	}
 }
