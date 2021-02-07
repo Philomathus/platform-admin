@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.controller;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.PayType;
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,6 +74,7 @@ public class ConfigBankController extends BaseController {
 	@Log( title = "【公司入款银行列表】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ConfigBank configBank) {
+		configBank.setId(UuidUtil.getRandomUuidWithoutSeparator());
 		return toAjax( configBankService.insertConfigBank(configBank) );
 	}
 
