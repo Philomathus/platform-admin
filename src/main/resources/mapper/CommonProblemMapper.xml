@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.CommonProblemMapper">
+	<resultMap type="CommonProblem" id="CommonProblemResult">
+		<result property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="indexs" column="indexs"/>
+		<result property="status" column="status"/>
+	</resultMap>
+
+	<sql id="selectCommonProblemVo">
+		select id, title, content, indexs, status
+		from 7700_main.common_problem
+	</sql>
+
+	<select id="selectCommonProblemList" parameterType="CommonProblem" resultMap="CommonProblemResult">
+		<include refid="selectCommonProblemVo"/>
+		<where>
+			<if test="title != null  and title != ''">
+				and title = #{title}
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectCommonProblemById" parameterType="String" resultMap="CommonProblemResult">
+		<include refid="selectCommonProblemVo"/>
+		where id = #{id}
+	</select>
+
+	<insert id="insertCommonProblem" parameterType="CommonProblem">
+		insert into 7700_main.common_problem
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="indexs != null">
+				indexs,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="title != null">
+				#{title},
+			</if>
+			<if test="content != null">
+				#{content},
+			</if>
+			<if test="indexs != null">
+				#{indexs},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateCommonProblem" parameterType="CommonProblem">
+		update 7700_main.common_problem
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="title != null">
+				title = #{title},
+			</if>
+
+			<if test="content != null">
+				content = #{content},
+			</if>
+
+			<if test="indexs != null">
+				indexs = #{indexs},
+			</if>
+
+			<if test="status != null">
+				status = #{status},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteCommonProblemById" parameterType="String">
+		delete
+		from 7700_main.common_problem
+		where id = #{id}
+	</delete>
+
+	<delete id="deleteCommonProblemByIds" parameterType="String">
+		delete
+		from 7700_main.common_problem where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>
