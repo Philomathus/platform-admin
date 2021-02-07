@@ -133,8 +133,8 @@
         SELECT lhwn.family_id,SUM(lhwn.live_time_sec) as alltime,sum(lhwn.ticket) as allticket,sum(lhwn.cp_cost) as
         allCpCost,sum(lhwn.cp_prize) as allPrize,SUBSTR(lhwn.create_time,1,10) as shijian, #{countTime} timedata,
         lf.nick_name as familyNickName,lf.name as familyName
-        FROM 7700_live.live_host_wage_note lhwn
-        left join 7700_live.live_family lf on lhwn.family_id=lf.id
+        FROM cx_live.live_host_wage_note lhwn
+        left join cx_live.live_family lf on lhwn.family_id=lf.id
         <where>
 <!--            <if test="dto.settlementRate!=null"></if>-->
             <if test="dto.familyId!=null">and lhwn.family_id = #{dto.familyId}</if>
@@ -146,12 +146,12 @@
         group by lhwn.family_id
     </select>
     <select id="selectFamilyName" resultType="java.util.Map">
-        select id,nick_name,name from 7700_live.live_family
+        select id,nick_name,name from cx_live.live_family
     </select>
     <select id="selectListMt" resultType="com.qiqilm.server.admin.domain.LiveHostWageNote">
         select m.nick_name,o.family_id as familyId, host_id,SUM(o.live_time_sec) as alltime,sum(o.ticket) as allticket,sum(o.cp_cost) as allCpCost,sum(o.cp_prize) as allPrize,SUBSTR(o.create_time,1,10) as shijian
-        from 7700_live.live_host_wage_note o left join
-        7700_live.live_user m on o.host_id=m.id
+        from cx_live.live_host_wage_note o left join
+        cx_live.live_user m on o.host_id=m.id
         where o.family_id=#{dto.familyId}
         group by o.host_id
     </select>
