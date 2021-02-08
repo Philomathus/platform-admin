@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectH5PluginVo">
-        select id, name, status, con_url, icon_url from cx_live.h5_plugin
+        select id, name, status, con_url, icon_url from 7700_live.h5_plugin
     </sql>
 
     <select id="selectH5PluginList" parameterType="H5Plugin" resultMap="H5PluginResult">
@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertH5Plugin" parameterType="H5Plugin">
-        insert into cx_live.h5_plugin
+        insert into 7700_live.h5_plugin
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="name != null and name != ''">name,</if>
@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateH5Plugin" parameterType="H5Plugin">
-        update cx_live.h5_plugin
+        update 7700_live.h5_plugin
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
     
@@ -65,11 +65,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteH5PluginById" parameterType="Long">
-        delete from cx_live.h5_plugin where id = #{id}
+        delete from 7700_live.h5_plugin where id = #{id}
     </delete>
 
     <delete id="deleteH5PluginByIds" parameterType="String">
-        delete from cx_live.h5_plugin where id in
+        delete from 7700_live.h5_plugin where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveMountVo">
-        select id, gvip, name, status, icon_url, svg_url, price, dis_price, vday from cx_live.live_mount
+        select id, gvip, name, status, icon_url, svg_url, price, dis_price, vday from 7700_live.live_mount
     </sql>
 
     <select id="selectLiveMountList" parameterType="LiveMount" resultMap="LiveMountResult">
@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveMount" parameterType="LiveMount" useGeneratedKeys="true" keyProperty="id">
-        insert into cx_live.live_mount
+        insert into 7700_live.live_mount
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gvip != null">gvip,</if>
             <if test="name != null and name != ''">name,</if>
@@ -64,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveMount" parameterType="LiveMount">
-        update cx_live.live_mount
+        update 7700_live.live_mount
         <trim prefix="SET" suffixOverrides=",">
             <if test="gvip != null">gvip = #{gvip},</if>
             <if test="name != null and name != ''">name = #{name},</if>
@@ -79,11 +79,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLiveMountById" parameterType="Long">
-        delete from cx_live.live_mount where id = #{id}
+        delete from 7700_live.live_mount where id = #{id}
     </delete>
 
     <delete id="deleteLiveMountByIds" parameterType="String">
-        delete from cx_live.live_mount where id in
+        delete from 7700_live.live_mount where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

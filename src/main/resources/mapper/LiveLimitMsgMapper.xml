@@ -10,7 +10,7 @@
     </resultMap>
 
     <sql id="selectLiveLimitMsgVo">
-        select id, name from cx_live.live_limit_msg
+        select id, name from 7700_live.live_limit_msg
     </sql>
 
     <select id="selectLiveLimitMsgList" parameterType="LiveLimitMsg" resultMap="LiveLimitMsgResult">
@@ -21,10 +21,10 @@
     </select>
 
     <delete id="deleteAll">
-        delete from cx_live.live_limit_msg
+        delete from 7700_live.live_limit_msg
     </delete>
     <insert id="insertBatch" parameterType="list">
-        insert into cx_live.live_limit_msg(name)
+        insert into 7700_live.live_limit_msg(name)
         <foreach collection="list" item="item" open="values" separator=",">
             (#{item})
         </foreach>

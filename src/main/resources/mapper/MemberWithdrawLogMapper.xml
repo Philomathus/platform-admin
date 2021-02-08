@@ -41,7 +41,7 @@
         account,
         first,
         recharge_withdraw_rate
-        from `db_cx001`.member_withdraw_log
+        from `7700_main`.member_withdraw_log
     </sql>
 
     <select id="selectMemberWithdrawLogList" parameterType="MemberWithdrawLog" resultMap="MemberWithdrawLogResult">
@@ -49,7 +49,7 @@
         <where>
             <if test="status != null and status == -1">
                 member_id not in (select member_id
-                from `db_cx001`.member_withdraw_log
+                from `7700_main`.member_withdraw_log
                 WHERE `status` in (3, 6)
                 GROUP BY member_id
                 HAVING count(1) &gt; 1)
@@ -78,7 +78,7 @@
     </select>
 
     <insert id="insertMemberWithdrawLog" parameterType="MemberWithdrawLog">
-        insert into db_cx001.member_withdraw_log
+        insert into 7700_main.member_withdraw_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
@@ -188,7 +188,7 @@
     </insert>
 
     <update id="updateMemberWithdrawLog" parameterType="MemberWithdrawLog">
-        update db_cx001.member_withdraw_log
+        update 7700_main.member_withdraw_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="memberId != null">
                 member_id = #{memberId},
@@ -250,7 +250,7 @@
     <sql id="whereTotal">
         <if test="status != null and status == -1">
             member_id not in (select member_id
-            from `db_cx001`.member_withdraw_log
+            from `7700_main`.member_withdraw_log
             WHERE `status` in (3, 6)
             GROUP BY member_id
             HAVING count(1) &gt; 1)
@@ -272,13 +272,13 @@
         </if>
     </sql>
     <sql id="getTotalSql">
-        select count(*) numberTotal from `db_cx001`.member_withdraw_log
+        select count(*) numberTotal from `7700_main`.member_withdraw_log
         <where>
             <include refid="whereTotal"></include>
         </where>
     </sql>
     <sql id="getSuccessTotalSql">
-        select count(*) total ,sum(withdraw_money) successTotal from `db_cx001`.member_withdraw_log
+        select count(*) total ,sum(withdraw_money) successTotal from `7700_main`.member_withdraw_log
         <where>
             <include refid="whereTotal"></include>
                (status = 3 or status = 6)

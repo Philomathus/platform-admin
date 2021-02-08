@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLogCommissionVo">
-        select id, member_id, commission, create_time from db_cx001.log_commission
+        select id, member_id, commission, create_time from 7700_main.log_commission
     </sql>
 
     <select id="selectLogCommissionList" parameterType="LogCommission" resultMap="LogCommissionResult">
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLogCommission" parameterType="LogCommission">
-        insert into db_cx001.log_commission
+        insert into 7700_main.log_commission
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="memberId != null">member_id,</if>
@@ -45,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLogCommission" parameterType="LogCommission">
-        update db_cx001.log_commission
+        update 7700_main.log_commission
         <trim prefix="SET" suffixOverrides=",">
             <if test="memberId != null">member_id = #{memberId},</if>
     
@@ -58,11 +58,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLogCommissionById" parameterType="String">
-        delete from db_cx001.log_commission where id = #{id}
+        delete from 7700_main.log_commission where id = #{id}
     </delete>
 
     <delete id="deleteLogCommissionByIds" parameterType="String">
-        delete from db_cx001.log_commission where id in
+        delete from 7700_main.log_commission where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

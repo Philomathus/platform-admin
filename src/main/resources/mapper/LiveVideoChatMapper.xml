@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectLiveVideoChatVo">
         select id, poscat_id, `group`, user_id, msg,  create_time as createTimes,  type, poscat_nick_name, user_nick_name,
-        from_platform from cx_live.live_video_chat
+        from_platform from 7700_live.live_video_chat
     </sql>
 
     <select id="selectLiveVideoChatList" parameterType="LiveVideoChat" resultMap="LiveVideoChatResult">
@@ -45,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveVideoChat" parameterType="LiveVideoChat" useGeneratedKeys="true" keyProperty="id">
-        insert into cx_live.live_video_chat
+        insert into 7700_live.live_video_chat
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="poscatId != null">poscat_id,</if>
             <if test="group != null">`group`,</if>
@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveVideoChat" parameterType="LiveVideoChat">
-        update cx_live.live_video_chat
+        update 7700_live.live_video_chat
         <trim prefix="SET" suffixOverrides=",">
             <if test="poscatId != null">poscat_id = #{poscatId},</if>
 
@@ -96,11 +96,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLiveVideoChatById" parameterType="Long">
-        delete from cx_live.live_video_chat where id = #{id}
+        delete from 7700_live.live_video_chat where id = #{id}
     </delete>
 
     <delete id="deleteLiveVideoChatByIds" parameterType="String">
-        delete from cx_live.live_video_chat where id in
+        delete from 7700_live.live_video_chat where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
