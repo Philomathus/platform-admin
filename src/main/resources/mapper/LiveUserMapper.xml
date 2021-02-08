@@ -954,11 +954,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM
         cx_live.lottery_bet a
         LEFT JOIN cx_live.live_user b ON a.anchor = b.id
-        <where>
-            <if test="nickName != null  and nickName != ''"> and b.nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="sendStartTime != null  and sendStartTime != ''"> and a.update_time>= #{sendStartTime}</if>
-            <if test="sendEndTime != null  and sendEndTime != ''"> and a.update_time &lt;= #{sendEndTime}</if>
-            <if test="id != null  and id != ''"> and b.id = #{id}</if>
-        </where>
+        where a.status = '1'
+        <if test="nickName != null  and nickName != ''"> and b.nick_name like concat('%', #{nickName}, '%')</if>
+        <if test="sendStartTime != null  and sendStartTime != ''"> and a.update_time>= #{sendStartTime}</if>
+        <if test="sendEndTime != null  and sendEndTime != ''"> and a.update_time &lt;= #{sendEndTime}</if>
+        <if test="id != null  and id != ''"> and b.id = #{id}</if>
+        GROUP BY a.anchor
     </select>
 </mapper>
