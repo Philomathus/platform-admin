@@ -58,4 +58,6 @@ public interface IPayAgentRechargeBankService {
 	 * @return 结果
 	 */
 	public int deletePayAgentRechargeBankById(Long id);
+
+	public int changeStatus(PayAgentRechargeBank payAgentRechargeBank);
 }
