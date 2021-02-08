@@ -9,7 +9,8 @@ spring:
     password: tv77_redis:^&*B2(vBvfi#h
 
 mybatis:
-  configuration-properties:
-    db-main: db_cx001
-    db-live: cx_live
-    db-lottery: cx_lottery
+  configuration:
+    variables:
+      dbMain: db_cx001
+      dbLive: cx_live
+      dbLottery: cx_lottery

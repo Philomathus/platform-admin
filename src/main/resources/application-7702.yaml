@@ -9,7 +9,8 @@ spring:
     password: xxxxxx
 
 mybatis:
-  configuration-properties:
-    db-main: 7702_main
-    db-live: 7702_live
-    db-lottery: 7702_lottery
+  configuration:
+    variables:
+      dbMain: 7702_main
+      dbLive: 7702_live
+      dbLottery: 7702_lottery
