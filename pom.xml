@@ -28,6 +28,7 @@
 		<googleauth.version>1.5.0</googleauth.version>
 		<commons-lang3.version>3.10</commons-lang3.version>
 		<commons-io.version>2.7</commons-io.version>
+		<commons-pool2.version>2.9.0</commons-pool2.version>
 		<bitwalker.version>1.21</bitwalker.version>
 		<jwt.version>0.9.1</jwt.version>
 
@@ -90,16 +91,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>io.lettuce</groupId>
-					<artifactId>lettuce-core</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
 		</dependency>
 
 		<!-- spring security 安全认证 -->
@@ -199,6 +190,11 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>${commons-io.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>${commons-pool2.version}</version>
 		</dependency>
 
 		<!--velocity代码生成使用模板 -->
