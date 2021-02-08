@@ -106,7 +106,7 @@
 	</resultMap>
 
 	<sql id="selectLiveVideoVoById">
-        select id, title, user_id, live_in, watch_number, virtual_watch_number, vote_number, cate_id, province, city,  FROM_UNIXTIME(create_time) create_time ,  begin_time, end_time, end_date, group_id, destroy_group_status, long_polling_key, max_watch_number, room_type, is_playback, video_vid, monitor_time, is_delete, robot_num, robot_time, channelid, is_aborted, is_del_vod, online_status, tipoff_count, private_key, share_type, sort, pai_id, sex, video_type, sort_num, create_type, max_robot_num, share_count, like_count, fans_count, sort_init, push_rtmp, play_flv, play_rtmp, play_mp4, play_hls, xpoint, ypoint, head_image, thumb_head_image, play_url, is_recommend, live_image, virtual_number, live_pay_time, is_live_pay, live_fee, live_is_mention, live_pay_type, live_pay_count, prop_table, room_title, pay_room_id, len_time, is_concatvideo, stick, classified_id, game_log_id, banker_status, banker_id, auto_start, auto_game_id, lottery_id, new_play_flv, n_play_flv, host_name, lottery_name from cx_live.live_video
+        select id, title, user_id, live_in, watch_number, virtual_watch_number, vote_number, cate_id, province, city,  FROM_UNIXTIME(create_time) create_time ,  begin_time, end_time, end_date, group_id, destroy_group_status, long_polling_key, max_watch_number, room_type, is_playback, video_vid, monitor_time, is_delete, robot_num, robot_time, channelid, is_aborted, is_del_vod, online_status, tipoff_count, private_key, share_type, sort, pai_id, sex, video_type, sort_num, create_type, max_robot_num, share_count, like_count, fans_count, sort_init, push_rtmp, play_flv, play_rtmp, play_mp4, play_hls, xpoint, ypoint, head_image, thumb_head_image, play_url, is_recommend, live_image, virtual_number, live_pay_time, is_live_pay, live_fee, live_is_mention, live_pay_type, live_pay_count, prop_table, room_title, pay_room_id, len_time, is_concatvideo, stick, classified_id, game_log_id, banker_status, banker_id, auto_start, auto_game_id, lottery_id, new_play_flv, n_play_flv, host_name, lottery_name from 7700_live.live_video
     </sql>
 
 	<sql id="selectLiveVideoVo">
@@ -124,7 +124,7 @@
 			host_name,
 			lottery_name,vote_Number,is_live_pay,s.name,live_image
 		FROM
-			cx_live.live_video v INNER JOIN cx_live.server_live s on(v.pai_id=s.id)
+			cx_live.live_video v INNER JOIN 7700_live.server_live s on(v.pai_id=s.id)
     </sql>
 
 	<select id="selectLiveVideoList" parameterType="LiveVideo" resultMap="LiveVideoResult">
@@ -151,7 +151,7 @@
 	</select>
 
 	<insert id="insertLiveVideo" parameterType="LiveVideo">
-		insert into cx_live.live_video
+		insert into 7700_live.live_video
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">id,</if>
 			<if test="title != null and title != ''">title,</if>
@@ -317,7 +317,7 @@
 	</insert>
 
 	<update id="updateLiveVideo" parameterType="LiveVideo">
-		update cx_live.live_video
+		update 7700_live.live_video
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="title != null and title != ''">title = #{title},</if>
 
@@ -480,11 +480,11 @@
 	</update>
 
 	<delete id="deleteLiveVideoById" parameterType="Long">
-        delete from cx_live.live_video where id = #{id}
+        delete from 7700_live.live_video where id = #{id}
     </delete>
 
 	<delete id="deleteLiveVideoByIds" parameterType="String">
-		delete from cx_live.live_video where id in
+		delete from 7700_live.live_video where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

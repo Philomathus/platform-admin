@@ -25,7 +25,7 @@
     </resultMap>
 
     <sql id="selectReportAgentcountVo">
-        select rep_id, agentcode, agentname, agenttime, newmember, totalmember, gs_rukuanjine, xs_rukuanjine, sg_rukuanjine, totalfrist_rukuanjine, chukuanjine, total_rukuanjine, total_chukuanjine, total_enterlivetimes, total_activeandroid, total_activeios, total_giveprop from db_cx001.report_agentcount
+        select rep_id, agentcode, agentname, agenttime, newmember, totalmember, gs_rukuanjine, xs_rukuanjine, sg_rukuanjine, totalfrist_rukuanjine, chukuanjine, total_rukuanjine, total_chukuanjine, total_enterlivetimes, total_activeandroid, total_activeios, total_giveprop from 7700_main.report_agentcount
     </sql>
 
     <select id="selectReportAgentcountList" parameterType="ReportAgentcount" resultMap="ReportAgentcountResult">

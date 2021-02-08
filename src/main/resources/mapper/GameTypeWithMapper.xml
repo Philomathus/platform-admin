@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="selectGameTypeWithVo">
-        select id, type_id, game_id, create_time create_time,kind_id from db_cx001.game_type_with
+        select id, type_id, game_id, create_time create_time,kind_id from 7700_main.game_type_with
     </sql>
 
     <select id="selectGameTypeWithList" parameterType="GameTypeWith" resultMap="GameTypeWithResult">
@@ -31,7 +31,7 @@
     </select>
 
     <insert id="insertGameTypeWith" parameterType="GameTypeWith">
-        insert into db_cx001.game_type_with
+        insert into 7700_main.game_type_with
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="typeId != null">type_id,</if>
@@ -49,7 +49,7 @@
     </insert>
 
     <update id="updateGameTypeWith" parameterType="GameTypeWith">
-        update db_cx001.game_type_with
+        update 7700_main.game_type_with
         <trim prefix="SET" suffixOverrides=",">
             <if test="typeId != null">type_id = #{typeId},</if>
             <if test="gameId != null">game_id = #{gameId},</if>
@@ -60,18 +60,18 @@
     </update>
 
     <delete id="deleteGameTypeWithById" parameterType="String">
-        delete from db_cx001.game_type_with where id = #{id}
+        delete from 7700_main.game_type_with where id = #{id}
     </delete>
 
     <delete id="deleteGameTypeWithByIds" parameterType="String">
-        delete from db_cx001.game_type_with where id in
+        delete from 7700_main.game_type_with where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
     <delete id="deleteTypeGames">
-        delete from db_cx001.game_type_with
+        delete from 7700_main.game_type_with
         where type_id = #{typeId}
     </delete>
 

@@ -22,7 +22,7 @@
     </resultMap>
 
     <sql id="selectMemberGameDataVo">
-        select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from db_cx001.member_game_data
+        select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from 7700_main.member_game_data
     </sql>
 
     <select id="selectMemberGameDataList" parameterType="MemberGameData" resultMap="MemberGameDataResult">
@@ -52,7 +52,7 @@
     </select>
 
     <insert id="insertMemberGameData" parameterType="MemberGameData">
-        insert into db_cx001.member_game_data
+        insert into 7700_main.member_game_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="gameId != null and gameId != ''">game_id,</if>
@@ -88,7 +88,7 @@
     </insert>
 
     <update id="updateMemberGameData" parameterType="MemberGameData">
-        update db_cx001.member_game_data
+        update 7700_main.member_game_data
         <trim prefix="SET" suffixOverrides=",">
             <if test="gameId != null and gameId != ''">game_id = #{gameId},</if>
 
@@ -121,11 +121,11 @@
     </update>
 
     <delete id="deleteMemberGameDataById" parameterType="String">
-        delete from db_cx001.member_game_data where id = #{id}
+        delete from 7700_main.member_game_data where id = #{id}
     </delete>
 
     <delete id="deleteMemberGameDataByIds" parameterType="String">
-        delete from db_cx001.member_game_data where id in
+        delete from 7700_main.member_game_data where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -148,7 +148,7 @@
         <if test="endTime != null and endTime != ''">and game_end_time &lt;= #{endTime}</if>
     </sql>
     <select id="getCount" resultType="java.util.Map">
-        select SUM(cell_score) totalSuccessBet,SUM(all_bet) totalBet,SUM(profit) totalIncome from db_cx001.member_game_data
+        select SUM(cell_score) totalSuccessBet,SUM(all_bet) totalBet,SUM(profit) totalIncome from 7700_main.member_game_data
         <where>
             <include refid="whereCount"></include>
         </where>

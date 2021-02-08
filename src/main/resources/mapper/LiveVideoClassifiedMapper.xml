@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveVideoClassifiedVo">
-        select id, title, is_effect, sort, img, classfy, is_host_show, sort_desc from cx_live.live_video_classified
+        select id, title, is_effect, sort, img, classfy, is_host_show, sort_desc from 7700_live.live_video_classified
     </sql>
 
     <select id="selectLiveVideoClassifiedList" parameterType="LiveVideoClassified" resultMap="LiveVideoClassifiedResult">
@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveVideoClassified" parameterType="LiveVideoClassified" useGeneratedKeys="true" keyProperty="id">
-        insert into cx_live.live_video_classified
+        insert into 7700_live.live_video_classified
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="title != null and title != ''">title,</if>
             <if test="isEffect != null">is_effect,</if>
@@ -60,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveVideoClassified" parameterType="LiveVideoClassified">
-        update cx_live.live_video_classified
+        update 7700_live.live_video_classified
         <trim prefix="SET" suffixOverrides=",">
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="isEffect != null">is_effect = #{isEffect},</if>
@@ -74,11 +74,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLiveVideoClassifiedById" parameterType="Long">
-        delete from cx_live.live_video_classified where id = #{id}
+        delete from 7700_live.live_video_classified where id = #{id}
     </delete>
 
     <delete id="deleteLiveVideoClassifiedByIds" parameterType="String">
-        delete from cx_live.live_video_classified where id in
+        delete from 7700_live.live_video_classified where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

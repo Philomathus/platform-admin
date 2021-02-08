@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLotteryBetVo">
-        select id, user_id, lottery_id, issue, method_id, bet_select, chip, bet_time, status, prize, cost, lottery_name, puser_id, anchor, code,  FROM_UNIXTIME(update_time) update_time   from cx_live.lottery_bet
+        select id, user_id, lottery_id, issue, method_id, bet_select, chip, bet_time, status, prize, cost, lottery_name, puser_id, anchor, code,  FROM_UNIXTIME(update_time) update_time   from 7700_live.lottery_bet
     </sql>
 
     <select id="selectLotteryBetList" parameterType="LotteryBet" resultMap="LotteryBetResult">
@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLotteryBet" parameterType="LotteryBet">
-        insert into cx_live.lottery_bet
+        insert into 7700_live.lottery_bet
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="userId != null">user_id,</if>
@@ -93,7 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLotteryBet" parameterType="LotteryBet">
-        update cx_live.lottery_bet
+        update 7700_live.lottery_bet
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
     
@@ -130,18 +130,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLotteryBetById" parameterType="String">
-        delete from cx_live.lottery_bet where id = #{id}
+        delete from 7700_live.lottery_bet where id = #{id}
     </delete>
 
     <delete id="deleteLotteryBetByIds" parameterType="String">
-        delete from cx_live.lottery_bet where id in
+        delete from 7700_live.lottery_bet where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
     <select id="sumBatCostPrize" resultType="java.util.HashMap">
-        select sum(cost) as cost, anchor from cx_live.lottery_bet where anchor = #{anchor} and update_time >=#{beginTime} and
+        select sum(cost) as cost, anchor from 7700_live.lottery_bet where anchor = #{anchor} and update_time >=#{beginTime} and
          update_time <![CDATA[ <= ]]> #{endTime} GROUP BY anchor
     </select>
 </mapper>
