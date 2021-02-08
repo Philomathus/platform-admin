@@ -4,10 +4,10 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
 import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +32,8 @@ public class MemberGameDataController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:list')" )
 	@GetMapping( "/list" )
 	public TableDataInfo list( MemberGameData memberGameData ) {
-		if ( memberGameData.getSelectDate() != null ) {
-			memberGameData.setStartTime( memberGameData.getSelectDate()[ 0 ] );
-			memberGameData.setEndTime( memberGameData.getSelectDate()[ 1 ] );
-		}
 		startPage();
-		List<MemberGameData> list = memberGameDataService.selectMemberGameDataList( memberGameData );
+		List<RspMemberGameData> list = memberGameDataService.selectMemberGameDataList( memberGameData );
 		return getDataTable( list );
 	}
 
@@ -58,18 +54,18 @@ public class MemberGameDataController extends BaseController {
 		}
 		return memberGameDataService.getCount( memberGameData );
 	}
-
-	/**
-	 * 导出会员注单数据列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('member:memberGameData:export')" )
-	@Log( title = "会员注单数据", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public AjaxResult export( MemberGameData memberGameData ) {
-		List<MemberGameData>      list = memberGameDataService.selectMemberGameDataList( memberGameData );
-		ExcelUtil<MemberGameData> util = new ExcelUtil<MemberGameData>( MemberGameData.class );
-		return util.exportExcel( list, "memberGameData" );
-	}
+//
+//	/**
+//	 * 导出会员注单数据列表
+//	 */
+//	@PreAuthorize( "@ss.hasPermi('member:memberGameData:export')" )
+//	@Log( title = "会员注单数据", businessType = BusinessType.EXPORT )
+//	@GetMapping( "/export" )
+//	public AjaxResult export( MemberGameData memberGameData ) {
+//		List<RspMemberGameData>      list = memberGameDataService.selectMemberGameDataList( memberGameData );
+//		ExcelUtil<MemberGameData> util = new ExcelUtil<MemberGameData>( MemberGameData.class );
+//		return util.exportExcel( list, "memberGameData" );
+//	}
 
 	/**
 	 * 获取会员注单数据详细信息

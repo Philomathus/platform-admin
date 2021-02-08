@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog;
+import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public interface MemberGameDataMapper {
 	 * @param memberGameData 会员注单数据
 	 * @return 会员注单数据集合
 	 */
-	public List<MemberGameData> selectMemberGameDataList(MemberGameData memberGameData);
+	public List<RspMemberGameData> selectMemberGameDataList(MemberGameData memberGameData);
 
 	/**
 	 * 新增会员注单数据
