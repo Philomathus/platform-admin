@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLogGameOrderVo">
-        select id, type, member_id, user_name, platform_id, status, money, b_time, e_time from 7700_main.log_game_order
+        select id, type, member_id, user_name, platform_id, status, money, b_time, e_time from db_cx001.log_game_order
     </sql>
 
     <select id="selectLogGameOrderList" parameterType="LogGameOrder" resultMap="LogGameOrderResult">
@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLogGameOrder" parameterType="LogGameOrder">
-        insert into 7700_main.log_game_order
+        insert into db_cx001.log_game_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="type != null">type,</if>
@@ -68,7 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLogGameOrder" parameterType="LogGameOrder">
-        update 7700_main.log_game_order
+        update db_cx001.log_game_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="type != null">type = #{type},</if>
 
@@ -91,11 +91,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLogGameOrderById" parameterType="String">
-        delete from 7700_main.log_game_order where id = #{id}
+        delete from db_cx001.log_game_order where id = #{id}
     </delete>
 
     <delete id="deleteLogGameOrderByIds" parameterType="String">
-        delete from 7700_main.log_game_order where id in
+        delete from db_cx001.log_game_order where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

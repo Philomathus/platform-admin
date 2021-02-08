@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLivePayLogVo">
-        select id, total_time, total_ticket, total_diamonds, from_user_id, p_user_id, from_user_name, to_user_id,  FROM_UNIXTIME(create_time) create_time ,  create_date, create_ym, create_d, create_w, live_fee, live_pay_time, live_pay_date, video_id, group_id, pay_time_end, pay_time_next, live_is_mention_time, live_is_mention_pay, live_pay_type, new_room_id, total_score, uesddiamonds_to_score, ticket_to_rate, pay_type, is_history, is_note from 7700_live.live_pay_log
+        select id, total_time, total_ticket, total_diamonds, from_user_id, p_user_id, from_user_name, to_user_id,  FROM_UNIXTIME(create_time) create_time ,  create_date, create_ym, create_d, create_w, live_fee, live_pay_time, live_pay_date, video_id, group_id, pay_time_end, pay_time_next, live_is_mention_time, live_is_mention_pay, live_pay_type, new_room_id, total_score, uesddiamonds_to_score, ticket_to_rate, pay_type, is_history, is_note from cx_live.live_pay_log
     </sql>
 
     <select id="selectLivePayLogList" parameterType="LivePayLog" resultMap="LivePayLogResult">
@@ -81,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLivePayLog" parameterType="LivePayLog" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.live_pay_log
+        insert into cx_live.live_pay_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="totalTime != null">total_time,</if>
             <if test="totalTicket != null">total_ticket,</if>
@@ -147,7 +147,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLivePayLog" parameterType="LivePayLog">
-        update 7700_live.live_pay_log
+        update cx_live.live_pay_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="totalTime != null">total_time = #{totalTime},</if>
     
@@ -212,11 +212,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLivePayLogById" parameterType="Long">
-        delete from 7700_live.live_pay_log where id = #{id}
+        delete from cx_live.live_pay_log where id = #{id}
     </delete>
 
     <delete id="deleteLivePayLogByIds" parameterType="String">
-        delete from 7700_live.live_pay_log where id in
+        delete from cx_live.live_pay_log where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

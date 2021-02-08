@@ -29,7 +29,7 @@
 			   level,
 			   member_name,
 			   inviter
-		from 7700_main.member_recommend
+		from db_cx001.member_recommend
 	</sql>
 
 	<select id="selectMemberRecommendList" parameterType="MemberRecommend" resultMap="MemberRecommendResult">
@@ -71,7 +71,7 @@
 	</select>
 
 	<insert id="insertMemberRecommend" parameterType="MemberRecommend">
-		insert into 7700_main.member_recommend
+		insert into db_cx001.member_recommend
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				id,
@@ -145,7 +145,7 @@
 	</insert>
 
 	<update id="updateMemberRecommend" parameterType="MemberRecommend">
-		update 7700_main.member_recommend
+		update db_cx001.member_recommend
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="memberId != null">
 				member_id = #{memberId},
@@ -183,13 +183,13 @@
 
 	<delete id="deleteMemberRecommendById" parameterType="String">
 		delete
-		from 7700_main.member_recommend
+		from db_cx001.member_recommend
 		where id = #{id}
 	</delete>
 
 	<delete id="deleteMemberRecommendByIds" parameterType="String">
 		delete
-		from 7700_main.member_recommend where id in
+		from db_cx001.member_recommend where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

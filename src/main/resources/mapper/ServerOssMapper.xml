@@ -31,7 +31,7 @@
 			   create_time,
 			   updator,
 			   update_time
-		from 7700_live.server_oss
+		from cx_live.server_oss
 	</sql>
 
 	<select id="selectServerOssList" parameterType="ServerOss" resultMap="ServerOssResult">
@@ -49,7 +49,7 @@
 	</select>
 
 	<insert id="insertServerOss" parameterType="ServerOss" useGeneratedKeys="true" keyProperty="id">
-		insert into 7700_live.server_oss
+		insert into cx_live.server_oss
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name,
@@ -123,7 +123,7 @@
 	</insert>
 
 	<update id="updateServerOss" parameterType="ServerOss">
-		update 7700_live.server_oss
+		update cx_live.server_oss
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name = #{name},
@@ -174,13 +174,13 @@
 
 	<delete id="deleteServerOssById" parameterType="Long">
 		delete
-		from 7700_live.server_oss
+		from cx_live.server_oss
 		where id = #{id}
 	</delete>
 
 	<delete id="deleteServerOssByIds" parameterType="String">
 		delete
-		from 7700_live.server_oss where id in
+		from cx_live.server_oss where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

@@ -50,7 +50,7 @@
 	<sql id="selectMemberInfoVo">
 		select id,
 			   member_code,
-			   7700_agent,
+			   cx_agent,
 			   user_name,
 			   real_name,
 			   status,
@@ -571,7 +571,7 @@
 	</select>
 
 	<select id="findRecommendByInviterCode" resultType="com.qiqilm.server.admin.domain.MemberInfo">
-		select id, user_name, 7700_agent, inviter_code
+		select id, user_name, cx_agent, inviter_code
 		from member_info
 		where member_code = #{inviterCode}
 	</select>

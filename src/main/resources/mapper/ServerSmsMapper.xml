@@ -29,7 +29,7 @@
 			   sms_sdk_appid,
 			   identify,
 			   is_effect
-		from 7700_live.server_sms
+		from cx_live.server_sms
 	</sql>
 
 	<select id="selectServerSmsList" parameterType="ServerSms" resultMap="ServerSmsResult">
@@ -53,7 +53,7 @@
 	</select>
 
 	<insert id="insertServerSms" parameterType="ServerSms" useGeneratedKeys="true" keyProperty="id">
-		insert into 7700_live.server_sms
+		insert into cx_live.server_sms
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name,
@@ -121,7 +121,7 @@
 	</insert>
 
 	<update id="updateServerSms" parameterType="ServerSms">
-		update 7700_live.server_sms
+		update cx_live.server_sms
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name = #{name},
@@ -159,13 +159,13 @@
 
 	<delete id="deleteServerSmsById" parameterType="Long">
 		delete
-		from 7700_live.server_sms
+		from cx_live.server_sms
 		where id = #{id}
 	</delete>
 
 	<delete id="deleteServerSmsByIds" parameterType="String">
 		delete
-		from 7700_live.server_sms where id in
+		from cx_live.server_sms where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

@@ -11,7 +11,7 @@
 
 	<sql id="selectCommonProblemVo">
 		select id, title, content, indexs, status
-		from 7700_main.common_problem
+		from db_cx001.common_problem
 	</sql>
 
 	<select id="selectCommonProblemList" parameterType="CommonProblem" resultMap="CommonProblemResult">
@@ -32,7 +32,7 @@
 	</select>
 
 	<insert id="insertCommonProblem" parameterType="CommonProblem">
-		insert into 7700_main.common_problem
+		insert into db_cx001.common_problem
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				id,
@@ -70,7 +70,7 @@
 	</insert>
 
 	<update id="updateCommonProblem" parameterType="CommonProblem">
-		update 7700_main.common_problem
+		update db_cx001.common_problem
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="title != null">
 				title = #{title},
@@ -93,13 +93,13 @@
 
 	<delete id="deleteCommonProblemById" parameterType="String">
 		delete
-		from 7700_main.common_problem
+		from db_cx001.common_problem
 		where id = #{id}
 	</delete>
 
 	<delete id="deleteCommonProblemByIds" parameterType="String">
 		delete
-		from 7700_main.common_problem where id in
+		from db_cx001.common_problem where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>
