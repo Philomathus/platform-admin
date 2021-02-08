@@ -52,8 +52,9 @@ public class ReportAnchorhotDay extends BaseEntity {
     private String num;
 
     /** 更新日期 */
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "更新日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    @Excel(name = "更新日期", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date reptime;
 
     /** 主播头像 */
