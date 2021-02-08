@@ -9,12 +9,13 @@ import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.SysUserOnline;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ISysUserOnlineService;
+import com.qiqilm.server.admin.utils.DateUtils;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,21 +41,22 @@ public class SysUserOnlineController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('monitor:online:list')" )
 	@GetMapping( "/list" )
 	public TableDataInfo list( String ipaddr, String userName ) {
-		log.warn( System.currentTimeMillis() );
-		Map<String, LoginUser> loginUserList = stringRedisTemplate.execute( ( RedisCallback<Map<String, LoginUser>> )
-				connection -> {
-					Map<String, LoginUser> resultMap = new HashMap<>();
-					Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
-							.match( AdminConstants.LOGIN_TOKEN_KEY + "*" ).count( 3 ).build() );
-					while ( cursor.hasNext() ) {
-						log.warn( System.currentTimeMillis() );
-						String    value = new String( connection.get( cursor.next() ) );
-						LoginUser user  = JsonUtil.json2Object( value, LoginUser.class );
-						resultMap.put( user.getToken(), user );
-					}
-					return resultMap;
-				} );
-		log.warn( System.currentTimeMillis() );
+		log.warn( DateUtils.getTime() );
+		Map<String, LoginUser> loginUserList   = new HashMap<>();
+		RedisConnection        redisConnection = stringRedisTemplate.getConnectionFactory().getConnection();
+		Cursor<byte[]> cursor = redisConnection.scan(
+				ScanOptions.scanOptions()
+						.match( AdminConstants.LOGIN_TOKEN_KEY + "*" )
+						.count( 3 )
+						.build()
+		);
+		while ( cursor.hasNext() ) {
+			log.warn( DateUtils.getTime() );
+			String    value = new String( redisConnection.get( cursor.next() ) );
+			LoginUser user  = JsonUtil.json2Object( value, LoginUser.class );
+			loginUserList.put( user.getToken(), user );
+		}
+		log.warn( DateUtils.getTime() );
 		List<SysUserOnline> userOnlineList = new ArrayList<>();
 		if ( !CollectionUtils.isEmpty( loginUserList ) ) {
 			for ( LoginUser user : loginUserList.values() ) {
@@ -75,7 +77,7 @@ public class SysUserOnlineController extends BaseController {
 				}
 			}
 		}
-		log.warn( System.currentTimeMillis() );
+		log.warn( DateUtils.getTime() );
 		userOnlineList.removeAll( Collections.singleton( null ) );
 		Collections.reverse( userOnlineList );
 		return getDataTable2( userOnlineList );
