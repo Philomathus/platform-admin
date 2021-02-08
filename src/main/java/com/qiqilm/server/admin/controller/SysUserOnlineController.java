@@ -46,8 +46,8 @@ public class SysUserOnlineController extends BaseController {
 					Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
 							.match( AdminConstants.LOGIN_TOKEN_KEY + "*" ).count( 3 ).build() );
 					while ( cursor.hasNext() ) {
-						String    key  = new String( cursor.next() );
-						LoginUser user = JsonUtil.json2Object( stringRedisTemplate.opsForValue().get( key ), LoginUser.class );
+						String    value = new String( connection.get( cursor.next() ) );
+						LoginUser user  = JsonUtil.json2Object( value, LoginUser.class );
 						resultMap.put( user.getToken(), user );
 					}
 					return resultMap;
