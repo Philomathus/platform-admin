@@ -7,3 +7,9 @@ spring:
     host: 172.31.131.36
     port: 6379
     password: 75a2-4e0e-9897-0347cc
+
+mybatis:
+  configuration-properties:
+    db-main: 7700_main
+    db-live: 7700_live
+    db-lottery: 7700_lottery

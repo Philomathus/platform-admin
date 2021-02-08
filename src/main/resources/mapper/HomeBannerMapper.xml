@@ -12,7 +12,7 @@
 
 	<sql id="selectHomeBannerVo">
 		select id, name, indexs, status, FROM_UNIXTIME(update_time) update_time, cover_img
-		from db_cx001.home_banner
+		from ${dbMain}.home_banner
 	</sql>
 
 	<select id="selectHomeBannerList" parameterType="HomeBanner" resultMap="HomeBannerResult">
@@ -33,7 +33,7 @@
 	</select>
 
 	<insert id="insertHomeBanner" parameterType="HomeBanner">
-		insert into db_cx001.home_banner
+		insert into ${dbMain}.home_banner
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				id,
@@ -77,7 +77,7 @@
 	</insert>
 
 	<update id="updateHomeBanner" parameterType="HomeBanner">
-		update db_cx001.home_banner
+		update ${dbMain}.home_banner
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name = #{name},
@@ -104,13 +104,13 @@
 
 	<delete id="deleteHomeBannerById" parameterType="String">
 		delete
-		from db_cx001.home_banner
+		from ${dbMain}.home_banner
 		where id = #{id}
 	</delete>
 
 	<delete id="deleteHomeBannerByIds" parameterType="String">
 		delete
-		from db_cx001.home_banner where id in
+		from ${dbMain}.home_banner where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

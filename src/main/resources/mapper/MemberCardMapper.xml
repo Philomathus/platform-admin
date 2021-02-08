@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMemberCardVo">
-        select id, real_name, bank_name, bank_code, bank_account, bank_address, member_id,  FROM_UNIXTIME(create_time) create_time ,  type, dv from db_cx001.member_card
+        select id, real_name, bank_name, bank_code, bank_account, bank_address, member_id,  FROM_UNIXTIME(create_time) create_time ,  type, dv from ${dbMain}.member_card
     </sql>
 
     <select id="selectMemberCardList" parameterType="MemberCard" resultMap="MemberCardResult">
@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertMemberCard" parameterType="MemberCard">
-        insert into db_cx001.member_card
+        insert into ${dbMain}.member_card
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="realName != null">real_name,</if>
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateMemberCard" parameterType="MemberCard">
-        update db_cx001.member_card
+        update ${dbMain}.member_card
         <trim prefix="SET" suffixOverrides=",">
             <if test="realName != null">real_name = #{realName},</if>
 
@@ -94,11 +94,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteMemberCardById" parameterType="String">
-        delete from db_cx001.member_card where id = #{id}
+        delete from ${dbMain}.member_card where id = #{id}
     </delete>
 
     <delete id="deleteMemberCardByIds" parameterType="String">
-        delete from db_cx001.member_card where id in
+        delete from ${dbMain}.member_card where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

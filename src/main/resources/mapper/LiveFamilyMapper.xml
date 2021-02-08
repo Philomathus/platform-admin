@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveFamilyVo">
-        select id, logo, name, notice, manifesto, nick_name, user_id, user_count, create_time, create_date, create_y, create_m, create_d, create_w, memo, status, contribution, family_level, video_time, score, live_level, family_recom from cx_live.live_family
+        select id, logo, name, notice, manifesto, nick_name, user_id, user_count, create_time, create_date, create_y, create_m, create_d, create_w, memo, status, contribution, family_level, video_time, score, live_level, family_recom from ${dbLive}.live_family
     </sql>
 
     <select id="selectLiveFamilyList" parameterType="LiveFamily" resultMap="LiveFamilyResult">
@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveFamily" parameterType="LiveFamily" useGeneratedKeys="true" keyProperty="id">
-        insert into cx_live.live_family
+        insert into ${dbLive}.live_family
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="logo != null and logo != ''">logo,</if>
             <if test="name != null and name != ''">name,</if>
@@ -115,7 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveFamily" parameterType="LiveFamily">
-        update cx_live.live_family
+        update ${dbLive}.live_family
         <trim prefix="SET" suffixOverrides=",">
             <if test="logo != null and logo != ''">logo = #{logo},</if>
             <if test="name != null and name != ''">name = #{name},</if>
@@ -143,11 +143,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLiveFamilyById" parameterType="Long">
-        delete from cx_live.live_family where id = #{id}
+        delete from ${dbLive}.live_family where id = #{id}
     </delete>
 
     <delete id="deleteLiveFamilyByIds" parameterType="String">
-        delete from cx_live.live_family where id in
+        delete from ${dbLive}.live_family where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

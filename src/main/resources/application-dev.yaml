@@ -9,6 +9,10 @@ spring:
     password: 75a2-4e0e-9897-0347cc
 
 mybatis:
-  # spring boot集成mybatis的方式打印sql
+  configuration-properties:
+    db-main: 7700_main
+    db-live: 7700_live
+    db-lottery: 7700_lottery
   configuration:
+    # spring boot集成mybatis的方式打印sql
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

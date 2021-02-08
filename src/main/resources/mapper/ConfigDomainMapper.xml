@@ -27,7 +27,7 @@
 			   create_time,
 			   update_by,
 			   update_time
-		from db_cx001.config_domain
+		from ${dbMain}.config_domain
 	</sql>
 
 	<select id="selectConfigDomainList" parameterType="ConfigDomain" resultMap="ConfigDomainResult">
@@ -51,7 +51,7 @@
 	</select>
 
 	<insert id="insertConfigDomain" parameterType="ConfigDomain" useGeneratedKeys="true" keyProperty="id">
-		insert into db_cx001.config_domain
+		insert into ${dbMain}.config_domain
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="domain != null and domain != ''">
 				domain,
@@ -113,7 +113,7 @@
 	</insert>
 
 	<update id="updateConfigDomain" parameterType="ConfigDomain">
-		update db_cx001.config_domain
+		update ${dbMain}.config_domain
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="domain != null and domain != ''">
 				domain = #{domain},
@@ -148,13 +148,13 @@
 
 	<delete id="deleteConfigDomainById" parameterType="Long">
 		delete
-		from db_cx001.config_domain
+		from ${dbMain}.config_domain
 		where id = #{id}
 	</delete>
 
 	<delete id="deleteConfigDomainByIds" parameterType="String">
 		delete
-		from db_cx001.config_domain where id in
+		from ${dbMain}.config_domain where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>
@@ -162,7 +162,7 @@
 
 	<select id="selectDomainsByCode" resultType="java.lang.String">
 		select domain
-		from db_cx001.config_domain
+		from ${dbMain}.config_domain
 		where dcode = #{code}
 	</select>
 
@@ -175,6 +175,6 @@
 	</select>
 
 	<select id="existsConfigDomain" parameterType="ConfigDomain" resultType="_int">
-		SELECT IFNULL((SELECT 1 FROM db_cx001.config_domain WHERE dgroup = #{dgroup} AND domain = #{domain}), 0)
+		SELECT IFNULL((SELECT 1 FROM ${dbMain}.config_domain WHERE dgroup = #{dgroup} AND domain = #{domain}), 0)
 	</select>
 </mapper>

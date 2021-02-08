@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveProplogVo">
-        select id, p_user_id, p_user_name, prop_id, prop_name, total_diamonds, total_ticket, current_diamonds, to_user_id, createtime from db_cx001.live_proplog
+        select id, p_user_id, p_user_name, prop_id, prop_name, total_diamonds, total_ticket, current_diamonds, to_user_id, createtime from ${dbMain}.live_proplog
     </sql>
 
     <select id="selectLiveProplogList" parameterType="LiveProplog" resultMap="LiveProplogResult">
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveProplog" parameterType="LiveProplog">
-        insert into db_cx001.live_proplog
+        insert into ${dbMain}.live_proplog
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="pUserId != null">p_user_id,</if>
@@ -72,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveProplog" parameterType="LiveProplog">
-        update db_cx001.live_proplog
+        update ${dbMain}.live_proplog
         <trim prefix="SET" suffixOverrides=",">
             <if test="pUserId != null">p_user_id = #{pUserId},</if>
 
@@ -97,11 +97,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLiveProplogById" parameterType="Long">
-        delete from db_cx001.live_proplog where id = #{id}
+        delete from ${dbMain}.live_proplog where id = #{id}
     </delete>
 
     <delete id="deleteLiveProplogByIds" parameterType="String">
-        delete from db_cx001.live_proplog where id in
+        delete from ${dbMain}.live_proplog where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

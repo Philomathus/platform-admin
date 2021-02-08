@@ -18,7 +18,7 @@
 	</resultMap>
 
 	<sql id="selectReportAnchorhotDayVo">
-        select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from cx_live.report_anchorhot_day
+        select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from ${dbLive}.report_anchorhot_day
     </sql>
 
 	<select id="selectReportAnchorhotDayList" parameterType="ReportAnchorhotDay" resultMap="ReportAnchorhotDayResult">
@@ -34,7 +34,7 @@
 	</select>
 
 	<insert id="insertReportAnchorhotDay" parameterType="ReportAnchorhotDay">
-		insert into cx_live.report_anchorhot_day
+		insert into ${dbLive}.report_anchorhot_day
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="repId != null">rep_id,</if>
 			<if test="anchorid != null">anchorid,</if>
@@ -62,7 +62,7 @@
 	</insert>
 
 	<update id="updateReportAnchorhotDay" parameterType="ReportAnchorhotDay">
-		update cx_live.report_anchorhot_day
+		update ${dbLive}.report_anchorhot_day
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="anchorid != null">anchorid = #{anchorid},</if>
 
@@ -87,24 +87,24 @@
 	</update>
 
 	<delete id="deleteReportAnchorhotDayById" parameterType="String">
-        delete from cx_live.report_anchorhot_day where rep_id = #{repId}
+        delete from ${dbLive}.report_anchorhot_day where rep_id = #{repId}
     </delete>
 
 	<delete id="deleteReportAnchorhotDayByIds" parameterType="String">
-		delete from cx_live.report_anchorhot_day where rep_id in
+		delete from ${dbLive}.report_anchorhot_day where rep_id in
 		<foreach item="repId" collection="array" open="(" separator="," close=")">
 			#{repId}
 		</foreach>
 	</delete>
 
 	<select id="selectReportAnchorhotDayByDay" resultMap="ReportAnchorhotDayResult">
-		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from cx_live.report_anchorhot_day  where num= #{num} ORDER BY sort
+		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from ${dbLive}.report_anchorhot_day  where num= #{num} ORDER BY sort
     </select>
 	<select id="selectReportAnchorhotDayByWeek" resultMap="ReportAnchorhotDayResult">
-		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from cx_live.report_anchorhot_week  where num=#{num} ORDER BY sort
+		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from ${dbLive}.report_anchorhot_week  where num=#{num} ORDER BY sort
 	</select>
 
 	<select id="selectReportAnchorhotDayListByMonth" resultMap="ReportAnchorhotDayResult">
-		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from cx_live.report_anchorhot_month  where num= #{num} ORDER BY sort
+		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from ${dbLive}.report_anchorhot_month  where num= #{num} ORDER BY sort
 	</select>
 </mapper>
