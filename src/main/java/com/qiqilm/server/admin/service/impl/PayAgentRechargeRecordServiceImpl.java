@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.PayAgentRechargeRecordMapper;
 import com.qiqilm.server.admin.domain.PayAgentRechargeRecord;
 import com.qiqilm.server.admin.service.IPayAgentRechargeRecordService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -104,6 +105,7 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
     }
 
     @Override
+    @Transactional( rollbackFor = Exception.class )
     public AjaxResult deposit(PayAgentRechargeRecord dto) {
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    userName  = loginUser.getUser().getUserName();
@@ -142,6 +144,7 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
     }
 
     @Override
+    @Transactional( rollbackFor = Exception.class )
     public AjaxResult proposed(PayAgentRechargeRecord dto) {
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    userName  = loginUser.getUser().getUserName();
