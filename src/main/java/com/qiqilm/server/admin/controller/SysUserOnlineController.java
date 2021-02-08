@@ -40,18 +40,21 @@ public class SysUserOnlineController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('monitor:online:list')" )
 	@GetMapping( "/list" )
 	public TableDataInfo list( String ipaddr, String userName ) {
+		log.warn( System.currentTimeMillis() );
 		Map<String, LoginUser> loginUserList = stringRedisTemplate.execute( ( RedisCallback<Map<String, LoginUser>> )
 				connection -> {
 					Map<String, LoginUser> resultMap = new HashMap<>();
 					Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
 							.match( AdminConstants.LOGIN_TOKEN_KEY + "*" ).count( 3 ).build() );
 					while ( cursor.hasNext() ) {
+						log.warn( System.currentTimeMillis() );
 						String    value = new String( connection.get( cursor.next() ) );
 						LoginUser user  = JsonUtil.json2Object( value, LoginUser.class );
 						resultMap.put( user.getToken(), user );
 					}
 					return resultMap;
 				} );
+		log.warn( System.currentTimeMillis() );
 		List<SysUserOnline> userOnlineList = new ArrayList<>();
 		if ( !CollectionUtils.isEmpty( loginUserList ) ) {
 			for ( LoginUser user : loginUserList.values() ) {
@@ -72,6 +75,7 @@ public class SysUserOnlineController extends BaseController {
 				}
 			}
 		}
+		log.warn( System.currentTimeMillis() );
 		userOnlineList.removeAll( Collections.singleton( null ) );
 		Collections.reverse( userOnlineList );
 		return getDataTable2( userOnlineList );
