@@ -103,6 +103,6 @@ public class PayAgentRechargeBankController extends BaseController {
 	@Log( title = "代充人", businessType = BusinessType.UPDATE )
 	@PutMapping( "/changeStatus" )
 	public AjaxResult changeStatus( @RequestBody PayAgentRechargeBank payAgentRechargeBank ) {
-		return toAjax( payAgentRechargeBankService.updatePayAgentRechargeBank(payAgentRechargeBank));
+		return toAjax( payAgentRechargeBankService.changeStatus(payAgentRechargeBank));
 	}
 }

@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.domain.rsp.RspTypeGames;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IGameTypeService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +69,7 @@ public class GameTypeController extends BaseController {
 	@Log( title = "游戏类型", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody GameType gameType ) {
+		gameType.setId(UuidUtil.getRandomUuid());
 		return toAjax( gameTypeService.insertGameType( gameType ) );
 	}
 

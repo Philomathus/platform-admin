@@ -122,7 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <select id="sumMoney" parameterType="PayAgentRechargeAccountLog" resultType="PayAgentRechargeAccountLog">
-        select sum(recharge_money) as  countMoney,count(order_no) as countNumber
+        select ifnull(sum(recharge_money),0) countMoney,count(order_no) as countNumber
         from pay_agent_recharge_account_log
         <where>
             <if test="account != null  and account != ''"> and account = #{account}</if>

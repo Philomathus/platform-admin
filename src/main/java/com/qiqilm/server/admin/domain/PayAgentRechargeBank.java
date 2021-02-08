@@ -41,7 +41,7 @@ public class PayAgentRechargeBank extends BaseEntity {
 
     /** 状态(1启用0停用) */
     @Excel(name = "状态(1启用0停用)")
-        private String status;
+    private String status;
 
     /** 创建人 */
     @Excel(name = "创建人")
