@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectConfigRecommendVo">
-        select id, level, name, bill from 7700_main.config_recommend
+        select id, level, name, bill from db_cx001.config_recommend
     </sql>
 
     <select id="selectConfigRecommendList" parameterType="ConfigRecommend" resultMap="ConfigRecommendResult">
@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertConfigRecommend" parameterType="ConfigRecommend">
-        insert into 7700_main.config_recommend
+        insert into db_cx001.config_recommend
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="level != null">level,</if>
@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateConfigRecommend" parameterType="ConfigRecommend">
-        update 7700_main.config_recommend
+        update db_cx001.config_recommend
         <trim prefix="SET" suffixOverrides=",">
             <if test="level != null">level = #{level},</if>
     
@@ -59,11 +59,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteConfigRecommendById" parameterType="String">
-        delete from 7700_main.config_recommend where id = #{id}
+        delete from db_cx001.config_recommend where id = #{id}
     </delete>
 
     <delete id="deleteConfigRecommendByIds" parameterType="String">
-        delete from 7700_main.config_recommend where id in
+        delete from db_cx001.config_recommend where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

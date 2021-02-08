@@ -25,7 +25,7 @@
 			   online_group,
 			   provider,
 			   is_effect
-		from 7700_live.server_im
+		from cx_live.server_im
 	</sql>
 
 	<select id="selectServerImList" parameterType="ServerIm" resultMap="ServerImResult">
@@ -40,7 +40,7 @@
 	</select>
 
 	<insert id="insertServerIm" parameterType="ServerIm" useGeneratedKeys="true" keyProperty="id">
-		insert into 7700_live.server_im
+		insert into cx_live.server_im
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name,
@@ -96,7 +96,7 @@
 	</insert>
 
 	<update id="updateServerIm" parameterType="ServerIm">
-		update 7700_live.server_im
+		update cx_live.server_im
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name = #{name},
@@ -135,13 +135,13 @@
 
 	<delete id="deleteServerImById" parameterType="Long">
 		delete
-		from 7700_live.server_im
+		from cx_live.server_im
 		where id = #{id}
 	</delete>
 
 	<delete id="deleteServerImByIds" parameterType="String">
 		delete
-		from 7700_live.server_im where id in
+		from cx_live.server_im where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

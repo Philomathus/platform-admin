@@ -15,7 +15,7 @@
     </resultMap>
 
     <sql id="selectConfigEnvironmentVo">
-        select env_title, env_code, env_value, env_des, env_group, env_sort, env_status from 7700_main.config_environment
+        select env_title, env_code, env_value, env_des, env_group, env_sort, env_status from db_cx001.config_environment
     </sql>
 
     <select id="selectConfigEnvironmentList" parameterType="ConfigEnvironment" resultMap="ConfigEnvironmentResult">
@@ -36,7 +36,7 @@
     </select>
 
     <insert id="insertConfigEnvironment" parameterType="ConfigEnvironment">
-        insert into 7700_main.config_environment
+        insert into db_cx001.config_environment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="envTitle != null">env_title,</if>
             <if test="envCode != null">env_code,</if>
@@ -58,7 +58,7 @@
     </insert>
 
     <update id="updateConfigEnvironment" parameterType="ConfigEnvironment">
-        update 7700_main.config_environment
+        update db_cx001.config_environment
         <trim prefix="SET" suffixOverrides=",">
             <if test="envTitle != null">env_title= #{envTitle},</if>
 
@@ -77,11 +77,11 @@
     </update>
 
     <delete id="deleteConfigEnvironmentById" parameterType="String">
-        delete from 7700_main.config_environment where env_code = #{envCode}
+        delete from db_cx001.config_environment where env_code = #{envCode}
     </delete>
 
     <delete id="deleteConfigEnvironmentByIds" parameterType="String">
-        delete from 7700_main.config_environment where env_code in
+        delete from db_cx001.config_environment where env_code in
         <foreach item="envCode" collection="array" open="(" separator="," close=")">
             #{envCode}
         </foreach>
