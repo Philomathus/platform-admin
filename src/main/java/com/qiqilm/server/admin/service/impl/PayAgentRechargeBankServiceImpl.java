@@ -99,4 +99,9 @@ public class PayAgentRechargeBankServiceImpl implements IPayAgentRechargeBankSer
     public int deletePayAgentRechargeBankById(Long id) {
         return payAgentRechargeBankMapper.deletePayAgentRechargeBankById(id);
     }
+
+    @Override
+    public int changeStatus(PayAgentRechargeBank payAgentRechargeBank) {
+        return payAgentRechargeBankMapper.updatePayAgentRechargeBank(payAgentRechargeBank);
+    }
 }
