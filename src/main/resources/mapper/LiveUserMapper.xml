@@ -159,7 +159,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveUserVo">
-        select id, nick_name, user_pwd, signature,  FROM_UNIXTIME(create_time) create_time ,   FROM_UNIXTIME(update_time) update_time ,  is_authentication, login_type, is_effect, money, login_ip, province, city, is_edit_sex, sex, birthday, is_remind, focus_count, intro, code, sina_id, sina_token, sina_secret, sina_url, tencent_id, tencent_token, tencent_secret, tencent_url, verify, user_level, mobile, user_type, is_has_send_success, verify_setting_time, authentication_type, authentication_name, contact, from_platform, wiki, identify_hold_image, identify_positive_image, identify_nagative_image, wx_openid, gz_openid, qq_openid, investor_send_info, paypassword, source_url, pid, score, point, emotional_state, job, head_image, thumb_head_image, qq_id, qq_token, v_type, v_explain, v_icon, fans_count, ticket, refund_ticket, diamonds, use_diamonds, usersig, expiry_after, is_online, wx_unionid, user_name, synchronize, login_time, logout_time, is_agree, online_time, subscribe, is_robot, apns_code, device_type, video_count, is_ban, ban_time, identify_number, authent_list_id, family_id, family_chieftain, is_admin, last_login_level, binding_alipay, alipay_name, alipay_account, room_title, luck_num, alipay_user_id, alipay_authent_token, p_user_id, ban_type, society_id, society_chieftain, society_settlement_type, is_vip, vip_expire_time, coin, is_nospeaking, society_ticket, view_count, is_hot_on, rate, game_distribution_id, game_distribution1, game_distribution2, invitation_code, invitation_id, game_distribution_top_id, investor_time, alone_ticket_ratio, open_game, open_pay, open_auction, family_recom, classified_id, allinpay_user_id, no_ticket, roboter, is_change_name, is_replace_qq, is_replace_wx, weibo_count, weibo_sort_num, weibo_recommend_weight, weixin_account, weixin_price, xpoint, ypoint, show_image, weibo_refund_money, weibo_money, tipoff_count, weibo_photo_img, weibo_chat_price, weixin_account_time, auto_invitation_sid, agent_id, noble_car_id, is_gift_giving, qr_code, total_time, p_user_shenhe, ticket_catty_ratio, ban_remark from 7700_live.live_user
+        select id, nick_name, user_pwd, signature,  FROM_UNIXTIME(create_time) create_time ,   FROM_UNIXTIME(update_time) update_time ,  is_authentication, login_type, is_effect, money, login_ip, province, city, is_edit_sex, sex, birthday, is_remind, focus_count, intro, code, sina_id, sina_token, sina_secret, sina_url, tencent_id, tencent_token, tencent_secret, tencent_url, verify, user_level, mobile, user_type, is_has_send_success, verify_setting_time, authentication_type, authentication_name, contact, from_platform, wiki, identify_hold_image, identify_positive_image, identify_nagative_image, wx_openid, gz_openid, qq_openid, investor_send_info, paypassword, source_url, pid, score, point, emotional_state, job, head_image, thumb_head_image, qq_id, qq_token, v_type, v_explain, v_icon, fans_count, ticket, refund_ticket, diamonds, use_diamonds, usersig, expiry_after, is_online, wx_unionid, user_name, synchronize, login_time, logout_time, is_agree, online_time, subscribe, is_robot, apns_code, device_type, video_count, is_ban, ban_time, identify_number, authent_list_id, family_id, family_chieftain, is_admin, last_login_level, binding_alipay, alipay_name, alipay_account, room_title, luck_num, alipay_user_id, alipay_authent_token, p_user_id, ban_type, society_id, society_chieftain, society_settlement_type, is_vip, vip_expire_time, coin, is_nospeaking, society_ticket, view_count, is_hot_on, rate, game_distribution_id, game_distribution1, game_distribution2, invitation_code, invitation_id, game_distribution_top_id, investor_time, alone_ticket_ratio, open_game, open_pay, open_auction, family_recom, classified_id, allinpay_user_id, no_ticket, roboter, is_change_name, is_replace_qq, is_replace_wx, weibo_count, weibo_sort_num, weibo_recommend_weight, weixin_account, weixin_price, xpoint, ypoint, show_image, weibo_refund_money, weibo_money, tipoff_count, weibo_photo_img, weibo_chat_price, weixin_account_time, auto_invitation_sid, agent_id, noble_car_id, is_gift_giving, qr_code, total_time, p_user_shenhe, ticket_catty_ratio, ban_remark from cx_live.live_user
     </sql>
 
     <select id="selectLiveUserList" parameterType="LiveUser" resultMap="LiveUserResult">
@@ -323,7 +323,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveUser" parameterType="LiveUser" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.live_user
+        insert into cx_live.live_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">nick_name,</if>
             <if test="userPwd != null">user_pwd,</if>
@@ -629,7 +629,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveUser" parameterType="LiveUser">
-        update 7700_live.live_user
+        update cx_live.live_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
 
@@ -934,11 +934,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLiveUserById" parameterType="Long">
-        delete from 7700_live.live_user where id = #{id}
+        delete from cx_live.live_user where id = #{id}
     </delete>
 
     <delete id="deleteLiveUserByIds" parameterType="String">
-        delete from 7700_live.live_user where id in
+        delete from cx_live.live_user where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -952,13 +952,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         b.id,
         b.nick_name as nickName
         FROM
-        7700_live.lottery_bet a
-        LEFT JOIN 7700_live.live_user b ON a.anchor = b.id
-        <where>
-            <if test="nickName != null  and nickName != ''"> and b.nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="sendStartTime != null  and sendStartTime != ''"> and a.update_time>= #{sendStartTime}</if>
-            <if test="sendEndTime != null  and sendEndTime != ''"> and a.update_time &lt;= #{sendEndTime}</if>
-            <if test="id != null  and id != ''"> and b.id = #{id}</if>
-        </where>
+        cx_live.lottery_bet a
+        LEFT JOIN cx_live.live_user b ON a.anchor = b.id
+        where a.status = '1'
+        <if test="nickName != null  and nickName != ''"> and b.nick_name like concat('%', #{nickName}, '%')</if>
+        <if test="sendStartTime != null  and sendStartTime != ''"> and a.update_time>= #{sendStartTime}</if>
+        <if test="sendEndTime != null  and sendEndTime != ''"> and a.update_time &lt;= #{sendEndTime}</if>
+        <if test="id != null  and id != ''"> and b.id = #{id}</if>
+        GROUP BY a.anchor
     </select>
 </mapper>

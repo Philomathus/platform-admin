@@ -10,7 +10,7 @@
     </resultMap>
 
     <sql id="selectMemberDirtyWordsVo">
-        select id, name from 7700_main.member_dirty_words
+        select id, name from db_cx001.member_dirty_words
     </sql>
 
     <select id="selectMemberDirtyWordsById" resultType="com.qiqilm.server.admin.domain.MemberDirtyWords">
@@ -20,7 +20,7 @@
         </where>
     </select>
     <update id="updateMemberDirtyWords" parameterType="MemberDirtyWords">
-        update 7700_main.member_dirty_words
+        update db_cx001.member_dirty_words
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
 

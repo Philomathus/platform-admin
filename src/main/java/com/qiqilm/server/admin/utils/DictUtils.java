@@ -96,6 +96,7 @@ public class DictUtils {
 	public List<SysDictData> getDictCache( String key ) {
 		if ( !redisUtil.exists( getCacheKey( key ) ) ) {
 			List<SysDictData> dictDataList = sysDictDataMapper.selectDictDataByType( key );
+			log.warn( JsonUtil.object2Json( dictDataList ) );
 			if ( !CollectionUtils.isEmpty( dictDataList ) ) {
 				setDictCache( key, dictDataList );
 			}

@@ -20,7 +20,7 @@
     </resultMap>
 
     <sql id="selectConfigVipVo">
-        select id, level_flag, dm_money, jjcj, zfl, yfl, tdjs, zskf,  FROM_UNIXTIME(create_time) create_time ,  op_name,  FROM_UNIXTIME(update_time) update_time ,  level_money from 7700_main.config_vip
+        select id, level_flag, dm_money, jjcj, zfl, yfl, tdjs, zskf,  FROM_UNIXTIME(create_time) create_time ,  op_name,  FROM_UNIXTIME(update_time) update_time ,  level_money from db_cx001.config_vip
     </sql>
 
     <select id="selectConfigVipList" parameterType="ConfigVip" resultMap="ConfigVipResult">
@@ -44,7 +44,7 @@
     </select>
 
     <insert id="insertConfigVip" parameterType="ConfigVip">
-        insert into 7700_main.config_vip
+        insert into db_cx001.config_vip
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="levelFlag != null">level_flag,</if>
@@ -76,7 +76,7 @@
     </insert>
 
     <update id="updateConfigVip" parameterType="ConfigVip">
-        update 7700_main.config_vip
+        update db_cx001.config_vip
         <trim prefix="SET" suffixOverrides=",">
             <if test="levelFlag != null">level_flag = #{levelFlag},</if>
 
@@ -105,11 +105,11 @@
     </update>
 
     <delete id="deleteConfigVipById" parameterType="String">
-        delete from 7700_main.config_vip where id = #{id}
+        delete from db_cx001.config_vip where id = #{id}
     </delete>
 
     <delete id="deleteConfigVipByIds" parameterType="String">
-        delete from 7700_main.config_vip where id in
+        delete from db_cx001.config_vip where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
