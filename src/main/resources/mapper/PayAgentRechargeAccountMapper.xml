@@ -122,4 +122,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <select id="memberIdSearchRepeat" resultType="java.lang.Integer">
+        select count(0) from pay_agent_recharge_account
+        where account = #{account}
+    </select>
 </mapper>

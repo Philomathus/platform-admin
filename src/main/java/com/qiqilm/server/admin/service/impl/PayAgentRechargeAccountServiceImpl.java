@@ -64,6 +64,13 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
 
         }
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(payAgentRechargeAccount.getAccount());
+        if (memberInfo==null){
+            return  AjaxResult.error("该会员ID不存在");
+        }
+        int i = payAgentRechargeAccountMapper.memberIdSearchRepeat(payAgentRechargeAccount.getAccount());
+        if (i!=0){
+            return  AjaxResult.error("该代充人账号已存在");
+        }
         payAgentRechargeAccount.setNickName(memberInfo.getNickName());
         payAgentRechargeAccount.setBalanceAmount( BigDecimal.ZERO );
         payAgentRechargeAccount.setRechargeNum( 0 );
