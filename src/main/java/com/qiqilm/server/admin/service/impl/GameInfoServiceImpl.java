@@ -61,7 +61,7 @@ public class GameInfoServiceImpl implements IGameInfoService {
     }
 
     @Override
-    public List<RspGameInfo> getGameListInfo() {
+    public List<GamePlatform> getGameListInfo() {
         return gamePlatformMapper.getGameListInfo();
     }
 

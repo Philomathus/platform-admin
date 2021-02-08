@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.GameInfo;
+import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IGameInfoService;
@@ -66,7 +67,8 @@ public class GameInfoController extends BaseController {
 
 	@GetMapping( value = "/listGame" )
 	public AjaxResult getGameListInfo() {
-		return AjaxResult.success( gameInfoService.getGameListInfo() );
+		List<GamePlatform> gamePlatforms = gameInfoService.getGameListInfo();
+		return AjaxResult.success( gamePlatforms );
 	}
 
 
