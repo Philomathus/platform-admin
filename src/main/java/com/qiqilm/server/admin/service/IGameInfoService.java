@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.domain.GameInfo;
+import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public interface IGameInfoService {
 	 */
 	public List<RspGameInfo> selectGameInfoList(GameInfo gameInfo);
 
-	List<RspGameInfo> getGameListInfo();
+	List<GamePlatform> getGameListInfo();
 
 	/**
 	 * 新增游戏信息

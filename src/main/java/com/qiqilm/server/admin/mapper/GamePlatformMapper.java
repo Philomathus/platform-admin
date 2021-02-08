@@ -18,7 +18,7 @@ public interface GamePlatformMapper {
 
 
 
-	List<RspGameInfo> getGameListInfo();
+	List<GamePlatform> getGameListInfo();
 	/**
 	 * 查询【请填写功能名称】
 	 *
