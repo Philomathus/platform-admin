@@ -53,12 +53,12 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
     public Object storage(ReportMoneyinfo reportMoneyinfo) {
         String dateNowStr=dateNowStr();//获取当天时间字符串
         setSelectTime(dateNowStr,reportMoneyinfo);//首次进入查询7天的数据
-        List allList = reportMoneyinfoMapper.selectReportMoneyinfoList(reportMoneyinfo);
+//        List allList = reportMoneyinfoMapper.selectReportMoneyinfoList(reportMoneyinfo);
         if (reportMoneyinfo.getParams().get("endTime").equals(dateNowStr)){
-            if (allList.size() == 0) {
+//            if (allList.size() == 0) {
                 return reportMoneyinfoMapper.calldataProrepPlamcom(dateNowStr, dateNowStr);
             }
-        }
+//        }
         return null;
     }
 

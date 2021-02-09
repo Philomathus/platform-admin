@@ -50,12 +50,12 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateNowStr = sdf.format(d);
         reportPlamGames.setBegindate(dateNowStr);
-        List<ReportPlamGames> allList =reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
-        if (allList.size()==0) {
+//        List<ReportPlamGames> allList =reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
+//        if (allList.size()==0) {
             if (reportPlamGames.getBegindate() == null || reportPlamGames.getBegindate().equals(dateNowStr)) {
                 return reportPlamGamesMapper.calldataProrepPlamcom(dateNowStr);
             }
-        }
+//        }
         return null;
     }
 
