@@ -11,7 +11,7 @@
 	</resultMap>
 
 	<sql id="selectHomeBannerVo">
-		select id, name, indexs, status, FROM_UNIXTIME(update_time) update_time, cover_img
+		select id, name, indexs, status, update_time, cover_img
 		from ${dbMain}.home_banner
 	</sql>
 
@@ -68,7 +68,7 @@
 				#{status},
 			</if>
 			<if test="updateTime != null">
-				UNIX_TIMESTAMP(#{updateTime}),
+				#{updateTime},
 			</if>
 			<if test="coverImg != null and coverImg != ''">
 				#{coverImg},
@@ -92,7 +92,7 @@
 			</if>
 
 			<if test="updateTime != null">
-				update_time = UNIX_TIMESTAMP(#{updateTime}),
+				update_time = #{updateTime},
 			</if>
 
 			<if test="coverImg != null and coverImg != ''">

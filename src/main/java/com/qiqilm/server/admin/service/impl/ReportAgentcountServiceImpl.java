@@ -54,8 +54,8 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
     public Object storage(ReportAgentcount reportAgentcount) {
         String dateNowStr=dateNowStr();//获取当天时间字符串
         setSelectTime(dateNowStr,reportAgentcount);//首次进入查询7天的数据
-        List<ReportAgentcount> allList = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
-        if (allList.size()==0){
+//        List<ReportAgentcount> allList = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
+//        if (allList.size()==0){
             if(reportAgentcount.getAgentcode()==null){
                 reportAgentcount.setAgentcode("");
             }
@@ -63,7 +63,7 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
             if(dateNowStr.equals(endTime)){
              return  reportAgentcountMapper.calldataProrepPlamcom(endTime,reportAgentcount.getAgentcode());
             }
-        }
+//        }
         return null;
     }
 

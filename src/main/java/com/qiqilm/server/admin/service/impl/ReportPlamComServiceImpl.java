@@ -44,12 +44,12 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 		if (Strings.isBlank(reportPlamCom.getReporttime())) {
 			reportPlamCom.setReporttime(dateNowStr);
 		}
-		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
-		if (allList.size()==0) {
+//		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
+//		if (allList.size()==0) {
 			if (reportPlamCom.getReporttime() == null || reportPlamCom.getReporttime().equals(dateNowStr)) {
 				return getCalldataProrepPlamcom(dateNowStr);
 			}
-		}
+//		}
 		return null;
 	}
 
