@@ -6,8 +6,8 @@ import com.qiqilm.server.admin.domain.SysDictData;
 import com.qiqilm.server.admin.mapper.SysDictDataMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -64,17 +63,15 @@ public class DictUtils {
 	 * 清空字典缓存
 	 */
 	public void clearDictCache() {
-		Collection<String> keys = stringRedisTemplate.execute( ( RedisCallback<List<String>> ) connection -> {
-			List<String> resultList = new ArrayList<>();
-			Cursor<byte[]> cursor = connection.scan( ScanOptions.scanOptions()
-					.match( AdminConstants.SYS_DICT_KEY + "*" ).count( 5 ).build() );
-			while ( cursor.hasNext() ) {
-				String key = new String( cursor.next() );
-				resultList.add( key );
-			}
-			return resultList;
-		} );
-		redisUtil.unlink( keys );
+		List<String>    keyList         = new ArrayList<>();
+		RedisConnection redisConnection = stringRedisTemplate.getConnectionFactory().getConnection();
+		Cursor<byte[]> cursor = redisConnection.scan( ScanOptions.scanOptions()
+				.match( AdminConstants.SYS_DICT_KEY + "*" ).count( 5 ).build() );
+		while ( cursor.hasNext() ) {
+			String key = new String( cursor.next() );
+			keyList.add( key );
+		}
+		redisUtil.unlink( keyList );
 	}
 
 	/**

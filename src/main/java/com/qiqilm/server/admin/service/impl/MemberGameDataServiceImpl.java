@@ -1,9 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.GameType;
 import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog;
+import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
 import com.qiqilm.server.admin.mapper.GameTypeMapper;
 import com.qiqilm.server.admin.mapper.MemberGameDataMapper;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
@@ -46,20 +46,12 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
      * @return 会员注单数据
      */
     @Override
-    public List<MemberGameData> selectMemberGameDataList(MemberGameData memberGameData) {
+    public List<RspMemberGameData> selectMemberGameDataList(MemberGameData memberGameData) {
         if (memberGameData.getSelectDate() != null) {
             memberGameData.setStartTime(memberGameData.getSelectDate()[0] + " 00:00:00");
             memberGameData.setEndTime(memberGameData.getSelectDate()[1] + " 23:59:59");
         }
-        List<MemberGameData> memberGameDatas = memberGameDataMapper.selectMemberGameDataList(memberGameData);
-        List<GameType> gameTypes = gameTypeMapper.selectGameTypeName();
-        for (MemberGameData me : memberGameDatas) {
-            for (GameType ge : gameTypes) {
-                if (me.getPlatformType().equals(ge.getId())) {
-                    me.setPlatformType(ge.getName());
-                }
-            }
-        }
+        List<RspMemberGameData> memberGameDatas = memberGameDataMapper.selectMemberGameDataList(memberGameData);
         return memberGameDatas;
 
     }

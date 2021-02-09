@@ -13,7 +13,7 @@
 
 	<sql id="selectMemberGameMoneyVo">
 		select id, member_id, platform_id, status, money, c_time, oder_sn
-		from db_cx001.member_game_money
+		from ${dbMain}.member_game_money
 	</sql>
 
 	<select id="selectMemberGameMoneyList" parameterType="MemberGameMoney" resultMap="MemberGameMoneyResult">
@@ -47,7 +47,7 @@
 	</select>
 
 	<insert id="insertMemberGameMoney" parameterType="MemberGameMoney">
-		insert into db_cx001.member_game_money
+		insert into ${dbMain}.member_game_money
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				id,
@@ -97,7 +97,7 @@
 	</insert>
 
 	<update id="updateMemberGameMoney" parameterType="MemberGameMoney">
-		update db_cx001.member_game_money
+		update ${dbMain}.member_game_money
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="memberId != null">
 				member_id = #{memberId},

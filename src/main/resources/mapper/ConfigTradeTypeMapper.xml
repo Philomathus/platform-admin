@@ -11,7 +11,7 @@
 
 	<sql id="selectConfigTradeTypeVo">
 		select type, name, des
-		from db_cx001.config_trade_type
+		from ${dbMain}.config_trade_type
 	</sql>
 
 	<select id="selectConfigTradeTypeList" parameterType="ConfigTradeType" resultMap="ConfigTradeTypeResult">
@@ -38,7 +38,7 @@
 	</select>
 
 	<insert id="insertConfigTradeType" parameterType="ConfigTradeType">
-		insert into db_cx001.config_trade_type
+		insert into ${dbMain}.config_trade_type
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="type != null">
 				type,
@@ -64,7 +64,7 @@
 	</insert>
 
 	<update id="updateConfigTradeType" parameterType="ConfigTradeType">
-		update db_cx001.config_trade_type
+		update ${dbMain}.config_trade_type
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name = #{name},
@@ -78,13 +78,13 @@
 
 	<delete id="deleteConfigTradeTypeById" parameterType="Long">
 		delete
-		from db_cx001.config_trade_type
+		from ${dbMain}.config_trade_type
 		where type = #{type}
 	</delete>
 
 	<delete id="deleteConfigTradeTypeByIds" parameterType="String">
 		delete
-		from db_cx001.config_trade_type where type in
+		from ${dbMain}.config_trade_type where type in
 		<foreach item="type" collection="array" open="(" separator="," close=")">
 			#{type}
 		</foreach>

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.PayAgentRechargeAccountLogMapper;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccountLog;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountLogService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 /**
@@ -112,6 +113,7 @@ public class PayAgentRechargeAccountLogServiceImpl implements IPayAgentRechargeA
     }
 
     @Override
+    @Transactional( rollbackFor = Exception.class )
     public AjaxResult refused(ReqPayAgentRechargeAccountLog req) {
         PayAgentRechargeAccountLog payAgentRechargeAccountLog = payAgentRechargeAccountLogMapper.selectPayAgentRechargeAccountLogById(req.getOrderNo());
         if ( payAgentRechargeAccountLog == null ) {
@@ -180,6 +182,7 @@ public class PayAgentRechargeAccountLogServiceImpl implements IPayAgentRechargeA
     }
 
     @Override
+    @Transactional( rollbackFor = Exception.class )
     public AjaxResult artificial(ReqPayAgentRechargeAccountLog req) {
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    userName  = loginUser.getUser().getUserName();

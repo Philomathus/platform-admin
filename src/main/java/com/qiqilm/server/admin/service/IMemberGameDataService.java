@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
 import com.qiqilm.server.admin.domain.MemberGameData;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface IMemberGameDataService {
 	 * @param memberGameData 会员注单数据
 	 * @return 会员注单数据集合
 	 */
-	public List<MemberGameData> selectMemberGameDataList(MemberGameData memberGameData);
+	public List<RspMemberGameData> selectMemberGameDataList(MemberGameData memberGameData);
 
 	/**
 	 * 新增会员注单数据

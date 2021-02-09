@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.qiqilm.server.admin.domain.ReportPlamCom;
 import com.qiqilm.server.admin.mapper.ReportPlamComMapper;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.service.IReportPlamComService;
@@ -40,7 +41,9 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 		Date d = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String dateNowStr = sdf.format(d);
-		reportPlamCom.setReporttime(dateNowStr);
+		if (Strings.isBlank(reportPlamCom.getReporttime())) {
+			reportPlamCom.setReporttime(dateNowStr);
+		}
 		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList(reportPlamCom);
 		if (allList.size()==0) {
 			if (reportPlamCom.getReporttime() == null || reportPlamCom.getReporttime().equals(dateNowStr)) {

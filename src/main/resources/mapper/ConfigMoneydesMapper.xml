@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectConfigMoneydesVo">
-        select md_id, val, des from db_cx001.config_moneydes
+        select md_id, val, des from ${dbMain}.config_moneydes
     </sql>
 
     <select id="selectConfigMoneydesList" parameterType="ConfigMoneydes" resultMap="ConfigMoneydesResult">
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertConfigMoneydes" parameterType="ConfigMoneydes" useGeneratedKeys="true" keyProperty="mdId">
-        insert into db_cx001.config_moneydes
+        insert into ${dbMain}.config_moneydes
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="val != null">val,</if>
             <if test="des != null">des,</if>
@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateConfigMoneydes" parameterType="ConfigMoneydes">
-        update db_cx001.config_moneydes
+        update ${dbMain}.config_moneydes
         <trim prefix="SET" suffixOverrides=",">
             <if test="val != null">val = #{val},</if>
     
@@ -51,11 +51,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteConfigMoneydesById" parameterType="Long">
-        delete from db_cx001.config_moneydes where md_id = #{mdId}
+        delete from ${dbMain}.config_moneydes where md_id = #{mdId}
     </delete>
 
     <delete id="deleteConfigMoneydesByIds" parameterType="String">
-        delete from db_cx001.config_moneydes where md_id in
+        delete from ${dbMain}.config_moneydes where md_id in
         <foreach item="mdId" collection="array" open="(" separator="," close=")">
             #{mdId}
         </foreach>

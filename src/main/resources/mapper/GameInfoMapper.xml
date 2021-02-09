@@ -25,13 +25,13 @@
     </resultMap>
 
     <sql id="selectGameInfoVo">
-        select id, name, remark, indexs, is_wh, is_recommend, status, icon, is_hot, edition_icon,  FROM_UNIXTIME(create_time) create_time ,  kind_id, platform_id, screen, high_wide, is_full, icon_type from db_cx001.game_info
+        select id, name, remark, indexs, is_wh, is_recommend, status, icon, is_hot, edition_icon,  FROM_UNIXTIME(create_time) create_time ,  kind_id, platform_id, screen, high_wide, is_full, icon_type from ${dbMain}.game_info
     </sql>
 
     <select id="selectGameInfoList"  resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
         select a.id, a.name,a.icon,a.edition_icon as editionIcon,a.indexs,a.is_full as isFull,a.is_wh as isWh,a.status,a.high_wide as highWide,b.name as platformName
-        from db_cx001.game_info a
-        left join  db_cx001.game_platform b
+        from ${dbMain}.game_info a
+        left join  ${dbMain}.game_platform b
         on a.platform_id=b.id
         <where>
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
@@ -50,7 +50,7 @@
 
 
     <insert id="insertGameInfo" parameterType="GameInfo">
-        insert into db_cx001.game_info
+        insert into ${dbMain}.game_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="name != null">name,</if>
@@ -92,7 +92,7 @@
     </insert>
 
     <update id="updateGameInfo" parameterType="GameInfo">
-        update db_cx001.game_info
+        update ${dbMain}.game_info
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
 
@@ -129,25 +129,25 @@
         where id = #{id}
     </update>
     <update id="updateStatus" parameterType="GameInfo">
-        update db_cx001.game_info
+        update ${dbMain}.game_info
         <trim prefix="SET" suffixOverrides=",">
             <if test="status != null">status = #{status},</if>
         </trim>
         where id = #{id}
     </update>
     <update id="changeIsWh" parameterType="GameInfo">
-        update db_cx001.game_info
+        update ${dbMain}.game_info
         <trim prefix="SET" suffixOverrides=",">
             <if test="isWh != null">is_wh = #{isWh},</if>
         </trim>
         where id = #{id}
     </update>
     <delete id="deleteGameInfoById" parameterType="String">
-        delete from db_cx001.game_info where id = #{id}
+        delete from ${dbMain}.game_info where id = #{id}
     </delete>
 
     <delete id="deleteGameInfoByIds" parameterType="String">
-        delete from db_cx001.game_info where id=#{id}
+        delete from ${dbMain}.game_info where id=#{id}
 
     </delete>
 

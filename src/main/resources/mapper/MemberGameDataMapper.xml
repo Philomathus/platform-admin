@@ -22,29 +22,39 @@
     </resultMap>
 
     <sql id="selectMemberGameDataVo">
-        select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from db_cx001.member_game_data
+        select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from ${dbMain}.member_game_data
     </sql>
 
-    <select id="selectMemberGameDataList" parameterType="MemberGameData" resultMap="MemberGameDataResult">
-        <include refid="selectMemberGameDataVo"/>
-        <where>
-            <if test="gameId != null  and gameId != ''">and game_id = #{gameId}</if>
-            <if test="account != null  and account != ''">and account = #{account}</if>
-            <if test="kindId != null  and kindId != ''">and kind_id = #{kindId}</if>
-            <if test="cellScore != null  and cellScore != ''">and cell_score = #{cellScore}</if>
-            <if test="allBet != null  and allBet != ''">and all_bet = #{allBet}</if>
-            <if test="profit != null  and profit != ''">and profit = #{profit}</if>
-            <if test="revenue != null  and revenue != ''">and revenue = #{revenue}</if>
-            <if test="gameEndTime != null  and gameEndTime != ''">and game_end_time = #{gameEndTime}</if>
-            <if test="platformId != null ">and platform_id = #{platformId}</if>
-            <if test="agent != null  and agent != ''">and agent = #{agent}</if>
-            <if test="platformType != null  and platformType != ''">and platform_type = #{platformType}</if>
-            <if test="status != null ">and status = #{status}</if>
-            <if test="gameStartTime != null  and gameStartTime != ''">and game_start_time = #{gameStartTime}</if>
-            <if test="startTime != null and startTime != ''">and game_start_time >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and game_end_time &lt;= #{endTime}</if>
-        </where>
+    <select id="selectMemberGameDataList" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberGameData">
+        SELECT
+        m.agent,
+        m.account,
+        m.cell_score,
+        m.all_bet,
+        m.profit,
+        m.revenue,
+        m.game_start_time,
+        m.game_end_time,
+        cg.platform_name AS platformName,
+        cg.son_platform_name AS sonPlatformName
+        FROM
+        member_game_data m
+        LEFT JOIN config_gametype cg ON m.agent = cg.platform_id
+        AND m.kind_id = cg.son_platform_id
+        WHERE
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            m.game_end_time >= STR_TO_DATE(#{startTime},'%Y-%m-%d %H:%i:%s') and m.game_end_time &lt;= STR_TO_DATE(#{endTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="account != null and account != ''">
+            and m.account = #{account}
+        </if>
+        <if test="sonPlatformName != null and sonPlatformName != ''">
+            and cg.son_platform_name = #{sonPlatformName}
+        </if>
+        ORDER BY
+        m.game_end_time DESC
     </select>
+
 
     <select id="selectMemberGameDataById" parameterType="String" resultMap="MemberGameDataResult">
         <include refid="selectMemberGameDataVo"/>
@@ -52,7 +62,7 @@
     </select>
 
     <insert id="insertMemberGameData" parameterType="MemberGameData">
-        insert into db_cx001.member_game_data
+        insert into ${dbMain}.member_game_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="gameId != null and gameId != ''">game_id,</if>
@@ -88,7 +98,7 @@
     </insert>
 
     <update id="updateMemberGameData" parameterType="MemberGameData">
-        update db_cx001.member_game_data
+        update ${dbMain}.member_game_data
         <trim prefix="SET" suffixOverrides=",">
             <if test="gameId != null and gameId != ''">game_id = #{gameId},</if>
 
@@ -121,11 +131,11 @@
     </update>
 
     <delete id="deleteMemberGameDataById" parameterType="String">
-        delete from db_cx001.member_game_data where id = #{id}
+        delete from ${dbMain}.member_game_data where id = #{id}
     </delete>
 
     <delete id="deleteMemberGameDataByIds" parameterType="String">
-        delete from db_cx001.member_game_data where id in
+        delete from ${dbMain}.member_game_data where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -148,7 +158,7 @@
         <if test="endTime != null and endTime != ''">and game_end_time &lt;= #{endTime}</if>
     </sql>
     <select id="getCount" resultType="java.util.Map">
-        select SUM(cell_score) totalSuccessBet,SUM(all_bet) totalBet,SUM(profit) totalIncome from db_cx001.member_game_data
+        select SUM(cell_score) totalSuccessBet,SUM(all_bet) totalBet,SUM(profit) totalIncome from ${dbMain}.member_game_data
         <where>
             <include refid="whereCount"></include>
         </where>

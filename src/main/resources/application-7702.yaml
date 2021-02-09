@@ -7,3 +7,10 @@ spring:
     host: xxxxxxx
     port: 6379
     password: xxxxxx
+
+mybatis:
+  configuration:
+    variables:
+      dbMain: 7702_main
+      dbLive: 7702_live
+      dbLottery: 7702_lottery

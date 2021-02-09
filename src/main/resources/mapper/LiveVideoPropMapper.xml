@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveVideoPropVo">
-        select id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id, p_user_id, p_user_name, to_user_id,  FROM_UNIXTIME(create_time) create_time ,  create_date, create_y, create_m, create_d, create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private, from_ip, is_coin from cx_live.live_video_prop
+        select id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id, p_user_id, p_user_name, to_user_id,  FROM_UNIXTIME(create_time) create_time ,  create_date, create_y, create_m, create_d, create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private, from_ip, is_coin from ${dbLive}.live_video_prop
     </sql>
 
     <select id="selectLiveVideoPropList" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveVideoProp" parameterType="LiveVideoProp" useGeneratedKeys="true" keyProperty="id">
-        insert into cx_live.live_video_prop
+        insert into ${dbLive}.live_video_prop
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="propId != null">prop_id,</if>
             <if test="propName != null and propName != ''">prop_name,</if>
@@ -149,7 +149,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveVideoProp" parameterType="LiveVideoProp">
-        update cx_live.live_video_prop
+        update ${dbLive}.live_video_prop
         <trim prefix="SET" suffixOverrides=",">
             <if test="propId != null">prop_id = #{propId},</if>
 
@@ -214,11 +214,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLiveVideoPropById" parameterType="Long">
-        delete from cx_live.live_video_prop where id = #{id}
+        delete from ${dbLive}.live_video_prop where id = #{id}
     </delete>
 
     <delete id="deleteLiveVideoPropByIds" parameterType="String">
-        delete from cx_live.live_video_prop where id in
+        delete from ${dbLive}.live_video_prop where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

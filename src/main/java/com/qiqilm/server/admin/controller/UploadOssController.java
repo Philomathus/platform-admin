@@ -26,8 +26,10 @@ public class UploadOssController {
 		InputStream inputStream = file.getInputStream();
 		File        newFile     = new File( System.getProperty( "java.io.tmpdir" ) + fileName );
 		IOUtils.copy( inputStream, new FileOutputStream( newFile ) );
-		String rFileName = DigestUtils.md5Hex( inputStream );
+		String rFileName = DigestUtils.md5Hex( new FileInputStream( newFile ) );
 		String fileKey   = path + "/" + rFileName + FilenameUtils.EXTENSION_SEPARATOR + extension;
-		return AjaxResult.success( "上传成功", serverOssService.uploadInputStream( new FileInputStream( newFile ), fileKey ) );
+		String url       = serverOssService.uploadInputStream( new FileInputStream( newFile ), fileKey );
+		newFile.delete();
+		return AjaxResult.success( "上传成功", url );
 	}
 }

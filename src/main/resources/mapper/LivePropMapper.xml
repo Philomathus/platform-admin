@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLivePropVo">
-        select id, name, score, diamonds, icon, ticket, is_much, sort, is_red_envelope, is_animated, is_effect, anim_type, robot_diamonds, pc_icon, pc_gif, gif_gift_show_style, animated_url, type from cx_live.live_prop
+        select id, name, score, diamonds, icon, ticket, is_much, sort, is_red_envelope, is_animated, is_effect, anim_type, robot_diamonds, pc_icon, pc_gif, gif_gift_show_style, animated_url, type from ${dbLive}.live_prop
     </sql>
 
     <select id="selectLivePropList" parameterType="LiveProp" resultMap="LivePropResult">
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertLiveProp" parameterType="LiveProp" useGeneratedKeys="true" keyProperty="id">
-        insert into cx_live.live_prop
+        insert into ${dbLive}.live_prop
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">name,</if>
             <if test="score != null">score,</if>
@@ -100,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateLiveProp" parameterType="LiveProp">
-        update cx_live.live_prop
+        update ${dbLive}.live_prop
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="score != null">score = #{score},</if>
@@ -124,18 +124,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteLivePropById" parameterType="Long">
-        delete from cx_live.live_prop where id = #{id}
+        delete from ${dbLive}.live_prop where id = #{id}
     </delete>
 
     <delete id="deleteLivePropByIds" parameterType="String">
-        delete from cx_live.live_prop where id in
+        delete from ${dbLive}.live_prop where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
     <select id="getList" resultMap="LivePropResult">
-         select id, CONCAT(diamonds,'  ',name) as name from cx_live.live_prop
+         select id, CONCAT(diamonds,'  ',name) as name from ${dbLive}.live_prop
          where type=2 and is_Effect=0 order by id asc
     </select>
 </mapper>

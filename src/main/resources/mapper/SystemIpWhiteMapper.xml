@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectSystemIpWhiteVo">
-        select ip_id, ip_address, ip_status, ip_admin, mark, ip_count from system_ip_white
+        select ip_id, ip_address, ip_status, ip_admin, mark, ip_count from ${dbMain}.system_ip_white
     </sql>
 
     <select id="selectSystemIpWhiteList" parameterType="SystemIpWhite" resultMap="SystemIpWhiteResult">
@@ -34,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertSystemIpWhite" parameterType="SystemIpWhite">
-        insert into db_cx001.system_ip_white
+        insert into ${dbMain}.system_ip_white
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="ipId != null">ip_id,</if>
             <if test="ipAddress != null and ipAddress != ''">ip_address,</if>
@@ -54,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateSystemIpWhite" parameterType="SystemIpWhite">
-        update db_cx001.system_ip_white
+        update ${dbMain}.system_ip_white
         <trim prefix="SET" suffixOverrides=",">
             <if test="ipAddress != null and ipAddress != ''">ip_address = #{ipAddress},</if>
     
@@ -71,11 +71,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteSystemIpWhiteById" parameterType="String">
-        delete from db_cx001.system_ip_white where ip_id = #{ipId}
+        delete from ${dbMain}.system_ip_white where ip_id = #{ipId}
     </delete>
 
     <delete id="deleteSystemIpWhiteByIds" parameterType="String">
-        delete from db_cx001.system_ip_white where ip_id in
+        delete from ${dbMain}.system_ip_white where ip_id in
         <foreach item="ipId" collection="array" open="(" separator="," close=")">
             #{ipId}
         </foreach>

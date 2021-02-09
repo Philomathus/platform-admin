@@ -12,8 +12,8 @@
 	</resultMap>
 
 	<sql id="selectHomeNoticeVo">
-		select id, title, content, FROM_UNIXTIME(update_time) update_time, indexs, status, type
-		from db_cx001.home_notice
+		select id, title, content, update_time, indexs, status, type
+		from ${dbMain}.home_notice
 	</sql>
 
 	<select id="selectHomeNoticeList" parameterType="HomeNotice" resultMap="HomeNoticeResult">
@@ -37,7 +37,7 @@
 	</select>
 
 	<insert id="insertHomeNotice" parameterType="HomeNotice">
-		insert into db_cx001.home_notice
+		insert into ${dbMain}.home_notice
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				id,
@@ -72,7 +72,7 @@
 				#{content},
 			</if>
 			<if test="updateTime != null">
-				UNIX_TIMESTAMP(#{updateTime}),
+				#{updateTime},
 			</if>
 			<if test="indexs != null">
 				#{indexs},
@@ -87,7 +87,7 @@
 	</insert>
 
 	<update id="updateHomeNotice" parameterType="HomeNotice">
-		update db_cx001.home_notice
+		update ${dbMain}.home_notice
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="title != null">
 				title = #{title},
@@ -98,7 +98,7 @@
 			</if>
 
 			<if test="updateTime != null">
-				update_time = UNIX_TIMESTAMP(#{updateTime}),
+				update_time = #{updateTime},
 			</if>
 
 			<if test="indexs != null">
@@ -118,13 +118,13 @@
 
 	<delete id="deleteHomeNoticeById" parameterType="String">
 		delete
-		from db_cx001.home_notice
+		from ${dbMain}.home_notice
 		where id = #{id}
 	</delete>
 
 	<delete id="deleteHomeNoticeByIds" parameterType="String">
 		delete
-		from db_cx001.home_notice where id in
+		from ${dbMain}.home_notice where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

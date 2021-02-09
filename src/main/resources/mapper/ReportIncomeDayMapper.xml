@@ -15,7 +15,7 @@
     </resultMap>
 
     <sql id="selectReportIncomeDayVo">
-        select reppay_id, money, type, payplam, paychancl, paycard, paydate from db_cx001.report_income_day
+        select reppay_id, money, type, payplam, paychancl, paycard, paydate from ${dbMain}.report_income_day
     </sql>
 
     <select id="selectReportIncomeDayList" parameterType="ReportIncomeDay" resultMap="ReportIncomeDayResult">
@@ -29,7 +29,7 @@
     </select>
     <select id="countSuccessMoney" resultType="com.qiqilm.server.admin.domain.ReportIncomeDay">
         select sum(money) as countSuccessMoney
-        from db_cx001.report_income_day
+        from ${dbMain}.report_income_day
         <where>
             <if test="paydate != null  and paydate != ''"> and paydate = #{paydate}</if>
         </where>

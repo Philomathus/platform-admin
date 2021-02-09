@@ -35,7 +35,7 @@
 			   pull_key,
 			   push_key,
 			   count_Num
-		from cx_live.server_live
+		from ${dbLive}.server_live
 	</sql>
 
 	<select id="selectServerLiveList" parameterType="ServerLive" resultMap="ServerLiveResult">
@@ -56,7 +56,7 @@
 	</select>
 
 	<insert id="insertServerLive" parameterType="ServerLive" useGeneratedKeys="true" keyProperty="id">
-		insert into cx_live.server_live
+		insert into ${dbLive}.server_live
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name,
@@ -142,7 +142,7 @@
 	</insert>
 
 	<update id="updateServerLive" parameterType="ServerLive">
-		update cx_live.server_live
+		update ${dbLive}.server_live
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="name != null and name != ''">
 				name = #{name},
@@ -189,13 +189,13 @@
 
 	<delete id="deleteServerLiveById" parameterType="Long">
 		delete
-		from cx_live.server_live
+		from ${dbLive}.server_live
 		where id = #{id}
 	</delete>
 
 	<delete id="deleteServerLiveByIds" parameterType="String">
 		delete
-		from cx_live.server_live where id in
+		from ${dbLive}.server_live where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>
