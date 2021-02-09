@@ -102,7 +102,7 @@
 				and (id = #{searchValue} or phone = #{searchValue} or user_name in (#{searchValue}))
 			</if>
 			<if test="status != null">
-				and status = #{status}
+				and id in (select id from member_info where status = #{status})
 			</if>
 			<if test="registIp != null  and registIp != ''">
 				and regist_ip = #{registIp}

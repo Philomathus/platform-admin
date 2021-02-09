@@ -49,8 +49,8 @@
 					#{id}
 				</foreach>
 			</if>
-			<if test="createTime != null">
-				and create_time = #{createTime}
+			<if test="startTime != null">
+				and create_time &gt;=  #{startTime} and create_time &lt;=  #{endTime}
 			</if>
 			<if test="mark != null  and mark != ''">
 				and mark like concat('%', #{mark}, '%')
@@ -163,12 +163,13 @@
         </if>
         <if test="types != null and types.length != 0">
             and type in
+
             <foreach item="id" collection="types" open="(" separator="," close=")">
                 #{id}
             </foreach>
         </if>
-        <if test="createTime != null">
-            and create_time = #{createTime}
+        <if test="startTime != null">
+			and create_time &gt;=  #{startTime} and create_time &lt;=  #{endTime}
         </if>
         <if test="mark != null  and mark != ''">
             and mark like concat('%', #{mark}, '%')
