@@ -10,7 +10,7 @@ public class RspMemberGameData {
     private String account;
 
     private String kind_id;
-    private String game_id;
+    private String gameId;
 
     @Excel(name = "有效下注")
     private String cell_score;
