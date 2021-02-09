@@ -111,7 +111,7 @@
 				and login_ip = #{loginIp}
 			</if>
 			<if test="nickName != null  and nickName != ''">
-				and nick_name like concat('%', #{nickName}, '%')
+				and nick_name like concat(#{nickName}, '%')
 			</if>
 			<if test="inviterCode != null  and inviterCode != ''">
 				and inviter_code = #{inviterCode}
