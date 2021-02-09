@@ -497,14 +497,14 @@ public class GameBaseServiceImpl implements IGameBaseService {
 				memberInfoService.outGameFail( orderId, userId, platformId );
 				log.info( "人工下分失败：会员ID:{},下分平台:{},金额:{},result:{}", userId, gamePlatform.getName(), xiaFenResult.getBackMoney(),
 						xiaFenResult.isOk() );
-				return null;
+				return AjaxResult.error();
 			}
 		} catch ( Exception e ) {
 			memberInfoService.outGameFail( orderId, userId, platformId );
 			log.error( "退出游戏失败userId：{}, platformId:{},orderId:{},msg:{} ", userId, platformId, orderId, e.getMessage() );
-			return null;
+			return AjaxResult.error();
 		}
-		return null;
+		return AjaxResult.success();
 	}
 
 	@Transactional( rollbackFor = Exception.class )
