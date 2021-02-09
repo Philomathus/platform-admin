@@ -28,6 +28,7 @@
     <select id="selectMemberGameDataList" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberGameData">
         SELECT
         m.agent,
+        m.game_id as gameId,
         m.account,
         m.cell_score,
         m.all_bet,
@@ -50,6 +51,9 @@
         </if>
         <if test="sonPlatformName != null and sonPlatformName != ''">
             and cg.son_platform_name = #{sonPlatformName}
+        </if>
+        <if test="agent != null and agent != ''">
+            and m.agent = #{agent}
         </if>
         ORDER BY
         m.game_end_time DESC
