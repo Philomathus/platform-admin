@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller.live;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,8 @@ public class LiveMountController extends BaseController {
 	@Autowired
 	private ILiveMountService liveMountService;
 
+	@Autowired
+	private LiveCacheUtil global;
 	/**
 	 * 查询礼物列列表
 	 */
@@ -72,7 +75,9 @@ public class LiveMountController extends BaseController {
 	@Log( title = "礼物列", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody LiveMount liveMount) {
-		return toAjax( liveMountService.insertLiveMount(liveMount) );
+		liveMountService.insertLiveMount(liveMount);
+		global.refreshMountConfCache();
+		return toAjax(1);
 	}
 
 	/**
@@ -82,7 +87,9 @@ public class LiveMountController extends BaseController {
 	@Log( title = "礼物列", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LiveMount liveMount) {
-		return toAjax( liveMountService.updateLiveMount(liveMount) );
+		liveMountService.updateLiveMount(liveMount);
+		global.refreshMountConfCache();
+		return toAjax( 1);
 	}
 
 	/**

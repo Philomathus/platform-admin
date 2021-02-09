@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.cache;
 
 import com.qiqilm.server.admin.constant.Constants;
+import com.qiqilm.server.admin.domain.LiveMount;
+import com.qiqilm.server.admin.mapper.LiveMountMapper;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
@@ -8,6 +10,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.HashMap;
@@ -19,6 +22,9 @@ import java.util.Map;
 public class LiveCacheUtil {
 	@Autowired
 	private RedisUtil redisUtil;
+
+	@Resource
+	private LiveMountMapper liveMountMapper;
 
 	public void setRedis( String key, String identify, Object value ) {
 		String valStr;
@@ -141,5 +147,16 @@ public class LiveCacheUtil {
 	 */
 	public String getAdminSign( String adminKey ) {
 		return redisUtil.strGet( Constants.ADMIN_SIGN + adminKey );
+	}
+
+	public void refreshMountConfCache() {
+		redisUtil.unlink(Constants.LIVE_MOUNT);
+		Map<String, String> map = new HashMap<>();
+		LiveMount liveMount=new LiveMount();
+		liveMount.setStatus( "1" );
+		for( LiveMount mount : liveMountMapper.selectLiveMountList(liveMount)){
+			map.put(String.valueOf(mount.getId()),mount.getSvgUrl());
+		}
+		redisUtil.hMSet( Constants.LIVE_MOUNT, map );
 	}
 }
