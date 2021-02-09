@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service;
 import com.qiqilm.server.admin.enums.EnumAction;
 import com.qiqilm.server.admin.enums.EnumMoney;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
 public interface ILogService {
@@ -27,6 +28,6 @@ public interface ILogService {
 	/**
 	 * 会员行为日志
 	 */
-	void logMemberAction( String userid, String username, EnumAction enumAction, String params1, String params2, String params3,
+	void logMemberAction( HttpServletRequest request, String userid, String username, EnumAction enumAction, String params1, String params2, String params3,
 						  String params4 );
 }

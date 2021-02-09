@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
 /**
@@ -19,10 +20,10 @@ public class LogAction {
 	private ILogService logService;
 
 	@Async
-	public void logXiafen( String userId, String account, String platformname, String orderId,
+	public void logXiafen( HttpServletRequest request, String userId, String account, String platformname, String orderId,
 						   BigDecimal changeMoney, BigDecimal total, BigDecimal backMoney ) {
-		logService.logMemberAction( userId, account, EnumAction.xiafen, "盈利：" + changeMoney.setScale( 2,
-				BigDecimal.ROUND_HALF_UP ).toString(), "余额" + total.toString(),
+		logService.logMemberAction( request, userId, account, EnumAction.xiafen, "盈利：" + changeMoney
+						.setScale( 2, BigDecimal.ROUND_HALF_UP ).toString(), "余额" + total.toString(),
 				"平台：" + platformname + "下分金额" + backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ).toString(),
 				"下分订单号：" + orderId );
 	}

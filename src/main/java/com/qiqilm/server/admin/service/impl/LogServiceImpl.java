@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -110,7 +111,7 @@ public class LogServiceImpl implements ILogService {
 	}
 
 	@Override
-	public void logMemberAction( String userid, String username, EnumAction enumAction, String params1, String params2,
+	public void logMemberAction( HttpServletRequest request, String userid, String username, EnumAction enumAction, String params1, String params2,
 								 String params3, String params4 ) {
 		MemberActionLogs log = new MemberActionLogs();
 		log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
@@ -122,7 +123,7 @@ public class LogServiceImpl implements ILogService {
 		log.setParam2( params2 );
 		log.setParam3( params3 );
 		log.setParam4( params4 );
-		log.setParamIp( UserDataUtil.getIp( ServletUtil.getHttpServletRequest() ) );
+		log.setParamIp( UserDataUtil.getIp( request ) );
 		log.setcTime( new Date() );
 		actionLogsMapper.insertMemberActionLogs( log );
 	}

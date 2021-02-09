@@ -21,15 +21,13 @@ import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.IGameBaseService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.game.*;
-import com.qiqilm.server.admin.utils.DocumentUtil;
-import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.PostData;
-import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -493,15 +491,8 @@ public class GameBaseServiceImpl implements IGameBaseService {
 			}
 			if ( xiaFenResult.isOk() ) {
 				MemberInfo member = memberInfoService.selectMemberInfoById( userId );
-				memberInfoService.outGMGameSucess( orderId, userId, platformId, xiaFenResult.getBackMoney(),
-						member.getUserName() );
-				logMoney.logPlatformSwitch( userId, member.getUserName(), xiaFenResult.getBackMoney(), old,
-						gamePlatform.getAgent(), name, orderId );
-				logAction.logXiafen( member.getId(), member.getUserName(), name, orderId,
-						xiaFenResult.getBackMoney().subtract( gameMoney.getMoney() ),
-						member.getTotalAccount(), xiaFenResult.getBackMoney() );
-				log.info( "人工下分成功：会员ID:{},下分平台:{},金额:{},result:{}", userId, gamePlatform.getName(), xiaFenResult.getBackMoney(),
-						xiaFenResult.isOk() );
+
+				this.xiafen( member, gamePlatform, xiaFenResult, orderId, old, name, gameMoney );
 			} else {
 				memberInfoService.outGameFail( orderId, userId, platformId );
 				log.info( "人工下分失败：会员ID:{},下分平台:{},金额:{},result:{}", userId, gamePlatform.getName(), xiaFenResult.getBackMoney(),
@@ -514,6 +505,20 @@ public class GameBaseServiceImpl implements IGameBaseService {
 			return null;
 		}
 		return null;
+	}
+
+	@Transactional( rollbackFor = Exception.class )
+	public void xiafen( MemberInfo member, GamePlatform gamePlatform, XiaFenResult xiaFenResult, String orderId,
+						BigDecimal old, String name, MemberGameMoney gameMoney ) {
+		memberInfoService.outGMGameSucess( orderId, member.getId(), gamePlatform.getId().intValue(), xiaFenResult.getBackMoney(),
+				member.getUserName() );
+		logMoney.logPlatformSwitch( member.getId(), member.getUserName(), xiaFenResult.getBackMoney(), old,
+				gamePlatform.getAgent(), name, orderId );
+		logAction.logXiafen( ServletUtil.getHttpServletRequest(), member.getId(), member.getUserName(), name, orderId,
+				xiaFenResult.getBackMoney().subtract( gameMoney.getMoney() ),
+				member.getTotalAccount(), xiaFenResult.getBackMoney() );
+		log.info( "人工下分成功：会员ID:{},下分平台:{},金额:{},result:{}", member.getId(), gamePlatform.getName(), xiaFenResult.getBackMoney(),
+				xiaFenResult.isOk() );
 	}
 
 	private MemberGameMoney getMemberGameMoney( String userId, Integer platformId ) {
