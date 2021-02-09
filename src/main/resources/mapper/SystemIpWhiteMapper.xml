@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectSystemIpWhiteVo">
-        select ip_id, ip_address, ip_status, ip_admin, mark, ip_count from db_cx001.system_ip_white
+        select ip_id, ip_address, ip_status, ip_admin, mark, ip_count from system_ip_white
     </sql>
 
     <select id="selectSystemIpWhiteList" parameterType="SystemIpWhite" resultMap="SystemIpWhiteResult">
