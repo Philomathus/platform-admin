@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -18,63 +19,83 @@ import java.util.Date;
  */
 @Data
 public class LogGameOrder extends BaseEntity {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /** 本地ID */
-    private String id;
+	/**
+	 * 本地ID
+	 */
+	private String id;
 
-    /** 1上分2下分 */
-    @Excel(name = "1上分2下分")
-    private Integer type;
+	/**
+	 * 1上分2下分
+	 */
+	@Excel( name = "1上分2下分" )
+	private Integer type;
 
-    /** 玩家ID */
-    @Excel(name = "玩家ID")
-    private String memberId;
+	/**
+	 * 玩家ID
+	 */
+	@Excel( name = "玩家ID" )
+	private String memberId;
 
-    /** 账号 */
-    @Excel(name = "账号")
-    private String userName;
+	/**
+	 * 账号
+	 */
+	@Excel( name = "账号" )
+	private String userName;
 
-    /** 本地平台id */
-    @Excel(name = "本地平台id")
-    private Integer platformId;
+	/**
+	 * 本地平台id
+	 */
+	private Integer platformId;
 
-    /** 0开始1失败2成功3异常 */
-    @Excel(name = "0开始1失败2成功3异常")
-    private Integer status;
+	@Excel( name = "游戏平台" )
+	private String platformName;
 
-    /** 金额 */
-    @Excel(name = "金额")
-    private BigDecimal money;
+	/**
+	 * 0开始1失败2成功3异常
+	 */
+	@Excel( name = "0开始1失败2成功3异常" )
+	private Integer status;
 
-    /** 开始时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date bTime;
+	/**
+	 * 金额
+	 */
+	@Excel( name = "金额" )
+	private BigDecimal money;
 
-    /** 结束时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date eTime;
-    /**
-     * 选择日期
-     */
-    private String[] selectDate;
-    private String startTime;
-    private String endTime;
+	/**
+	 * 开始时间
+	 */
+	@JsonFormat( pattern = DateFormatUtils.SPLIT_PATTERN_DATETIME )
+	@Excel( name = "开始时间", width = 30, dateFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
+	private Date bTime;
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("type", getType())
-            .append("memberId", getMemberId())
-            .append("userName", getUserName())
-            .append("platformId", getPlatformId())
-            .append("status", getStatus())
-            .append("money", getMoney())
-            .append("bTime", getBTime())
-            .append("eTime", getETime())
-            .toString();
-    }
+	/**
+	 * 结束时间
+	 */
+	@JsonFormat( pattern = DateFormatUtils.SPLIT_PATTERN_DATETIME )
+	@Excel( name = "结束时间", width = 30, dateFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
+	private Date     eTime;
+	/**
+	 * 选择日期
+	 */
+	private String[] selectDate;
+	private String   startTime;
+	private String   endTime;
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
+				.append( "id", getId() )
+				.append( "type", getType() )
+				.append( "memberId", getMemberId() )
+				.append( "userName", getUserName() )
+				.append( "platformId", getPlatformId() )
+				.append( "status", getStatus() )
+				.append( "money", getMoney() )
+				.append( "bTime", getBTime() )
+				.append( "eTime", getETime() )
+				.toString();
+	}
 }

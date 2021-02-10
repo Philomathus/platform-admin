@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class MemberBcode extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -51,53 +53,9 @@ public class MemberBcode extends BaseEntity {
 	@Excel( name = "当前打码量" )
 	private BigDecimal cur;
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId( String id ) {
-		this.id = id;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId( String userId ) {
-		this.userId = userId;
-	}
-
-	public String getDes() {
-		return des;
-	}
-
-	public void setDes( String des ) {
-		this.des = des;
-	}
-
-	public BigDecimal getIncome() {
-		return income;
-	}
-
-	public void setIncome( BigDecimal income ) {
-		this.income = income;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus( Integer status ) {
-		this.status = status;
-	}
-
-	public BigDecimal getCur() {
-		return cur;
-	}
-
-	public void setCur( BigDecimal cur ) {
-		this.cur = cur;
-	}
+	private String[] selectDate;
+	private String   startTime;
+	private String   endTime;
 
 	@Override
 	public String toString() {

@@ -1,103 +1,154 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.LogGameOrderMapper">
+	<resultMap type="LogGameOrder" id="LogGameOrderResult">
+		<result property="id" column="id"/>
+		<result property="type" column="type"/>
+		<result property="memberId" column="member_id"/>
+		<result property="userName" column="user_name"/>
+		<result property="platformId" column="platform_id"/>
+		<result property="status" column="status"/>
+		<result property="money" column="money"/>
+		<result property="bTime" column="b_time"/>
+		<result property="eTime" column="e_time"/>
+	</resultMap>
 
-    <resultMap type="LogGameOrder" id="LogGameOrderResult">
-        <result property="id"    column="id"    />
-        <result property="type"    column="type"    />
-        <result property="memberId"    column="member_id"    />
-        <result property="userName"    column="user_name"    />
-        <result property="platformId"    column="platform_id"    />
-        <result property="status"    column="status"    />
-        <result property="money"    column="money"    />
-        <result property="bTime"    column="b_time"    />
-        <result property="eTime"    column="e_time"    />
-    </resultMap>
+	<sql id="selectLogGameOrderVo">
+		select id, type, member_id, user_name, platform_id, status, money, b_time, e_time from ${dbMain}.log_game_order
+	</sql>
 
-    <sql id="selectLogGameOrderVo">
-        select id, type, member_id, user_name, platform_id, status, money, b_time, e_time from ${dbMain}.log_game_order
-    </sql>
+	<select id="selectLogGameOrderList" parameterType="LogGameOrder" resultMap="LogGameOrderResult">
+		<include refid="selectLogGameOrderVo"/>
+		<where>
+			<if test="searchValue != null  and searchValue != ''">
+				and (member_id = #{searchValue} or user_name like concat(#{searchValue}, '%'))
+			</if>
+			<if test="type != null">
+				and type = #{type}
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				and b_time >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				and e_time &lt;= #{endTime}
+			</if>
+		</where>
+	</select>
 
-    <select id="selectLogGameOrderList" parameterType="LogGameOrder" resultMap="LogGameOrderResult">
-        <include refid="selectLogGameOrderVo"/>
-        <where>
-            <if test="type != null "> and type = #{type}</if>
-            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
-            <if test="platformId != null "> and platform_id = #{platformId}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="money != null "> and money = #{money}</if>
-            <if test="bTime != null "> and b_time = #{bTime}</if>
-            <if test="eTime != null "> and e_time = #{eTime}</if>
-            <if test="startTime != null and startTime != ''"> and b_time >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''"> and e_time &lt;= #{endTime}</if>
-        </where>
-    </select>
+	<select id="selectLogGameOrderById" parameterType="String" resultMap="LogGameOrderResult">
+		<include refid="selectLogGameOrderVo"/>
+		where id = #{id}
+	</select>
 
-    <select id="selectLogGameOrderById" parameterType="String" resultMap="LogGameOrderResult">
-        <include refid="selectLogGameOrderVo"/>
-        where id = #{id}
-    </select>
+	<insert id="insertLogGameOrder" parameterType="LogGameOrder">
+		insert into ${dbMain}.log_game_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="memberId != null">
+				member_id,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="platformId != null">
+				platform_id,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="bTime != null">
+				b_time,
+			</if>
+			<if test="eTime != null">
+				e_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="memberId != null">
+				#{memberId},
+			</if>
+			<if test="userName != null">
+				#{userName},
+			</if>
+			<if test="platformId != null">
+				#{platformId},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="money != null">
+				#{money},
+			</if>
+			<if test="bTime != null">
+				#{bTime},
+			</if>
+			<if test="eTime != null">
+				#{eTime},
+			</if>
+		</trim>
+	</insert>
 
-    <insert id="insertLogGameOrder" parameterType="LogGameOrder">
-        insert into ${dbMain}.log_game_order
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
-            <if test="type != null">type,</if>
-            <if test="memberId != null">member_id,</if>
-            <if test="userName != null">user_name,</if>
-            <if test="platformId != null">platform_id,</if>
-            <if test="status != null">status,</if>
-            <if test="money != null">money,</if>
-            <if test="bTime != null">b_time,</if>
-            <if test="eTime != null">e_time,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id != null">#{id},</if>
-                    <if test="type != null">#{type},</if>
-                    <if test="memberId != null">#{memberId},</if>
-                    <if test="userName != null">#{userName},</if>
-                    <if test="platformId != null">#{platformId},</if>
-                    <if test="status != null">#{status},</if>
-                    <if test="money != null">#{money},</if>
-                    <if test="bTime != null">#{bTime},</if>
-                    <if test="eTime != null">#{eTime},</if>
-             </trim>
-    </insert>
+	<update id="updateLogGameOrder" parameterType="LogGameOrder">
+		update ${dbMain}.log_game_order
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="memberId != null">
+				member_id = #{memberId},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName},
+			</if>
+			<if test="platformId != null">
+				platform_id = #{platformId},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="money != null">
+				money = #{money},
+			</if>
+			<if test="bTime != null">
+				b_time = #{bTime},
+			</if>
+			<if test="eTime != null">
+				e_time = #{eTime},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
 
-    <update id="updateLogGameOrder" parameterType="LogGameOrder">
-        update ${dbMain}.log_game_order
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="type != null">type = #{type},</if>
+	<delete id="deleteLogGameOrderById" parameterType="String">
+		delete
+		from ${dbMain}.log_game_order
+		where id = #{id}
+	</delete>
 
-            <if test="memberId != null">member_id = #{memberId},</if>
-
-            <if test="userName != null">user_name = #{userName},</if>
-
-            <if test="platformId != null">platform_id = #{platformId},</if>
-
-            <if test="status != null">status = #{status},</if>
-
-            <if test="money != null">money = #{money},</if>
-
-            <if test="bTime != null">b_time = #{bTime},</if>
-
-            <if test="eTime != null">e_time = #{eTime},</if>
-
-        </trim>
-        where id = #{id}
-    </update>
-
-    <delete id="deleteLogGameOrderById" parameterType="String">
-        delete from ${dbMain}.log_game_order where id = #{id}
-    </delete>
-
-    <delete id="deleteLogGameOrderByIds" parameterType="String">
-        delete from ${dbMain}.log_game_order where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+	<delete id="deleteLogGameOrderByIds" parameterType="String">
+		delete
+		from ${dbMain}.log_game_order where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
 </mapper>

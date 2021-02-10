@@ -10,6 +10,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -62,6 +63,7 @@ public class DictUtils {
 	/**
 	 * 清空字典缓存
 	 */
+	@Async
 	public void clearDictCache() {
 		List<String>    keyList         = new ArrayList<>();
 		RedisConnection redisConnection = stringRedisTemplate.getConnectionFactory().getConnection();
