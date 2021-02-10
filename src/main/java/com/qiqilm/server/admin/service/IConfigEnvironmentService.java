@@ -61,4 +61,6 @@ public interface IConfigEnvironmentService {
 	public int deleteConfigEnvironmentById(String envCode);
 
     public AjaxResult getTitleIndex(String title, String code);
+
+	void refreshCache();
 }

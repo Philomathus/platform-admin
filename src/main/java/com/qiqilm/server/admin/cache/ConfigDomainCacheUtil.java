@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.cache;
 
 import com.qiqilm.server.admin.mapper.ConfigDomainMapper;
 import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,5 +37,18 @@ public class ConfigDomainCacheUtil {
 			this.refreshKey( code );
 		}
 		return redisUtil.sRandom( CONFIG_DOMAIN + code );
+	}
+
+
+	public String dynamicValue( String value ) {
+		String trim = value.trim();
+		if ( trim.startsWith( "${" ) && trim.contains( "}" ) ) {
+			String param  = trim.substring( 2, trim.indexOf( "}" ) );
+			String domain = this.getValue( param );
+			if ( StringUtils.isNotBlank( domain ) ) {
+				return trim.replace( "${" + param + "}", domain );
+			}
+		}
+		return trim;
 	}
 }

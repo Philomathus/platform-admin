@@ -3,11 +3,16 @@ package com.qiqilm.server.admin.utils;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.enums.EnumLock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.*;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.connection.BitFieldSubCommands;
+import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisZSetCommands;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -993,16 +998,16 @@ public class RedisUtil {
 		return stringRedisTemplate.opsForZSet().intersectAndStore( key, otherKeys, destKey, aggregate, weights );
 	}
 
-    public boolean lock( EnumLock mode, String userId, String value, int timeOut ) {
+	public boolean lock( EnumLock mode, String userId, String value, int timeOut ) {
 		return this.strSetIfAbsent( Constants.SESSION_CLICK_LOCK.concat( mode.getKey() ).concat( userId ), value
 				, Duration.ofSeconds( timeOut ) );
-    }
+	}
 
-    public void unLock(EnumLock mode, String userId ) {
-        this.unlink( Constants.SESSION_CLICK_LOCK.concat( mode.getKey() ).concat( userId ) );
-    }
+	public void unLock( EnumLock mode, String userId ) {
+		this.unlink( Constants.SESSION_CLICK_LOCK.concat( mode.getKey() ).concat( userId ) );
+	}
 
-    public RedisConnectionFactory getConnectionFactory() {
-	    return stringRedisTemplate.getConnectionFactory();
-    }
+	public RedisConnectionFactory getConnectionFactory() {
+		return stringRedisTemplate.getConnectionFactory();
+	}
 }
