@@ -41,7 +41,7 @@ public class SysDictTypeController extends BaseController {
 	@GetMapping( "/export" )
 	public AjaxResult export( SysDictType dictType ) {
 		List<SysDictType>      list = dictTypeService.selectDictTypeList( dictType );
-		ExcelUtil<SysDictType> util = new ExcelUtil<SysDictType>( SysDictType.class );
+		ExcelUtil<SysDictType> util = new ExcelUtil<>( SysDictType.class );
 		return util.exportExcel( list, "字典类型" );
 	}
 

@@ -24,15 +24,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectLiveProplogList" parameterType="LiveProplog" resultMap="LiveProplogResult">
         <include refid="selectLiveProplogVo"/>
         <where>
-            <if test="pUserId != null  and pUserId != ''"> and p_user_id = #{pUserId}</if>
-            <if test="pUserName != null  and pUserName != ''"> and p_user_name like concat('%', #{pUserName}, '%')</if>
-            <if test="propId != null "> and prop_id = #{propId}</if>
-            <if test="propName != null  and propName != ''"> and prop_name like concat('%', #{propName}, '%')</if>
-            <if test="totalDiamonds != null "> and total_diamonds = #{totalDiamonds}</if>
-            <if test="totalTicket != null "> and total_ticket = #{totalTicket}</if>
-            <if test="currentDiamonds != null "> and current_diamonds = #{currentDiamonds}</if>
-            <if test="toUserId != null "> and to_user_id = #{toUserId}</if>
-            <if test="createtime != null "> and createtime = #{createtime}</if>
+            <if test="searchValue != null  and searchValue != ''">
+                and (p_user_id = #{searchValue} or to_user_id = #{searchValue})
+            </if>
             <if test="startTime != null and startTime != ''"> and createtime >= #{startTime}</if>
             <if test="endTime != null and endTime != ''"> and createtime &lt;= #{endTime}</if>
         </where>

@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.qiqilm.server.admin.domain.ReportMoneyinfo;
 import com.qiqilm.server.admin.domain.ReportPlamCom;
+import com.qiqilm.server.admin.domain.ReportPlamGames;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -77,5 +78,14 @@ public class ReportIncomeDayController extends BaseController {
 		cal.add(Calendar.DATE,-1);
 		Date time=cal.getTime();
 		return new SimpleDateFormat("yyyy-MM-dd").format(time);
+	}
+
+	@PreAuthorize( "@ss.hasPermi('admin:reportIncomeDay:export')" )
+	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export(ReportIncomeDay reportIncomeDay) {
+		List<ReportIncomeDay> list = reportIncomeDayService.selectReportIncomeDayList(reportIncomeDay);
+		ExcelUtil<ReportIncomeDay> util = new ExcelUtil<>(ReportIncomeDay.class);
+		return util.exportExcel( list, "reportIncomeDay" );
 	}
 }

@@ -38,31 +38,31 @@ public class ReportAgentcount extends BaseEntity {
     private Long totalmember;
 
     /** 公司入款（首充） */
-    @Excel(name = "公司入款", readConverterExp = "首=充")
+    @Excel(name = "公司入款")
     private String gsRukuanjine;
 
     /** 线上入款（首充） */
-    @Excel(name = "线上入款", readConverterExp = "首=充")
+    @Excel(name = "线上入款")
     private String xsRukuanjine;
 
     /** 手工入款（首充） */
-    @Excel(name = "手工入款", readConverterExp = "首=充")
+    @Excel(name = "手工入款")
     private String sgRukuanjine;
 
     /** 入款总（首充） */
-    @Excel(name = "入款总", readConverterExp = "首=充")
+    @Excel(name = "入款总")
     private String totalfristRukuanjine;
 
     /** 出款金额（首次） */
-    @Excel(name = "出款金额", readConverterExp = "首=次")
+    @Excel(name = "出款金额")
     private String chukuanjine;
 
     /** 总入款（当日总） */
-    @Excel(name = "总入款", readConverterExp = "当=日总")
+    @Excel(name = "总入款")
     private String totalRukuanjine;
 
     /** 总出款（当日总） */
-    @Excel(name = "总出款", readConverterExp = "当=日总")
+    @Excel(name = "总出款")
     private String totalChukuanjine;
 
     /** 进入直播间次数 */

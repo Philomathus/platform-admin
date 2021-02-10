@@ -176,7 +176,7 @@ public class ExcelUtil<T> {
 
 	public void init( List<T> list, String sheetName, Type type ) {
 		if ( list == null ) {
-			list = new ArrayList<T>();
+			list = new ArrayList<>();
 		}
 		this.list = list;
 		this.sheetName = sheetName;
@@ -400,7 +400,7 @@ public class ExcelUtil<T> {
 		for ( int i = startNo; i < endNo; i++ ) {
 			row = sheet.createRow( i + 1 - startNo );
 			// 得到导出对象.
-			T   vo     = ( T ) list.get( i );
+			T   vo     = list.get( i );
 			int column = 0;
 			for ( Object[] os : fields ) {
 				Field field = ( Field ) os[ 0 ];
@@ -581,7 +581,9 @@ public class ExcelUtil<T> {
 				} else if ( StringUtils.isNotEmpty( dictType ) && StringUtils.isNotNull( value ) ) {
 					cell.setCellValue( convertDictByExp( Convert.toStr( value ), dictType, separator ) );
 				} else if ( value instanceof BigDecimal && -1 != attr.scale() ) {
-					cell.setCellValue( ( ( ( BigDecimal ) value ).setScale( attr.scale(), attr.roundingMode() ) ).toString() );
+					BigDecimal decimal = ( BigDecimal ) value;
+					cell.setCellValue( ( decimal.multiply( new BigDecimal( attr.multiply() ) ).setScale( attr.scale(),
+							attr.roundingMode() ) ).toString().concat( attr.suffix() ) );
 				} else {
 					// 设置列类型
 					setCellVo( value, attr, cell );
@@ -589,7 +591,7 @@ public class ExcelUtil<T> {
 				addStatisticsData( column, Convert.toStr( value ), attr );
 			}
 		} catch ( Exception e ) {
-			log.error( "导出Excel失败{}", e );
+			log.error( "导出Excel失败{}", e.getMessage(), e );
 		}
 		return cell;
 	}
@@ -751,7 +753,7 @@ public class ExcelUtil<T> {
 	 * 得到所有定义字段
 	 */
 	private void createExcelField() {
-		this.fields = new ArrayList<Object[]>();
+		this.fields = new ArrayList<>();
 		List<Field> tempFields = new ArrayList<>();
 		tempFields.addAll( Arrays.asList( clazz.getSuperclass().getDeclaredFields() ) );
 		tempFields.addAll( Arrays.asList( clazz.getDeclaredFields() ) );

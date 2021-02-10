@@ -61,8 +61,8 @@ public class ReportPlamGames extends BaseEntity {
     private String bili;
 
     /** 日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "日期", width = 30, dateFormat = "yyyy-MM-dd")
+
+    @Excel(name = "日期")
     private String begindate;
     private Integer countBetPeople;
     private BigDecimal countBetMoney;

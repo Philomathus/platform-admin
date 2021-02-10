@@ -1,10 +1,13 @@
 package com.qiqilm.server.admin.controller;
 
+import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
+import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IReportPlamGamesService;
+import com.qiqilm.server.admin.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
@@ -73,5 +76,13 @@ public class ReportPlamGamesController extends BaseController {
         cal.add(Calendar.DATE,-1);
         Date time=cal.getTime();
         return new SimpleDateFormat("yyyy-MM-dd").format(time);
+    }
+    @PreAuthorize( "@ss.hasPermi('admin:reportPlamGames:export')" )
+    @Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+    @GetMapping( "/export" )
+    public AjaxResult export(ReportPlamGames reportPlamGames) {
+        List<ReportPlamGames>      list = reportPlamGamesService.selectReportPlamGamesList(reportPlamGames);
+        ExcelUtil<ReportPlamGames> util = new ExcelUtil<>(ReportPlamGames.class);
+        return util.exportExcel( list, "reportPlamGames" );
     }
 }

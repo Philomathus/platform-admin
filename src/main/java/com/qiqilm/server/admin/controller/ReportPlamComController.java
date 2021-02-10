@@ -63,6 +63,17 @@ public class ReportPlamComController extends BaseController {
 		return getDataTable( list );
 	}
 
+	/**
+	 * 导出综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:export')" )
+	@Log( title = "综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export(ReportPlamCom reportPlamCom) throws ParseException {
+		List<ReportPlamCom>      list = reportPlamComService.selectReportPlamComList(reportPlamCom);
+		ExcelUtil<ReportPlamCom> util = new ExcelUtil<>(ReportPlamCom.class);
+		return util.exportExcel( list, "report-plam-com" );
+	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
 	@GetMapping( "/storage" )

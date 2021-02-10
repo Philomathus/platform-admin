@@ -87,6 +87,7 @@ public class LogMoney extends BaseEntity {
 
 	@JsonIgnore
 	private String[] types;
+	private String[] selectDate;
 	@JsonIgnore
 	private String   startTime;
 	@JsonIgnore

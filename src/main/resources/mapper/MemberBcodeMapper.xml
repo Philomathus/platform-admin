@@ -36,6 +36,12 @@
 			<if test="cur != null">
 				and cur = #{cur}
 			</if>
+			<if test="startTime != null and startTime != ''">
+				and create_time >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				and create_time &lt;= #{endTime}
+			</if>
 		</where>
 	</select>
 
@@ -132,7 +138,9 @@
 			#{id}
 		</foreach>
 	</delete>
-    <select id="getTotalData" resultType="java.util.Map">
-        SELECT SUM(income)total,SUM(cur)cur from member_bcode
-    </select>
+
+	<select id="getTotalData" resultType="java.util.Map">
+		SELECT SUM(income) total, SUM(cur) cur
+		from member_bcode
+	</select>
 </mapper>

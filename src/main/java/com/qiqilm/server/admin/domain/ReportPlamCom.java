@@ -15,35 +15,31 @@ import org.apache.commons.lang.builder.ToStringStyle;
 public class ReportPlamCom extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+
     private String repId;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+
     private String classOne;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+
     private String classOnename;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+
     private String classTwo;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+
+    @Excel(name = "名称")
     private String classTwoname;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "类型")
     private String type;
 
     /** 对应子类报表的统计值 */
-    @Excel(name = "对应子类报表的统计值")
+    @Excel(name = "金额")
     private BigDecimal tValue;
 
     /** $column.columnComment */
-    @Excel(name = "对应子类报表的统计值")
+    @Excel(name = "报表时间")
     private String reporttime;
 
     public void setRepId(String repId) {

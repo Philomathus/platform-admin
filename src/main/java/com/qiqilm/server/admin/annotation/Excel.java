@@ -49,6 +49,8 @@ public @interface Excel {
 	 */
 	public int scale() default -1;
 
+	public int multiply() default 0;
+
 	/**
 	 * BigDecimal 舍入规则 默认:BigDecimal.ROUND_HALF_EVEN
 	 */
