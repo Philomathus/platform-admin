@@ -44,5 +44,12 @@
     <select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">
         {call prorep_plamagent(#{timedateta,mode=IN,jdbcType=VARCHAR},#{timedateta,mode=IN,jdbcType=VARCHAR},#{agentcode,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}
     </select>
+    <select id="findChartsOne" resultType="com.qiqilm.server.admin.domain.vo.ReportPlamHome">
+        select
+        *
+        from db_cx001.report_plam_home
+        where class_two = #{classTwo,jdbcType=VARCHAR} and reporttime=#{time,jdbcType=VARCHAR}
+        order by reporhour asc
+    </select>
 
 </mapper>

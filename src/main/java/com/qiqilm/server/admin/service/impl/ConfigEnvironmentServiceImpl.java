@@ -66,7 +66,7 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
             SysDictData dictData = new SysDictData();
             dictData.setDictSort(configEnvironment.getEnvSort());
             dictData.setDictLabel(configEnvironment.getEnvTitle());
-            dictData.setDictValue(String.valueOf(configEnvironment.getEnvSort()));
+            dictData.setDictValue(configEnvironmentMapper.getValue());
             dictData.setDictType("config_environment_group");
             dictData.setStatus(String.valueOf(0));
             return toAjax(dictDataMapper.insertDictData(dictData));
