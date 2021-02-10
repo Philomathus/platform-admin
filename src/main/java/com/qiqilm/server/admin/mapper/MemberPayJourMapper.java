@@ -1,9 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberPayJour;
-import com.qiqilm.server.admin.domain.req.ReqPayJour;
-import com.qiqilm.server.admin.domain.rsp.RspPayJour;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -29,9 +26,7 @@ public interface MemberPayJourMapper {
 	 * @param req 线上充值信息
 	 * @return 线上充值信息集合
 	 */
-	public List<MemberPayJour> selectMemberPayJourList( @Param( "req" ) MemberPayJour req );
-
-	List<RspPayJour> findList( @Param( "req" ) ReqPayJour req );
+	public List<MemberPayJour> selectMemberPayJourList( MemberPayJour req );
 
 	/**
 	 * 新增线上充值信息
@@ -49,9 +44,7 @@ public interface MemberPayJourMapper {
 	 */
 	public int updateMemberPayJour( MemberPayJour memberPayJour );
 
-	public Map listCount( @Param( "req" ) ReqPayJour req );
-
-	RspPayJour selectById( String id );
+	public Map listCount( MemberPayJour req );
 
 	MemberPayJour findByOrderNo( String orderNo );
 }

@@ -26,6 +26,10 @@
 		<result property="createTimes" column="create_time"/>
 		<result property="updateTimes" column="update_time"/>
 		<result property="first" column="first"/>
+
+		<result property="payRate" column="pay_rate"/>
+		<result property="platformName" column="platform_name"/>
+		<result property="channelName" column="channel_name"/>
 	</resultMap>
 
 	<sql id="selectMemberPayJourVo">
@@ -55,68 +59,23 @@
 	</sql>
 
 	<select id="selectMemberPayJourList" parameterType="MemberPayJour" resultMap="MemberPayJourResult">
+		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
 		<include refid="selectMemberPayJourVo"/>
 		<where>
-			<if test="memberId != null  and memberId != ''">
-				and member_id = #{memberId}
-			</if>
-			<if test="platformId != null  and platformId != ''">
-				and platform_id = #{platformId}
-			</if>
-			<if test="channelId != null  and channelId != ''">
-				and channel_id = #{channelId}
-			</if>
-			<if test="paymentMethod != null  and paymentMethod != ''">
-				and payment_method = #{paymentMethod}
-			</if>
-			<if test="orderNo != null  and orderNo != ''">
-				and order_no = #{orderNo}
-			</if>
-			<if test="tradeSn != null  and tradeSn != ''">
-				and trade_sn = #{tradeSn}
-			</if>
-			<if test="money != null">
-				and money = #{money}
-			</if>
-			<if test="subMoney != null">
-				and sub_money = #{subMoney}
-			</if>
-			<if test="paymentCode != null  and paymentCode != ''">
-				and payment_code = #{paymentCode}
-			</if>
-			<if test="paymentTime != null  and paymentTime != ''">
-				and payment_time = #{paymentTime}
-			</if>
-			<if test="payTime != null  and payTime != ''">
-				and pay_time = #{payTime}
-			</if>
-			<if test="status != null  and status != ''">
-				and status = #{status}
-			</if>
-			<if test="isPatchOrder != null">
-				and is_patch_order = #{isPatchOrder}
-			</if>
-			<if test="platformRate != null">
-				and platform_rate = #{platformRate}
-			</if>
-			<if test="currentSuccessRate != null">
-				and current_success_rate = #{currentSuccessRate}
-			</if>
-			<if test="manWork != null  and manWork != ''">
-				and man_work = #{manWork}
-			</if>
-			<if test="userName != null  and userName != ''">
-				and user_name like concat('%', #{userName}, '%')
-			</if>
-			<if test="first != null">
-				and first = #{first}
-			</if>
-		</where>
+			<include refid="listWhere"/>
+		</where>) j
+		left join pay_platform_new p on j.platform_id = p.id
+		left join pay_channel_new c on j.channel_id = c.id
+		order by j.update_time desc
 	</select>
 
 	<select id="selectMemberPayJourById" parameterType="String" resultMap="MemberPayJourResult">
+		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
 		<include refid="selectMemberPayJourVo"/>
 		where id = #{id}
+		) j
+		left join pay_platform_new p on j.platform_id = p.id
+		left join pay_channel_new c on j.channel_id = c.id
 	</select>
 
 	<insert id="insertMemberPayJour" parameterType="MemberPayJour">
@@ -329,36 +288,24 @@
 		where id = #{id}
 	</update>
 
-	<select id="findList" resultType="com.qiqilm.server.admin.domain.rsp.RspPayJour">
-		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
-		<include refid="selectMemberPayJourVo"/>
-		<where>
-			<include refid="listWhere"/>
-		</where>
-		) j
-				left join pay_platform_new p on j.platform_id = p.id
-				left join pay_channel_new c on j.channel_id = c.id
-				order by j.update_time desc
-	</select>
-
 	<sql id="listWhere">
-		<if test="req.status != null and req.status lt 2">
-			and status = #{req.status}
+		<if test="status != null and status lt 2">
+			and status = #{status}
 		</if>
-		<if test="req.status != null and req.status == 2">
+		<if test="status != null and status == 2">
 			and status = '1' and is_patch_order = 1
 		</if>
-		<if test="req.platformId != null and req.platformId != ''">
-			and platform_id = #{req.platformId}
+		<if test="platformId != null and platformId != ''">
+			and platform_id = #{platformId}
 		</if>
-		<if test="req.searchOrderNo != null and req.searchOrderNo != ''">
-			and (trade_sn = #{req.searchOrderNo} or order_no = #{req.searchOrderNo})
+		<if test="searchOrderNo != null and searchOrderNo != ''">
+			and (trade_sn = #{searchOrderNo} or order_no = #{searchOrderNo})
 		</if>
-		<if test="req.searchValue != null and req.searchValue != ''">
-			and (member_id = #{req.searchValue} or user_name = #{req.searchValue})
+		<if test="searchValue != null and searchValue != ''">
+			and (member_id = #{searchValue} or user_name = #{searchValue})
 		</if>
-		<if test="req.selectStartDate != null and req.selectStartDate != ''">
-			and update_time <![CDATA[ >= ]]> #{req.selectStartDate} and update_time <![CDATA[ <= ]]> #{req.selectEndDate}
+		<if test="selectStartDate != null and selectStartDate != ''">
+			and update_time <![CDATA[ >= ]]> #{selectStartDate} and update_time <![CDATA[ <= ]]> #{selectEndDate}
 		</if>
 	</sql>
 
@@ -389,15 +336,6 @@
 		select *, 1 - c.failCount / a.total failRate from (<include refid="transactionsTotal"/>)a
 			left join (<include refid="replenishmentTotal"/>)b on 1 = 1
 			left join (<include refid="failureRate"/>)c on 1 = 1
-	</select>
-
-	<select id="selectById" resultType="com.qiqilm.server.admin.domain.rsp.RspPayJour">
-		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
-		<include refid="selectMemberPayJourVo"/>
-		) j
-				left join pay_platform_new p on j.platform_id = p.id
-				left join pay_channel_new c on j.channel_id = c.id
-				where j.id = #{id}
 	</select>
 
 	<select id="findByOrderNo" resultMap="MemberPayJourResult">

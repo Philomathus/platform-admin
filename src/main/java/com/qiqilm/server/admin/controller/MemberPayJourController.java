@@ -4,8 +4,7 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.req.ReqPayJour;
-import com.qiqilm.server.admin.domain.rsp.RspPayJour;
+import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
@@ -36,9 +35,9 @@ public class MemberPayJourController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list( ReqPayJour memberPayJour ) {
+	public TableDataInfo list( MemberPayJour memberPayJour ) {
 		startPage();
-		List<RspPayJour> list = memberPayJourService.findList( memberPayJour );
+		List<MemberPayJour> list = memberPayJourService.selectMemberPayJourList( memberPayJour );
 		return getDataTable( list );
 	}
 
@@ -47,7 +46,7 @@ public class MemberPayJourController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:list')" )
 	@GetMapping( "/listCount" )
-	public Map listCount( ReqPayJour memberPayJour ) {
+	public Map listCount( MemberPayJour memberPayJour ) {
 		return memberPayJourService.listCount( memberPayJour );
 	}
 
@@ -57,9 +56,9 @@ public class MemberPayJourController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:export')" )
 	@Log( title = "线上充值信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( ReqPayJour memberPayJour ) {
-		List<RspPayJour>      list = memberPayJourService.findList( memberPayJour );
-		ExcelUtil<RspPayJour> util = new ExcelUtil<>( RspPayJour.class );
+	public AjaxResult export( MemberPayJour memberPayJour ) {
+		List<MemberPayJour>      list = memberPayJourService.selectMemberPayJourList( memberPayJour );
+		ExcelUtil<MemberPayJour> util = new ExcelUtil<>( MemberPayJour.class );
 		return util.exportExcel( list, "memberPayJour" );
 	}
 
@@ -69,7 +68,7 @@ public class MemberPayJourController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:query')" )
 	@GetMapping( value = "/{id}" )
 	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
-		return AjaxResult.success( memberPayJourService.selectById( id ) );
+		return AjaxResult.success( memberPayJourService.selectMemberPayJourById( id ) );
 	}
 
 
