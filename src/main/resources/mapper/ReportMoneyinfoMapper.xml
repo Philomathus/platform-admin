@@ -38,6 +38,8 @@
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
                 AND date_format(reptime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
+            ORDER BY reptime DESC
+
         </where>
     </select>
     <select id="countMoneyInfoData" resultType="com.qiqilm.server.admin.domain.ReportMoneyinfo">
