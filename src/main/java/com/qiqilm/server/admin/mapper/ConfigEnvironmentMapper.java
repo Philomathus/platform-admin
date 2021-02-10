@@ -69,4 +69,7 @@ public interface ConfigEnvironmentMapper {
     public int checkType2(String envTitle);
 
     public int checkCode2(String envCode);
+
+    public String getValue();
+
 }

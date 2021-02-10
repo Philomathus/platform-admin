@@ -1,9 +1,10 @@
 package com.qiqilm.server.admin.service;
 
+import com.qiqilm.server.admin.domain.ReportAgentcount;
+import com.qiqilm.server.admin.domain.vo.ReportPlamHome;
+
 import java.text.ParseException;
 import java.util.List;
-
-import com.qiqilm.server.admin.domain.ReportAgentcount;
 
 /**
  * 代理统计，主要用于代理渠道的统计Service接口
@@ -22,6 +23,7 @@ public interface IReportAgentcountService {
 	 */
 	public List<ReportAgentcount> selectReportAgentcountList(ReportAgentcount reportAgentcount) throws ParseException;
 
-
     Object storage(ReportAgentcount reportAgentcount);
+
+    List<ReportPlamHome> findChartsOne(String classTwo, String time);
 }

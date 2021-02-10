@@ -1,17 +1,15 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.domain.ReportAgentcount;
+import com.qiqilm.server.admin.domain.vo.ReportPlamHome;
+import com.qiqilm.server.admin.mapper.ReportAgentcountMapper;
+import com.qiqilm.server.admin.service.IReportAgentcountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import com.qiqilm.server.admin.annotation.Log;
-import com.qiqilm.server.admin.domain.ReportMoneyinfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.ReportAgentcountMapper;
-import com.qiqilm.server.admin.domain.ReportAgentcount;
-import com.qiqilm.server.admin.service.IReportAgentcountService;
-import org.springframework.util.StringUtils;
 
 /**
  * 代理统计，主要用于代理渠道的统计Service业务层处理
@@ -65,6 +63,11 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
             }
 //        }
         return null;
+    }
+
+    @Override
+    public List<ReportPlamHome> findChartsOne(String classTwo,String time) {
+        return reportAgentcountMapper.findChartsOne(classTwo,time);
     }
 
     private void setSelectTime(String dateNowStr, ReportAgentcount reportAgentcount) {

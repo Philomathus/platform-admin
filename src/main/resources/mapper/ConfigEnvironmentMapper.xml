@@ -94,16 +94,19 @@
         </where>
     </select>
     <select id="checkType" resultType="int">
-        SELECT COUNT(*) FROM `sys_n_dict_type` where dict_type=#{envTitle}
+        SELECT COUNT(*) FROM sys_n_dict_data where dict_type= 'config_environment_group' and dict_label=#{envTitle}
     </select>
     <select id="checkCode" resultType="int">
-        SELECT COUNT(*) FROM `sys_n_dict_type` where dict_name=#{envValue}
+        SELECT COUNT(*) FROM sys_n_dict_data where dict_type= 'config_environment_group' and dict_value=#{envValue}
     </select>
     <select id="checkType2" resultType="int">
         SELECT COUNT(*) FROM `config_environment` where env_title=#{envTitle}
     </select>
     <select id="checkCode2" resultType="int">
         SELECT COUNT(*) FROM `config_environment` where env_code=#{envValue}
+    </select>
+    <select id="getValue" resultType="java.lang.String">
+        select dict_value+1 from sys_n_dict_data where dict_type= 'config_environment_group' ORDER BY dict_value desc LIMIT 1
     </select>
 
 </mapper>
