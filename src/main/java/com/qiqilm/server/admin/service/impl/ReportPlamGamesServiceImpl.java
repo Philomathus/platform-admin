@@ -53,7 +53,8 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 //        List<ReportPlamGames> allList =reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
 //        if (allList.size()==0) {
             if (reportPlamGames.getBegindate() == null || reportPlamGames.getBegindate().equals(dateNowStr)) {
-                return reportPlamGamesMapper.calldataProrepPlamcom(dateNowStr);
+//                return reportPlamGamesMapper.calldataProrepPlamcom(dateNowStr);
+                return null;
             }
 //        }
         return null;
