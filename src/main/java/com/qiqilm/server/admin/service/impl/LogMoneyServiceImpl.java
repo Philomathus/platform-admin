@@ -28,6 +28,10 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
 	 */
 	@Override
 	public List<LogMoney> selectLogMoneyList( LogMoney logMoney ) {
+		if ( logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0 ) {
+			logMoney.setStartTime(  logMoney.getSelectDate()[ 0 ] );
+			logMoney.setEndTime(  logMoney.getSelectDate()[ 1 ] );
+		}
 		return logMoneyMapper.selectLogMoneyList( logMoney );
 	}
 
