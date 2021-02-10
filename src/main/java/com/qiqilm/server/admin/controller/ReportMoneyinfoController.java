@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.controller;
 
+import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -7,7 +8,9 @@ import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.ReportMoneyinfo;
 import com.qiqilm.server.admin.domain.ReportPlamCom;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
+import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IReportMoneyinfoService;
+import com.qiqilm.server.admin.utils.ExcelUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,6 +55,13 @@ public class ReportMoneyinfoController extends BaseController {
 	public AjaxResult storage(ReportMoneyinfo reportMoneyinfo) throws ParseException {
 		return AjaxResult.success( reportMoneyinfoService.storage(reportMoneyinfo));
 	}
-
+	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:export')" )
+	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export(ReportMoneyinfo reportMoneyinfo) throws ParseException {
+		List<ReportMoneyinfo> list = reportMoneyinfoService.selectReportMoneyinfoList(reportMoneyinfo);
+		ExcelUtil<ReportMoneyinfo> util = new ExcelUtil<>(ReportMoneyinfo.class);
+		return util.exportExcel( list, "reportMoneyinfo" );
+	}
 
 }

@@ -50,6 +50,13 @@ public class ReportAgentcountController extends BaseController {
 	public AjaxResult storage(ReportAgentcount reportAgentcount) throws ParseException {
 		return AjaxResult.success( reportAgentcountService.storage(reportAgentcount));
 	}
-
+	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:export')" )
+	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export(ReportAgentcount reportAgentcount) throws ParseException {
+		List<ReportAgentcount> list = reportAgentcountService.selectReportAgentcountList(reportAgentcount);
+		ExcelUtil<ReportAgentcount> util = new ExcelUtil<>(ReportAgentcount.class);
+		return util.exportExcel( list, "reportAgentcount" );
+	}
 
 }
