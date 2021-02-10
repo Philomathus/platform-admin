@@ -5,6 +5,7 @@ import java.util.List;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,6 +85,7 @@ public class SystemIpWhiteController extends BaseController {
         }
         LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
         String username = loginUser.getUsername();
+        systemIpWhite.setIpId(UuidUtil.getRandomUuidWithoutSeparator());
         systemIpWhite.setIpAdmin(username);
         systemIpWhite.setIpStatus("1");
         return toAjax(systemIpWhiteService.insertSystemIpWhite(systemIpWhite));
