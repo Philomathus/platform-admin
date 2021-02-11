@@ -111,7 +111,7 @@
 				and login_ip = #{loginIp}
 			</if>
 			<if test="nickName != null  and nickName != ''">
-				and id in (select id from member_info where nick_name = concat('%', #{nickName}, '%'))
+				and id in (select id from member_info where nick_name like concat('%', #{nickName}, '%'))
 			</if>
 			<if test="inviterCode != null  and inviterCode != ''">
 				and inviter_code = #{inviterCode}
