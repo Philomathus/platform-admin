@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 pay_type
+ * 支付类型对象 pay_type
  *
  * @author 77tv
  * @date 2021-01-25
@@ -22,10 +22,6 @@ public class PayType extends BaseEntity {
     /** 名称 */
     @Excel(name = "名称")
     private String name;
-
-    /** 编码 */
-    @Excel(name = "编码")
-    private String code;
 
     /** 图标 */
     @Excel(name = "图标")
@@ -66,7 +62,6 @@ public class PayType extends BaseEntity {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("name", getName())
-            .append("code", getCode())
             .append("iconUrl", getIconUrl())
             .append("indexes", getIndexes())
             .append("isRecommend", getIsRecommend())

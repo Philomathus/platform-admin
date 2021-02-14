@@ -7,7 +7,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="PayType" id="PayTypeResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
-        <result property="code"    column="code"    />
         <result property="iconUrl"    column="icon_url"    />
         <result property="indexes"    column="indexes"    />
         <result property="isRecommend"    column="is_recommend"    />
@@ -21,14 +20,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPayTypeVo">
-        select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, creator, create_time, updator, update_time from pay_type
+        select id, name, icon_url, indexes, is_recommend, status, is_online, type, creator, create_time, updator, update_time from pay_type
     </sql>
 
     <select id="selectPayTypeList" parameterType="PayType" resultMap="PayTypeResult">
         <include refid="selectPayTypeVo"/>
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="code != null  and code != ''"> and code = #{code}</if>
             <if test="iconUrl != null  and iconUrl != ''"> and icon_url = #{iconUrl}</if>
             <if test="indexes != null "> and indexes = #{indexes}</if>
             <if test="isRecommend != null "> and is_recommend = #{isRecommend}</if>
@@ -50,7 +48,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="name != null and name != ''">name,</if>
-            <if test="code != null and code != ''">code,</if>
             <if test="iconUrl != null">icon_url,</if>
             <if test="indexes != null">indexes,</if>
             <if test="isRecommend != null">is_recommend,</if>
@@ -65,7 +62,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="name != null and name != ''">#{name},</if>
-            <if test="code != null and code != ''">#{code},</if>
             <if test="iconUrl != null">#{iconUrl},</if>
             <if test="indexes != null">#{indexes},</if>
             <if test="isRecommend != null">#{isRecommend},</if>
@@ -83,7 +79,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update pay_type
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
-            <if test="code != null and code != ''">code = #{code},</if>
             <if test="iconUrl != null">icon_url = #{iconUrl},</if>
             <if test="indexes != null">indexes = #{indexes},</if>
             <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
