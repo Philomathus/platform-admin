@@ -5,7 +5,6 @@ import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.mapper.PayTypeMapper;
 import com.qiqilm.server.admin.service.IPayTypeService;
 import com.qiqilm.server.admin.utils.DateUtils;
-import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	private PayTypeMapper payTypeMapper;
 	@Autowired
 	private TokenService  tokenService;
-	@Autowired
-	private RedisUtil     redisUtil;
 
 	/**
 	 * 查询支付类型
