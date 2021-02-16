@@ -22,7 +22,7 @@ public enum BankCodeShunWeiType {
 	HXB( "华夏银行" ),
 	;
 
-	private String desc;
+	private final String desc;
 
 	BankCodeShunWeiType( String desc ) {
 		this.desc = desc;

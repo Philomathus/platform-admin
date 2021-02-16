@@ -27,13 +27,13 @@ import java.util.List;
 @Service
 public class GameTypeServiceImpl implements IGameTypeService {
 	@Autowired
-	private GameTypeMapper gameTypeMapper;
+	private GameTypeMapper     gameTypeMapper;
 	@Autowired
-	private GameInfoMapper gameInfoMapper;
+	private GameInfoMapper     gameInfoMapper;
 	@Autowired
-	private GameCacheManager gameCacheManager;
-    @Autowired
-    private GameTypeWithMapper gameTypeWithMapper;
+	private GameCacheManager   gameCacheManager;
+	@Autowired
+	private GameTypeWithMapper gameTypeWithMapper;
 
 	/**
 	 * 查询游戏类型
@@ -102,29 +102,29 @@ public class GameTypeServiceImpl implements IGameTypeService {
 	}
 
 	@Override
-	public RspTypeGames findTypeGames(String id) {
-		List<RspGameInfo> allGameList = gameInfoMapper.findTypeGames();
-		List<String> typeGameList = gameInfoMapper.findTypeHasGames(id);
-		RspTypeGames rspTypeGames = new RspTypeGames();
-		rspTypeGames.setAll_games(allGameList);
-		rspTypeGames.setType_games(typeGameList);
+	public RspTypeGames findTypeGames( String id ) {
+		List<RspGameInfo> allGameList  = gameInfoMapper.findTypeGames();
+		List<String>      typeGameList = gameInfoMapper.findTypeHasGames( id );
+		RspTypeGames      rspTypeGames = new RspTypeGames();
+		rspTypeGames.setAll_games( allGameList );
+		rspTypeGames.setType_games( typeGameList );
 		return rspTypeGames;
 	}
 
 	@Override
-	public void addTypeGames(ReqTypeGame dto) {
+	public void addTypeGames( ReqTypeGame dto ) {
 
-		gameTypeWithMapper.deleteTypeGames(dto.getTypeId());
-		List<String> type_games = dto.getType_games();
-		for (String id: type_games) {
-			GameInfo gameInfo = gameInfoMapper.selectGameInfoById(id);
+		gameTypeWithMapper.deleteTypeGames( dto.getTypeId() );
+		List<String> typeGames = dto.getType_games();
+		for ( String id : typeGames ) {
+			GameInfo     gameInfo = gameInfoMapper.selectGameInfoById( id );
 			GameTypeWith typeGame = new GameTypeWith();
-			typeGame.setId(UuidUtil.getRandomUuidWithoutSeparator());
-			typeGame.setTypeId(dto.getTypeId());
-			typeGame.setCreateTime(new Date());
-			typeGame.setGameId(id);
-			typeGame.setKindId(gameInfo!=null?gameInfo.getKindId().toString():"");
-			gameTypeWithMapper.insertGameTypeWith(typeGame);
+			typeGame.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+			typeGame.setTypeId( dto.getTypeId() );
+			typeGame.setCreateTime( new Date() );
+			typeGame.setGameId( id );
+			typeGame.setKindId( gameInfo != null ? gameInfo.getKindId() : "" );
+			gameTypeWithMapper.insertGameTypeWith( typeGame );
 		}
 		gameCacheManager.initGameGroup();
 	}

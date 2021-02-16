@@ -265,7 +265,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		String           endTime         = DateFormatUtils.formate( video.getEndTime() );
 		long              liveTimeSec     = 0;
 		try {
-			liveTimeSec = ( long ) ( DateFormatUtils.getIntervalTime( video.getBeginTime(),
+			liveTimeSec = ( DateFormatUtils.getIntervalTime( video.getBeginTime(),
 					video.getMonitorTime() ) / 1000 );
 		} catch ( Exception e ) {
 			//log.error( e.getMessage(), e );

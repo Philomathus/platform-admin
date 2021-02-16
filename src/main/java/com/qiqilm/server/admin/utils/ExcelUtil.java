@@ -784,7 +784,7 @@ public class ExcelUtil<T> {
 		double maxHeight = 0;
 		for ( Object[] os : this.fields ) {
 			Excel excel = ( Excel ) os[ 1 ];
-			maxHeight = maxHeight > excel.height() ? maxHeight : excel.height();
+			maxHeight = Math.max( maxHeight, excel.height() );
 		}
 		return ( short ) ( maxHeight * 20 );
 	}

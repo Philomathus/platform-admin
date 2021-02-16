@@ -75,22 +75,21 @@ public class RequestLogAspect {
     private Object runProceed(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
-        StringBuilder sb = new StringBuilder(1000);
-        sb.append("\n").append("----------------------------").append("请求时间    ").append(getTime()).append("----------------------------\n");
-        //类名称
-        sb.append("Class     : ").append(proceedingJoinPoint.getSignature().getDeclaringTypeName()).append("\n");
-        //方法名称
-        sb.append("Method    : ").append(proceedingJoinPoint.getSignature().getName()).append("\n");
-        //请求成功
-        sb.append("Result    : ").append("成功").append("\n");
-        //所有的请求参数
-        sb.append("Params    : ").append(getRequestParamsByProceedingJoinPoint(proceedingJoinPoint)).append("\n");
-        //接口时间
-        sb.append("request Time: ").append(System.currentTimeMillis() - start).append("\n");
         //结果
 //        sb.append("Result    : ").append(result).append("\n");
         //打印
-        System.out.println(sb.toString());
+        String sb = "\n" + "----------------------------" + "请求时间    " + getTime() + "----------------------------\n" +
+                //类名称
+                "Class     : " + proceedingJoinPoint.getSignature().getDeclaringTypeName() + "\n" +
+                //方法名称
+                "Method    : " + proceedingJoinPoint.getSignature().getName() + "\n" +
+                //请求成功
+                "Result    : " + "成功" + "\n" +
+                //所有的请求参数
+                "Params    : " + getRequestParamsByProceedingJoinPoint( proceedingJoinPoint ) + "\n" +
+                //接口时间
+                "request Time: " + ( System.currentTimeMillis() - start ) + "\n";
+        System.out.println( sb );
         return result;
     }
 
@@ -106,20 +105,19 @@ public class RequestLogAspect {
     @AfterThrowing(pointcut = "requestServer()", throwing = "e")
     public void doAfterThrow(JoinPoint joinPoint, RuntimeException e) {
         Signature signature = joinPoint.getSignature();
-        StringBuilder sb = new StringBuilder(1000);
-        sb.append("\n").append("----------------------------").append("请求时间    ").append(getTime()).append("----------------------------\n");
-        //类名称
-        sb.append("Class     : ").append(signature.getDeclaringTypeName()).append("\n");
-        //方法名称
-        sb.append("Method    : ").append(signature.getName()).append("\n");
-        //请求成功
-        sb.append("Result    : ").append("失败").append("\n");
-        //所有的请求参数
-        sb.append("Params    : ").append(getRequestParamsByJoinPoint(joinPoint)).append("\n");
-        //结果
-        sb.append("Result    : ").append(getExceptionMsg(e)).append("\n");
         //打印
-        System.out.println(sb.toString());
+        String sb = "\n" + "----------------------------" + "请求时间    " + getTime() + "----------------------------\n" +
+                //类名称
+                "Class     : " + signature.getDeclaringTypeName() + "\n" +
+                //方法名称
+                "Method    : " + signature.getName() + "\n" +
+                //请求成功
+                "Result    : " + "失败" + "\n" +
+                //所有的请求参数
+                "Params    : " + getRequestParamsByJoinPoint( joinPoint ) + "\n" +
+                //结果
+                "Result    : " + getExceptionMsg( e ) + "\n";
+        System.out.println( sb );
 //        log.info("Error Request Info      : {}", JSON.toJSONString(requestErrorInfo));
     }
 

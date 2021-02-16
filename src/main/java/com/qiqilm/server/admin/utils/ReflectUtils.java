@@ -173,8 +173,7 @@ public class ReflectUtils {
 				Field field = superClass.getDeclaredField( fieldName );
 				makeAccessible( field );
 				return field;
-			} catch ( NoSuchFieldException e ) {
-				continue;
+			} catch ( NoSuchFieldException ignored ) {
 			}
 		}
 		return null;
@@ -196,8 +195,7 @@ public class ReflectUtils {
 				Method method = searchType.getDeclaredMethod( methodName, parameterTypes );
 				makeAccessible( method );
 				return method;
-			} catch ( NoSuchMethodException e ) {
-				continue;
+			} catch ( NoSuchMethodException ignored ) {
 			}
 		}
 		return null;

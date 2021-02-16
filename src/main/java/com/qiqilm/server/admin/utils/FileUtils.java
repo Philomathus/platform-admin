@@ -141,15 +141,13 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 	public static void setAttachmentResponseHeader( HttpServletResponse response, String realFileName ) throws UnsupportedEncodingException {
 		String percentEncodedFileName = percentEncode( realFileName );
 
-		StringBuilder contentDispositionValue = new StringBuilder();
-		contentDispositionValue.append( "attachment; filename=" )
-				.append( percentEncodedFileName )
-				.append( ";" )
-				.append( "filename*=" )
-				.append( "utf-8''" )
-				.append( percentEncodedFileName );
-
-		response.setHeader( "Content-disposition", contentDispositionValue.toString() );
+		String contentDispositionValue = "attachment; filename=" +
+				percentEncodedFileName +
+				";" +
+				"filename*=" +
+				"utf-8''" +
+				percentEncodedFileName;
+		response.setHeader( "Content-disposition", contentDispositionValue );
 	}
 
 	/**

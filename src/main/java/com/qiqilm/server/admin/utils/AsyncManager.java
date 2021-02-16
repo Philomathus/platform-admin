@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * @author 77tv
  */
 public class AsyncManager {
-	private static AsyncManager me = new AsyncManager();
+	private static final AsyncManager ME = new AsyncManager();
 	/**
 	 * 操作延迟10毫秒
 	 */
@@ -18,7 +18,7 @@ public class AsyncManager {
 	/**
 	 * 异步操作任务调度线程池
 	 */
-	private ScheduledExecutorService executor = SpringUtils.getBean( "scheduledExecutorService" );
+	private final ScheduledExecutorService executor = SpringUtils.getBean( "scheduledExecutorService" );
 
 	/**
 	 * 单例模式
@@ -27,7 +27,7 @@ public class AsyncManager {
 	}
 
 	public static AsyncManager me() {
-		return me;
+		return ME;
 	}
 
 	/**

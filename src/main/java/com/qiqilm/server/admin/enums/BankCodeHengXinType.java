@@ -34,7 +34,7 @@ public enum BankCodeHengXinType {
 	SRCB( "上海农商银行" ),
 	;
 
-	private String desc;
+	private final String desc;
 
 	BankCodeHengXinType( String desc ) {
 		this.desc = desc;

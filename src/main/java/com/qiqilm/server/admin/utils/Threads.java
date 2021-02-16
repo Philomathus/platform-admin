@@ -17,8 +17,7 @@ public class Threads {
 	public static void sleep( long milliseconds ) {
 		try {
 			Thread.sleep( milliseconds );
-		} catch ( InterruptedException e ) {
-			return;
+		} catch ( InterruptedException ignored ) {
 		}
 	}
 
