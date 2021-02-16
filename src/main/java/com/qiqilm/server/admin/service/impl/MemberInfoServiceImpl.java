@@ -82,7 +82,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	 */
 	@Override
 	public AjaxResult insertMemberInfo( MemberInfo memberInfo ) {
-		if ( memberInfoMapper.selectMemberInfoList( memberInfo ).size() > 0 ) {
+		if ( memberInfoMapper.countByUserName( memberInfo.getUserName() ) > 0 ) {
 			return AjaxResult.error( "此账号已经存在" );
 		}
 		MemberInfo member = memberCacheManager.createMember();

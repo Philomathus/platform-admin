@@ -68,4 +68,6 @@ public interface MemberInfoMapper {
 	MemberInfo findRecommendByInviterCode( String inviterCode );
 
 	BigDecimal getMemberMoney( String userId );
+
+	int countByUserName( String userName );
 }
