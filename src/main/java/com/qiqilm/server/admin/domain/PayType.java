@@ -23,6 +23,10 @@ public class PayType extends BaseEntity {
     @Excel(name = "名称")
     private String name;
 
+    /** 编码 */
+    @Excel(name = "编码")
+    private String code;
+
     /** 图标 */
     @Excel(name = "图标")
     private String iconUrl;

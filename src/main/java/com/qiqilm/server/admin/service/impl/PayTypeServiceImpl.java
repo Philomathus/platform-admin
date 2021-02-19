@@ -5,11 +5,13 @@ import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.mapper.PayTypeMapper;
 import com.qiqilm.server.admin.service.IPayTypeService;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,7 +26,8 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	private PayTypeMapper payTypeMapper;
 	@Autowired
 	private TokenService  tokenService;
-
+	@Autowired
+	private RedisUtil redisUtil;
 	/**
 	 * 查询支付类型
 	 *
@@ -56,11 +59,12 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	@Override
 	public int insertPayType( PayType payType ) {
 		payType.setId( UuidUtil.getRandomUuid() );
-		payType.setCreateTime( DateUtils.getNowDate() );
+		payType.setCreateTime(DateUtils.getNowDate() );
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    username  = loginUser.getUsername();
 		payType.setCreateBy( username );
 		payType.setStatus( "0" );
+		payType.setCode( "PT-" + redisUtil.strIncrement( "pay_type" ).toString() );
 		return payTypeMapper.insertPayType( payType );
 	}
 
