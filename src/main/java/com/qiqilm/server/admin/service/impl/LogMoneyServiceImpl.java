@@ -30,19 +30,22 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
 	 */
 	@Override
 	public List<LogMoney> selectLogMoneyList( LogMoney logMoney ) {
-		if ( logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0 ) {
-			logMoney.setStartTime(  logMoney.getSelectDate()[ 0 ] );
-			logMoney.setEndTime(  logMoney.getSelectDate()[ 1 ] );
-		}
-		return logMoneyMapper.selectLogMoneyList( logMoney );
+	    LogMoney logMoney1=getTime(logMoney);
+		return logMoneyMapper.selectLogMoneyList( logMoney1 );
 	}
 
     @Override
     public AjaxResult totalCount(LogMoney logMoney) {
+		LogMoney logMoney1=getTime(logMoney);
+		return AjaxResult.success(logMoneyMapper.totalCount(logMoney1));
+    }
+
+
+	private LogMoney getTime(LogMoney logMoney) {
 		if ( logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0 ) {
 			logMoney.setStartTime(  logMoney.getSelectDate()[ 0 ] );
 			logMoney.setEndTime(  logMoney.getSelectDate()[ 1 ] );
 		}
-		return AjaxResult.success(logMoneyMapper.totalCount(logMoney));
-    }
+		return logMoney;
+	}
 }
