@@ -281,7 +281,7 @@
         select count(*) total ,sum(withdraw_money) successTotal from `${dbMain}`.member_withdraw_log
         <where>
             <include refid="whereTotal"></include>
-               (status = 3 or status = 6)
+             and  (status = 3 or status = 6)
         </where>
     </sql>
     <select id="getTotal" parameterType="MemberWithdrawLog" resultType="java.util.Map">
