@@ -79,6 +79,7 @@ public class MessageOnSiteController extends BaseController {
 	public AjaxResult add( @RequestBody MessageOnSite messageOnSite) {
 		messageOnSite.setId(UuidUtil.getRandomUuidWithoutSeparator());
 		messageOnSite.setCreateTime(new Date());
+		messageOnSite.setReceiverType("ALL_MEMBER");
 		return toAjax( messageOnSiteService.insertMessageOnSite(messageOnSite) );
 	}
 
