@@ -43,13 +43,6 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
 			logMoney.setStartTime(  logMoney.getSelectDate()[ 0 ] );
 			logMoney.setEndTime(  logMoney.getSelectDate()[ 1 ] );
 		}
-		Map map = logMoneyMapper.totalCount(logMoney);
-		if (map==null){
-			Map map1=new HashMap();
-			map1.put("totalIncome",0);
-			map1.put("totalPay",0);
-			return AjaxResult.success(map1);
-		}
-		return AjaxResult.success(map);
+		return AjaxResult.success(logMoneyMapper.totalCount(logMoney));
     }
 }

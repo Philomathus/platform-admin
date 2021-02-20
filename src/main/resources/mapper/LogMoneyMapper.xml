@@ -176,8 +176,8 @@
         </if>
     </sql>
     <select id="totalCount" parameterType="LogMoney" resultType="java.util.Map">
-        select sum(income) totalIncome,
-        sum(pay) totalPay
+        select ifnull(sum(income),0) as totalIncome,
+		ifnull(sum(pay),0) as totalPay
         from ${dbMain}.log_money
         <where>
             <include refid="whereCount"></include>
