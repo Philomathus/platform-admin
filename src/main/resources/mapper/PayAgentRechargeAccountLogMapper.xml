@@ -126,6 +126,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select ifnull(sum(recharge_money),0) countMoney,count(order_no) as countNumber
         from pay_agent_recharge_account_log
         <where>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="account != null  and account != ''"> and account = #{account}</if>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="bankId != null "> and bank_id = #{bankId}</if>
