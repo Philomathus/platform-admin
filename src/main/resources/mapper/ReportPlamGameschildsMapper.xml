@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ReportPlamGameschildsMapper">
+
+    <resultMap type="ReportPlamGameschilds" id="ReportPlamGameschildsResult">
+        <result property="gameUuid"    column="game_uuid"    />
+        <result property="gameagent"    column="gameagent"    />
+        <result property="gameplame"    column="gameplame"    />
+        <result property="agentchild"    column="agentchild"    />
+        <result property="agentchildname"    column="agentchildname"    />
+        <result property="gamepepole"    column="gamepepole"    />
+        <result property="gametouzhu"    column="gametouzhu"    />
+        <result property="gamecell"    column="gamecell"    />
+        <result property="gamebet"    column="gamebet"    />
+        <result property="gamerevenve"    column="gamerevenve"    />
+        <result property="gameprofit"    column="gameprofit"    />
+        <result property="plampfit"    column="plampfit"    />
+        <result property="bili"    column="bili"    />
+        <result property="begindate"    column="begindate"    />
+    </resultMap>
+
+    <sql id="selectReportPlamGameschildsVo">
+        select game_uuid, gameagent, gameplame, agentchild, agentchildname, gamepepole, gametouzhu, gamecell, gamebet, gamerevenve, gameprofit, plampfit, bili, begindate from 7700_main.report_plam_gameschilds
+    </sql>
+
+    <select id="selectReportPlamGameschildsList" parameterType="ReportPlamGameschilds" resultMap="ReportPlamGameschildsResult">
+        <include refid="selectReportPlamGameschildsVo"/>
+        <where>
+            <if test="gameagent != null  and gameagent != ''"> and gameagent = #{gameagent}</if>
+            <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
+            <if test="agentchild != null  and agentchild != ''"> and agentchild = #{agentchild}</if>
+            <if test="agentchildname != null  and agentchildname != ''"> and agentchildname like concat('%', #{agentchildname}, '%')</if>
+            <if test="gamepepole != null "> and gamepepole = #{gamepepole}</if>
+            <if test="gametouzhu != null "> and gametouzhu = #{gametouzhu}</if>
+            <if test="gamecell != null "> and gamecell = #{gamecell}</if>
+            <if test="gamebet != null "> and gamebet = #{gamebet}</if>
+            <if test="gamerevenve != null "> and gamerevenve = #{gamerevenve}</if>
+            <if test="gameprofit != null "> and gameprofit = #{gameprofit}</if>
+            <if test="plampfit != null "> and plampfit = #{plampfit}</if>
+            <if test="bili != null  and bili != ''"> and bili = #{bili}</if>
+            <if test="begindate != null "> and begindate = #{begindate}</if>
+        </where>
+    </select>
+
+    <select id="selectReportPlamGameschildsById" parameterType="String" resultMap="ReportPlamGameschildsResult">
+        <include refid="selectReportPlamGameschildsVo"/>
+        where game_uuid = #{gameUuid}
+    </select>
+
+    <insert id="insertReportPlamGameschilds" parameterType="ReportPlamGameschilds">
+        insert into 7700_main.report_plam_gameschilds
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameUuid != null">game_uuid,</if>
+            <if test="gameagent != null">gameagent,</if>
+            <if test="gameplame != null">gameplame,</if>
+            <if test="agentchild != null">agentchild,</if>
+            <if test="agentchildname != null">agentchildname,</if>
+            <if test="gamepepole != null">gamepepole,</if>
+            <if test="gametouzhu != null">gametouzhu,</if>
+            <if test="gamecell != null">gamecell,</if>
+            <if test="gamebet != null">gamebet,</if>
+            <if test="gamerevenve != null">gamerevenve,</if>
+            <if test="gameprofit != null">gameprofit,</if>
+            <if test="plampfit != null">plampfit,</if>
+            <if test="bili != null">bili,</if>
+            <if test="begindate != null">begindate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="gameUuid != null">#{gameUuid},</if>
+                    <if test="gameagent != null">#{gameagent},</if>
+                    <if test="gameplame != null">#{gameplame},</if>
+                    <if test="agentchild != null">#{agentchild},</if>
+                    <if test="agentchildname != null">#{agentchildname},</if>
+                    <if test="gamepepole != null">#{gamepepole},</if>
+                    <if test="gametouzhu != null">#{gametouzhu},</if>
+                    <if test="gamecell != null">#{gamecell},</if>
+                    <if test="gamebet != null">#{gamebet},</if>
+                    <if test="gamerevenve != null">#{gamerevenve},</if>
+                    <if test="gameprofit != null">#{gameprofit},</if>
+                    <if test="plampfit != null">#{plampfit},</if>
+                    <if test="bili != null">#{bili},</if>
+                    <if test="begindate != null">#{begindate},</if>
+             </trim>
+    </insert>
+
+    <update id="updateReportPlamGameschilds" parameterType="ReportPlamGameschilds">
+        update 7700_main.report_plam_gameschilds
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gameagent != null">gameagent = #{gameagent},</if>
+    
+            <if test="gameplame != null">gameplame = #{gameplame},</if>
+    
+            <if test="agentchild != null">agentchild = #{agentchild},</if>
+    
+            <if test="agentchildname != null">agentchildname = #{agentchildname},</if>
+    
+            <if test="gamepepole != null">gamepepole = #{gamepepole},</if>
+    
+            <if test="gametouzhu != null">gametouzhu = #{gametouzhu},</if>
+    
+            <if test="gamecell != null">gamecell = #{gamecell},</if>
+    
+            <if test="gamebet != null">gamebet = #{gamebet},</if>
+    
+            <if test="gamerevenve != null">gamerevenve = #{gamerevenve},</if>
+    
+            <if test="gameprofit != null">gameprofit = #{gameprofit},</if>
+    
+            <if test="plampfit != null">plampfit = #{plampfit},</if>
+    
+            <if test="bili != null">bili = #{bili},</if>
+    
+            <if test="begindate != null">begindate = #{begindate},</if>
+    
+        </trim>
+        where game_uuid = #{gameUuid}
+    </update>
+
+    <delete id="deleteReportPlamGameschildsById" parameterType="String">
+        delete from 7700_main.report_plam_gameschilds where game_uuid = #{gameUuid}
+    </delete>
+
+    <delete id="deleteReportPlamGameschildsByIds" parameterType="String">
+        delete from 7700_main.report_plam_gameschilds where game_uuid in
+        <foreach item="gameUuid" collection="array" open="(" separator="," close=")">
+            #{gameUuid}
+        </foreach>
+    </delete>
+</mapper>
