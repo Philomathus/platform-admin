@@ -153,6 +153,11 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
         if (memberInfo==null){
             return AjaxResult.error( "会员不存在，请核实" );
         }
+        //代充人表減钱
+        int a = payAgentRechargeRecordMapper.updateByBalanceAmountLess( dto.getRechargeAcount(), dto.getMoney() );
+        if ( a == 0 ) {
+            return AjaxResult.error( "余额不足" );
+        }
         String orderNo = "CT" + DateFormatUtils.formate( new Date(), "yyyyMMddHHmmss" )
                 + memberInfo.getMemberCode();
         payAgentRechargeRecord.setOrderNo( orderNo );
@@ -166,12 +171,6 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
 
         payAgentRechargeRecord.setOpName( userName );
         payAgentRechargeRecordMapper.insertPayAgentRechargeRecord(payAgentRechargeRecord);
-        //代充人表減钱
-        int a = payAgentRechargeRecordMapper.updateByBalanceAmountLess( dto.getRechargeAcount(), dto.getMoney() );
-        if ( a == 0 ) {
-           return AjaxResult.error( "余额不足" );
-        }
-
         //pay_agent_recharge_trade_log表记录
         PayAgentRechargeTradeLog payAgentRechargeTradeLog = new PayAgentRechargeTradeLog();
         payAgentRechargeTradeLog.setOrderNo( orderNo );
