@@ -7,7 +7,9 @@ import com.qiqilm.server.admin.service.ILogMoneyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员资金信息Service业务层处理
@@ -37,6 +39,17 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
 
     @Override
     public AjaxResult totalCount(LogMoney logMoney) {
-        return AjaxResult.success(logMoneyMapper.totalCount( logMoney ));
+		if ( logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0 ) {
+			logMoney.setStartTime(  logMoney.getSelectDate()[ 0 ] );
+			logMoney.setEndTime(  logMoney.getSelectDate()[ 1 ] );
+		}
+		Map map = logMoneyMapper.totalCount(logMoney);
+		if (map==null){
+			Map map1=new HashMap();
+			map1.put("totalIncome",0);
+			map1.put("totalPay",0);
+			return AjaxResult.success(map1);
+		}
+		return AjaxResult.success(map);
     }
 }
