@@ -110,7 +110,7 @@ public class PayChannelNew extends BaseEntity {
 
     public String getPayRateStr() {
         if (payRate != null) {
-            return payRate.multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_UP).toString().concat("%");
+            return payRate.multiply(new BigDecimal(100)).setScale(1, RoundingMode.HALF_UP).toString().concat("%");
         }
         return "";
     }
