@@ -19,7 +19,7 @@
     </resultMap>
 
     <sql id="selectPayTypeVo">
-        select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, creator,  FROM_UNIXTIME(create_time) create_time ,  updator,  FROM_UNIXTIME(update_time) update_time   from 7700_main.pay_type
+        select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, creator,  FROM_UNIXTIME(create_time) create_time ,  updator,  FROM_UNIXTIME(update_time) update_time   from pay_type
     </sql>
 
     <select id="selectPayTypeList" parameterType="PayType" resultMap="PayTypeResult">
