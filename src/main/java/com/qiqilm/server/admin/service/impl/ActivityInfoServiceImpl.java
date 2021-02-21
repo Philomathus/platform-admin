@@ -2,11 +2,15 @@ package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.domain.GameType;
 import com.qiqilm.server.admin.mapper.ActivityInfoMapper;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.domain.ActivityInfo;
 import com.qiqilm.server.admin.service.IActivityInfoService;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 活动信息Service业务层处理
@@ -17,7 +21,9 @@ import com.qiqilm.server.admin.service.IActivityInfoService;
 @Service
 public class ActivityInfoServiceImpl implements IActivityInfoService {
     @Autowired
-    private ActivityInfoMapper activityInfoMapper;
+    private ActivityInfoMapper    activityInfoMapper;
+    @Autowired
+    private ConfigDomainCacheUtil configDomainCacheUtil;
 
     /**
      * 查询活动信息
@@ -38,7 +44,16 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
      */
     @Override
     public List<ActivityInfo> selectActivityInfoList(ActivityInfo activityInfo) {
-        return activityInfoMapper.selectActivityInfoList(activityInfo);
+        List<ActivityInfo> activityInfos = activityInfoMapper.selectActivityInfoList( activityInfo );
+        if ( !CollectionUtils.isEmpty( activityInfos ) ) {
+            String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+            for ( ActivityInfo info : activityInfos ) {
+                if ( StringUtils.isNotBlank( info.getIcon() ) && !info.getIcon().startsWith( "http" ) ) {
+                    info.setIcon( domainValue + info.getIcon() );
+                }
+            }
+        }
+        return activityInfos;
     }
 
     /**

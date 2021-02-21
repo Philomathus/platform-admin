@@ -1,12 +1,17 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.domain.ActivityQuestInfo;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.HomeBannerMapper;
 import com.qiqilm.server.admin.domain.HomeBanner;
 import com.qiqilm.server.admin.service.IHomeBannerService;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 首页轮播图Service业务层处理
@@ -17,7 +22,9 @@ import com.qiqilm.server.admin.service.IHomeBannerService;
 @Service
 public class HomeBannerServiceImpl implements IHomeBannerService {
     @Autowired
-    private HomeBannerMapper homeBannerMapper;
+    private HomeBannerMapper      homeBannerMapper;
+    @Autowired
+    private ConfigDomainCacheUtil configDomainCacheUtil;
 
     /**
      * 查询首页轮播图
@@ -38,7 +45,16 @@ public class HomeBannerServiceImpl implements IHomeBannerService {
      */
     @Override
     public List<HomeBanner> selectHomeBannerList(HomeBanner homeBanner) {
-        return homeBannerMapper.selectHomeBannerList(homeBanner);
+        List<HomeBanner> homeBanners = homeBannerMapper.selectHomeBannerList( homeBanner );
+        if ( !CollectionUtils.isEmpty( homeBanners ) ) {
+            String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+            for ( HomeBanner banner : homeBanners ) {
+                if ( StringUtils.isNotBlank( banner.getCoverImg() ) && !banner.getCoverImg().startsWith( "http" ) ) {
+                    banner.setCoverImg( domainValue + banner.getCoverImg() );
+                }
+            }
+        }
+        return homeBanners;
     }
 
     /**

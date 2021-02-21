@@ -2,7 +2,6 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.cache.ServerOssCacheUtil;
 import com.qiqilm.server.admin.domain.ServerOss;
 import com.qiqilm.server.admin.mapper.ServerOssMapper;
@@ -24,11 +23,9 @@ import java.util.List;
 @Service
 public class ServerOssServiceImpl implements IServerOssService {
 	@Autowired
-	private ServerOssMapper       serverOssMapper;
+	private ServerOssMapper    serverOssMapper;
 	@Autowired
-	private ServerOssCacheUtil    serverOssCacheUtil;
-	@Autowired
-	private ConfigDomainCacheUtil configDomainCacheUtil;
+	private ServerOssCacheUtil serverOssCacheUtil;
 
 	/**
 	 * 查询oss文件存储服务配置
@@ -143,6 +140,6 @@ public class ServerOssServiceImpl implements IServerOssService {
 		ossClient.putObject( serverOss.getBucket(), fileKey, inputStream );
 		// 关闭client
 		ossClient.shutdown();
-		return configDomainCacheUtil.getValue( "domain.oss" ) + "/" + fileKey;
+		return "/" + fileKey;
 	}
 }
