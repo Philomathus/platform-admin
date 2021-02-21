@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.mapper.PayTypeMapper;
@@ -7,9 +8,11 @@ import com.qiqilm.server.admin.service.IPayTypeService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -23,9 +26,11 @@ import java.util.List;
 @Service
 public class PayTypeServiceImpl implements IPayTypeService {
 	@Autowired
-	private PayTypeMapper payTypeMapper;
+	private PayTypeMapper         payTypeMapper;
 	@Autowired
-	private TokenService  tokenService;
+	private TokenService          tokenService;
+	@Autowired
+	private ConfigDomainCacheUtil configDomainCacheUtil;
 	@Autowired
 	private RedisUtil redisUtil;
 	/**
@@ -47,7 +52,16 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	 */
 	@Override
 	public List<PayType> selectPayTypeList( PayType payType ) {
-		return payTypeMapper.selectPayTypeList( payType );
+		List<PayType> payTypes = payTypeMapper.selectPayTypeList( payType );
+		if ( !CollectionUtils.isEmpty( payTypes ) ) {
+			String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+			for ( PayType type : payTypes ) {
+				if ( StringUtils.isNotBlank( type.getIconUrl() ) && !type.getIconUrl().startsWith( "http" ) ) {
+					type.setIconUrl( domainValue + type.getIconUrl() );
+				}
+			}
+		}
+		return payTypes;
 	}
 
 	/**

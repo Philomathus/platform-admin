@@ -48,11 +48,11 @@ public class RspGameInfo extends BaseEntity {
     private String editionIcon;
 
     /** 游戏码(0大厅620德州扑克720二八杠830抢庄牛牛220炸金花860三公900压庄龙虎600 二十一点 870通比牛牛230极速炸金花730抢庄牌九630十三水610斗地主910百家乐920森林舞会930白人牛牛1950万人炸金花650血流成河890看牌抢庄牛牛740二人麻将1350幸运转盘1940金鲨银鲨1960奔驰宝马 */
-    @Excel(name = "游戏码(0大厅620德州扑克720二八杠830抢庄牛牛220炸金花860三公900压庄龙虎600 二十一点 870通比牛牛230极速炸金花730抢庄牌九630十三水610斗地主910百家乐920森林舞会930白人牛牛1950万人炸金花650血流成河890看牌抢庄牛牛740二人麻将1350幸运转盘1940金鲨银鲨1960奔驰宝马")
+    @Excel(name = "游戏码")
     private String kindId;
 
     /** 游戏平台(1开元) */
-    @Excel(name = "游戏平台(1开元)")
+    @Excel(name = "游戏平台")
     private Integer platformId;
 
     /** 0 =横屏 1=竖屏 */
@@ -76,7 +76,7 @@ public class RspGameInfo extends BaseEntity {
     }
 
     /** 图标类型（ 0=热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞） */
-    @Excel(name = "图标类型", readConverterExp = "0==热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞")
+    @Excel(name = "图标类型", readConverterExp = "0=热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞")
     private Long iconType;
     private String  platformName;
 //
