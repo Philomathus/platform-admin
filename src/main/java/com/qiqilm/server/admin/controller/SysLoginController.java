@@ -1,6 +1,9 @@
 package com.qiqilm.server.admin.controller;
 
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginBody;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.SysMenu;
 import com.qiqilm.server.admin.domain.SysUser;
 import com.qiqilm.server.admin.service.ISysMenuService;
@@ -8,8 +11,6 @@ import com.qiqilm.server.admin.service.impl.SysLoginService;
 import com.qiqilm.server.admin.service.impl.SysPermissionService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.core.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,13 +28,15 @@ import java.util.Set;
 @RestController
 public class SysLoginController {
 	@Autowired
-	private SysLoginService      loginService;
+	private SysLoginService       loginService;
 	@Autowired
-	private ISysMenuService      menuService;
+	private ISysMenuService       menuService;
 	@Autowired
-	private SysPermissionService permissionService;
+	private SysPermissionService  permissionService;
 	@Autowired
-	private TokenService         tokenService;
+	private TokenService          tokenService;
+	@Autowired
+	private ConfigDomainCacheUtil configDomainCacheUtil;
 
 	/**
 	 * 登录方法
@@ -44,7 +47,7 @@ public class SysLoginController {
 	@PostMapping( "/login" )
 	public AjaxResult login( @RequestBody String data ) throws Exception {
 
-		String     ip         = UserDataUtil.getIp( ServletUtil.getHttpServletRequest() );
+		String ip = UserDataUtil.getIp( ServletUtil.getHttpServletRequest() );
 
 		String    decryptStr = RSACoder.decryptByPrivateKey( data, AuthUtil.getSecurityKeyStr( "secretkey/loginPrivateKey" ) );
 		LoginBody loginBody  = JsonUtil.json2Object( decryptStr, LoginBody.class );
@@ -82,8 +85,10 @@ public class SysLoginController {
 	public AjaxResult getRouters() {
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		// 用户信息
-		SysUser       user  = loginUser.getUser();
-		List<SysMenu> menus = menuService.selectMenuTreeByUserId( user.getUserId() );
-		return AjaxResult.success( menuService.buildMenus( menus ) );
+		SysUser       user   = loginUser.getUser();
+		List<SysMenu> menus  = menuService.selectMenuTreeByUserId( user.getUserId() );
+		AjaxResult    result = AjaxResult.success( menuService.buildMenus( menus ) );
+		result.put( "vhostUrl", configDomainCacheUtil.getValue( "domain.oss" ));
+		return result;
 	}
 }

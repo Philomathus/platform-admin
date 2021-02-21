@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.cache.GameCacheManager;
 import com.qiqilm.server.admin.domain.GameInfo;
 import com.qiqilm.server.admin.domain.GameType;
@@ -11,9 +12,11 @@ import com.qiqilm.server.admin.mapper.GameInfoMapper;
 import com.qiqilm.server.admin.mapper.GameTypeMapper;
 import com.qiqilm.server.admin.mapper.GameTypeWithMapper;
 import com.qiqilm.server.admin.service.IGameTypeService;
+import com.qiqilm.server.admin.utils.StringUtils;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -27,13 +30,15 @@ import java.util.List;
 @Service
 public class GameTypeServiceImpl implements IGameTypeService {
 	@Autowired
-	private GameTypeMapper     gameTypeMapper;
+	private GameTypeMapper        gameTypeMapper;
 	@Autowired
-	private GameInfoMapper     gameInfoMapper;
+	private GameInfoMapper        gameInfoMapper;
 	@Autowired
-	private GameCacheManager   gameCacheManager;
+	private GameCacheManager      gameCacheManager;
 	@Autowired
-	private GameTypeWithMapper gameTypeWithMapper;
+	private GameTypeWithMapper    gameTypeWithMapper;
+	@Autowired
+	private ConfigDomainCacheUtil configDomainCacheUtil;
 
 	/**
 	 * 查询游戏类型
@@ -54,7 +59,16 @@ public class GameTypeServiceImpl implements IGameTypeService {
 	 */
 	@Override
 	public List<GameType> selectGameTypeList( GameType gameType ) {
-		return gameTypeMapper.selectGameTypeList( gameType );
+		List<GameType> gameTypes = gameTypeMapper.selectGameTypeList( gameType );
+		if ( !CollectionUtils.isEmpty( gameTypes ) ) {
+			String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+			for ( GameType type : gameTypes ) {
+				if ( StringUtils.isNotBlank( type.getIcon() ) && !type.getIcon().startsWith( "http" ) ) {
+					type.setIcon( domainValue + type.getIcon() );
+				}
+			}
+		}
+		return gameTypes;
 	}
 
 	/**

@@ -1,11 +1,15 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.domain.LiveProp;
+import com.qiqilm.server.admin.mapper.LivePropMapper;
+import com.qiqilm.server.admin.service.ILivePropService;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.LivePropMapper;
-import com.qiqilm.server.admin.domain.LiveProp;
-import com.qiqilm.server.admin.service.ILivePropService;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * 礼物列Service业务层处理
@@ -15,77 +19,88 @@ import com.qiqilm.server.admin.service.ILivePropService;
  */
 @Service
 public class LivePropServiceImpl implements ILivePropService {
-    @Autowired
-    private LivePropMapper livePropMapper;
+	@Autowired
+	private LivePropMapper        livePropMapper;
+	@Autowired
+	private ConfigDomainCacheUtil configDomainCacheUtil;
 
-    /**
-     * 查询礼物列
-     *
-     * @param id 礼物列ID
-     * @return 礼物列
-     */
-    @Override
-    public LiveProp selectLivePropById(Long id) {
-        return livePropMapper.selectLivePropById(id);
-    }
+	/**
+	 * 查询礼物列
+	 *
+	 * @param id 礼物列ID
+	 * @return 礼物列
+	 */
+	@Override
+	public LiveProp selectLivePropById( Long id ) {
+		return livePropMapper.selectLivePropById( id );
+	}
 
-    /**
-     * 查询礼物列列表
-     *
-     * @param liveProp 礼物列
-     * @return 礼物列
-     */
-    @Override
-    public List<LiveProp> selectLivePropList(LiveProp liveProp) {
-        return livePropMapper.selectLivePropList(liveProp);
-    }
+	/**
+	 * 查询礼物列列表
+	 *
+	 * @param liveProp 礼物列
+	 * @return 礼物列
+	 */
+	@Override
+	public List<LiveProp> selectLivePropList( LiveProp liveProp ) {
+		List<LiveProp> liveProps = livePropMapper.selectLivePropList( liveProp );
+		if ( !CollectionUtils.isEmpty( liveProps ) ) {
+			String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+			for ( LiveProp prop : liveProps ) {
+				if ( StringUtils.isNotBlank( prop.getIcon() ) && !prop.getIcon().startsWith( "http" ) ) {
+					prop.setIcon( domainValue + prop.getIcon() );
+				}
+			}
+		}
+		return liveProps;
+	}
 
-    /**
-     * 新增礼物列
-     *
-     * @param liveProp 礼物列
-     * @return 结果
-     */
-    @Override
-    public int insertLiveProp(LiveProp liveProp) {
-        return livePropMapper.insertLiveProp(liveProp);
-    }
+	/**
+	 * 新增礼物列
+	 *
+	 * @param liveProp 礼物列
+	 * @return 结果
+	 */
+	@Override
+	public int insertLiveProp( LiveProp liveProp ) {
+		return livePropMapper.insertLiveProp( liveProp );
+	}
 
-    /**
-     * 修改礼物列
-     *
-     * @param liveProp 礼物列
-     * @return 结果
-     */
-    @Override
-    public int updateLiveProp(LiveProp liveProp) {
-        return livePropMapper.updateLiveProp(liveProp);
-    }
+	/**
+	 * 修改礼物列
+	 *
+	 * @param liveProp 礼物列
+	 * @return 结果
+	 */
+	@Override
+	public int updateLiveProp( LiveProp liveProp ) {
+		return livePropMapper.updateLiveProp( liveProp );
+	}
 
-    /**
-     * 批量删除礼物列
-     *
-     * @param ids 需要删除的礼物列ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLivePropByIds(Long[] ids) {
-        return livePropMapper.deleteLivePropByIds(ids);
-    }
+	/**
+	 * 批量删除礼物列
+	 *
+	 * @param ids 需要删除的礼物列ID
+	 * @return 结果
+	 */
+	@Override
+	public int deleteLivePropByIds( Long[] ids ) {
+		return livePropMapper.deleteLivePropByIds( ids );
+	}
 
-    /**
-     * 删除礼物列信息
-     *
-     * @param id 礼物列ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLivePropById(Long id) {
-        return livePropMapper.deleteLivePropById(id);
-    }
+	/**
+	 * 删除礼物列信息
+	 *
+	 * @param id 礼物列ID
+	 * @return 结果
+	 */
+	@Override
+	public int deleteLivePropById( Long id ) {
+		return livePropMapper.deleteLivePropById( id );
+	}
 
-    @Override
-    public List<LiveProp> getList( ) {
-        return livePropMapper.getList();
-    }
+	@Override
+	public List<LiveProp> getList() {
+		return livePropMapper.getList();
+	}
 }

@@ -83,8 +83,7 @@ public class UserDataUtil {
 				return true;
 			}
 		case SECTION_5:
-			switch ( b1 ) {
-			case SECTION_6:
+			if ( b1 == SECTION_6 ) {
 				return true;
 			}
 		default:
