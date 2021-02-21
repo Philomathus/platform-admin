@@ -20,7 +20,7 @@
     </resultMap>
 
     <sql id="selectReportPlamGameschildsVo">
-        select game_uuid, gameagent, gameplame, agentchild, agentchildname, gamepepole, gametouzhu, gamecell, gamebet, gamerevenve, gameprofit, plampfit, bili, begindate from 7700_main.report_plam_gameschilds
+        select game_uuid, gameagent, gameplame, agentchild, agentchildname, gamepepole, gametouzhu, gamecell, gamebet, gamerevenve, gameprofit, plampfit, bili, begindate from report_plam_gameschilds
     </sql>
 
     <select id="selectReportPlamGameschildsList" parameterType="ReportPlamGameschilds" resultMap="ReportPlamGameschildsResult">
@@ -48,7 +48,7 @@
     </select>
 
     <insert id="insertReportPlamGameschilds" parameterType="ReportPlamGameschilds">
-        insert into 7700_main.report_plam_gameschilds
+        insert into report_plam_gameschilds
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gameUuid != null">game_uuid,</if>
             <if test="gameagent != null">gameagent,</if>
@@ -84,7 +84,7 @@
     </insert>
 
     <update id="updateReportPlamGameschilds" parameterType="ReportPlamGameschilds">
-        update 7700_main.report_plam_gameschilds
+        update report_plam_gameschilds
         <trim prefix="SET" suffixOverrides=",">
             <if test="gameagent != null">gameagent = #{gameagent},</if>
     
@@ -117,11 +117,11 @@
     </update>
 
     <delete id="deleteReportPlamGameschildsById" parameterType="String">
-        delete from 7700_main.report_plam_gameschilds where game_uuid = #{gameUuid}
+        delete from report_plam_gameschilds where game_uuid = #{gameUuid}
     </delete>
 
     <delete id="deleteReportPlamGameschildsByIds" parameterType="String">
-        delete from 7700_main.report_plam_gameschilds where game_uuid in
+        delete from report_plam_gameschilds where game_uuid in
         <foreach item="gameUuid" collection="array" open="(" separator="," close=")">
             #{gameUuid}
         </foreach>
