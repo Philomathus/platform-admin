@@ -52,21 +52,6 @@ public class SysConfigCacheUtil {
 		return value != null ? configDomainCacheUtil.dynamicValue( value.toString() ) : defaultValue;
 	}
 
-	public void refreshConfCache() {
-		ConfigEnvironment query = new ConfigEnvironment();
-		query.setEnvStatus( 1 );
-		List<ConfigEnvironment> configEnvironments = configEnvironmentMapper.selectConfigEnvironmentList( query );
-
-		Map<Object, Object> map = configEnvironments.stream().collect( Collectors.toMap( ConfigEnvironment::getEnvCode,
-				ConfigEnvironment::getEnvValue ) );
-		redisUtil.unlink( SYS_CONFIG_KEY );
-		redisUtil.hMSet( SYS_CONFIG_KEY, map );
-	}
-
-	public void setConfCache( ConfigEnvironment configEnvironment ) {
-		redisUtil.hSet( SYS_CONFIG_KEY, configEnvironment.getEnvCode(), configEnvironment.getEnvValue() );
-	}
-
 	public String getConf( String code ) {
 		return getConf( code, "" );
 	}
@@ -89,6 +74,22 @@ public class SysConfigCacheUtil {
 
 	public boolean getConfBool( String code ) {
 		return getConfInt( code ) > 0;
+	}
+
+
+	public void refreshConfCache() {
+		ConfigEnvironment query = new ConfigEnvironment();
+		query.setEnvStatus( 1 );
+		List<ConfigEnvironment> configEnvironments = configEnvironmentMapper.selectConfigEnvironmentList( query );
+
+		Map<Object, Object> map = configEnvironments.stream().collect( Collectors.toMap( ConfigEnvironment::getEnvCode,
+				ConfigEnvironment::getEnvValue ) );
+		redisUtil.unlink( SYS_CONFIG_KEY );
+		redisUtil.hMSet( SYS_CONFIG_KEY, map );
+	}
+
+	public void setConfCache( ConfigEnvironment configEnvironment ) {
+		redisUtil.hSet( SYS_CONFIG_KEY, configEnvironment.getEnvCode(), configEnvironment.getEnvValue() );
 	}
 
 	public void deleteCache( String... envCodes ) {
