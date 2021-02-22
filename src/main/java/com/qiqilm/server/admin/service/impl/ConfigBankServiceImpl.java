@@ -1,12 +1,16 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.domain.ConfigBank;
+import com.qiqilm.server.admin.mapper.ConfigBankMapper;
+import com.qiqilm.server.admin.service.IConfigBankService;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.ConfigBankMapper;
-import com.qiqilm.server.admin.domain.ConfigBank;
-import com.qiqilm.server.admin.service.IConfigBankService;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -18,6 +22,8 @@ import com.qiqilm.server.admin.service.IConfigBankService;
 public class ConfigBankServiceImpl implements IConfigBankService {
     @Autowired
     private ConfigBankMapper configBankMapper;
+    @Autowired
+    private ConfigDomainCacheUtil configDomainCacheUtil;
 
     /**
      * 查询【请填写功能名称】
@@ -38,7 +44,16 @@ public class ConfigBankServiceImpl implements IConfigBankService {
      */
     @Override
     public List<ConfigBank> selectConfigBankList(ConfigBank configBank) {
-        return configBankMapper.selectConfigBankList(configBank);
+        List<ConfigBank> configBanks = configBankMapper.selectConfigBankList(configBank);
+        if ( !CollectionUtils.isEmpty( configBanks ) ) {
+            String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+            for ( ConfigBank Bank : configBanks ) {
+                if ( StringUtils.isNotBlank( Bank.getIcon() ) && !Bank.getIcon().startsWith( "http" ) ) {
+                    Bank.setIcon( domainValue + Bank.getIcon() );
+                }
+            }
+        }
+        return configBanks;
     }
 
     /**

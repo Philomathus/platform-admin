@@ -16,10 +16,11 @@
         <result property="createTime"    column="create_time"    />
         <result property="updator"    column="updator"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="openLevel"    column="open_level"    />
     </resultMap>
 
     <sql id="selectPayTypeVo">
-        select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, creator,  FROM_UNIXTIME(create_time) create_time ,  updator,  FROM_UNIXTIME(update_time) update_time   from pay_type
+        select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, creator,  FROM_UNIXTIME(create_time) create_time ,  updator,  FROM_UNIXTIME(update_time) update_time ,  open_level from 7700_main.pay_type
     </sql>
 
     <select id="selectPayTypeList" parameterType="PayType" resultMap="PayTypeResult">
@@ -35,6 +36,7 @@
             <if test="type != null "> and type = #{type}</if>
             <if test="creator != null  and creator != ''"> and creator = #{creator}</if>
             <if test="updator != null  and updator != ''"> and updator = #{updator}</if>
+            <if test="openLevel != null "> and open_level = #{openLevel}</if>
         </where>
     </select>
 
@@ -59,6 +61,7 @@
             <if test="createTime != null">create_time,</if>
             <if test="updator != null">updator,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="openLevel != null">open_level,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -74,11 +77,12 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updator != null">#{updator},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="openLevel != null">#{openLevel},</if>
         </trim>
     </insert>
 
     <update id="updatePayType" parameterType="PayType">
-        update pay_type
+        update 7700_main.pay_type
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
 
@@ -103,6 +107,8 @@
             <if test="updator != null">updator = #{updator},</if>
 
             <if test="updateTime != null">update_time = #{updateTime},</if>
+
+            <if test="openLevel != null">open_level = #{openLevel},</if>
 
         </trim>
         where id = #{id}

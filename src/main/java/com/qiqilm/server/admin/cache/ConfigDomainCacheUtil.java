@@ -1,5 +1,7 @@
 package com.qiqilm.server.admin.cache;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.qiqilm.server.admin.mapper.ConfigDomainMapper;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
@@ -7,10 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class ConfigDomainCacheUtil {
 	public static final String CONFIG_DOMAIN = "config:domain:";
+
+	private static final Cache<String, String> DOMAIN_CACHE = CacheBuilder.newBuilder()
+			//最大容量
+			.maximumSize( 100 )
+			//缓存过期时长
+			.expireAfterWrite( 5, TimeUnit.SECONDS )
+			// 设置并发级别为cpu核心数
+			.concurrencyLevel( Runtime.getRuntime().availableProcessors() )
+			.build();
 
 	@Autowired
 	private ConfigDomainMapper configDomainMapper;
@@ -33,10 +45,16 @@ public class ConfigDomainCacheUtil {
 	}
 
 	public String getValue( String code ) {
-		if ( !redisUtil.exists( CONFIG_DOMAIN + code ) ) {
-			this.refreshKey( code );
+		String cacheInfo = DOMAIN_CACHE.getIfPresent( code );
+		if ( StringUtils.isBlank( cacheInfo ) ) {
+			if ( !redisUtil.exists( CONFIG_DOMAIN + code ) ) {
+				this.refreshKey( code );
+			}
+			String domain = redisUtil.sRandom( CONFIG_DOMAIN + code );
+			DOMAIN_CACHE.put( code, domain );
+			return DOMAIN_CACHE.getIfPresent( code );
 		}
-		return redisUtil.sRandom( CONFIG_DOMAIN + code );
+		return cacheInfo;
 	}
 
 

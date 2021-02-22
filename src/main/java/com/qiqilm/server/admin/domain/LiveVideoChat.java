@@ -75,7 +75,8 @@ public class LiveVideoChat extends BaseEntity {
 	 */
 	@Excel( name = "平台会员ID" )
 	private String fromPlatform;
-
+	@Excel( name = "用户ip" )
+	private String userIp;
 	private String createTimes;
 
 	private boolean isNoSpeaking = false;

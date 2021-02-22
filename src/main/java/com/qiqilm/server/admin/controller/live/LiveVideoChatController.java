@@ -55,10 +55,11 @@ public class LiveVideoChatController extends BaseController {
 		String pUserId = ( String ) requestMap.get( "pUserId" );
 		boolean flag = ( boolean ) requestMap.get( "flag" );
 		int num = ( int ) requestMap.get( "num" );
+		String userIp = (String) requestMap.get("userIp");
 		if ( !StringUtils.hasText( pUserId ) ) {
 			return AjaxResult.error( "会员平台ID不得为空" );
 		}
-		liveVideoChatService.suspendUser(pUserId,flag,num);
+		liveVideoChatService.suspendUser(pUserId,flag,num,userIp);
 		return AjaxResult.success();
 	}
 

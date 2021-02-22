@@ -2,14 +2,17 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.domain.LiveVideoChat;
+import com.qiqilm.server.admin.domain.SpeakIpBlackList;
 import com.qiqilm.server.admin.mapper.LiveVideoChatMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.SpeakIpBlackListMapper;
 import com.qiqilm.server.admin.service.ILiveVideoChatService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +32,8 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 
 	@Autowired
 	private MemberInfoMapper memberInfoMapper;
-
+	@Autowired
+	private SpeakIpBlackListMapper speakIpBlackListMapper;
 	/**
 	 * 查询会员发言
 	 *
@@ -122,10 +126,20 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 	}
 
 	@Override
-	public String suspendUser( String pUserId,boolean flag,Integer num ) {
+	public String suspendUser( String pUserId,boolean flag,Integer num,String userIp ) {
 		if ( memberForbidUtil.setPlatformUserSpeak( pUserId, flag )) {
 			memberInfoMapper.updateSpeak( pUserId, num );
 		}
+		if (flag){
+			SpeakIpBlackList speakIpBlackList=new SpeakIpBlackList();
+			speakIpBlackList.setUserId(pUserId);
+			speakIpBlackList.setUserIp(userIp);
+			speakIpBlackList.setCreateTime(new Date());
+			speakIpBlackListMapper.insertSpeakIpBlackList(speakIpBlackList);
+		}else {
+			speakIpBlackListMapper.deleteSpeakIp(userIp);
+		}
+
 		return null;
 	}
 
