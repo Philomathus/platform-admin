@@ -58,24 +58,29 @@ public class PayType extends BaseEntity {
     /** 修改人 */
     @Excel(name = "修改人")
     private String updator;
+    /** 开放层级 */
+    @Excel(name = "开放层级")
+    private Long openLevel;
 
 
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("iconUrl", getIconUrl())
-            .append("indexes", getIndexes())
-            .append("isRecommend", getIsRecommend())
-            .append("status", getStatus())
-            .append("isOnline", getIsOnline())
-            .append("type", getType())
-            .append("creator", getCreator())
-            .append("createTime", getCreateTime())
-            .append("updator", getUpdator())
-            .append("updateTime", getUpdateTime())
-            .toString();
+                .append("id", getId())
+                .append("name", getName())
+                .append("code", getCode())
+                .append("iconUrl", getIconUrl())
+                .append("indexes", getIndexes())
+                .append("isRecommend", getIsRecommend())
+                .append("status", getStatus())
+                .append("isOnline", getIsOnline())
+                .append("type", getType())
+                .append("creator", getCreator())
+                .append("createTime", getCreateTime())
+                .append("updator", getUpdator())
+                .append("updateTime", getUpdateTime())
+                .append("openLevel", getOpenLevel())
+                .toString();
     }
 }
