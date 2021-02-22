@@ -58,4 +58,6 @@ public interface LiveVideoChatMapper {
 	 * @return 结果
 	 */
 	public int deleteLiveVideoChatByIds(Long[] ids );
+
+	LiveVideoChat selectLiveVideoUser(String pUserId);
 }
