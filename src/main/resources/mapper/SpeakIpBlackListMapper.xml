@@ -6,10 +6,11 @@
         <result property="id"    column="id"    />
         <result property="createTime"    column="create_time"    />
         <result property="userIp"    column="user_ip"    />
+        <result property="userId"    column="user_id"    />
     </resultMap>
 
     <sql id="selectSpeakIpBlackListVo">
-        select id, create_time,user_id  user_ip from ${dbLive}.speak_ip_black_list
+        select id, create_time,user_id,user_ip from ${dbLive}.speak_ip_black_list
     </sql>
 
     <select id="selectSpeakIpBlackListList" parameterType="SpeakIpBlackList" resultMap="SpeakIpBlackListResult">
