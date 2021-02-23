@@ -9,7 +9,7 @@
     </resultMap>
 
     <sql id="selectSpeakIpBlackListVo">
-        select id,  FROM_UNIXTIME(create_time) create_time ,  user_ip from ${dbLive}.speak_ip_black_list
+        select id, create_time,user_id  user_ip from ${dbLive}.speak_ip_black_list
     </sql>
 
     <select id="selectSpeakIpBlackListList" parameterType="SpeakIpBlackList" resultMap="SpeakIpBlackListResult">
