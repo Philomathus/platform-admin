@@ -20,7 +20,8 @@
     </resultMap>
 
     <sql id="selectPayTypeVo">
-        select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, creator,  FROM_UNIXTIME(create_time) create_time ,  updator,  FROM_UNIXTIME(update_time) update_time ,  open_level from 7700_main.pay_type
+        select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, creator,  FROM_UNIXTIME(create_time)
+                create_time ,  updator,  FROM_UNIXTIME(update_time) update_time ,  open_level from ${dbMain}.pay_type
     </sql>
 
     <select id="selectPayTypeList" parameterType="PayType" resultMap="PayTypeResult">
@@ -82,7 +83,7 @@
     </insert>
 
     <update id="updatePayType" parameterType="PayType">
-        update 7700_main.pay_type
+        update ${dbMain}.pay_type
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
 
