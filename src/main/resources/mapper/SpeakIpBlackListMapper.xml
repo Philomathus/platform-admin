@@ -9,7 +9,7 @@
     </resultMap>
 
     <sql id="selectSpeakIpBlackListVo">
-        select id,  FROM_UNIXTIME(create_time) create_time ,  user_ip from 7700_live.speak_ip_black_list
+        select id,  FROM_UNIXTIME(create_time) create_time ,  user_ip from ${dbLive}.speak_ip_black_list
     </sql>
 
     <select id="selectSpeakIpBlackListList" parameterType="SpeakIpBlackList" resultMap="SpeakIpBlackListResult">
@@ -25,7 +25,7 @@
     </select>
 
     <insert id="insertSpeakIpBlackList" parameterType="SpeakIpBlackList">
-        insert into 7700_live.speak_ip_black_list
+        insert into ${dbLive}.speak_ip_black_list
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
             <if test="createTime != null">create_time,</if>
@@ -39,7 +39,7 @@
     </insert>
 
     <update id="updateSpeakIpBlackList" parameterType="SpeakIpBlackList">
-        update 7700_live.speak_ip_black_list
+        update ${dbLive}.speak_ip_black_list
         <trim prefix="SET" suffixOverrides=",">
             <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
 
@@ -50,14 +50,14 @@
     </update>
 
     <delete id="deleteSpeakIpBlackListById" parameterType="String">
-        delete from 7700_live.speak_ip_black_list where id = #{id}
+        delete from ${dbLive}.speak_ip_black_list where id = #{id}
     </delete>
 
     <delete id="deleteSpeakIp" parameterType="String">
-        delete from 7700_live.speak_ip_black_list where user_ip = #{userIp}
+        delete from ${dbLive}.speak_ip_black_list where user_ip = #{userIp}
     </delete>
     <delete id="deleteSpeakIpBlackListByIds" parameterType="String">
-        delete from 7700_live.speak_ip_black_list where id in
+        delete from ${dbLive}.speak_ip_black_list where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
