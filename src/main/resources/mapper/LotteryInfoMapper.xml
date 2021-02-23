@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryInfoMapper">
+
+    <resultMap type="LotteryInfo" id="LotteryInfoResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+        <result property="icon"    column="icon"    />
+        <result property="official"    column="official"    />
+        <result property="killRate"    column="kill_rate"    />
+        <result property="minCost"    column="min_cost"    />
+        <result property="cycle"    column="cycle"    />
+    </resultMap>
+
+    <sql id="selectLotteryInfoVo">
+        select id, name, type, status, icon, official, kill_rate, min_cost, cycle from 7700_lottery.lottery_info
+    </sql>
+
+    <select id="selectLotteryInfoList" parameterType="LotteryInfo" resultMap="LotteryInfoResult">
+        <include refid="selectLotteryInfoVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="official != null "> and official = #{official}</if>
+            <if test="killRate != null "> and kill_rate = #{killRate}</if>
+            <if test="minCost != null "> and min_cost = #{minCost}</if>
+            <if test="cycle != null "> and cycle = #{cycle}</if>
+        </where>
+    </select>
+</mapper>
