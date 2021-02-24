@@ -7,7 +7,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ReportPlamCom;
+import com.qiqilm.server.admin.enums.EnumLock;
+import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +44,10 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 public class ReportPlamComController extends BaseController {
 	@Autowired
 	private IReportPlamComService reportPlamComService;
-
+	@Autowired
+	private RedisUtil redisUtil;
+	@Autowired
+	private TokenService tokenService;
 	/**
 	 * 查询综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间列表
 	 */
@@ -78,6 +86,11 @@ public class ReportPlamComController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
 	@GetMapping( "/storage" )
 	public AjaxResult storage(ReportPlamCom reportPlamCom) throws ParseException {
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String userId = loginUser.getUser().getUserId().toString();
+		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 60 ) ) {
+			return AjaxResult.error("请勿连续点击搜索，1分钟后再搜索");
+		}
 		return AjaxResult.success( reportPlamComService.storage(reportPlamCom));
 	}
 

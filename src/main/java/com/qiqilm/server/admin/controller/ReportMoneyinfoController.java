@@ -10,7 +10,9 @@ import com.qiqilm.server.admin.domain.ReportPlamCom;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IReportMoneyinfoService;
+import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +35,10 @@ import java.util.List;
 public class ReportMoneyinfoController extends BaseController {
 	@Autowired
 	private IReportMoneyinfoService reportMoneyinfoService;
-
+	@Autowired
+	private RedisUtil redisUtil;
+	@Autowired
+	private TokenService tokenService;
 	/**
 	 * 查询平台资金报，记录平台每日收入及支出总额，预估当前会员的积分余额列表
 	 */
@@ -53,6 +58,7 @@ public class ReportMoneyinfoController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:list')" )
 	@GetMapping( "/storage" )
 	public AjaxResult storage(ReportMoneyinfo reportMoneyinfo) throws ParseException {
+
 		return AjaxResult.success( reportMoneyinfoService.storage(reportMoneyinfo));
 	}
 	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:export')" )
