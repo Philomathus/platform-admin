@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryTempMapper">
+
+    <resultMap type="LotteryTemp" id="LotteryTempResult">
+        <result property="id"    column="id"    />
+        <result property="issue"    column="issue"    />
+        <result property="ktime"    column="ktime"    />
+        <result property="issueJust"    column="issue_just"    />
+        <result property="codeJust"    column="code_just"    />
+        <result property="su"    column="su"    />
+    </resultMap>
+
+    <sql id="selectLotteryTempVo">
+        select id, issue, ktime, issue_just, code_just, su from 7700_lottery.lottery_temp
+    </sql>
+
+    <select id="selectLotteryTempList" parameterType="LotteryTemp" resultMap="LotteryTempResult">
+        <include refid="selectLotteryTempVo"/>
+        <where>
+            <if test="issue != null  and issue != ''"> and issue = #{issue}</if>
+            <if test="ktime != null "> and ktime = #{ktime}</if>
+            <if test="issueJust != null  and issueJust != ''"> and issue_just = #{issueJust}</if>
+            <if test="codeJust != null  and codeJust != ''"> and code_just = #{codeJust}</if>
+            <if test="su != null "> and su = #{su}</if>
+        </where>
+    </select>
+</mapper>
