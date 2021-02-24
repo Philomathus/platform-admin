@@ -1,6 +1,10 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.cache.MemberForbidUtil;
+import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +22,10 @@ import com.qiqilm.server.admin.service.ISpeakIpBlackListService;
 public class SpeakIpBlackListServiceImpl implements ISpeakIpBlackListService {
     @Autowired
     private SpeakIpBlackListMapper speakIpBlackListMapper;
-
+    @Autowired
+    private MemberInfoMapper memberInfoMapper;
+    @Autowired
+    private MemberForbidUtil memberForbidUtil;
     /**
      * 查询【请填写功能名称】
      *
@@ -61,7 +68,15 @@ public class SpeakIpBlackListServiceImpl implements ISpeakIpBlackListService {
      */
     @Override
     public int updateSpeakIpBlackList(SpeakIpBlackList speakIpBlackList) {
-        return speakIpBlackListMapper.updateSpeakIpBlackList(speakIpBlackList);
+        // 解封账号
+        MemberInfo update = new MemberInfo();
+        update.setId( speakIpBlackList.getUserId() );
+        update.setStatus( 1 );
+        update.setSpeak(0);
+        memberInfoMapper.updateMemberInfo( update );
+        memberForbidUtil.setPlatformUserSpeak( speakIpBlackList.getUserId(), false );
+        speakIpBlackListMapper.deleteSpeakIp( speakIpBlackList.getUserIp());
+        return 1;
     }
 
     /**
