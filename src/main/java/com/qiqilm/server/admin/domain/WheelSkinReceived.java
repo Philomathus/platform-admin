@@ -43,6 +43,9 @@ public class WheelSkinReceived extends BaseEntity {
     @Excel(name = "皮肤名称")
     private String skin;
 
+    @Excel(name = "中奖金额")
+    private Integer prize;
+
     /** 领取状态 0未领取1领取中2已领取 */
     @Excel(name = "领取状态 0未领取1领取中2已领取")
     private Long receiveType;

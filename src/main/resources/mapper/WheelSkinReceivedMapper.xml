@@ -10,13 +10,15 @@
         <result property="name"    column="name"    />
         <result property="nickName"    column="nickName"    />
         <result property="skin"    column="skin"    />
+        <result property="prize"    column="prize"    />
         <result property="receiveType"    column="receive_type"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectWheelSkinReceivedVo">
-        select a.id, a.wheel_history_id, a.p_user_id, a.da_qu, a.name, a.skin, a.receive_type,  FROM_UNIXTIME(a.create_time) create_time ,   FROM_UNIXTIME(a.update_time) update_time  ,b.name nickName
+        select a.id, a.wheel_history_id, a.p_user_id, a.da_qu, a.name, a.skin, a.receive_type,  FROM_UNIXTIME(a.create_time) create_time ,   FROM_UNIXTIME(a.update_time) update_time  ,
+        b.name nickName,b.prize
         from 7700_live.wheel_skin_received a
         LEFT JOIN 7700_live.wheel_history b on a.wheel_history_id=b.id
     </sql>
