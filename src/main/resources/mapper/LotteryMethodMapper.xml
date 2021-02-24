@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryMethodMapper">
+
+    <resultMap type="LotteryMethod" id="LotteryMethodResult">
+        <result property="id"    column="id"    />
+        <result property="lotteryType"    column="lottery_type"    />
+        <result property="order"    column="order"    />
+        <result property="name"    column="name"    />
+        <result property="ind"    column="ind"    />
+    </resultMap>
+
+    <sql id="selectLotteryMethodVo">
+        select id, lottery_type, `order`, `name`, ind from 7700_lottery.lottery_method
+    </sql>
+
+    <select id="selectLotteryMethodList" parameterType="LotteryMethod" resultMap="LotteryMethodResult">
+        <include refid="selectLotteryMethodVo"/>
+        <where>
+            <if test="lotteryType != null  and lotteryType != ''"> and lottery_type = #{lotteryType}</if>
+            <if test="order != null "> and order = #{order}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="ind != null "> and ind = #{ind}</if>
+        </where>
+    </select>
+</mapper>
