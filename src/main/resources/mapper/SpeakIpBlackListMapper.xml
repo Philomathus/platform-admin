@@ -17,6 +17,7 @@
         <include refid="selectSpeakIpBlackListVo"/>
         <where>
             <if test="userIp != null  and userIp != ''"> and user_ip = #{userIp}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
         </where>
     </select>
 
