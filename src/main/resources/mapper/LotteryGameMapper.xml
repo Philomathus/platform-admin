@@ -37,18 +37,7 @@
     <update id="updateLotteryGame" parameterType="LotteryGame">
         update 7700_lottery.lottery_game
         <trim prefix="SET" suffixOverrides=",">
-            <if test="methodId != null">method_id = #{methodId},</if>
-    
-            <if test="type != null">type = #{type},</if>
-    
-            <if test="info != null">info = #{info},</if>
-    
-            <if test="odds != null">odds = #{odds},</if>
-    
-            <if test="victoryRule != null">victory_rule = #{victoryRule},</if>
-    
-            <if test="ind != null">ind = #{ind},</if>
-    
+            <if test="odds != null">odds = #{odds}</if>
         </trim>
         where id = #{id}
     </update>
