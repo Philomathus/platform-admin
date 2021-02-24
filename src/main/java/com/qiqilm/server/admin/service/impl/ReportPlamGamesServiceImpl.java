@@ -23,8 +23,6 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
     private ReportPlamGamesMapper reportPlamGamesMapper;
 
 
-
-
     /**
      * 查询【请填写功能名称】列表
      *
@@ -33,7 +31,7 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
      */
     @Override
     public List<ReportPlamGames> selectReportPlamGamesList(ReportPlamGames reportPlamGames) {
-        List<ReportPlamGames> allList =reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
+        List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
 
         return allList;
     }
@@ -50,13 +48,9 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateNowStr = sdf.format(d);
         reportPlamGames.setBegindate(dateNowStr);
-//        List<ReportPlamGames> allList =reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
-//        if (allList.size()==0) {
-            if (reportPlamGames.getBegindate() == null || reportPlamGames.getBegindate().equals(dateNowStr)) {
-//                return reportPlamGamesMapper.calldataProrepPlamcom(dateNowStr);
-                return null;
-            }
-//        }
+        if (reportPlamGames.getBegindate() == null || reportPlamGames.getBegindate().equals(dateNowStr)) {
+            return reportPlamGamesMapper.calldataProrepPlamcom(dateNowStr);
+        }
         return null;
     }
 

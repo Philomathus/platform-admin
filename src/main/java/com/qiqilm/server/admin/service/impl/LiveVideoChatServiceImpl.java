@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.domain.LiveVideoChat;
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.SpeakIpBlackList;
 import com.qiqilm.server.admin.mapper.LiveVideoChatMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
@@ -31,9 +32,10 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 	private MemberForbidUtil    memberForbidUtil;
 
 	@Autowired
-	private MemberInfoMapper memberInfoMapper;
+	private MemberInfoMapper       memberInfoMapper;
 	@Autowired
 	private SpeakIpBlackListMapper speakIpBlackListMapper;
+
 	/**
 	 * 查询会员发言
 	 *
@@ -126,25 +128,37 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 	}
 
 	@Override
-	public String suspendUser( String pUserId,boolean flag,Integer num,String userIp ) {
-		if ( memberForbidUtil.setPlatformUserSpeak( pUserId, flag )) {
+	public String suspendUser( String pUserId, boolean flag, Integer num, String userIp ) {
+		if ( memberForbidUtil.setPlatformUserSpeak( pUserId, flag ) ) {
 			memberInfoMapper.updateSpeak( pUserId, num );
 		}
-		if (flag){
-			SpeakIpBlackList speakIpBlackList=new SpeakIpBlackList();
-			speakIpBlackList.setUserId(pUserId);
-			speakIpBlackList.setUserIp(userIp);
-			speakIpBlackList.setCreateTime(new Date());
-			speakIpBlackListMapper.insertSpeakIpBlackList(speakIpBlackList);
-		}else {
-			speakIpBlackListMapper.deleteSpeakIp(userIp);
+		if ( flag ) {
+			SpeakIpBlackList speakIpBlackList = new SpeakIpBlackList();
+			speakIpBlackList.setUserId( pUserId );
+			speakIpBlackList.setUserIp( userIp );
+			speakIpBlackList.setCreateTime( new Date() );
+			speakIpBlackListMapper.insertSpeakIpBlackList( speakIpBlackList );
+
+			// 封停账号
+			MemberInfo update = new MemberInfo();
+			update.setId( pUserId );
+			update.setStatus( 0 );
+			memberInfoMapper.updateMemberInfo( update );
+		} else {
+			speakIpBlackListMapper.deleteSpeakIp( userIp );
+
+			// 解封账号
+			MemberInfo update = new MemberInfo();
+			update.setId( pUserId );
+			update.setStatus( 1 );
+			memberInfoMapper.updateMemberInfo( update );
 		}
 
 		return null;
 	}
 
 	@Override
-	public void forbidSendMsg( String pUserId, Integer forbidTime,Integer videoId ) {
+	public void forbidSendMsg( String pUserId, Integer forbidTime, Integer videoId ) {
 		memberForbidUtil.setUserForbid( pUserId, videoId, Duration.ofSeconds( forbidTime ) );
 	}
 }

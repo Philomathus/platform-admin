@@ -19,9 +19,6 @@ public class SpeakIpBlackList extends BaseEntity {
     /** 会员ID */
     private Integer id;
     private String userId;
-
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private String userIp;
 
     @Override

@@ -43,11 +43,12 @@ public abstract class Constants {
 	public static final String  SESSION_CLICK_LOCK         = "CX:platform:lock:";
 	public static final String  USER_TOKEN_KEY             = "CX:platform:user-token:";
 	public static final String  TOKEN_USER_KEY             = "CX:platform:token-user:";
-
+	public static final String  CX_HOME_NOTICE             = "CX:home-notices";
+	public static final String  CX_HOME_BANNER             = "CX:home-banners";
 	// 主播签名
-	public static final String HOST_SIGN  = LIVE_PREX + "host-sign:";
-	public static final String USER_SIGN  = LIVE_PREX + "user-sign:";
-	public static final String ADMIN_SIGN = LIVE_PREX + "admin-sign:";
+	public static final String  HOST_SIGN                  = LIVE_PREX + "host-sign:";
+	public static final String  USER_SIGN                  = LIVE_PREX + "user-sign:";
+	public static final String  ADMIN_SIGN                 = LIVE_PREX + "admin-sign:";
 
 	public static final String   TIME                        = "time";
 	public static final Duration SESSION_VALID_TIME_DURATION = Duration.ofHours( 1 );
