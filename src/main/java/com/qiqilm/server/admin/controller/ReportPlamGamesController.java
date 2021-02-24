@@ -69,8 +69,8 @@ public class ReportPlamGamesController extends BaseController {
     public AjaxResult storage(ReportPlamGames reportPlamGames){
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String userId = loginUser.getUser().getUserId().toString();
-        if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 60 ) ) {
-          return AjaxResult.error("请勿连续点击搜索，1分钟后再搜索");
+        if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
+          return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
         }
         return AjaxResult.success(reportPlamGamesService.storage(reportPlamGames));
     }
