@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
@@ -51,7 +52,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	private MemberCardMapper       memberCardMapper;
 	@Autowired
 	private MemberCacheManager     memberCacheManager;
-
+	@Autowired
+	private MemberForbidUtil memberForbidUtil;
 	/**
 	 * 查询会员信息
 	 *
@@ -262,5 +264,20 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 		if ( money.compareTo( BigDecimal.ZERO ) > 0 && i > 0 && i1 > 0 ) {
 			memberInfoMapper.updateMoneySelect( userId, money, null, null, null, null );
 		}
+	}
+
+	@Override
+	public int changeSpeak(MemberInfo memberInfo) {
+		if ("0".equals(memberInfo.getSpeak())) {
+			memberInfo.setStatus(1);
+			memberInfo.setSpeak("0");
+			memberInfoMapper.updateMemberInfo(memberInfo);
+			memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), false);
+		}else {
+			memberInfo.setSpeak("1");
+			memberInfoMapper.updateMemberInfo(memberInfo);
+			memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(),true);
+		}
+		return 1;
 	}
 }

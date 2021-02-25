@@ -177,7 +177,7 @@ public class MemberInfo extends BaseEntity {
 
     /** 0=正常 1 =禁言 */
     @Excel(name = "是否禁言")
-    private Integer speak;
+    private String speak;
 
     /** 登陆次数 */
     @Excel(name = "登陆次数")
