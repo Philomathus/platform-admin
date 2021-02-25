@@ -42,7 +42,7 @@
         member_game_data m
         LEFT JOIN config_gametype cg ON m.agent = cg.platform_id
         AND m.kind_id = cg.son_platform_id
-        WHERE
+        <where>
         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
             m.game_end_time >= STR_TO_DATE(#{startTime},'%Y-%m-%d %H:%i:%s') and m.game_end_time &lt;= STR_TO_DATE(#{endTime},'%Y-%m-%d %H:%i:%s')
         </if>
@@ -55,6 +55,7 @@
         <if test="agent != null and agent != ''">
             and m.agent = #{agent}
         </if>
+        </where>
         ORDER BY
         m.game_end_time DESC
     </select>

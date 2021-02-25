@@ -4,13 +4,18 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.ReportMoneyinfo;
 import com.qiqilm.server.admin.domain.ReportPlamCom;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IReportMoneyinfoService;
+import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +38,10 @@ import java.util.List;
 public class ReportMoneyinfoController extends BaseController {
 	@Autowired
 	private IReportMoneyinfoService reportMoneyinfoService;
-
+	@Autowired
+	private RedisUtil redisUtil;
+	@Autowired
+	private TokenService tokenService;
 	/**
 	 * 查询平台资金报，记录平台每日收入及支出总额，预估当前会员的积分余额列表
 	 */
@@ -53,6 +61,11 @@ public class ReportMoneyinfoController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:list')" )
 	@GetMapping( "/storage" )
 	public AjaxResult storage(ReportMoneyinfo reportMoneyinfo) throws ParseException {
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String userId = loginUser.getUser().getUserId().toString();
+		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
+			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
+		}
 		return AjaxResult.success( reportMoneyinfoService.storage(reportMoneyinfo));
 	}
 	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:export')" )

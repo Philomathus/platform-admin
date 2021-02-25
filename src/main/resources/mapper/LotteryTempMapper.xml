@@ -12,7 +12,7 @@
     </resultMap>
 
     <sql id="selectLotteryTempVo">
-        select id, issue, ktime, issue_just, code_just, su from 7700_lottery.lottery_temp
+        select id, issue, ktime, issue_just, code_just, su from ${dbLottery}.lottery_temp
     </sql>
 
     <select id="selectLotteryTempList" parameterType="LotteryTemp" resultMap="LotteryTempResult">

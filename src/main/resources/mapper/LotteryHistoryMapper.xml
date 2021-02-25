@@ -18,7 +18,7 @@
     </resultMap>
 
     <sql id="selectLotteryHistoryVo">
-        select id, issue, lottery_id, code, ktime, status, name, kill_rate, total_bet, total_prize, ctl, analyse from 7700_lottery.lottery_history
+        select id, issue, lottery_id, code, ktime, status, name, kill_rate, total_bet, total_prize, ctl, analyse from ${dbLottery}.lottery_history
     </sql>
 
     <select id="selectLotteryHistoryList" parameterType="LotteryHistory" resultMap="LotteryHistoryResult">

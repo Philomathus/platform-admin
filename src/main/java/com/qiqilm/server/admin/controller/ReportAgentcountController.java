@@ -4,14 +4,15 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.ReportAgentcount;
 import com.qiqilm.server.admin.domain.vo.ReportPlamHome;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IReportAgentcountService;
-import com.qiqilm.server.admin.utils.Constants;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
-import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +39,10 @@ import java.util.Map;
 public class ReportAgentcountController extends BaseController {
 	@Autowired
 	private IReportAgentcountService reportAgentcountService;
+	@Autowired
+	private RedisUtil redisUtil;
+	@Autowired
+	private TokenService tokenService;
 
 	/**
 	 * 首页注册人数
@@ -120,6 +125,11 @@ public class ReportAgentcountController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
 	@GetMapping( "/storage" )
 	public AjaxResult storage( ReportAgentcount reportAgentcount ) throws ParseException {
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String userId = loginUser.getUser().getUserId().toString();
+		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
+			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
+		}
 		return AjaxResult.success( reportAgentcountService.storage( reportAgentcount ) );
 	}
 

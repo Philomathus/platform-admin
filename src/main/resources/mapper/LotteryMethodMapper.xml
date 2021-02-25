@@ -11,7 +11,7 @@
     </resultMap>
 
     <sql id="selectLotteryMethodVo">
-        select id, lottery_type, `order`, `name`, ind from 7700_lottery.lottery_method
+        select id, lottery_type, `order`, `name`, ind from ${dbLottery}.lottery_method
     </sql>
 
     <select id="selectLotteryMethodList" parameterType="LotteryMethod" resultMap="LotteryMethodResult">

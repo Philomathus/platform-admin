@@ -40,8 +40,8 @@ public class MessageOnSite extends BaseEntity {
     private String action;
 
     /** 发布时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "发布时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "发布时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date pubdatetime;
 
     public void setId(String id) {

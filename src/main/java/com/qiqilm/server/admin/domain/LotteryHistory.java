@@ -32,6 +32,7 @@ public class LotteryHistory extends BaseEntity {
     private String code;
 
     /** 开奖时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date ktime;
 
     /** 0=投注中1=已开奖2=已派奖3=开奖失败 */

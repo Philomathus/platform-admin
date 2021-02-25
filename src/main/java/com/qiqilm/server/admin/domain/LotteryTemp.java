@@ -28,8 +28,8 @@ public class LotteryTemp extends BaseEntity {
 
 
     /** 开奖时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开奖时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开奖时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date ktime;
 
 

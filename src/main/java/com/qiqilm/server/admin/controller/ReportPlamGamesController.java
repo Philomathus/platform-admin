@@ -4,10 +4,15 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IReportPlamGamesService;
+import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
@@ -32,7 +37,10 @@ import java.util.List;
 public class ReportPlamGamesController extends BaseController {
     @Autowired
     private IReportPlamGamesService reportPlamGamesService;
-
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
+    private TokenService tokenService;
     /**
      * 查询【请填写功能名称】列表
      */
@@ -59,7 +67,12 @@ public class ReportPlamGamesController extends BaseController {
     @PreAuthorize("@ss.hasPermi('admin:report-plam-games:list')")
     @GetMapping("/storage")
     public AjaxResult storage(ReportPlamGames reportPlamGames){
-        return AjaxResult.success( reportPlamGamesService.storage(reportPlamGames));
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String userId = loginUser.getUser().getUserId().toString();
+        if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
+          return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
+        }
+        return AjaxResult.success(reportPlamGamesService.storage(reportPlamGames));
     }
     @GetMapping(value = "/count")
     public AjaxResult countBetData(ReportPlamGames reportPlamGames) {

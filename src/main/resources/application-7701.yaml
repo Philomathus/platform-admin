@@ -13,4 +13,4 @@ mybatis:
     variables:
       dbMain: db_cx001
       dbLive: cx_live
-      dbLottery: cx_lottery
+      dbLottery: 7701_lottery
