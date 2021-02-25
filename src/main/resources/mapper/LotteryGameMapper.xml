@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="selectLotteryGameVo">
-        select id, method_id, type, info, odds, victory_rule, ind from 7700_lottery.lottery_game
+        select id, method_id, type, info, odds, victory_rule, ind from ${dbLottery}.lottery_game
     </sql>
 
     <select id="selectLotteryGameList" parameterType="LotteryGame" resultMap="LotteryGameResult">
@@ -35,7 +35,7 @@
 
 
     <update id="updateLotteryGame" parameterType="LotteryGame">
-        update 7700_lottery.lottery_game
+        update ${dbLottery}.lottery_game
         <trim prefix="SET" suffixOverrides=",">
             <if test="odds != null">odds = #{odds}</if>
         </trim>

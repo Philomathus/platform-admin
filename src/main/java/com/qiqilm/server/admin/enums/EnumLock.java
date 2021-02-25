@@ -7,7 +7,8 @@ public enum EnumLock {
 
     game("game:"),
 
-    member("member:");
+    member("member:"),
+    adminUser("adminUser:");
 
     private String key;
 

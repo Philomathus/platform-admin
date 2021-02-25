@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelSkinReceivedMapper">
+
+    <resultMap type="WheelSkinReceived" id="WheelSkinReceivedResult">
+        <result property="id"    column="id"    />
+        <result property="wheelHistoryId"    column="wheel_history_id"    />
+        <result property="pUserId"    column="p_user_id"    />
+        <result property="daQu"    column="da_qu"    />
+        <result property="name"    column="name"    />
+        <result property="nickName"    column="nickName"    />
+        <result property="skin"    column="skin"    />
+        <result property="prize"    column="prize"    />
+        <result property="receiveType"    column="receive_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectWheelSkinReceivedVo">
+        select a.id, a.wheel_history_id, a.p_user_id, a.da_qu, a.name, a.skin, a.receive_type,  FROM_UNIXTIME(a.create_time) create_time ,   FROM_UNIXTIME(a.update_time) update_time  ,
+        b.name nickName,b.prize
+        from 7700_live.wheel_skin_received a
+        LEFT JOIN 7700_live.wheel_history b on a.wheel_history_id=b.id
+    </sql>
+
+    <select id="selectWheelSkinReceivedList" parameterType="WheelSkinReceived" resultMap="WheelSkinReceivedResult">
+        <include refid="selectWheelSkinReceivedVo"/>
+        <where>
+            <if test="wheelHistoryId != null "> and a.wheel_history_id = #{wheelHistoryId}</if>
+            <if test="pUserId != null  and pUserId != ''"> and a.p_user_id = #{pUserId}</if>
+            <if test="daQu != null  and daQu != ''"> and a.da_qu like concat('%', #{daQu}, '%')</if>
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and b.name like concat('%', #{nickName}, '%')</if>
+            <if test="skin != null  and skin != ''"> and a.skin like concat('%', #{skin}, '%') </if>
+            <if test="receiveType != null "> and a.receive_type = #{receiveType}</if>
+        </where>
+    </select>
+
+    <select id="selectWheelSkinReceivedById" parameterType="Long" resultMap="WheelSkinReceivedResult">
+        <include refid="selectWheelSkinReceivedVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWheelSkinReceived" parameterType="WheelSkinReceived" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.wheel_skin_received
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wheelHistoryId != null">wheel_history_id,</if>
+            <if test="pUserId != null">p_user_id,</if>
+            <if test="daQu != null">da_qu,</if>
+            <if test="name != null">name,</if>
+            <if test="skin != null">skin,</if>
+            <if test="receiveType != null">receive_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="wheelHistoryId != null">#{wheelHistoryId},</if>
+                    <if test="pUserId != null">#{pUserId},</if>
+                    <if test="daQu != null">#{daQu},</if>
+                    <if test="name != null">#{name},</if>
+                    <if test="skin != null">#{skin},</if>
+                    <if test="receiveType != null">#{receiveType},</if>
+                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+             </trim>
+    </insert>
+
+    <update id="updateWheelSkinReceived" parameterType="WheelSkinReceived">
+        update 7700_live.wheel_skin_received
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="wheelHistoryId != null">wheel_history_id = #{wheelHistoryId},</if>
+
+            <if test="pUserId != null">p_user_id = #{pUserId},</if>
+
+            <if test="daQu != null">da_qu = #{daQu},</if>
+
+            <if test="name != null">name = #{name},</if>
+
+            <if test="skin != null">skin = #{skin},</if>
+
+            <if test="receiveType != null">receive_type = #{receiveType},</if>
+
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+
+            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelSkinReceivedById" parameterType="Long">
+        delete from 7700_live.wheel_skin_received where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelSkinReceivedByIds" parameterType="String">
+        delete from 7700_live.wheel_skin_received where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

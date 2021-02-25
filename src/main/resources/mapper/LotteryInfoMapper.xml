@@ -15,7 +15,7 @@
     </resultMap>
 
     <sql id="selectLotteryInfoVo">
-        select id, name, type, status, icon, official, kill_rate, min_cost, cycle from 7700_lottery.lottery_info
+        select id, name, type, status, icon, official, kill_rate, min_cost, cycle from ${dbLottery}.lottery_info
     </sql>
 
     <select id="selectLotteryInfoList" parameterType="LotteryInfo" resultMap="LotteryInfoResult">
