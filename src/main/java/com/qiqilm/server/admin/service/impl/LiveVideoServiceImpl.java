@@ -100,15 +100,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				}
 			} );
 		} );
-
-		List<Map<String, Object>> costPrizeList = liveHostWageNoteMapper.sumCostPrize( hostIds );
-		liveVideos.forEach( video -> {
-			costPrizeList.forEach( costPrize -> {
-				if ( video.getId().toString().equals( costPrize.getOrDefault( "host_id", "" ).toString() ) ) {
-					video.setCpcost( costPrize.getOrDefault( "cpcost", "" ).toString() );
-				}
-			} );
-		} );
 		return liveVideos;
 	}
 

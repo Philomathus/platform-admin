@@ -68,6 +68,4 @@ public interface LiveHostWageNoteMapper {
 	public List<Map<String, Object>> selectFamilyName();
 
 	public List<LiveHostWageNote> selectListMt( @Param( "dto" ) LiveHostWageNote dto );
-
-	List<Map<String, Object>> sumCostPrize( @Param( "hostIds" ) List<Long> hostIds );
 }

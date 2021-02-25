@@ -155,9 +155,4 @@
         where o.family_id=#{dto.familyId}
         group by o.host_id
     </select>
-
-    <select id="sumCostPrize" resultType="java.util.Map">
-        select host_id,sum(cp_cost) as cpcost FROM ${dbLive}.live_host_wage_note where cp_cost > 0
-        and host_id in( #{hostIds} ) GROUP BY host_id
-	</select>
 </mapper>

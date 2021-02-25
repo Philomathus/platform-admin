@@ -346,9 +346,6 @@ public class LiveVideo extends BaseEntity {
 	private String  lineName;
 	private Integer lineStatus;
 
-	private String cpcost;
-	private String cpprize;
-
 	@JsonIgnore
 	private String[] types;
 
