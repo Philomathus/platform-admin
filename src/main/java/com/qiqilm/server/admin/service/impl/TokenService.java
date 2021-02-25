@@ -26,9 +26,9 @@ import java.util.Map;
 @Log4j2
 @Component
 public class TokenService {
-	protected static final long MILLIS_SECOND     = 1000L;
-	protected static final long MILLIS_MINUTE     = 60 * MILLIS_SECOND;
-	private static final   Long MILLIS_MINUTE_SIX = 60 * MILLIS_MINUTE;
+	protected static final long MILLIS_SECOND = 1000L;
+	protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
+	private static final   Long MILLIS_HOUR   = 60 * MILLIS_MINUTE;
 
 	// 令牌自定义标识
 	@Value( "${token.header}" )
@@ -37,7 +37,7 @@ public class TokenService {
 	@Value( "${token.secret}" )
 	private String secret;
 	// 令牌有效期（默认30分钟）
-	@Value( "${token.expireTime}" )
+	@Value( "${token.expireTime || 30}" )
 	private int    expireTime;
 
 	@Autowired
@@ -107,7 +107,7 @@ public class TokenService {
 	public void verifyToken( LoginUser loginUser ) {
 		long expireTime  = loginUser.getExpireTime();
 		long currentTime = System.currentTimeMillis();
-		if ( (expireTime - currentTime) <= MILLIS_MINUTE_SIX ) {
+		if ( ( expireTime - currentTime ) <= MILLIS_HOUR ) {
 			refreshToken( loginUser );
 		}
 	}
@@ -119,7 +119,7 @@ public class TokenService {
 	 */
 	public void refreshToken( LoginUser loginUser ) {
 		loginUser.setLoginTime( System.currentTimeMillis() );
-		loginUser.setExpireTime( loginUser.getLoginTime() + (expireTime * MILLIS_MINUTE) );
+		loginUser.setExpireTime( loginUser.getLoginTime() + ( expireTime * MILLIS_MINUTE ) );
 
 		String userKey  = getUserKey( loginUser.getUser().getUserId() );
 		String oldToken = redisUtil.strGet( userKey );
