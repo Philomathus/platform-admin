@@ -7,7 +7,10 @@ import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageType;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
-import com.qiqilm.server.admin.utils.*;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
+import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.VideoCacheUtil;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -26,40 +29,32 @@ import java.util.*;
  */
 @Service
 public class LiveVideoServiceImpl implements ILiveVideoService {
-	@Resource
-	private LiveVideoMapper liveVideoMapper;
-
-	public static final String                 REDIS_KEY_DETECT_PLAY = "live:liveVideo:detectPlay";
+	public static final String REDIS_KEY_DETECT_PLAY = "live:liveVideo:detectPlay";
 
 	@Autowired
-	private             RedisUtil              redisUtil;
-
+	private RedisUtil      redisUtil;
 	@Autowired
-	private LiveCacheUtil global;
-
+	private LiveCacheUtil  global;
 	@Autowired
-	private ImApi imApi;
-
+	private ImApi          imApi;
 	@Autowired
 	private VideoCacheUtil videoCacheUtil;
-
-	@Resource
-	private LiveHostWageNoteMapper liveHostWageNoteMapper;
-
-	@Resource
-	private ServerLiveMapper serverLiveMapper;
-
-	@Resource
-	private LiveUserMapper     liveUserMapper;
 
 	@Autowired
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Resource
-	private LotteryBetMapper lotteryBetMapper;
-
+	private LiveHostWageNoteMapper liveHostWageNoteMapper;
 	@Resource
-	private LivePayLogMapper livePayLogMapper;
+	private ServerLiveMapper       serverLiveMapper;
+	@Resource
+	private LiveUserMapper         liveUserMapper;
+	@Resource
+	private LotteryBetMapper       lotteryBetMapper;
+	@Resource
+	private LivePayLogMapper       livePayLogMapper;
+	@Resource
+	private LiveVideoMapper        liveVideoMapper;
 
 	/**
 	 * 查询直播
@@ -80,17 +75,40 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	 */
 	@Override
 	public List<LiveVideo> selectLiveVideoList( LiveVideo liveVideo ) {
-		List<LiveVideo>     liveVideos = liveVideoMapper.selectLiveVideoList( liveVideo );
-		Map<Object, Object> failMap    = redisUtil.hGetAll( REDIS_KEY_DETECT_PLAY );
-		if ( !CollectionUtils.isEmpty( failMap ) ) {
-			liveVideos.forEach( video -> {
-				failMap.forEach( ( key, value ) -> {
-					if ( video.getId().toString().equals( key.toString() ) ) {
-						video.setLiveStatus( value.toString() );
-					}
-				} );
-			} );
+		List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList( liveVideo );
+
+		if ( CollectionUtils.isEmpty( liveVideos ) ) {
+			return liveVideos;
 		}
+		List<ServerLive>    resultList = serverLiveMapper.selectServerLiveList( null );
+		Map<Object, Object> failMap    = redisUtil.hGetAll( REDIS_KEY_DETECT_PLAY );
+		List<Long>          hostIds    = new ArrayList<>();
+		liveVideos.forEach( video -> {
+
+			hostIds.add( video.getId() );
+
+			resultList.forEach( serverLive -> {
+				if ( liveVideo.getPaiId().equals( serverLive.getId() ) ) {
+					liveVideo.setLineName( serverLive.getName() );
+					liveVideo.setLineStatus( serverLive.getStatus() );
+				}
+			} );
+
+			failMap.forEach( ( key, value ) -> {
+				if ( video.getId().toString().equals( key.toString() ) ) {
+					video.setLiveStatus( value.toString() );
+				}
+			} );
+		} );
+
+		List<Map<String, Object>> costPrizeList = liveHostWageNoteMapper.sumCostPrize( hostIds );
+		liveVideos.forEach( video -> {
+			costPrizeList.forEach( costPrize -> {
+				if ( video.getId().toString().equals( costPrize.getOrDefault( "host_id", "" ).toString() ) ) {
+					video.setCpcost( costPrize.getOrDefault( "cpcost", "" ).toString() );
+				}
+			} );
+		} );
 		return liveVideos;
 	}
 
@@ -144,7 +162,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
 		if ( "admin".equals( cause ) ) {
 			//通知主播退出
-			HashMap<String, Object> ext =new HashMap<>();
+			HashMap<String, Object> ext = new HashMap<>();
 			ext.put( "type", 17 );
 			ext.put( "room_id", id );
 			ext.put( "desc", "违规直播，立即关闭直播" );
@@ -196,7 +214,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		updateVideo.setIsDelete( true );
 		updateVideo.setId( id );
 		if ( isAborted ) {
-			Double monitorTimeLong = videoCacheUtil.getVideoMonitorTime(Integer.parseInt( ""+id) );
+			Double monitorTimeLong = videoCacheUtil.getVideoMonitorTime( Integer.parseInt( "" + id ) );
 			if ( monitorTimeLong != null ) {
 				updateVideo.setEndTime( new Date( monitorTimeLong.longValue() ) );
 			} else {
@@ -210,7 +228,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		videoCacheUtil.setVideoCache( updateVideo );
 
 		// 更新主播直播印票
-		BigDecimal voteNumber = videoCacheUtil.getVoteNumber( Integer.parseInt( ""+id)  );
+		BigDecimal voteNumber = videoCacheUtil.getVoteNumber( Integer.parseInt( "" + id ) );
 		if ( voteNumber != null ) {
 			LiveUser updateUser = new LiveUser();
 			updateUser.setTicket( voteNumber );
@@ -220,7 +238,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		liveVideoMapper.updateLiveVideo( updateVideo );
 
-		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" +id) );
+		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" + id ) );
 
 		/*//连麦表更新
 		LiveVideoLianmai lianmai = new LiveVideoLianmai();
@@ -250,7 +268,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		if ( serverLive != null && serverLive.getCountNum() > 0 ) {
 			serverLive.setCountNum( serverLive.getCountNum() - 1 );
 			serverLiveMapper.updateServerLive( serverLive );
-		//	videoStreamUtil.setServerLive( serverLive );
+			//	videoStreamUtil.setServerLive( serverLive );
 		}
 
 		this.closeVideoIMNotify( video, isAborted );
@@ -263,7 +281,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		LiveHostWageNote oldHostWageNote = liveHostWageNoteMapper.beforeNote( video.getUserId() );
 		String           videoBeginTime  = DateFormatUtils.formate( video.getBeginTime() );
 		String           endTime         = DateFormatUtils.formate( video.getEndTime() );
-		long              liveTimeSec     = 0;
+		long             liveTimeSec     = 0;
 		try {
 			liveTimeSec = ( DateFormatUtils.getIntervalTime( video.getBeginTime(),
 					video.getMonitorTime() ) / 1000 );
@@ -314,7 +332,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			newHostWageNote.setLiveTimeSec( liveTimeSec );
 			newHostWageNote.setStartTime( videoBeginTime );
 
-			newHostWageNote.setCreateTimes(DateFormatUtils.formate(new Date()));
+			newHostWageNote.setCreateTimes( DateFormatUtils.formate( new Date() ) );
 
 			Map<String, Object> costMap = lotteryBetMapper.sumBatCostPrize( video.getUserId(),
 					newHostWageNote.getStartTime(), newHostWageNote.getEndTime() );
@@ -328,6 +346,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			liveHostWageNoteMapper.insertLiveHostWageNote( newHostWageNote );
 		}
 	}
+
 	private void closeVideoIMNotify( LiveVideo video, boolean isAborted ) {
 		if ( Strings.isNotBlank( video.getGroupId() ) && !isAborted ) {
 			threadPoolTaskExecutor.execute( () -> {

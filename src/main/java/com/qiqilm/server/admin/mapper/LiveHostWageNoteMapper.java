@@ -19,7 +19,7 @@ public interface LiveHostWageNoteMapper {
 	 * @param id 【请填写功能名称】ID
 	 * @return 【请填写功能名称】
 	 */
-	public LiveHostWageNote selectLiveHostWageNoteById(Long id);
+	public LiveHostWageNote selectLiveHostWageNoteById( Long id );
 
 	/**
 	 * 查询【请填写功能名称】列表
@@ -27,7 +27,7 @@ public interface LiveHostWageNoteMapper {
 	 * @param liveHostWageNote 【请填写功能名称】
 	 * @return 【请填写功能名称】集合
 	 */
-	public List<LiveHostWageNote> selectLiveHostWageNoteList(LiveHostWageNote liveHostWageNote);
+	public List<LiveHostWageNote> selectLiveHostWageNoteList( LiveHostWageNote liveHostWageNote );
 
 	/**
 	 * 新增【请填写功能名称】
@@ -35,7 +35,7 @@ public interface LiveHostWageNoteMapper {
 	 * @param liveHostWageNote 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int insertLiveHostWageNote(LiveHostWageNote liveHostWageNote);
+	public int insertLiveHostWageNote( LiveHostWageNote liveHostWageNote );
 
 	/**
 	 * 修改【请填写功能名称】
@@ -43,7 +43,7 @@ public interface LiveHostWageNoteMapper {
 	 * @param liveHostWageNote 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int updateLiveHostWageNote(LiveHostWageNote liveHostWageNote);
+	public int updateLiveHostWageNote( LiveHostWageNote liveHostWageNote );
 
 	/**
 	 * 删除【请填写功能名称】
@@ -51,7 +51,7 @@ public interface LiveHostWageNoteMapper {
 	 * @param id 【请填写功能名称】ID
 	 * @return 结果
 	 */
-	public int deleteLiveHostWageNoteById(Long id);
+	public int deleteLiveHostWageNoteById( Long id );
 
 	/**
 	 * 批量删除【请填写功能名称】
@@ -59,13 +59,15 @@ public interface LiveHostWageNoteMapper {
 	 * @param ids 需要删除的数据ID
 	 * @return 结果
 	 */
-	public int deleteLiveHostWageNoteByIds(Long[] ids );
+	public int deleteLiveHostWageNoteByIds( Long[] ids );
 
-    public LiveHostWageNote beforeNote( @Param( "userId" ) Long userId );
+	public LiveHostWageNote beforeNote( @Param( "userId" ) Long userId );
 
-    public List<LiveHostWageNote> familyPage(@Param("countTime") String countTime,@Param("dto") LiveHostWageNote dto);
+	public List<LiveHostWageNote> familyPage( @Param( "countTime" ) String countTime, @Param( "dto" ) LiveHostWageNote dto );
 
-    public List<Map<String, Object>> selectFamilyName();
+	public List<Map<String, Object>> selectFamilyName();
 
-    public List<LiveHostWageNote> selectListMt(@Param("dto") LiveHostWageNote dto);
+	public List<LiveHostWageNote> selectListMt( @Param( "dto" ) LiveHostWageNote dto );
+
+	List<Map<String, Object>> sumCostPrize( @Param( "hostIds" ) List<Long> hostIds );
 }
