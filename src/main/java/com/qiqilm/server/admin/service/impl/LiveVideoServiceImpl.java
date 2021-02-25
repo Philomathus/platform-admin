@@ -88,9 +88,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			hostIds.add( video.getId() );
 
 			resultList.forEach( serverLive -> {
-				if ( liveVideo.getPaiId().equals( serverLive.getId() ) ) {
-					liveVideo.setLineName( serverLive.getName() );
-					liveVideo.setLineStatus( serverLive.getStatus() );
+				if ( video.getPaiId().equals( serverLive.getId() ) ) {
+					video.setLineName( serverLive.getName() );
+					video.setLineStatus( serverLive.getStatus() );
 				}
 			} );
 
