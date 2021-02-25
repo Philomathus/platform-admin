@@ -37,7 +37,7 @@ public class TokenService {
 	@Value( "${token.secret}" )
 	private String secret;
 	// 令牌有效期（默认30分钟）
-	@Value( "${token.expireTime || 30}" )
+	@Value( "${token.expireTime}" )
 	private int    expireTime;
 
 	@Autowired
