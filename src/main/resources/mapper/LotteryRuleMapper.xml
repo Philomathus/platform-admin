@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryRuleMapper">
+
+    <resultMap type="LotteryRule" id="LotteryRuleResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="des"    column="des"    />
+    </resultMap>
+
+    <sql id="selectLotteryRuleVo">
+        select id, name, des from ${dbLottery}.lottery_rule
+    </sql>
+
+    <select id="selectLotteryRuleList" parameterType="LotteryRule" resultMap="LotteryRuleResult">
+        <include refid="selectLotteryRuleVo"/>
+        <where>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+        </where>
+    </select>
+
+    <select id="selectLotteryRuleById" parameterType="Long" resultMap="LotteryRuleResult">
+        <include refid="selectLotteryRuleVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLotteryRule" parameterType="LotteryRule">
+        insert into ${dbLottery}.lottery_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="des != null">des,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="name != null">#{name},</if>
+                    <if test="des != null">#{des},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLotteryRule" parameterType="LotteryRule">
+        update ${dbLottery}.lottery_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+    
+            <if test="des != null">des = #{des},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLotteryRuleById" parameterType="Long">
+        delete from ${dbLottery}.lottery_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteLotteryRuleByIds" parameterType="String">
+        delete from ${dbLottery}.lottery_rule where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
