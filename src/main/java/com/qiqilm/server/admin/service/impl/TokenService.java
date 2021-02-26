@@ -7,6 +7,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,11 +23,12 @@ import java.util.Map;
  *
  * @author 77tv
  */
+@Log4j2
 @Component
 public class TokenService {
-	protected static final long MILLIS_SECOND     = 1000L;
-	protected static final long MILLIS_MINUTE     = 2 * 60 * MILLIS_SECOND;
-	private static final   Long MILLIS_MINUTE_SIX = 60 * 60 * 1000L;
+	protected static final long MILLIS_SECOND = 1000L;
+	protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
+	private static final   Long MILLIS_HOUR   = 60 * MILLIS_MINUTE;
 
 	// 令牌自定义标识
 	@Value( "${token.header}" )
@@ -105,7 +107,7 @@ public class TokenService {
 	public void verifyToken( LoginUser loginUser ) {
 		long expireTime  = loginUser.getExpireTime();
 		long currentTime = System.currentTimeMillis();
-		if ( expireTime - currentTime <= MILLIS_MINUTE_SIX ) {
+		if ( ( expireTime - currentTime ) <= MILLIS_HOUR ) {
 			refreshToken( loginUser );
 		}
 	}
@@ -117,7 +119,7 @@ public class TokenService {
 	 */
 	public void refreshToken( LoginUser loginUser ) {
 		loginUser.setLoginTime( System.currentTimeMillis() );
-		loginUser.setExpireTime( loginUser.getLoginTime() + expireTime * MILLIS_MINUTE );
+		loginUser.setExpireTime( loginUser.getLoginTime() + ( expireTime * MILLIS_MINUTE ) );
 
 		String userKey  = getUserKey( loginUser.getUser().getUserId() );
 		String oldToken = redisUtil.strGet( userKey );

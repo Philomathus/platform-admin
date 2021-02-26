@@ -144,6 +144,11 @@ public class MemberInfoController extends BaseController {
 		return toAjax( memberInfoService.updateMemberInfo( memberInfo ) );
 	}
 
+	@Log( title = "用户信息", businessType = BusinessType.UPDATE )
+	@PutMapping( "/changeSpeak")
+	public AjaxResult changeSpeak( @RequestBody MemberInfo memberInfo ) {
+		return toAjax( memberInfoService.changeSpeak( memberInfo ) );
+	}
 	@PutMapping( "/change-status" )
 	@Log( title = "修改用户状态", businessType = BusinessType.UPDATE )
 	public Object changeStatus( ReqMemberInfo req ) {

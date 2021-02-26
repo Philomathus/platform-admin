@@ -72,7 +72,7 @@ public class SpeakIpBlackListServiceImpl implements ISpeakIpBlackListService {
         MemberInfo update = new MemberInfo();
         update.setId( speakIpBlackList.getUserId() );
         update.setStatus( 1 );
-        update.setSpeak(0);
+        update.setSpeak("0");
         memberInfoMapper.updateMemberInfo( update );
         memberForbidUtil.setPlatformUserSpeak( speakIpBlackList.getUserId(), false );
         speakIpBlackListMapper.deleteSpeakIp( speakIpBlackList.getUserIp());
