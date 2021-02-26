@@ -1,0 +1,97 @@
+package com.qiqilm.server.admin.controller;
+
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.qiqilm.server.admin.annotation.Log;
+import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.domain.LotteryRule;
+import com.qiqilm.server.admin.service.ILotteryRuleService;
+import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+/**
+ * 开奖规则说明Controller
+ *
+ * @author 77tv
+ * @date 2021-02-26
+ */
+@RestController
+@RequestMapping( "/admin/lotteryRule" )
+public class LotteryRuleController extends BaseController {
+	@Autowired
+	private ILotteryRuleService lotteryRuleService;
+
+	/**
+	 * 查询开奖规则说明列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:list')" )
+	@GetMapping( "/list" )
+    	public TableDataInfo list(LotteryRule lotteryRule) {
+		startPage();
+		List<LotteryRule> list = lotteryRuleService.selectLotteryRuleList(lotteryRule);
+		return getDataTable( list );
+	}
+    
+	/**
+	 * 导出开奖规则说明列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:export')" )
+	@Log( title = "开奖规则说明", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export(LotteryRule lotteryRule) {
+		List<LotteryRule>      list = lotteryRuleService.selectLotteryRuleList(lotteryRule);
+		ExcelUtil<LotteryRule> util = new ExcelUtil<>(LotteryRule.class);
+		return util.exportExcel( list, "lotteryRule" );
+	}
+
+	/**
+	 * 获取开奖规则说明详细信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:query')" )
+	@GetMapping( value = "/{id}" )
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
+		return AjaxResult.success( lotteryRuleService.selectLotteryRuleById(id) );
+	}
+
+	/**
+	 * 新增开奖规则说明
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:add')" )
+	@Log( title = "开奖规则说明", businessType = BusinessType.INSERT )
+	@PostMapping
+	public AjaxResult add( @RequestBody LotteryRule lotteryRule) {
+		return toAjax( lotteryRuleService.insertLotteryRule(lotteryRule) );
+	}
+
+	/**
+	 * 修改开奖规则说明
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:edit')" )
+	@Log( title = "开奖规则说明", businessType = BusinessType.UPDATE )
+	@PutMapping
+	public AjaxResult edit( @RequestBody LotteryRule lotteryRule) {
+		return toAjax( lotteryRuleService.updateLotteryRule(lotteryRule) );
+	}
+
+	/**
+	 * 删除开奖规则说明
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:remove')" )
+	@Log( title = "开奖规则说明", businessType = BusinessType.DELETE )
+	@DeleteMapping( "/{ids}" )
+	public AjaxResult remove( @PathVariable Long[] ids ) {
+		return toAjax( lotteryRuleService.deleteLotteryRuleByIds( ids ) );
+	}
+}
