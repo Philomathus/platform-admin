@@ -33,27 +33,26 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
      */
     @Override
     public List<ReportAgentcount> selectReportAgentcountList(ReportAgentcount reportAgentcount) throws ParseException {
-//        List<ReportAgentcount>allList=new ArrayList<>();
-//        String dateNowStr=dateNowStr();//获取当天时间字符串
-//        setSelectTime(dateNowStr,reportAgentcount);//首次进入查询7天的数据
-//        String beginTime = (String) reportAgentcount.getParams().get("beginTime");
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        Date date = simpleDateFormat.parse(beginTime);
-//        boolean flag = date.before(new Date());
-//        if (flag){
-//            allList = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
-//            return allList;
-//        }else {
-//            return allList;
-//        }
-        List<ReportAgentcount> allList =reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
-        return allList;
+        List<ReportAgentcount>allList=new ArrayList<>();
+        String dateNowStr=dateNowStr();//获取当天时间字符串
+        setSelectTime(dateNowStr,reportAgentcount);//首次进入查询7天的数据
+        String beginTime = (String) reportAgentcount.getParams().get("beginTime");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(beginTime);
+        boolean flag = date.before(new Date());
+        if (flag){
+            allList = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
+            return allList;
+        }else {
+            return allList;
+        }
 
     }
 
     @Override
     public Object storage(ReportAgentcount reportAgentcount) {
         String dateNowStr=dateNowStr();//获取当天时间字符串
+        setSelectTime(dateNowStr,reportAgentcount);//首次进入查询7天的数据
             if(reportAgentcount.getAgentcode()==null){
                 reportAgentcount.setAgentcode("");
             }
