@@ -39,6 +39,10 @@ public class WheelSkinReceived extends BaseEntity {
     @Excel(name = "用户昵称")
     private String nickName;
 
+    /** 游戏昵称 */
+    @Excel(name = "异常信息")
+    private String errorRemark;
+
     /** 皮肤名称 */
     @Excel(name = "皮肤名称")
     private String skin;
@@ -60,6 +64,7 @@ public class WheelSkinReceived extends BaseEntity {
             .append("name", getName())
             .append("skin", getSkin())
             .append("receiveType", getReceiveType())
+            .append("errorRemark", getErrorRemark())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
             .toString();

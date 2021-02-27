@@ -82,18 +82,13 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		}
 		List<ServerLive>    resultList = serverLiveMapper.selectServerLiveList( null );
 		Map<Object, Object> failMap    = redisUtil.hGetAll( REDIS_KEY_DETECT_PLAY );
-		List<Long>          hostIds    = new ArrayList<>();
 		liveVideos.forEach( video -> {
-
-			hostIds.add( video.getId() );
-
 			resultList.forEach( serverLive -> {
 				if ( video.getPaiId().equals( serverLive.getId() ) ) {
 					video.setLineName( serverLive.getName() );
 					video.setLineStatus( serverLive.getStatus() );
 				}
 			} );
-
 			failMap.forEach( ( key, value ) -> {
 				if ( video.getId().toString().equals( key.toString() ) ) {
 					video.setLiveStatus( value.toString() );
