@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelPrizeMapper">
+
+    <resultMap type="WheelPrize" id="WheelPrizeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="prize"    column="prize"    />
+        <result property="weight"    column="weight"    />
+        <result property="odr"    column="odr"    />
+        <result property="wheelType"    column="wheel_type"    />
+    </resultMap>
+
+    <sql id="selectWheelPrizeVo">
+        select id, name, prize, weight, odr, wheel_type from 7700_live.wheel_prize
+    </sql>
+
+    <select id="selectWheelPrizeList" parameterType="WheelPrize" resultMap="WheelPrizeResult">
+        <include refid="selectWheelPrizeVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="prize != null "> and prize = #{prize}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="odr != null "> and odr = #{odr}</if>
+            <if test="wheelType != null "> and wheel_type = #{wheelType}</if>
+        </where>
+    </select>
+
+    <select id="selectWheelPrizeById" parameterType="Long" resultMap="WheelPrizeResult">
+        <include refid="selectWheelPrizeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWheelPrize" parameterType="WheelPrize" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.wheel_prize
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="prize != null">prize,</if>
+            <if test="weight != null">weight,</if>
+            <if test="odr != null">odr,</if>
+            <if test="wheelType != null">wheel_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="name != null">#{name},</if>
+                    <if test="prize != null">#{prize},</if>
+                    <if test="weight != null">#{weight},</if>
+                    <if test="odr != null">#{odr},</if>
+                    <if test="wheelType != null">#{wheelType},</if>
+             </trim>
+    </insert>
+
+    <update id="updateWheelPrize" parameterType="WheelPrize">
+        update 7700_live.wheel_prize
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+    
+            <if test="prize != null">prize = #{prize},</if>
+    
+            <if test="weight != null">weight = #{weight},</if>
+    
+            <if test="odr != null">odr = #{odr},</if>
+    
+            <if test="wheelType != null">wheel_type = #{wheelType},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelPrizeById" parameterType="Long">
+        delete from 7700_live.wheel_prize where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelPrizeByIds" parameterType="String">
+        delete from 7700_live.wheel_prize where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

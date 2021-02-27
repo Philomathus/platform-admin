@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelSkinMapper">
+
+    <resultMap type="WheelSkin" id="WheelSkinResult">
+        <result property="id"    column="id"    />
+        <result property="prize"    column="prize"    />
+        <result property="skinName"    column="skin_name"    />
+        <result property="heroName"    column="hero_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectWheelSkinVo">
+        select id, prize, skin_name, hero_name,  FROM_UNIXTIME(create_time) create_time ,   FROM_UNIXTIME(update_time) update_time   from 7700_live.wheel_skin
+    </sql>
+
+    <select id="selectWheelSkinList" parameterType="WheelSkin" resultMap="WheelSkinResult">
+        <include refid="selectWheelSkinVo"/>
+        <where>
+            <if test="prize != null "> and prize = #{prize}</if>
+            <if test="skinName != null  and skinName != ''"> and skin_name like concat('%', #{skinName}, '%')</if>
+            <if test="heroName != null  and heroName != ''"> and hero_name like concat('%', #{heroName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectWheelSkinById" parameterType="Long" resultMap="WheelSkinResult">
+        <include refid="selectWheelSkinVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWheelSkin" parameterType="WheelSkin" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.wheel_skin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prize != null">prize,</if>
+            <if test="skinName != null">skin_name,</if>
+            <if test="heroName != null">hero_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="prize != null">#{prize},</if>
+                    <if test="skinName != null">#{skinName},</if>
+                    <if test="heroName != null">#{heroName},</if>
+                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+             </trim>
+    </insert>
+
+    <update id="updateWheelSkin" parameterType="WheelSkin">
+        update 7700_live.wheel_skin
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="prize != null">prize = #{prize},</if>
+    
+            <if test="skinName != null">skin_name = #{skinName},</if>
+    
+            <if test="heroName != null">hero_name = #{heroName},</if>
+    
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+    
+            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelSkinById" parameterType="Long">
+        delete from 7700_live.wheel_skin where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelSkinByIds" parameterType="String">
+        delete from 7700_live.wheel_skin where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
