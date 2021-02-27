@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.domain.ActivityType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LotteryRuleMapper;
@@ -82,5 +84,10 @@ public class LotteryRuleServiceImpl implements ILotteryRuleService {
     @Override
     public int deleteLotteryRuleById(Long id) {
         return lotteryRuleMapper.deleteLotteryRuleById(id);
+    }
+
+    @Override
+    public List<LotteryRule> selectLotteryRuleType() {
+        return lotteryRuleMapper.selectLotteryRuleType();
     }
 }
