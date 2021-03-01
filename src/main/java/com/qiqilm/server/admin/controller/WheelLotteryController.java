@@ -1,0 +1,97 @@
+package com.qiqilm.server.admin.controller;
+
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.qiqilm.server.admin.annotation.Log;
+import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.domain.WheelLottery;
+import com.qiqilm.server.admin.service.IWheelLotteryService;
+import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+/**
+ * 转盘彩票Controller
+ *
+ * @author 77tv
+ * @date 2021-03-01
+ */
+@RestController
+@RequestMapping( "/lottery/wheelLottery" )
+public class WheelLotteryController extends BaseController {
+	@Autowired
+	private IWheelLotteryService wheelLotteryService;
+
+	/**
+	 * 查询转盘彩票列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:list')" )
+	@GetMapping( "/list" )
+    	public TableDataInfo list(WheelLottery wheelLottery) {
+		startPage();
+		List<WheelLottery> list = wheelLotteryService.selectWheelLotteryList(wheelLottery);
+		return getDataTable( list );
+	}
+    
+	/**
+	 * 导出转盘彩票列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:export')" )
+	@Log( title = "转盘彩票", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export(WheelLottery wheelLottery) {
+		List<WheelLottery>      list = wheelLotteryService.selectWheelLotteryList(wheelLottery);
+		ExcelUtil<WheelLottery> util = new ExcelUtil<>(WheelLottery.class);
+		return util.exportExcel( list, "wheelLottery" );
+	}
+
+	/**
+	 * 获取转盘彩票详细信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:query')" )
+	@GetMapping( value = "/{id}" )
+	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
+		return AjaxResult.success( wheelLotteryService.selectWheelLotteryById(id) );
+	}
+
+	/**
+	 * 新增转盘彩票
+	 */
+	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:add')" )
+	@Log( title = "转盘彩票", businessType = BusinessType.INSERT )
+	@PostMapping
+	public AjaxResult add( @RequestBody WheelLottery wheelLottery) {
+		return toAjax( wheelLotteryService.insertWheelLottery(wheelLottery) );
+	}
+
+	/**
+	 * 修改转盘彩票
+	 */
+	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:edit')" )
+	@Log( title = "转盘彩票", businessType = BusinessType.UPDATE )
+	@PutMapping
+	public AjaxResult edit( @RequestBody WheelLottery wheelLottery) {
+		return toAjax( wheelLotteryService.updateWheelLottery(wheelLottery) );
+	}
+
+	/**
+	 * 删除转盘彩票
+	 */
+	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:remove')" )
+	@Log( title = "转盘彩票", businessType = BusinessType.DELETE )
+	@DeleteMapping( "/{ids}" )
+	public AjaxResult remove( @PathVariable String[] ids ) {
+		return toAjax( wheelLotteryService.deleteWheelLotteryByIds( ids ) );
+	}
+}
