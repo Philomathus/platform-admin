@@ -12,7 +12,7 @@
     </resultMap>
 
     <sql id="selectWheelPrizeVo">
-        select id, name, prize, weight, odr, wheel_type from 7700_live.wheel_prize
+        select id, name, prize, weight, odr, wheel_type from ${dbLottery}.wheel_prize
     </sql>
 
     <select id="selectWheelPrizeList" parameterType="WheelPrize" resultMap="WheelPrizeResult">
@@ -32,7 +32,7 @@
     </select>
 
     <insert id="insertWheelPrize" parameterType="WheelPrize" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.wheel_prize
+        insert into ${dbLottery}.wheel_prize
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
             <if test="prize != null">prize,</if>
@@ -50,7 +50,7 @@
     </insert>
 
     <update id="updateWheelPrize" parameterType="WheelPrize">
-        update 7700_live.wheel_prize
+        update ${dbLottery}.wheel_prize
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
     
@@ -67,11 +67,11 @@
     </update>
 
     <delete id="deleteWheelPrizeById" parameterType="Long">
-        delete from 7700_live.wheel_prize where id = #{id}
+        delete from ${dbLottery}.wheel_prize where id = #{id}
     </delete>
 
     <delete id="deleteWheelPrizeByIds" parameterType="String">
-        delete from 7700_live.wheel_prize where id in
+        delete from ${dbLottery}.wheel_prize where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

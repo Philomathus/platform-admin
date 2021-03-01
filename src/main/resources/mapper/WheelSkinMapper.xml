@@ -12,7 +12,7 @@
     </resultMap>
 
     <sql id="selectWheelSkinVo">
-        select id, prize, skin_name, hero_name,  FROM_UNIXTIME(create_time) create_time ,   FROM_UNIXTIME(update_time) update_time   from 7700_live.wheel_skin
+        select id, prize, skin_name, hero_name,  FROM_UNIXTIME(create_time) create_time ,   FROM_UNIXTIME(update_time) update_time   from ${dbLottery}.wheel_skin
     </sql>
 
     <select id="selectWheelSkinList" parameterType="WheelSkin" resultMap="WheelSkinResult">
@@ -30,7 +30,7 @@
     </select>
 
     <insert id="insertWheelSkin" parameterType="WheelSkin" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.wheel_skin
+        insert into ${dbLottery}.wheel_skin
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="prize != null">prize,</if>
             <if test="skinName != null">skin_name,</if>
@@ -48,7 +48,7 @@
     </insert>
 
     <update id="updateWheelSkin" parameterType="WheelSkin">
-        update 7700_live.wheel_skin
+        update ${dbLottery}.wheel_skin
         <trim prefix="SET" suffixOverrides=",">
             <if test="prize != null">prize = #{prize},</if>
     
@@ -65,11 +65,11 @@
     </update>
 
     <delete id="deleteWheelSkinById" parameterType="Long">
-        delete from 7700_live.wheel_skin where id = #{id}
+        delete from ${dbLottery}.wheel_skin where id = #{id}
     </delete>
 
     <delete id="deleteWheelSkinByIds" parameterType="String">
-        delete from 7700_live.wheel_skin where id in
+        delete from ${dbLottery}.wheel_skin where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
