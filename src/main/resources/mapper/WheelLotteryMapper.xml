@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelLotteryMapper">
+
+    <resultMap type="WheelLottery" id="WheelLotteryResult">
+        <result property="id"    column="id"    />
+        <result property="lotteryId"    column="lottery_id"    />
+        <result property="name"    column="name"    />
+        <result property="start"    column="start"    />
+        <result property="end"    column="end"    />
+        <result property="pRate"    column="p_rate"    />
+        <result property="minPrize"    column="min_prize"    />
+        <result property="minBet"    column="min_bet"    />
+        <result property="prePrize"    column="pre_prize"    />
+        <result property="actPrize"    column="act_prize"    />
+        <result property="wheelType"    column="wheel_type"    />
+    </resultMap>
+
+    <sql id="selectWheelLotteryVo">
+        select id, lottery_id, name, start, end, p_rate, min_prize, min_bet, pre_prize, act_prize, wheel_type from 7700_live.wheel_lottery
+    </sql>
+
+    <select id="selectWheelLotteryList" parameterType="WheelLottery" resultMap="WheelLotteryResult">
+        <include refid="selectWheelLotteryVo"/>
+        <where>
+            <if test="lotteryId != null "> and lottery_id = #{lotteryId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="start != null "> and start = #{start}</if>
+            <if test="end != null "> and end = #{end}</if>
+            <if test="pRate != null "> and p_rate = #{pRate}</if>
+            <if test="minPrize != null "> and min_prize = #{minPrize}</if>
+            <if test="minBet != null "> and min_bet = #{minBet}</if>
+            <if test="prePrize != null "> and pre_prize = #{prePrize}</if>
+            <if test="actPrize != null "> and act_prize = #{actPrize}</if>
+            <if test="wheelType != null "> and wheel_type = #{wheelType}</if>
+        </where>
+    </select>
+
+    <select id="selectWheelLotteryById" parameterType="String" resultMap="WheelLotteryResult">
+        <include refid="selectWheelLotteryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWheelLottery" parameterType="WheelLottery">
+        insert into 7700_live.wheel_lottery
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="lotteryId != null">lottery_id,</if>
+            <if test="name != null">name,</if>
+            <if test="start != null">start,</if>
+            <if test="end != null">end,</if>
+            <if test="pRate != null">p_rate,</if>
+            <if test="minPrize != null">min_prize,</if>
+            <if test="minBet != null">min_bet,</if>
+            <if test="prePrize != null">pre_prize,</if>
+            <if test="actPrize != null">act_prize,</if>
+            <if test="wheelType != null">wheel_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="lotteryId != null">#{lotteryId},</if>
+                    <if test="name != null">#{name},</if>
+                    <if test="start != null">#{start},</if>
+                    <if test="end != null">#{end},</if>
+                    <if test="pRate != null">#{pRate},</if>
+                    <if test="minPrize != null">#{minPrize},</if>
+                    <if test="minBet != null">#{minBet},</if>
+                    <if test="prePrize != null">#{prePrize},</if>
+                    <if test="actPrize != null">#{actPrize},</if>
+                    <if test="wheelType != null">#{wheelType},</if>
+             </trim>
+    </insert>
+
+    <update id="updateWheelLottery" parameterType="WheelLottery">
+        update 7700_live.wheel_lottery
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lotteryId != null">lottery_id = #{lotteryId},</if>
+    
+            <if test="name != null">name = #{name},</if>
+    
+            <if test="start != null">start = #{start},</if>
+    
+            <if test="end != null">end = #{end},</if>
+    
+            <if test="pRate != null">p_rate = #{pRate},</if>
+    
+            <if test="minPrize != null">min_prize = #{minPrize},</if>
+    
+            <if test="minBet != null">min_bet = #{minBet},</if>
+    
+            <if test="prePrize != null">pre_prize = #{prePrize},</if>
+    
+            <if test="actPrize != null">act_prize = #{actPrize},</if>
+    
+            <if test="wheelType != null">wheel_type = #{wheelType},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelLotteryById" parameterType="String">
+        delete from 7700_live.wheel_lottery where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelLotteryByIds" parameterType="String">
+        delete from 7700_live.wheel_lottery where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

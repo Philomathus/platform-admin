@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.cache;
 
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.domain.LiveMount;
+import com.qiqilm.server.admin.domain.WheelLottery;
 import com.qiqilm.server.admin.mapper.LiveMountMapper;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
@@ -159,4 +160,15 @@ public class LiveCacheUtil {
 		}
 		redisUtil.hMSet( Constants.LIVE_MOUNT, map );
 	}
+
+
+    public void setWheelLottery( WheelLottery wheelLottery ) {
+        setRedis( "wheel-lottery", String.valueOf( wheelLottery.getId() ), wheelLottery);
+    }
+    public void delWheelLotteryUseKey( int lotteryId ) {
+        redisUtil.unlink(getWheelLotteryUseKey(lotteryId));
+    }
+    private String getWheelLotteryUseKey( int lotteryId ) {
+        return "live:lottery_wheel_pool:" +lotteryId;
+    }
 }

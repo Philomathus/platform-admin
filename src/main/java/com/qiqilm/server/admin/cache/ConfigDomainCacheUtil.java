@@ -60,8 +60,8 @@ public class ConfigDomainCacheUtil {
 
 	public String dynamicValue( String value ) {
 		String trim = value.trim();
-		if ( trim.startsWith( "${" ) && trim.contains( "}" ) ) {
-			String param  = trim.substring( 2, trim.indexOf( "}" ) );
+		if ( trim.contains( "${" ) && trim.contains( "}" ) ) {
+			String param  = trim.substring( trim.indexOf( "${" ) + 2, trim.indexOf( "}" ) );
 			String domain = this.getValue( param );
 			if ( StringUtils.isNotBlank( domain ) ) {
 				return trim.replace( "${" + param + "}", domain );
