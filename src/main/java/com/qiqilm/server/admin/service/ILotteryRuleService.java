@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.ActivityType;
 import com.qiqilm.server.admin.domain.LotteryRule;
 
 /**
@@ -58,4 +59,7 @@ public interface ILotteryRuleService {
 	 * @return 结果
 	 */
 	public int deleteLotteryRuleById(Long id);
+
+	//给彩票信息做的下拉框
+	List<LotteryRule> selectLotteryRuleType();
 }

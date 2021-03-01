@@ -3,20 +3,22 @@
 <mapper namespace="com.qiqilm.server.admin.mapper.LotteryRuleMapper">
 
     <resultMap type="LotteryRule" id="LotteryRuleResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="des"    column="des"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="kind" column="kind"/>
+        <result property="ind" column="ind"/>
+        <result property="des" column="des"/>
     </resultMap>
 
     <sql id="selectLotteryRuleVo">
-        select id, name, des from ${dbLottery}.lottery_rule
+        select id, `name`, kind, ind, des from ${dbLottery}.lottery_rule
     </sql>
 
     <select id="selectLotteryRuleList" parameterType="LotteryRule" resultMap="LotteryRuleResult">
         <include refid="selectLotteryRuleVo"/>
         <where>
-            <if test="id != null  and id != ''"> and id = #{id}</if>
-            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="kind != null  and kind != ''">and kind = #{kind}</if>
+            <if test="name != null  and name != ''">and name = #{name}</if>
         </where>
     </select>
 
@@ -25,27 +27,35 @@
         where id = #{id}
     </select>
 
+    <select id="selectLotteryRuleType" parameterType="Long" resultMap="LotteryRuleResult">
+        <include refid="selectLotteryRuleVo"/>
+    </select>
+
     <insert id="insertLotteryRule" parameterType="LotteryRule">
         insert into ${dbLottery}.lottery_rule
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="name != null">name,</if>
+            <if test="kind != null">kind,</if>
+            <if test="ind != null">ind,</if>
             <if test="des != null">des,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id != null">#{id},</if>
-                    <if test="name != null">#{name},</if>
-                    <if test="des != null">#{des},</if>
-             </trim>
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="kind != null">#{kind},</if>
+            <if test="ind != null">#{ind},</if>
+            <if test="des != null">#{des},</if>
+        </trim>
     </insert>
 
     <update id="updateLotteryRule" parameterType="LotteryRule">
         update ${dbLottery}.lottery_rule
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
-    
+            <if test="kind != null">kind = #{kind},,</if>
+            <if test="ind != null">ind = #{ind},,</if>
             <if test="des != null">des = #{des},</if>
-    
         </trim>
         where id = #{id}
     </update>

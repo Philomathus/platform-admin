@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.ActivityType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,5 +94,17 @@ public class LotteryRuleController extends BaseController {
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( lotteryRuleService.deleteLotteryRuleByIds( ids ) );
+	}
+
+	/**
+	 * 彩票类型下拉框
+	 *
+	 * @return
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:list')" )
+	@GetMapping("/lotteryType")
+	public AjaxResult findLotteryType() {
+		List<LotteryRule> lotteryRuleType = lotteryRuleService.selectLotteryRuleType();
+		return AjaxResult.success(lotteryRuleType);
 	}
 }
