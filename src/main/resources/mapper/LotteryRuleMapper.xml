@@ -18,17 +18,13 @@
         <include refid="selectLotteryRuleVo"/>
         <where>
             <if test="kind != null  and kind != ''">and kind = #{kind}</if>
-            <if test="name != null  and name != ''">and name = #{name}</if>
+            <if test="name != null  and name != ''">and `name` = #{name}</if>
         </where>
     </select>
 
     <select id="selectLotteryRuleById" parameterType="Long" resultMap="LotteryRuleResult">
         <include refid="selectLotteryRuleVo"/>
         where id = #{id}
-    </select>
-
-    <select id="selectLotteryRuleType" parameterType="Long" resultMap="LotteryRuleResult">
-        <include refid="selectLotteryRuleVo"/>
     </select>
 
     <insert id="insertLotteryRule" parameterType="LotteryRule">
@@ -53,8 +49,8 @@
         update ${dbLottery}.lottery_rule
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
-            <if test="kind != null">kind = #{kind},,</if>
-            <if test="ind != null">ind = #{ind},,</if>
+            <if test="kind != null">kind = #{kind},</if>
+            <if test="ind != null">ind = #{ind},</if>
             <if test="des != null">des = #{des},</if>
         </trim>
         where id = #{id}

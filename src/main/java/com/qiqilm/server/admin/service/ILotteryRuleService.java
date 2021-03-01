@@ -60,6 +60,4 @@ public interface ILotteryRuleService {
 	 */
 	public int deleteLotteryRuleById(Long id);
 
-	//给彩票信息做的下拉框
-	List<LotteryRule> selectLotteryRuleType();
 }

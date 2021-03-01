@@ -58,6 +58,4 @@ public interface LotteryRuleMapper {
 	 * @return 结果
 	 */
 	public int deleteLotteryRuleByIds(Long[] ids );
-
-	List<LotteryRule> selectLotteryRuleType();
 }
