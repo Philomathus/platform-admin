@@ -86,8 +86,4 @@ public class LotteryRuleServiceImpl implements ILotteryRuleService {
         return lotteryRuleMapper.deleteLotteryRuleById(id);
     }
 
-    @Override
-    public List<LotteryRule> selectLotteryRuleType() {
-        return lotteryRuleMapper.selectLotteryRuleType();
-    }
 }

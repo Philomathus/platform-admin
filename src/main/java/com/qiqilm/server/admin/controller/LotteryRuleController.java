@@ -96,15 +96,5 @@ public class LotteryRuleController extends BaseController {
 		return toAjax( lotteryRuleService.deleteLotteryRuleByIds( ids ) );
 	}
 
-	/**
-	 * 彩票类型下拉框
-	 *
-	 * @return
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:list')" )
-	@GetMapping("/lotteryType")
-	public AjaxResult findLotteryType() {
-		List<LotteryRule> lotteryRuleType = lotteryRuleService.selectLotteryRuleType();
-		return AjaxResult.success(lotteryRuleType);
-	}
+
 }
