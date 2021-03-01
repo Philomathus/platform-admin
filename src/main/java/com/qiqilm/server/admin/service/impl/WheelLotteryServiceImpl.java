@@ -54,7 +54,12 @@ public class WheelLotteryServiceImpl implements IWheelLotteryService {
      */
     @Override
     public int insertWheelLottery(WheelLottery wheelLottery) {
-        int i = wheelLotteryMapper.insertWheelLottery(wheelLottery);
+        int i = 0;
+        try {
+            i = wheelLotteryMapper.insertWheelLottery(wheelLottery);
+        } catch (Exception e) {
+            return i;
+        }
         liveCacheUtil.setWheelLottery(wheelLottery);
         return i;
     }
