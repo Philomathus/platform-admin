@@ -17,7 +17,7 @@
     </resultMap>
 
     <sql id="selectWheelLotteryVo">
-        select id, lottery_id, name, start, end, p_rate, min_prize, min_bet, pre_prize, act_prize, wheel_type from 7700_live.wheel_lottery
+        select id, lottery_id, name, start, end, p_rate, min_prize, min_bet, pre_prize, act_prize, wheel_type from ${dbLottery}.wheel_lottery
     </sql>
 
     <select id="selectWheelLotteryList" parameterType="WheelLottery" resultMap="WheelLotteryResult">
@@ -42,7 +42,7 @@
     </select>
 
     <insert id="insertWheelLottery" parameterType="WheelLottery">
-        insert into 7700_live.wheel_lottery
+        insert into ${dbLottery}.wheel_lottery
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="lotteryId != null">lottery_id,</if>
@@ -72,7 +72,7 @@
     </insert>
 
     <update id="updateWheelLottery" parameterType="WheelLottery">
-        update 7700_live.wheel_lottery
+        update ${dbLottery}.wheel_lottery
         <trim prefix="SET" suffixOverrides=",">
             <if test="lotteryId != null">lottery_id = #{lotteryId},</if>
     
@@ -99,11 +99,11 @@
     </update>
 
     <delete id="deleteWheelLotteryById" parameterType="String">
-        delete from 7700_live.wheel_lottery where id = #{id}
+        delete from ${dbLottery}.wheel_lottery where id = #{id}
     </delete>
 
     <delete id="deleteWheelLotteryByIds" parameterType="String">
-        delete from 7700_live.wheel_lottery where id in
+        delete from ${dbLottery}.wheel_lottery where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

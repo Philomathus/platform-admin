@@ -20,13 +20,14 @@
     <sql id="selectWheelSkinReceivedVo">
         select a.id, a.wheel_history_id, a.p_user_id, a.da_qu, a.name, a.skin, a.receive_type,  FROM_UNIXTIME(a.create_time) create_time ,   FROM_UNIXTIME(a.update_time) update_time  ,
         b.name nickName,b.prize,a.error_remark errorRemark
-        from 7700_live.wheel_skin_received a
-        LEFT JOIN 7700_live.wheel_history b on a.wheel_history_id=b.id
+        from ${dbLottery}.wheel_skin_received a
+        LEFT JOIN ${dbLottery}.wheel_history b on a.wheel_history_id=b.id
     </sql>
 
     <select id="selectWheelSkinReceivedList" parameterType="WheelSkinReceived" resultMap="WheelSkinReceivedResult">
         <include refid="selectWheelSkinReceivedVo"/>
         <where>
+            and b.prize > 0
             <if test="wheelHistoryId != null "> and a.wheel_history_id = #{wheelHistoryId}</if>
             <if test="pUserId != null  and pUserId != ''"> and a.p_user_id = #{pUserId}</if>
             <if test="daQu != null  and daQu != ''"> and a.da_qu like concat('%', #{daQu}, '%')</if>
@@ -43,7 +44,7 @@
     </select>
 
     <insert id="insertWheelSkinReceived" parameterType="WheelSkinReceived" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.wheel_skin_received
+        insert into ${dbLottery}.wheel_skin_received
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="wheelHistoryId != null">wheel_history_id,</if>
             <if test="pUserId != null">p_user_id,</if>
@@ -67,7 +68,7 @@
     </insert>
 
     <update id="updateWheelSkinReceived" parameterType="WheelSkinReceived">
-        update 7700_live.wheel_skin_received
+        update ${dbLottery}.wheel_skin_received
         <trim prefix="SET" suffixOverrides=",">
             <if test="wheelHistoryId != null">wheel_history_id = #{wheelHistoryId},</if>
 
@@ -92,11 +93,11 @@
     </update>
 
     <delete id="deleteWheelSkinReceivedById" parameterType="Long">
-        delete from 7700_live.wheel_skin_received where id = #{id}
+        delete from ${dbLottery}.wheel_skin_received where id = #{id}
     </delete>
 
     <delete id="deleteWheelSkinReceivedByIds" parameterType="String">
-        delete from 7700_live.wheel_skin_received where id in
+        delete from ${dbLottery}.wheel_skin_received where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
