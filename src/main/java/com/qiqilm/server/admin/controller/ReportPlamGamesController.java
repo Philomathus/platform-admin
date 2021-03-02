@@ -53,7 +53,6 @@ public class ReportPlamGamesController extends BaseController {
         if("0".equals( keyVal )){
             return AjaxResult.error("报表正在生成，请稍后...");
         }
-
         startPage();
         Date d = new Date();
         String myString = reportPlamGames.getBegindate();

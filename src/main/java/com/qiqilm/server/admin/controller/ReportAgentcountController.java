@@ -116,22 +116,28 @@ public class ReportAgentcountController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list( ReportAgentcount reportAgentcount ) throws ParseException {
+	public Object list( ReportAgentcount reportAgentcount ) throws ParseException {
+		reportAgentcountService.storage( reportAgentcount );
+
+		String keyVal = redisUtil.strGet( "admin-reportAgentcount" );
+		if("0".equals( keyVal )){
+			return AjaxResult.error("报表正在生成，请稍后...");
+		}
 		startPage();
 		List<ReportAgentcount> list = reportAgentcountService.selectReportAgentcountList( reportAgentcount );
 		return getDataTable( list );
 	}
 
-	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
-	@GetMapping( "/storage" )
-	public AjaxResult storage( ReportAgentcount reportAgentcount ) throws ParseException {
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String userId = loginUser.getUser().getUserId().toString();
-		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
-			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
-		}
-		return AjaxResult.success( reportAgentcountService.storage( reportAgentcount ) );
-	}
+//	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
+//	@GetMapping( "/storage" )
+//	public AjaxResult storage( ReportAgentcount reportAgentcount ) throws ParseException {
+//		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+//		String userId = loginUser.getUser().getUserId().toString();
+//		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
+//			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
+//		}
+//		return AjaxResult.success( reportAgentcountService.storage( reportAgentcount ) );
+//	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:export')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
