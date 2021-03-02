@@ -21,5 +21,5 @@ public interface IReportPlamComService {
 	public List<ReportPlamCom> selectReportPlamComList(ReportPlamCom reportPlamCom);
 
 
-    Object storage(ReportPlamCom reportPlamCom);
+    void storage(ReportPlamCom reportPlamCom);
 }

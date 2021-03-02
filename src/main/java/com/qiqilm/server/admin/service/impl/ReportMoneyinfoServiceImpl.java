@@ -3,12 +3,15 @@ package com.qiqilm.server.admin.service.impl;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.*;
 
 import com.qiqilm.server.admin.domain.ReportMoneyinfo;
 import com.qiqilm.server.admin.mapper.ReportMoneyinfoMapper;
 import com.qiqilm.server.admin.service.IReportMoneyinfoService;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -24,6 +27,10 @@ import org.springframework.util.StringUtils;
 public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
     @Autowired
     private ReportMoneyinfoMapper reportMoneyinfoMapper;
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     /**
      * 查询平台资金报，记录平台每日收入及支出总额，预估当前会员的积分余额列表
@@ -33,45 +40,50 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
      */
     @Override
     public List<ReportMoneyinfo> selectReportMoneyinfoList(ReportMoneyinfo reportMoneyinfo) throws ParseException {
-        List<ReportMoneyinfo> allList =new ArrayList<>();
-        String dateNowStr=dateNowStr();//获取当天时间字符串
-        setSelectTime(dateNowStr,reportMoneyinfo);//首次进入查询7天的数据
+        List<ReportMoneyinfo> allList = new ArrayList<>();
+        String dateNowStr = dateNowStr();//获取当天时间字符串
+        setSelectTime(dateNowStr, reportMoneyinfo);//首次进入查询7天的数据
         String beginTime = (String) reportMoneyinfo.getParams().get("beginTime");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = simpleDateFormat.parse(beginTime);
         boolean flag = date.before(new Date());
-        if (flag){
-             allList = reportMoneyinfoMapper.selectReportMoneyinfoList(reportMoneyinfo);
+        if (flag) {
+            allList = reportMoneyinfoMapper.selectReportMoneyinfoList(reportMoneyinfo);
             return allList;
-        }else {
+        } else {
             return allList;
         }
 
     }
 
     @Override
-    public Object storage(ReportMoneyinfo reportMoneyinfo) {
-        String dateNowStr=dateNowStr();//获取当天时间字符串
-        setSelectTime(dateNowStr,reportMoneyinfo);//首次进入查询7天的数据
-//        List allList = reportMoneyinfoMapper.selectReportMoneyinfoList(reportMoneyinfo);
-        if (reportMoneyinfo.getParams().get("endTime").equals(dateNowStr)){
-//            if (allList.size() == 0) {
-                return reportMoneyinfoMapper.calldataProrepPlamcom(dateNowStr, dateNowStr);
+    public void storage(ReportMoneyinfo reportMoneyinfo) {
+        String dateNowStr = dateNowStr();//获取当天时间字符串
+        setSelectTime(dateNowStr, reportMoneyinfo);//首次进入查询7天的数据
+        if (reportMoneyinfo.getParams().get("endTime").equals(dateNowStr)) {
+            if (!redisUtil.strSetIfAbsent("admin-reportMoneyInfo", "0", Duration.ofMinutes(10))) {
+                return;
             }
-//        }
-        return null;
+            threadPoolTaskExecutor.execute(() -> {
+                String result = reportMoneyinfoMapper.calldataProrepPlamcom(dateNowStr, dateNowStr);
+                if (StringUtils.hasText(result) && redisUtil.exists("admin-reportMoneyInfo")) {
+                    redisUtil.strIncrement("admin-reportMoneyInfo");
+                }
+            });
+
+        }
     }
 
     //统计表头数据
     @Override
     public ReportMoneyinfo countMoneyData(ReportMoneyinfo reportMoneyinfo) throws ParseException {
-        String dateNowStr=dateNowStr();//获取当天时间字符串
-        setSelectTime(dateNowStr,reportMoneyinfo);//首次进入查询7天的数据
+        String dateNowStr = dateNowStr();//获取当天时间字符串
+        setSelectTime(dateNowStr, reportMoneyinfo);//首次进入查询7天的数据
         String beginTime = (String) reportMoneyinfo.getParams().get("beginTime");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = simpleDateFormat.parse(beginTime);
         boolean flag = date.before(new Date());
-        if (!flag){
+        if (!flag) {
             reportMoneyinfo.setPaymentAmount(BigDecimal.ZERO);
             reportMoneyinfo.setOutMoney(BigDecimal.ZERO);
             reportMoneyinfo.setCountMoney(BigDecimal.ZERO);
@@ -84,7 +96,7 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
             BigDecimal outMoney = reportMoneyinfo1.getOutMoney();//出款总金额
             reportMoneyinfo1.setCountMoney(paymentAmount.subtract(outMoney));
             return reportMoneyinfo1;
-        }else {
+        } else {
             reportMoneyinfo.setPaymentAmount(BigDecimal.ZERO);
             reportMoneyinfo.setOutMoney(BigDecimal.ZERO);
             reportMoneyinfo.setCountMoney(BigDecimal.ZERO);
@@ -102,6 +114,7 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
             reportMoneyinfo.setParams(m);
         }
     }
+
     private String dateNowStr() {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

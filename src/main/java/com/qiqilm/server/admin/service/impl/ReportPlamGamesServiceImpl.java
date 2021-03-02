@@ -51,21 +51,21 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 
 	@Override
 	public void storage( ReportPlamGames reportPlamGames ) {
-		if ( !redisUtil.strSetIfAbsent( "admin-reportPlamGames", "0", Duration.ofMinutes( 10 ) ) ) {
-			return;
-		}
-		// 判断锁是否释放
-		// 如果是否，则return
-		// 如果是则执行
 		Date             d          = new Date();
 		SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
 		String           dateNowStr = sdf.format( d );
 		reportPlamGames.setBegindate( dateNowStr );
 		if ( reportPlamGames.getBegindate() == null || reportPlamGames.getBegindate().equals( dateNowStr ) ) {
+			// 判断锁是否释放
+			// 如果是否，则return
+			// 如果是则执行
+			if ( !redisUtil.strSetIfAbsent( "admin-reportPlamGames", "0", Duration.ofMinutes( 1 ) ) ) {
+				return;
+			}
 			threadPoolTaskExecutor.execute( () -> {
 				String result = reportPlamGamesMapper.calldataProrepPlamcom( dateNowStr );
 				if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamGames" ) ) {
-					redisUtil.strSet( "admin-reportPlamGames", "1" );
+					redisUtil.strIncrement("admin-reportPlamGames");
 				}
 			} );
 		}

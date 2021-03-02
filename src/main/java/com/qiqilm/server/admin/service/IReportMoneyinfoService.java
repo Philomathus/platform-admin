@@ -26,5 +26,5 @@ public interface IReportMoneyinfoService {
 
     ReportMoneyinfo countMoneyData(ReportMoneyinfo reportMoneyinfo) throws ParseException;
 
-    Object storage(ReportMoneyinfo reportMoneyinfo);
+    void storage(ReportMoneyinfo reportMoneyinfo);
 }

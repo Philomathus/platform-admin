@@ -53,7 +53,12 @@ public class ReportPlamComController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list(ReportPlamCom reportPlamCom) throws ParseException {
+	public Object list(ReportPlamCom reportPlamCom) throws ParseException {
+		reportPlamComService.storage(reportPlamCom);
+		String keyVal = redisUtil.strGet( "admin-reportPlamCom" );
+		if("0".equals( keyVal )){
+			return AjaxResult.error("报表正在生成，请稍后...");
+		}
 		startPage();
 		Date d = new Date();
 		String myString = reportPlamCom.getReporttime();
@@ -83,16 +88,16 @@ public class ReportPlamComController extends BaseController {
 		return util.exportExcel( list, "report-plam-com" );
 	}
 
-	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
-	@GetMapping( "/storage" )
-	public AjaxResult storage(ReportPlamCom reportPlamCom) throws ParseException {
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String userId = loginUser.getUser().getUserId().toString();
-		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
-			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
-		}
-		return AjaxResult.success( reportPlamComService.storage(reportPlamCom));
-	}
+//	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
+//	@GetMapping( "/storage" )
+//	public AjaxResult storage(ReportPlamCom reportPlamCom) throws ParseException {
+//		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+//		String userId = loginUser.getUser().getUserId().toString();
+//		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
+//			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
+//		}
+//		return AjaxResult.success( reportPlamComService.storage(reportPlamCom));
+//	}
 
 	//获取昨天数据
 	private static String getYestoday(){
