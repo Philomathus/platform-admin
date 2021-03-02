@@ -128,7 +128,7 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 	}
 
 	@Override
-	public String suspendUser( String pUserId, boolean flag, Integer num, String userIp ) {
+	public String suspendUser( String pUserId, boolean flag, Integer num, String userIp,String msg,String banAccount ) {
 		if ( memberForbidUtil.setPlatformUserSpeak( pUserId, flag ) ) {
 			memberInfoMapper.updateSpeak( pUserId, num );
 		}
@@ -137,6 +137,7 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 			speakIpBlackList.setUserId( pUserId );
 			speakIpBlackList.setUserIp( userIp );
 			speakIpBlackList.setCreateTime( new Date() );
+			speakIpBlackList.setMsg("操作人:"+banAccount+",发言内容:"+msg);
 			speakIpBlackListMapper.insertSpeakIpBlackList( speakIpBlackList );
 
 			// 封停账号
