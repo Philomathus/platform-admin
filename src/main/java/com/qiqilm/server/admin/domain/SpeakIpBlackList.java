@@ -20,6 +20,7 @@ public class SpeakIpBlackList extends BaseEntity {
     private Integer id;
     private String userId;
     private String userIp;
+    private String msg;
 
     @Override
     public String toString() {
@@ -27,6 +28,7 @@ public class SpeakIpBlackList extends BaseEntity {
             .append("id", getId())
             .append("createTime", getCreateTime())
             .append("userIp", getUserIp())
+            .append("msg", getMsg())
             .toString();
     }
 }

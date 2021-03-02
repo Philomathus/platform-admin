@@ -4,10 +4,13 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.LiveVideoChat;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoChatService;
+import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
@@ -28,7 +31,8 @@ import java.util.Map;
 public class LiveVideoChatController extends BaseController {
 	@Autowired
 	private ILiveVideoChatService liveVideoChatService;
-
+	@Autowired
+	private TokenService tokenService;
 	/**
 	 * 查询会员发言列表
 	 */
@@ -56,10 +60,13 @@ public class LiveVideoChatController extends BaseController {
 		boolean flag = ( boolean ) requestMap.get( "flag" );
 		int num = ( int ) requestMap.get( "num" );
 		String userIp = (String) requestMap.get("userIp");
+		String msg = (String) requestMap.get("msg");
 		if ( !StringUtils.hasText( pUserId ) ) {
 			return AjaxResult.error( "会员平台ID不得为空" );
 		}
-		liveVideoChatService.suspendUser(pUserId,flag,num,userIp);
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String banAccount = loginUser.getUser().getUserName();
+		liveVideoChatService.suspendUser(pUserId,flag,num,userIp,msg,banAccount);
 		return AjaxResult.success();
 	}
 
