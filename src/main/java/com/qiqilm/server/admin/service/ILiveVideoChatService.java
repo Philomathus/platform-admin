@@ -66,7 +66,7 @@ public interface ILiveVideoChatService {
 	 */
 	void setSpeakForbid( List<LiveVideoChat> list );
 
-	String suspendUser( String pUserId,boolean flag,Integer num,String userIp);
+	String suspendUser( String pUserId,boolean flag,Integer num,String userIp,String msg,String banAccount);
 
 	void forbidSendMsg( String pUserId, Integer forbidTime ,Integer videoId );
 }
