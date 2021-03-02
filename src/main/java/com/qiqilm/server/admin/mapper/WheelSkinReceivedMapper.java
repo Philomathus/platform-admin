@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.WheelSkinReceived;
+import com.qiqilm.server.admin.domain.dto.WheelSkinReceivedExcel;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 转盘皮肤领取Mapper接口
@@ -26,6 +28,8 @@ public interface WheelSkinReceivedMapper {
 	 * @return 转盘皮肤领取集合
 	 */
 	public List<WheelSkinReceived> selectWheelSkinReceivedList(WheelSkinReceived wheelSkinReceived);
+
+	public List<WheelSkinReceivedExcel> selectWheelSkinReceivedList2(WheelSkinReceived wheelSkinReceived);
 
 	/**
 	 * 新增转盘皮肤领取
@@ -58,4 +62,6 @@ public interface WheelSkinReceivedMapper {
 	 * @return 结果
 	 */
 	public int deleteWheelSkinReceivedByIds(Long[] ids );
+
+    public Map getTotal(WheelSkinReceived wheelSkinReceived);
 }
