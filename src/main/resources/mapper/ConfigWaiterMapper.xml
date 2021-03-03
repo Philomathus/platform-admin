@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ConfigWaiterMapper">
+
+    <resultMap type="ConfigWaiter" id="ConfigWaiterResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="icon"    column="icon"    />
+        <result property="status"    column="status"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="indexs"    column="indexs"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectConfigWaiterVo">
+        select id, type, code, `name`, icon, status, update_by,  update_time,  indexs, remark from 7700_main.config_waiter
+    </sql>
+
+    <select id="selectConfigWaiterList" parameterType="ConfigWaiter" resultMap="ConfigWaiterResult">
+        <include refid="selectConfigWaiterVo"/>
+        <where>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="indexs != null "> and indexs = #{indexs}</if>
+        </where>
+    </select>
+
+    <select id="selectConfigWaiterById" parameterType="String" resultMap="ConfigWaiterResult">
+        <include refid="selectConfigWaiterVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertConfigWaiter" parameterType="ConfigWaiter">
+        insert into 7700_main.config_waiter
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="type != null">type,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="icon != null">icon,</if>
+            <if test="status != null">status,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="indexs != null">indexs,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="type != null">#{type},</if>
+                    <if test="code != null">#{code},</if>
+                    <if test="name != null">#{name},</if>
+                    <if test="icon != null">#{icon},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="indexs != null">#{indexs},</if>
+                    <if test="remark != null">#{remark},</if>
+             </trim>
+    </insert>
+
+    <update id="updateConfigWaiter" parameterType="ConfigWaiter">
+        update 7700_main.config_waiter
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type = #{type},</if>
+    
+            <if test="code != null">code = #{code},</if>
+    
+            <if test="name != null">name = #{name},</if>
+    
+            <if test="icon != null">icon = #{icon},</if>
+    
+            <if test="status != null">status = #{status},</if>
+    
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+    
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+    
+            <if test="indexs != null">indexs = #{indexs},</if>
+    
+            <if test="remark != null">remark = #{remark},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteConfigWaiterById" parameterType="String">
+        delete from 7700_main.config_waiter where id = #{id}
+    </delete>
+
+    <delete id="deleteConfigWaiterByIds" parameterType="String">
+        delete from 7700_main.config_waiter where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
