@@ -23,7 +23,7 @@ public interface IReportAgentcountService {
 	 */
 	public List<ReportAgentcount> selectReportAgentcountList(ReportAgentcount reportAgentcount) throws ParseException;
 
-    Object storage(ReportAgentcount reportAgentcount);
+    void storage(ReportAgentcount reportAgentcount);
 
     List<ReportPlamHome> findChartsOne(String classTwo, String time);
 }

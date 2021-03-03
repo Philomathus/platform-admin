@@ -47,7 +47,13 @@ public class ReportMoneyinfoController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list(ReportMoneyinfo reportMoneyinfo) throws ParseException {
+	public Object list(ReportMoneyinfo reportMoneyinfo) throws ParseException {
+		reportMoneyinfoService.storage(reportMoneyinfo);
+
+		String keyVal = redisUtil.strGet( "admin-reportMoneyInfo" );
+		if("0".equals( keyVal )){
+			return AjaxResult.error("报表正在生成，请稍后...");
+		}
 		startPage();
 		List<ReportMoneyinfo> list = reportMoneyinfoService.selectReportMoneyinfoList(reportMoneyinfo);
 		return getDataTable( list );
@@ -58,16 +64,16 @@ public class ReportMoneyinfoController extends BaseController {
 		return AjaxResult.success(reportMoneyinfo1);
 	}
 
-	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:list')" )
-	@GetMapping( "/storage" )
-	public AjaxResult storage(ReportMoneyinfo reportMoneyinfo) throws ParseException {
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String userId = loginUser.getUser().getUserId().toString();
-		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
-			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
-		}
-		return AjaxResult.success( reportMoneyinfoService.storage(reportMoneyinfo));
-	}
+//	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:list')" )
+//	@GetMapping( "/storage" )
+//	public AjaxResult storage(ReportMoneyinfo reportMoneyinfo) throws ParseException {
+//		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+//		String userId = loginUser.getUser().getUserId().toString();
+//		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
+//			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
+//		}
+//		return AjaxResult.success( reportMoneyinfoService.storage(reportMoneyinfo));
+//	}
 	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:export')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )

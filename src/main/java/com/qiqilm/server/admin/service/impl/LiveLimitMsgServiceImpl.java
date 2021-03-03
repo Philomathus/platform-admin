@@ -47,8 +47,7 @@ public class LiveLimitMsgServiceImpl implements ILiveLimitMsgService {
 
         List<String> strings = Arrays.asList( liveLimitMsg.getName().split( "," ) );
         int          i       = liveLimitMsgMapper.deleteAll();
-        liveLimitMsgMapper.insertBatch( strings );
-        return 0;
+        return   liveLimitMsgMapper.insertBatch( strings );
     }
 
 }

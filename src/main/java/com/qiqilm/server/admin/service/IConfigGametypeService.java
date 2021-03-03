@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigGametype;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface IConfigGametypeService {
 	 * @param configGametype 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int insertConfigGametype(ConfigGametype configGametype);
+	public AjaxResult insertConfigGametype(ConfigGametype configGametype);
 
 	/**
 	 * 修改【请填写功能名称】

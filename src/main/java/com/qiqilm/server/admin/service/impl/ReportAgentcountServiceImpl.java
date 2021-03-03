@@ -5,11 +5,15 @@ import com.qiqilm.server.admin.domain.ReportIncomeDay;
 import com.qiqilm.server.admin.domain.vo.ReportPlamHome;
 import com.qiqilm.server.admin.mapper.ReportAgentcountMapper;
 import com.qiqilm.server.admin.service.IReportAgentcountService;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.*;
 
 /**
@@ -22,7 +26,10 @@ import java.util.*;
 public class ReportAgentcountServiceImpl implements IReportAgentcountService {
     @Autowired
     private ReportAgentcountMapper reportAgentcountMapper;
-
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 
     /**
@@ -33,48 +40,54 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
      */
     @Override
     public List<ReportAgentcount> selectReportAgentcountList(ReportAgentcount reportAgentcount) throws ParseException {
-//        List<ReportAgentcount>allList=new ArrayList<>();
-//        String dateNowStr=dateNowStr();//获取当天时间字符串
-//        setSelectTime(dateNowStr,reportAgentcount);//首次进入查询7天的数据
-//        String beginTime = (String) reportAgentcount.getParams().get("beginTime");
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        Date date = simpleDateFormat.parse(beginTime);
-//        boolean flag = date.before(new Date());
-//        if (flag){
-//            allList = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
-//            return allList;
-//        }else {
-//            return allList;
-//        }
-        List<ReportAgentcount> allList =reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
-        return allList;
+        List<ReportAgentcount> allList = new ArrayList<>();
+        String dateNowStr = dateNowStr();//获取当天时间字符串
+        setSelectTime(dateNowStr, reportAgentcount);//首次进入查询7天的数据
+        String beginTime = (String) reportAgentcount.getParams().get("beginTime");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(beginTime);
+        boolean flag = date.before(new Date());
+        if (flag) {
+            allList = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
+            return allList;
+        } else {
+            return allList;
+        }
 
     }
 
     @Override
-    public Object storage(ReportAgentcount reportAgentcount) {
-        String dateNowStr=dateNowStr();//获取当天时间字符串
-            if(reportAgentcount.getAgentcode()==null){
-                reportAgentcount.setAgentcode("");
+    public void storage(ReportAgentcount reportAgentcount) {
+        String dateNowStr = dateNowStr();//获取当天时间字符串
+        setSelectTime(dateNowStr, reportAgentcount);//首次进入查询7天的数据
+        if (reportAgentcount.getAgentcode() == null) {
+            reportAgentcount.setAgentcode("");
+        }
+        String endTime = (String) reportAgentcount.getParams().get("endTime");
+        if (dateNowStr.equals(endTime)) {
+            if (!redisUtil.strSetIfAbsent("admin-reportAgentcount", "0", Duration.ofMinutes(10))) {
+                return;
             }
-            String endTime = (String) reportAgentcount.getParams().get("endTime");
-            if(dateNowStr.equals(endTime)){
-             return  reportAgentcountMapper.calldataProrepPlamcom(endTime,reportAgentcount.getAgentcode());
-            }
-        return null;
+            threadPoolTaskExecutor.execute(() -> {
+                String result = reportAgentcountMapper.calldataProrepPlamcom(endTime, reportAgentcount.getAgentcode());
+                if (StringUtils.hasText(result) && redisUtil.exists("admin-reportAgentcount")) {
+                    redisUtil.strIncrement("admin-reportAgentcount");
+                }
+            });
+        }
     }
 
     @Override
-    public List<ReportPlamHome> findChartsOne(String classTwo,String time) {
-        return reportAgentcountMapper.findChartsOne(classTwo,time);
+    public List<ReportPlamHome> findChartsOne(String classTwo, String time) {
+        return reportAgentcountMapper.findChartsOne(classTwo, time);
     }
 
     private void setSelectTime(String dateNowStr, ReportAgentcount reportAgentcount) {
-        if (null==reportAgentcount.getParams()||reportAgentcount.getParams().size()==0||
-                reportAgentcount.getParams().get("beginTime") == ""){
-            HashMap m=new HashMap<>();
-            m.put("beginTime",getPastDate(7));
-            m.put("endTime",dateNowStr);
+        if (null == reportAgentcount.getParams() || reportAgentcount.getParams().size() == 0 ||
+                reportAgentcount.getParams().get("beginTime") == "") {
+            HashMap m = new HashMap<>();
+            m.put("beginTime", getPastDate(7));
+            m.put("endTime", dateNowStr);
             reportAgentcount.setParams(m);
         }
     }
@@ -86,7 +99,7 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
         return dateNowStr;
     }
 
-    private  String getPastDate(int past) {
+    private String getPastDate(int past) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - past);
         Date today = calendar.getTime();

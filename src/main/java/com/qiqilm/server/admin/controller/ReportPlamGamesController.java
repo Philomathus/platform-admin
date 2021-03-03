@@ -46,7 +46,13 @@ public class ReportPlamGamesController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('admin:report-plam-games:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ReportPlamGames reportPlamGames) throws ParseException {
+    public Object list(ReportPlamGames reportPlamGames) throws ParseException {
+        reportPlamGamesService.storage(reportPlamGames);
+
+        String keyVal = redisUtil.strGet( "admin-reportPlamGames" );
+        if("0".equals( keyVal )){
+            return AjaxResult.error("报表正在生成，请稍后...");
+        }
         startPage();
         Date d = new Date();
         String myString = reportPlamGames.getBegindate();
@@ -64,16 +70,6 @@ public class ReportPlamGamesController extends BaseController {
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('admin:report-plam-games:list')")
-    @GetMapping("/storage")
-    public AjaxResult storage(ReportPlamGames reportPlamGames){
-        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-        String userId = loginUser.getUser().getUserId().toString();
-        if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
-          return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
-        }
-        return AjaxResult.success(reportPlamGamesService.storage(reportPlamGames));
-    }
     @GetMapping(value = "/count")
     public AjaxResult countBetData(ReportPlamGames reportPlamGames) {
         String myString = reportPlamGames.getBegindate();

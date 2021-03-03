@@ -63,7 +63,8 @@ public class ConfigGametypeController extends BaseController {
 	@Log( title = "游戏配置新增", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ConfigGametype configGametype ) {
-		return toAjax( configGametypeService.insertConfigGametype( configGametype ) );
+		AjaxResult ajaxResult=configGametypeService.insertConfigGametype( configGametype );
+		return ajaxResult;
 	}
 
 	/**
