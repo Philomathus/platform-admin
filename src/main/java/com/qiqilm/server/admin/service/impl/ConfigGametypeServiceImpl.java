@@ -1,7 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigGametype;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.mapper.ConfigGametypeMapper;
@@ -54,15 +56,21 @@ public class ConfigGametypeServiceImpl implements IConfigGametypeService {
      * @return 结果
      */
     @Override
-    public int insertConfigGametype(ConfigGametype configGametype) {
+    public AjaxResult insertConfigGametype(ConfigGametype configGametype) {
 
         GamePlatform gamePlatform= gamePlatformMapper.findAgentList(configGametype);
         configGametype.setPlatformId( gamePlatform.getAgent() );
         configGametype.setPlatformName(gamePlatform.getName());
+        String id= gamePlatform.getAgent() + "-" + configGametype.getSonPlatformId();
+        ConfigGametype gametype = configGametypeMapper.selectConfigGametypeById(id);
+        if (Objects.isNull(gametype)){
+            configGametype.setId(id);
+            configGametypeMapper.insertConfigGametype(configGametype);
+            return AjaxResult.success("新增成功");
+        }else {
+            return AjaxResult.success("新增重复");
+        }
 
-        configGametype.setId(  gamePlatform.getAgent() + "-" + configGametype.getSonPlatformId() );
-
-        return configGametypeMapper.insertConfigGametype(configGametype);
     }
 
     /**
