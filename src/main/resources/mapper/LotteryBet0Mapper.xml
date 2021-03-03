@@ -22,7 +22,7 @@
     </resultMap>
 
     <sql id="selectLotteryBet0Vo">
-        select id, lottery_id, puser_id, issue, status, method_id, bet_select, bet_ids, chip, prize, cost, lottery_name, anchor, code, bet_time,  FROM_UNIXTIME(update_time) update_time   from 7700_lottery.lottery_bet_view
+        select id, lottery_id, puser_id, issue, status, method_id, bet_select, bet_ids, chip, prize, cost, lottery_name, anchor, code, bet_time,  FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet_view
     </sql>
 
     <select id="selectLotteryBet0List" parameterType="LotteryBet0" resultMap="LotteryBet0Result">

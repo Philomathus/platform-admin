@@ -16,7 +16,7 @@
     </resultMap>
 
     <sql id="selectConfigWaiterVo">
-        select id, type, code, `name`, icon, status, update_by,  update_time,  indexs, remark from 7700_main.config_waiter
+        select id, type, code, `name`, icon, status, update_by,  update_time,  indexs, remark from ${dbMain}.config_waiter
     </sql>
 
     <select id="selectConfigWaiterList" parameterType="ConfigWaiter" resultMap="ConfigWaiterResult">
@@ -37,7 +37,7 @@
     </select>
 
     <insert id="insertConfigWaiter" parameterType="ConfigWaiter">
-        insert into 7700_main.config_waiter
+        insert into ${dbMain}.config_waiter
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="type != null">type,</if>
@@ -65,7 +65,7 @@
     </insert>
 
     <update id="updateConfigWaiter" parameterType="ConfigWaiter">
-        update 7700_main.config_waiter
+        update ${dbMain}.config_waiter
         <trim prefix="SET" suffixOverrides=",">
             <if test="type != null">type = #{type},</if>
     
@@ -90,11 +90,11 @@
     </update>
 
     <delete id="deleteConfigWaiterById" parameterType="String">
-        delete from 7700_main.config_waiter where id = #{id}
+        delete from ${dbMain}.config_waiter where id = #{id}
     </delete>
 
     <delete id="deleteConfigWaiterByIds" parameterType="String">
-        delete from 7700_main.config_waiter where id in
+        delete from ${dbMain}.config_waiter where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
