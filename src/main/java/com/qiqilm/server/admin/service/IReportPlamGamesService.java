@@ -26,5 +26,4 @@ public interface IReportPlamGamesService {
 
 	ReportPlamGames countBetData(ReportPlamGames reportPlamGames);
 
-    void storage(ReportPlamGames reportPlamGames);
 }
