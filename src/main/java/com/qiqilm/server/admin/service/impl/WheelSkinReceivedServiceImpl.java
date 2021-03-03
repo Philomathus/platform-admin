@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.WheelSkinReceived;
+import com.qiqilm.server.admin.domain.dto.WheelSkinReceivedExcel;
 import com.qiqilm.server.admin.mapper.WheelSkinReceivedMapper;
 import com.qiqilm.server.admin.service.IWheelSkinReceivedService;
 import com.qiqilm.server.admin.utils.DateUtils;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 转盘皮肤领取Service业务层处理
@@ -86,5 +88,15 @@ public class WheelSkinReceivedServiceImpl implements IWheelSkinReceivedService {
     @Override
     public int deleteWheelSkinReceivedById(Long id) {
         return wheelSkinReceivedMapper.deleteWheelSkinReceivedById(id);
+    }
+
+    @Override
+    public Map getTotal(WheelSkinReceived wheelSkinReceived) {
+        return wheelSkinReceivedMapper.getTotal(wheelSkinReceived);
+    }
+
+    @Override
+    public List<WheelSkinReceivedExcel> selectWheelSkinReceivedList2(WheelSkinReceived wheelSkinReceived) {
+        return wheelSkinReceivedMapper.selectWheelSkinReceivedList2(wheelSkinReceived);
     }
 }

@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.WheelSkinReceived;
+import com.qiqilm.server.admin.domain.dto.WheelSkinReceivedExcel;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 转盘皮肤领取Service接口
@@ -58,4 +60,8 @@ public interface IWheelSkinReceivedService {
 	 * @return 结果
 	 */
 	public int deleteWheelSkinReceivedById(Long id);
+
+    public Map getTotal(WheelSkinReceived wheelSkinReceived);
+
+    public List<WheelSkinReceivedExcel> selectWheelSkinReceivedList2(WheelSkinReceived wheelSkinReceived);
 }
