@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 【请填写功能名称】Controller
@@ -47,13 +45,13 @@ public class ReportPlamGamesController extends BaseController {
     @PreAuthorize("@ss.hasPermi('admin:report-plam-games:list')")
     @GetMapping("/list")
     public Object list(ReportPlamGames reportPlamGames) throws ParseException {
-        reportPlamGamesService.storage(reportPlamGames);
+//        reportPlamGamesService.storage(reportPlamGames);
+//
+//        String keyVal = redisUtil.strGet( "admin-reportPlamGames" );
+//        if("0".equals( keyVal )){
+//            return AjaxResult.error("报表正在生成，请稍后...");
+//        }
 
-        String keyVal = redisUtil.strGet( "admin-reportPlamGames" );
-        if("0".equals( keyVal )){
-            return AjaxResult.error("报表正在生成，请稍后...");
-        }
-        startPage();
         Date d = new Date();
         String myString = reportPlamGames.getBegindate();
         if (!StringUtils.isEmpty(myString)) {
@@ -67,7 +65,9 @@ public class ReportPlamGamesController extends BaseController {
             reportPlamGames.setBegindate(getYestoday());
         }
         List<ReportPlamGames> list = reportPlamGamesService.selectReportPlamGamesList(reportPlamGames);
-        return getDataTable(list);
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("rows",list);
+        return resultMap;
     }
 
     @GetMapping(value = "/count")
