@@ -52,7 +52,9 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 		if (allList.size()!=0&&reportPlamGames.getBegindate().equals( dateNowStr)){
 			Date updateTime=allList.get(0).getUpdateTime();
 			if (updateTime.getTime()<=beforeD.getTime()){
-				reportPlamGamesMapper.calldataProrepPlamcom( dateNowStr );
+				threadPoolTaskExecutor.execute(() -> {
+					reportPlamGamesMapper.calldataProrepPlamcom( dateNowStr );
+				});
 				List<ReportPlamGames> allList1 = reportPlamGamesMapper.selectReportPlamGamesList( reportPlamGames );
 				return allList1;
 			}
