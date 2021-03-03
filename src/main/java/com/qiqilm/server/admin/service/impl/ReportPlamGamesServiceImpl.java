@@ -59,7 +59,7 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 			// 判断锁是否释放
 			// 如果是否，则return
 			// 如果是则执行
-			if ( !redisUtil.strSetIfAbsent( "admin-reportPlamGames", "0", Duration.ofMinutes( 1 ) ) ) {
+			if ( !redisUtil.strSetIfAbsent( "admin-reportPlamGames", "0", Duration.ofMinutes( 10 ) ) ) {
 				return;
 			}
 			threadPoolTaskExecutor.execute( () -> {
