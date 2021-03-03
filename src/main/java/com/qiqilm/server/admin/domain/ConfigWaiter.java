@@ -37,7 +37,7 @@ public class ConfigWaiter extends BaseEntity {
 
     /** 状态(1启用0停用) */
     @Excel(name = "状态(1启用0停用)")
-    private Long status;
+    private String status;
 
     /** 排序 */
     @Excel(name = "排序")
