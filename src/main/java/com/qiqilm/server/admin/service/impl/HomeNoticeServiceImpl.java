@@ -56,7 +56,7 @@ public class HomeNoticeServiceImpl implements IHomeNoticeService {
 	public int insertHomeNotice( HomeNotice homeNotice ) {
 		int i = homeNoticeMapper.insertHomeNotice( homeNotice );
 		if ( i > 0 ) {
-			redisUtil.unlink( Constants.CX_HOME_BANNER );
+			redisUtil.unlink( Constants.CX_HOME_NOTICE );
 		}
 		return i;
 	}
@@ -72,7 +72,7 @@ public class HomeNoticeServiceImpl implements IHomeNoticeService {
 		homeNotice.setUpdateTime( DateUtils.getNowDate() );
 		int i = homeNoticeMapper.updateHomeNotice( homeNotice );
 		if ( i > 0 ) {
-			redisUtil.unlink( Constants.CX_HOME_BANNER );
+			redisUtil.unlink( Constants.CX_HOME_NOTICE );
 		}
 		return i;
 	}
@@ -87,7 +87,7 @@ public class HomeNoticeServiceImpl implements IHomeNoticeService {
 	public int deleteHomeNoticeByIds( String[] ids ) {
 		int i = homeNoticeMapper.deleteHomeNoticeByIds( ids );
 		if ( i > 0 ) {
-			redisUtil.unlink( Constants.CX_HOME_BANNER );
+			redisUtil.unlink( Constants.CX_HOME_NOTICE );
 		}
 		return i;
 	}
@@ -102,7 +102,7 @@ public class HomeNoticeServiceImpl implements IHomeNoticeService {
 	public int deleteHomeNoticeById( String id ) {
 		int i = homeNoticeMapper.deleteHomeNoticeById( id );
 		if ( i > 0 ) {
-			redisUtil.unlink( Constants.CX_HOME_BANNER );
+			redisUtil.unlink( Constants.CX_HOME_NOTICE );
 		}
 		return i;
 	}
