@@ -46,11 +46,11 @@ public class ReportPlamGamesController extends BaseController {
     @GetMapping("/list")
     public Object list(ReportPlamGames reportPlamGames) throws ParseException {
 //        reportPlamGamesService.storage(reportPlamGames);
-//
-//        String keyVal = redisUtil.strGet( "admin-reportPlamGames" );
-//        if("0".equals( keyVal )){
-//            return AjaxResult.error("报表正在生成，请稍后...");
-//        }
+
+        String keyVal = redisUtil.strGet( "admin-reportPlamGames" );
+        if("0".equals( keyVal )){
+            return new AjaxResult(900,"报表正在生成，请稍后...");
+        }
 
         Date d = new Date();
         String myString = reportPlamGames.getBegindate();
