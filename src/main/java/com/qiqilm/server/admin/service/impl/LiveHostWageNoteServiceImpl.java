@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.LiveHostWageNote;
 import com.qiqilm.server.admin.mapper.LiveHostWageNoteMapper;
 import com.qiqilm.server.admin.service.ILiveHostWageNoteService;
@@ -23,7 +24,7 @@ public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
     @Autowired
     private LiveHostWageNoteMapper liveHostWageNoteMapper;
     @Autowired
-    private LiveCacheUtil liveCacheUtil;
+    private SysConfigCacheUtil     sysConfigCacheUtil;
 
     /**
      * 查询【请填写功能名称】
@@ -94,7 +95,7 @@ public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
 
     @Override
     public List<LiveHostWageNote> familyPage(LiveHostWageNote dto) {
-        BigDecimal ticketCattyRatio = liveCacheUtil.getConfBd("ticket_catty_ratio");
+        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd("ticket_catty_ratio");
         List<LiveHostWageNote> liveHostWageNotes = liveHostWageNoteMapper.familyPage(dto.getSelectDate()[0] + "-" + dto.getSelectDate()[1],dto );
         for (LiveHostWageNote liveHostWageNote : liveHostWageNotes) {
             if (liveHostWageNote.getAllticket()!=null) {
@@ -114,7 +115,7 @@ public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
 
     @Override
     public List<LiveHostWageNote> getPage(LiveHostWageNote dto) {
-        BigDecimal ticketCattyRatio = liveCacheUtil.getConfBd("ticket_catty_ratio");
+        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd("ticket_catty_ratio");
         List<LiveHostWageNote> liveHostWageNotes = liveHostWageNoteMapper.selectListMt(dto);
         List<Map<String, Object>> mapLists = liveHostWageNoteMapper.selectFamilyName();
         for (LiveHostWageNote liveHostWageNote : liveHostWageNotes) {

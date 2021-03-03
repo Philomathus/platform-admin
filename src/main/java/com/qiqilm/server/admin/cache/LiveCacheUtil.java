@@ -55,57 +55,6 @@ public class LiveCacheUtil {
 		redisUtil.unlink( Constants.LIVE_PREX + key + ":" + identify );
 	}
 
-	public List<Object> getConf( List<Object> codes ) {
-		String  keys   = "autoCache:LiveMConfig:map";
-		Boolean exists = redisUtil.exists( keys );
-		if ( exists == null || !exists ) {
-			this.refreshConfCache();
-		}
-		return redisUtil.hMGet( keys, codes );
-	}
-
-	public String getConf( String code, String defaultValue ) {
-		String  keys   = "autoCache:LiveMConfig:map";
-		Boolean exists = redisUtil.exists( keys );
-		if ( exists == null || !exists ) {
-			this.refreshConfCache();
-		}
-		Object value = redisUtil.hGet( keys, code );
-		return value == null ? defaultValue : value.toString().trim();
-	}
-
-	public void refreshConfCache() {
-		String              keys = "autoCache:LiveMConfig:map";
-		Map<Object, Object> map  = new HashMap<>();
-		redisUtil.hMSet( keys, map );
-		redisUtil.expire( keys, Duration.ofDays( 1 ) );
-	}
-
-	public String getConf( String code ) {
-		return getConf( code, "" );
-	}
-
-	public BigDecimal getConfBd( String code ) {
-		try {
-			return new BigDecimal( getConf( code, "0" ) );
-		} catch ( NumberFormatException e ) {
-			return BigDecimal.ZERO;
-		}
-	}
-
-	public int getConfInt( String code ) {
-		try {
-			return Integer.parseInt( getConf( code, "0" ) );
-		} catch ( NumberFormatException e ) {
-			return 0;
-		}
-	}
-
-	public boolean getConfBool( String code ) {
-		return getConfInt( code ) > 0;
-	}
-
-
 	public void setLock( String key, String identify, int seconds ) {
 		setRedis( key + ":lock", identify, "lock", seconds );
 	}
