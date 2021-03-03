@@ -1,12 +1,17 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.domain.ActivityInfo;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.ConfigWaiterMapper;
 import com.qiqilm.server.admin.domain.ConfigWaiter;
 import com.qiqilm.server.admin.service.IConfigWaiterService;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 客服管理Service业务层处理
@@ -18,6 +23,9 @@ import com.qiqilm.server.admin.service.IConfigWaiterService;
 public class ConfigWaiterServiceImpl implements IConfigWaiterService {
     @Autowired
     private ConfigWaiterMapper configWaiterMapper;
+
+    @Autowired
+    private ConfigDomainCacheUtil configDomainCacheUtil;
 
     /**
      * 查询客服管理
@@ -38,7 +46,16 @@ public class ConfigWaiterServiceImpl implements IConfigWaiterService {
      */
     @Override
     public List<ConfigWaiter> selectConfigWaiterList(ConfigWaiter configWaiter) {
-        return configWaiterMapper.selectConfigWaiterList(configWaiter);
+        List<ConfigWaiter> configWaiters = configWaiterMapper.selectConfigWaiterList(configWaiter);
+        if ( !CollectionUtils.isEmpty( configWaiters ) ) {
+            String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+            for ( ConfigWaiter info : configWaiters ) {
+                if ( StringUtils.isNotBlank( info.getIcon() ) && !info.getIcon().startsWith( "http" ) ) {
+                    info.setIcon( domainValue + info.getIcon() );
+                }
+            }
+        }
+        return configWaiters;
     }
 
     /**
