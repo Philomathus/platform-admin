@@ -43,20 +43,18 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 		Date             d          = new Date();
 		SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
 		String           dateNowStr = sdf.format( d );
-//		reportPlamGames.setBegindate( dateNowStr );
-		//获取当前时间的前五分钟
+
 		Calendar beforeTime = Calendar.getInstance();
 		beforeTime.add(Calendar.MINUTE, -5);// 5分钟之前的时间
 		Date beforeD = beforeTime.getTime();
 		List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList( reportPlamGames );
+		if (allList.size()==0&&reportPlamGames.getBegindate().equals( dateNowStr)){
+			storage(dateNowStr,reportPlamGames);
+		}
 		if (allList.size()!=0&&reportPlamGames.getBegindate().equals( dateNowStr)){
 			Date updateTime=allList.get(0).getUpdateTime();
 			if (updateTime.getTime()<=beforeD.getTime()){
-				threadPoolTaskExecutor.execute(() -> {
-					reportPlamGamesMapper.calldataProrepPlamcom( dateNowStr );
-				});
-				List<ReportPlamGames> allList1 = reportPlamGamesMapper.selectReportPlamGamesList( reportPlamGames );
-				return allList1;
+				storage(dateNowStr,reportPlamGames);
 			}
 		}
 		return allList;
@@ -69,35 +67,17 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 		return reportPlamGamesMapper.countBetData( reportPlamGames );
 	}
 
-	@Override
-	public void storage( ReportPlamGames reportPlamGames ) {
-		Date             d          = new Date();
-		SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
-		String           dateNowStr = sdf.format( d );
-		reportPlamGames.setBegindate( dateNowStr );
-		if ( reportPlamGames.getBegindate() == null || reportPlamGames.getBegindate().equals( dateNowStr ) ) {
-			// 判断锁是否释放
-			// 如果是否，则return
-			// 如果是则执行
-			if ( !redisUtil.strSetIfAbsent( "admin-reportPlamGames", "0", Duration.ofMinutes( 10 ) ) ) {
-				return;
+	public  List<ReportPlamGames> storage( String dateNowStr,ReportPlamGames reportPlamGames ) {
+		threadPoolTaskExecutor.execute(() -> {
+			redisUtil.strSet( "admin-reportPlamGames", "0", Duration.ofMinutes( 1 ) );
+			String result=reportPlamGamesMapper.calldataProrepPlamcom( dateNowStr );
+			if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamGames" ) ) {
+				redisUtil.strIncrement("admin-reportPlamGames");
 			}
-			threadPoolTaskExecutor.execute( () -> {
-				String result = reportPlamGamesMapper.calldataProrepPlamcom( dateNowStr );
-				if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamGames" ) ) {
-					redisUtil.strIncrement("admin-reportPlamGames");
-				}
-			} );
-		}
+		});
+		List<ReportPlamGames> allList1 = reportPlamGamesMapper.selectReportPlamGamesList( reportPlamGames );
+		return allList1;
 	}
 
-//	public static void main(String[] args) {
-//
-//		Calendar beforeTime = Calendar.getInstance();
-//		beforeTime.add(Calendar.MINUTE, -5);// 5分钟之前的时间
-//		Date beforeD = beforeTime.getTime();
-//		String before5 = new SimpleDateFormat("yyyyMMddHHmmss").format(beforeD);
-//		System.out.println(beforeD);
-//	}
 
 }
