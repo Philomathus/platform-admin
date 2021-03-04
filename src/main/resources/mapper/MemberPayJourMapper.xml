@@ -289,10 +289,10 @@
 	</update>
 
 	<sql id="listWhere">
-		<if test="status != null and status lt 2">
+		<if test="status != null and status != '' and status lt 2">
 			and status = #{status}
 		</if>
-		<if test="status != null and status == 2">
+		<if test="status != null and status != '' and status == 2">
 			and status = '1' and is_patch_order = 1
 		</if>
 		<if test="platformId != null and platformId != ''">
