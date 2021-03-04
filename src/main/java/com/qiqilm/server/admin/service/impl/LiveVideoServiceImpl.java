@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
+import com.qiqilm.server.admin.cache.ServerImCacheUtil;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageType;
@@ -32,13 +34,17 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	public static final String REDIS_KEY_DETECT_PLAY = "live:liveVideo:detectPlay";
 
 	@Autowired
-	private RedisUtil      redisUtil;
+	private RedisUtil          redisUtil;
 	@Autowired
-	private LiveCacheUtil  global;
+	private LiveCacheUtil      global;
 	@Autowired
-	private ImApi          imApi;
+	private ImApi              imApi;
 	@Autowired
-	private VideoCacheUtil videoCacheUtil;
+	private VideoCacheUtil     videoCacheUtil;
+	@Autowired
+	private SysConfigCacheUtil sysConfigCacheUtil;
+	@Autowired
+	private ServerImCacheUtil  serverImCacheUtil;
 
 	@Autowired
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
@@ -154,7 +160,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			ext.put( "desc", "违规直播，立即关闭直播" );
 			MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
 			try {
-				imApi.sendMessage( global.getConf( "tim_identifier" ), video.getUserId().toString(), message );
+				imApi.sendMessage( serverImCacheUtil.getValue( "tim_identifier" ), video.getUserId().toString(), message );
 			} catch ( Exception e ) {
 				//log.error( this.toString() + "(m)close", e );
 			}
@@ -167,7 +173,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			ext.put( "desc", "违规直播，立即关闭直播" );
 			MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
 			try {
-				imApi.sendMessage( global.getConf( "tim_identifier" ), video.getUserId().toString(), message );
+				imApi.sendMessage( serverImCacheUtil.getValue( "tim_identifier" ), video.getUserId().toString(), message );
 			} catch ( Exception e ) {
 				//log.error( this.toString() + "(m)close", e );
 			}
@@ -180,7 +186,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			ext.put( "desc", "直播源切换，立即关闭直播" );
 			MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
 			try {
-				imApi.sendMessage( global.getConf( "tim_identifier" ), video.getUserId().toString(), message );
+				imApi.sendMessage( serverImCacheUtil.getValue( "tim_identifier" ), video.getUserId().toString(), message );
 			} catch ( Exception e ) {
 				//log.error( this.toString() + "(m)close", e );
 			}
@@ -365,12 +371,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			throw new RuntimeException( "参数错误" );
 		}
 
-		int payMin = live_pay_type == 0 ? global.getConfInt( "live_pay_min" ) : global.getConfInt( "live_pay_scene_min" );
+		int payMin = live_pay_type == 0 ? sysConfigCacheUtil.getConfInt( "live_pay_min" ) : sysConfigCacheUtil.getConfInt( "live_pay_scene_min" );
 		//付费最高
-		int payMax = live_pay_type == 0 ? global.getConfInt( "live_pay_max" ) : global.getConfInt( "live_pay_scene_max" );
+		int payMax = live_pay_type == 0 ? sysConfigCacheUtil.getConfInt( "live_pay_max" ) : sysConfigCacheUtil.getConfInt( "live_pay_scene_max" );
 		//付费最低
 
-		String coinName = global.getConf( "diamond_name" );
+		String coinName = sysConfigCacheUtil.getConf( "diamond_name" );
 
 		if ( payMin != 0 && live_fee < payMin ) {
 			throw new RuntimeException( "按" + ( live_pay_type == 0 ? "时" : "场" ) + "收费不能低于" + payMin + coinName );

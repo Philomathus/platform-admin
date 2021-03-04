@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.im;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
+import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.im.vo.*;
 import com.qiqilm.server.admin.im.vo.api.*;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -28,14 +29,18 @@ import java.util.stream.Stream;
 @Component
 public class ImApiImpl implements ImApi {
 	@Autowired
-	private RestTemplate  restTemplate;
+	private RestTemplate      restTemplate;
 	@Autowired
-	private LiveCacheUtil liveCacheUtil;
+	private LiveCacheUtil     liveCacheUtil;
+	@Autowired
+	private ServerImCacheUtil serverImCacheUtil;
 
 	private String getUrl( String api ) {
-		String tim_sdkappid   = liveCacheUtil.getConf( "tim_sdkappid" );
-		String tim_sdk_key    = liveCacheUtil.getConf( "tim_sdk_key" );
-		String tim_identifier = liveCacheUtil.getConf( "tim_identifier" );
+		List<String> confs = serverImCacheUtil.getValue( Arrays.asList( "tim_sdkappid", "tim_sdk_key", "tim_identifier" ) );
+
+		String tim_sdkappid   = confs.get( 0 );
+		String tim_sdk_key    = confs.get( 1 );
+		String tim_identifier = confs.get( 2 );
 		String sign           = getIMAdminSign( tim_sdkappid, tim_sdk_key, tim_identifier );
 
 		return General.IM_API + api + "?" + "sdkappid=" + tim_sdkappid +
