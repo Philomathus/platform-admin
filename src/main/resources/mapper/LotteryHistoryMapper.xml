@@ -27,7 +27,12 @@
             <if test="issue != null  and issue != ''"> and issue = #{issue}</if>
             <if test="lotteryId != null "> and lottery_id = #{lotteryId}</if>
             <if test="code != null  and code != ''"> and code = #{code}</if>
-            <if test="ktime != null "> and ktime = #{ktime}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(ktime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(ktime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
             <if test="status != null "> and status = #{status}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="killRate != null "> and kill_rate = #{killRate}</if>
@@ -36,5 +41,9 @@
             <if test="ctl != null "> and ctl = #{ctl}</if>
             <if test="analyse != null  and analyse != ''"> and analyse = #{analyse}</if>
         </where>
+    </select>
+
+    <select id="selectLotteryHistoryNameList" parameterType="LotteryHistory" resultMap="LotteryHistoryResult">
+        select distinct name from ${dbLottery}.lottery_history
     </select>
 </mapper>

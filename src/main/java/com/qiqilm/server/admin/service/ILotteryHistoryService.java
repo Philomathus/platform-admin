@@ -18,4 +18,12 @@ public interface ILotteryHistoryService {
 	 * @return 开奖历史集合
 	 */
 	public List<LotteryHistory> selectLotteryHistoryList(LotteryHistory lotteryHistory);
+
+	/**
+	 * 查询全部彩种
+	 *
+	 * @param lotteryHistory 开奖历史
+	 * @return 开奖历史集合
+	 */
+	public List<LotteryHistory> selectLotteryHistoryList();
 }

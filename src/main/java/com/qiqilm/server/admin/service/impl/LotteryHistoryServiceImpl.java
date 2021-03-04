@@ -28,4 +28,15 @@ public class LotteryHistoryServiceImpl implements ILotteryHistoryService {
     public List<LotteryHistory> selectLotteryHistoryList(LotteryHistory lotteryHistory) {
         return lotteryHistoryMapper.selectLotteryHistoryList(lotteryHistory);
     }
+
+    /**
+     * 查询全部彩种
+     *
+     * @param lotteryHistoryName 全部彩种
+     * @return 全部彩种
+     */
+    @Override
+    public List<LotteryHistory> selectLotteryHistoryList() {
+        return lotteryHistoryMapper.selectLotteryHistoryNameList();
+    }
 }

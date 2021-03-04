@@ -16,43 +16,32 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.LotteryHistory;
-import com.qiqilm.server.admin.service.ILotteryHistoryService;
+import com.qiqilm.server.admin.domain.LotteryBet0;
+import com.qiqilm.server.admin.service.ILotteryBet0Service;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 /**
- * 开奖历史Controller
+ * 用户投资行为Controller
  *
  * @author 77tv
- * @date 2021-02-23
+ * @date 2021-03-03
  */
 @RestController
-@RequestMapping( "/admin/lotteryHistory" )
-public class LotteryHistoryController extends BaseController {
+@RequestMapping( "/admin/lotteryBet0" )
+public class LotteryBet0Controller extends BaseController {
 	@Autowired
-	private ILotteryHistoryService lotteryHistoryService;
+	private ILotteryBet0Service lotteryBet0Service;
 
 	/**
-	 * 查询开奖历史列表
+	 * 查询用户投资行为列表
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:lotteryHistory:list')" )
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryBet:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LotteryHistory lotteryHistory) {
+    	public TableDataInfo list(LotteryBet0 lotteryBet0) {
 		startPage();
-		List<LotteryHistory> list = lotteryHistoryService.selectLotteryHistoryList(lotteryHistory);
+		List<LotteryBet0> list = lotteryBet0Service.selectLotteryBet0List(lotteryBet0);
 		return getDataTable( list );
 	}
-
-	/**
-	 * 查询全部彩种
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:lotteryHistory:list')" )
-	@GetMapping( "/lotteryName" )
-	public AjaxResult lotteryName(LotteryHistory lotteryHistory) {
-		List<LotteryHistory> list = lotteryHistoryService.selectLotteryHistoryList();
-		return AjaxResult.success( list );
-	}
-
 
 }
