@@ -59,7 +59,6 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 		Date                beforeD = beforeTime.getTime();
 		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList( reportPlamCom );
 		if ( allList.size() == 0 && reportPlamCom.getReporttime().equals( dateNowStr ) ) {
-			log.warn( "进来了1" );
 			storage( dateNowStr );
 			return new AjaxResult( 900, "报表正在生成，请稍后..." );
 		}
@@ -68,18 +67,15 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 			Date   updateTime  = allList.get( 0 ).getUpdateTime();
 			String reportCache = redisUtil.strGet( "admin-reportPlamCom" );
 			if ( "1".equals( reportCache ) ) {
-				log.warn( "进来了4：" );
 				resultMap.put( "rows", allList );
 			} else if ( "0".equals( reportCache ) ) {
-				log.warn( "进来了3：" );
 				return new AjaxResult( 900, "报表正在生成，请稍后..." );
 			} else if ( updateTime.getTime() <= beforeD.getTime() ) {
-				// 19:30执行完, 19:33 - 5 = 19:28
-				// 1614787359000：1614857090165
-				log.warn( "进来了2：" + updateTime.getTime() + "：" + beforeD.getTime() );
 				storage( dateNowStr );
 				return new AjaxResult( 900, "报表正在生成，请稍后..." );
 			}
+		} else {
+			resultMap.put( "rows", allList );
 		}
 		return resultMap;
 
@@ -92,17 +88,14 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 	}
 
 	public void storage( String dateNowStr ) {
-		String keyVal = redisUtil.strGet( "admin-reportPlamCom" );
-		if ( !StringUtils.hasText( keyVal ) ) {
-			synchronized ( this ) {
-				redisUtil.strSet( "admin-reportPlamCom", "0", Duration.ofMinutes( 5 ) );
-				threadPoolTaskExecutor.execute( () -> {
-					String result = reportPlamComMapper.calldataProrepPlamcom( dateNowStr );
-					if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamCom" ) ) {
-						redisUtil.strIncrement( "admin-reportPlamCom" );
-					}
-				} );
-			}
+		if ( !redisUtil.exists( "admin-reportPlamCom" )
+				&& redisUtil.strSetIfAbsent( "admin-reportPlamCom", "0", Duration.ofMinutes( 5 ) ) ) {
+			threadPoolTaskExecutor.execute( () -> {
+				String result = reportPlamComMapper.calldataProrepPlamcom( dateNowStr );
+				if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamCom" ) ) {
+					redisUtil.strIncrement( "admin-reportPlamCom" );
+				}
+			} );
 		}
 	}
 
