@@ -54,26 +54,9 @@ public class ReportPlamComController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
 	@GetMapping( "/list" )
 	public Object list(ReportPlamCom reportPlamCom) throws ParseException {
-		reportPlamComService.storage(reportPlamCom);
-		String keyVal = redisUtil.strGet( "admin-reportPlamCom" );
-		if("0".equals( keyVal )){
-			return AjaxResult.error("报表正在生成，请稍后...");
-		}
-		startPage();
-		Date d = new Date();
-		String myString = reportPlamCom.getReporttime();
-		if (!StringUtils.isEmpty(myString)){
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date dd = simpleDateFormat.parse(myString);
-			boolean flag = dd.before(d);
-			if(!flag){
-				reportPlamCom.setReporttime(null);
-			}
-		}else{
-			reportPlamCom.setReporttime(getYestoday());
-		}
-		List<ReportPlamCom> list = reportPlamComService.selectReportPlamComList(reportPlamCom);
-		return getDataTable( list );
+
+		return reportPlamComService.selectReportPlamComList(reportPlamCom);
+
 	}
 
 	/**
@@ -83,7 +66,7 @@ public class ReportPlamComController extends BaseController {
 	@Log( title = "综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(ReportPlamCom reportPlamCom) throws ParseException {
-		List<ReportPlamCom>      list = reportPlamComService.selectReportPlamComList(reportPlamCom);
+		List<ReportPlamCom>      list = reportPlamComService.exportPlamComList(reportPlamCom);
 		ExcelUtil<ReportPlamCom> util = new ExcelUtil<>(ReportPlamCom.class);
 		return util.exportExcel( list, "report-plam-com" );
 	}
