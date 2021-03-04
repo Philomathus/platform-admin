@@ -107,7 +107,6 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
                     if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamCom" ) ) {
                         redisUtil.strIncrement( "admin-reportPlamCom" );
                     }
-                    redisUtil.strSet( "admin-reportPlamCom", "0", Duration.ofMinutes( 4 ) );
                 } );
             }
         }

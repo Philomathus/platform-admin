@@ -71,12 +71,9 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
                     return new AjaxResult(900, "报表正在生成，请稍后...");
                 }
             }
-            resultMap.put("rows", allList);
-            return resultMap;
-        } else {
-            resultMap.put("rows", allList);
-            return resultMap;
         }
+        resultMap.put("rows", allList);
+        return resultMap;
     }
 
 public void storage( String dateNowStr, ReportMoneyinfo reportMoneyinfo ) {
@@ -89,7 +86,6 @@ public void storage( String dateNowStr, ReportMoneyinfo reportMoneyinfo ) {
                 if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportMoneyInfo" ) ) {
                     redisUtil.strIncrement( "admin-reportMoneyInfo" );
                 }
-                redisUtil.strSet( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 4 ) );
             } );
         }
     }
