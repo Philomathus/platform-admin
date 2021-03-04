@@ -18,8 +18,8 @@ public interface IReportPlamComService {
 	 * @param reportPlamCom 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间
 	 * @return 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间集合
 	 */
-	public List<ReportPlamCom> selectReportPlamComList(ReportPlamCom reportPlamCom);
+	public Object selectReportPlamComList(ReportPlamCom reportPlamCom);
 
 
-    void storage(ReportPlamCom reportPlamCom);
+	List<ReportPlamCom> exportPlamComList(ReportPlamCom reportPlamCom);
 }
