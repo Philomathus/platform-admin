@@ -37,11 +37,14 @@
 	<select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
 		<include refid="selectLogMoneyVo"/>
 		<where>
-			<if test="userId != null  and userId != ''">
-				and user_id = #{userId}
-			</if>
-			<if test="userName != null  and userName != ''">
-				and user_name = #{userName}
+<!--			<if test="userId != null  and userId != ''">-->
+<!--				and user_id = #{userId}-->
+<!--			</if>-->
+<!--			<if test="userName != null  and userName != ''">-->
+<!--				and user_name = #{userName}-->
+<!--			</if>-->
+			<if test="searchValue != null  and searchValue != ''">
+			and (user_name = #{searchValue} or user_id = #{searchValue})
 			</if>
 			<if test="types != null and types.length != 0">
 				and type in
