@@ -38,10 +38,6 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
      */
     @Override
     public Object selectReportPlamGamesList(ReportPlamGames reportPlamGames) {
-        String keyVal = redisUtil.strGet("admin-reportPlamGames");
-        if ("0".equals(keyVal)) {
-            return new AjaxResult(900, "报表正在生成，请稍后...");
-        }
 
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
