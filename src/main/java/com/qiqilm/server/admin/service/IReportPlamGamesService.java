@@ -22,8 +22,9 @@ public interface IReportPlamGamesService {
 	 * @param reportPlamGames 【请填写功能名称】
 	 * @return 【请填写功能名称】集合
 	 */
-	public List<ReportPlamGames> selectReportPlamGamesList(ReportPlamGames reportPlamGames);
+	public Object selectReportPlamGamesList(ReportPlamGames reportPlamGames);
 
 	ReportPlamGames countBetData(ReportPlamGames reportPlamGames);
 
+	List<ReportPlamGames> exportPlamGamesList(ReportPlamGames reportPlamGames);
 }

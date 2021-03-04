@@ -47,27 +47,9 @@ public class ReportPlamGamesController extends BaseController {
     public Object list(ReportPlamGames reportPlamGames) throws ParseException {
 //        reportPlamGamesService.storage(reportPlamGames);
 
-        String keyVal = redisUtil.strGet( "admin-reportPlamGames" );
-        if("0".equals( keyVal )){
-            return new AjaxResult(900,"报表正在生成，请稍后...");
-        }
 
-        Date d = new Date();
-        String myString = reportPlamGames.getBegindate();
-        if (!StringUtils.isEmpty(myString)) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date dd = simpleDateFormat.parse(myString);
-            boolean flag = dd.before(d);
-            if (!flag) {
-                reportPlamGames.setBegindate(null);
-            }
-        } else {
-            reportPlamGames.setBegindate(getYestoday());
-        }
-        List<ReportPlamGames> list = reportPlamGamesService.selectReportPlamGamesList(reportPlamGames);
-        Map<String,Object> resultMap = new HashMap<>();
-        resultMap.put("rows",list);
-        return resultMap;
+        return reportPlamGamesService.selectReportPlamGamesList(reportPlamGames);
+
     }
 
     @GetMapping(value = "/count")
@@ -90,7 +72,7 @@ public class ReportPlamGamesController extends BaseController {
     @Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
     @GetMapping( "/export" )
     public AjaxResult export(ReportPlamGames reportPlamGames) {
-        List<ReportPlamGames>      list = reportPlamGamesService.selectReportPlamGamesList(reportPlamGames);
+        List<ReportPlamGames>      list = reportPlamGamesService.exportPlamGamesList(reportPlamGames);
         ExcelUtil<ReportPlamGames> util = new ExcelUtil<>(ReportPlamGames.class);
         return util.exportExcel( list, "reportPlamGames" );
     }
