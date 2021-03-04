@@ -59,37 +59,39 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
         if (flag) {//如果查询开始时间在当前时间之后，直接返回空数据
             allList = reportMoneyinfoMapper.selectReportMoneyinfoList(reportMoneyinfo);
             if (allList.size() == 0 && reportMoneyinfo.getParams().get("endTime").equals(dateNowStr)) {
-                storage(dateNowStr, reportMoneyinfo);
+                storage(dateNowStr);
                 return new AjaxResult(900, "报表正在生成，请稍后...");
             }
             if (allList.size() != 0 && reportMoneyinfo.getParams().get("endTime").equals(dateNowStr)) {
+                String reportCache = redisUtil.strGet("admin-reportMoneyInfo");
                 Date updateTime = allList.get(0).getUpdateTime();
-                if (updateTime.getTime() <= beforeD.getTime()) {
-                    storage(dateNowStr, reportMoneyinfo);
-                    return new AjaxResult(900, "报表正在生成，请稍后...");
+                if ("1".equals(reportCache)) {
+                    resultMap.put("rows", allList);
                 } else if ("0".equals(redisUtil.strGet("admin-reportMoneyInfo"))) {
                     return new AjaxResult(900, "报表正在生成，请稍后...");
+                } else if (updateTime.getTime() <= beforeD.getTime()) {
+                    storage(dateNowStr);
+                    return new AjaxResult(900, "报表正在生成，请稍后...");
                 }
+            } else {
+                resultMap.put("rows", allList);
             }
         }
-        resultMap.put("rows", allList);
         return resultMap;
     }
 
-public void storage( String dateNowStr, ReportMoneyinfo reportMoneyinfo ) {
-    String keyVal = redisUtil.strGet( "admin-reportMoneyInfo" );
-    if ( !"0".equals( keyVal ) ) {
-        synchronized ( this ) {
-            redisUtil.strSet( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 4 ) );
-            threadPoolTaskExecutor.execute( () -> {
+    public void storage(String dateNowStr) {
+        if (!redisUtil.exists("admin-reportMoneyInfo") &&
+                redisUtil.strSetIfAbsent("admin-reportMoneyInfo", "0", Duration.ofMinutes(5))) {
+            redisUtil.strSet("admin-reportMoneyInfo", "0", Duration.ofMinutes(5));
+            threadPoolTaskExecutor.execute(() -> {
                 String result = reportMoneyinfoMapper.calldataProrepPlamcom(dateNowStr, dateNowStr);
-                if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportMoneyInfo" ) ) {
-                    redisUtil.strIncrement( "admin-reportMoneyInfo" );
+                if (StringUtils.hasText(result) && redisUtil.exists("admin-reportMoneyInfo")) {
+                    redisUtil.strIncrement("admin-reportMoneyInfo");
                 }
-            } );
+            });
         }
     }
-}
 
     //统计表头数据
     @Override
@@ -124,7 +126,7 @@ public void storage( String dateNowStr, ReportMoneyinfo reportMoneyinfo ) {
 
     @Override
     public List<ReportMoneyinfo> exportMoneyinfoList(ReportMoneyinfo reportMoneyinfo) {
-        List<ReportMoneyinfo>allList = reportMoneyinfoMapper.selectReportMoneyinfoList(reportMoneyinfo);
+        List<ReportMoneyinfo> allList = reportMoneyinfoMapper.selectReportMoneyinfoList(reportMoneyinfo);
         return allList;
     }
 
