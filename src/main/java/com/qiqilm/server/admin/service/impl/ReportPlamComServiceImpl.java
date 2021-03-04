@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ReportPlamCom;
 import com.qiqilm.server.admin.mapper.ReportPlamComMapper;
 import com.qiqilm.server.admin.service.IReportPlamComService;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
@@ -32,6 +33,13 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 	@Autowired
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
+	public static void main( String[] args ) {
+		System.out.println( DateFormatUtils.formate( new Date() ) );
+		Calendar beforeTime = Calendar.getInstance();
+		beforeTime.add( Calendar.MINUTE, -5 );
+		System.out.println( DateFormatUtils.formate( beforeTime.getTime() ) );
+	}
+
 	/**
 	 * 查询综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间列表
 	 *
@@ -55,19 +63,24 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 			storage( dateNowStr );
 			return new AjaxResult( 900, "报表正在生成，请稍后..." );
 		}
+		Map<String, Object> resultMap = new HashMap<>();
 		if ( allList.size() != 0 && reportPlamCom.getReporttime().equals( dateNowStr ) ) {
-			Date updateTime = allList.get( 0 ).getUpdateTime();
-			if ( updateTime.getTime() <= beforeD.getTime() ) {
+			Date   updateTime  = allList.get( 0 ).getUpdateTime();
+			String reportCache = redisUtil.strGet( "admin-reportPlamCom" );
+			if ( "1".equals( reportCache ) ) {
+				log.warn( "进来了4：" );
+				resultMap.put( "rows", allList );
+			} else if ( "0".equals( reportCache ) ) {
+				log.warn( "进来了3：" );
+				return new AjaxResult( 900, "报表正在生成，请稍后..." );
+			} else if ( updateTime.getTime() <= beforeD.getTime() ) {
+				// 19:30执行完, 19:33 - 5 = 19:28
+				// 1614787359000：1614857090165
 				log.warn( "进来了2：" + updateTime.getTime() + "：" + beforeD.getTime() );
 				storage( dateNowStr );
 				return new AjaxResult( 900, "报表正在生成，请稍后..." );
-			} else if ( "0".equals( redisUtil.strGet( "admin-reportPlamCom" ) ) ) {
-				log.warn( "进来了3：" );
-				return new AjaxResult( 900, "报表正在生成，请稍后..." );
 			}
 		}
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put( "rows", allList );
 		return resultMap;
 
 	}
@@ -92,6 +105,5 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 			}
 		}
 	}
-
 
 }
