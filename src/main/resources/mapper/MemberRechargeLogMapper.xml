@@ -241,7 +241,7 @@
 		<if test="req.orderNo != null  and req.orderNo != ''">
 			and order_no = #{req.orderNo}
 		</if>
-		<if test="req.status != null">
+		<if test="req.status != null and req.status != ''">
 			and status = #{req.status}
 		</if>
 		<if test="req.searchValue != null and req.searchValue != ''">
