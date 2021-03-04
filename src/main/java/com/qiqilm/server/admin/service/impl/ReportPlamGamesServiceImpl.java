@@ -77,13 +77,12 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 		String keyVal = redisUtil.strGet( "admin-reportPlamGames" );
 		if ( !"0".equals( keyVal ) ) {
 			synchronized ( this ) {
-				redisUtil.strSet( "admin-reportPlamGames", "0", Duration.ofMinutes( 1 ) );
+				redisUtil.strSet( "admin-reportPlamGames", "0", Duration.ofMinutes( 4) );
 				threadPoolTaskExecutor.execute( () -> {
 					String result = reportPlamGamesMapper.calldataProrepPlamcom( dateNowStr );
 					if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamGames" ) ) {
 						redisUtil.strIncrement( "admin-reportPlamGames" );
 					}
-					redisUtil.strSet( "admin-reportPlamGames", "0", Duration.ofMinutes( 1 ) );
 				} );
 			}
 		}
