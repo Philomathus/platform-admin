@@ -74,6 +74,8 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 				storage( dateNowStr );
 				return new AjaxResult( 900, "报表正在生成，请稍后..." );
 			}
+		} else {
+			resultMap.put( "rows", allList );
 		}
 		return resultMap;
 
