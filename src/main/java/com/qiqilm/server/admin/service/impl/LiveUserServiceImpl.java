@@ -127,8 +127,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
     }
 
     @Override
-    public List<RspLotteryBet> selectAnchorAward( ReqLotteryBat ReqLotteryBat) {
-        List<RspLotteryBet> lotteryBets = liveUserMapper.selectAnchorAward(ReqLotteryBat);
+    public List<RspLotteryBet> selectAnchorAward( ReqLotteryBat req) {
+        List<RspLotteryBet> lotteryBets = liveUserMapper.selectAnchorAward(req);
         for (RspLotteryBet lotteryBet : lotteryBets) {
             BigDecimal subtract = lotteryBet.getPrize().subtract(lotteryBet.getCost());
             if (subtract.compareTo(BigDecimal.ZERO) > 0) {

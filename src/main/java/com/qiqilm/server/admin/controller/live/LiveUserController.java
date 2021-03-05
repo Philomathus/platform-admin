@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -113,10 +114,9 @@ public class LiveUserController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:list')" )
 	@GetMapping( "/anchorAward" )
 	public TableDataInfo anchorAward( ReqLotteryBat req ) throws ParseException {
-		String[] selectDate = req.getSelectDate();
-		if ( selectDate != null && selectDate.length > 0 ) {
-			req.setStartTime( selectDate[ 0 ] );
-			req.setEndTime( selectDate[ 1 ] );
+		if ( StringUtils.isNotBlank( req.getUpdateTime() ) ) {
+			req.setStartTime( req.getUpdateTime() + " 00:00:00" );
+			req.setEndTime( req.getUpdateTime() + " 23:59:59");
 		}
 		startPage();
 		List<RspLotteryBet> list = liveUserService.selectAnchorAward( req );
