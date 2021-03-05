@@ -48,15 +48,7 @@ public class ReportMoneyinfoController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('web:report-moneyinfo:list')" )
 	@GetMapping( "/list" )
 	public Object list(ReportMoneyinfo reportMoneyinfo) throws ParseException {
-		reportMoneyinfoService.storage(reportMoneyinfo);
-
-		String keyVal = redisUtil.strGet( "admin-reportMoneyInfo" );
-		if("0".equals( keyVal )){
-			return AjaxResult.error("报表正在生成，请稍后...");
-		}
-		startPage();
-		List<ReportMoneyinfo> list = reportMoneyinfoService.selectReportMoneyinfoList(reportMoneyinfo);
-		return getDataTable( list );
+	   return reportMoneyinfoService.selectReportMoneyinfoList(reportMoneyinfo);
 	}
 	@GetMapping( value = "/count" )
 	public AjaxResult countMoneyData(ReportMoneyinfo reportMoneyinfo) throws ParseException {
@@ -78,7 +70,7 @@ public class ReportMoneyinfoController extends BaseController {
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(ReportMoneyinfo reportMoneyinfo) throws ParseException {
-		List<ReportMoneyinfo> list = reportMoneyinfoService.selectReportMoneyinfoList(reportMoneyinfo);
+		List<ReportMoneyinfo> list = reportMoneyinfoService.exportMoneyinfoList(reportMoneyinfo);
 		ExcelUtil<ReportMoneyinfo> util = new ExcelUtil<>(ReportMoneyinfo.class);
 		return util.exportExcel( list, "reportMoneyinfo" );
 	}

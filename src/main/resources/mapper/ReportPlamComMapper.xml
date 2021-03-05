@@ -13,10 +13,11 @@
 		<result property="type"    column="type"    />
 		<result property="tValue"    column="t_value"    />
 		<result property="reporttime"    column="reporttime"    />
+		<result property="updateTime"    column="updatetime"    />
 	</resultMap>
 
 	<sql id="selectReportPlamComVo">
-		select rep_id, class_one, class_onename, class_two, class_twoname, type, t_value, reporttime from report_plam_com
+		select rep_id, class_one, class_onename, class_two, class_twoname, type, t_value, reporttime,updatetime as updateTime from report_plam_com
 	</sql>
 
 	<select id="selectReportPlamComList" parameterType="ReportPlamCom" resultMap="ReportPlamComResult">
@@ -25,6 +26,7 @@
 			<if test="classTwoname != null  and classTwoname != ''"> and class_twoname like concat('%', #{classTwoname}, '%')</if>
 			<if test="reporttime != null  and reporttime != ''"> and reporttime = #{reporttime}</if>
 		</where>
+		order by updatetime desc
 	</select>
 	<select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">
 		{call prorep_plamcom(#{timedateta,mode=IN,jdbcType=VARCHAR},#{timedateta,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}

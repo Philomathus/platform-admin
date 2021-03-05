@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
 import com.qiqilm.server.admin.mapper.ReportPlamGamesMapper;
 import com.qiqilm.server.admin.service.IReportPlamGamesService;
@@ -12,10 +13,7 @@ import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -39,25 +37,32 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 	 * @return 【请填写功能名称】
 	 */
 	@Override
-	public List<ReportPlamGames> selectReportPlamGamesList( ReportPlamGames reportPlamGames ) {
+	public Object selectReportPlamGamesList( ReportPlamGames reportPlamGames ) {
+
 		Date             d          = new Date();
 		SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
 		String           dateNowStr = sdf.format( d );
 
 		Calendar beforeTime = Calendar.getInstance();
-		beforeTime.add(Calendar.MINUTE, -5);// 5分钟之前的时间
-		Date beforeD = beforeTime.getTime();
+		beforeTime.add( Calendar.MINUTE, -5 );// 5分钟之前的时间
+		Date                  beforeD = beforeTime.getTime();
 		List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList( reportPlamGames );
-		if (allList.size()==0&&reportPlamGames.getBegindate().equals( dateNowStr)){
-			storage(dateNowStr,reportPlamGames);
+		if ( allList.size() == 0 && reportPlamGames.getBegindate().equals( dateNowStr ) ) {
+			storage( dateNowStr, reportPlamGames );
+			return new AjaxResult( 900, "报表正在生成，请稍后..." );
 		}
-		if (allList.size()!=0&&reportPlamGames.getBegindate().equals( dateNowStr)){
-			Date updateTime=allList.get(0).getUpdateTime();
-			if (updateTime.getTime()<=beforeD.getTime()){
-				storage(dateNowStr,reportPlamGames);
+		if ( allList.size() != 0 && reportPlamGames.getBegindate().equals( dateNowStr ) ) {
+			Date updateTime = allList.get( 0 ).getUpdateTime();
+			if ( updateTime.getTime() <= beforeD.getTime() ) {
+				storage( dateNowStr, reportPlamGames );
+				return new AjaxResult( 900, "报表正在生成，请稍后..." );
+			} else if ( "0".equals( redisUtil.strGet( "admin-reportPlamGames" ) ) ) {
+				return new AjaxResult( 900, "报表正在生成，请稍后..." );
 			}
 		}
-		return allList;
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put( "rows", allList );
+		return resultMap;
 
 	}
 
@@ -67,17 +72,27 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 		return reportPlamGamesMapper.countBetData( reportPlamGames );
 	}
 
-	public  List<ReportPlamGames> storage( String dateNowStr,ReportPlamGames reportPlamGames ) {
-		threadPoolTaskExecutor.execute(() -> {
-			redisUtil.strSet( "admin-reportPlamGames", "0", Duration.ofMinutes( 1 ) );
-			String result=reportPlamGamesMapper.calldataProrepPlamcom( dateNowStr );
-			if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamGames" ) ) {
-				redisUtil.strIncrement("admin-reportPlamGames");
+
+	public void storage( String dateNowStr, ReportPlamGames reportPlamGames ) {
+		String keyVal = redisUtil.strGet( "admin-reportPlamGames" );
+		if ( !"0".equals( keyVal ) ) {
+			synchronized ( this ) {
+				redisUtil.strSet( "admin-reportPlamGames", "0", Duration.ofMinutes( 1 ) );
+				threadPoolTaskExecutor.execute( () -> {
+					String result = reportPlamGamesMapper.calldataProrepPlamcom( dateNowStr );
+					if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamGames" ) ) {
+						redisUtil.strIncrement( "admin-reportPlamGames" );
+					}
+					redisUtil.strSet( "admin-reportPlamGames", "0", Duration.ofMinutes( 1 ) );
+				} );
 			}
-		});
-		List<ReportPlamGames> allList1 = reportPlamGamesMapper.selectReportPlamGamesList( reportPlamGames );
-		return allList1;
+		}
 	}
 
+	@Override
+	public List<ReportPlamGames> exportPlamGamesList( ReportPlamGames reportPlamGames ) {
+		List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList( reportPlamGames );
+		return allList;
+	}
 
 }
