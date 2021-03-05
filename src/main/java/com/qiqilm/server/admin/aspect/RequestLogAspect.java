@@ -67,7 +67,7 @@ public class RequestLogAspect {
      * @return {@link Object}
      * @throws Throwable throwable
      */
-    @Around("taskServer()")
+//    @Around("taskServer()")
     public Object doTaskAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         return runProceed(proceedingJoinPoint);
     }
