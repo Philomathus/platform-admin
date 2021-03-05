@@ -24,4 +24,10 @@ public interface ReportAgentcountMapper {
 	String calldataProrepPlamcom(@Param( "timedateta" ) String timedateta, @Param( "agentcode" ) String agentcode);
 
     List<ReportPlamHome> findChartsOne(@Param("classTwo") String classTwo,@Param("time") String time);
+
+	int existsPromotionCode(ReportAgentcount reportAgentcount);
+
+	void addPromotionCode(ReportAgentcount reportAgentcount);
+
+	void delPromotionCode(ReportAgentcount reportAgentcount);
 }

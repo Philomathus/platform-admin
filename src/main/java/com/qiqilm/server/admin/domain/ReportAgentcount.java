@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class ReportAgentcount extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -80,6 +82,8 @@ public class ReportAgentcount extends BaseEntity {
     /** 代理线送礼 */
     @Excel(name = "代理线送礼")
     private String totalGiveprop;
+
+    private String code;
 
     public void setRepId(String repId) {
         this.repId = repId;
