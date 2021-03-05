@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelHistoryMapper">
+
+    <resultMap type="WheelHistory" id="WheelHistoryResult">
+        <result property="id"    column="id"    />
+        <result property="pUserId"    column="p_user_id"    />
+        <result property="name"    column="name"    />
+        <result property="prize"    column="prize"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="wheelType"    column="wheel_type"    />
+    </resultMap>
+
+    <sql id="selectWheelHistoryVo">
+        select id, p_user_id, name, prize, c_time, wheel_type from 7700_live.wheel_history
+    </sql>
+
+    <select id="selectWheelHistoryList" parameterType="WheelHistory" resultMap="WheelHistoryResult">
+        <include refid="selectWheelHistoryVo"/>
+        <where>
+            <if test="pUserId != null  and pUserId != ''"> and p_user_id = #{pUserId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="prize != null "> and prize = #{prize}</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="sTime != null "> and c_time > #{sTime}</if>
+            <if test="eTime != null "> and c_time &lt;= #{eTime}</if>
+            <if test="wheelType != null "> and wheel_type = #{wheelType}</if>
+        </where>
+    </select>
+
+    <select id="selectWheelHistoryById" parameterType="Long" resultMap="WheelHistoryResult">
+        <include refid="selectWheelHistoryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWheelHistory" parameterType="WheelHistory" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.wheel_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pUserId != null">p_user_id,</if>
+            <if test="name != null">name,</if>
+            <if test="prize != null">prize,</if>
+            <if test="cTime != null">c_time,</if>
+            <if test="wheelType != null">wheel_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="pUserId != null">#{pUserId},</if>
+                    <if test="name != null">#{name},</if>
+                    <if test="prize != null">#{prize},</if>
+                    <if test="cTime != null">#{cTime},</if>
+                    <if test="wheelType != null">#{wheelType},</if>
+             </trim>
+    </insert>
+
+    <update id="updateWheelHistory" parameterType="WheelHistory">
+        update 7700_live.wheel_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pUserId != null">p_user_id = #{pUserId},</if>
+
+            <if test="name != null">name = #{name},</if>
+
+            <if test="prize != null">prize = #{prize},</if>
+
+            <if test="cTime != null">c_time = #{cTime},</if>
+
+            <if test="wheelType != null">wheel_type = #{wheelType},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelHistoryById" parameterType="Long">
+        delete from 7700_live.wheel_history where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelHistoryByIds" parameterType="String">
+        delete from 7700_live.wheel_history where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
