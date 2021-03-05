@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.domain.rsp;
 
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -39,5 +40,12 @@ public class RspLotteryBet {
 	private String updateTime;
 
 	private BigDecimal prizeSixThousand;
-	private Integer id;
+	private Integer    id;
+
+	public String getUpdateTime() {
+		if ( StringUtils.isNotBlank( updateTime ) ) {
+			this.updateTime = updateTime.split( " " )[ 0 ];
+		}
+		return updateTime;
+	}
 }
