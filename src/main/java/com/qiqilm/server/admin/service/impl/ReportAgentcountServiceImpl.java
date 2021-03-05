@@ -82,6 +82,21 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
         return reportAgentcountMapper.findChartsOne(classTwo, time);
     }
 
+    @Override
+    public int existsPromotionCode(ReportAgentcount reportAgentcount) {
+        return reportAgentcountMapper.existsPromotionCode(reportAgentcount);
+    }
+
+    @Override
+    public void addPromotionCode(ReportAgentcount reportAgentcount) {
+        reportAgentcountMapper.addPromotionCode(reportAgentcount);
+    }
+
+    @Override
+    public void delPromotionCode(ReportAgentcount reportAgentcount) {
+        reportAgentcountMapper.delPromotionCode(reportAgentcount);
+    }
+
     private void setSelectTime(String dateNowStr, ReportAgentcount reportAgentcount) {
         if (null == reportAgentcount.getParams() || reportAgentcount.getParams().size() == 0 ||
                 reportAgentcount.getParams().get("beginTime") == "") {

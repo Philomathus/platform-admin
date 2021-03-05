@@ -26,4 +26,10 @@ public interface IReportAgentcountService {
     void storage(ReportAgentcount reportAgentcount);
 
     List<ReportPlamHome> findChartsOne(String classTwo, String time);
+
+    int existsPromotionCode(ReportAgentcount reportAgentcount);
+
+	void addPromotionCode(ReportAgentcount reportAgentcount);
+
+	void delPromotionCode(ReportAgentcount reportAgentcount);
 }

@@ -52,4 +52,17 @@
         order by reporhour asc
     </select>
 
+    <select id="existsPromotionCode" resultType="Integer">
+        select count(0) from ${dbMain}.report_agentcode
+        where `CODE` = #{code}
+    </select>
+
+    <insert id="addPromotionCode">
+        insert into ${dbMain}.report_agentcode (`CODE`) values (#{code})
+    </insert>
+
+    <delete id="delPromotionCode" >
+        delete from ${dbMain}.report_agentcode where (`CODE`) = (#{code})
+    </delete>
+
 </mapper>
