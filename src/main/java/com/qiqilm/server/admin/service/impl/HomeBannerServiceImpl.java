@@ -8,10 +8,12 @@ import com.qiqilm.server.admin.service.IHomeBannerService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,6 +70,8 @@ public class HomeBannerServiceImpl implements IHomeBannerService {
 	 */
 	@Override
 	public int insertHomeBanner( HomeBanner homeBanner ) {
+		homeBanner.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+		homeBanner.setUpdateTime( new Date() );
 		int i = homeBannerMapper.insertHomeBanner( homeBanner );
 		if ( i > 0 ) {
 			redisUtil.unlink( Constants.CX_HOME_BANNER );
