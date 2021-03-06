@@ -111,7 +111,7 @@ public class LiveUserController extends BaseController {
 		return toAjax( liveUserService.deleteLiveUserByIds( ids ) );
 	}
 
-	@PreAuthorize( "@ss.hasPermi('admin:liveUser:list')" )
+	@PreAuthorize( "@ss.hasPermi('live:anchorAward:list')" )
 	@GetMapping( "/anchorAward" )
 	public TableDataInfo anchorAward( ReqLotteryBat req ) throws ParseException {
 		if ( StringUtils.isNotBlank( req.getUpdateTime() ) ) {
@@ -121,5 +121,17 @@ public class LiveUserController extends BaseController {
 		startPage();
 		List<RspLotteryBet> list = liveUserService.selectAnchorAward( req );
 		return getDataTable( list );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live:anchorAward:export')" )
+	@GetMapping( "/anchorAward/export" )
+	public AjaxResult anchorAwardExport( ReqLotteryBat req ) {
+		if ( StringUtils.isNotBlank( req.getUpdateTime() ) ) {
+			req.setStartTime( req.getUpdateTime() + " 00:00:00" );
+			req.setEndTime( req.getUpdateTime() + " 23:59:59");
+		}
+		List<RspLotteryBet>      list = liveUserService.selectAnchorAward( req );
+		ExcelUtil<RspLotteryBet> util = new ExcelUtil<>( RspLotteryBet.class );
+		return util.exportExcel( list, "anchorAward" );
 	}
 }
