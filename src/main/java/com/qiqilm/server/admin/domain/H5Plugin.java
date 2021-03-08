@@ -23,7 +23,7 @@ public class H5Plugin extends BaseEntity {
 
     /** 1 启用 0 禁用 */
     @Excel(name = "1 启用 0 禁用")
-    private Boolean status;
+    private String status;
 
     /** 内容地址 */
     @Excel(name = "内容地址")
@@ -47,7 +47,13 @@ public class H5Plugin extends BaseEntity {
     public String getName() {
         return name;
     }
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
+    public String getStatus() {
+        return status;
+    }
     public void setConUrl(String conUrl) {
         this.conUrl = conUrl;
     }
@@ -61,14 +67,6 @@ public class H5Plugin extends BaseEntity {
 
     public String getIconUrl() {
         return iconUrl;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
     }
 
     @Override
