@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelUserMapper">
+
+    <resultMap type="WheelUser" id="WheelUserResult">
+        <result property="id"    column="id"    />
+        <result property="times"    column="times"    />
+        <result property="skinTimes"    column="skin_times"    />
+    </resultMap>
+
+    <sql id="selectWheelUserVo">
+        select id, times, skin_times from 7700_live.wheel_user
+    </sql>
+
+    <select id="selectWheelUserList" parameterType="WheelUser" resultMap="WheelUserResult">
+        <include refid="selectWheelUserVo"/>
+        <where>
+            <if test="times != null "> and times = #{times}</if>
+            <if test="skinTimes != null "> and skin_times = #{skinTimes}</if>
+        </where>
+    </select>
+
+    <select id="selectWheelUserById" parameterType="String" resultMap="WheelUserResult">
+        <include refid="selectWheelUserVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWheelUser" parameterType="WheelUser">
+        insert into 7700_live.wheel_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="times != null">times,</if>
+            <if test="skinTimes != null">skin_times,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="times != null">#{times},</if>
+                    <if test="skinTimes != null">#{skinTimes},</if>
+             </trim>
+    </insert>
+
+    <update id="updateWheelUser" parameterType="WheelUser">
+        update 7700_live.wheel_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="times != null">times = #{times},</if>
+    
+            <if test="skinTimes != null">skin_times = #{skinTimes},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelUserById" parameterType="String">
+        delete from 7700_live.wheel_user where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelUserByIds" parameterType="String">
+        delete from 7700_live.wheel_user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
