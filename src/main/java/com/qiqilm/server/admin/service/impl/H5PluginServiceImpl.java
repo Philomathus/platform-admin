@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ import java.util.List;
  */
 @Service
 public class H5PluginServiceImpl implements IH5PluginService {
-	@Autowired
+	@Resource
 	private H5PluginMapper        h5PluginMapper;
 	@Autowired
 	private ConfigDomainCacheUtil configDomainCacheUtil;
@@ -86,7 +87,7 @@ public class H5PluginServiceImpl implements IH5PluginService {
 		vo.setType(record.getId().intValue());
 		vo.setIcon(record.getIconUrl());
 		vo.setLink(record.getConUrl());
-		vo.setStatus(record.getStatus());
+		vo.setStatus(record.getStatus().compareTo("0")>0);
 		vo.setLotteryName(record.getName());
 		liveCacheUtil.setH5PluginVo(vo);
 		return i;
