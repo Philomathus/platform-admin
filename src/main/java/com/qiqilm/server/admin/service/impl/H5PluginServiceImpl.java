@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.domain.H5Plugin;
 import com.qiqilm.server.admin.domain.LiveProp;
+import com.qiqilm.server.admin.domain.vo.H5PluginVo;
 import com.qiqilm.server.admin.mapper.H5PluginMapper;
 import com.qiqilm.server.admin.service.IH5PluginService;
 import com.qiqilm.server.admin.utils.StringUtils;
@@ -24,6 +26,9 @@ public class H5PluginServiceImpl implements IH5PluginService {
 	private H5PluginMapper        h5PluginMapper;
 	@Autowired
 	private ConfigDomainCacheUtil configDomainCacheUtil;
+
+	@Autowired
+	private LiveCacheUtil liveCacheUtil;
 
 	/**
 	 * 查询h5插件
@@ -75,7 +80,16 @@ public class H5PluginServiceImpl implements IH5PluginService {
 	 */
 	@Override
 	public int updateH5Plugin( H5Plugin h5Plugin ) {
-		return h5PluginMapper.updateH5Plugin( h5Plugin );
+		int i = h5PluginMapper.updateH5Plugin( h5Plugin );
+		H5Plugin record = h5PluginMapper.selectH5PluginById(h5Plugin.getId());
+		H5PluginVo vo = new H5PluginVo();
+		vo.setType(record.getId().intValue());
+		vo.setIcon(record.getIconUrl());
+		vo.setLink(record.getConUrl());
+		vo.setStatus(Boolean.valueOf(record.getStatus()));
+		vo.setLotteryName(record.getName());
+		liveCacheUtil.setH5PluginVo(vo);
+		return i;
 	}
 
 	/**

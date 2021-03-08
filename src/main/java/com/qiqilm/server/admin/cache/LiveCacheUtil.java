@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.cache;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.domain.LiveMount;
 import com.qiqilm.server.admin.domain.WheelLottery;
+import com.qiqilm.server.admin.domain.vo.H5PluginVo;
 import com.qiqilm.server.admin.mapper.LiveMountMapper;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
@@ -120,4 +121,8 @@ public class LiveCacheUtil {
     private String getWheelLotteryUseKey( int lotteryId ) {
         return "live:lottery_wheel_pool:" +lotteryId;
     }
+
+	public void setH5PluginVo( H5PluginVo vo ) {
+		setRedis( "h5-plugin", String.valueOf( vo.getType()), vo );
+	}
 }
