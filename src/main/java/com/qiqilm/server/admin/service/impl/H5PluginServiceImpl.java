@@ -86,7 +86,7 @@ public class H5PluginServiceImpl implements IH5PluginService {
 		vo.setType(record.getId().intValue());
 		vo.setIcon(record.getIconUrl());
 		vo.setLink(record.getConUrl());
-		vo.setStatus(Boolean.valueOf(record.getStatus()));
+		vo.setStatus(record.getStatus());
 		vo.setLotteryName(record.getName());
 		liveCacheUtil.setH5PluginVo(vo);
 		return i;
