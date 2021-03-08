@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveFamily;
 import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
@@ -126,13 +127,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
     }
 
     @Override
-    public List<RspLotteryBet> selectAnchorAward(LiveUser liveUser) {
-        List<RspLotteryBet> lotteryBets = liveUserMapper.selectAnchorAward(liveUser);
-        RspLotteryBet rspLotteryBet = lotteryBets.get(0);
-        if (StringUtils.isNull(rspLotteryBet)) {
-            lotteryBets = new ArrayList<>();
-            return lotteryBets;
-        }
+    public List<RspLotteryBet> selectAnchorAward( ReqLotteryBat req) {
+        List<RspLotteryBet> lotteryBets = liveUserMapper.selectAnchorAward(req);
         for (RspLotteryBet lotteryBet : lotteryBets) {
             BigDecimal subtract = lotteryBet.getPrize().subtract(lotteryBet.getCost());
             if (subtract.compareTo(BigDecimal.ZERO) > 0) {

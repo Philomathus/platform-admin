@@ -6,9 +6,11 @@ import com.qiqilm.server.admin.mapper.HomeNoticeMapper;
 import com.qiqilm.server.admin.service.IHomeNoticeService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,6 +56,8 @@ public class HomeNoticeServiceImpl implements IHomeNoticeService {
 	 */
 	@Override
 	public int insertHomeNotice( HomeNotice homeNotice ) {
+		homeNotice.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+		homeNotice.setUpdateTime( new Date() );
 		int i = homeNoticeMapper.insertHomeNotice( homeNotice );
 		if ( i > 0 ) {
 			redisUtil.unlink( Constants.CX_HOME_NOTICE );

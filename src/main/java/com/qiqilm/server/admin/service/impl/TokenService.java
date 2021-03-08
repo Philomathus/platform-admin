@@ -56,8 +56,17 @@ public class TokenService {
 			// 解析对应的权限以及用户信息
 			String uuid    = ( String ) claims.get( AdminConstants.LOGIN_USER_KEY );
 			String userKey = getTokenKey( uuid );
-			String userStr = redisUtil.strGet( userKey );
-			return JsonUtil.json2Object( userStr, LoginUser.class );
+//            Map tokenKeys = (Map)redisUtil.hGet("tokenKeys", userKey);
+            Object tokenKeysString = redisUtil.hGet("tokenKeys", userKey);
+            if (tokenKeysString!= null){
+                Map tokenKeys = JsonUtil.json2Object((String) tokenKeysString, Map.class);
+                long expireDate = (long)tokenKeys.get("expireDate");
+                if (System.currentTimeMillis()<= expireDate) {
+                    JsonUtil.json2Object( (String)tokenKeys.get("loginUser"), LoginUser.class );
+                    return JsonUtil.json2Object( (String)tokenKeys.get("loginUser"), LoginUser.class );
+                }
+            }
+
 		}
 		return null;
 	}
@@ -130,8 +139,18 @@ public class TokenService {
 
 		// 根据uuid将loginUser缓存
 		String tokenKey = getTokenKey( loginUser.getToken() );
-		redisUtil.strSet( tokenKey, JsonUtil.object2Json( loginUser ), Duration.ofMinutes( expireTime ) );
-		redisUtil.strSet( userKey, loginUser.getToken(), Duration.ofMinutes( expireTime ) );
+//		redisUtil.strSet( tokenKey, JsonUtil.object2Json( loginUser ), Duration.ofMinutes( expireTime ) );
+		//获取截止时间
+        long expireDate = System.currentTimeMillis() + Duration.ofMinutes(expireTime).toMillis();
+        Map<String, Object> map = new HashMap<>();
+        map.put("loginUser", JsonUtil.object2Json(loginUser));
+        map.put("expireDate",expireDate);
+        redisUtil.hSet("tokenKeys",tokenKey,JsonUtil.object2Json(map));
+//		redisUtil.strSet( userKey, loginUser.getToken(), Duration.ofMinutes( expireTime ) );
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("userKey", loginUser.getToken());
+        map2.put("expireDate",expireDate);
+        redisUtil.hSet("userKeys",userKey,JsonUtil.object2Json(map2));
 	}
 
 	/**
@@ -197,11 +216,11 @@ public class TokenService {
 		return token;
 	}
 
-	private String getTokenKey( String uuid ) {
+	public static String getTokenKey( String uuid ) {
 		return AdminConstants.LOGIN_TOKEN_KEY + uuid;
 	}
 
-	private String getUserKey( Long userId ) {
+    public static String getUserKey( Long userId ) {
 		return AdminConstants.LOGIN_USER_TOEN_KEY + userId;
 	}
 }

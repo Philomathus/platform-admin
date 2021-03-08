@@ -5,19 +5,18 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -112,23 +111,27 @@ public class LiveUserController extends BaseController {
 		return toAjax( liveUserService.deleteLiveUserByIds( ids ) );
 	}
 
-	@PreAuthorize( "@ss.hasPermi('admin:liveUser:list')" )
+	@PreAuthorize( "@ss.hasPermi('live:anchorAward:list')" )
 	@GetMapping( "/anchorAward" )
-	public TableDataInfo anchorAward( LiveUser liveUser ) throws ParseException {
-		startPage();
-		Date d = new Date();
-		String myString = liveUser.getSendEndTime();
-		if (!StringUtils.isEmpty(myString)) {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date dd = simpleDateFormat.parse(myString);
-			boolean flag = dd.before(d);
-			if (!flag){
-				TableDataInfo tableDataInfo=new TableDataInfo();
-				tableDataInfo.setMsg("请选择正确的时间范围");
-				return tableDataInfo;
-			}
+	public TableDataInfo anchorAward( ReqLotteryBat req ) throws ParseException {
+		if ( StringUtils.isNotBlank( req.getUpdateTime() ) ) {
+			req.setStartTime( req.getUpdateTime() + " 00:00:00" );
+			req.setEndTime( req.getUpdateTime() + " 23:59:59");
 		}
-		List<RspLotteryBet> list = liveUserService.selectAnchorAward( liveUser );
+		startPage();
+		List<RspLotteryBet> list = liveUserService.selectAnchorAward( req );
 		return getDataTable( list );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live:anchorAward:export')" )
+	@GetMapping( "/anchorAward/export" )
+	public AjaxResult anchorAwardExport( ReqLotteryBat req ) {
+		if ( StringUtils.isNotBlank( req.getUpdateTime() ) ) {
+			req.setStartTime( req.getUpdateTime() + " 00:00:00" );
+			req.setEndTime( req.getUpdateTime() + " 23:59:59");
+		}
+		List<RspLotteryBet>      list = liveUserService.selectAnchorAward( req );
+		ExcelUtil<RspLotteryBet> util = new ExcelUtil<>( RspLotteryBet.class );
+		return util.exportExcel( list, "anchorAward" );
 	}
 }
