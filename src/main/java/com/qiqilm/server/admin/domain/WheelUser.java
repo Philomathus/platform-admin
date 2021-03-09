@@ -21,11 +21,11 @@ public class WheelUser extends BaseEntity {
 
     /** 剩余次数 */
     @Excel(name = "剩余次数")
-    private Long times;
+    private Integer times;
 
     /** 皮肤转盘剩余次数 */
     @Excel(name = "皮肤转盘剩余次数")
-    private Long skinTimes;
+    private Integer skinTimes;
 
     @Override
     public String toString() {

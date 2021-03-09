@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,11 +48,16 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	@Autowired
 	private ConfigRecommendMapper   configRecommendMapper;
 	@Autowired
+	private WheelUserMapper wheelUserMapper;
+	@Autowired
 	private ILogService             logService;
 	@Autowired
 	private TokenService            tokenService;
 	@Autowired
 	private RedisUtil               redisUtil;
+
+	@Autowired
+	private LiveCacheUtil liveCacheUtil;
 
 	/**
 	 * 查询公司入款信息
@@ -129,12 +136,31 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		try {
 			boolean isAudit = this.finalAudit( req, userName, "审核人：" + userName );
 			return isAudit ? AjaxResult.success( "审核成功" ) : AjaxResult.error( "审核失败" );
+
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 			return AjaxResult.error( "订单审核有误" );
 		} finally {
 			redisUtil.unLock( EnumLock.member, memberRechargeLog.getMemberId() );
 		}
+	}
+
+	private void checkFirstChargeaddWheelTimes(  String pUserId ) {
+		memberInfoMapper.selectMemberInfoById(pUserId);
+		WheelUser wheelUser = wheelUserMapper.selectWheelUserById(pUserId);
+		if ( wheelUser == null ) {
+			wheelUser = new WheelUser();
+			wheelUser.setId( pUserId );
+			wheelUser.setTimes( 1 );
+			wheelUser.setSkinTimes(1);
+			wheelUserMapper.insertWheelUser(wheelUser);
+
+		} else {
+			wheelUser.setTimes( 1 );
+			wheelUser.setSkinTimes(1);
+			wheelUserMapper.updateWheelUser(wheelUser);
+		}
+		//加坐骑
 	}
 
 	@Transactional( rollbackFor = Exception.class )
@@ -171,6 +197,10 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 
 		//新增佣金记录
 		this.recommendProcess( memberRechargeLog, memberInfo );
+
+		if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
+			checkFirstChargeaddWheelTimes(memberRechargeLog.getMemberId());
+		}
 
 		//更新用户账户余额
 		return this.updateMemberCharge( memberInfo.getId(), add, "线下存款" );
