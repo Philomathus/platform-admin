@@ -225,10 +225,15 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 
 		//新增佣金记录
 		this.recommendProcess( memberRechargeLog, memberInfo );
-
-		if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
-			checkFirstChargeaddWheelTimes(memberRechargeLog.getMemberId());
+		try {
+			if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
+				checkFirstChargeaddWheelTimes(memberRechargeLog.getMemberId());
+			}
+		}catch (Exception e){
+			log.error("首充报错",e);
 		}
+
+
 
 		//更新用户账户余额
 		return this.updateMemberCharge( memberInfo.getId(), add, "线下存款" );
