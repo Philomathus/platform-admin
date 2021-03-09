@@ -179,11 +179,11 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 					db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
 				}else{
 					Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
-					query.setEffectiveTime( d );
+					db.setEffectiveTime( d );
 				}
 			}else{
 				Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
-				query.setEffectiveTime( d );
+				db.setEffectiveTime( d );
 				db.setIsUse(0);
 			}
 
