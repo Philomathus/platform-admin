@@ -166,7 +166,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		LiveUserMount query = new LiveUserMount();
 		query.setUserId(pUserId);
 		query.setMountId(33);
-		int day = 3;
+		int day = 4;
 		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList(query);
 		if(list.size()==0){
 			query.setIsUse(0);
