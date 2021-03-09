@@ -148,7 +148,6 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	}
 
 	private void checkFirstChargeaddWheelTimes(  String pUserId ) {
-		memberInfoMapper.selectMemberInfoById(pUserId);
 		WheelUser wheelUser = wheelUserMapper.selectWheelUserById(pUserId);
 		if ( wheelUser == null ) {
 			wheelUser = new WheelUser();
