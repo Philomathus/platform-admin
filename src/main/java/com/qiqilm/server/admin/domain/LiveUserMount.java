@@ -32,11 +32,11 @@ public class LiveUserMount extends BaseEntity {
 
     /** 用户层级 */
     @Excel(name = "用户层级")
-    private Long mountId;
+    private Integer mountId;
 
     /** 0:禁用;1:启用;默认启用 */
     @Excel(name = "0:禁用;1:启用;默认启用")
-    private Long isUse;
+    private Integer isUse;
 
     @Override
     public String toString() {

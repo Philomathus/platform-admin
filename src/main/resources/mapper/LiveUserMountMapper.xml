@@ -11,7 +11,7 @@
     </resultMap>
 
     <sql id="selectLiveUserMountVo">
-        select id, user_id, effective_time, mount_id, is_use from 7700_live.live_user_mount
+        select id, user_id, effective_time, mount_id, is_use from ${dbLive}.live_user_mount
     </sql>
 
     <select id="selectLiveUserMountList" parameterType="LiveUserMount" resultMap="LiveUserMountResult">
@@ -30,7 +30,7 @@
     </select>
 
     <insert id="insertLiveUserMount" parameterType="LiveUserMount" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.live_user_mount
+        insert into ${dbLive}.live_user_mount
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
             <if test="effectiveTime != null">effective_time,</if>
@@ -46,7 +46,7 @@
     </insert>
 
     <update id="updateLiveUserMount" parameterType="LiveUserMount">
-        update 7700_live.live_user_mount
+        update ${dbLive}.live_user_mount
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
     
@@ -61,11 +61,11 @@
     </update>
 
     <delete id="deleteLiveUserMountById" parameterType="Long">
-        delete from 7700_live.live_user_mount where id = #{id}
+        delete from ${dbLive}.live_user_mount where id = #{id}
     </delete>
 
     <delete id="deleteLiveUserMountByIds" parameterType="String">
-        delete from 7700_live.live_user_mount where id in
+        delete from ${dbLive}.live_user_mount where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
