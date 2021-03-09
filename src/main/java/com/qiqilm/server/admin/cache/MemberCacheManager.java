@@ -2,9 +2,13 @@ package com.qiqilm.server.admin.cache;
 
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.constant.ConstantsWeb;
+import com.qiqilm.server.admin.domain.LiveUserMount;
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.WheelUser;
 import com.qiqilm.server.admin.exception.BusinessException;
+import com.qiqilm.server.admin.mapper.LiveUserMountMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.WheelUserMapper;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomUtils;
@@ -15,6 +19,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +33,11 @@ public class MemberCacheManager {
     private MemberInfoMapper memberInfoMapper;
 	@Autowired
 	private RedisUtil redisUtil;
+
+	@Autowired
+	private WheelUserMapper wheelUserMapper;
+	@Autowired
+	private LiveUserMountMapper liveUserMountMapper;
 
 	public void init() {
 		initMemberCode();
@@ -155,5 +166,49 @@ public class MemberCacheManager {
 		member.setHeadImg( String.valueOf( RandomUtils.nextInt( 1, 7 ) ) );
 		member.setId( member.getCxAgent().concat( "_" ).concat( member.getMemberCode() ) );
 		return member;
+	}
+
+	public void checkFirstChargeaddWheelTimes(  String pUserId ) {
+		WheelUser wheelUser = wheelUserMapper.selectWheelUserById(pUserId);
+		if ( wheelUser == null ) {
+			wheelUser = new WheelUser();
+			wheelUser.setId( pUserId );
+			wheelUser.setTimes( 1 );
+			wheelUser.setSkinTimes(1);
+			wheelUserMapper.insertWheelUser(wheelUser);
+
+		} else {
+			wheelUser.setTimes( 1 );
+			wheelUser.setSkinTimes(1);
+			wheelUserMapper.updateWheelUser(wheelUser);
+		}
+		//加坐骑33
+		LiveUserMount query = new LiveUserMount();
+		query.setUserId(pUserId);
+		query.setMountId(33);
+		int day = 4;
+		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList(query);
+		if(list.size()==0){
+			query.setIsUse(0);
+			Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+			query.setEffectiveTime( d );
+			liveUserMountMapper.insertLiveUserMount(query);
+		}else{
+			LiveUserMount db = list.get(0);
+			if(db.getIsUse().equals(1)){
+				if(db.getEffectiveTime().getTime()>System.currentTimeMillis()){
+					db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
+				}else{
+					Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+					db.setEffectiveTime( d );
+				}
+			}else{
+				Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+				db.setEffectiveTime( d );
+				db.setIsUse(0);
+			}
+
+			liveUserMountMapper.updateLiveUserMount(db);
+		}
 	}
 }
