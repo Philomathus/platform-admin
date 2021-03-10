@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveUserMountMapper">
+
+    <resultMap type="LiveUserMount" id="LiveUserMountResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="effectiveTime"    column="effective_time"    />
+        <result property="mountId"    column="mount_id"    />
+        <result property="isUse"    column="is_use"    />
+    </resultMap>
+
+    <sql id="selectLiveUserMountVo">
+        select id, user_id, effective_time, mount_id, is_use from ${dbLive}.live_user_mount
+    </sql>
+
+    <select id="selectLiveUserMountList" parameterType="LiveUserMount" resultMap="LiveUserMountResult">
+        <include refid="selectLiveUserMountVo"/>
+        <where>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="effectiveTime != null "> and effective_time = #{effectiveTime}</if>
+            <if test="mountId != null "> and mount_id = #{mountId}</if>
+            <if test="isUse != null "> and is_use = #{isUse}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveUserMountById" parameterType="Long" resultMap="LiveUserMountResult">
+        <include refid="selectLiveUserMountVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveUserMount" parameterType="LiveUserMount" useGeneratedKeys="true" keyProperty="id">
+        insert into ${dbLive}.live_user_mount
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="effectiveTime != null">effective_time,</if>
+            <if test="mountId != null">mount_id,</if>
+            <if test="isUse != null">is_use,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="userId != null">#{userId},</if>
+                    <if test="effectiveTime != null">#{effectiveTime},</if>
+                    <if test="mountId != null">#{mountId},</if>
+                    <if test="isUse != null">#{isUse},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLiveUserMount" parameterType="LiveUserMount">
+        update ${dbLive}.live_user_mount
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+    
+            <if test="effectiveTime != null">effective_time = #{effectiveTime},</if>
+    
+            <if test="mountId != null">mount_id = #{mountId},</if>
+    
+            <if test="isUse != null">is_use = #{isUse},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveUserMountById" parameterType="Long">
+        delete from ${dbLive}.live_user_mount where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveUserMountByIds" parameterType="String">
+        delete from ${dbLive}.live_user_mount where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
