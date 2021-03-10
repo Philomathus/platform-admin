@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.domain.LiveVideo;
 
@@ -38,4 +39,8 @@ public interface LiveVideoMapper {
 	LiveVideo selectLiveVideoSortById( Long id );
 
 	List<LiveVideo> selectLiveInVideoSort();
+
+	long countLiveInSort( Long sort );
+
+	int updateSortBatch( List<Map<String, Integer>> sortInitList );
 }

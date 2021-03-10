@@ -7,12 +7,14 @@
 		<result property="id" column="id"/>
 		<result property="userId" column="user_id"/>
 		<result property="title" column="title"/>
+		<result property="liveIn" column="live_in"/>
 		<result property="watchNumber" column="watch_number"/>
 		<result property="cateId" column="cate_id"/>
 		<result property="beginTime" column="begin_time"/>
 		<result property="endTime" column="end_time"/>
 		<result property="monitorTime" column="monitor_time"/>
 		<result property="sort" column="sort"/>
+		<result property="sortInit" column="sort_init"/>
 		<result property="isRecommend" column="is_recommend"/>
 		<result property="stick" column="stick"/>
 		<result property="liveImage" column="live_image"/>
@@ -78,6 +80,7 @@
 				#{id}
 			</foreach>
 		</if>
+		order by sort_init
 	</select>
 
 	<select id="selectLiveVideoById" parameterType="Long" resultMap="LiveVideoResult">
@@ -234,4 +237,23 @@
 	<select id="selectLiveInVideoSort" resultMap="LiveVideoResult">
 		select id, sort, is_recommend, stick FROM ${dbLive}.live_video where live_in = 1 order by sort,is_recommend desc,stick
 	</select>
+
+	<select id="countLiveInSort" resultType="long">
+		select count(0) from ${dbLive}.live_video where live_in = 1 and sort = #{sort}
+	</select>
+
+	<update id="updateSortBatch">
+		update ${dbLive}.live_video
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="sort_init = case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when id=#{item.id} then #{item.sort}
+				</foreach>
+			</trim>
+		</trim>
+		where id in
+		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+			#{item.id}
+		</foreach>
+	</update>
 </mapper>

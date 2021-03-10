@@ -9,9 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author qicheng
@@ -27,27 +25,14 @@ public class ServerSmsCacheUtil {
 	private ServerSmsMapper serverSmsMapper;
 
 	public void setServerSms( ServerSms serverSms ) {
-		Map<String, String> serverSmsMap = new HashMap<>();
-		for ( String code : serverSms.toCodes() ) {
-			serverSmsMap.put( code, serverSms.getVal( code ) );
-		}
 		redisUtil.unlink( SERVER_SMS );
-		redisUtil.hMSet( SERVER_SMS, serverSmsMap );
+		redisUtil.strSet( SERVER_SMS, JsonUtil.object2Json( serverSms ) );
 	}
 
-	public String getValue( String code ) {
+	public ServerSms getEffect() {
 		this.exists();
-		Object codeValue = redisUtil.hGet( SERVER_SMS, code );
-		return codeValue == null ? "" : codeValue.toString();
-	}
-
-	public ServerSms getAllValue() {
-		this.exists();
-		Map<Object, Object> resultMap = redisUtil.hGetAll( SERVER_SMS );
-		if ( resultMap.isEmpty() ) {
-			return null;
-		}
-		return JsonUtil.map2Object( resultMap, ServerSms.class );
+		String value = redisUtil.strGet( SERVER_SMS );
+		return value == null ? null : JsonUtil.json2Object( value, ServerSms.class );
 	}
 
 	private void exists() {
@@ -61,5 +46,9 @@ public class ServerSmsCacheUtil {
 				this.setServerSms( serverSms );
 			}
 		}
+	}
+
+	public void clear(){
+		redisUtil.unlink( SERVER_SMS );
 	}
 }

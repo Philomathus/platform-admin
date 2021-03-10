@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.google.common.collect.ImmutableMap;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
@@ -173,16 +174,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		liveVideoMapper.updateLiveVideo( updateVideo );
 
-		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" + id ) );
+		this.processVideoSort();
 
-		/*//连麦表更新
-		LiveVideoLianmai lianmai = new LiveVideoLianmai();
-		lianmai.setStopTime( ( int ) ( System.currentTimeMillis() / 1000 ) );
-		ReqLiveVideoLianMai reqLiveVideoLianMai  = new ReqLiveVideoLianMai();
-		ReqLiveVideoLianMai reqLiveVideoLianMai1 = reqLiveVideoLianMai;
-		reqLiveVideoLianMai1.setVideo_id( id );
-		reqLiveVideoLianMai1.setStop_time( 0 );
-		lianmaiService.update( lianmai, reqLiveVideoLianMai1.getQueryWrapper() );*/
+		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" + id ) );
 
 		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
 
@@ -367,19 +361,102 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Override
 	public AjaxResult updateVideoSort( LiveVideo liveVideo ) {
+
 		LiveVideo newLiveVideo = liveVideoMapper.selectLiveVideoSortById( liveVideo.getId() );
 		if ( newLiveVideo.getLiveIn() == 0 ) {
 			return AjaxResult.error( "主播已下播，更新失败" );
 		}
-		if ( liveVideo.getSort() != null ) {
-			if ( liveVideo.getSort() != 9999999 && (liveVideo.getSort() <= 0 || liveVideo.getSort() >= 100) ) {
-				return AjaxResult.error( "排序值大小有误，请输入大于0小于100的整数值" );
+		if ( liveVideo.getSort() != null && liveVideo.getSort() != 9999999 ) {
+			if ( liveVideo.getSort() <= 0 || liveVideo.getSort() >= 100 ) {
+				return AjaxResult.error( "固定位大小有误，请输入大于0小于100的整数值" );
+			}
+			if ( newLiveVideo.getIsRecommend() == 1 ) {
+				return AjaxResult.error( "当前主播是推荐位，无法设置固定位，请取消推荐位后重试" );
+			}
+			if ( newLiveVideo.getStick() == 1 ) {
+				return AjaxResult.error( "当前主播是置底位，无法设置固定位，请取消置底位后重试" );
+			}
+			long count = liveVideoMapper.countLiveInSort( liveVideo.getSort() );
+			if ( count > 0 ) {
+				return AjaxResult.error( "固定位{}已存在，请重新设置固定位值", liveVideo.getSort() );
+			}
+		}
+		if ( liveVideo.getIsRecommend() != null && liveVideo.getIsRecommend() == 1 ) {
+			if ( newLiveVideo.getSort() < 9999000 ) {
+				return AjaxResult.error( "当前主播是固定位，无法设置推荐位，请取消固定位后重试" );
+			}
+			if ( newLiveVideo.getStick() == 1 ) {
+				return AjaxResult.error( "当前主播是置底位，无法设置推荐位，请取消置底位后重试" );
+			}
+		}
+		if ( liveVideo.getStick() != null && liveVideo.getStick() == 1 ) {
+			if ( newLiveVideo.getSort() < 9999000 ) {
+				return AjaxResult.error( "当前主播是固定位，无法设置置底位，请取消固定位后重试" );
+			}
+			if ( newLiveVideo.getIsRecommend() == 1 ) {
+				return AjaxResult.error( "当前主播是推荐位，无法设置置底位，请取消推荐位后重试" );
 			}
 		}
 		int i = liveVideoMapper.updateLiveVideo( liveVideo );
 		if ( i > 0 ) {
-			return AjaxResult.success("更新成功");
+			this.processVideoSort();
+			return AjaxResult.success( "更新成功" );
 		}
-		return AjaxResult.error("更新失败");
+		return AjaxResult.error( "更新失败" );
+	}
+
+	@Override
+	public void processVideoSort() {
+		List<LiveVideo> liveVideos = liveVideoMapper.selectLiveInVideoSort();
+
+		// 固定位
+		Map<Integer, Long> sortHostMap = new TreeMap<>();
+		// 推荐位
+		List<Long> recommendHostList = new ArrayList<>();
+		// 正常位
+		List<Long> normalHostList = new ArrayList<>();
+		// 置底位
+		List<Long> stickHostList = new ArrayList<>();
+
+		liveVideos.forEach( liveVideo -> {
+			if ( liveVideo.getSort() < 9999000 ) {
+				sortHostMap.put( liveVideo.getSort().intValue(), liveVideo.getId() );
+			} else if ( liveVideo.getIsRecommend() == 1 ) {
+				recommendHostList.add( liveVideo.getId() );
+			} else if ( liveVideo.getIsRecommend() == 0 && liveVideo.getStick() == 0 ) {
+				normalHostList.add( liveVideo.getId() );
+			} else if ( liveVideo.getStick() == 1 ) {
+				stickHostList.add( liveVideo.getId() );
+			}
+		} );
+
+		List<Long> resultList = new ArrayList<>();
+		for ( int i = 1; i <= liveVideos.size(); i++ ) {
+			Long sortHostId = sortHostMap.get( i );
+			if ( sortHostId != null ) {
+				resultList.add( i - 1, sortHostId );
+				sortHostMap.remove( i );
+			} else if ( !CollectionUtils.isEmpty( recommendHostList ) ) {
+				resultList.add( recommendHostList.get( 0 ) );
+				recommendHostList.remove( 0 );
+			} else if ( !CollectionUtils.isEmpty( normalHostList ) ) {
+				resultList.add( normalHostList.get( 0 ) );
+				normalHostList.remove( 0 );
+			}
+		}
+
+		if ( !CollectionUtils.isEmpty( sortHostMap ) ) {
+			resultList.addAll( sortHostMap.values() );
+		}
+		if ( !CollectionUtils.isEmpty( stickHostList ) ) {
+			resultList.addAll( stickHostList );
+		}
+
+		List<Map<String, Integer>> sortInitList = new ArrayList<>();
+		for ( int i = 0; i < resultList.size(); i++ ) {
+			sortInitList.add( ImmutableMap.of( "id", resultList.get( i ).intValue(), "sort", i ) );
+		}
+
+		liveVideoMapper.updateSortBatch( sortInitList );
 	}
 }

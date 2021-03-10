@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -18,6 +17,7 @@ import java.util.Date;
  * @date 2021-01-25
  */
 @Data
+@Accessors( chain = true )
 public class LiveVideo extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -95,6 +95,8 @@ public class LiveVideo extends BaseEntity {
 	/** 热门排序 */
 	@Excel( name = "热门排序" )
 	private Long sort;
+
+	private Integer sortInit;
 
 	/** 线路id */
 	@Excel( name = "线路id" )

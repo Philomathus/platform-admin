@@ -13,7 +13,7 @@ import com.baidubce.services.sms.SmsClient;
 import com.baidubce.services.sms.SmsClientConfiguration;
 import com.baidubce.services.sms.model.SendMessageV3Request;
 import com.baidubce.services.sms.model.SendMessageV3Response;
-import com.qiqilm.server.admin.cache.RedisCacheUtil;
+import com.qiqilm.server.admin.cache.ServerSmsCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ServerSms;
 import com.qiqilm.server.admin.exception.BaseException;
@@ -44,7 +44,9 @@ import java.util.regex.Pattern;
 @Service
 public class ServerSmsServiceImpl implements IServerSmsService {
 	@Autowired
-	private ServerSmsMapper serverSmsMapper;
+	private ServerSmsMapper    serverSmsMapper;
+	@Autowired
+	private ServerSmsCacheUtil serverSmsCacheUtil;
 
 	/**
 	 * 查询SMS短信服务配置
@@ -87,7 +89,11 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	 */
 	@Override
 	public int updateServerSms( ServerSms serverSms ) {
-		return serverSmsMapper.updateServerSms( serverSms );
+		int i = serverSmsMapper.updateServerSms( serverSms );
+		if ( i > 0 ) {
+			serverSmsCacheUtil.clear();
+		}
+		return i;
 	}
 
 	/**
@@ -128,7 +134,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 		update.setIsEffect( 1 );
 		int i = serverSmsMapper.updateServerSms( update );
 		if ( i > 0 ) {
-			RedisCacheUtil.me.clear( "effect", ServerSms.class );
+			serverSmsCacheUtil.clear();
 		}
 		return i;
 	}
