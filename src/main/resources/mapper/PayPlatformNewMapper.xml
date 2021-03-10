@@ -42,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="creator != null  and creator != ''"> and creator = #{creator}</if>
             <if test="updator != null  and updator != ''"> and updator = #{updator}</if>
         </where>
+        ORDER BY create_time desc
     </select>
 
     <select id="selectPayPlatformNewById" parameterType="Long" resultMap="PayPlatformNewResult">

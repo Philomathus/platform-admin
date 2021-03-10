@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,11 +48,18 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	@Autowired
 	private ConfigRecommendMapper   configRecommendMapper;
 	@Autowired
+	private WheelUserMapper wheelUserMapper;
+	@Autowired
+	private LiveUserMountMapper liveUserMountMapper;
+	@Autowired
 	private ILogService             logService;
 	@Autowired
 	private TokenService            tokenService;
 	@Autowired
 	private RedisUtil               redisUtil;
+
+	@Autowired
+	private LiveCacheUtil liveCacheUtil;
 
 	/**
 	 * 查询公司入款信息
@@ -129,11 +138,56 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		try {
 			boolean isAudit = this.finalAudit( req, userName, "审核人：" + userName );
 			return isAudit ? AjaxResult.success( "审核成功" ) : AjaxResult.error( "审核失败" );
+
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 			return AjaxResult.error( "订单审核有误" );
 		} finally {
 			redisUtil.unLock( EnumLock.member, memberRechargeLog.getMemberId() );
+		}
+	}
+
+	private void checkFirstChargeaddWheelTimes(  String pUserId ) {
+		WheelUser wheelUser = wheelUserMapper.selectWheelUserById(pUserId);
+		if ( wheelUser == null ) {
+			wheelUser = new WheelUser();
+			wheelUser.setId( pUserId );
+			wheelUser.setTimes( 1 );
+			wheelUser.setSkinTimes(1);
+			wheelUserMapper.insertWheelUser(wheelUser);
+
+		} else {
+			wheelUser.setTimes( 1 );
+			wheelUser.setSkinTimes(1);
+			wheelUserMapper.updateWheelUser(wheelUser);
+		}
+		//加坐骑33
+		LiveUserMount query = new LiveUserMount();
+		query.setUserId(pUserId);
+		query.setMountId(33);
+		int day = 4;
+		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList(query);
+		if(list.size()==0){
+			query.setIsUse(0);
+			Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+			query.setEffectiveTime( d );
+			liveUserMountMapper.insertLiveUserMount(query);
+		}else{
+			LiveUserMount db = list.get(0);
+			if(db.getIsUse().equals(1)){
+				if(db.getEffectiveTime().getTime()>System.currentTimeMillis()){
+					db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
+				}else{
+					Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+					db.setEffectiveTime( d );
+				}
+			}else{
+				Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+				db.setEffectiveTime( d );
+				db.setIsUse(0);
+			}
+
+			liveUserMountMapper.updateLiveUserMount(db);
 		}
 	}
 
@@ -171,6 +225,15 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 
 		//新增佣金记录
 		this.recommendProcess( memberRechargeLog, memberInfo );
+		try {
+			if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
+				checkFirstChargeaddWheelTimes(memberRechargeLog.getMemberId());
+			}
+		}catch (Exception e){
+			log.error("首充报错",e);
+		}
+
+
 
 		//更新用户账户余额
 		return this.updateMemberCharge( memberInfo.getId(), add, "线下存款" );

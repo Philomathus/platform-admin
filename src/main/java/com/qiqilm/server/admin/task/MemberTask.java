@@ -22,7 +22,7 @@ public class MemberTask implements Serializable {
     private RedisUtil redisUtil;
     private static final long serialVersionUID = 1L;
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0/30 * * * * ?")
     public void checkLogin() {
         log.info("检测用户超时"+ DateUtils.getTime());
         Map<Object, Object> tokenKeys = redisUtil.hGetAll("tokenKeys");

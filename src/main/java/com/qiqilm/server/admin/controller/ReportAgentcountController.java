@@ -117,15 +117,8 @@ public class ReportAgentcountController extends BaseController {
     @PreAuthorize("@ss.hasPermi('admin:reportAgentcount:list')")
     @GetMapping("/list")
     public Object list(ReportAgentcount reportAgentcount) throws ParseException {
-        reportAgentcountService.storage(reportAgentcount);
 
-        String keyVal = redisUtil.strGet("admin-reportAgentcount");
-        if ("0".equals(keyVal)) {
-            return AjaxResult.error("报表正在生成，请稍后...");
-        }
-        startPage();
-        List<ReportAgentcount> list = reportAgentcountService.selectReportAgentcountList(reportAgentcount);
-        return getDataTable(list);
+        return   reportAgentcountService.selectReportAgentcountList(reportAgentcount);
     }
 
 //	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
@@ -143,7 +136,7 @@ public class ReportAgentcountController extends BaseController {
     @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(ReportAgentcount reportAgentcount) throws ParseException {
-        List<ReportAgentcount> list = reportAgentcountService.selectReportAgentcountList(reportAgentcount);
+        List<ReportAgentcount> list = reportAgentcountService.exportAgentcountList(reportAgentcount);
         ExcelUtil<ReportAgentcount> util = new ExcelUtil<>(ReportAgentcount.class);
         return util.exportExcel(list, "reportAgentcount");
     }
