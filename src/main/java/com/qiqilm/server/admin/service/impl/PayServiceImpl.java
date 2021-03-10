@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -47,6 +48,7 @@ public class PayServiceImpl implements IPayService {
 	private ILogService             logService;
 	@Autowired
 	private MemberCacheManager      memberCacheManager;
+
 
 	@Override
 	public AjaxResult payPatchOrder( Map<String, Object> requestMap ) throws Exception {
@@ -155,9 +157,18 @@ public class PayServiceImpl implements IPayService {
 			rechargeLogMapper.updateMemberRechargeLog( memberRechargeLog );
 
 			log.warn( "会员线上充值上分成功 - orderNo:{}", payJour.getOrderNo() );
+			try {
+				if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
+					memberCacheManager.checkFirstChargeaddWheelTimes(memberInfo.getId());
+				}
+			}catch (Exception e){
+				log.error("首充报错",e);
+			}
 		}
 		return isUpdate;
 	}
+
+
 
 	private boolean updateMemberCharge( String userId, BigDecimal money, String chargeType ) {
 		MemberBcode codeFlow = new MemberBcode();
