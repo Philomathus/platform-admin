@@ -69,27 +69,4 @@ public class ServerOss extends BaseEntity {
 				.append( "updateTime", getUpdateTime() )
 				.toString();
 	}
-
-	public String[] toCodes() {
-		return new String[]{ "id", "name", "accessKey", "accessSecret", "endpoint", "bucket" };
-	}
-
-	public String getVal( String code ) {
-		switch ( code ) {
-		case "id":
-			return id + "";
-		case "name":
-			return name;
-		case "accessKey":
-			return accessKey;
-		case "accessSecret":
-			return accessSecret;
-		case "endpoint":
-			return endpoint;
-		case "bucket":
-			return bucket;
-		default:
-			return null;
-		}
-	}
 }

@@ -9,7 +9,7 @@ import com.qiqilm.server.admin.domain.LivePayLog;
 import com.qiqilm.server.admin.service.ILivePayLogService;
 
 /**
- * //付费直播记录Service业务层处理
+ * 付费直播记录Service业务层处理
  *
  * @author 77tv
  * @date 2021-02-03
@@ -20,10 +20,10 @@ public class LivePayLogServiceImpl implements ILivePayLogService {
     private LivePayLogMapper livePayLogMapper;
 
     /**
-     * 查询//付费直播记录
+     * 查询付费直播记录
      *
-     * @param id //付费直播记录ID
-     * @return //付费直播记录
+     * @param id 付费直播记录ID
+     * @return 付费直播记录
      */
     @Override
     public LivePayLog selectLivePayLogById(Long id) {
@@ -31,10 +31,10 @@ public class LivePayLogServiceImpl implements ILivePayLogService {
     }
 
     /**
-     * 查询//付费直播记录列表
+     * 查询付费直播记录列表
      *
-     * @param livePayLog //付费直播记录
-     * @return //付费直播记录
+     * @param livePayLog 付费直播记录
+     * @return 付费直播记录
      */
     @Override
     public List<LivePayLog> selectLivePayLogList(LivePayLog livePayLog) {
@@ -42,9 +42,9 @@ public class LivePayLogServiceImpl implements ILivePayLogService {
     }
 
     /**
-     * 新增//付费直播记录
+     * 新增付费直播记录
      *
-     * @param livePayLog //付费直播记录
+     * @param livePayLog 付费直播记录
      * @return 结果
      */
     @Override
@@ -54,35 +54,13 @@ public class LivePayLogServiceImpl implements ILivePayLogService {
     }
 
     /**
-     * 修改//付费直播记录
+     * 修改付费直播记录
      *
-     * @param livePayLog //付费直播记录
+     * @param livePayLog 付费直播记录
      * @return 结果
      */
     @Override
     public int updateLivePayLog(LivePayLog livePayLog) {
         return livePayLogMapper.updateLivePayLog(livePayLog);
-    }
-
-    /**
-     * 批量删除//付费直播记录
-     *
-     * @param ids 需要删除的//付费直播记录ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLivePayLogByIds(Long[] ids) {
-        return livePayLogMapper.deleteLivePayLogByIds(ids);
-    }
-
-    /**
-     * 删除//付费直播记录信息
-     *
-     * @param id //付费直播记录ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLivePayLogById(Long id) {
-        return livePayLogMapper.deleteLivePayLogById(id);
     }
 }

@@ -1,9 +1,10 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.qiqilm.server.admin.cache.LiveCacheUtil;
+import com.google.common.collect.ImmutableMap;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageType;
@@ -35,8 +36,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Autowired
 	private RedisUtil          redisUtil;
-	@Autowired
-	private LiveCacheUtil      global;
 	@Autowired
 	private ImApi              imApi;
 	@Autowired
@@ -86,15 +85,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		if ( CollectionUtils.isEmpty( liveVideos ) ) {
 			return liveVideos;
 		}
-		List<ServerLive>    resultList = serverLiveMapper.selectServerLiveList( null );
-		Map<Object, Object> failMap    = redisUtil.hGetAll( REDIS_KEY_DETECT_PLAY );
+		Map<Object, Object> failMap = redisUtil.hGetAll( REDIS_KEY_DETECT_PLAY );
 		liveVideos.forEach( video -> {
-			resultList.forEach( serverLive -> {
-				if ( video.getPaiId().equals( serverLive.getId() ) ) {
-					video.setLineName( serverLive.getName() );
-					video.setLineStatus( serverLive.getStatus() );
-				}
-			} );
 			failMap.forEach( ( key, value ) -> {
 				if ( video.getId().toString().equals( key.toString() ) ) {
 					video.setLiveStatus( value.toString() );
@@ -102,51 +94,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			} );
 		} );
 		return liveVideos;
-	}
-
-	/**
-	 * 新增直播
-	 *
-	 * @param liveVideo 直播
-	 * @return 结果
-	 */
-	@Override
-	public int insertLiveVideo( LiveVideo liveVideo ) {
-		//liveVideo.setCreateTime( DateUtils.getNowDate() );
-		return liveVideoMapper.insertLiveVideo( liveVideo );
-	}
-
-	/**
-	 * 修改直播
-	 *
-	 * @param liveVideo 直播
-	 * @return 结果
-	 */
-	@Override
-	public int updateLiveVideo( LiveVideo liveVideo ) {
-		return liveVideoMapper.updateLiveVideo( liveVideo );
-	}
-
-	/**
-	 * 批量删除直播
-	 *
-	 * @param ids 需要删除的直播ID
-	 * @return 结果
-	 */
-	@Override
-	public int deleteLiveVideoByIds( Long[] ids ) {
-		return liveVideoMapper.deleteLiveVideoByIds( ids );
-	}
-
-	/**
-	 * 删除直播信息
-	 *
-	 * @param id 直播ID
-	 * @return 结果
-	 */
-	@Override
-	public int deleteLiveVideoById( Long id ) {
-		return liveVideoMapper.deleteLiveVideoById( id );
 	}
 
 	@Override
@@ -201,9 +148,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		updateVideo.setLiveIn( 0 );
 		updateVideo.setIsAborted( isAborted );
 		updateVideo.setEndDate( now );
-		updateVideo.setVideoVid( "" );
-		updateVideo.setIsDelVod( true );
-		updateVideo.setIsDelete( true );
 		updateVideo.setId( id );
 		if ( isAborted ) {
 			Double monitorTimeLong = videoCacheUtil.getVideoMonitorTime( Integer.parseInt( "" + id ) );
@@ -230,16 +174,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		liveVideoMapper.updateLiveVideo( updateVideo );
 
-		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" + id ) );
+		this.processVideoSort();
 
-		/*//连麦表更新
-		LiveVideoLianmai lianmai = new LiveVideoLianmai();
-		lianmai.setStopTime( ( int ) ( System.currentTimeMillis() / 1000 ) );
-		ReqLiveVideoLianMai reqLiveVideoLianMai  = new ReqLiveVideoLianMai();
-		ReqLiveVideoLianMai reqLiveVideoLianMai1 = reqLiveVideoLianMai;
-		reqLiveVideoLianMai1.setVideo_id( id );
-		reqLiveVideoLianMai1.setStop_time( 0 );
-		lianmaiService.update( lianmai, reqLiveVideoLianMai1.getQueryWrapper() );*/
+		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" + id ) );
 
 		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
 
@@ -253,7 +190,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			LivePayLog log = new LivePayLog();
 			log.setIsHistory( true );
 			log.setVideoId( id );
-			int i = livePayLogMapper.updateToHistory( log );
+			int i = livePayLogMapper.updateLivePayLog( log );
 		}
 
 		ServerLive serverLive = serverLiveMapper.selectServerLiveById( video.getPaiId() );
@@ -308,6 +245,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			LiveHostWageNote newHostWageNote = new LiveHostWageNote();
 			newHostWageNote.setFamilyId( liveUser.getFamilyId() == null ? 0 : liveUser.getFamilyId() );
 			newHostWageNote.setHostId( video.getUserId() );
+			newHostWageNote.setCreateTimes( DateFormatUtils.formate( new Date() ) );
 			newHostWageNote.setEndTime( endTime );
 			newHostWageNote.setRemark( remark );
 			newHostWageNote.setBeforeTotalTicket( video.getVoteNumber() );
@@ -371,9 +309,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			throw new RuntimeException( "参数错误" );
 		}
 
-		int payMin = live_pay_type == 0 ? sysConfigCacheUtil.getConfInt( "live_pay_min" ) : sysConfigCacheUtil.getConfInt( "live_pay_scene_min" );
+		int payMin = live_pay_type == 0 ? sysConfigCacheUtil.getConfInt( "live_pay_min" ) : sysConfigCacheUtil.getConfInt(
+				"live_pay_scene_min" );
 		//付费最高
-		int payMax = live_pay_type == 0 ? sysConfigCacheUtil.getConfInt( "live_pay_max" ) : sysConfigCacheUtil.getConfInt( "live_pay_scene_max" );
+		int payMax = live_pay_type == 0 ? sysConfigCacheUtil.getConfInt( "live_pay_max" ) : sysConfigCacheUtil.getConfInt(
+				"live_pay_scene_max" );
 		//付费最低
 
 		String coinName = sysConfigCacheUtil.getConf( "diamond_name" );
@@ -405,6 +345,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			updateVideo.setLiveFee( live_fee );
 			updateVideo.setLivePayTime( ( int ) ( System.currentTimeMillis() / 1000 ) );
 			updateVideo.setCateId( 4L );// 设置主题ID为收费直播
+			updateVideo.setIsLivePay( true );
 			liveVideoMapper.updateLiveVideo( updateVideo );
 			//im
 			HashMap<String, Object> ext = new HashMap<>();
@@ -416,5 +357,106 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			return msg;
 		}
 		throw new RuntimeException( "切换失败" );
+	}
+
+	@Override
+	public AjaxResult updateVideoSort( LiveVideo liveVideo ) {
+
+		LiveVideo newLiveVideo = liveVideoMapper.selectLiveVideoSortById( liveVideo.getId() );
+		if ( newLiveVideo.getLiveIn() == 0 ) {
+			return AjaxResult.error( "主播已下播，更新失败" );
+		}
+		if ( liveVideo.getSort() != null && liveVideo.getSort() != 9999999 ) {
+			if ( liveVideo.getSort() <= 0 || liveVideo.getSort() >= 100 ) {
+				return AjaxResult.error( "固定位大小有误，请输入大于0小于100的整数值" );
+			}
+			if ( newLiveVideo.getIsRecommend() == 1 ) {
+				return AjaxResult.error( "当前主播是推荐位，无法设置固定位，请取消推荐位后重试" );
+			}
+			if ( newLiveVideo.getStick() == 1 ) {
+				return AjaxResult.error( "当前主播是置底位，无法设置固定位，请取消置底位后重试" );
+			}
+			long count = liveVideoMapper.countLiveInSort( liveVideo.getSort() );
+			if ( count > 0 ) {
+				return AjaxResult.error( "固定位{}已存在，请重新设置固定位值", liveVideo.getSort() );
+			}
+		}
+		if ( liveVideo.getIsRecommend() != null && liveVideo.getIsRecommend() == 1 ) {
+			if ( newLiveVideo.getSort() < 9999000 ) {
+				return AjaxResult.error( "当前主播是固定位，无法设置推荐位，请取消固定位后重试" );
+			}
+			if ( newLiveVideo.getStick() == 1 ) {
+				return AjaxResult.error( "当前主播是置底位，无法设置推荐位，请取消置底位后重试" );
+			}
+		}
+		if ( liveVideo.getStick() != null && liveVideo.getStick() == 1 ) {
+			if ( newLiveVideo.getSort() < 9999000 ) {
+				return AjaxResult.error( "当前主播是固定位，无法设置置底位，请取消固定位后重试" );
+			}
+			if ( newLiveVideo.getIsRecommend() == 1 ) {
+				return AjaxResult.error( "当前主播是推荐位，无法设置置底位，请取消推荐位后重试" );
+			}
+		}
+		int i = liveVideoMapper.updateLiveVideo( liveVideo );
+		if ( i > 0 ) {
+			this.processVideoSort();
+			return AjaxResult.success( "更新成功" );
+		}
+		return AjaxResult.error( "更新失败" );
+	}
+
+	@Override
+	public void processVideoSort() {
+		List<LiveVideo> liveVideos = liveVideoMapper.selectLiveInVideoSort();
+
+		// 固定位
+		Map<Integer, Long> sortHostMap = new TreeMap<>();
+		// 推荐位
+		List<Long> recommendHostList = new ArrayList<>();
+		// 正常位
+		List<Long> normalHostList = new ArrayList<>();
+		// 置底位
+		List<Long> stickHostList = new ArrayList<>();
+
+		liveVideos.forEach( liveVideo -> {
+			if ( liveVideo.getSort() < 9999000 ) {
+				sortHostMap.put( liveVideo.getSort().intValue(), liveVideo.getId() );
+			} else if ( liveVideo.getIsRecommend() == 1 ) {
+				recommendHostList.add( liveVideo.getId() );
+			} else if ( liveVideo.getIsRecommend() == 0 && liveVideo.getStick() == 0 ) {
+				normalHostList.add( liveVideo.getId() );
+			} else if ( liveVideo.getStick() == 1 ) {
+				stickHostList.add( liveVideo.getId() );
+			}
+		} );
+
+		List<Long> resultList = new ArrayList<>();
+		for ( int i = 1; i <= liveVideos.size(); i++ ) {
+			Long sortHostId = sortHostMap.get( i );
+			if ( sortHostId != null ) {
+				resultList.add( i - 1, sortHostId );
+				sortHostMap.remove( i );
+			} else if ( !CollectionUtils.isEmpty( recommendHostList ) ) {
+				resultList.add( recommendHostList.get( 0 ) );
+				recommendHostList.remove( 0 );
+			} else if ( !CollectionUtils.isEmpty( normalHostList ) ) {
+				resultList.add( normalHostList.get( 0 ) );
+				normalHostList.remove( 0 );
+			}
+		}
+
+		if ( !CollectionUtils.isEmpty( sortHostMap ) ) {
+			resultList.addAll( sortHostMap.values() );
+		}
+		if ( !CollectionUtils.isEmpty( stickHostList ) ) {
+			resultList.addAll( stickHostList );
+		}
+
+		List<Map<String, Integer>> sortInitList = new ArrayList<>();
+		for ( int i = 0; i < resultList.size(); i++ ) {
+			sortInitList.add( ImmutableMap.of( "id", resultList.get( i ).intValue(), "sort", i ) );
+		}
+
+		liveVideoMapper.updateSortBatch( sortInitList );
 	}
 }

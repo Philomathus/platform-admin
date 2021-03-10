@@ -26,27 +26,14 @@ public class ServerOssCacheUtil {
 	private ServerOssMapper serverOssMapper;
 
 	public void setServerOss( ServerOss serverOss ) {
-		Map<String, String> serverOssMap = new HashMap<>();
-		for ( String code : serverOss.toCodes() ) {
-			serverOssMap.put( code, serverOss.getVal( code ) );
-		}
 		redisUtil.unlink( SERVER_OSS );
-		redisUtil.hMSet( SERVER_OSS, serverOssMap );
+		redisUtil.strSet( SERVER_OSS, JsonUtil.object2Json( serverOss ) );
 	}
 
-	public String getValue( String code ) {
+	public ServerOss getEffect() {
 		this.exists();
-		Object codeValue = redisUtil.hGet( SERVER_OSS, code );
-		return codeValue == null ? "" : codeValue.toString();
-	}
-
-	public ServerOss getAllValue() {
-		this.exists();
-		Map<Object, Object> resultMap = redisUtil.hGetAll( SERVER_OSS );
-		if ( resultMap.isEmpty() ) {
-			return null;
-		}
-		return JsonUtil.map2Object( resultMap, ServerOss.class );
+		String value = redisUtil.strGet( SERVER_OSS );
+		return value == null ? null : JsonUtil.json2Object( value, ServerOss.class );
 	}
 
 	private void exists() {

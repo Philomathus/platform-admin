@@ -231,7 +231,7 @@
 	</update>
 
 	<sql id="listWhere">
-		where type != 10
+		where type = 1
 		<if test="req.bankUserName != null  and req.bankUserName != ''">
 			and user_name like concat('%', #{req.bankUserName}, '%')
 		</if>
