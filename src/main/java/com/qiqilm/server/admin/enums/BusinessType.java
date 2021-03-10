@@ -75,4 +75,14 @@ public enum BusinessType {
 	 * 下单
 	 */
 	ORDER,
+
+	/**
+	 * 关闭
+	 */
+	CLOSE,
+
+	/**
+	 * 开启收费
+	 */
+	LIVE_PAY
 }

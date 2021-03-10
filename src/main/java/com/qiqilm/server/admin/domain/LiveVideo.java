@@ -52,14 +52,6 @@ public class LiveVideo extends BaseEntity {
 	@Excel( name = "主题id", readConverterExp = "2=最新3颜值4收费5游戏" )
 	private Long cateId;
 
-	/** 省份 */
-	@Excel( name = "省份" )
-	private String province;
-
-	/** 城市 */
-	@Excel( name = "城市" )
-	private String city;
-
 	/** 开始时间 */
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
 	@Excel( name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss" )
@@ -79,124 +71,42 @@ public class LiveVideo extends BaseEntity {
 	@Excel( name = "群组ID,通过create_group后返回的值;直播结束后解散群" )
 	private String groupId;
 
-	/** 1：未解散;0:已解散;其它为ErrorCode错码 */
-	@Excel( name = "1：未解散;0:已解散;其它为ErrorCode错码" )
-	private Integer destroyGroupStatus;
-
-	/** 通过create_group后返回的LongPollingKey值 */
-	@Excel( name = "通过create_group后返回的LongPollingKey值" )
-	private String longPollingKey;
-
 	/** 最大观看人数(每进来一人次加1）实际,不含虚拟人数,不包含机器人 */
 	@Excel( name = "最大观看人数(每进来一人次加1）实际,不含虚拟人数,不包含机器人" )
 	private Long maxWatchNumber;
-
-	/** 房间类型 : 1私有群（Private）,0公开群（Public）,2聊天室（ChatRoom）,3互动直播聊天室（AVChatRoom） */
-	@Excel( name = "房间类型 : 1私有群", readConverterExp = "P=rivate" )
-	private Long roomType;
-
-	/** 是否可回放 0-否 ；1-是 */
-	@Excel( name = "是否可回放 0-否 ；1-是" )
-	private Integer isPlayback;
-
-	/** 视频地址 */
-	@Excel( name = "视频地址" )
-	private String videoVid;
 
 	/** 最后心跳监听时间；如果超过监听时间，则说明主播已经掉线了 */
 	@JsonFormat( pattern = "yyyy-MM-dd" )
 	@Excel( name = "最后心跳监听时间；如果超过监听时间，则说明主播已经掉线了", width = 30, dateFormat = "yyyy-MM-dd" )
 	private Date monitorTime;
 
-	/** 1:删除;0:未删除;私有聊天或小于5分钟的视频，不保存 */
-	@Excel( name = "1:删除;0:未删除;私有聊天或小于5分钟的视频，不保存" )
-	private Boolean isDelete;
-
 	/** 聊天群中机器人数量 */
 	@Excel( name = "聊天群中机器人数量" )
 	private Long robotNum;
 
-	/** 添加机器人时间（每隔20秒左右加几个人） */
-	@Excel( name = "添加机器人时间", readConverterExp = "每=隔20秒左右加几个人" )
-	private Long robotTime;
-
-	/** 旁路直播,频道ID */
-	@Excel( name = "旁路直播,频道ID" )
-	private String channelid;
-
-	/** 1:被服务器异常终止结束(主要是心跳超时) */
-	@Excel( name = "1:被服务器异常终止结束(主要是心跳超时)" )
+	/** 是否被服务器异常终止结束 */
+	@Excel( name = "是否被服务器异常终止结束" )
 	private Boolean isAborted;
-
-	/** 1:表示已经清空了,录制视频;0:未做清空操作 */
-	@Excel( name = "1:表示已经清空了,录制视频;0:未做清空操作" )
-	private Boolean isDelVod;
 
 	/** 主播在线状态;1:在线(默认); 0:离开 */
 	@Excel( name = "主播在线状态;1:在线(默认); 0:离开" )
 	private Integer onlineStatus;
 
-	/** 举报次数 */
-	@Excel( name = "举报次数" )
-	private Long tipoffCount;
-
-	/** 私密直播key */
-	@Excel( name = "私密直播key" )
-	private String privateKey;
-
-	/** 分享类型WEIXIN,WEIXIN_CIRCLE,QQ,QZONE,SINA */
-	@Excel( name = "分享类型WEIXIN,WEIXIN_CIRCLE,QQ,QZONE,SINA" )
-	private String shareType;
-
 	/** 热门排序 */
 	@Excel( name = "热门排序" )
 	private Long sort;
 
-	/** 竞拍id */
-	@Excel( name = "竞拍id" )
+	/** 线路id */
+	@Excel( name = "线路id" )
 	private Long paiId;
-
-	private String  name;
-	/** 性别 0:未知, 1-男，2-女 */
-	@Excel( name = "性别 0:未知, 1-男，2-女" )
-	private Integer sex;
-
-	/** 0:腾讯云互动直播;1:腾讯云直播 */
-	@Excel( name = "0:腾讯云互动直播;1:腾讯云直播" )
-	private Integer videoType;
-
-	/** sort_init + share_count * 分享权重 + like_count * 点赞权重 + fans_count * 关注权重 + sort * 排序权重 + ticket(本场收到的印票) * 印票权重 */
-	@Excel( name = "sort_init + share_count * 分享权重 + like_count * 点赞权重 + fans_count * 关注权重 + sort * 排序权重 + ticket(本场收到的印票) * " +
-			"印票权重" )
-	private Long sortNum;
-
-	/** 0:APP端创建的直播;1:PC端创建的直播 */
-	@Excel( name = "0:APP端创建的直播;1:PC端创建的直播" )
-	private Integer createType;
 
 	/** 默认最大机器人头像数 */
 	@Excel( name = "默认最大机器人头像数" )
 	private Long maxRobotNum;
 
-	/** 分享数,每个用户只记录一次 */
-	@Excel( name = "分享数,每个用户只记录一次" )
-	private Long shareCount;
-
-	/** 点赞数,每个用户只记录一次 */
-	@Excel( name = "点赞数,每个用户只记录一次" )
-	private Long likeCount;
-
 	/** 本场直播净添加的粉丝数即：被关注数，关注加1，取消减1 */
 	@Excel( name = "本场直播净添加的粉丝数即：被关注数，关注加1，取消减1" )
 	private Long fansCount;
-
-	/**
-	 * sort_init(初始排序权重) = (用户可提现印票：fanwe_user.ticket - fanwe_user.refund_ticket) * 保留印票权重+ 直播/回看[回看是：0; 直播：9000000000 直播,需要排在最上面
-	 * ]+ fanwe_user.user_level * 等级权重+ fanwe_user.fans_count * 当前有的关注数权重
-	 */
-	@Excel( name = "sort_init(初始排序权重) = (用户可提现印票：fanwe_user.ticket - fanwe_user.refund_ticket) * 保留印票权重+ 直播/回看[回看是：0; " +
-			"直播：9000000000 直播,需要排在最上面 ]+ fanwe_user.user_level * 等级权重+ fanwe_user.fans_count * 当前有的关注数权重" )
-	private Long sortInit;
 
 	/** 推流地址 */
 	@Excel( name = "推流地址" )
@@ -218,21 +128,9 @@ public class LiveVideo extends BaseEntity {
 	@Excel( name = "播放地址；当video_type=0时，记录：傍路直播地址" )
 	private String playHls;
 
-	/** x座标(用来计算：附近) */
-	@Excel( name = "x座标(用来计算：附近)" )
-	private BigDecimal xpoint;
-
-	/** y座标(用来计算：附近) */
-	@Excel( name = "y座标(用来计算：附近)" )
-	private BigDecimal ypoint;
-
 	/** 直播时，可自定义封面图; 如果不存在,则取会员头像 */
 	@Excel( name = "直播时，可自定义封面图; 如果不存在,则取会员头像" )
 	private String headImage;
-
-	/** 模糊图片 */
-	@Excel( name = "模糊图片" )
-	private String thumbHeadImage;
 
 	/** 播放地址 */
 	@Excel( name = "播放地址" )
@@ -274,53 +172,17 @@ public class LiveVideo extends BaseEntity {
 	@Excel( name = "付费人数" )
 	private Long livePayCount;
 
-	/** 直播礼物表 */
-	@Excel( name = "直播礼物表" )
-	private String propTable;
-
-	/** 直播间名称 */
-	@Excel( name = "直播间名称" )
-	private String roomTitle;
-
-	/** 付费直播的ID , 用于标示直播间付费 模式 */
-	@Excel( name = "付费直播的ID , 用于标示直播间付费 模式 " )
-	private Long payRoomId;
-
 	/** 直播的时长 */
 	@Excel( name = "直播的时长" )
 	private Long lenTime;
 
-	/** 视频是否合并 0 未合并，1 已合并 */
-	@Excel( name = "视频是否合并 0 未合并，1 已合并" )
-	private Integer isConcatvideo;
-
-	/** 是否置顶 0 不置顶 1 置顶 */
-	@Excel( name = "是否置顶 0 不置顶 1 置顶" )
+	/** 是否置底 0 不置底 1 置底 */
+	@Excel( name = "是否置底" )
 	private Integer stick;
 
 	/** 分类id */
 	@Excel( name = "分类id" )
 	private Long classifiedId;
-
-	/** 游戏记录id */
-	@Excel( name = "游戏记录id" )
-	private Long gameLogId;
-
-	/** 上庄状态 */
-	@Excel( name = "上庄状态" )
-	private Integer bankerStatus;
-
-	/** 上庄id */
-	@Excel( name = "上庄id" )
-	private Long bankerId;
-
-	/** 是否自动开启游戏 */
-	@Excel( name = "是否自动开启游戏" )
-	private Integer autoStart;
-
-	/** 自动开始游戏id */
-	@Excel( name = "自动开始游戏id" )
-	private Long autoGameId;
 
 	/** 绑定彩票ID */
 	@Excel( name = "绑定彩票ID" )
@@ -345,92 +207,8 @@ public class LiveVideo extends BaseEntity {
 	private String  liveStatus = "";
 	private String  lineName;
 	private Integer lineStatus;
+	private Integer openPay;
 
 	@JsonIgnore
 	private String[] types;
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
-				.append( "id", getId() )
-				.append( "title", getTitle() )
-				.append( "userId", getUserId() )
-				.append( "liveIn", getLiveIn() )
-				.append( "watchNumber", getWatchNumber() )
-				.append( "virtualWatchNumber", getVirtualWatchNumber() )
-				.append( "voteNumber", getVoteNumber() )
-				.append( "cateId", getCateId() )
-				.append( "province", getProvince() )
-				.append( "city", getCity() )
-				.append( "createTime", getCreateTime() )
-				.append( "beginTime", getBeginTime() )
-				.append( "endTime", getEndTime() )
-				.append( "endDate", getEndDate() )
-				.append( "groupId", getGroupId() )
-				.append( "destroyGroupStatus", getDestroyGroupStatus() )
-				.append( "longPollingKey", getLongPollingKey() )
-				.append( "maxWatchNumber", getMaxWatchNumber() )
-				.append( "roomType", getRoomType() )
-				.append( "isPlayback", getIsPlayback() )
-				.append( "videoVid", getVideoVid() )
-				.append( "monitorTime", getMonitorTime() )
-				.append( "isDelete", getIsDelete() )
-				.append( "robotNum", getRobotNum() )
-				.append( "robotTime", getRobotTime() )
-				.append( "channelid", getChannelid() )
-				.append( "isAborted", getIsAborted() )
-				.append( "isDelVod", getIsDelVod() )
-				.append( "onlineStatus", getOnlineStatus() )
-				.append( "tipoffCount", getTipoffCount() )
-				.append( "privateKey", getPrivateKey() )
-				.append( "shareType", getShareType() )
-				.append( "sort", getSort() )
-				.append( "paiId", getPaiId() )
-				.append( "sex", getSex() )
-				.append( "videoType", getVideoType() )
-				.append( "sortNum", getSortNum() )
-				.append( "createType", getCreateType() )
-				.append( "maxRobotNum", getMaxRobotNum() )
-				.append( "shareCount", getShareCount() )
-				.append( "likeCount", getLikeCount() )
-				.append( "fansCount", getFansCount() )
-				.append( "sortInit", getSortInit() )
-				.append( "pushRtmp", getPushRtmp() )
-				.append( "playFlv", getPlayFlv() )
-				.append( "playRtmp", getPlayRtmp() )
-				.append( "playMp4", getPlayMp4() )
-				.append( "playHls", getPlayHls() )
-				.append( "xpoint", getXpoint() )
-				.append( "ypoint", getYpoint() )
-				.append( "headImage", getHeadImage() )
-				.append( "thumbHeadImage", getThumbHeadImage() )
-				.append( "playUrl", getPlayUrl() )
-				.append( "isRecommend", getIsRecommend() )
-				.append( "liveImage", getLiveImage() )
-				.append( "virtualNumber", getVirtualNumber() )
-				.append( "livePayTime", getLivePayTime() )
-				.append( "isLivePay", getIsLivePay() )
-				.append( "liveFee", getLiveFee() )
-				.append( "liveIsMention", getLiveIsMention() )
-				.append( "livePayType", getLivePayType() )
-				.append( "livePayCount", getLivePayCount() )
-				.append( "propTable", getPropTable() )
-				.append( "roomTitle", getRoomTitle() )
-				.append( "payRoomId", getPayRoomId() )
-				.append( "lenTime", getLenTime() )
-				.append( "isConcatvideo", getIsConcatvideo() )
-				.append( "stick", getStick() )
-				.append( "classifiedId", getClassifiedId() )
-				.append( "gameLogId", getGameLogId() )
-				.append( "bankerStatus", getBankerStatus() )
-				.append( "bankerId", getBankerId() )
-				.append( "autoStart", getAutoStart() )
-				.append( "autoGameId", getAutoGameId() )
-				.append( "lotteryId", getLotteryId() )
-				.append( "newPlayFlv", getNewPlayFlv() )
-				.append( "nPlayFlv", getNPlayFlv() )
-				.append( "hostName", getHostName() )
-				.append( "lotteryName", getLotteryName() )
-				.toString();
-	}
 }

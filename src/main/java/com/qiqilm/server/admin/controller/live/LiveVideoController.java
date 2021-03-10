@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import java.util.Objects;
  * @author 77tv
  * @date 2021-01-25
  */
+@Log4j2
 @RestController
 @RequestMapping( "/admin/liveVideo" )
 public class LiveVideoController extends BaseController {
@@ -39,18 +41,6 @@ public class LiveVideoController extends BaseController {
 	}
 
 	/**
-	 * 导出直播列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:export')" )
-	@Log( title = "直播", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public AjaxResult export( LiveVideo liveVideo ) {
-		List<LiveVideo>      list = liveVideoService.selectLiveVideoList( liveVideo );
-		ExcelUtil<LiveVideo> util = new ExcelUtil<LiveVideo>( LiveVideo.class );
-		return util.exportExcel( list, "liveVideo" );
-	}
-
-	/**
 	 * 获取直播详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:query')" )
@@ -59,64 +49,52 @@ public class LiveVideoController extends BaseController {
 		return AjaxResult.success( liveVideoService.selectLiveVideoById( id ) );
 	}
 
+	/**
+	 * 导出直播列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:export')" )
+	@Log( title = "直播", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export( LiveVideo liveVideo ) {
+		List<LiveVideo>      list = liveVideoService.selectLiveVideoList( liveVideo );
+		ExcelUtil<LiveVideo> util = new ExcelUtil<>( LiveVideo.class );
+		return util.exportExcel( list, "liveVideo" );
+	}
+
+	/**
+	 * 关播
+	 */
+	@Log( title = "关播", businessType = BusinessType.CLOSE )
 	@GetMapping( value = "close/{ids}" )
 	public AjaxResult close( @PathVariable( "ids" ) String ids ) {
-		String[] allId = ids.split(",");
-		for (int i = 0; i < allId.length; i++) {
-			String id=allId[i];
-			liveVideoService.close( Long.valueOf(id), "origin" );
+		String[] allId = ids.split( "," );
+		for ( String id : allId ) {
+			liveVideoService.close( Long.valueOf( id ), "origin" );
 		}
 		return AjaxResult.success();
 	}
 
 	/**
-	 * 新增直播
+	 * 开启直播付费
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:add')" )
-	@Log( title = "直播", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody LiveVideo liveVideo ) {
-		return toAjax( liveVideoService.insertLiveVideo( liveVideo ) );
-	}
-
-	/**
-	 * 修改直播
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:edit')" )
-	@Log( title = "直播", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody LiveVideo liveVideo ) {
-		return toAjax( liveVideoService.updateLiveVideo( liveVideo ) );
-	}
-
-	/**
-	 * 删除直播
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:remove')" )
-	@Log( title = "直播", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( liveVideoService.deleteLiveVideoByIds( ids ) );
-	}
-
-
-	//@PreAuthorize( "@ss.hasPermi('admin:liveVideo:edit')" )
-	@Log( title = "直播付费", businessType = BusinessType.UPDATE )
-	@PutMapping("/livePay")
-	public AjaxResult livePay( @RequestBody LiveVideo record ) {
-		if ( Objects.nonNull( record ) && Objects.nonNull( record.getIsLivePay() ) && Objects.nonNull( record.getLiveFee() )
-				&& record.getIsLivePay() && record.getLiveFee() > 0
-		) {
+	@Log( title = "直播付费", businessType = BusinessType.LIVE_PAY )
+	@PutMapping( "/livePay/{userId}" )
+	public AjaxResult livePay( @PathVariable long userId, Integer liveFee ) {
+		if ( Objects.nonNull( liveFee ) && liveFee > 0 ) {
 			try {
-				liveVideoService.livePay( record.getId(), record.getLiveFee(), 1 );
-				AjaxResult.success();
+				return AjaxResult.success( liveVideoService.livePay( userId, liveFee, 1 ) );
 			} catch ( Exception e ) {
-				return AjaxResult.error();
+				log.error( e.getMessage(), e );
 			}
-		} else {
-			int i = liveVideoService.updateLiveVideo( record );
-			return i > 0 ? AjaxResult.success() : AjaxResult.error();
 		}
-		return null;
+		return AjaxResult.error();
+	}
+
+	/**
+	 * 设置排序值 固定定位、取消固定定位、推荐、取消推荐、置底、取消置底
+	 */
+	@PutMapping( "/updateVideoSort" )
+	public AjaxResult updateVideoSort( @RequestBody LiveVideo liveVideo ) {
+		return liveVideoService.updateVideoSort( liveVideo );
 	}
 }
