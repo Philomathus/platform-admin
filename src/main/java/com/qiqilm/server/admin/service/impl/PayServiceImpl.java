@@ -159,7 +159,7 @@ public class PayServiceImpl implements IPayService {
 			log.warn( "会员线上充值上分成功 - orderNo:{}", payJour.getOrderNo() );
 			try {
 				if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
-					memberCacheManager.checkFirstChargeaddWheelTimes(memberRechargeLog.getMemberId());
+					memberCacheManager.checkFirstChargeaddWheelTimes(memberInfo.getId());
 				}
 			}catch (Exception e){
 				log.error("首充报错",e);
