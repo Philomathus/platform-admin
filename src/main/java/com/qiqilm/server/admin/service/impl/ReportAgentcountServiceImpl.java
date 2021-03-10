@@ -68,6 +68,7 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
         }else {
             resultMap.put("rows", allList);
         }
+        resultMap.put("rows", allList);
         return resultMap;
     }
 
