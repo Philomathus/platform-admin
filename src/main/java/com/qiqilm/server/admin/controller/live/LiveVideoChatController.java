@@ -95,7 +95,7 @@ public class LiveVideoChatController extends BaseController {
         String username = loginUser.getUser().getUserName();
         MemberInfo memberInfo = new MemberInfo();
         memberInfo.setId(pUserId);
-        memberInfo.setEmail("禁言操作人:" + username + ";禁言10分钟备注" + remark);
+        memberInfo.setEmail("禁言操作人:" + username + ";禁言10分钟原因:" + remark);
         memberInfoMapper.updateMemberInfo(memberInfo);
         liveVideoChatService.forbidSendMsg(pUserId, forbidTime, videoId);
         return AjaxResult.success();
