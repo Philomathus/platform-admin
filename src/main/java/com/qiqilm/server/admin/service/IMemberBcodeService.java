@@ -33,6 +33,6 @@ public interface IMemberBcodeService {
 	 *
 	 * @return {@link AjaxResult}
 	 */
-	AjaxResult getTotalData();
+	AjaxResult getTotalData(MemberBcode memberBcode);
 
 }
