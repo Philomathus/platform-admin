@@ -56,11 +56,11 @@ public class MemberBcodeServiceImpl implements IMemberBcodeService {
 	 */
 	@Override
 	public AjaxResult getTotalData(MemberBcode memberBcode) {
-		MemberBcode memberBcode1 = memberBcodeMapper.getTotalData(memberBcode);
 		if ( memberBcode.getSelectDate() != null ) {
 			memberBcode.setStartTime( memberBcode.getSelectDate()[ 0 ] + " 00:00:00" );
 			memberBcode.setEndTime( memberBcode.getSelectDate()[ 1 ] + " 23:59:59" );
 		}
+		MemberBcode memberBcode1 = memberBcodeMapper.getTotalData(memberBcode);
 		if (Objects.isNull(memberBcode1)){
 			MemberBcode memberBcode2=new MemberBcode();
 			memberBcode2.setCountCur(BigDecimal.ZERO);
