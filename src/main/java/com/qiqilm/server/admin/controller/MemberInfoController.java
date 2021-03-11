@@ -151,7 +151,7 @@ public class MemberInfoController extends BaseController {
         if (memberInfo.getRemark() != null) {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
             String username = loginUser.getUser().getUserName();
-            memberInfo.setEmail("禁言人" + username + ";禁言原因:" + memberInfo.getRemark());
+            memberInfo.setEmail("禁言操作人" + username + ";禁言原因:" + memberInfo.getRemark());
         }
         return toAjax(memberInfoService.changeSpeak(memberInfo));
     }
@@ -185,7 +185,7 @@ public class MemberInfoController extends BaseController {
         if (req.getRemark() != null) {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
             String username = loginUser.getUser().getUserName();
-            newMemberInfo.setEmail("禁用人" + username + ";禁用原因:" + req.getRemark());
+            newMemberInfo.setEmail("禁用操作人" + username + ";禁用原因:" + req.getRemark());
         }
         if (1 == req.getStatus()) {
             newMemberInfo.setLoginNum(0);
