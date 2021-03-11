@@ -11,8 +11,10 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 会员注单数据Service业务层处理
@@ -102,8 +104,15 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
 
     @Override
     public AjaxResult getCount(MemberGameData memberGameData) {
-        Map map = memberGameDataMapper.getCount(memberGameData);
-        return AjaxResult.success(map);
+        MemberGameData memberGameData1 = memberGameDataMapper.getCount(memberGameData);
+        if (Objects.isNull(memberGameData1)){
+            MemberGameData memberGameData2=new MemberGameData();
+            memberGameData2.setTotalBet(BigDecimal.ZERO);
+            memberGameData2.setTotalIncome(BigDecimal.ZERO);
+            memberGameData2.setTotalSuccessBet(BigDecimal.ZERO);
+            return AjaxResult.success(memberGameData2);
+        }
+        return AjaxResult.success(memberGameData1);
     }
 
     @Override

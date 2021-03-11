@@ -162,8 +162,11 @@
         <if test="startTime != null and startTime != ''">and game_start_time >= #{startTime}</if>
         <if test="endTime != null and endTime != ''">and game_end_time &lt;= #{endTime}</if>
     </sql>
-    <select id="getCount" resultType="java.util.Map">
-        select SUM(cell_score) totalSuccessBet,SUM(all_bet) totalBet,SUM(profit) totalIncome from ${dbMain}.member_game_data
+    <select id="getCount" resultType="com.qiqilm.server.admin.domain.MemberGameData">
+        SELECT cast(SUM(cell_score) AS decimal(10,2)) totalSuccessBet,
+        cast(SUM(all_bet) AS decimal(10,2)) totalBet,
+        cast(SUM(profit) AS decimal(10,2)) totalIncome
+        from ${dbMain}.member_game_data
         <where>
             <include refid="whereCount"></include>
         </where>
