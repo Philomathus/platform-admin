@@ -22,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.*;
 
 /**
@@ -360,43 +361,55 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Override
 	public AjaxResult updateVideoSort( LiveVideo liveVideo ) {
-
+		if(!redisUtil.strSetIfAbsent( "admin:videoSort:" + liveVideo.getId(),"1", Duration.ofSeconds( 5 ) )){
+			return AjaxResult.error( "已有管理员正在设置此主播，请稍后重试" );
+		}
 		LiveVideo newLiveVideo = liveVideoMapper.selectLiveVideoSortById( liveVideo.getId() );
 		if ( newLiveVideo.getLiveIn() == 0 ) {
+			redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 			return AjaxResult.error( "主播已下播，更新失败" );
 		}
 		if ( liveVideo.getSort() != null && liveVideo.getSort() != 9999999 ) {
 			if ( liveVideo.getSort() <= 0 || liveVideo.getSort() >= 100 ) {
+				redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 				return AjaxResult.error( "固定位大小有误，请输入大于0小于100的整数值" );
 			}
 			if ( newLiveVideo.getIsRecommend() == 1 ) {
+				redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 				return AjaxResult.error( "当前主播是推荐位，无法设置固定位，请取消推荐位后重试" );
 			}
 			if ( newLiveVideo.getStick() == 1 ) {
+				redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 				return AjaxResult.error( "当前主播是置底位，无法设置固定位，请取消置底位后重试" );
 			}
 			long count = liveVideoMapper.countLiveInSort( liveVideo.getSort() );
 			if ( count > 0 ) {
+				redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 				return AjaxResult.error( "固定位{}已存在，请重新设置固定位值", liveVideo.getSort() );
 			}
 		}
 		if ( liveVideo.getIsRecommend() != null && liveVideo.getIsRecommend() == 1 ) {
 			if ( newLiveVideo.getSort() < 9999000 ) {
+				redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 				return AjaxResult.error( "当前主播是固定位，无法设置推荐位，请取消固定位后重试" );
 			}
 			if ( newLiveVideo.getStick() == 1 ) {
+				redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 				return AjaxResult.error( "当前主播是置底位，无法设置推荐位，请取消置底位后重试" );
 			}
 		}
 		if ( liveVideo.getStick() != null && liveVideo.getStick() == 1 ) {
 			if ( newLiveVideo.getSort() < 9999000 ) {
+				redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 				return AjaxResult.error( "当前主播是固定位，无法设置置底位，请取消固定位后重试" );
 			}
 			if ( newLiveVideo.getIsRecommend() == 1 ) {
+				redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 				return AjaxResult.error( "当前主播是推荐位，无法设置置底位，请取消推荐位后重试" );
 			}
 		}
 		int i = liveVideoMapper.updateLiveVideo( liveVideo );
+		redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 		if ( i > 0 ) {
 			this.processVideoSort();
 			return AjaxResult.success( "更新成功" );
