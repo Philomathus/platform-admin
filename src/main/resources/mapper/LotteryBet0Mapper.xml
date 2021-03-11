@@ -42,10 +42,10 @@
             <if test="anchor != null "> and anchor = #{anchor}</if>
             <if test="code != null  and code != ''"> and code = #{code}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(betTime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                and date_format(bet_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(betTime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                and date_format(bet_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
         </where>
     </select>
