@@ -7,8 +7,10 @@ import com.qiqilm.server.admin.service.IMemberBcodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 会员打码数据Service业务层处理
@@ -53,8 +55,18 @@ public class MemberBcodeServiceImpl implements IMemberBcodeService {
 	 * @return {@link AjaxResult}
 	 */
 	@Override
-	public AjaxResult getTotalData() {
-		Map map = memberBcodeMapper.getTotalData();
-		return AjaxResult.success( map );
+	public AjaxResult getTotalData(MemberBcode memberBcode) {
+		MemberBcode memberBcode1 = memberBcodeMapper.getTotalData(memberBcode);
+		if ( memberBcode.getSelectDate() != null ) {
+			memberBcode.setStartTime( memberBcode.getSelectDate()[ 0 ] + " 00:00:00" );
+			memberBcode.setEndTime( memberBcode.getSelectDate()[ 1 ] + " 23:59:59" );
+		}
+		if (Objects.isNull(memberBcode1)){
+			MemberBcode memberBcode2=new MemberBcode();
+			memberBcode2.setCountCur(BigDecimal.ZERO);
+			memberBcode2.setTotal(BigDecimal.ZERO);
+			return AjaxResult.success(memberBcode2);
+		}
+		return AjaxResult.success( memberBcode1 );
 	}
 }

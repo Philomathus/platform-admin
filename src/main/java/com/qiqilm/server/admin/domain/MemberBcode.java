@@ -56,6 +56,8 @@ public class MemberBcode extends BaseEntity {
 	private String[] selectDate;
 	private String   startTime;
 	private String   endTime;
+	private BigDecimal total;
+	private BigDecimal countCur;
 
 	@Override
 	public String toString() {
