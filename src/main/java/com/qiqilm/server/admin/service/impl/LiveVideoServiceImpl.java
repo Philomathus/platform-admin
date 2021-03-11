@@ -245,7 +245,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			LiveHostWageNote newHostWageNote = new LiveHostWageNote();
 			newHostWageNote.setFamilyId( liveUser.getFamilyId() == null ? 0 : liveUser.getFamilyId() );
 			newHostWageNote.setHostId( video.getUserId() );
-			newHostWageNote.setCreateTimes( DateFormatUtils.formate( new Date() ) );
 			newHostWageNote.setEndTime( endTime );
 			newHostWageNote.setRemark( remark );
 			newHostWageNote.setBeforeTotalTicket( video.getVoteNumber() );
