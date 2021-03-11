@@ -16,6 +16,7 @@ import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.NameUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
+import org.apache.commons.collections4.list.LazyList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,250 +35,257 @@ import java.util.List;
  */
 @Service
 public class MemberInfoServiceImpl implements IMemberInfoService {
-	@Autowired
-	private MemberInfoMapper       memberInfoMapper;
-	@Autowired
-	private MemberActionLogsMapper actionLogsMapper;
-	@Autowired
-	private LogMoneyMapper         logMoneyMapper;
-	@Autowired
-	private MemberBcodeMapper      codeFlowMapper;
-	@Resource
-	private MemberGameMoneyMapper  gameMoneyMapper;
-	@Resource
-	private LogGameOrderMapper     logGameOrderMapper;
-	@Autowired
-	private ILogService            logService;
-	@Autowired
-	private MemberCardMapper       memberCardMapper;
-	@Autowired
-	private MemberCacheManager     memberCacheManager;
-	@Autowired
-	private MemberForbidUtil memberForbidUtil;
-	/**
-	 * 查询会员信息
-	 *
-	 * @param id 会员信息 ID
-	 * @return 会员信息
-	 */
-	@Override
-	public MemberInfo selectMemberInfoById( String id ) {
-		return memberInfoMapper.selectMemberInfoById( id );
-	}
+    @Autowired
+    private MemberInfoMapper memberInfoMapper;
+    @Autowired
+    private MemberActionLogsMapper actionLogsMapper;
+    @Autowired
+    private LogMoneyMapper logMoneyMapper;
+    @Autowired
+    private MemberBcodeMapper codeFlowMapper;
+    @Resource
+    private MemberGameMoneyMapper gameMoneyMapper;
+    @Resource
+    private LogGameOrderMapper logGameOrderMapper;
+    @Autowired
+    private ILogService logService;
+    @Autowired
+    private MemberCardMapper memberCardMapper;
+    @Autowired
+    private MemberCacheManager memberCacheManager;
+    @Autowired
+    private MemberForbidUtil memberForbidUtil;
 
-	/**
-	 * 查询会员信息 列表
-	 *
-	 * @param memberInfo 会员信息
-	 * @return 会员信息
-	 */
-	@Override
-	public List<MemberInfo> selectMemberInfoList( MemberInfo memberInfo ) {
-		return memberInfoMapper.selectMemberInfoList( memberInfo );
-	}
+    /**
+     * 查询会员信息
+     *
+     * @param id 会员信息 ID
+     * @return 会员信息
+     */
+    @Override
+    public MemberInfo selectMemberInfoById(String id) {
+        return memberInfoMapper.selectMemberInfoById(id);
+    }
 
-	/**
-	 * 新增会员信息
-	 *
-	 * @param memberInfo 会员信息
-	 * @return 结果
-	 */
-	@Override
-	public AjaxResult insertMemberInfo( MemberInfo memberInfo ) {
-		if ( memberInfoMapper.countByUserName( memberInfo.getUserName() ) > 0 ) {
-			return AjaxResult.error( "此账号已经存在" );
-		}
-		MemberInfo member = memberCacheManager.createMember();
-		if ( StringUtils.isEmpty( member.getId() ) ) {
-			return AjaxResult.error( "注册redis存在问题，请联系管理员" );
-		}
+    /**
+     * 查询会员信息 列表
+     *
+     * @param memberInfo 会员信息
+     * @return 会员信息
+     */
+    @Override
+    public List<MemberInfo> selectMemberInfoList(MemberInfo memberInfo) {
+        return memberInfoMapper.selectMemberInfoList(memberInfo);
+    }
 
-		member.setIsOnline( 0 );
-		member.setVip( 1 );//默认vip1
-		member.setStatus( 1 );
-		member.setTotalAccount( BigDecimal.ZERO );
-		member.setPassword( memberInfo.getPassword() );
-		member.setUserName( memberInfo.getUserName() );
-		member.setRegTime( new Date() );
-		member.setLevelIntegral( BigDecimal.ZERO );
-		member.setBoxAccount( BigDecimal.ZERO );
-		member.setCodeAccount( BigDecimal.ZERO );
-		member.setCodeTotal( BigDecimal.ZERO );
-		member.setInviteMoney( memberInfo.getInviteMoney() );
-		member.setInviterCode( memberInfo.getInviterCode() );
-		member.setNickName( NameUtil.nickNameRandom() );
-		member.setLoginNum( 0 );
-		if ( memberInfoMapper.insertMemberInfo( member ) > 0 ) {
-			return AjaxResult.success( "添加成功" );
-		} else {
-			return AjaxResult.success( "添加失败" );
-		}
-	}
+    /**
+     * 新增会员信息
+     *
+     * @param memberInfo 会员信息
+     * @return 结果
+     */
+    @Override
+    public AjaxResult insertMemberInfo(MemberInfo memberInfo) {
+        if (memberInfoMapper.countByUserName(memberInfo.getUserName()) > 0) {
+            return AjaxResult.error("此账号已经存在");
+        }
+        MemberInfo member = memberCacheManager.createMember();
+        if (StringUtils.isEmpty(member.getId())) {
+            return AjaxResult.error("注册redis存在问题，请联系管理员");
+        }
 
-	/**
-	 * 修改会员信息
-	 *
-	 * @param memberInfo 会员信息
-	 * @return 结果
-	 */
-	@Override
-	public int updateMemberInfo( MemberInfo memberInfo ) {
-		return memberInfoMapper.updateMemberInfo( memberInfo );
-	}
+        member.setIsOnline(0);
+        member.setVip(1);//默认vip1
+        member.setStatus(1);
+        member.setTotalAccount(BigDecimal.ZERO);
+        member.setPassword(memberInfo.getPassword());
+        member.setUserName(memberInfo.getUserName());
+        member.setRegTime(new Date());
+        member.setLevelIntegral(BigDecimal.ZERO);
+        member.setBoxAccount(BigDecimal.ZERO);
+        member.setCodeAccount(BigDecimal.ZERO);
+        member.setCodeTotal(BigDecimal.ZERO);
+        member.setInviteMoney(memberInfo.getInviteMoney());
+        member.setInviterCode(memberInfo.getInviterCode());
+        member.setNickName(NameUtil.nickNameRandom());
+        member.setLoginNum(0);
+        if (memberInfoMapper.insertMemberInfo(member) > 0) {
+            return AjaxResult.success("添加成功");
+        } else {
+            return AjaxResult.success("添加失败");
+        }
+    }
 
-	@Override
-	@Transactional
-	public RspBase addMemberMoneyOnly( String ip, String userId, BigDecimal money, BigDecimal beatNum, String Mk,
-									   String markorder, String admin_name ) {
-		RspBase    rspBase       = new RspBase();
-		MemberInfo oldmemberInfo = this.selectMemberInfoById( userId );
-		BigDecimal total         = oldmemberInfo.getTotalAccount();
+    /**
+     * 修改会员信息
+     *
+     * @param memberInfo 会员信息
+     * @return 结果
+     */
+    @Override
+    public int updateMemberInfo(MemberInfo memberInfo) {
+        return memberInfoMapper.updateMemberInfo(memberInfo);
+    }
 
-		if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
-			if ( money.compareTo( new BigDecimal( 1000000 ) ) > 0 ) {
-				rspBase.setMsg( "最大金额为1000000" );
-				rspBase.setCode( 2 );
-				return rspBase;
-			}
-		} else if ( money.compareTo( BigDecimal.ZERO ) < 0 ) {
-			BigDecimal lat = total.add( money );
-			if ( lat.compareTo( BigDecimal.ZERO ) < 0 ) {
-				rspBase.setMsg( "余额" + money + "不足扣除" );
-				rspBase.setCode( 2 );
-				return rspBase;
-			}
-			beatNum = new BigDecimal( 0 );
-		}
+    @Override
+    @Transactional
+    public RspBase addMemberMoneyOnly(String ip, String userId, BigDecimal money, BigDecimal beatNum, String Mk,
+                                      String markorder, String admin_name) {
+        RspBase rspBase = new RspBase();
+        MemberInfo oldmemberInfo = this.selectMemberInfoById(userId);
+        BigDecimal total = oldmemberInfo.getTotalAccount();
 
-		if ( !"0".equals( markorder ) ) {
-			List<LogMoney> markList = null;
-			if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
-				markList = logMoneyMapper.findMark( userId, markorder, money, null );
-			} else {
-				BigDecimal negate = money.negate();
-				markList = logMoneyMapper.findMark( userId, markorder, null, negate );
-			}
-			if ( markList.size() > 0 ) {
-				rspBase.setMsg( "请查看此笔金额是否已经入款过，如否请输入其他订单备注" );
-				rspBase.setCode( 2 );
-				return rspBase;
-			}
-		}
+        if (money.compareTo(BigDecimal.ZERO) > 0) {
+            if (money.compareTo(new BigDecimal(1000000)) > 0) {
+                rspBase.setMsg("最大金额为1000000");
+                rspBase.setCode(2);
+                return rspBase;
+            }
+        } else if (money.compareTo(BigDecimal.ZERO) < 0) {
+            BigDecimal lat = total.add(money);
+            if (lat.compareTo(BigDecimal.ZERO) < 0) {
+                rspBase.setMsg("余额" + money + "不足扣除");
+                rspBase.setCode(2);
+                return rspBase;
+            }
+            beatNum = new BigDecimal(0);
+        }
 
-		if ( total != null ) {
-			BigDecimal now = total.add( money );
-			if ( beatNum != null && beatNum.compareTo( BigDecimal.ZERO ) > 0 ) {
-				MemberBcode codeFlow = new MemberBcode();
-				codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-				codeFlow.setIncome( money.multiply( beatNum ).setScale( 2 ) );
-				codeFlow.setCreateTime( new Date() );
-				codeFlow.setStatus( 0 );
-				codeFlow.setCur( BigDecimal.ZERO );
-				codeFlow.setUserId( userId );
-				codeFlow.setDes( "人工入款" );
-				codeFlowMapper.insertMemberBcode( codeFlow );
-			} else {
-				beatNum = new BigDecimal( 0 );
-			}
-			memberInfoMapper.updateMoneySelect( userId, money, null, money.multiply( beatNum ).setScale( 2 ), null, null );
-			MemberActionLogs log = new MemberActionLogs();
-			log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-			log.setUserId( userId );
-			log.setUserName( oldmemberInfo.getUserName() );
-			log.setcTime( new Date() );
-			log.setType( EnumAction.gm.getType() );
-			log.setDes( EnumAction.gm.getDes() );
-			log.setParam1( "人工入款：" + money );
-			log.setParam2( "剩余资金：" + now );
-			log.setParam3( "操作人：" + admin_name );
-			log.setParam4( "备注：" + Mk );
-			log.setParamIp( ip );
-			actionLogsMapper.insertMemberActionLogs( log );
-			logService.logmarkMoney( userId, oldmemberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder );
-		} else {
-			rspBase.setMsg( "该成员redis未初始化金额，或者您输入的金额有误" );
-			rspBase.setCode( 2 );
-			return rspBase;
-		}
-		return rspBase;
-	}
+        if (!"0".equals(markorder)) {
+            List<LogMoney> markList = null;
+            if (money.compareTo(BigDecimal.ZERO) > 0) {
+                markList = logMoneyMapper.findMark(userId, markorder, money, null);
+            } else {
+                BigDecimal negate = money.negate();
+                markList = logMoneyMapper.findMark(userId, markorder, null, negate);
+            }
+            if (markList.size() > 0) {
+                rspBase.setMsg("请查看此笔金额是否已经入款过，如否请输入其他订单备注");
+                rspBase.setCode(2);
+                return rspBase;
+            }
+        }
 
-	@Override
-	public PageBO<WithdrawReport> withdrawReport( String memberid, Integer pageNum, Integer pageSize ) {
-		memberInfoMapper.call_pro_useranalysis( memberid );
-		PageBO<WithdrawReport> pageBO = new PageBO<>();
-		pageNum = 1;
-		pageSize = 100;
-		Page page = PageHelper.startPage( pageNum, pageSize, true );
-		pageBO.setData( memberInfoMapper.userWithdrawReportList() );
-		pageBO.setCount( page.getTotal() );
-		return pageBO;
-	}
+        if (total != null) {
+            BigDecimal now = total.add(money);
+            if (beatNum != null && beatNum.compareTo(BigDecimal.ZERO) > 0) {
+                MemberBcode codeFlow = new MemberBcode();
+                codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
+                codeFlow.setIncome(money.multiply(beatNum).setScale(2));
+                codeFlow.setCreateTime(new Date());
+                codeFlow.setStatus(0);
+                codeFlow.setCur(BigDecimal.ZERO);
+                codeFlow.setUserId(userId);
+                codeFlow.setDes("人工入款");
+                codeFlowMapper.insertMemberBcode(codeFlow);
+            } else {
+                beatNum = new BigDecimal(0);
+            }
+            memberInfoMapper.updateMoneySelect(userId, money, null, money.multiply(beatNum).setScale(2), null, null);
+            MemberActionLogs log = new MemberActionLogs();
+            log.setId(UuidUtil.getRandomUuidWithoutSeparator());
+            log.setUserId(userId);
+            log.setUserName(oldmemberInfo.getUserName());
+            log.setcTime(new Date());
+            log.setType(EnumAction.gm.getType());
+            log.setDes(EnumAction.gm.getDes());
+            log.setParam1("人工入款：" + money);
+            log.setParam2("剩余资金：" + now);
+            log.setParam3("操作人：" + admin_name);
+            log.setParam4("备注：" + Mk);
+            log.setParamIp(ip);
+            actionLogsMapper.insertMemberActionLogs(log);
+            logService.logmarkMoney(userId, oldmemberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder);
+        } else {
+            rspBase.setMsg("该成员redis未初始化金额，或者您输入的金额有误");
+            rspBase.setCode(2);
+            return rspBase;
+        }
+        return rspBase;
+    }
+
+    @Override
+    public PageBO<WithdrawReport> withdrawReport(String memberid, Integer pageNum, Integer pageSize) {
+        memberInfoMapper.call_pro_useranalysis(memberid);
+        PageBO<WithdrawReport> pageBO = new PageBO<>();
+        pageNum = 1;
+        pageSize = 100;
+        Page page = PageHelper.startPage(pageNum, pageSize, true);
+        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
+        String remark = memberInfoMapper.findBanRemark(memberid);
+        WithdrawReport withdrawReport = new WithdrawReport();
+        withdrawReport.setClass_twoname("禁言禁用备注");
+        withdrawReport.setT_value(remark);
+        withdrawReports.add(withdrawReport);
+        pageBO.setData(withdrawReports);
+        pageBO.setCount(page.getTotal());
+        return pageBO;
+    }
 
 
-	@Override
-	public PageBO<MemberCard> findMemberCardPage( String memberid, Integer pageNum, Integer pageSize, String orderBy ) {
-		PageBO<MemberCard> pageBO = new PageBO<>();
-		Page               page   = PageHelper.startPage( pageNum, pageSize, orderBy );
-		pageBO.setData( memberCardMapper.findList( memberid ) );
-		pageBO.setCount( page.getTotal() );
-		return pageBO;
-	}
+    @Override
+    public PageBO<MemberCard> findMemberCardPage(String memberid, Integer pageNum, Integer pageSize, String orderBy) {
+        PageBO<MemberCard> pageBO = new PageBO<>();
+        Page page = PageHelper.startPage(pageNum, pageSize, orderBy);
+        pageBO.setData(memberCardMapper.findList(memberid));
+        pageBO.setCount(page.getTotal());
+        return pageBO;
+    }
 
-	@Override
-	public void outGameFail( String orderId, String userId, Integer platformId ) {
-		MemberGameMoney myGameMoney = new MemberGameMoney();
-		myGameMoney.setId( userId + "_" + platformId );
-		myGameMoney.setStatus( 2 );
-		myGameMoney.setOderSn( "" );
-		gameMoneyMapper.updateMemberGameMoney( myGameMoney );
+    @Override
+    public void outGameFail(String orderId, String userId, Integer platformId) {
+        MemberGameMoney myGameMoney = new MemberGameMoney();
+        myGameMoney.setId(userId + "_" + platformId);
+        myGameMoney.setStatus(2);
+        myGameMoney.setOderSn("");
+        gameMoneyMapper.updateMemberGameMoney(myGameMoney);
 
-		LogGameOrder logOrder = new LogGameOrder();
-		logOrder.setId( orderId );
-		logOrder.setStatus( 1 );
-		logOrder.setETime( new Date() );
-		logGameOrderMapper.updateLogGameOrder( logOrder );
-	}
+        LogGameOrder logOrder = new LogGameOrder();
+        logOrder.setId(orderId);
+        logOrder.setStatus(1);
+        logOrder.setETime(new Date());
+        logGameOrderMapper.updateLogGameOrder(logOrder);
+    }
 
-	@Override
-	public void outGMGameSucess( String orderId, String userId, Integer platformId, BigDecimal money, String account ) {
-		MemberGameMoney myGameMoney = new MemberGameMoney();
-		myGameMoney.setId( userId + "_" + platformId );
-		myGameMoney.setStatus( 0 );
-		myGameMoney.setOderSn( "" );
-		myGameMoney.setMoney( BigDecimal.ZERO );
-		int i = gameMoneyMapper.updateMemberGameMoney( myGameMoney );
+    @Override
+    public void outGMGameSucess(String orderId, String userId, Integer platformId, BigDecimal money, String account) {
+        MemberGameMoney myGameMoney = new MemberGameMoney();
+        myGameMoney.setId(userId + "_" + platformId);
+        myGameMoney.setStatus(0);
+        myGameMoney.setOderSn("");
+        myGameMoney.setMoney(BigDecimal.ZERO);
+        int i = gameMoneyMapper.updateMemberGameMoney(myGameMoney);
 
-		Date         date     = new Date();
-		LogGameOrder logOrder = new LogGameOrder();
-		logOrder.setId( orderId );
-		logOrder.setBTime( date );
-		logOrder.setETime( date );
-		logOrder.setMemberId( userId );
-		logOrder.setMoney( money );
-		logOrder.setStatus( 2 );
-		logOrder.setType( 2 );
-		logOrder.setUserName( account );
-		logOrder.setPlatformId( platformId );
-		int i1 = logGameOrderMapper.insertLogGameOrder( logOrder );
+        Date date = new Date();
+        LogGameOrder logOrder = new LogGameOrder();
+        logOrder.setId(orderId);
+        logOrder.setBTime(date);
+        logOrder.setETime(date);
+        logOrder.setMemberId(userId);
+        logOrder.setMoney(money);
+        logOrder.setStatus(2);
+        logOrder.setType(2);
+        logOrder.setUserName(account);
+        logOrder.setPlatformId(platformId);
+        int i1 = logGameOrderMapper.insertLogGameOrder(logOrder);
 
-		if ( money.compareTo( BigDecimal.ZERO ) > 0 && i > 0 && i1 > 0 ) {
-			memberInfoMapper.updateMoneySelect( userId, money, null, null, null, null );
-		}
-	}
+        if (money.compareTo(BigDecimal.ZERO) > 0 && i > 0 && i1 > 0) {
+            memberInfoMapper.updateMoneySelect(userId, money, null, null, null, null);
+        }
+    }
 
-	@Override
-	public int changeSpeak(MemberInfo memberInfo) {
-		if ("0".equals(memberInfo.getSpeak())) {
-			memberInfo.setStatus(1);
-			memberInfo.setSpeak("0");
-			memberInfoMapper.updateMemberInfo(memberInfo);
-			memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), false);
-		}else {
-			memberInfo.setSpeak("1");
-			memberInfoMapper.updateMemberInfo(memberInfo);
-			memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(),true);
-		}
-		return 1;
-	}
+    @Override
+    public int changeSpeak(MemberInfo memberInfo) {
+        if ("0".equals(memberInfo.getSpeak())) {
+            memberInfo.setStatus(1);
+            memberInfo.setSpeak("0");
+            memberInfoMapper.updateMemberInfo(memberInfo);
+            memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), false);
+        } else {
+            memberInfo.setSpeak("1");
+            memberInfoMapper.updateMemberInfo(memberInfo);
+            memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), true);
+        }
+        return 1;
+    }
 }

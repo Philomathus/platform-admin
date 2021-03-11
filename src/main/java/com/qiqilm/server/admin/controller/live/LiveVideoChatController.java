@@ -6,7 +6,9 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.LiveVideoChat;
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILiveVideoChatService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
@@ -27,114 +29,126 @@ import java.util.Map;
  * @date 2021-01-26
  */
 @RestController
-@RequestMapping( "/admin/liveVideoChat" )
+@RequestMapping("/admin/liveVideoChat")
 public class LiveVideoChatController extends BaseController {
-	@Autowired
-	private ILiveVideoChatService liveVideoChatService;
-	@Autowired
-	private TokenService tokenService;
-	/**
-	 * 查询会员发言列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoChat:list')" )
-	@GetMapping( "/list" )
-	public TableDataInfo list( LiveVideoChat liveVideoChat ) {
-		startPage();
-		List<LiveVideoChat> list = liveVideoChatService.selectLiveVideoChatList( liveVideoChat );
+    @Autowired
+    private ILiveVideoChatService liveVideoChatService;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private MemberInfoMapper memberInfoMapper;
 
-		liveVideoChatService.setSpeakForbid( list );
+    /**
+     * 查询会员发言列表
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideoChat:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(LiveVideoChat liveVideoChat) {
+        startPage();
+        List<LiveVideoChat> list = liveVideoChatService.selectLiveVideoChatList(liveVideoChat);
 
-		return getDataTable( list );
-	}
+        liveVideoChatService.setSpeakForbid(list);
 
-	/**
-	 * 直播间用户封停
-	 *
-	 * @return
-	 */
-	@PostMapping( "suspendUser" )
-	@Log( title = "用户封停", businessType = BusinessType.UPDATE )
-	public AjaxResult suspendUser( HttpServletRequest request,
-						  @RequestBody Map<String, Object> requestMap ) {
-		String pUserId = ( String ) requestMap.get( "pUserId" );
-		boolean flag = ( boolean ) requestMap.get( "flag" );
-		int num = ( int ) requestMap.get( "num" );
-		String userIp = (String) requestMap.get("userIp");
-		String msg = (String) requestMap.get("msg");
-		if ( !StringUtils.hasText( pUserId ) ) {
-			return AjaxResult.error( "会员平台ID不得为空" );
-		}
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String banAccount = loginUser.getUser().getUserName();
-		liveVideoChatService.suspendUser(pUserId,flag,num,userIp,msg,banAccount);
-		return AjaxResult.success();
-	}
+        return getDataTable(list);
+    }
 
-	/**
-	 * 直播间用户禁言10分钟
-	 *
-	 * @return
-	 */
-	@PostMapping( "forbidSendMsg" )
-	@Log( title = "用户禁言", businessType = BusinessType.UPDATE )
-	public AjaxResult forbidSendMsg(@RequestBody Map<String, Object> requestMap ) {
-		String  pUserId    = ( String ) requestMap.get( "pUserId" );
-		Integer videoId    = ( Integer ) requestMap.get( "videoId" );
-		Integer forbidTime = 600;
-		if ( !StringUtils.hasText( pUserId ) ) {
-			return AjaxResult.error( "会员平台ID不得为空" );
-		}
-		liveVideoChatService.forbidSendMsg(pUserId,forbidTime,videoId);
-		return AjaxResult.success();
-	}
-	/**
-	 * 导出会员发言列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoChat:export')" )
-	@Log( title = "会员发言", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public AjaxResult export( LiveVideoChat liveVideoChat ) {
-		List<LiveVideoChat>      list = liveVideoChatService.selectLiveVideoChatList( liveVideoChat );
-		ExcelUtil<LiveVideoChat> util = new ExcelUtil<>( LiveVideoChat.class );
-		return util.exportExcel( list, "liveVideoChat" );
-	}
+    /**
+     * 直播间用户封停
+     *
+     * @return
+     */
+    @PostMapping("suspendUser")
+    @Log(title = "用户封停", businessType = BusinessType.UPDATE)
+    public AjaxResult suspendUser(HttpServletRequest request,
+                                  @RequestBody Map<String, Object> requestMap) {
+        String pUserId = (String) requestMap.get("pUserId");
+        boolean flag = (boolean) requestMap.get("flag");
+        int num = (int) requestMap.get("num");
+        String userIp = (String) requestMap.get("userIp");
+        String msg = (String) requestMap.get("msg");
+        if (!StringUtils.hasText(pUserId)) {
+            return AjaxResult.error("会员平台ID不得为空");
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String banAccount = loginUser.getUser().getUserName();
+        liveVideoChatService.suspendUser(pUserId, flag, num, userIp, msg, banAccount);
+        return AjaxResult.success();
+    }
 
-	/**
-	 * 获取会员发言详细信息
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoChat:query')" )
-	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
-		return AjaxResult.success( liveVideoChatService.selectLiveVideoChatById( id ) );
-	}
+    /**
+     * 直播间用户禁言10分钟
+     *
+     * @return
+     */
+    @PostMapping("forbidSendMsg")
+    @Log(title = "用户禁言", businessType = BusinessType.UPDATE)
+    public AjaxResult forbidSendMsg(@RequestBody Map<String, Object> requestMap) {
+        String pUserId = (String) requestMap.get("pUserId");
+        Integer videoId = (Integer) requestMap.get("videoId");
+        String remark = (String) requestMap.get("remark");
+        Integer forbidTime = 600;
+        if (!StringUtils.hasText(pUserId)) {
+            return AjaxResult.error("会员平台ID不得为空");
+        }
+        //禁言添加备注
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String username = loginUser.getUser().getUserName();
+        MemberInfo memberInfo = new MemberInfo();
+        memberInfo.setId(pUserId);
+        memberInfo.setEmail("禁言操作人:" + username + ";禁言10分钟备注" + remark);
+        memberInfoMapper.updateMemberInfo(memberInfo);
+        liveVideoChatService.forbidSendMsg(pUserId, forbidTime, videoId);
+        return AjaxResult.success();
+    }
 
-	/**
-	 * 新增会员发言
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoChat:add')" )
-	@Log( title = "会员发言", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody LiveVideoChat liveVideoChat ) {
-		return toAjax( liveVideoChatService.insertLiveVideoChat( liveVideoChat ) );
-	}
+    /**
+     * 导出会员发言列表
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideoChat:export')")
+    @Log(title = "会员发言", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public AjaxResult export(LiveVideoChat liveVideoChat) {
+        List<LiveVideoChat> list = liveVideoChatService.selectLiveVideoChatList(liveVideoChat);
+        ExcelUtil<LiveVideoChat> util = new ExcelUtil<>(LiveVideoChat.class);
+        return util.exportExcel(list, "liveVideoChat");
+    }
 
-	/**
-	 * 修改会员发言
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoChat:edit')" )
-	@Log( title = "会员发言", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody LiveVideoChat liveVideoChat ) {
-		return toAjax( liveVideoChatService.updateLiveVideoChat( liveVideoChat ) );
-	}
+    /**
+     * 获取会员发言详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideoChat:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
+        return AjaxResult.success(liveVideoChatService.selectLiveVideoChatById(id));
+    }
 
-	/**
-	 * 删除会员发言
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoChat:remove')" )
-	@Log( title = "会员发言", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( liveVideoChatService.deleteLiveVideoChatByIds( ids ) );
-	}
+    /**
+     * 新增会员发言
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideoChat:add')")
+    @Log(title = "会员发言", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody LiveVideoChat liveVideoChat) {
+        return toAjax(liveVideoChatService.insertLiveVideoChat(liveVideoChat));
+    }
+
+    /**
+     * 修改会员发言
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideoChat:edit')")
+    @Log(title = "会员发言", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody LiveVideoChat liveVideoChat) {
+        return toAjax(liveVideoChatService.updateLiveVideoChat(liveVideoChat));
+    }
+
+    /**
+     * 删除会员发言
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideoChat:remove')")
+    @Log(title = "会员发言", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
+        return toAjax(liveVideoChatService.deleteLiveVideoChatByIds(ids));
+    }
 }

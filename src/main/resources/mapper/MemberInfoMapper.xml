@@ -549,6 +549,12 @@
 		ORDER BY rep_id asc
 	</select>
 
+	<select id="findBanRemark" resultType="java.lang.String">
+		select email
+		from member_info
+		where id = #{memberid}
+	</select>
+
 	<select id="selectMemberSpeak" resultType="java.lang.String">
 		select id
 		from member_info where speak = 1

@@ -17,6 +17,8 @@ public class ReqMemberInfo extends PageVO {
 
     private Integer channelCode;
 
+    private String remark;
+
     private String nick_name;
 
     private String login_ip;
