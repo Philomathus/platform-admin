@@ -6,6 +6,8 @@ import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.math.BigDecimal;
+
 /**
  * 会员注单数据对象 member_game_data
  *
@@ -80,6 +82,10 @@ public class MemberGameData extends BaseEntity {
 
     private String platformName;
     private String sonPlatformName;
+    private BigDecimal totalSuccessBet;
+    private BigDecimal totalBet;
+    private BigDecimal totalIncome;
+
 
     public String[] getSelectDate() {
         return selectDate;
