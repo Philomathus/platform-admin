@@ -467,13 +467,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			resultList.addAll( stickHostList );
 		}
 
-		List<Map<String, Integer>> sortInitList = new ArrayList<>();
 		for ( int i = 0; i < resultList.size(); i++ ) {
-			sortInitList.add( ImmutableMap.of( "id", resultList.get( i ).intValue(), "sort", i ) );
-		}
-
-		if ( !CollectionUtils.isEmpty( sortInitList ) ) {
-			liveVideoMapper.updateSortBatch( sortInitList );
+			LiveVideo update = new LiveVideo();
+			update.setId( resultList.get( i ) );
+			update.setSortInit( i );
+			liveVideoMapper.updateLiveVideo( update );
 		}
 	}
 }

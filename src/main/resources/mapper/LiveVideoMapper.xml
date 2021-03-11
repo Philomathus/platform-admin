@@ -226,6 +226,9 @@
 			<if test="stick != null">
 				stick = #{stick},
 			</if>
+			<if test="sortInit != null">
+				sort_init = #{sortInit},
+			</if>
 		</trim>
 		where id = #{id}
 	</update>
@@ -241,19 +244,4 @@
 	<select id="countLiveInSort" resultType="long">
 		select count(0) from ${dbLive}.live_video where live_in = 1 and sort = #{sort}
 	</select>
-
-	<update id="updateSortBatch">
-		update ${dbLive}.live_video
-		<trim prefix="set" suffixOverrides=",">
-			<trim prefix="sort_init = case" suffix="end,">
-				<foreach collection="list" item="item" index="index">
-					when id=#{item.id} then #{item.sort}
-				</foreach>
-			</trim>
-		</trim>
-		where id in
-		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
-			#{item.id}
-		</foreach>
-	</update>
 </mapper>
