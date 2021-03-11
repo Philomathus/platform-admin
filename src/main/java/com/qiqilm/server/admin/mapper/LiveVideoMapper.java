@@ -41,6 +41,4 @@ public interface LiveVideoMapper {
 	List<LiveVideo> selectLiveInVideoSort();
 
 	long countLiveInSort( Long sort );
-
-	int updateSortBatch( List<Map<String, Integer>> sortInitList );
 }
