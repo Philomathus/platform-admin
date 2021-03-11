@@ -407,6 +407,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	@Override
 	public void processVideoSort() {
 		List<LiveVideo> liveVideos = liveVideoMapper.selectLiveInVideoSort();
+		if ( CollectionUtils.isEmpty( liveVideos ) ) {
+			return;
+		}
 
 		// 固定位
 		Map<Integer, Long> sortHostMap = new TreeMap<>();
@@ -456,6 +459,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			sortInitList.add( ImmutableMap.of( "id", resultList.get( i ).intValue(), "sort", i ) );
 		}
 
-		liveVideoMapper.updateSortBatch( sortInitList );
+		if ( !CollectionUtils.isEmpty( sortInitList ) ) {
+			liveVideoMapper.updateSortBatch( sortInitList );
+		}
 	}
 }
