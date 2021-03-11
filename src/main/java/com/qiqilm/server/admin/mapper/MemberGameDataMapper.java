@@ -62,7 +62,7 @@ public interface MemberGameDataMapper {
 	 */
 	public int deleteMemberGameDataByIds(String[] ids );
 
-    public Map getCount(MemberGameData memberGameData);
+    public MemberGameData getCount(MemberGameData memberGameData);
 
     RspLotteryBetLog findBetList(String gameId);
 

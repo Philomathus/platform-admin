@@ -122,7 +122,7 @@ public class ServerOssServiceImpl implements IServerOssService {
 
 	@Override
 	public String uploadInputStream( InputStream inputStream, String fileKey ) {
-		ServerOss serverOss = serverOssCacheUtil.getAllValue();
+		ServerOss serverOss = serverOssCacheUtil.getEffect();
 		return this.uploadOss( inputStream, fileKey, serverOss );
 	}
 

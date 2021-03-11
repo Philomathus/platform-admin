@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.domain.LiveVideo;
 
@@ -28,14 +29,6 @@ public interface LiveVideoMapper {
 	public List<LiveVideo> selectLiveVideoList(LiveVideo liveVideo);
 
 	/**
-	 * 新增直播
-	 *
-	 * @param liveVideo 直播
-	 * @return 结果
-	 */
-	public int insertLiveVideo(LiveVideo liveVideo);
-
-	/**
 	 * 修改直播
 	 *
 	 * @param liveVideo 直播
@@ -43,19 +36,11 @@ public interface LiveVideoMapper {
 	 */
 	public int updateLiveVideo(LiveVideo liveVideo);
 
-	/**
-	 * 删除直播
-	 *
-	 * @param id 直播ID
-	 * @return 结果
-	 */
-	public int deleteLiveVideoById(Long id);
+	LiveVideo selectLiveVideoSortById( Long id );
 
-	/**
-	 * 批量删除直播
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deleteLiveVideoByIds(Long[] ids );
+	List<LiveVideo> selectLiveInVideoSort();
+
+	long countLiveInSort( Long sort );
+
+	int updateSortBatch( List<Map<String, Integer>> sortInitList );
 }
