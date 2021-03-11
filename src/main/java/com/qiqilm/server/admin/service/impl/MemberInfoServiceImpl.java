@@ -16,6 +16,7 @@ import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.NameUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
+import org.apache.commons.collections4.list.LazyList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -210,6 +211,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 		pageSize = 100;
 		Page page = PageHelper.startPage( pageNum, pageSize, true );
 		pageBO.setData( memberInfoMapper.userWithdrawReportList() );
+		String remark = memberInfoMapper.findBanRemark(memberid);
+		WithdrawReport withdrawReport=new WithdrawReport();
 		pageBO.setCount( page.getTotal() );
 		return pageBO;
 	}

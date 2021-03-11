@@ -14,60 +14,62 @@ import java.util.List;
  * @date 2021-01-25
  */
 public interface MemberInfoMapper {
-	/**
-	 * 查询会员信息
-	 *
-	 * @param id 会员信息ID
-	 * @return 会员信息
-	 */
-	public MemberInfo selectMemberInfoById( String id );
+    /**
+     * 查询会员信息
+     *
+     * @param id 会员信息ID
+     * @return 会员信息
+     */
+    public MemberInfo selectMemberInfoById(String id);
 
-	/**
-	 * 查询会员信息列表
-	 *
-	 * @param memberInfo 会员信息
-	 * @return 会员信息集合
-	 */
-	public List<MemberInfo> selectMemberInfoList( MemberInfo memberInfo );
+    /**
+     * 查询会员信息列表
+     *
+     * @param memberInfo 会员信息
+     * @return 会员信息集合
+     */
+    public List<MemberInfo> selectMemberInfoList(MemberInfo memberInfo);
 
-	/**
-	 * 新增会员信息
-	 *
-	 * @param memberInfo 会员信息
-	 * @return 结果
-	 */
-	public int insertMemberInfo( MemberInfo memberInfo );
+    /**
+     * 新增会员信息
+     *
+     * @param memberInfo 会员信息
+     * @return 结果
+     */
+    public int insertMemberInfo(MemberInfo memberInfo);
 
-	/**
-	 * 修改会员信息
-	 *
-	 * @param memberInfo 会员信息
-	 * @return 结果
-	 */
-	public int updateMemberInfo( MemberInfo memberInfo );
+    /**
+     * 修改会员信息
+     *
+     * @param memberInfo 会员信息
+     * @return 结果
+     */
+    public int updateMemberInfo(MemberInfo memberInfo);
 
-	int selectMaxMemberCode();
+    int selectMaxMemberCode();
 
-	int updateMoneySelect( @Param( "userId" ) String userId,
-						   @Param( "money" ) BigDecimal money,
-						   @Param( "invite_money" ) BigDecimal invite_money,
-						   @Param( "level_integral" ) BigDecimal level_integral,
-						   @Param( "code_account" ) BigDecimal code_account,
-						   @Param( "code_total" ) BigDecimal code_total );
+    int updateMoneySelect(@Param("userId") String userId,
+                          @Param("money") BigDecimal money,
+                          @Param("invite_money") BigDecimal invite_money,
+                          @Param("level_integral") BigDecimal level_integral,
+                          @Param("code_account") BigDecimal code_account,
+                          @Param("code_total") BigDecimal code_total);
 
-	void call_pro_useranalysis( @Param( "userid" ) String userId );
+    void call_pro_useranalysis(@Param("userid") String userId);
 
-	List<WithdrawReport> userWithdrawReportList();
+    List<WithdrawReport> userWithdrawReportList();
 
-	List<String> selectMemberSpeak( String[] ids );
+    List<String> selectMemberSpeak(String[] ids);
 
-	void updateSpeak( @Param( "pUserId" ) String pUserId, @Param( "speak" ) int speak );
+    void updateSpeak(@Param("pUserId") String pUserId, @Param("speak") int speak);
 
-	BigDecimal selectTotalAccountById( String memberId );
+    BigDecimal selectTotalAccountById(String memberId);
 
-	MemberInfo findRecommendByInviterCode( String inviterCode );
+    MemberInfo findRecommendByInviterCode(String inviterCode);
 
-	BigDecimal getMemberMoney( String userId );
+    BigDecimal getMemberMoney(String userId);
 
-	int countByUserName( String userName );
+    int countByUserName(String userName);
+
+    String findBanRemark(@Param("memberid") String memberid);
 }
