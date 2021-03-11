@@ -17,7 +17,7 @@ import java.util.Map;
 @Log4j2
 @Component
 public class ServerLiveCacheUtil {
-	public static final String SERVER_LIVE = Constants.CONFIG_PREX + "serverLive:";
+	private static final String SERVER_LIVE = Constants.CONFIG_PREX + "serverLive:";
 
 	@Autowired
 	private RedisUtil        redisUtil;

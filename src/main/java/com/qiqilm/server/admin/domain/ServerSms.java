@@ -86,33 +86,4 @@ public class ServerSms extends BaseEntity {
 				.append( "isEffect", getIsEffect() )
 				.toString();
 	}
-
-	public String[] toCodes() {
-		return new String[]{ "id", "name", "provider", "appKey", "appAccess", "region", "signature", "template", "smsSdkAppid" };
-	}
-
-	public String getVal( String code ) {
-		switch ( code ) {
-		case "id":
-			return id + "";
-		case "name":
-			return name;
-		case "provider":
-			return provider + "";
-		case "appKey":
-			return appKey;
-		case "appAccess":
-			return appAccess;
-		case "region":
-			return region;
-		case "signature":
-			return signature;
-		case "template":
-			return template;
-		case "smsSdkAppid":
-			return smsSdkAppid;
-		default:
-			return null;
-		}
-	}
 }
