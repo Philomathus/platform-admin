@@ -80,28 +80,6 @@ public class LiveUserServiceImpl implements ILiveUserService {
         return liveUserMapper.updateLiveUser(liveUser);
     }
 
-    /**
-     * 批量删除主播用户信息
-     *
-     * @param ids 需要删除的主播用户信息ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLiveUserByIds(Long[] ids) {
-        return liveUserMapper.deleteLiveUserByIds(ids);
-    }
-
-    /**
-     * 删除主播用户信息信息
-     *
-     * @param id 主播用户信息ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLiveUserById(Long id) {
-        return liveUserMapper.deleteLiveUserById(id);
-    }
-
     @Override
     public AjaxResult updateFamilyID(Long familyID, Long userId) {
         LiveFamily liveFamily = liveFamilyMapper.selectLiveFamilyById(familyID);

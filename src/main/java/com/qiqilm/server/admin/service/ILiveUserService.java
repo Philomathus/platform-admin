@@ -46,22 +46,6 @@ public interface ILiveUserService {
 	 */
 	public int updateLiveUser( LiveUser liveUser );
 
-	/**
-	 * 批量删除用户信息
-	 *
-	 * @param ids 需要删除的用户信息ID
-	 * @return 结果
-	 */
-	public int deleteLiveUserByIds( Long[] ids );
-
-	/**
-	 * 删除用户信息信息
-	 *
-	 * @param id 用户信息ID
-	 * @return 结果
-	 */
-	public int deleteLiveUserById( Long id );
-
 	public AjaxResult updateFamilyID( Long familyId, Long id );
 
 	List<RspLotteryBet> selectAnchorAward( ReqLotteryBat req );
