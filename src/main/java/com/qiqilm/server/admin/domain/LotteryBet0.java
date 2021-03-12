@@ -79,6 +79,8 @@ public class LotteryBet0 extends BaseEntity {
     @Excel(name = "下注时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date betTime;
 
+    private String tableLast;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
