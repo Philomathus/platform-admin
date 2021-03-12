@@ -48,6 +48,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectLiveUserList" parameterType="LiveUser" resultMap="LiveUserResult">
         <include refid="selectLiveUserVo"/>
         <where>
+            <if test="id != null and id != ''">
+                and u.id = #{id}
+            </if>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="isAuthentication != null "> and is_authentication = #{isAuthentication}</if>
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
