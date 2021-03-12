@@ -943,22 +943,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+<!--    <select id="selectAnchorAward" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBet">-->
+<!--        select SUM(t.prize) as prize,SUM(t.cost) as cost,t.anchor,t.update_time as updateTime,u.nick_name as nickName from (-->
+<!--        select prize,cost,anchor,update_time from ${dbLive}.lottery_bet where status = '1'-->
+<!--        <if test="id != null  and id != ''"> and anchor = #{id}</if>-->
+<!--        <if test="startTime != null  and startTime != ''"> and update_time >= #{startTime}</if>-->
+<!--        <if test="endTime != null  and endTime != ''"> and update_time &lt;= #{endTime}</if>-->
+<!--        and anchor &lt;> '-1'-->
+<!--        UNION all-->
+<!--        select prize,cost,anchor,update_time from ${dbLottery}.lottery_bet_view where status = '1'-->
+<!--        <if test="id != null  and id != ''"> and anchor = #{id}</if>-->
+<!--        <if test="startTime != null  and startTime != ''"> and update_time >= #{startTime}</if>-->
+<!--        <if test="endTime != null  and endTime != ''"> and update_time &lt;= #{endTime}</if>-->
+<!--        and anchor &lt;> '-1') t left join ${dbLive}.live_user u on u.id = t.anchor-->
+<!--        <where>-->
+<!--            <if test="nickName != null  and nickName != ''"> and u.nick_name like concat(#{nickName}, '%')</if>-->
+<!--        </where>-->
+<!--        GROUP BY t.anchor-->
+<!--    </select>-->
+
     <select id="selectAnchorAward" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBet">
-        select SUM(t.prize) as prize,SUM(t.cost) as cost,t.anchor,t.update_time as updateTime,u.nick_name as nickName from (
-        select prize,cost,anchor,update_time from ${dbLive}.lottery_bet where status = '1'
-        <if test="id != null  and id != ''"> and anchor = #{id}</if>
-        <if test="startTime != null  and startTime != ''"> and update_time >= #{startTime}</if>
-        <if test="endTime != null  and endTime != ''"> and update_time &lt;= #{endTime}</if>
-        and anchor &lt;> '-1'
-        UNION all
-        select prize,cost,anchor,update_time from ${dbLottery}.lottery_bet_view where status = '1'
-        <if test="id != null  and id != ''"> and anchor = #{id}</if>
-        <if test="startTime != null  and startTime != ''"> and update_time >= #{startTime}</if>
-        <if test="endTime != null  and endTime != ''"> and update_time &lt;= #{endTime}</if>
-        and anchor &lt;> '-1') t left join ${dbLive}.live_user u on u.id = t.anchor
+        select host_id as anchor, prize, cost, create_date as updateTime, cost_qianliu, host_nickname as nickName from ${dbLive}.live_host_paijiang
         <where>
-            <if test="nickName != null  and nickName != ''"> and u.nick_name like concat(#{nickName}, '%')</if>
+            <if test="id != null  and id != ''"> and host_id = #{id}</if>
+            <if test="nickName != null  and nickName != ''"> and host_nickname like concat('%', #{nickName}, '%')</if>
+            <if test="updateTime != null  and updateTime != ''"> and create_date = #{updateTime}</if>
         </where>
-        GROUP BY t.anchor
     </select>
 </mapper>
