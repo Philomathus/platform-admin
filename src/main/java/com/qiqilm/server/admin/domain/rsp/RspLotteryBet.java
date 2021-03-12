@@ -40,8 +40,11 @@ public class RspLotteryBet {
 	@Excel( name = "主播昵称", sort = 2 )
 	private String nickName;
 
-	@Excel( name = "日期", sort = 6 )
+	@Excel( name = "修改日期", sort = 6 )
 	private String updateTime;
+
+//	@Excel( name = "创建日期", sort = 6 )
+//	private String createTime;
 
 	@Excel( name = "派奖千六", sort = 5 )
 	private BigDecimal prizeSixThousand;

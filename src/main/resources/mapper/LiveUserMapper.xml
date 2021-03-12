@@ -4,961 +4,161 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.LiveUserMapper">
 
-    <resultMap type="LiveUser" id="LiveUserResult">
+    <resultMap type="com.qiqilm.server.admin.domain.LiveUser" id="LiveUserResult">
         <result property="id"    column="id"    />
         <result property="nickName"    column="nick_name"    />
-        <result property="userPwd"    column="user_pwd"    />
-        <result property="signature"    column="signature"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="isAuthentication"    column="is_authentication"    />
-        <result property="loginType"    column="login_type"    />
-        <result property="isEffect"    column="is_effect"    />
-        <result property="money"    column="money"    />
         <result property="loginIp"    column="login_ip"    />
-        <result property="province"    column="province"    />
-        <result property="city"    column="city"    />
-        <result property="isEditSex"    column="is_edit_sex"    />
-        <result property="sex"    column="sex"    />
-        <result property="birthday"    column="birthday"    />
-        <result property="isRemind"    column="is_remind"    />
         <result property="focusCount"    column="focus_count"    />
-        <result property="intro"    column="intro"    />
-        <result property="code"    column="code"    />
-        <result property="sinaId"    column="sina_id"    />
-        <result property="sinaToken"    column="sina_token"    />
-        <result property="sinaSecret"    column="sina_secret"    />
-        <result property="sinaUrl"    column="sina_url"    />
-        <result property="tencentId"    column="tencent_id"    />
-        <result property="tencentToken"    column="tencent_token"    />
-        <result property="tencentSecret"    column="tencent_secret"    />
-        <result property="tencentUrl"    column="tencent_url"    />
-        <result property="verify"    column="verify"    />
-        <result property="userLevel"    column="user_level"    />
         <result property="mobile"    column="mobile"    />
-        <result property="userType"    column="user_type"    />
-        <result property="isHasSendSuccess"    column="is_has_send_success"    />
-        <result property="verifySettingTime"    column="verify_setting_time"    />
         <result property="authenticationType"    column="authentication_type"    />
         <result property="authenticationName"    column="authentication_name"    />
-        <result property="contact"    column="contact"    />
-        <result property="fromPlatform"    column="from_platform"    />
-        <result property="wiki"    column="wiki"    />
         <result property="identifyHoldImage"    column="identify_hold_image"    />
         <result property="identifyPositiveImage"    column="identify_positive_image"    />
         <result property="identifyNagativeImage"    column="identify_nagative_image"    />
-        <result property="wxOpenid"    column="wx_openid"    />
-        <result property="gzOpenid"    column="gz_openid"    />
-        <result property="qqOpenid"    column="qq_openid"    />
-        <result property="investorSendInfo"    column="investor_send_info"    />
-        <result property="paypassword"    column="paypassword"    />
-        <result property="sourceUrl"    column="source_url"    />
-        <result property="pid"    column="pid"    />
-        <result property="score"    column="score"    />
-        <result property="point"    column="point"    />
-        <result property="emotionalState"    column="emotional_state"    />
-        <result property="job"    column="job"    />
-        <result property="headImage"    column="head_image"    />
-        <result property="thumbHeadImage"    column="thumb_head_image"    />
-        <result property="qqId"    column="qq_id"    />
-        <result property="qqToken"    column="qq_token"    />
-        <result property="vType"    column="v_type"    />
         <result property="vExplain"    column="v_explain"    />
-        <result property="vIcon"    column="v_icon"    />
         <result property="fansCount"    column="fans_count"    />
         <result property="ticket"    column="ticket"    />
         <result property="refundTicket"    column="refund_ticket"    />
-        <result property="diamonds"    column="diamonds"    />
-        <result property="useDiamonds"    column="use_diamonds"    />
-        <result property="usersig"    column="usersig"    />
-        <result property="expiryAfter"    column="expiry_after"    />
-        <result property="isOnline"    column="is_online"    />
-        <result property="wxUnionid"    column="wx_unionid"    />
-        <result property="userName"    column="user_name"    />
-        <result property="synchronize"    column="synchronize"    />
+        <result property="isBan"    column="is_ban"    />
+        <result property="identifyNumber"    column="identify_number"    />
+        <result property="familyId"    column="family_id"    />
+        <result property="familyName"    column="family_name"    />
+        <result property="familyUserId"    column="family_user_id"    />
+        <result property="familyNickName"    column="family_nick_name"    />
+        <result property="coin"    column="coin"    />
+        <result property="aloneTicketRatio"    column="alone_ticket_ratio"    />
+        <result property="openPay"    column="open_pay"    />
+        <result property="banRemark"    column="ban_remark"    />
         <result property="loginTime"    column="login_time"    />
         <result property="logoutTime"    column="logout_time"    />
-        <result property="isAgree"    column="is_agree"    />
-        <result property="onlineTime"    column="online_time"    />
-        <result property="subscribe"    column="subscribe"    />
-        <result property="isRobot"    column="is_robot"    />
-        <result property="apnsCode"    column="apns_code"    />
-        <result property="deviceType"    column="device_type"    />
-        <result property="videoCount"    column="video_count"    />
-        <result property="isBan"    column="is_ban"    />
-        <result property="isBanStr"    column="is_ban"    />
-        <result property="banTime"    column="ban_time"    />
-        <result property="identifyNumber"    column="identify_number"    />
-        <result property="authentListId"    column="authent_list_id"    />
-        <result property="familyId"    column="family_id"    />
-        <result property="familyChieftain"    column="family_chieftain"    />
-        <result property="isAdmin"    column="is_admin"    />
-        <result property="lastLoginLevel"    column="last_login_level"    />
-        <result property="bindingAlipay"    column="binding_alipay"    />
-        <result property="alipayName"    column="alipay_name"    />
-        <result property="alipayAccount"    column="alipay_account"    />
-        <result property="roomTitle"    column="room_title"    />
-        <result property="luckNum"    column="luck_num"    />
-        <result property="alipayUserId"    column="alipay_user_id"    />
-        <result property="alipayAuthentToken"    column="alipay_authent_token"    />
-        <result property="pUserId"    column="p_user_id"    />
-        <result property="banType"    column="ban_type"    />
-        <result property="societyId"    column="society_id"    />
-        <result property="societyChieftain"    column="society_chieftain"    />
-        <result property="societySettlementType"    column="society_settlement_type"    />
-        <result property="isVip"    column="is_vip"    />
-        <result property="vipExpireTime"    column="vip_expire_time"    />
-        <result property="coin"    column="coin"    />
-        <result property="isNospeaking"    column="is_nospeaking"    />
-        <result property="societyTicket"    column="society_ticket"    />
-        <result property="viewCount"    column="view_count"    />
-        <result property="isHotOn"    column="is_hot_on"    />
-        <result property="rate"    column="rate"    />
-        <result property="gameDistributionId"    column="game_distribution_id"    />
-        <result property="gameDistribution1"    column="game_distribution1"    />
-        <result property="gameDistribution2"    column="game_distribution2"    />
-        <result property="invitationCode"    column="invitation_code"    />
-        <result property="invitationId"    column="invitation_id"    />
-        <result property="gameDistributionTopId"    column="game_distribution_top_id"    />
-        <result property="investorTime"    column="investor_time"    />
-        <result property="aloneTicketRatio"    column="alone_ticket_ratio"    />
-        <result property="openGame"    column="open_game"    />
-        <result property="openPay"    column="open_pay"    />
-        <result property="openAuction"    column="open_auction"    />
-        <result property="familyRecom"    column="family_recom"    />
-        <result property="classifiedId"    column="classified_id"    />
-        <result property="allinpayUserId"    column="allinpay_user_id"    />
-        <result property="noTicket"    column="no_ticket"    />
-        <result property="roboter"    column="roboter"    />
-        <result property="isChangeName"    column="is_change_name"    />
-        <result property="isReplaceQq"    column="is_replace_qq"    />
-        <result property="isReplaceWx"    column="is_replace_wx"    />
-        <result property="weiboCount"    column="weibo_count"    />
-        <result property="weiboSortNum"    column="weibo_sort_num"    />
-        <result property="weiboRecommendWeight"    column="weibo_recommend_weight"    />
-        <result property="weixinAccount"    column="weixin_account"    />
-        <result property="weixinPrice"    column="weixin_price"    />
-        <result property="xpoint"    column="xpoint"    />
-        <result property="ypoint"    column="ypoint"    />
-        <result property="showImage"    column="show_image"    />
-        <result property="weiboRefundMoney"    column="weibo_refund_money"    />
-        <result property="weiboMoney"    column="weibo_money"    />
-        <result property="tipoffCount"    column="tipoff_count"    />
-        <result property="weiboPhotoImg"    column="weibo_photo_img"    />
-        <result property="weiboChatPrice"    column="weibo_chat_price"    />
-        <result property="weixinAccountTime"    column="weixin_account_time"    />
-        <result property="autoInvitationSid"    column="auto_invitation_sid"    />
-        <result property="agentId"    column="agent_id"    />
-        <result property="nobleCarId"    column="noble_car_id"    />
-        <result property="isGiftGiving"    column="is_gift_giving"    />
-        <result property="qrCode"    column="qr_code"    />
-        <result property="totalTime"    column="total_time"    />
-        <result property="pUserShenhe"    column="p_user_shenhe"    />
-        <result property="ticketCattyRatio"    column="ticket_catty_ratio"    />
-        <result property="banRemark"    column="ban_remark"    />
     </resultMap>
 
     <sql id="selectLiveUserVo">
-        select id, nick_name, user_pwd, signature,  FROM_UNIXTIME(create_time) create_time ,   FROM_UNIXTIME(update_time) update_time ,  is_authentication, login_type, is_effect, money, login_ip, province, city, is_edit_sex, sex, birthday, is_remind, focus_count, intro, code, sina_id, sina_token, sina_secret, sina_url, tencent_id, tencent_token, tencent_secret, tencent_url, verify, user_level, mobile, user_type, is_has_send_success, verify_setting_time, authentication_type, authentication_name, contact, from_platform, wiki, identify_hold_image, identify_positive_image, identify_nagative_image, wx_openid, gz_openid, qq_openid, investor_send_info, paypassword, source_url, pid, score, point, emotional_state, job, head_image, thumb_head_image, qq_id, qq_token, v_type, v_explain, v_icon, fans_count, ticket, refund_ticket, diamonds, use_diamonds, usersig, expiry_after, is_online, wx_unionid, user_name, synchronize, login_time, logout_time, is_agree, online_time, subscribe, is_robot, apns_code, device_type, video_count, is_ban, ban_time, identify_number, authent_list_id, family_id, family_chieftain, is_admin, last_login_level, binding_alipay, alipay_name, alipay_account, room_title, luck_num, alipay_user_id, alipay_authent_token, p_user_id, ban_type, society_id, society_chieftain, society_settlement_type, is_vip, vip_expire_time, coin, is_nospeaking, society_ticket, view_count, is_hot_on, rate, game_distribution_id, game_distribution1, game_distribution2, invitation_code, invitation_id, game_distribution_top_id, investor_time, alone_ticket_ratio, open_game, open_pay, open_auction, family_recom, classified_id, allinpay_user_id, no_ticket, roboter, is_change_name, is_replace_qq, is_replace_wx, weibo_count, weibo_sort_num, weibo_recommend_weight, weixin_account, weixin_price, xpoint, ypoint, show_image, weibo_refund_money, weibo_money, tipoff_count, weibo_photo_img, weibo_chat_price, weixin_account_time, auto_invitation_sid, agent_id, noble_car_id, is_gift_giving, qr_code, total_time, p_user_shenhe, ticket_catty_ratio, ban_remark from ${dbLive}.live_user
+        select u.id,u.nick_name,signature,FROM_UNIXTIME(u.create_time) create_time,FROM_UNIXTIME(u.update_time) update_time,
+		is_authentication,login_ip,focus_count,mobile,authentication_type,authentication_name,identify_hold_image,
+		identify_positive_image,identify_nagative_image, fans_count, ticket, refund_ticket,is_ban,v_explain,family_id,
+		coin,alone_ticket_ratio,open_pay,ban_remark,identify_number,login_time,logout_time,f.name family_name,
+        f.user_id family_user_id,f.nick_name family_nick_name
+		from ${dbLive}.live_user u left join ${dbLive}.live_family f on (f.id = u.family_id)
     </sql>
 
     <select id="selectLiveUserList" parameterType="LiveUser" resultMap="LiveUserResult">
         <include refid="selectLiveUserVo"/>
         <where>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="sendStartTime != null  and sendStartTime != ''"> and create_time >= #{sendStartTime}</if>
-            <if test="sendEndTime != null  and sendEndTime != ''"> and create_time &lt;= #{sendEndTime}</if>
-            <if test="userPwd != null  and userPwd != ''"> and user_pwd = #{userPwd}</if>
-            <if test="signature != null  and signature != ''"> and signature = #{signature}</if>
             <if test="isAuthentication != null "> and is_authentication = #{isAuthentication}</if>
-            <if test="loginType != null "> and login_type = #{loginType}</if>
-            <if test="isEffect != null "> and is_effect = #{isEffect}</if>
-            <if test="money != null "> and money = #{money}</if>
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
-            <if test="province != null  and province != ''"> and province = #{province}</if>
-            <if test="city != null  and city != ''"> and city = #{city}</if>
-            <if test="isEditSex != null "> and is_edit_sex = #{isEditSex}</if>
-            <if test="sex != null "> and sex = #{sex}</if>
-            <if test="birthday != null "> and birthday = #{birthday}</if>
-            <if test="isRemind != null "> and is_remind = #{isRemind}</if>
-            <if test="focusCount != null "> and focus_count = #{focusCount}</if>
-            <if test="intro != null  and intro != ''"> and intro = #{intro}</if>
-            <if test="code != null  and code != ''"> and code = #{code}</if>
-            <if test="sinaId != null  and sinaId != ''"> and sina_id = #{sinaId}</if>
-            <if test="sinaToken != null  and sinaToken != ''"> and sina_token = #{sinaToken}</if>
-            <if test="sinaSecret != null  and sinaSecret != ''"> and sina_secret = #{sinaSecret}</if>
-            <if test="sinaUrl != null  and sinaUrl != ''"> and sina_url = #{sinaUrl}</if>
-            <if test="tencentId != null  and tencentId != ''"> and tencent_id = #{tencentId}</if>
-            <if test="tencentToken != null  and tencentToken != ''"> and tencent_token = #{tencentToken}</if>
-            <if test="tencentSecret != null  and tencentSecret != ''"> and tencent_secret = #{tencentSecret}</if>
-            <if test="tencentUrl != null  and tencentUrl != ''"> and tencent_url = #{tencentUrl}</if>
-            <if test="verify != null  and verify != ''"> and verify = #{verify}</if>
-            <if test="userLevel != null "> and user_level = #{userLevel}</if>
             <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
-            <if test="userType != null "> and user_type = #{userType}</if>
-            <if test="isHasSendSuccess != null "> and is_has_send_success = #{isHasSendSuccess}</if>
-            <if test="verifySettingTime != null "> and verify_setting_time = #{verifySettingTime}</if>
-            <if test="authenticationType != null  and authenticationType != ''"> and authentication_type = #{authenticationType}</if>
-            <if test="authenticationName != null  and authenticationName != ''"> and authentication_name like concat('%', #{authenticationName}, '%')</if>
-            <if test="contact != null  and contact != ''"> and contact = #{contact}</if>
-            <if test="fromPlatform != null  and fromPlatform != ''"> and from_platform = #{fromPlatform}</if>
-            <if test="wiki != null  and wiki != ''"> and wiki = #{wiki}</if>
-            <if test="identifyHoldImage != null  and identifyHoldImage != ''"> and identify_hold_image = #{identifyHoldImage}</if>
-            <if test="identifyPositiveImage != null  and identifyPositiveImage != ''"> and identify_positive_image = #{identifyPositiveImage}</if>
-            <if test="identifyNagativeImage != null  and identifyNagativeImage != ''"> and identify_nagative_image = #{identifyNagativeImage}</if>
-            <if test="wxOpenid != null  and wxOpenid != ''"> and wx_openid = #{wxOpenid}</if>
-            <if test="gzOpenid != null  and gzOpenid != ''"> and gz_openid = #{gzOpenid}</if>
-            <if test="qqOpenid != null  and qqOpenid != ''"> and qq_openid = #{qqOpenid}</if>
-            <if test="investorSendInfo != null  and investorSendInfo != ''"> and investor_send_info = #{investorSendInfo}</if>
-            <if test="paypassword != null  and paypassword != ''"> and paypassword = #{paypassword}</if>
-            <if test="sourceUrl != null  and sourceUrl != ''"> and source_url = #{sourceUrl}</if>
-            <if test="pid != null "> and pid = #{pid}</if>
-            <if test="score != null "> and score = #{score}</if>
-            <if test="point != null "> and point = #{point}</if>
-            <if test="emotionalState != null  and emotionalState != ''"> and emotional_state = #{emotionalState}</if>
-            <if test="job != null  and job != ''"> and job = #{job}</if>
-            <if test="headImage != null  and headImage != ''"> and head_image = #{headImage}</if>
-            <if test="thumbHeadImage != null  and thumbHeadImage != ''"> and thumb_head_image = #{thumbHeadImage}</if>
-            <if test="qqId != null  and qqId != ''"> and qq_id = #{qqId}</if>
-            <if test="qqToken != null  and qqToken != ''"> and qq_token = #{qqToken}</if>
-            <if test="vType != null "> and v_type = #{vType}</if>
-            <if test="vExplain != null  and vExplain != ''"> and v_explain = #{vExplain}</if>
-            <if test="vIcon != null  and vIcon != ''"> and v_icon = #{vIcon}</if>
             <if test="fansCount != null "> and fans_count = #{fansCount}</if>
-            <if test="ticket != null "> and ticket = #{ticket}</if>
-            <if test="refundTicket != null "> and refund_ticket = #{refundTicket}</if>
-            <if test="diamonds != null "> and diamonds = #{diamonds}</if>
-            <if test="useDiamonds != null "> and use_diamonds = #{useDiamonds}</if>
-            <if test="usersig != null  and usersig != ''"> and usersig = #{usersig}</if>
-            <if test="expiryAfter != null "> and expiry_after = #{expiryAfter}</if>
-            <if test="isOnline != null "> and is_online = #{isOnline}</if>
-            <if test="wxUnionid != null  and wxUnionid != ''"> and wx_unionid = #{wxUnionid}</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
-            <if test="synchronize != null "> and synchronize = #{synchronize}</if>
-            <if test="loginTime != null "> and login_time = #{loginTime}</if>
-            <if test="logoutTime != null "> and logout_time = #{logoutTime}</if>
-            <if test="isAgree != null "> and is_agree = #{isAgree}</if>
-            <if test="onlineTime != null "> and online_time = #{onlineTime}</if>
-            <if test="subscribe != null "> and subscribe = #{subscribe}</if>
-            <if test="isRobot != null "> and is_robot = #{isRobot}</if>
-            <if test="apnsCode != null  and apnsCode != ''"> and apns_code = #{apnsCode}</if>
-            <if test="deviceType != null "> and device_type = #{deviceType}</if>
-            <if test="videoCount != null "> and video_count = #{videoCount}</if>
             <if test="isBan != null "> and is_ban = #{isBan}</if>
-            <if test="banTime != null "> and ban_time = #{banTime}</if>
             <if test="identifyNumber != null  and identifyNumber != ''"> and identify_number = #{identifyNumber}</if>
-            <if test="authentListId != null "> and authent_list_id = #{authentListId}</if>
             <if test="familyId != null "> and family_id = #{familyId}</if>
-            <if test="familyChieftain != null "> and family_chieftain = #{familyChieftain}</if>
-            <if test="isAdmin != null "> and is_admin = #{isAdmin}</if>
-            <if test="lastLoginLevel != null "> and last_login_level = #{lastLoginLevel}</if>
-            <if test="bindingAlipay != null "> and binding_alipay = #{bindingAlipay}</if>
-            <if test="alipayName != null  and alipayName != ''"> and alipay_name like concat('%', #{alipayName}, '%')</if>
-            <if test="alipayAccount != null  and alipayAccount != ''"> and alipay_account = #{alipayAccount}</if>
-            <if test="roomTitle != null  and roomTitle != ''"> and room_title = #{roomTitle}</if>
-            <if test="luckNum != null "> and luck_num = #{luckNum}</if>
-            <if test="alipayUserId != null  and alipayUserId != ''"> and alipay_user_id = #{alipayUserId}</if>
-            <if test="alipayAuthentToken != null  and alipayAuthentToken != ''"> and alipay_authent_token = #{alipayAuthentToken}</if>
-            <if test="pUserId != null "> and p_user_id = #{pUserId}</if>
-            <if test="banType != null "> and ban_type = #{banType}</if>
-            <if test="societyId != null "> and society_id = #{societyId}</if>
-            <if test="societyChieftain != null "> and society_chieftain = #{societyChieftain}</if>
-            <if test="societySettlementType != null "> and society_settlement_type = #{societySettlementType}</if>
-            <if test="isVip != null "> and is_vip = #{isVip}</if>
-            <if test="vipExpireTime != null "> and vip_expire_time = #{vipExpireTime}</if>
             <if test="coin != null "> and coin = #{coin}</if>
-            <if test="isNospeaking != null "> and is_nospeaking = #{isNospeaking}</if>
-            <if test="societyTicket != null "> and society_ticket = #{societyTicket}</if>
-            <if test="viewCount != null "> and view_count = #{viewCount}</if>
-            <if test="isHotOn != null "> and is_hot_on = #{isHotOn}</if>
-            <if test="rate != null "> and rate = #{rate}</if>
-            <if test="gameDistributionId != null "> and game_distribution_id = #{gameDistributionId}</if>
-            <if test="gameDistribution1 != null "> and game_distribution1 = #{gameDistribution1}</if>
-            <if test="gameDistribution2 != null "> and game_distribution2 = #{gameDistribution2}</if>
-            <if test="invitationCode != null  and invitationCode != ''"> and invitation_code = #{invitationCode}</if>
-            <if test="invitationId != null "> and invitation_id = #{invitationId}</if>
-            <if test="gameDistributionTopId != null "> and game_distribution_top_id = #{gameDistributionTopId}</if>
-            <if test="investorTime != null "> and investor_time = #{investorTime}</if>
-            <if test="aloneTicketRatio != null  and aloneTicketRatio != ''"> and alone_ticket_ratio = #{aloneTicketRatio}</if>
-            <if test="openGame != null "> and open_game = #{openGame}</if>
             <if test="openPay != null "> and open_pay = #{openPay}</if>
-            <if test="openAuction != null "> and open_auction = #{openAuction}</if>
-            <if test="familyRecom != null  and familyRecom != ''"> and family_recom = #{familyRecom}</if>
-            <if test="classifiedId != null "> and classified_id = #{classifiedId}</if>
-            <if test="allinpayUserId != null  and allinpayUserId != ''"> and allinpay_user_id = #{allinpayUserId}</if>
-            <if test="noTicket != null "> and no_ticket = #{noTicket}</if>
-            <if test="roboter != null "> and roboter = #{roboter}</if>
-            <if test="isChangeName != null "> and is_change_name like concat('%', #{isChangeName}, '%')</if>
-            <if test="isReplaceQq != null "> and is_replace_qq = #{isReplaceQq}</if>
-            <if test="isReplaceWx != null "> and is_replace_wx = #{isReplaceWx}</if>
-            <if test="weiboCount != null "> and weibo_count = #{weiboCount}</if>
-            <if test="weiboSortNum != null "> and weibo_sort_num = #{weiboSortNum}</if>
-            <if test="weiboRecommendWeight != null "> and weibo_recommend_weight = #{weiboRecommendWeight}</if>
-            <if test="weixinAccount != null  and weixinAccount != ''"> and weixin_account = #{weixinAccount}</if>
-            <if test="weixinPrice != null "> and weixin_price = #{weixinPrice}</if>
-            <if test="xpoint != null  and xpoint != ''"> and xpoint = #{xpoint}</if>
-            <if test="ypoint != null  and ypoint != ''"> and ypoint = #{ypoint}</if>
-            <if test="showImage != null  and showImage != ''"> and show_image = #{showImage}</if>
-            <if test="weiboRefundMoney != null "> and weibo_refund_money = #{weiboRefundMoney}</if>
-            <if test="weiboMoney != null "> and weibo_money = #{weiboMoney}</if>
-            <if test="tipoffCount != null "> and tipoff_count = #{tipoffCount}</if>
-            <if test="weiboPhotoImg != null  and weiboPhotoImg != ''"> and weibo_photo_img = #{weiboPhotoImg}</if>
-            <if test="weiboChatPrice != null "> and weibo_chat_price = #{weiboChatPrice}</if>
-            <if test="weixinAccountTime != null "> and weixin_account_time = #{weixinAccountTime}</if>
-            <if test="autoInvitationSid != null "> and auto_invitation_sid = #{autoInvitationSid}</if>
-            <if test="agentId != null "> and agent_id = #{agentId}</if>
-            <if test="nobleCarId != null "> and noble_car_id = #{nobleCarId}</if>
-            <if test="isGiftGiving != null "> and is_gift_giving = #{isGiftGiving}</if>
-            <if test="qrCode != null  and qrCode != ''"> and qr_code = #{qrCode}</if>
-            <if test="totalTime != null  and totalTime != ''"> and total_time = #{totalTime}</if>
-            <if test="pUserShenhe != null "> and p_user_shenhe = #{pUserShenhe}</if>
-            <if test="ticketCattyRatio != null "> and ticket_catty_ratio = #{ticketCattyRatio}</if>
-            <if test="banRemark != null  and banRemark != ''"> and ban_remark = #{banRemark}</if>
         </where>
     </select>
 
     <select id="selectLiveUserById" parameterType="Long" resultMap="LiveUserResult">
         <include refid="selectLiveUserVo"/>
-        where id = #{id}
+        where u.id = #{id}
     </select>
 
     <insert id="insertLiveUser" parameterType="LiveUser" useGeneratedKeys="true" keyProperty="id">
         insert into ${dbLive}.live_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">nick_name,</if>
-            <if test="userPwd != null">user_pwd,</if>
-            <if test="signature != null">signature,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="isAuthentication != null">is_authentication,</if>
-            <if test="loginType != null">login_type,</if>
-            <if test="isEffect != null">is_effect,</if>
-            <if test="money != null">money,</if>
             <if test="loginIp != null">login_ip,</if>
-            <if test="province != null">province,</if>
-            <if test="city != null">city,</if>
-            <if test="isEditSex != null">is_edit_sex,</if>
-            <if test="sex != null">sex,</if>
-            <if test="birthday != null">birthday,</if>
-            <if test="isRemind != null">is_remind,</if>
             <if test="focusCount != null">focus_count,</if>
-            <if test="intro != null">intro,</if>
-            <if test="code != null">code,</if>
-            <if test="sinaId != null">sina_id,</if>
-            <if test="sinaToken != null">sina_token,</if>
-            <if test="sinaSecret != null">sina_secret,</if>
-            <if test="sinaUrl != null">sina_url,</if>
-            <if test="tencentId != null">tencent_id,</if>
-            <if test="tencentToken != null">tencent_token,</if>
-            <if test="tencentSecret != null">tencent_secret,</if>
-            <if test="tencentUrl != null">tencent_url,</if>
-            <if test="verify != null">verify,</if>
-            <if test="userLevel != null">user_level,</if>
             <if test="mobile != null and mobile != ''">mobile,</if>
-            <if test="userType != null">user_type,</if>
-            <if test="isHasSendSuccess != null">is_has_send_success,</if>
-            <if test="verifySettingTime != null">verify_setting_time,</if>
             <if test="authenticationType != null">authentication_type,</if>
             <if test="authenticationName != null">authentication_name,</if>
-            <if test="contact != null">contact,</if>
-            <if test="fromPlatform != null">from_platform,</if>
-            <if test="wiki != null">wiki,</if>
             <if test="identifyHoldImage != null">identify_hold_image,</if>
             <if test="identifyPositiveImage != null">identify_positive_image,</if>
             <if test="identifyNagativeImage != null">identify_nagative_image,</if>
-            <if test="wxOpenid != null">wx_openid,</if>
-            <if test="gzOpenid != null">gz_openid,</if>
-            <if test="qqOpenid != null">qq_openid,</if>
             <if test="investorSendInfo != null">investor_send_info,</if>
-            <if test="paypassword != null">paypassword,</if>
-            <if test="sourceUrl != null">source_url,</if>
-            <if test="pid != null">pid,</if>
-            <if test="score != null">score,</if>
-            <if test="point != null">point,</if>
-            <if test="emotionalState != null and emotionalState != ''">emotional_state,</if>
-            <if test="job != null and job != ''">job,</if>
-            <if test="headImage != null and headImage != ''">head_image,</if>
-            <if test="thumbHeadImage != null">thumb_head_image,</if>
-            <if test="qqId != null">qq_id,</if>
-            <if test="qqToken != null">qq_token,</if>
-            <if test="vType != null">v_type,</if>
             <if test="vExplain != null">v_explain,</if>
-            <if test="vIcon != null">v_icon,</if>
             <if test="fansCount != null">fans_count,</if>
             <if test="ticket != null">ticket,</if>
             <if test="refundTicket != null">refund_ticket,</if>
-            <if test="diamonds != null">diamonds,</if>
-            <if test="useDiamonds != null">use_diamonds,</if>
-            <if test="usersig != null">usersig,</if>
-            <if test="expiryAfter != null">expiry_after,</if>
-            <if test="isOnline != null">is_online,</if>
-            <if test="wxUnionid != null">wx_unionid,</if>
-            <if test="userName != null">user_name,</if>
-            <if test="synchronize != null">synchronize,</if>
-            <if test="loginTime != null">login_time,</if>
-            <if test="logoutTime != null">logout_time,</if>
-            <if test="isAgree != null">is_agree,</if>
-            <if test="onlineTime != null">online_time,</if>
-            <if test="subscribe != null">subscribe,</if>
-            <if test="isRobot != null">is_robot,</if>
-            <if test="apnsCode != null">apns_code,</if>
-            <if test="deviceType != null">device_type,</if>
-            <if test="videoCount != null">video_count,</if>
             <if test="isBan != null">is_ban,</if>
-            <if test="banTime != null">ban_time,</if>
             <if test="identifyNumber != null">identify_number,</if>
-            <if test="authentListId != null">authent_list_id,</if>
             <if test="familyId != null">family_id,</if>
-            <if test="familyChieftain != null">family_chieftain,</if>
-            <if test="isAdmin != null">is_admin,</if>
-            <if test="lastLoginLevel != null">last_login_level,</if>
-            <if test="bindingAlipay != null">binding_alipay,</if>
-            <if test="alipayName != null">alipay_name,</if>
-            <if test="alipayAccount != null">alipay_account,</if>
-            <if test="roomTitle != null">room_title,</if>
-            <if test="luckNum != null">luck_num,</if>
-            <if test="alipayUserId != null">alipay_user_id,</if>
-            <if test="alipayAuthentToken != null">alipay_authent_token,</if>
-            <if test="pUserId != null">p_user_id,</if>
-            <if test="banType != null">ban_type,</if>
-            <if test="societyId != null">society_id,</if>
-            <if test="societyChieftain != null">society_chieftain,</if>
-            <if test="societySettlementType != null">society_settlement_type,</if>
-            <if test="isVip != null">is_vip,</if>
-            <if test="vipExpireTime != null">vip_expire_time,</if>
             <if test="coin != null">coin,</if>
-            <if test="isNospeaking != null">is_nospeaking,</if>
-            <if test="societyTicket != null">society_ticket,</if>
-            <if test="viewCount != null">view_count,</if>
-            <if test="isHotOn != null">is_hot_on,</if>
-            <if test="rate != null">rate,</if>
-            <if test="gameDistributionId != null">game_distribution_id,</if>
-            <if test="gameDistribution1 != null">game_distribution1,</if>
-            <if test="gameDistribution2 != null">game_distribution2,</if>
-            <if test="invitationCode != null">invitation_code,</if>
-            <if test="invitationId != null">invitation_id,</if>
-            <if test="gameDistributionTopId != null">game_distribution_top_id,</if>
-            <if test="investorTime != null">investor_time,</if>
             <if test="aloneTicketRatio != null and aloneTicketRatio != ''">alone_ticket_ratio,</if>
-            <if test="openGame != null">open_game,</if>
             <if test="openPay != null">open_pay,</if>
-            <if test="openAuction != null">open_auction,</if>
-            <if test="familyRecom != null and familyRecom != ''">family_recom,</if>
-            <if test="classifiedId != null">classified_id,</if>
-            <if test="allinpayUserId != null and allinpayUserId != ''">allinpay_user_id,</if>
-            <if test="noTicket != null">no_ticket,</if>
-            <if test="roboter != null">roboter,</if>
-            <if test="isChangeName != null">is_change_name,</if>
-            <if test="isReplaceQq != null">is_replace_qq,</if>
-            <if test="isReplaceWx != null">is_replace_wx,</if>
-            <if test="weiboCount != null">weibo_count,</if>
-            <if test="weiboSortNum != null">weibo_sort_num,</if>
-            <if test="weiboRecommendWeight != null">weibo_recommend_weight,</if>
-            <if test="weixinAccount != null">weixin_account,</if>
-            <if test="weixinPrice != null">weixin_price,</if>
-            <if test="xpoint != null and xpoint != ''">xpoint,</if>
-            <if test="ypoint != null and ypoint != ''">ypoint,</if>
-            <if test="showImage != null">show_image,</if>
-            <if test="weiboRefundMoney != null">weibo_refund_money,</if>
-            <if test="weiboMoney != null">weibo_money,</if>
-            <if test="tipoffCount != null">tipoff_count,</if>
-            <if test="weiboPhotoImg != null and weiboPhotoImg != ''">weibo_photo_img,</if>
-            <if test="weiboChatPrice != null">weibo_chat_price,</if>
-            <if test="weixinAccountTime != null">weixin_account_time,</if>
-            <if test="autoInvitationSid != null">auto_invitation_sid,</if>
-            <if test="agentId != null">agent_id,</if>
-            <if test="nobleCarId != null">noble_car_id,</if>
-            <if test="isGiftGiving != null">is_gift_giving,</if>
-            <if test="qrCode != null">qr_code,</if>
-            <if test="totalTime != null">total_time,</if>
-            <if test="pUserShenhe != null">p_user_shenhe,</if>
-            <if test="ticketCattyRatio != null">ticket_catty_ratio,</if>
             <if test="banRemark != null">ban_remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="nickName != null and nickName != ''">#{nickName},</if>
-                    <if test="userPwd != null">#{userPwd},</if>
-                    <if test="signature != null">#{signature},</if>
-                    <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
-                    <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
-                    <if test="isAuthentication != null">#{isAuthentication},</if>
-                    <if test="loginType != null">#{loginType},</if>
-                    <if test="isEffect != null">#{isEffect},</if>
-                    <if test="money != null">#{money},</if>
-                    <if test="loginIp != null">#{loginIp},</if>
-                    <if test="province != null">#{province},</if>
-                    <if test="city != null">#{city},</if>
-                    <if test="isEditSex != null">#{isEditSex},</if>
-                    <if test="sex != null">#{sex},</if>
-                    <if test="birthday != null">#{birthday},</if>
-                    <if test="isRemind != null">#{isRemind},</if>
-                    <if test="focusCount != null">#{focusCount},</if>
-                    <if test="intro != null">#{intro},</if>
-                    <if test="code != null">#{code},</if>
-                    <if test="sinaId != null">#{sinaId},</if>
-                    <if test="sinaToken != null">#{sinaToken},</if>
-                    <if test="sinaSecret != null">#{sinaSecret},</if>
-                    <if test="sinaUrl != null">#{sinaUrl},</if>
-                    <if test="tencentId != null">#{tencentId},</if>
-                    <if test="tencentToken != null">#{tencentToken},</if>
-                    <if test="tencentSecret != null">#{tencentSecret},</if>
-                    <if test="tencentUrl != null">#{tencentUrl},</if>
-                    <if test="verify != null">#{verify},</if>
-                    <if test="userLevel != null">#{userLevel},</if>
-                    <if test="mobile != null and mobile != ''">#{mobile},</if>
-                    <if test="userType != null">#{userType},</if>
-                    <if test="isHasSendSuccess != null">#{isHasSendSuccess},</if>
-                    <if test="verifySettingTime != null">#{verifySettingTime},</if>
-                    <if test="authenticationType != null">#{authenticationType},</if>
-                    <if test="authenticationName != null">#{authenticationName},</if>
-                    <if test="contact != null">#{contact},</if>
-                    <if test="fromPlatform != null">#{fromPlatform},</if>
-                    <if test="wiki != null">#{wiki},</if>
-                    <if test="identifyHoldImage != null">#{identifyHoldImage},</if>
-                    <if test="identifyPositiveImage != null">#{identifyPositiveImage},</if>
-                    <if test="identifyNagativeImage != null">#{identifyNagativeImage},</if>
-                    <if test="wxOpenid != null">#{wxOpenid},</if>
-                    <if test="gzOpenid != null">#{gzOpenid},</if>
-                    <if test="qqOpenid != null">#{qqOpenid},</if>
-                    <if test="investorSendInfo != null">#{investorSendInfo},</if>
-                    <if test="paypassword != null">#{paypassword},</if>
-                    <if test="sourceUrl != null">#{sourceUrl},</if>
-                    <if test="pid != null">#{pid},</if>
-                    <if test="score != null">#{score},</if>
-                    <if test="point != null">#{point},</if>
-                    <if test="emotionalState != null and emotionalState != ''">#{emotionalState},</if>
-                    <if test="job != null and job != ''">#{job},</if>
-                    <if test="headImage != null and headImage != ''">#{headImage},</if>
-                    <if test="thumbHeadImage != null">#{thumbHeadImage},</if>
-                    <if test="qqId != null">#{qqId},</if>
-                    <if test="qqToken != null">#{qqToken},</if>
-                    <if test="vType != null">#{vType},</if>
-                    <if test="vExplain != null">#{vExplain},</if>
-                    <if test="vIcon != null">#{vIcon},</if>
-                    <if test="fansCount != null">#{fansCount},</if>
-                    <if test="ticket != null">#{ticket},</if>
-                    <if test="refundTicket != null">#{refundTicket},</if>
-                    <if test="diamonds != null">#{diamonds},</if>
-                    <if test="useDiamonds != null">#{useDiamonds},</if>
-                    <if test="usersig != null">#{usersig},</if>
-                    <if test="expiryAfter != null">#{expiryAfter},</if>
-                    <if test="isOnline != null">#{isOnline},</if>
-                    <if test="wxUnionid != null">#{wxUnionid},</if>
-                    <if test="userName != null">#{userName},</if>
-                    <if test="synchronize != null">#{synchronize},</if>
-                    <if test="loginTime != null">#{loginTime},</if>
-                    <if test="logoutTime != null">#{logoutTime},</if>
-                    <if test="isAgree != null">#{isAgree},</if>
-                    <if test="onlineTime != null">#{onlineTime},</if>
-                    <if test="subscribe != null">#{subscribe},</if>
-                    <if test="isRobot != null">#{isRobot},</if>
-                    <if test="apnsCode != null">#{apnsCode},</if>
-                    <if test="deviceType != null">#{deviceType},</if>
-                    <if test="videoCount != null">#{videoCount},</if>
-                    <if test="isBan != null">#{isBan},</if>
-                    <if test="banTime != null">#{banTime},</if>
-                    <if test="identifyNumber != null">#{identifyNumber},</if>
-                    <if test="authentListId != null">#{authentListId},</if>
-                    <if test="familyId != null">#{familyId},</if>
-                    <if test="familyChieftain != null">#{familyChieftain},</if>
-                    <if test="isAdmin != null">#{isAdmin},</if>
-                    <if test="lastLoginLevel != null">#{lastLoginLevel},</if>
-                    <if test="bindingAlipay != null">#{bindingAlipay},</if>
-                    <if test="alipayName != null">#{alipayName},</if>
-                    <if test="alipayAccount != null">#{alipayAccount},</if>
-                    <if test="roomTitle != null">#{roomTitle},</if>
-                    <if test="luckNum != null">#{luckNum},</if>
-                    <if test="alipayUserId != null">#{alipayUserId},</if>
-                    <if test="alipayAuthentToken != null">#{alipayAuthentToken},</if>
-                    <if test="pUserId != null">#{pUserId},</if>
-                    <if test="banType != null">#{banType},</if>
-                    <if test="societyId != null">#{societyId},</if>
-                    <if test="societyChieftain != null">#{societyChieftain},</if>
-                    <if test="societySettlementType != null">#{societySettlementType},</if>
-                    <if test="isVip != null">#{isVip},</if>
-                    <if test="vipExpireTime != null">#{vipExpireTime},</if>
-                    <if test="coin != null">#{coin},</if>
-                    <if test="isNospeaking != null">#{isNospeaking},</if>
-                    <if test="societyTicket != null">#{societyTicket},</if>
-                    <if test="viewCount != null">#{viewCount},</if>
-                    <if test="isHotOn != null">#{isHotOn},</if>
-                    <if test="rate != null">#{rate},</if>
-                    <if test="gameDistributionId != null">#{gameDistributionId},</if>
-                    <if test="gameDistribution1 != null">#{gameDistribution1},</if>
-                    <if test="gameDistribution2 != null">#{gameDistribution2},</if>
-                    <if test="invitationCode != null">#{invitationCode},</if>
-                    <if test="invitationId != null">#{invitationId},</if>
-                    <if test="gameDistributionTopId != null">#{gameDistributionTopId},</if>
-                    <if test="investorTime != null">#{investorTime},</if>
-                    <if test="aloneTicketRatio != null and aloneTicketRatio != ''">#{aloneTicketRatio},</if>
-                    <if test="openGame != null">#{openGame},</if>
-                    <if test="openPay != null">#{openPay},</if>
-                    <if test="openAuction != null">#{openAuction},</if>
-                    <if test="familyRecom != null and familyRecom != ''">#{familyRecom},</if>
-                    <if test="classifiedId != null">#{classifiedId},</if>
-                    <if test="allinpayUserId != null and allinpayUserId != ''">#{allinpayUserId},</if>
-                    <if test="noTicket != null">#{noTicket},</if>
-                    <if test="roboter != null">#{roboter},</if>
-                    <if test="isChangeName != null">#{isChangeName},</if>
-                    <if test="isReplaceQq != null">#{isReplaceQq},</if>
-                    <if test="isReplaceWx != null">#{isReplaceWx},</if>
-                    <if test="weiboCount != null">#{weiboCount},</if>
-                    <if test="weiboSortNum != null">#{weiboSortNum},</if>
-                    <if test="weiboRecommendWeight != null">#{weiboRecommendWeight},</if>
-                    <if test="weixinAccount != null">#{weixinAccount},</if>
-                    <if test="weixinPrice != null">#{weixinPrice},</if>
-                    <if test="xpoint != null and xpoint != ''">#{xpoint},</if>
-                    <if test="ypoint != null and ypoint != ''">#{ypoint},</if>
-                    <if test="showImage != null">#{showImage},</if>
-                    <if test="weiboRefundMoney != null">#{weiboRefundMoney},</if>
-                    <if test="weiboMoney != null">#{weiboMoney},</if>
-                    <if test="tipoffCount != null">#{tipoffCount},</if>
-                    <if test="weiboPhotoImg != null and weiboPhotoImg != ''">#{weiboPhotoImg},</if>
-                    <if test="weiboChatPrice != null">#{weiboChatPrice},</if>
-                    <if test="weixinAccountTime != null">#{weixinAccountTime},</if>
-                    <if test="autoInvitationSid != null">#{autoInvitationSid},</if>
-                    <if test="agentId != null">#{agentId},</if>
-                    <if test="nobleCarId != null">#{nobleCarId},</if>
-                    <if test="isGiftGiving != null">#{isGiftGiving},</if>
-                    <if test="qrCode != null">#{qrCode},</if>
-                    <if test="totalTime != null">#{totalTime},</if>
-                    <if test="pUserShenhe != null">#{pUserShenhe},</if>
-                    <if test="ticketCattyRatio != null">#{ticketCattyRatio},</if>
-                    <if test="banRemark != null">#{banRemark},</if>
-             </trim>
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+			<if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+			<if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+			<if test="isAuthentication != null">#{isAuthentication},</if>
+			<if test="loginIp != null">#{loginIp},</if>
+			<if test="focusCount != null">#{focusCount},</if>
+            <if test="vExplain != null">#{vExplain},</if>
+			<if test="mobile != null and mobile != ''">#{mobile},</if>
+			<if test="authenticationType != null">#{authenticationType},</if>
+			<if test="authenticationName != null">#{authenticationName},</if>
+			<if test="identifyHoldImage != null">#{identifyHoldImage},</if>
+			<if test="identifyPositiveImage != null">#{identifyPositiveImage},</if>
+			<if test="identifyNagativeImage != null">#{identifyNagativeImage},</if>
+			<if test="investorSendInfo != null">#{investorSendInfo},</if>
+			<if test="fansCount != null">#{fansCount},</if>
+			<if test="ticket != null">#{ticket},</if>
+			<if test="refundTicket != null">#{refundTicket},</if>
+			<if test="isBan != null">#{isBan},</if>
+			<if test="identifyNumber != null">#{identifyNumber},</if>
+			<if test="familyId != null">#{familyId},</if>
+			<if test="coin != null">#{coin},</if>
+			<if test="aloneTicketRatio != null and aloneTicketRatio != ''">#{aloneTicketRatio},</if>
+			<if test="openPay != null">#{openPay},</if>
+			<if test="banRemark != null">#{banRemark},</if>
+         </trim>
     </insert>
 
     <update id="updateLiveUser" parameterType="LiveUser">
         update ${dbLive}.live_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
-
-            <if test="userPwd != null">user_pwd = #{userPwd},</if>
-
-            <if test="signature != null">signature = #{signature},</if>
-
             <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
-
             <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
-
             <if test="isAuthentication != null">is_authentication = #{isAuthentication},</if>
-
-            <if test="loginType != null">login_type = #{loginType},</if>
-
-            <if test="isEffect != null">is_effect = #{isEffect},</if>
-
-            <if test="money != null">money = #{money},</if>
-
             <if test="loginIp != null">login_ip = #{loginIp},</if>
-
-            <if test="province != null">province = #{province},</if>
-
-            <if test="city != null">city = #{city},</if>
-
-            <if test="isEditSex != null">is_edit_sex = #{isEditSex},</if>
-
-            <if test="sex != null">sex = #{sex},</if>
-
-            <if test="birthday != null">birthday = #{birthday},</if>
-
-            <if test="isRemind != null">is_remind = #{isRemind},</if>
-
             <if test="focusCount != null">focus_count = #{focusCount},</if>
-
-            <if test="intro != null">intro = #{intro},</if>
-
-            <if test="code != null">code = #{code},</if>
-
-            <if test="sinaId != null">sina_id = #{sinaId},</if>
-
-            <if test="sinaToken != null">sina_token = #{sinaToken},</if>
-
-            <if test="sinaSecret != null">sina_secret = #{sinaSecret},</if>
-
-            <if test="sinaUrl != null">sina_url = #{sinaUrl},</if>
-
-            <if test="tencentId != null">tencent_id = #{tencentId},</if>
-
-            <if test="tencentToken != null">tencent_token = #{tencentToken},</if>
-
-            <if test="tencentSecret != null">tencent_secret = #{tencentSecret},</if>
-
-            <if test="tencentUrl != null">tencent_url = #{tencentUrl},</if>
-
-            <if test="verify != null">verify = #{verify},</if>
-
-            <if test="userLevel != null">user_level = #{userLevel},</if>
-
             <if test="mobile != null and mobile != ''">mobile = #{mobile},</if>
-
-            <if test="userType != null">user_type = #{userType},</if>
-
-            <if test="isHasSendSuccess != null">is_has_send_success = #{isHasSendSuccess},</if>
-
-            <if test="verifySettingTime != null">verify_setting_time = #{verifySettingTime},</if>
-
             <if test="authenticationType != null">authentication_type = #{authenticationType},</if>
-
             <if test="authenticationName != null">authentication_name = #{authenticationName},</if>
-
-            <if test="contact != null">contact = #{contact},</if>
-
-            <if test="fromPlatform != null">from_platform = #{fromPlatform},</if>
-
-            <if test="wiki != null">wiki = #{wiki},</if>
-
             <if test="identifyHoldImage != null">identify_hold_image = #{identifyHoldImage},</if>
-
             <if test="identifyPositiveImage != null">identify_positive_image = #{identifyPositiveImage},</if>
-
             <if test="identifyNagativeImage != null">identify_nagative_image = #{identifyNagativeImage},</if>
-
-            <if test="wxOpenid != null">wx_openid = #{wxOpenid},</if>
-
-            <if test="gzOpenid != null">gz_openid = #{gzOpenid},</if>
-
-            <if test="qqOpenid != null">qq_openid = #{qqOpenid},</if>
-
             <if test="investorSendInfo != null">investor_send_info = #{investorSendInfo},</if>
-
-            <if test="paypassword != null">paypassword = #{paypassword},</if>
-
-            <if test="sourceUrl != null">source_url = #{sourceUrl},</if>
-
-            <if test="pid != null">pid = #{pid},</if>
-
-            <if test="score != null">score = #{score},</if>
-
-            <if test="point != null">point = #{point},</if>
-
-            <if test="emotionalState != null and emotionalState != ''">emotional_state = #{emotionalState},</if>
-
-            <if test="job != null and job != ''">job = #{job},</if>
-
-            <if test="headImage != null and headImage != ''">head_image = #{headImage},</if>
-
-            <if test="thumbHeadImage != null">thumb_head_image = #{thumbHeadImage},</if>
-
-            <if test="qqId != null">qq_id = #{qqId},</if>
-
-            <if test="qqToken != null">qq_token = #{qqToken},</if>
-
-            <if test="vType != null">v_type = #{vType},</if>
-
             <if test="vExplain != null">v_explain = #{vExplain},</if>
-
-            <if test="vIcon != null">v_icon = #{vIcon},</if>
-
             <if test="fansCount != null">fans_count = #{fansCount},</if>
-
             <if test="ticket != null">ticket = #{ticket},</if>
-
             <if test="refundTicket != null">refund_ticket = #{refundTicket},</if>
-
-            <if test="diamonds != null">diamonds = #{diamonds},</if>
-
-            <if test="useDiamonds != null">use_diamonds = #{useDiamonds},</if>
-
-            <if test="usersig != null">usersig = #{usersig},</if>
-
-            <if test="expiryAfter != null">expiry_after = #{expiryAfter},</if>
-
-            <if test="isOnline != null">is_online = #{isOnline},</if>
-
-            <if test="wxUnionid != null">wx_unionid = #{wxUnionid},</if>
-
-            <if test="userName != null">user_name = #{userName},</if>
-
-            <if test="synchronize != null">synchronize = #{synchronize},</if>
-
-            <if test="loginTime != null">login_time = #{loginTime},</if>
-
-            <if test="logoutTime != null">logout_time = #{logoutTime},</if>
-
-            <if test="isAgree != null">is_agree = #{isAgree},</if>
-
-            <if test="onlineTime != null">online_time = #{onlineTime},</if>
-
-            <if test="subscribe != null">subscribe = #{subscribe},</if>
-
-            <if test="isRobot != null">is_robot = #{isRobot},</if>
-
-            <if test="apnsCode != null">apns_code = #{apnsCode},</if>
-
-            <if test="deviceType != null">device_type = #{deviceType},</if>
-
-            <if test="videoCount != null">video_count = #{videoCount},</if>
-
             <if test="isBan != null">is_ban = #{isBan},</if>
-
-            <if test="banTime != null">ban_time = #{banTime},</if>
-
             <if test="identifyNumber != null">identify_number = #{identifyNumber},</if>
-
-            <if test="authentListId != null">authent_list_id = #{authentListId},</if>
-
             <if test="familyId != null">family_id = #{familyId},</if>
-
-            <if test="familyChieftain != null">family_chieftain = #{familyChieftain},</if>
-
-            <if test="isAdmin != null">is_admin = #{isAdmin},</if>
-
-            <if test="lastLoginLevel != null">last_login_level = #{lastLoginLevel},</if>
-
-            <if test="bindingAlipay != null">binding_alipay = #{bindingAlipay},</if>
-
-            <if test="alipayName != null">alipay_name = #{alipayName},</if>
-
-            <if test="alipayAccount != null">alipay_account = #{alipayAccount},</if>
-
-            <if test="roomTitle != null">room_title = #{roomTitle},</if>
-
-            <if test="luckNum != null">luck_num = #{luckNum},</if>
-
-            <if test="alipayUserId != null">alipay_user_id = #{alipayUserId},</if>
-
-            <if test="alipayAuthentToken != null">alipay_authent_token = #{alipayAuthentToken},</if>
-
-            <if test="pUserId != null">p_user_id = #{pUserId},</if>
-
-            <if test="banType != null">ban_type = #{banType},</if>
-
-            <if test="societyId != null">society_id = #{societyId},</if>
-
-            <if test="societyChieftain != null">society_chieftain = #{societyChieftain},</if>
-
-            <if test="societySettlementType != null">society_settlement_type = #{societySettlementType},</if>
-
-            <if test="isVip != null">is_vip = #{isVip},</if>
-
-            <if test="vipExpireTime != null">vip_expire_time = #{vipExpireTime},</if>
-
             <if test="coin != null">coin = #{coin},</if>
-
-            <if test="isNospeaking != null">is_nospeaking = #{isNospeaking},</if>
-
-            <if test="societyTicket != null">society_ticket = #{societyTicket},</if>
-
-            <if test="viewCount != null">view_count = #{viewCount},</if>
-
-            <if test="isHotOn != null">is_hot_on = #{isHotOn},</if>
-
-            <if test="rate != null">rate = #{rate},</if>
-
-            <if test="gameDistributionId != null">game_distribution_id = #{gameDistributionId},</if>
-
-            <if test="gameDistribution1 != null">game_distribution1 = #{gameDistribution1},</if>
-
-            <if test="gameDistribution2 != null">game_distribution2 = #{gameDistribution2},</if>
-
-            <if test="invitationCode != null">invitation_code = #{invitationCode},</if>
-
-            <if test="invitationId != null">invitation_id = #{invitationId},</if>
-
-            <if test="gameDistributionTopId != null">game_distribution_top_id = #{gameDistributionTopId},</if>
-
-            <if test="investorTime != null">investor_time = #{investorTime},</if>
-
             <if test="aloneTicketRatio != null and aloneTicketRatio != ''">alone_ticket_ratio = #{aloneTicketRatio},</if>
-
-            <if test="openGame != null">open_game = #{openGame},</if>
-
             <if test="openPay != null">open_pay = #{openPay},</if>
-
-            <if test="openAuction != null">open_auction = #{openAuction},</if>
-
-            <if test="familyRecom != null and familyRecom != ''">family_recom = #{familyRecom},</if>
-
-            <if test="classifiedId != null">classified_id = #{classifiedId},</if>
-
-            <if test="allinpayUserId != null and allinpayUserId != ''">allinpay_user_id = #{allinpayUserId},</if>
-
-            <if test="noTicket != null">no_ticket = #{noTicket},</if>
-
-            <if test="roboter != null">roboter = #{roboter},</if>
-
-            <if test="isChangeName != null">is_change_name = #{isChangeName},</if>
-
-            <if test="isReplaceQq != null">is_replace_qq = #{isReplaceQq},</if>
-
-            <if test="isReplaceWx != null">is_replace_wx = #{isReplaceWx},</if>
-
-            <if test="weiboCount != null">weibo_count = #{weiboCount},</if>
-
-            <if test="weiboSortNum != null">weibo_sort_num = #{weiboSortNum},</if>
-
-            <if test="weiboRecommendWeight != null">weibo_recommend_weight = #{weiboRecommendWeight},</if>
-
-            <if test="weixinAccount != null">weixin_account = #{weixinAccount},</if>
-
-            <if test="weixinPrice != null">weixin_price = #{weixinPrice},</if>
-
-            <if test="xpoint != null and xpoint != ''">xpoint = #{xpoint},</if>
-
-            <if test="ypoint != null and ypoint != ''">ypoint = #{ypoint},</if>
-
-            <if test="showImage != null">show_image = #{showImage},</if>
-
-            <if test="weiboRefundMoney != null">weibo_refund_money = #{weiboRefundMoney},</if>
-
-            <if test="weiboMoney != null">weibo_money = #{weiboMoney},</if>
-
-            <if test="tipoffCount != null">tipoff_count = #{tipoffCount},</if>
-
-            <if test="weiboPhotoImg != null and weiboPhotoImg != ''">weibo_photo_img = #{weiboPhotoImg},</if>
-
-            <if test="weiboChatPrice != null">weibo_chat_price = #{weiboChatPrice},</if>
-
-            <if test="weixinAccountTime != null">weixin_account_time = #{weixinAccountTime},</if>
-
-            <if test="autoInvitationSid != null">auto_invitation_sid = #{autoInvitationSid},</if>
-
-            <if test="agentId != null">agent_id = #{agentId},</if>
-
-            <if test="nobleCarId != null">noble_car_id = #{nobleCarId},</if>
-
-            <if test="isGiftGiving != null">is_gift_giving = #{isGiftGiving},</if>
-
-            <if test="qrCode != null">qr_code = #{qrCode},</if>
-
-            <if test="totalTime != null">total_time = #{totalTime},</if>
-
-            <if test="pUserShenhe != null">p_user_shenhe = #{pUserShenhe},</if>
-
-            <if test="ticketCattyRatio != null">ticket_catty_ratio = #{ticketCattyRatio},</if>
-
             <if test="banRemark != null">ban_remark = #{banRemark},</if>
-
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteLiveUserById" parameterType="Long">
-        delete from ${dbLive}.live_user where id = #{id}
-    </delete>
-
-    <delete id="deleteLiveUserByIds" parameterType="String">
-        delete from ${dbLive}.live_user where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
     <select id="selectAnchorAward" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBet">
-        select SUM(t.prize) as prize,SUM(t.cost) as cost,t.anchor,t.update_time as updateTime,u.nick_name as nickName from (
-        select prize,cost,anchor,update_time from ${dbLive}.lottery_bet where status = '1'
-        <if test="id != null  and id != ''"> and anchor = #{id}</if>
-        <if test="startTime != null  and startTime != ''"> and update_time >= #{startTime}</if>
-        <if test="endTime != null  and endTime != ''"> and update_time &lt;= #{endTime}</if>
-        and anchor &lt;> '-1'
-        UNION all
-        select prize,cost,anchor,update_time from ${dbLottery}.lottery_bet_view where status = '1'
-        <if test="id != null  and id != ''"> and anchor = #{id}</if>
-        <if test="startTime != null  and startTime != ''"> and update_time >= #{startTime}</if>
-        <if test="endTime != null  and endTime != ''"> and update_time &lt;= #{endTime}</if>
-        and anchor &lt;> '-1') t left join ${dbLive}.live_user u on u.id = t.anchor
+        select host_id as anchor, prize, cost, create_date as updateTime, cost_qianliu, host_nickname as nickName from ${dbLive}.live_host_paijiang
         <where>
-            <if test="nickName != null  and nickName != ''"> and u.nick_name like concat(#{nickName}, '%')</if>
+            <if test="id != null  and id != ''"> and host_id = #{id}</if>
+            <if test="nickName != null  and nickName != ''"> and host_nickname like concat('%', #{nickName}, '%')</if>
+            <if test="updateTime != null  and updateTime != ''"> and create_date = #{updateTime}</if>
         </where>
-        GROUP BY t.anchor
     </select>
 </mapper>

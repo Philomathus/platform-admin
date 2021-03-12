@@ -48,22 +48,6 @@ public interface LiveUserMapper {
 	 */
 	public int updateLiveUser(LiveUser liveUser);
 
-	/**
-	 * 删除主播用户信息
-	 *
-	 * @param id 主播用户信息ID
-	 * @return 结果
-	 */
-	public int deleteLiveUserById(Long id);
-
-	/**
-	 * 批量删除主播用户信息
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deleteLiveUserByIds(Long[] ids );
-
     @Select( "SELECT family_id FROM ${dbLive}.live_user where id = ${userId}" )
     int getFamilyId(@Param( "userId" ) Long userId);
 

@@ -77,7 +77,7 @@ public class MessageSystemNoticeController extends BaseController {
 		messageSystemNotice.setId(UuidUtil.getRandomUuidWithoutSeparator());
 		messageSystemNotice.setAction("DIALOG");
 		messageSystemNotice.setDevice("ALL");
-		messageSystemNotice.setCreateTime(new Date());
+		messageSystemNotice.setPubdatetime(new Date());
 		return toAjax( messageSystemNoticeService.insertMessageSystemNotice(messageSystemNotice) );
 	}
 
