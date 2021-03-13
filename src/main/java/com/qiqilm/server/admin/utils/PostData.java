@@ -320,7 +320,8 @@ public class PostData {
 	 * @return
 	 */
 	public static String createOrderId( String agent, String account, Integer platform_id, Date date ) {
-		if ( EnumGamePlatform.AG_LIVE.getType() == platform_id ) {
+		if ( EnumGamePlatform.AG_LIVE.getType() == platform_id ||
+				EnumGamePlatform.FANY_SPORT.getType()==platform_id) {
 			return agent.concat( account.split( "_" )[ 1 ] ).concat( String.valueOf( System.currentTimeMillis() / 1000 ) );
 		}
 		if ( EnumGamePlatform.BBIN_LIVE.getType() == platform_id ||
