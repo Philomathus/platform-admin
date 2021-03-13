@@ -48,7 +48,7 @@ public class SysDictTypeController extends BaseController {
 	/**
 	 * 查询字典类型详细
 	 */
-	@PreAuthorize( "@ss.hasPermi('system:dict:query')" )
+	//@PreAuthorize( "@ss.hasPermi('system:dict:query')" )
 	@GetMapping( value = "/{dictId}" )
 	public AjaxResult getInfo( @PathVariable Long dictId ) {
 		return AjaxResult.success( dictTypeService.selectDictTypeById( dictId ) );
