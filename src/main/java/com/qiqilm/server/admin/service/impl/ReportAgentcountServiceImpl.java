@@ -52,21 +52,14 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
         boolean flag = date.before(new Date());
         Map<String, Object> resultMap = new HashMap<>();
         if (flag) {//判断时间是否是正确时间
-            String reportCache = redisUtil.strGet("admin-reportAgentcount");
             allList = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
-            if ("1".equals(reportCache)) {
-                resultMap.put("rows", allList);
-                return resultMap;
-            } else if ("0".equals(reportCache)) {
-                return new AjaxResult(900, "报表正在生成，请稍后...");
-            }
             if ((reportAgentcount.getAgentcode() != null && allList.size() == 0)
             ||reportAgentcount.getParams().get("endTime").equals(dateNowStr)) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
-                storage(reportAgentcount);//调用存储过程
-                return new AjaxResult(900, "报表正在生成，请稍后...");
+                reportAgentcountMapper.calldataProrepPlamcom(dateNowStr, dateNowStr);//调用存储过程
+                List<ReportAgentcount>   allList1 = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
+                resultMap.put("rows", allList1);
+                return resultMap;
             }
-        }else {
-            resultMap.put("rows", allList);
         }
         resultMap.put("rows", allList);
         return resultMap;
