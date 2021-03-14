@@ -8,11 +8,12 @@ import com.qiqilm.server.admin.domain.MemberRechargeLog;
 import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberRechargeLogService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -54,10 +55,9 @@ public class MemberRechargeLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:export')" )
 	@Log( title = "公司入款信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( ReqMemberRechargeLog req ) {
-		List<MemberRechargeLog>      list = memberRechargeLogService.selectMemberRechargeLogList( req );
-		ExcelUtil<MemberRechargeLog> util = new ExcelUtil<>( MemberRechargeLog.class );
-		return util.exportExcel( list, "memberRechargeLog" );
+	public void export( ReqMemberRechargeLog req, HttpServletResponse response ) {
+		List<MemberRechargeLog> list = memberRechargeLogService.selectMemberRechargeLogList( req );
+		ExportExcelUtil.exportExcel( list, "公司入款", "公司入款信息表", ReqMemberRechargeLog.class, response );
 	}
 
 	/**

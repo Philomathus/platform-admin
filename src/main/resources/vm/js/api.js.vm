@@ -50,6 +50,7 @@ export function export${BusinessName}(query) {
     url: url.platformWeb + '/${moduleName}/${businessName}/export',
     method: 'get',
     params: query,
-    responseType: 'arraybuffer'
+    responseType: 'arraybuffer',
+    timeout: 60000
   })
 }
