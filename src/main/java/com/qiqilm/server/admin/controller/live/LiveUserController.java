@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import com.qiqilm.server.admin.enums.BusinessType;
@@ -74,13 +75,18 @@ public class LiveUserController extends BaseController {
 	}
 
 	/**
-	 * 修改主播用户信息
+	 * 认证主播用户信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
-	@Log( title = "修改主播用户信息", businessType = BusinessType.UPDATE )
+	@Log( title = "认证主播用户信息", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LiveUser liveUser ) {
-		return toAjax( liveUserService.updateLiveUser( liveUser ) );
+		LiveUser newLiveUser = new LiveUser();
+		newLiveUser.setId( liveUser.getId() );
+		newLiveUser.setIsAuthentication( liveUser.getIsAuthentication() );
+		newLiveUser.setVExplain( liveUser.getVExplain() );
+		newLiveUser.setInvestorSendInfo( liveUser.getInvestorSendInfo() );
+		return toAjax( liveUserService.updateLiveUser( newLiveUser ) );
 	}
 
 	/**
@@ -99,16 +105,6 @@ public class LiveUserController extends BaseController {
 	@PutMapping( "/gofamiily" )
 	public AjaxResult gofamiily( LiveUser user ) {
 		return liveUserService.updateFamilyID( user.getFamilyId(), user.getId() );
-	}
-
-	/**
-	 * 删除主播用户信息
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveUser:remove')" )
-	@Log( title = "主播用户信息", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( liveUserService.deleteLiveUserByIds( ids ) );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('live:anchorAward:list')" )

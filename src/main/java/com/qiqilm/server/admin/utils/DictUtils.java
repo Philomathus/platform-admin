@@ -6,8 +6,10 @@ import com.qiqilm.server.admin.domain.SysDictData;
 import com.qiqilm.server.admin.mapper.SysDictDataMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -16,7 +18,9 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 字典工具类
@@ -65,15 +69,16 @@ public class DictUtils {
 	 */
 	@Async
 	public void clearDictCache() {
-		List<String>    keyList         = new ArrayList<>();
-		RedisConnection redisConnection = stringRedisTemplate.getConnectionFactory().getConnection();
-		Cursor<byte[]> cursor = redisConnection.scan( ScanOptions.scanOptions()
-				.match( AdminConstants.SYS_DICT_KEY + "*" ).count( 5 ).build() );
-		while ( cursor.hasNext() ) {
-			String key = new String( cursor.next() );
-			keyList.add( key );
-		}
-		redisUtil.unlink( keyList );
+		Set<String> keySet = stringRedisTemplate.execute( ( RedisCallback<Set<String>> ) connection -> {
+			Set<String> binaryKeys = new HashSet<>();
+			Cursor<byte[]> cursor = connection.scan( new ScanOptions.ScanOptionsBuilder()
+					.match(AdminConstants.SYS_DICT_KEY + "*").count(100).build());
+			while (cursor.hasNext()) {
+				binaryKeys.add(new String(cursor.next()));
+			}
+			return binaryKeys;
+		} );
+		redisUtil.unlink( keySet );
 	}
 
 	/**
@@ -95,7 +100,6 @@ public class DictUtils {
 	public List<SysDictData> getDictCache( String key ) {
 		if ( !redisUtil.exists( getCacheKey( key ) ) ) {
 			List<SysDictData> dictDataList = sysDictDataMapper.selectDictDataByType( key );
-			log.warn( JsonUtil.object2Json( dictDataList ) );
 			if ( !CollectionUtils.isEmpty( dictDataList ) ) {
 				setDictCache( key, dictDataList );
 			}

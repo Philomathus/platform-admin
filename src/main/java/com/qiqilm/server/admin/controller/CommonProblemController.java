@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,7 @@ public class CommonProblemController extends BaseController {
 	@Log( title = "常见问题", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody CommonProblem commonProblem) {
+		commonProblem.setId(UuidUtil.getRandomUuidWithoutSeparator());
 		return toAjax( commonProblemService.insertCommonProblem(commonProblem) );
 	}
 
