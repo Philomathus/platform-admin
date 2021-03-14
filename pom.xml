@@ -24,7 +24,7 @@
 		<springfox-swagger2.version>2.7.0</springfox-swagger2.version>
 
 		<httpcomponents.version>4.5.13</httpcomponents.version>
-		<easypoi.version>4.1.2</easypoi.version>
+		<easypoi.version>4.3.0</easypoi.version>
 		<googleauth.version>1.5.0</googleauth.version>
 		<commons-lang3.version>3.10</commons-lang3.version>
 		<commons-io.version>2.7</commons-io.version>
@@ -161,8 +161,8 @@
 
 		<!-- excel工具 -->
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-web</artifactId>
 			<version>${easypoi.version}</version>
 		</dependency>
 

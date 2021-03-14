@@ -7,7 +7,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -56,10 +57,9 @@ public class MemberPayJourController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:export')" )
 	@Log( title = "线上充值信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( MemberPayJour memberPayJour ) {
-		List<MemberPayJour>      list = memberPayJourService.selectMemberPayJourList( memberPayJour );
-		ExcelUtil<MemberPayJour> util = new ExcelUtil<>( MemberPayJour.class );
-		return util.exportExcel( list, "memberPayJour" );
+	public void export( MemberPayJour memberPayJour, HttpServletResponse response ) {
+		List<MemberPayJour> list = memberPayJourService.selectMemberPayJourList( memberPayJour );
+		ExportExcelUtil.exportExcel( list, "线上充值", "线上充值表", MemberPayJour.class, response );
 	}
 
 	/**

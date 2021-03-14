@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.google.common.collect.ImmutableMap;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
@@ -445,7 +444,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			}
 		} );
 
-		List<Long> resultList = new ArrayList<>();
+		List<Long> resultList = new ArrayList<>(liveVideos.size());
 		for ( int i = 1; i <= liveVideos.size(); i++ ) {
 			Long sortHostId = sortHostMap.get( i );
 			if ( sortHostId != null ) {
