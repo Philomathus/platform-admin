@@ -55,7 +55,7 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
             allList = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
             if ((reportAgentcount.getAgentcode() != null && allList.size() == 0)
             ||reportAgentcount.getParams().get("endTime").equals(dateNowStr)) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
-                reportAgentcountMapper.calldataProrepPlamcom(dateNowStr, dateNowStr);//调用存储过程
+                reportAgentcountMapper.calldataProrepPlamcom(dateNowStr, reportAgentcount.getAgentcode());//调用存储过程
                 List<ReportAgentcount>   allList1 = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
                 resultMap.put("rows", allList1);
                 return resultMap;
@@ -75,7 +75,7 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
                 redisUtil.strSetIfAbsent("admin-reportAgentcount", "0", Duration.ofMinutes(5))) {
             redisUtil.strSet("admin-reportAgentcount", "0", Duration.ofMinutes(5));
             threadPoolTaskExecutor.execute(() -> {
-                String result = reportAgentcountMapper.calldataProrepPlamcom(dateNowStr, dateNowStr);
+                String result = reportAgentcountMapper.calldataProrepPlamcom(dateNowStr, reportAgentcount.getAgentcode());
                 if (StringUtils.hasText(result) && redisUtil.exists("admin-reportAgentcount")) {
                     redisUtil.strIncrement("admin-reportAgentcount");
                 }
