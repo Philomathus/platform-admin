@@ -48,6 +48,7 @@ public class RobotMessage extends TelegramLongPollingBot {
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public void send(String tex){
