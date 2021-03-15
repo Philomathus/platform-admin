@@ -28,7 +28,7 @@ public class DomainTask implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Scheduled(cron = "0 */5 * * * ?")
+//    @Scheduled(cron = "0 */5 * * * ?")
     public void checkDomain() {
         log.info("轮询检测域名" + DateUtils.getTime());
         ConfigDomain configDomain = new ConfigDomain();
@@ -65,5 +65,19 @@ public class DomainTask implements Serializable {
             return doGet(url, retryNum);
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        String url= "https://77.wiki/verif/ping";
+        RestTemplate restTemplate =new RestTemplate();
+        try {
+        ResponseEntity<Object> resultEntity = restTemplate.getForEntity(url, Object.class);
+            if (resultEntity.getStatusCode() == HttpStatus.OK) {
+                System.out.println("aa");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }
