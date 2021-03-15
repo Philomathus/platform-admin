@@ -117,8 +117,11 @@ public class ReportAgentcountController extends BaseController {
     @PreAuthorize("@ss.hasPermi('admin:reportAgentcount:list')")
     @GetMapping("/list")
     public Object list(ReportAgentcount reportAgentcount) throws ParseException {
-
-        return   reportAgentcountService.selectReportAgentcountList(reportAgentcount);
+        if (reportAgentcount.getAgentcode()==null||reportAgentcount.getAgentcode()==""){
+            return AjaxResult.success("渠道编码不能为空");
+        }else {
+            return   reportAgentcountService.selectReportAgentcountList(reportAgentcount);
+        }
     }
 
 //	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
