@@ -10,6 +10,7 @@ import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.*;
 import java.util.List;
@@ -37,7 +38,12 @@ public class DomainTask implements Serializable {
             boolean a = doGet(url, 1);
             if (!a) {
                 String warnText = "这个域名挂了:" + li.getDomain();
-                robotMessage.send(warnText);
+                try {
+                    robotMessage.send(warnText);
+                } catch (Exception e) {
+                    log.warn(e.getMessage(), e);
+                    e.printStackTrace();
+                }
             }
         }
     }
