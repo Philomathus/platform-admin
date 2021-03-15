@@ -52,12 +52,8 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
         Date date = simpleDateFormat.parse(endTime);
         boolean flag = date.before(new Date());
         if(!flag){
+            beginTime=dateNowStr();
             endTime = dateNowStr();
-        }
-        Date datebegin = simpleDateFormat.parse(beginTime);
-        boolean flagbe = datebegin.before(new Date());
-        if(!flagbe){
-            beginTime = dateNowStr();
         }
         Map<String, Object> resultMap = new HashMap<>();
         //断时间是否是正确时间
