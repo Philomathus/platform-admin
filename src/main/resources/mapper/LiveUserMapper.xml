@@ -157,7 +157,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <select id="selectAnchorAward" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBet">
-        select host_id as anchor, prize, cost, create_date as updateTime, cost_qianliu, host_nickname as nickName from ${dbLive}.live_host_paijiang
+        select host_id as anchor, prize, cost, create_date as updateTime, cost_qianliu prizeSixThousand,
+        host_nickname as nickName from ${dbLive}.live_host_paijiang
         <where>
             <if test="id != null  and id != ''"> and host_id = #{id}</if>
             <if test="nickName != null  and nickName != ''"> and host_nickname like concat('%', #{nickName}, '%')</if>
