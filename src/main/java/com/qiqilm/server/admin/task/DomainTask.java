@@ -27,7 +27,7 @@ public class DomainTask implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Scheduled(cron = "0/360 * * * * ?")
+    @Scheduled(cron = "0 */5 * * * ?")
     public void checkDomain() {
         log.info("轮询检测域名" + DateUtils.getTime());
         ConfigDomain configDomain = new ConfigDomain();
