@@ -35,10 +35,10 @@ public class DomainTask implements Serializable {
         for (ConfigDomain li : list) {
             String url = li.getDomain() + "/verif/ping";
             boolean a = doGet(url, 1);
-              if(!a){
-                  String warnText="这个域名挂了:"+li.getDomain();
-                  robotMessage.send( warnText );
-              }
+            if (!a) {
+                String warnText = "这个域名挂了:" + li.getDomain();
+                robotMessage.send(warnText);
+            }
         }
     }
 
@@ -50,11 +50,11 @@ public class DomainTask implements Serializable {
         }
         try {
             ResponseEntity<Object> resultEntity = restTemplate.getForEntity(url, Object.class);
-            if (resultEntity.getStatusCode() == HttpStatus.OK){
+            if (resultEntity.getStatusCode() == HttpStatus.OK) {
                 return true;
             }
         } catch (Exception e) {
-            log.warn(e.getMessage(),e);
+            log.warn(e.getMessage(), e);
             retryNum++;
             return doGet(url, retryNum);
         }
