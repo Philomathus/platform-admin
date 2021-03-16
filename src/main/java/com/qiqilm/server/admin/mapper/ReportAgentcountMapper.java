@@ -21,8 +21,7 @@ public interface ReportAgentcountMapper {
 	 * @return 代理统计，主要用于代理渠道的统计集合
 	 */
 	public List<ReportAgentcount> selectReportAgentcountList(ReportAgentcount reportAgentcount);
-	String calldataProrepPlamcom(@Param( "timedateta" ) String timedateta, @Param( "agentcode" ) String agentcode);
-
+	String calldataProrepPlamcom(@Param( "beginTime" ) String beginTime,@Param( "endTime" ) String endTime, @Param( "agentcode" ) String agentcode);
     List<ReportPlamHome> findChartsOne(@Param("classTwo") String classTwo,@Param("time") String time);
 
 	int existsPromotionCode(ReportAgentcount reportAgentcount);
