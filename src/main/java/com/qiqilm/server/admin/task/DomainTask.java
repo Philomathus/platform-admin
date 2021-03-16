@@ -39,7 +39,7 @@ public class DomainTask implements Serializable {
             if (!a) {
                 String warnText = "这个域名挂了:" + li.getDomain();
                 try {
-                    robotMessage.send(warnText);
+                    robotMessage.sendByChatId(warnText,"-456729891");
                 } catch (Exception e) {
                     log.warn(e.getMessage(), e);
                     e.printStackTrace();
