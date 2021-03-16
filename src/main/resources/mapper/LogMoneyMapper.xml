@@ -65,7 +65,7 @@
 		insert into log_money${dbNodes} (
 		id,user_id,pay,income,user_name,type,des, total, create_time, total_before,markorder,mark) values
 		(
-        #{req.id},#{req.user_id},#{req.pay},#{req.income},#{req.user_name},#{req.type},#{req.des},#{req.total},#{req.create_time},#{req.total_before},#{req.markorder},#{req.mark}
+        #{req.id},#{req.userId},#{req.pay},#{req.income},#{req.userName},#{req.type},#{req.des},#{req.total},#{req.createTime},#{req.totalBefore},#{req.markorder},#{req.mark}
         )
 	</insert>
 
