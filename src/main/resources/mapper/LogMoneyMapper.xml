@@ -62,7 +62,7 @@
 	</select>
 
 	<insert id="insertLogMoney" parameterType="LogMoney">
-		insert into log_money
+		insert into log_money${dbNodes}
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				id,
