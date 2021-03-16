@@ -59,7 +59,7 @@ public class PayServiceImpl implements IPayService {
 			return AjaxResult.error( "请输入google验证码" );
 		}
 		MemberPayJour payJour = payJourMapper.findByOrderNo( orderNo );
-		if ( !"0".equals( payJour.getStatus() ) ) {
+		if ( "1".equals( payJour.getStatus() ) ) {
 			return AjaxResult.error( "订单状态有误，补单失败" );
 		}
 
