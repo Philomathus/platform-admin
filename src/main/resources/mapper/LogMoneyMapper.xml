@@ -35,7 +35,19 @@
 	</sql>
 
 	<select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
-		<include refid="selectLogMoneyVo"/>
+		select id,
+		user_id,
+		user_name,
+		type,
+		des,
+		income,
+		pay,
+		total,
+		create_time,
+		total_before,
+		mark,
+		markorder
+		from ${dbMain}.log_money${tableLast}
 		<where>
 <!--			<if test="userId != null  and userId != ''">-->
 <!--				and user_id = #{userId}-->

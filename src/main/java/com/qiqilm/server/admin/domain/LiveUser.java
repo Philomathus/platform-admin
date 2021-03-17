@@ -102,7 +102,7 @@ public class LiveUser extends BaseEntity {
 
 	/** 设置主播提现比例,如果为空,则使用后台通用比例 */
 	@Excel( name = "设置主播提现比例,如果为空,则使用后台通用比例" )
-	private String aloneTicketRatio;
+	private BigDecimal ticketCattyRatio;
 
 	/** 是否开启付费 0为 禁用 1 为不禁用 */
 	@Excel( name = "是否开启付费 0为 禁用 1 为不禁用" )

@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
-import com.qiqilm.server.admin.annotation.Excel.ColumnType;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -20,7 +19,7 @@ public class SysRole extends BaseEntity {
 	/**
 	 * 角色ID
 	 */
-	@Excel( name = "角色序号", cellType = ColumnType.NUMERIC )
+	@Excel( name = "角色序号" )
 	private Long roleId;
 
 	/**
@@ -44,7 +43,7 @@ public class SysRole extends BaseEntity {
 	/**
 	 * 数据范围（1：所有数据权限；2：自定义数据权限；3：本部门数据权限；4：本部门及以下数据权限）
 	 */
-	@Excel( name = "数据范围", readConverterExp = "1=所有数据权限,2=自定义数据权限,3=本部门数据权限,4=本部门及以下数据权限" )
+	@Excel( name = "数据范围" )
 	private String dataScope;
 
 	/**
@@ -55,7 +54,7 @@ public class SysRole extends BaseEntity {
 	/**
 	 * 角色状态（0正常 1停用）
 	 */
-	@Excel( name = "角色状态", readConverterExp = "0=正常,1=停用" )
+	@Excel( name = "角色状态" )
 	private String status;
 
 	/**

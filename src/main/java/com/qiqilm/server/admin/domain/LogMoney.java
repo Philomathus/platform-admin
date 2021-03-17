@@ -93,6 +93,9 @@ public class LogMoney extends BaseEntity {
 	@JsonIgnore
 	private String   endTime;
 
+	@JsonIgnore
+	private String tableLast;
+
 	public String getStartTime() {
 		if ( StringUtils.isNotNull( this.getCreateTime() ) ) {
 			return DateFormatUtils.formate( getCreateTime() );

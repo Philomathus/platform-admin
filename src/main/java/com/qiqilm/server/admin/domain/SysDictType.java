@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
-import com.qiqilm.server.admin.annotation.Excel.ColumnType;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,7 +21,7 @@ public class SysDictType extends BaseEntity {
 	/**
 	 * 字典主键
 	 */
-	@Excel( name = "字典主键", cellType = ColumnType.NUMERIC )
+	@Excel( name = "字典主键" )
 	private Long dictId;
 
 	/**
@@ -44,7 +43,7 @@ public class SysDictType extends BaseEntity {
 	/**
 	 * 状态（0正常 1停用）
 	 */
-	@Excel( name = "状态", readConverterExp = "0=正常,1=停用" )
+	@Excel( name = "状态" )
 	private String status;
 
 	@Override

@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.payagent;
 
 import com.google.common.collect.Sets;
-import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
 import com.qiqilm.server.admin.mapper.PayAgentPlatformMapper;
 import com.qiqilm.server.admin.service.IPayAgentService;
@@ -24,7 +24,7 @@ public abstract class AbstractPayAgent implements BasePayAgent {
 	@Autowired
 	protected IPayAgentService        payAgentService;
 	@Autowired
-	protected MemberCacheManager      memberCacheManager;
+	protected SysConfigCacheUtil      sysConfigCacheUtil;
 
 	protected String assemblyUrl( Map<String, ?> bodyMap ) {
 		StringBuilder sb = new StringBuilder();

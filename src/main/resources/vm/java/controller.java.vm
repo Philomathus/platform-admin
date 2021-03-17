@@ -24,6 +24,8 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 #elseif($table.tree)
 #end
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * ${functionName}Controller
  *

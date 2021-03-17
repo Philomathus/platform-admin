@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
-import com.qiqilm.server.admin.annotation.Excel.ColumnType;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.constant.UserConstants;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
@@ -23,13 +22,13 @@ public class SysDictData extends BaseEntity {
 	/**
 	 * 字典编码
 	 */
-	@Excel( name = "字典编码", cellType = ColumnType.NUMERIC )
+	@Excel( name = "字典编码" )
 	private Long dictCode;
 
 	/**
 	 * 字典排序
 	 */
-	@Excel( name = "字典排序", cellType = ColumnType.NUMERIC )
+	@Excel( name = "字典排序" )
 	private Long dictSort;
 
 	/**
@@ -76,17 +75,17 @@ public class SysDictData extends BaseEntity {
 	/**
 	 * 是否默认（Y是 N否）
 	 */
-	@Excel( name = "是否默认", readConverterExp = "Y=是,N=否" )
+	@Excel( name = "是否默认" )
 	private String isDefault;
 
 	/**
 	 * 状态（0正常 1停用）
 	 */
-	@Excel( name = "状态", readConverterExp = "0=正常,1=停用" )
+	@Excel( name = "状态" )
 	private String status;
 
 	public boolean getDefault() {
-		return UserConstants.YES.equals( this.isDefault ) ? true : false;
+		return UserConstants.YES.equals( this.isDefault );
 	}
 
 	@Override
