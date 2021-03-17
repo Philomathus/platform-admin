@@ -14,15 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Service
 public class LogServiceImpl implements ILogService {
-	@Autowired
+	@Resource
 	private LogMoneyMapper         logMoneyMapper;
-	@Autowired
+	@Resource
 	private MemberActionLogsMapper actionLogsMapper;
 
 	@Override
@@ -52,7 +53,7 @@ public class LogServiceImpl implements ILogService {
 		log.setDes( enumTrans.getDes() );
 		log.setMark( mark );
 		log.setMarkorder( markorder );
-		logMoneyMapper.insertLogMoney( log );
+		logMoneyMapper.insertLogMoney( log ,log.getUserId().substring(log.getUserId().length()-1));
 	}
 
 	//备注行为enumTrans 现在金额totalNow   变动金额change  游戏agent  订单备注 name    变动订单号orderId
@@ -84,7 +85,7 @@ public class LogServiceImpl implements ILogService {
 		log.setDes( enumTrans.getDes() );
 		log.setMark( name );
 		log.setMarkorder( orderId );
-		logMoneyMapper.insertLogMoney( log );
+		logMoneyMapper.insertLogMoney( log ,log.getUserId().substring(log.getUserId().length()-1));
 	}
 
 	@Override
@@ -107,7 +108,7 @@ public class LogServiceImpl implements ILogService {
 		log.setTotalBefore( old );
 		log.setMark( mark );
 		log.setMarkorder( markorder );
-		logMoneyMapper.insertLogMoney( log );
+		logMoneyMapper.insertLogMoney( log ,log.getUserId().substring(log.getUserId().length()-1));
 	}
 
 	@Override
