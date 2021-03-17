@@ -33,12 +33,12 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
     public List<LogMoney> selectLogMoneyList(LogMoney logMoney) {
         LogMoney logMoney1 = getTime(logMoney);
         String tableLast;
-        if (StringUtils.isNotBlank(logMoney.getSearchValue()) && logMoney.getSearchValue().startsWith("77")) {
-            tableLast = logMoney.getSearchValue().substring(logMoney.getSearchValue().length() - 1);
+        if (StringUtils.isNotBlank(logMoney1.getSearchValue()) && logMoney1.getSearchValue().startsWith("77")) {
+            tableLast = logMoney1.getSearchValue().substring(logMoney1.getSearchValue().length() - 1);
         } else {
             tableLast = "_view";
         }
-        logMoney.setTableLast(tableLast);
+        logMoney1.setTableLast(tableLast);
         return logMoneyMapper.selectLogMoneyList(logMoney1);
     }
 
