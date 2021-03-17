@@ -128,7 +128,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public RspBase addMemberMoneyOnly(String ip, String userId, BigDecimal money, BigDecimal beatNum, String Mk,
                                       String markorder, String admin_name) {
         RspBase rspBase = new RspBase();

@@ -33,7 +33,7 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
     public List<LogMoney> selectLogMoneyList(LogMoney logMoney) {
         LogMoney logMoney1 = getTime(logMoney);
         String tableLast;
-        if (StringUtils.isNotBlank(logMoney.getSearchValue()) && logMoney.getSearchValue().startsWith("7700")) {
+        if (StringUtils.isNotBlank(logMoney.getSearchValue()) && logMoney.getSearchValue().startsWith("77")) {
             tableLast = logMoney.getSearchValue().substring(logMoney.getSearchValue().length() - 1);
         } else {
             tableLast = "_view";
