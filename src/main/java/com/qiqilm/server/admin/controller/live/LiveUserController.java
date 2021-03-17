@@ -86,6 +86,7 @@ public class LiveUserController extends BaseController {
 		newLiveUser.setIsAuthentication( liveUser.getIsAuthentication() );
 		newLiveUser.setVExplain( liveUser.getVExplain() );
 		newLiveUser.setInvestorSendInfo( liveUser.getInvestorSendInfo() );
+		newLiveUser.setOpenPay( liveUser.getOpenPay() );
 		return toAjax( liveUserService.updateLiveUser( newLiveUser ) );
 	}
 

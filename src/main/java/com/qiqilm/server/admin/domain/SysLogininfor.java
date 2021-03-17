@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
-import com.qiqilm.server.admin.annotation.Excel.ColumnType;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 
@@ -18,7 +17,7 @@ public class SysLogininfor extends BaseEntity {
 	/**
 	 * ID
 	 */
-	@Excel( name = "序号", cellType = ColumnType.NUMERIC )
+	@Excel( name = "序号" )
 	private Long infoId;
 
 	/**
@@ -30,7 +29,7 @@ public class SysLogininfor extends BaseEntity {
 	/**
 	 * 登录状态 0成功 1失败
 	 */
-	@Excel( name = "登录状态", readConverterExp = "0=成功,1=失败" )
+	@Excel( name = "登录状态" )
 	private String status;
 
 	/**
@@ -67,7 +66,7 @@ public class SysLogininfor extends BaseEntity {
 	 * 访问时间
 	 */
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
-	@Excel( name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss" )
+	@Excel( name = "访问时间", width = 30, databaseFormat = "yyyy-MM-dd HH:mm:ss" )
 	private Date loginTime;
 
 	public Long getInfoId() {

@@ -2,16 +2,17 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.domain.SysLogininfor;
-import com.qiqilm.server.admin.service.ISysLogininforService;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.SysLogininfor;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.ISysLogininforService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -36,10 +37,9 @@ public class SysLogininforController extends BaseController {
 	@Log( title = "登录日志", businessType = BusinessType.EXPORT )
 	@PreAuthorize( "@ss.hasPermi('monitor:logininfor:export')" )
 	@GetMapping( "/export" )
-	public AjaxResult export( SysLogininfor logininfor ) {
-		List<SysLogininfor>      list = logininforService.selectLogininforList( logininfor );
-		ExcelUtil<SysLogininfor> util = new ExcelUtil<SysLogininfor>( SysLogininfor.class );
-		return util.exportExcel( list, "登录日志" );
+	public void export( SysLogininfor logininfor, HttpServletResponse response ) {
+		List<SysLogininfor> list = logininforService.selectLogininforList( logininfor );
+		ExportExcelUtil.exportExcel( list, "登录日志", "登录日志表", SysLogininfor.class, response );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('monitor:logininfor:remove')" )
