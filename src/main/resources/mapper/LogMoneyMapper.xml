@@ -34,7 +34,7 @@
 		from ${dbMain}.log_money
 	</sql>
 
-	<select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
+	<select id="selectLogMoneySingleList" parameterType="LogMoney" resultMap="LogMoneyResult">
 		select id,
 		user_id,
 		user_name,
@@ -47,31 +47,63 @@
 		total_before,
 		mark,
 		markorder
-		from ${dbMain}.log_money${tableLast}
+		from ${dbMain}.log_money${tableLast} a
 		<where>
-<!--			<if test="userId != null  and userId != ''">-->
-<!--				and user_id = #{userId}-->
-<!--			</if>-->
-<!--			<if test="userName != null  and userName != ''">-->
-<!--				and user_name = #{userName}-->
-<!--			</if>-->
 			<if test="searchValue != null  and searchValue != ''">
-			and (user_name = #{searchValue} or user_id = #{searchValue})
+				and user_id = #{searchValue}
 			</if>
-			<if test="types != null and types.length != 0">
-				and type in
-				<foreach item="id" collection="types" open="(" separator="," close=")">
-					#{id}
-				</foreach>
-			</if>
-			<if test="startTime != null">
-				and create_time &gt;=  #{startTime} and create_time &lt;=  #{endTime}
-			</if>
-			<if test="mark != null  and mark != ''">
-				and mark like concat('%', #{mark}, '%')
-			</if>
+			<include refid="whereSelect" />
 		</where>
 	</select>
+
+	<select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
+		select * from (
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money0
+			<where><include refid="whereSelect" /></where>
+			UNION ALL
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money1
+			<where><include refid="whereSelect" /></where>
+			UNION ALL
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money2
+			<where><include refid="whereSelect" /></where>
+			UNION ALL
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money3
+			<where><include refid="whereSelect" /></where>
+			UNION ALL
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money4
+			<where><include refid="whereSelect" /></where>
+			UNION ALL
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money5
+			<where><include refid="whereSelect" /></where>
+			UNION ALL
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money6
+			<where><include refid="whereSelect" /></where>
+			UNION ALL
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money7
+			<where><include refid="whereSelect" /></where>
+			UNION ALL
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money8
+			<where><include refid="whereSelect" /></where>
+			UNION ALL
+			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money9
+			<where><include refid="whereSelect" /></where>
+		) a
+	</select>
+
+	<sql id="whereSelect">
+		<if test="types != null and types.length != 0">
+			and type in
+			<foreach item="id" collection="types" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="startTime != null">
+			and create_time &gt;=  #{startTime} and create_time &lt;=  #{endTime}
+		</if>
+		<if test="mark != null  and mark != ''">
+			and mark like concat('%', #{mark}, '%')
+		</if>
+	</sql>
 
 	<insert id="insertLogMoney" parameterType="LogMoney">
 		insert into log_money${dbNodes} (

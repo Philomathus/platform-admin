@@ -23,6 +23,8 @@ public interface LogMoneyMapper {
 	 */
 	public List<LogMoney> selectLogMoneyList( LogMoney logMoney );
 
+	public List<LogMoney> selectLogMoneySingleList( LogMoney logMoney );
+
 	/**
 	 * 新增会员资金信息
 	 *
@@ -32,7 +34,9 @@ public interface LogMoneyMapper {
 	public int insertLogMoney( @Param("req") LogMoney reqLogMoney, @Param( "dbNodes" ) String dbNodes);
 
 	List<LogMoney> findMark( @Param( "userId" ) String userId, @Param( "mark" ) String mark,
-							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay );
+							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay,
+							 @Param( "dbNodes" ) String dbNodes );
 
     Map totalCount(LogMoney logMoney);
+
 }

@@ -3,8 +3,6 @@ package com.qiqilm.server.admin.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
-import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -87,28 +85,14 @@ public class LogMoney extends BaseEntity {
 
 	@JsonIgnore
 	private String[] types;
+	@JsonIgnore
 	private String[] selectDate;
 	@JsonIgnore
 	private String   startTime;
 	@JsonIgnore
 	private String   endTime;
-
 	@JsonIgnore
-	private String tableLast;
-
-	public String getStartTime() {
-		if ( StringUtils.isNotNull( this.getCreateTime() ) ) {
-			return DateFormatUtils.formate( getCreateTime() );
-		}
-		return startTime;
-	}
-
-	public String getEndTime() {
-		if ( StringUtils.isNotNull( this.getCreateTime() ) ) {
-			return DateFormatUtils.formate( getCreateTime(), DateFormatUtils.SPLIT_PATTERN_DATE ) + " 23:59:59";
-		}
-		return endTime;
-	}
+	private String   tableLast;
 
 	@Override
 	public String toString() {
