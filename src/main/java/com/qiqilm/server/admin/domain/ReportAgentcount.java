@@ -62,7 +62,10 @@ public class ReportAgentcount extends BaseEntity {
     /** 总入款（当日总） */
     @Excel(name = "总入款")
     private String totalRukuanjine;
-
+    @Excel(name = "总入款人数（当日总）")
+    private String totalRukuanrenshu;
+    @Excel(name = "总入款笔数（当日总）")
+    private String totalRukuanbishu;
     /** 总出款（当日总） */
     @Excel(name = "总出款")
     private String totalChukuanjine;

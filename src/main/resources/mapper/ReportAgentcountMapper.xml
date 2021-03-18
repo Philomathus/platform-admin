@@ -22,10 +22,13 @@
         <result property="totalActiveandroid"    column="total_activeandroid"    />
         <result property="totalActiveios"    column="total_activeios"    />
         <result property="totalGiveprop"    column="total_giveprop"    />
+        <result property="totalRukuanrenshu" jdbcType="VARCHAR" column="total_rukuanrenshu" />
+        <result property="totalRukuanbishu" jdbcType="VARCHAR" column="total_rukuanbishu" />
     </resultMap>
 
     <sql id="selectReportAgentcountVo">
-        select rep_id, agentcode, agentname, agenttime, newmember, totalmember, gs_rukuanjine, xs_rukuanjine, sg_rukuanjine, totalfrist_rukuanjine, chukuanjine, total_rukuanjine, total_chukuanjine, total_enterlivetimes, total_activeandroid, total_activeios, total_giveprop from ${dbMain}.report_agentcount
+        select rep_id, agentcode, agentname, agenttime, newmember, totalmember, gs_rukuanjine, xs_rukuanjine, sg_rukuanjine, totalfrist_rukuanjine, chukuanjine, total_rukuanjine, total_chukuanjine, total_enterlivetimes,
+        total_activeandroid, total_activeios, total_giveprop,total_rukuanrenshu ,total_rukuanbishu  from ${dbMain}.report_agentcount
     </sql>
 
     <select id="selectReportAgentcountList" parameterType="ReportAgentcount" resultMap="ReportAgentcountResult">
