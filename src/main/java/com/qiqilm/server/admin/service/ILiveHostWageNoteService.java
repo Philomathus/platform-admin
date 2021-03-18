@@ -1,65 +1,35 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.domain.LiveHostWageNote;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteFamily;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteList;
 
 import java.util.List;
 
 /**
- * 【请填写功能名称】Service接口
+ * 主播时长Service接口
  *
  * @author 77tv
  * @date 2021-01-27
  */
 public interface ILiveHostWageNoteService {
 	/**
-	 * 查询【请填写功能名称】
+	 * 查询主播时长
 	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 【请填写功能名称】
+	 * @param id 主播时长ID
+	 * @return 主播时长
 	 */
 	public LiveHostWageNote selectLiveHostWageNoteById(Long id);
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询主播时长列表
 	 *
-	 * @param liveHostWageNote 【请填写功能名称】
-	 * @return 【请填写功能名称】集合
+	 * @param liveHostWageNote 主播时长
+	 * @return 主播时长集合
 	 */
 	public List<LiveHostWageNote> selectLiveHostWageNoteList(LiveHostWageNote liveHostWageNote);
 
-	/**
-	 * 新增【请填写功能名称】
-	 *
-	 * @param liveHostWageNote 【请填写功能名称】
-	 * @return 结果
-	 */
-	public int insertLiveHostWageNote(LiveHostWageNote liveHostWageNote);
+    public List<RspLiveHostWageNoteFamily> familyPage( LiveHostWageNote dto);
 
-	/**
-	 * 修改【请填写功能名称】
-	 *
-	 * @param liveHostWageNote 【请填写功能名称】
-	 * @return 结果
-	 */
-	public int updateLiveHostWageNote(LiveHostWageNote liveHostWageNote);
-
-	/**
-	 * 批量删除【请填写功能名称】
-	 *
-	 * @param ids 需要删除的【请填写功能名称】ID
-	 * @return 结果
-	 */
-	public int deleteLiveHostWageNoteByIds(Long[] ids );
-
-	/**
-	 * 删除【请填写功能名称】信息
-	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 结果
-	 */
-	public int deleteLiveHostWageNoteById(Long id);
-
-    public List<LiveHostWageNote> familyPage(LiveHostWageNote dto);
-
-    public List<LiveHostWageNote> getPage(LiveHostWageNote dto);
+    public List<RspLiveHostWageNoteList> hostPage( LiveHostWageNote dto);
 }

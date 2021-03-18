@@ -13,23 +13,10 @@
         <result property="liveTimeSec" column="live_time_sec"/>
         <result property="ticket" column="ticket"/>
         <result property="beforeTotalTicket" column="before_total_ticket"/>
-        <result property="createTime" column="create_time"/>
+        <result property="createTimes" column="create_time"/>
         <result property="remark" column="remark"/>
         <result property="cpCost" column="cp_cost"/>
         <result property="cpPrize" column="cp_prize"/>
-
-        <result column="allCpCost" property="allCpCost"/>
-        <result column="allPrize" property="allPrize"/>
-        <result column="alltime" property="alltime"/>
-        <result column="shijian" property="shijian"/>
-        <result column="alltime" property="alltimeDes"/>
-        <result column="allticket" property="allticket"/>
-        <result column="timedata" property="timedata"/>
-        <result column="familyName" property="familyName"/>
-        <result column="familyNickName" property="familyNickName"/>
-        <result column="ticket" property="nickName"/>
-        <result column="allticket" property="allticketRes"/>
-
     </resultMap>
 
     <sql id="selectLiveHostWageNoteVo">
@@ -67,7 +54,6 @@
             <if test="ticket != null">ticket,</if>
             <if test="beforeTotalTicket != null">before_total_ticket,</if>
             <if test="createTimes != null and createTimes != ''">create_time,</if>
-            <if test="remark != null">remark,</if>
             <if test="cpCost != null">cp_cost,</if>
             <if test="cpPrize != null">cp_prize,</if>
         </trim>
@@ -80,7 +66,6 @@
             <if test="ticket != null">#{ticket},</if>
             <if test="beforeTotalTicket != null">#{beforeTotalTicket},</if>
             <if test="createTimes != null and createTimes != ''">#{createTimes},</if>
-            <if test="remark != null">#{remark},</if>
             <if test="cpCost != null">#{cpCost},</if>
             <if test="cpPrize != null">#{cpPrize},</if>
         </trim>
@@ -115,44 +100,62 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteLiveHostWageNoteById" parameterType="Long">
-        delete from ${dbLive}.live_host_wage_note where id = #{id}
-    </delete>
-
-    <delete id="deleteLiveHostWageNoteByIds" parameterType="String">
-        delete from ${dbLive}.live_host_wage_note where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
-
     <select id="beforeNote" resultMap="LiveHostWageNoteResult">
         select * from ${dbLive}.live_host_wage_note  l where l.host_id=#{userId}  ORDER BY create_time desc LIMIT 1
     </select>
-    <select id="familyPage" resultMap="LiveHostWageNoteResult">
-        SELECT lhwn.family_id,SUM(lhwn.live_time_sec) as alltime,sum(lhwn.ticket) as allticket,sum(lhwn.cp_cost) as
-        allCpCost,sum(lhwn.cp_prize) as allPrize,SUBSTR(lhwn.create_time,1,10) as shijian, #{countTime} timedata,
-        lf.nick_name as familyNickName,lf.name as familyName
-        FROM ${dbLive}.live_host_wage_note lhwn
-        left join ${dbLive}.live_family lf on lhwn.family_id=lf.id
+
+	<select id="familyPage" resultType="RspLiveHostWageNoteFamily">
+        select
+        o.family_id familyId,
+        f.name familyName,
+        f.user_id familyUserId,
+        f.nick_name familyNickName,
+        SUM(o.live_time_sec) as alltime,
+        sum(o.ticket) as allticket,
+        sum(o.cp_cost) as allCpCost,
+        sum(o.cp_prize) as allPrize,
+        SUBSTR(o.create_time,1,10) as shijian,
+        #{countTime} timedata
+        from ${dbLive}.live_host_wage_note o
+        left join ${dbLive}.live_family f on o.family_id=f.id
         <where>
-<!--            <if test="dto.settlementRate!=null"></if>-->
-            <if test="dto.familyId!=null">and lhwn.family_id = #{dto.familyId}</if>
-<!--            <if test="dto.familyName!=null">and lf.name like concat('%',#{dto.familyName},'%')</if>-->
-            <if test="dto.familyNickName!=null">and lf.nick_name like concat('%',#{dto.familyNickName},'%')</if>
-            <if test="dto.startTime!=null">and lhwn.start_time >= #{dto.startTime}</if>
-            <if test="dto.endTime!=null">and lhwn.start_time &lt;= #{dto.endTime}</if>
+            <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
+            <if test="dto.familyName!=null and dto.familyName!=''">and f.name like concat('%',#{dto.familyName},'%')</if>
+            <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>
+            <if test="dto.startTime!=null">and o.start_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and o.start_time &lt;= #{dto.endTime}</if>
         </where>
-        group by lhwn.family_id
+        group by o.family_id order by o.family_id asc
     </select>
-    <select id="selectFamilyName" resultType="java.util.Map">
+
+	<select id="selectFamilyName" resultType="java.util.Map">
         select id,nick_name,name from ${dbLive}.live_family
     </select>
-    <select id="selectListMt" resultType="com.qiqilm.server.admin.domain.LiveHostWageNote">
-        select m.nick_name,o.family_id as familyId, host_id,SUM(o.live_time_sec) as alltime,sum(o.ticket) as allticket,sum(o.cp_cost) as allCpCost,sum(o.cp_prize) as allPrize,SUBSTR(o.create_time,1,10) as shijian
-        from ${dbLive}.live_host_wage_note o left join
-        ${dbLive}.live_user m on o.host_id=m.id
-        where o.family_id=#{dto.familyId}
-        group by o.host_id
+
+	<select id="hostPage" resultType="RspLiveHostWageNoteList">
+        select
+        o.family_id familyId,
+        f.name familyName,
+        f.user_id familyUserId,
+        f.nick_name familyNickName,
+        o.host_id hostId,
+        u.nick_name nickName,
+        SUM(o.live_time_sec) as alltime,
+        sum(o.ticket) as allticket,
+        sum(o.cp_cost) as allCpCost,
+        sum(o.cp_prize) as allPrize,
+        SUBSTR(o.create_time,1,10) as shijian,
+        #{countTime} timedata
+        from ${dbLive}.live_host_wage_note o
+        left join ${dbLive}.live_family f on o.family_id=f.id
+        left join ${dbLive}.live_user u on o.host_id=u.id
+        <where>
+            <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
+            <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
+            <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
+            <if test="dto.startTime!=null">and o.start_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and o.start_time &lt;= #{dto.endTime}</if>
+        </where>
+        group by o.host_id order by o.create_time desc
     </select>
 </mapper>

@@ -20,7 +20,7 @@
     </resultMap>
 
     <sql id="selectConfigVipVo">
-        select id, level_flag, dm_money, jjcj, zfl, yfl, tdjs, zskf,  FROM_UNIXTIME(create_time) create_time ,  op_name,  FROM_UNIXTIME(update_time) update_time ,  level_money from ${dbMain}.config_vip
+        select id, level_flag, dm_money, jjcj, zfl, yfl, tdjs, zskf,create_time ,  op_name, update_time ,  level_money from ${dbMain}.config_vip
     </sql>
 
     <select id="selectConfigVipList" parameterType="ConfigVip" resultMap="ConfigVipResult">
@@ -42,7 +42,10 @@
         <include refid="selectConfigVipVo"/>
         where id = #{id}
     </select>
-
+    <select id="selectConfigVip" parameterType="Integer" resultMap="ConfigVipResult">
+        <include refid="selectConfigVipVo"/>
+        where level_flag = #{levelFlag}
+    </select>
     <insert id="insertConfigVip" parameterType="ConfigVip">
         insert into ${dbMain}.config_vip
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -68,9 +71,9 @@
             <if test="yfl != null">#{yfl},</if>
             <if test="tdjs != null">#{tdjs},</if>
             <if test="zskf != null">#{zskf},</if>
-            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="createTime != null">#{createTime},</if>
             <if test="opName != null">#{opName},</if>
-            <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="updateTime != null">#{updateTime},</if>
             <if test="levelMoney != null">#{levelMoney},</if>
         </trim>
     </insert>
@@ -92,11 +95,11 @@
 
             <if test="zskf != null">zskf = #{zskf},</if>
 
-            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
 
             <if test="opName != null">op_name = #{opName},</if>
 
-            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
 
             <if test="levelMoney != null">level_money = #{levelMoney},</if>
 

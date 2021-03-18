@@ -128,7 +128,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public RspBase addMemberMoneyOnly(String ip, String userId, BigDecimal money, BigDecimal beatNum, String Mk,
                                       String markorder, String admin_name) {
         RspBase rspBase = new RspBase();
@@ -154,10 +154,10 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         if (!"0".equals(markorder)) {
             List<LogMoney> markList = null;
             if (money.compareTo(BigDecimal.ZERO) > 0) {
-                markList = logMoneyMapper.findMark(userId, markorder, money, null);
+                markList = logMoneyMapper.findMark(userId, markorder, money, null, userId.substring(userId.length()-1));
             } else {
                 BigDecimal negate = money.negate();
-                markList = logMoneyMapper.findMark(userId, markorder, null, negate);
+                markList = logMoneyMapper.findMark(userId, markorder, null, negate, userId.substring(userId.length()-1));
             }
             if (markList.size() > 0) {
                 rspBase.setMsg("请查看此笔金额是否已经入款过，如否请输入其他订单备注");

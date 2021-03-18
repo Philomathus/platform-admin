@@ -3,18 +3,19 @@ package com.qiqilm.server.admin.controller;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.constant.UserConstants;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.domain.SysDictType;
-import com.qiqilm.server.admin.service.ISysDictTypeService;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.utils.SecurityUtils;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.SysDictType;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.ISysDictTypeService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -39,10 +40,9 @@ public class SysDictTypeController extends BaseController {
 	@Log( title = "字典类型", businessType = BusinessType.EXPORT )
 	@PreAuthorize( "@ss.hasPermi('system:dict:export')" )
 	@GetMapping( "/export" )
-	public AjaxResult export( SysDictType dictType ) {
-		List<SysDictType>      list = dictTypeService.selectDictTypeList( dictType );
-		ExcelUtil<SysDictType> util = new ExcelUtil<>( SysDictType.class );
-		return util.exportExcel( list, "字典类型" );
+	public void export( SysDictType dictType, HttpServletResponse response ) {
+		List<SysDictType> list = dictTypeService.selectDictTypeList( dictType );
+		ExportExcelUtil.exportExcel( list, "字典信息", "字典信息表", SysDictType.class, response );
 	}
 
 	/**

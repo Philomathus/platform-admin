@@ -1,8 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
-import com.qiqilm.server.admin.annotation.Excel.ColumnType;
-import com.qiqilm.server.admin.annotation.Excel.Type;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -23,7 +21,7 @@ public class SysUser extends BaseEntity {
 	/**
 	 * 用户ID
 	 */
-	@Excel( name = "用户序号", cellType = ColumnType.NUMERIC, prompt = "用户编号" )
+	@Excel( name = "用户序号" )
 	private Long userId;
 
 	/**
@@ -41,7 +39,7 @@ public class SysUser extends BaseEntity {
 	/**
 	 * 用户性别
 	 */
-	@Excel( name = "用户性别", readConverterExp = "0=男,1=女,2=未知" )
+	@Excel( name = "用户性别" )
 	private String sex;
 
 	/**
@@ -62,7 +60,7 @@ public class SysUser extends BaseEntity {
 	/**
 	 * 帐号状态（0正常 1停用）
 	 */
-	@Excel( name = "帐号状态", readConverterExp = "0=正常,1=停用" )
+	@Excel( name = "帐号状态" )
 	private String status;
 
 	/**
@@ -73,13 +71,13 @@ public class SysUser extends BaseEntity {
 	/**
 	 * 最后登录IP
 	 */
-	@Excel( name = "最后登录IP", type = Type.EXPORT )
+	@Excel( name = "最后登录IP" )
 	private String loginIp;
 
 	/**
 	 * 最后登录时间
 	 */
-	@Excel( name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Type.EXPORT )
+	@Excel( name = "最后登录时间", width = 30, databaseFormat = "yyyy-MM-dd HH:mm:ss" )
 	private Date loginDate;
 
 	private String googleAuthSecret;

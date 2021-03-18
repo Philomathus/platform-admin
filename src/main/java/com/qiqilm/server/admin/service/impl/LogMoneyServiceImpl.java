@@ -8,9 +8,7 @@ import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 会员资金信息Service业务层处理
@@ -20,40 +18,37 @@ import java.util.Map;
  */
 @Service
 public class LogMoneyServiceImpl implements ILogMoneyService {
-    @Autowired
-    private LogMoneyMapper logMoneyMapper;
+	@Autowired
+	private LogMoneyMapper logMoneyMapper;
 
-    /**
-     * 查询 会员资金信息列表
-     *
-     * @param logMoney 会员资金信息
-     * @return 会员资金信息
-     */
-    @Override
-    public List<LogMoney> selectLogMoneyList(LogMoney logMoney) {
-        LogMoney logMoney1 = getTime(logMoney);
-        String tableLast;
-        if (StringUtils.isNotBlank(logMoney.getSearchValue()) && logMoney.getSearchValue().startsWith("7700")) {
-            tableLast = logMoney.getSearchValue().substring(logMoney.getSearchValue().length() - 1);
-        } else {
-            tableLast = "_view";
-        }
-        logMoney.setTableLast(tableLast);
-        return logMoneyMapper.selectLogMoneyList(logMoney1);
-    }
+	/**
+	 * 查询 会员资金信息列表
+	 *
+	 * @param logMoney 会员资金信息
+	 * @return 会员资金信息
+	 */
+	@Override
+	public List<LogMoney> selectLogMoneyList( LogMoney logMoney ) {
+		this.getTime( logMoney );
+		if ( StringUtils.isNotBlank( logMoney.getSearchValue() ) && logMoney.getSearchValue().startsWith( "77" ) ) {
+            String tableLast = logMoney.getSearchValue().substring( logMoney.getSearchValue().length() - 1 );
+            logMoney.setTableLast( tableLast );
+            return logMoneyMapper.selectLogMoneySingleList( logMoney );
+		}
+		return logMoneyMapper.selectLogMoneyList( logMoney );
+	}
 
-    @Override
-    public AjaxResult totalCount(LogMoney logMoney) {
-        LogMoney logMoney1 = getTime(logMoney);
-        return AjaxResult.success(logMoneyMapper.totalCount(logMoney1));
-    }
+	@Override
+	public AjaxResult totalCount( LogMoney logMoney ) {
+		this.getTime( logMoney );
+		return AjaxResult.success( logMoneyMapper.totalCount( logMoney ) );
+	}
 
 
-    private LogMoney getTime(LogMoney logMoney) {
-        if (logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0) {
-            logMoney.setStartTime(logMoney.getSelectDate()[0]);
-            logMoney.setEndTime(logMoney.getSelectDate()[1]);
-        }
-        return logMoney;
-    }
+	private void getTime( LogMoney logMoney ) {
+		if ( logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0 ) {
+			logMoney.setStartTime( logMoney.getSelectDate()[ 0 ] );
+			logMoney.setEndTime( logMoney.getSelectDate()[ 1 ] );
+		}
+	}
 }

@@ -19,4 +19,5 @@ public interface LotteryBet0Mapper {
 	 */
 	public List<LotteryBet0> selectLotteryBet0List(LotteryBet0 lotteryBet0);
 
+	public List<LotteryBet0> selectLotteryBet0SingleList( LotteryBet0 lotteryBet0 );
 }

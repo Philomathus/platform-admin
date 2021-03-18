@@ -3,24 +3,25 @@ package com.qiqilm.server.admin.controller;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.constant.UserConstants;
 import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.SysRole;
+import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ISysRoleService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.SysPermissionService;
 import com.qiqilm.server.admin.service.impl.TokenService;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.SecurityUtils;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -51,10 +52,9 @@ public class SysRoleController extends BaseController {
 	@Log( title = "角色管理", businessType = BusinessType.EXPORT )
 	@PreAuthorize( "@ss.hasPermi('system:role:export')" )
 	@GetMapping( "/export" )
-	public AjaxResult export( SysRole role ) {
-		List<SysRole>      list = roleService.selectRoleList( role );
-		ExcelUtil<SysRole> util = new ExcelUtil<SysRole>( SysRole.class );
-		return util.exportExcel( list, "角色数据" );
+	public void export( SysRole role, HttpServletResponse response ) {
+		List<SysRole> list = roleService.selectRoleList( role );
+		ExportExcelUtil.exportExcel( list, "角色信息", "角色信息表", SysRole.class, response );
 	}
 
 	/**

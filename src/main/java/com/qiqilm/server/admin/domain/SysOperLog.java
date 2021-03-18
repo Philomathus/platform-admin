@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
-import com.qiqilm.server.admin.annotation.Excel.ColumnType;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 
@@ -18,7 +17,7 @@ public class SysOperLog extends BaseEntity {
 	/**
 	 * 日志主键
 	 */
-	@Excel( name = "操作序号", cellType = ColumnType.NUMERIC )
+	@Excel( name = "操作序号" )
 	private Long operId;
 
 	/**
@@ -30,7 +29,7 @@ public class SysOperLog extends BaseEntity {
 	/**
 	 * 业务类型（0其它 1新增 2修改 3删除）
 	 */
-	@Excel( name = "业务类型", readConverterExp = "0=其它,1=新增,2=修改,3=删除,4=授权,5=导出,6=导入,7=强退,8=生成代码,9=清空数据" )
+	@Excel( name = "业务类型" )
 	private Integer businessType;
 
 	/**
@@ -53,7 +52,7 @@ public class SysOperLog extends BaseEntity {
 	/**
 	 * 操作类别（0其它 1后台用户 2手机端用户）
 	 */
-	@Excel( name = "操作类别", readConverterExp = "0=其它,1=后台用户,2=手机端用户" )
+	@Excel( name = "操作类别" )
 	private Integer operatorType;
 
 	/**
@@ -101,7 +100,7 @@ public class SysOperLog extends BaseEntity {
 	/**
 	 * 操作状态（0正常 1异常）
 	 */
-	@Excel( name = "状态", readConverterExp = "0=正常,1=异常" )
+	@Excel( name = "状态" )
 	private Integer status;
 
 	/**
@@ -114,7 +113,7 @@ public class SysOperLog extends BaseEntity {
 	 * 操作时间
 	 */
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
-	@Excel( name = "操作时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss" )
+	@Excel( name = "操作时间", width = 30, databaseFormat = "yyyy-MM-dd HH:mm:ss" )
 	private Date operTime;
 
 	public Long getOperId() {
