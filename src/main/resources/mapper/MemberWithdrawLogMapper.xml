@@ -57,6 +57,9 @@
             <if test="status != null and status != '' and status != -1">
                 and `status` = #{status}
             </if>
+            <if test="status==0">
+                and status = #{status}
+            </if>
             <if test="searchValue != null and searchValue != ''">
                 and (order_no = #{searchValue} or member_id = #{searchValue} or account = #{searchValue}
                 or bank_user_name = #{searchValue})

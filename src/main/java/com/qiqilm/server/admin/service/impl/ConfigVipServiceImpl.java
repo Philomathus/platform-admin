@@ -1,9 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.mapper.ConfigVipMapper;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.domain.ConfigVip;
@@ -19,7 +24,8 @@ import com.qiqilm.server.admin.service.IConfigVipService;
 public class ConfigVipServiceImpl implements IConfigVipService {
     @Autowired
     private ConfigVipMapper configVipMapper;
-
+    @Autowired
+    private TokenService tokenService;
     /**
      * 查询【请填写功能名称】
      *
@@ -49,9 +55,20 @@ public class ConfigVipServiceImpl implements IConfigVipService {
      * @return 结果
      */
     @Override
-    public int insertConfigVip(ConfigVip configVip) {
+    public AjaxResult insertConfigVip(ConfigVip configVip) {
+        int levelFlag = configVip.getLevelFlag();
+        ConfigVip configVip1=configVipMapper.selectConfigVip(levelFlag);
+        if (Objects.nonNull(configVip1)){
+         return   AjaxResult.success("vip"+configVip.getLevelFlag()+"已被创建,请勿重复创建");
+        }
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String userName = loginUser.getUser().getUserName();
+		configVip.setId(UuidUtil.getRandomUuid());
+		configVip.setOpName(userName);
         configVip.setCreateTime(DateUtils.getNowDate());
-        return configVipMapper.insertConfigVip(configVip);
+        configVip.setUpdateTime(DateUtils.getNowDate());
+        configVipMapper.insertConfigVip(configVip);
+        return AjaxResult.success("新增成功");
     }
 
     /**
@@ -61,9 +78,13 @@ public class ConfigVipServiceImpl implements IConfigVipService {
      * @return 结果
      */
     @Override
-    public int updateConfigVip(ConfigVip configVip) {
+    public AjaxResult updateConfigVip(ConfigVip configVip) {
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String userName = loginUser.getUser().getUserName();
         configVip.setUpdateTime(DateUtils.getNowDate());
-        return configVipMapper.updateConfigVip(configVip);
+        configVip.setOpName(userName);
+        configVipMapper.updateConfigVip(configVip);
+        return AjaxResult.success("编辑成功");
     }
 
     /**

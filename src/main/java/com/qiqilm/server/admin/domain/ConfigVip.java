@@ -20,7 +20,7 @@ public class ConfigVip extends BaseEntity {
 
     /** vip等级 */
     @Excel(name = "vip等级")
-    private Long levelFlag;
+    private Integer levelFlag;
 
     /** 打码值 */
     @Excel(name = "打码值")
@@ -61,11 +61,11 @@ public class ConfigVip extends BaseEntity {
     public String getId() {
         return id;
     }
-    public void setLevelFlag(Long levelFlag) {
+    public void setLevelFlag(Integer levelFlag) {
         this.levelFlag = levelFlag;
     }
 
-    public Long getLevelFlag() {
+    public Integer getLevelFlag() {
         return levelFlag;
     }
     public void setDmMoney(BigDecimal dmMoney) {

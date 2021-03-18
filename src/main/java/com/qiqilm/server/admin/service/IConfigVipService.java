@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigVip;
 
 /**
@@ -33,7 +34,7 @@ public interface IConfigVipService {
 	 * @param configVip 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int insertConfigVip(ConfigVip configVip);
+	public AjaxResult insertConfigVip(ConfigVip configVip);
 
 	/**
 	 * 修改【请填写功能名称】
@@ -41,7 +42,7 @@ public interface IConfigVipService {
 	 * @param configVip 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int updateConfigVip(ConfigVip configVip);
+	public AjaxResult updateConfigVip(ConfigVip configVip);
 
 	/**
 	 * 批量删除【请填写功能名称】

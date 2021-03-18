@@ -61,4 +61,6 @@ public interface ConfigVipMapper {
 	public int deleteConfigVipByIds(String[] ids );
 
 	List<RspVipSet> findListForCache();
+
+	ConfigVip selectConfigVip(int levelFlag);
 }
