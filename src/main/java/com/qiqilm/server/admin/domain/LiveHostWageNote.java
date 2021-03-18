@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -48,6 +49,7 @@ public class LiveHostWageNote {
 	private String remark;
 
 	private BigDecimal settlementRate;
+	@JsonIgnore
 	private String[]   selectDate = new String[ 2 ];
 	private String     familyName;
 	private String     familyNickName;
