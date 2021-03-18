@@ -8,7 +8,7 @@ import com.qiqilm.server.admin.domain.SysDictData;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ISysDictDataService;
 import com.qiqilm.server.admin.service.ISysDictTypeService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.SecurityUtils;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +44,9 @@ public class SysDictDataController extends BaseController {
 	@Log( title = "字典数据", businessType = BusinessType.EXPORT )
 	@PreAuthorize( "@ss.hasPermi('system:dict:export')" )
 	@GetMapping( "/export" )
-	public AjaxResult export( SysDictData dictData ) {
-		List<SysDictData>      list = dictDataService.selectDictDataList( dictData );
-		ExcelUtil<SysDictData> util = new ExcelUtil<>( SysDictData.class );
-		return util.exportExcel( list, "字典数据" );
+	public void export( SysDictData dictData, HttpServletResponse response ) {
+		List<SysDictData> list = dictDataService.selectDictDataList( dictData );
+		ExportExcelUtil.exportExcel( list, "字典数据", "字典数据表", SysDictData.class, response );
 	}
 
 	/**

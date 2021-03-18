@@ -44,7 +44,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void processOrderPay( String merOrderNo, String orderNo, PayAgentPlatform payAgentPlatform, boolean isSuccess ) {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
 		PayAgentLog       payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( merOrderNo );
@@ -161,7 +161,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void processOrder( PayAgentPlatform payAgentPlatform, MemberWithdrawLog memberWithdrawLog,
 							  Date now, int status, int orderState ) {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectMemberWithdrawLogById( memberWithdrawLog.getId() );

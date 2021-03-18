@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LotteryBet0Mapper;
@@ -28,6 +29,13 @@ public class LotteryBet0ServiceImpl implements ILotteryBet0Service {
      */
     @Override
     public List<LotteryBet0> selectLotteryBet0List(LotteryBet0 lotteryBet0) {
+        String tableLast;
+        if( StringUtils.isNotBlank( lotteryBet0.getPuserId() ) ){
+            tableLast = lotteryBet0.getPuserId().substring( lotteryBet0.getPuserId().length() -1 );
+        }else{
+            tableLast = "_view";
+        }
+        lotteryBet0.setTableLast( tableLast );
         return lotteryBet0Mapper.selectLotteryBet0List(lotteryBet0);
     }
 

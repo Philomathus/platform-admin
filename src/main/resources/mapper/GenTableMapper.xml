@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectDbTableList" parameterType="GenTable" resultMap="GenTableResult">
 		select table_name, table_comment, create_time, update_time, table_schema from information_schema.tables
-		where table_schema in ('${dbMain}','${dbLottery}','${dbLive}')
+		where table_schema in ('${dbMain}','${dbLottery}','${dbLive}','db_data')
 		AND table_name NOT LIKE 'qrtz_%' AND table_name NOT LIKE 'gen_%'
 		AND table_name NOT IN (select table_name from sys_n_gen_table)
 		<if test="tableName != null and tableName != ''">
@@ -105,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectDbTableListByNames" resultMap="GenTableResult">
 		select table_name, table_comment, create_time, update_time, table_schema from information_schema.tables
-		where table_name NOT LIKE 'qrtz_%' and table_name NOT LIKE 'gen_%' and table_schema in ('${dbMain}','${dbLottery}','${dbLive}')
+		where table_name NOT LIKE 'qrtz_%' and table_name NOT LIKE 'gen_%' and table_schema in ('${dbMain}','${dbLottery}','${dbLive}','db_data')
 		and table_name in
 	    <foreach collection="array" item="name" open="(" separator="," close=")">
  			#{name}
@@ -114,7 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectTableByName" parameterType="String" resultMap="GenTableResult">
 		select table_name, table_comment, create_time, update_time, table_schema from information_schema.tables
-		where table_comment <![CDATA[ <> ]]> '' and table_schema in ('${dbMain}','${dbLottery}','${dbLive}')
+		where table_comment <![CDATA[ <> ]]> '' and table_schema in ('${dbMain}','${dbLottery}','${dbLive}','db_data')
 		and table_name = #{tableName}
 	</select>
 

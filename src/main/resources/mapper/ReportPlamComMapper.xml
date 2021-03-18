@@ -26,7 +26,6 @@
 			<if test="classTwoname != null  and classTwoname != ''"> and class_twoname like concat('%', #{classTwoname}, '%')</if>
 			<if test="reporttime != null  and reporttime != ''"> and reporttime = #{reporttime}</if>
 		</where>
-		order by rep_id desc
 	</select>
 	<select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">
 		{call prorep_plamcom(#{timedateta,mode=IN,jdbcType=VARCHAR},#{timedateta,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}

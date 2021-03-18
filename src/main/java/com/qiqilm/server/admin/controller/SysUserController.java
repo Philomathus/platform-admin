@@ -5,7 +5,6 @@ import com.qiqilm.server.admin.constant.UserConstants;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.SysRole;
 import com.qiqilm.server.admin.domain.SysUser;
 import com.qiqilm.server.admin.enums.BusinessType;
@@ -19,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,28 +53,21 @@ public class SysUserController extends BaseController {
 	@Log( title = "用户管理", businessType = BusinessType.EXPORT )
 	@PreAuthorize( "@ss.hasPermi('system:user:export')" )
 	@GetMapping( "/export" )
-	public AjaxResult export( SysUser user ) {
-		List<SysUser>      list = userService.selectUserList( user );
-		ExcelUtil<SysUser> util = new ExcelUtil<>( SysUser.class );
-		return util.exportExcel( list, "用户数据" );
+	public void export( SysUser user, HttpServletResponse response ) {
+		List<SysUser> list = userService.selectUserList( user );
+		ExportExcelUtil.exportExcel( list, "用户信息", "用户信息表", SysUser.class, response );
 	}
 
 	@Log( title = "用户管理", businessType = BusinessType.IMPORT )
 	@PreAuthorize( "@ss.hasPermi('system:user:import')" )
 	@PostMapping( "/importData" )
 	public AjaxResult importData( MultipartFile file, boolean updateSupport ) throws Exception {
-		ExcelUtil<SysUser> util      = new ExcelUtil<>( SysUser.class );
-		List<SysUser>      userList  = util.importExcel( file.getInputStream() );
-		LoginUser          loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String             operName  = loginUser.getUsername();
-		String             message   = userService.importUser( userList, updateSupport, operName );
-		return AjaxResult.success( message );
-	}
-
-	@GetMapping( "/importTemplate" )
-	public AjaxResult importTemplate() {
-		ExcelUtil<SysUser> util = new ExcelUtil<>( SysUser.class );
-		return util.importTemplateExcel( "用户数据" );
+		//		ExcelUtil<SysUser> util      = new ExcelUtil<>( SysUser.class );
+		//		List<SysUser>      userList  = util.importExcel( file.getInputStream() );
+		//		LoginUser          loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		//		String             operName  = loginUser.getUsername();
+		//		String             message   = userService.importUser( userList, updateSupport, operName );
+		return AjaxResult.success();
 	}
 
 	/**

@@ -32,12 +32,14 @@ public class MemberCacheManager {
 	@Resource
     private MemberInfoMapper memberInfoMapper;
 	@Autowired
-	private RedisUtil redisUtil;
-
-	@Autowired
 	private WheelUserMapper wheelUserMapper;
 	@Autowired
 	private LiveUserMountMapper liveUserMountMapper;
+
+	@Autowired
+	private RedisUtil redisUtil;
+	@Autowired
+	private SysConfigCacheUtil sysConfigCacheUtil;
 
 	public void init() {
 		initMemberCode();
@@ -55,15 +57,6 @@ public class MemberCacheManager {
 		if ( redisMaxCode < mysqlMaxCode ) {
 			entityIdCounter.set( mysqlMaxCode + 10 );
 		}
-	}
-
-
-	public void addWebSetVal( String key, String val ) {
-        redisUtil.strSet( Constants.CX_WEB_SET.concat( key ), val );
-	}
-
-	public String getWebSetVal( String key ) {
-		return redisUtil.strGet( Constants.CX_WEB_SET.concat( key ) );
 	}
 
 //	public void initWebSet() {
@@ -161,7 +154,7 @@ public class MemberCacheManager {
 	 */
 	public MemberInfo createMember() {
 		MemberInfo member = new MemberInfo();
-		member.setCxAgent( getWebSetVal( ConstantsWeb.agent_id ) );
+		member.setCxAgent( sysConfigCacheUtil.getConf( ConstantsWeb.agent_id ) );
 		member.setMemberCode( makeMemberCode() );
 		member.setHeadImg( String.valueOf( RandomUtils.nextInt( 1, 7 ) ) );
 		member.setId( member.getCxAgent().concat( "_" ).concat( member.getMemberCode() ) );

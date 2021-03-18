@@ -209,7 +209,7 @@ public class LiveVideo extends BaseEntity {
 	private String  liveStatus = "";
 	private String  lineName;
 	private Integer lineStatus;
-	private Integer openPay;
+	private String  openPay;
 
 	@JsonIgnore
 	private String[] types;

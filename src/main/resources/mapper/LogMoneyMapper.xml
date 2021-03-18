@@ -35,7 +35,19 @@
 	</sql>
 
 	<select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
-		<include refid="selectLogMoneyVo"/>
+		select id,
+		user_id,
+		user_name,
+		type,
+		des,
+		income,
+		pay,
+		total,
+		create_time,
+		total_before,
+		mark,
+		markorder
+		from ${dbMain}.log_money${tableLast}
 		<where>
 <!--			<if test="userId != null  and userId != ''">-->
 <!--				and user_id = #{userId}-->
@@ -62,83 +74,11 @@
 	</select>
 
 	<insert id="insertLogMoney" parameterType="LogMoney">
-		insert into log_money
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
-			<if test="userId != null">
-				user_id,
-			</if>
-			<if test="userName != null">
-				user_name,
-			</if>
-			<if test="type != null">
-				type,
-			</if>
-			<if test="des != null">
-				des,
-			</if>
-			<if test="income != null">
-				income,
-			</if>
-			<if test="pay != null">
-				pay,
-			</if>
-			<if test="total != null">
-				total,
-			</if>
-			<if test="createTime != null">
-				create_time,
-			</if>
-			<if test="totalBefore != null">
-				total_before,
-			</if>
-			<if test="mark != null">
-				mark,
-			</if>
-			<if test="markorder != null">
-				markorder,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id},
-			</if>
-			<if test="userId != null">
-				#{userId},
-			</if>
-			<if test="userName != null">
-				#{userName},
-			</if>
-			<if test="type != null">
-				#{type},
-			</if>
-			<if test="des != null">
-				#{des},
-			</if>
-			<if test="income != null">
-				#{income},
-			</if>
-			<if test="pay != null">
-				#{pay},
-			</if>
-			<if test="total != null">
-				#{total},
-			</if>
-			<if test="createTime != null">
-				#{createTime},
-			</if>
-			<if test="totalBefore != null">
-				#{totalBefore},
-			</if>
-			<if test="mark != null">
-				#{mark},
-			</if>
-			<if test="markorder != null">
-				#{markorder},
-			</if>
-		</trim>
+		insert into log_money${dbNodes} (
+		id,user_id,pay,income,user_name,type,des, total, create_time, total_before,markorder,mark) values
+		(
+        #{req.id},#{req.userId},#{req.pay},#{req.income},#{req.userName},#{req.type},#{req.des},#{req.total},#{req.createTime},#{req.totalBefore},#{req.markorder},#{req.mark}
+        )
 	</insert>
 
 	<select id="findMark" resultMap="LogMoneyResult">

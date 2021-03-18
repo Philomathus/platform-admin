@@ -32,7 +32,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "money", withdrawLog.getWithdrawMoney().toString() );
 		dataMap.put( "cardnumber", withdrawLog.getBankAccount() );
 		dataMap.put( "orderid", withdrawLog.getOrderNo() );
-		dataMap.put( "callbackurl", memberCacheManager.getWebSetVal( "payAgentNotifyUrl" ) + ConstantsPayAgent.TIAN_TIAN );
+		dataMap.put( "callbackurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.TIAN_TIAN );
 		dataMap.put( "ext", "ext" );
 		StringBuilder stringBuilder = new StringBuilder();
 		dataMap.forEach( ( k, v ) -> stringBuilder.append( v ) );

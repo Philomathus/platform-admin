@@ -1,11 +1,12 @@
 package com.qiqilm.server.admin.domain;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -25,7 +26,7 @@ public class MemberPayJour extends BaseEntity {
 	 */
 	private String id;
 
-	@Excel( name = "会员id", sort = 1 )
+	@Excel( name = "会员id", orderNum = "1" )
 	private String memberId;
 
 	/**
@@ -43,16 +44,16 @@ public class MemberPayJour extends BaseEntity {
 	 */
 	private String paymentMethod;
 
-	@Excel( name = "订单号", sort = 2 )
+	@Excel( name = "订单号", orderNum =  "2" )
 	private String orderNo;
 
-	@Excel( name = "上游订单号", sort = 3 )
+	@Excel( name = "上游订单号", orderNum =  "3" )
 	private String tradeSn;
 
-	@Excel( name = "请求金额", sort = 4 )
+	@Excel( name = "请求金额", orderNum =  "4" )
 	private BigDecimal money;
 
-	@Excel( name = "实际金额", sort = 5 )
+	@Excel( name = "实际金额", orderNum =  "5" )
 	private BigDecimal subMoney;
 
 	/**
@@ -65,10 +66,9 @@ public class MemberPayJour extends BaseEntity {
 	 */
 	private String paymentTime;
 
-	@Excel( name = "商户下单时间", sort = 6 )
+	@Excel( name = "商户下单时间", orderNum =  "6" )
 	private String payTime;
 
-	@Excel( name = "订单状态", dictType = "pay_jour_status", sort = 8 )
 	private String status;
 
 	/**
@@ -81,8 +81,6 @@ public class MemberPayJour extends BaseEntity {
 	 */
 	private BigDecimal platformRate;
 
-	@Excel( name = "通道成功率", defaultValue = "0", scale = 0, multiply = 100,
-			roundingMode = BigDecimal.ROUND_HALF_UP, suffix = "%", sort = 9 )
 	private BigDecimal currentSuccessRate;
 
 	/**
@@ -102,24 +100,28 @@ public class MemberPayJour extends BaseEntity {
 
 	private String createTimes;
 
-	@Excel( name = "回调时间", sort = 7 )
+	@Excel( name = "回调时间", orderNum =  "7" )
 	private String updateTimes;
 
-	@Excel( name = "备注", sort = 13 )
+	@Excel( name = "备注", orderNum =  "13" )
 	private String remark;
 
-	@Excel( name = "支付通道费率", defaultValue = "0", scale = 0, multiply = 100,
-			roundingMode = BigDecimal.ROUND_HALF_UP, suffix = "%", sort = 10 )
 	private BigDecimal payRate;
 
-	@Excel( name = "支付平台名称", sort = 11 )
+	@Excel( name = "支付平台名称", orderNum =  "11" )
 	private String platformName;
 
-	@Excel( name = "支付通道名称", sort = 12 )
+	@Excel( name = "支付通道名称", orderNum =  "12" )
 	private String channelName;
 
-	private String currentSuccessRateStr;
-	private String payRateStr;
+	@Excel( name = "通道成功率", orderNum = "9" )
+	private String     currentSuccessRateStr;
+
+	@Excel( name = "支付通道费率", orderNum = "10" )
+	private String     payRateStr;
+
+	@Excel( name = "订单状态", orderNum = "8" )
+	private String     statusDes;
 
 	@JsonIgnore
 	private String   searchOrderNo;
@@ -140,9 +142,27 @@ public class MemberPayJour extends BaseEntity {
 
 	public String getPayRateStr() {
 		if ( payRate != null ) {
-			return payRate.multiply( new BigDecimal( 100 ) ).setScale( 0, RoundingMode.HALF_UP ).toString().concat( "%" );
+			String payRateStr = payRate.multiply( new BigDecimal( 100 ) ).setScale( 1, RoundingMode.HALF_UP ).toString();
+			if ( payRateStr.endsWith( "0" ) ) {
+				payRateStr = payRate.multiply( new BigDecimal( 100 ) ).setScale( 0, RoundingMode.HALF_UP ).toString();
+			}
+			return payRateStr.concat( "%" );
 		}
 		return "";
+	}
+
+	public String getStatusDes() {
+		if ( StringUtils.hasText( status ) ) {
+			switch ( status ) {
+			case "1":
+				return "成功";
+			case "0":
+				return "失败";
+			case "-1":
+				return "待确认";
+			}
+		}
+		return "待确认";
 	}
 
 	@Override

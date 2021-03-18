@@ -1,6 +1,6 @@
 package com.qiqilm.server.admin.controller;
 
-import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.service.IServerOssService;
 import lombok.extern.log4j.Log4j2;
@@ -20,7 +20,7 @@ public class UploadOssController {
 	@Autowired
 	private IServerOssService  serverOssService;
 	@Autowired
-	private MemberCacheManager memberCacheManager;
+	private SysConfigCacheUtil sysConfigCacheUtil;
 
 	@PostMapping( "{path}" )
 	public AjaxResult upload( @RequestParam( "file" ) MultipartFile file, @PathVariable String path ) throws IOException {
@@ -30,7 +30,7 @@ public class UploadOssController {
 		File        newFile     = new File( System.getProperty( "java.io.tmpdir" ) + fileName );
 		IOUtils.copy( inputStream, new FileOutputStream( newFile ) );
 		String rFileName = DigestUtils.md5Hex( new FileInputStream( newFile ) );
-		String fileKey = memberCacheManager.getWebSetVal( "agent_id" ) + "/" + path + "/" + rFileName
+		String fileKey = sysConfigCacheUtil.getConf( "agent_id" ) + "/" + path + "/" + rFileName
 				+ FilenameUtils.EXTENSION_SEPARATOR + extension;
 		String url = serverOssService.uploadInputStream( new FileInputStream( newFile ), fileKey );
 		newFile.delete();

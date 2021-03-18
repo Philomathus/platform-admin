@@ -8,12 +8,13 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -54,8 +55,8 @@ public class MemberWithdrawLogController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
 	@GetMapping( value = "/countTotal" )
-	public AjaxResult getTotal(MemberWithdrawLog memberWithdrawLog ) {
-		return memberWithdrawLogService.getTotal(memberWithdrawLog) ;
+	public AjaxResult getTotal( MemberWithdrawLog memberWithdrawLog ) {
+		return memberWithdrawLogService.getTotal( memberWithdrawLog );
 	}
 
 	/**
@@ -64,7 +65,7 @@ public class MemberWithdrawLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
 	@GetMapping( value = "/report/{id}" )
 	public AjaxResult getReport( @PathVariable( "id" ) String id ) {
-		return memberWithdrawLogService.withdrawReport( id ) ;
+		return memberWithdrawLogService.withdrawReport( id );
 	}
 
 	/**
@@ -73,10 +74,9 @@ public class MemberWithdrawLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:export')" )
 	@Log( title = "会员提现信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( MemberWithdrawLog memberWithdrawLog ) {
-		List<MemberWithdrawLog>      list = memberWithdrawLogService.selectMemberWithdrawLogList( memberWithdrawLog );
-		ExcelUtil<MemberWithdrawLog> util = new ExcelUtil<>( MemberWithdrawLog.class );
-		return util.exportExcel( list, "memberWithdrawLog" );
+	public void export( MemberWithdrawLog memberWithdrawLog, HttpServletResponse response ) {
+		List<MemberWithdrawLog> list = memberWithdrawLogService.selectMemberWithdrawLogList( memberWithdrawLog );
+		ExportExcelUtil.exportExcel( list, "会员提现", "会员提现信息表", MemberWithdrawLog.class, response );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:refused')" )

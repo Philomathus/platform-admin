@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
@@ -18,7 +19,6 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -48,6 +48,8 @@ public class PayServiceImpl implements IPayService {
 	private ILogService             logService;
 	@Autowired
 	private MemberCacheManager      memberCacheManager;
+	@Autowired
+	private SysConfigCacheUtil      sysConfigCacheUtil;
 
 
 	@Override
@@ -59,7 +61,7 @@ public class PayServiceImpl implements IPayService {
 			return AjaxResult.error( "请输入google验证码" );
 		}
 		MemberPayJour payJour = payJourMapper.findByOrderNo( orderNo );
-		if ( !"0".equals( payJour.getStatus() ) ) {
+		if ( "1".equals( payJour.getStatus() ) ) {
 			return AjaxResult.error( "订单状态有误，补单失败" );
 		}
 
@@ -124,7 +126,7 @@ public class PayServiceImpl implements IPayService {
 		BigDecimal payJourMoney = payJour.getIsPatchOrder() == 1 ? payJour.getSubMoney() :
 				memberPayJour.getMoney();
 
-		BigDecimal payjourDiscountRate = new BigDecimal( memberCacheManager.getWebSetVal( "payjour_discount_rate" ) );
+		BigDecimal payjourDiscountRate = new BigDecimal( sysConfigCacheUtil.getConf( "payjour_discount_rate" ) );
 
 		// 充值彩金
 		BigDecimal chargeGive = payjourDiscountRate.multiply( payJourMoney ).setScale( 2, BigDecimal.ROUND_HALF_UP );
@@ -158,16 +160,15 @@ public class PayServiceImpl implements IPayService {
 
 			log.warn( "会员线上充值上分成功 - orderNo:{}", payJour.getOrderNo() );
 			try {
-				if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
-					memberCacheManager.checkFirstChargeaddWheelTimes(memberInfo.getId());
+				if ( memberInfo.getLevelIntegral().compareTo( BigDecimal.ZERO ) == 0 || memberInfo.getLevelIntegral().compareTo( memberInfo.getInviteMoney() ) <= 0 ) {
+					memberCacheManager.checkFirstChargeaddWheelTimes( memberInfo.getId() );
 				}
-			}catch (Exception e){
-				log.error("首充报错",e);
+			} catch ( Exception e ) {
+				log.error( "首充报错", e );
 			}
 		}
 		return isUpdate;
 	}
-
 
 
 	private boolean updateMemberCharge( String userId, BigDecimal money, String chargeType ) {

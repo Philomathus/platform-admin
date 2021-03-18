@@ -117,7 +117,6 @@ public class ReportAgentcountController extends BaseController {
     @PreAuthorize("@ss.hasPermi('admin:reportAgentcount:list')")
     @GetMapping("/list")
     public Object list(ReportAgentcount reportAgentcount) throws ParseException {
-
         return   reportAgentcountService.selectReportAgentcountList(reportAgentcount);
     }
 

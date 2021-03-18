@@ -49,6 +49,8 @@ export function export${BusinessName}(query) {
   return request({
     url: url.platformWeb + '/${moduleName}/${businessName}/export',
     method: 'get',
-    params: query
+    params: query,
+    responseType: 'arraybuffer',
+    timeout: 60000
   })
 }

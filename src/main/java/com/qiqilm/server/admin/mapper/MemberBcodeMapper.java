@@ -60,5 +60,5 @@ public interface MemberBcodeMapper {
 	 */
 	public int deleteMemberBcodeByIds(String[] ids );
 
-    Map getTotalData();
+	MemberBcode getTotalData(MemberBcode memberBcode);
 }

@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.google.common.collect.ImmutableMap;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
@@ -445,7 +444,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			}
 		} );
 
-		List<Long> resultList = new ArrayList<>();
+		List<Long> resultList = new ArrayList<>(liveVideos.size());
 		for ( int i = 1; i <= liveVideos.size(); i++ ) {
 			Long sortHostId = sortHostMap.get( i );
 			if ( sortHostId != null ) {
@@ -467,13 +466,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			resultList.addAll( stickHostList );
 		}
 
-		List<Map<String, Integer>> sortInitList = new ArrayList<>();
 		for ( int i = 0; i < resultList.size(); i++ ) {
-			sortInitList.add( ImmutableMap.of( "id", resultList.get( i ).intValue(), "sort", i ) );
-		}
-
-		if ( !CollectionUtils.isEmpty( sortInitList ) ) {
-			liveVideoMapper.updateSortBatch( sortInitList );
+			LiveVideo update = new LiveVideo();
+			update.setId( resultList.get( i ) );
+			update.setSortInit( i );
+			liveVideoMapper.updateLiveVideo( update );
 		}
 	}
 }

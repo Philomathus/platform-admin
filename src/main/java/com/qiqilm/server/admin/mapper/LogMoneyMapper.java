@@ -29,7 +29,7 @@ public interface LogMoneyMapper {
 	 * @param logMoney 会员资金信息
 	 * @return 结果
 	 */
-	public int insertLogMoney( LogMoney logMoney );
+	public int insertLogMoney( @Param("req") LogMoney reqLogMoney, @Param( "dbNodes" ) String dbNodes);
 
 	List<LogMoney> findMark( @Param( "userId" ) String userId, @Param( "mark" ) String mark,
 							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay );

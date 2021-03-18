@@ -18,11 +18,13 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.enums.BusinessType;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
-import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 #if($table.crud || $table.sub)
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 #elseif($table.tree)
 #end
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * ${functionName}Controller
@@ -60,10 +62,9 @@ public class ${ClassName}Controller extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('${permissionPrefix}:export')" )
 	@Log( title = "${functionName}", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(${ClassName} ${className}) {
+	public void export(${ClassName} ${className}, HttpServletResponse response) {
 		List<${ClassName}>      list = ${className}Service.select${ClassName}List(${className});
-		ExcelUtil<${ClassName}> util = new ExcelUtil<>(${ClassName}.class);
-		return util.exportExcel( list, "${businessName}" );
+		ExportExcelUtil.exportExcel( list, "${functionName}", "${functionName}表", ${ClassName}.class, response );
 	}
 
 	/**

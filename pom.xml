@@ -24,7 +24,7 @@
 		<springfox-swagger2.version>2.7.0</springfox-swagger2.version>
 
 		<httpcomponents.version>4.5.13</httpcomponents.version>
-		<easypoi.version>4.1.2</easypoi.version>
+		<easypoi.version>4.3.0</easypoi.version>
 		<googleauth.version>1.5.0</googleauth.version>
 		<commons-lang3.version>3.10</commons-lang3.version>
 		<commons-io.version>2.7</commons-io.version>
@@ -36,6 +36,32 @@
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>开发-dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<properties>
+				<spring.profiles.active>dev</spring.profiles.active>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>7700</id>
+			<properties>
+				<spring.profiles.active>7700</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>7701</id>
+			<properties>
+				<spring.profiles.active>7701</spring.profiles.active>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencyManagement>
 		<dependencies>
@@ -85,6 +111,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots</artifactId>
+			<version>4.1</version>
 		</dependency>
 
 		<!-- spring redis 缓存 -->
@@ -161,8 +193,8 @@
 
 		<!-- excel工具 -->
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-web</artifactId>
 			<version>${easypoi.version}</version>
 		</dependency>
 

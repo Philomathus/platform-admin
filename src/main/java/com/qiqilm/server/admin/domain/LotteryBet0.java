@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
@@ -78,6 +79,9 @@ public class LotteryBet0 extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "下注时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date betTime;
+
+    @JsonIgnore
+    private String tableLast;
 
     @Override
     public String toString() {

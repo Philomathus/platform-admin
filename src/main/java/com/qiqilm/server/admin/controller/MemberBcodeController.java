@@ -45,8 +45,8 @@ public class MemberBcodeController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('member:memberBcode:list')" )
 	@GetMapping( "/getTotalData" )
-	public AjaxResult getTotalData() {
-		return memberBcodeService.getTotalData();
+	public AjaxResult getTotalData(MemberBcode memberBcode) {
+		return memberBcodeService.getTotalData(memberBcode);
 	}
 
 	/**
