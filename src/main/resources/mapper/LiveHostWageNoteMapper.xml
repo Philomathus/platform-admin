@@ -119,8 +119,8 @@
             <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
             <if test="dto.familyName!=null and dto.familyName!=''">and f.name like concat('%',#{dto.familyName},'%')</if>
             <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>
-            <if test="dto.startTime!=null">and o.start_time >= #{dto.startTime}</if>
-            <if test="dto.endTime!=null">and o.start_time &lt;= #{dto.endTime}</if>
+            <if test="dto.startTime!=null">and o.create_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and o.create_time &lt;= #{dto.endTime}</if>
         </where>
         group by o.family_id order by o.family_id asc
     </select>
@@ -150,8 +150,8 @@
             <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
             <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
             <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
-            <if test="dto.startTime!=null">and o.start_time >= #{dto.startTime}</if>
-            <if test="dto.endTime!=null">and o.start_time &lt;= #{dto.endTime}</if>
+            <if test="dto.startTime!=null">and o.create_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and o.create_time &lt;= #{dto.endTime}</if>
         </where>
         group by o.host_id order by o.create_time desc
     </select>
