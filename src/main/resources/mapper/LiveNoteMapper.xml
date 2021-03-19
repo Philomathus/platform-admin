@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveNoteMapper">
+
+    <resultMap type="LiveNote" id="LiveNoteResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="cost"    column="cost"    />
+        <result property="income"    column="income"    />
+        <result property="kindId"    column="kind_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="tarId"    column="tar_id"    />
+        <result property="type"    column="type"    />
+        <result property="endTime"    column="end_time"    />
+    </resultMap>
+
+    <sql id="selectLiveNoteVo">
+        select id, user_id,  cost,  income,  kind_id, create_time ,  tar_id, type, end_time from ${dbLottery}.live_note
+    </sql>
+
+    <select id="selectLiveNoteList" parameterType="LiveNote" resultMap="LiveNoteResult">
+        <include refid="selectLiveNoteVo"/>
+        <where>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="cost != null "> and cost = #{cost}</if>
+            <if test="income != null "> and income = #{income}</if>
+            <if test="kindId != null  and kindId != ''"> and kind_id = #{kindId}</if>
+            <if test="tarId != null "> and tar_id = #{tarId}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveNoteById" parameterType="String" resultMap="LiveNoteResult">
+        <include refid="selectLiveNoteVo"/>
+        where id = #{id}
+    </select>
+
+
+    <delete id="deleteLiveNoteById" parameterType="String">
+        delete from ${dbLottery}.live_note where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveNoteByIds" parameterType="String">
+        delete from ${dbLottery}.live_note where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
