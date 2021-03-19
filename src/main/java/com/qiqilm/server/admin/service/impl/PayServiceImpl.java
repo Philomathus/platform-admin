@@ -114,7 +114,7 @@ public class PayServiceImpl implements IPayService {
 		MemberPayJour updatePayJour = new MemberPayJour();
 		updatePayJour.setId( payJour.getId() );
 		updatePayJour.setStatus( "1" );
-		updatePayJour.setUpdateTimes( DateFormatUtils.formate( new Date() ) );
+		updatePayJour.setUpdateTime( DateFormatUtils.formate( new Date() ) );
 		updatePayJour.setSubMoney( payJour.getSubMoney() );
 		updatePayJour.setTradeSn( payJour.getTradeSn() );
 		updatePayJour.setIsPatchOrder( payJour.getIsPatchOrder() );

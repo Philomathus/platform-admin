@@ -1,36 +1,21 @@
 package com.qiqilm.server.admin.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.domain.ReportPlamCom;
-import com.qiqilm.server.admin.enums.EnumLock;
-import com.qiqilm.server.admin.service.impl.TokenService;
-import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.ServletUtil;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.domain.ReportPlamCom;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IReportPlamComService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * 综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间Controller
@@ -44,19 +29,14 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 public class ReportPlamComController extends BaseController {
 	@Autowired
 	private IReportPlamComService reportPlamComService;
-	@Autowired
-	private RedisUtil redisUtil;
-	@Autowired
-	private TokenService tokenService;
+
 	/**
 	 * 查询综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
 	@GetMapping( "/list" )
-	public Object list(ReportPlamCom reportPlamCom) throws ParseException {
-
-		return reportPlamComService.selectReportPlamComList(reportPlamCom);
-
+	public Object list( ReportPlamCom reportPlamCom ) throws ParseException {
+		return reportPlamComService.selectReportPlamComList( reportPlamCom );
 	}
 
 	/**
@@ -65,28 +45,19 @@ public class ReportPlamComController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:export')" )
 	@Log( title = "综合数据报会每天进行前一天数据的生成，如果需要查当天的数据则需手动调用prorep_plamcom报存储过程，传入当天时间", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(ReportPlamCom reportPlamCom) throws ParseException {
-		List<ReportPlamCom>      list = reportPlamComService.exportPlamComList(reportPlamCom);
-		ExcelUtil<ReportPlamCom> util = new ExcelUtil<>(ReportPlamCom.class);
-		return util.exportExcel( list, "report-plam-com" );
+	public void export( ReportPlamCom reportPlamCom, HttpServletResponse response ) {
+		List<ReportPlamCom> list = reportPlamComService.exportPlamComList( reportPlamCom );
+		ExportExcelUtil.exportExcel( list, "综合数据报表", "综合数据报表", ReportPlamCom.class, response );
 	}
 
-//	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
-//	@GetMapping( "/storage" )
-//	public AjaxResult storage(ReportPlamCom reportPlamCom) throws ParseException {
-//		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-//		String userId = loginUser.getUser().getUserId().toString();
-//		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
-//			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
-//		}
-//		return AjaxResult.success( reportPlamComService.storage(reportPlamCom));
-//	}
-
-	//获取昨天数据
-	private static String getYestoday(){
-		Calendar cal=Calendar.getInstance();
-		cal.add(Calendar.DATE,-1);
-		Date time=cal.getTime();
-		return new SimpleDateFormat("yyyy-MM-dd").format(time);
-	}
+	//	@PreAuthorize( "@ss.hasPermi('admin:report-plam-com:list')" )
+	//	@GetMapping( "/storage" )
+	//	public AjaxResult storage(ReportPlamCom reportPlamCom) throws ParseException {
+	//		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+	//		String userId = loginUser.getUser().getUserId().toString();
+	//		if ( !redisUtil.lock( EnumLock.adminUser, userId, "10", 120 ) ) {
+	//			return AjaxResult.error("请勿连续点击搜索，2分钟后再搜索");
+	//		}
+	//		return AjaxResult.success( reportPlamComService.storage(reportPlamCom));
+	//	}
 }

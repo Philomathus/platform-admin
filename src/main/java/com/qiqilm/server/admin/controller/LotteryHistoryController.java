@@ -49,7 +49,7 @@ public class LotteryHistoryController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryHistory:list')" )
 	@GetMapping( "/lotteryName" )
-	public AjaxResult lotteryName(LotteryHistory lotteryHistory) {
+	public AjaxResult lotteryName() {
 		List<LotteryHistory> list = lotteryHistoryService.selectLotteryHistoryList();
 		return AjaxResult.success( list );
 	}

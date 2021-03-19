@@ -2,12 +2,12 @@ package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -18,7 +18,7 @@ import java.math.RoundingMode;
  * @date 2021-01-26
  */
 @Data
-public class MemberPayJour extends BaseEntity {
+public class MemberPayJour implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -26,7 +26,7 @@ public class MemberPayJour extends BaseEntity {
 	 */
 	private String id;
 
-	@Excel( name = "会员id", orderNum = "1" )
+	@Excel( name = "会员id", orderNum = "0" )
 	private String memberId;
 
 	/**
@@ -44,16 +44,16 @@ public class MemberPayJour extends BaseEntity {
 	 */
 	private String paymentMethod;
 
-	@Excel( name = "订单号", orderNum =  "2" )
+	@Excel( name = "订单号", orderNum = "1" )
 	private String orderNo;
 
-	@Excel( name = "上游订单号", orderNum =  "3" )
+	@Excel( name = "上游订单号", orderNum = "3" )
 	private String tradeSn;
 
-	@Excel( name = "请求金额", orderNum =  "4" )
+	@Excel( name = "请求金额", orderNum = "2" )
 	private BigDecimal money;
 
-	@Excel( name = "实际金额", orderNum =  "5" )
+	@Excel( name = "实际金额", orderNum = "7" )
 	private BigDecimal subMoney;
 
 	/**
@@ -66,7 +66,7 @@ public class MemberPayJour extends BaseEntity {
 	 */
 	private String paymentTime;
 
-	@Excel( name = "商户下单时间", orderNum =  "6" )
+	@Excel( name = "商户下单时间", orderNum = "6" )
 	private String payTime;
 
 	private String status;
@@ -98,31 +98,33 @@ public class MemberPayJour extends BaseEntity {
 	 */
 	private Long first;
 
-	private String createTimes;
+	private String createTime;
 
-	@Excel( name = "回调时间", orderNum =  "7" )
-	private String updateTimes;
+	@Excel( name = "回调时间", orderNum = "10" )
+	private String updateTime;
 
-	@Excel( name = "备注", orderNum =  "13" )
+	@Excel( name = "备注", orderNum = "9" )
 	private String remark;
 
 	private BigDecimal payRate;
 
-	@Excel( name = "支付平台名称", orderNum =  "11" )
+	@Excel( name = "支付平台名称", orderNum = "4" )
 	private String platformName;
 
-	@Excel( name = "支付通道名称", orderNum =  "12" )
+	@Excel( name = "支付通道名称", orderNum = "5" )
 	private String channelName;
 
-	@Excel( name = "通道成功率", orderNum = "9" )
-	private String     currentSuccessRateStr;
+	@Excel( name = "通道成功率", orderNum = "11" )
+	private String currentSuccessRateStr;
 
-	@Excel( name = "支付通道费率", orderNum = "10" )
-	private String     payRateStr;
+	@Excel( name = "支付通道费率", orderNum = "12" )
+	private String payRateStr;
 
 	@Excel( name = "订单状态", orderNum = "8" )
-	private String     statusDes;
+	private String statusDes;
 
+	@JsonIgnore
+	private String   searchValue;
 	@JsonIgnore
 	private String   searchOrderNo;
 	@JsonIgnore
@@ -187,8 +189,6 @@ public class MemberPayJour extends BaseEntity {
 				.append( "currentSuccessRate", getCurrentSuccessRate() )
 				.append( "manWork", getManWork() )
 				.append( "userName", getUserName() )
-				.append( "createTime", getCreateTime() )
-				.append( "updateTime", getUpdateTime() )
 				.append( "first", getFirst() )
 
 				.append( "payRate", getPayRate() )

@@ -44,6 +44,6 @@
     </select>
 
     <select id="selectLotteryHistoryNameList" parameterType="LotteryHistory" resultMap="LotteryHistoryResult">
-        select distinct name from ${dbLottery}.lottery_history
+        select distinct name from ${dbLottery}.lottery_info
     </select>
 </mapper>

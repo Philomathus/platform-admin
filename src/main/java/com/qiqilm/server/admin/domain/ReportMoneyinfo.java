@@ -1,8 +1,13 @@
 package com.qiqilm.server.admin.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import com.qiqilm.server.admin.annotation.Excel;
-import com.qiqilm.server.admin.core.vo.BaseEntity;
+import java.util.HashMap;
+import java.util.Map;
+
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
@@ -12,10 +17,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-25
  */
-public class ReportMoneyinfo extends BaseEntity {
+@Data
+public class ReportMoneyinfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
     private String repId;
 
     /** 报表时间 */
@@ -90,164 +95,9 @@ public class ReportMoneyinfo extends BaseEntity {
     private BigDecimal outMoney;//出款总额
     private BigDecimal countMoney;//合计
     private BigDecimal totalAccountGifts;//送礼总金额
-    public BigDecimal getPaymentAmount() {
-        return paymentAmount;
-    }
 
-    public void setPaymentAmount(BigDecimal paymentAmount) {
-        this.paymentAmount = paymentAmount;
-    }
-
-    public BigDecimal getOutMoney() {
-        return outMoney;
-    }
-
-    public void setOutMoney(BigDecimal outMoney) {
-        this.outMoney = outMoney;
-    }
-
-    public BigDecimal getCountMoney() {
-        return countMoney;
-    }
-
-    public void setCountMoney(BigDecimal countMoney) {
-        this.countMoney = countMoney;
-    }
-
-    public BigDecimal getTotalAccountGifts() {
-        return totalAccountGifts;
-    }
-
-    public void setTotalAccountGifts(BigDecimal totalAccountGifts) {
-        this.totalAccountGifts = totalAccountGifts;
-    }
-
-    public void setRepId(String repId) {
-        this.repId = repId;
-    }
-
-    public String getRepId() {
-        return repId;
-    }
-    public void setReptime(String reptime) {
-        this.reptime = reptime;
-    }
-
-    public String getReptime() {
-        return reptime;
-    }
-    public void setGsRukuanrenshu(Long gsRukuanrenshu) {
-        this.gsRukuanrenshu = gsRukuanrenshu;
-    }
-
-    public Long getGsRukuanrenshu() {
-        return gsRukuanrenshu;
-    }
-    public void setGsRukuanjine(BigDecimal gsRukuanjine) {
-        this.gsRukuanjine = gsRukuanjine;
-    }
-
-    public BigDecimal getGsRukuanjine() {
-        return gsRukuanjine;
-    }
-    public void setXsRukunanrenshu(Long xsRukunanrenshu) {
-        this.xsRukunanrenshu = xsRukunanrenshu;
-    }
-
-    public Long getXsRukunanrenshu() {
-        return xsRukunanrenshu;
-    }
-    public void setXsRukunanjine(BigDecimal xsRukunanjine) {
-        this.xsRukunanjine = xsRukunanjine;
-    }
-
-    public BigDecimal getXsRukunanjine() {
-        return xsRukunanjine;
-    }
-    public void setRgRukunanrenshu(Long rgRukunanrenshu) {
-        this.rgRukunanrenshu = rgRukunanrenshu;
-    }
-
-    public Long getRgRukunanrenshu() {
-        return rgRukunanrenshu;
-    }
-    public void setRgRukunanjine(BigDecimal rgRukunanjine) {
-        this.rgRukunanjine = rgRukunanjine;
-    }
-
-    public BigDecimal getRgRukunanjine() {
-        return rgRukunanjine;
-    }
-    public void setPalmYouhuirenshu(Long palmYouhuirenshu) {
-        this.palmYouhuirenshu = palmYouhuirenshu;
-    }
-
-    public Long getPalmYouhuirenshu() {
-        return palmYouhuirenshu;
-    }
-    public void setPalmYouhuijine(BigDecimal palmYouhuijine) {
-        this.palmYouhuijine = palmYouhuijine;
-    }
-
-    public BigDecimal getPalmYouhuijine() {
-        return palmYouhuijine;
-    }
-    public void setTotalRukuanrenshu(Long totalRukuanrenshu) {
-        this.totalRukuanrenshu = totalRukuanrenshu;
-    }
-
-    public Long getTotalRukuanrenshu() {
-        return totalRukuanrenshu;
-    }
-    public void setTotalRukuanjine(BigDecimal totalRukuanjine) {
-        this.totalRukuanjine = totalRukuanjine;
-    }
-
-    public BigDecimal getTotalRukuanjine() {
-        return totalRukuanjine;
-    }
-    public void setTotalChukuanrenshu(Long totalChukuanrenshu) {
-        this.totalChukuanrenshu = totalChukuanrenshu;
-    }
-
-    public Long getTotalChukuanrenshu() {
-        return totalChukuanrenshu;
-    }
-    public void setTotalChukuanjine(BigDecimal totalChukuanjine) {
-        this.totalChukuanjine = totalChukuanjine;
-    }
-
-    public BigDecimal getTotalChukuanjine() {
-        return totalChukuanjine;
-    }
-    public void setTotalAccount(BigDecimal totalAccount) {
-        this.totalAccount = totalAccount;
-    }
-
-    public BigDecimal getTotalAccount() {
-        return totalAccount;
-    }
-    public void setTotalProfile(BigDecimal totalProfile) {
-        this.totalProfile = totalProfile;
-    }
-
-    public BigDecimal getTotalProfile() {
-        return totalProfile;
-    }
-    public void setTotalGiveprop(BigDecimal totalGiveprop) {
-        this.totalGiveprop = totalGiveprop;
-    }
-
-    public BigDecimal getTotalGiveprop() {
-        return totalGiveprop;
-    }
-    public void setTotalLast(BigDecimal totalLast) {
-        this.totalLast = totalLast;
-    }
-
-    public BigDecimal getTotalLast() {
-        return totalLast;
-    }
+    @JsonIgnore
+    private Map<String, Object> params = new HashMap<>();
 
     @Override
     public String toString() {

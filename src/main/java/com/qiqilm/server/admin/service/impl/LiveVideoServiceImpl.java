@@ -163,14 +163,15 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		// 设置在Redis中缓存的值
 		videoCacheUtil.setVideoCache( updateVideo );
 
+		LiveUser updateUser = new LiveUser();
+		updateUser.setId( id );
 		// 更新主播直播印票
 		BigDecimal voteNumber = videoCacheUtil.getVoteNumber( Integer.parseInt( "" + id ) );
 		if ( voteNumber != null ) {
-			LiveUser updateUser = new LiveUser();
 			updateUser.setTicket( voteNumber );
-			updateUser.setId( id );
-			liveUserMapper.updateLiveUser( updateUser );
 		}
+		updateUser.setOpenPay( 0 );
+		liveUserMapper.updateLiveUser( updateUser );
 
 		liveVideoMapper.updateLiveVideo( updateVideo );
 
