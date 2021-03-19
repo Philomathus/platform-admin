@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LotteryBet0;
 import com.qiqilm.server.admin.service.ILotteryBet0Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,15 @@ public class LotteryBet0Controller extends BaseController {
 		startPage();
 		List<LotteryBet0> list = lotteryBet0Service.selectLotteryBet0List( lotteryBet0 );
 		return getDataTable( list );
+	}
+
+	/**
+	 * 用户投资行为统计
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryBet:list')" )
+	@GetMapping( "/getCount" )
+	public AjaxResult getCount(LotteryBet0 lotteryBet0) {
+		return lotteryBet0Service.getCount(lotteryBet0);
 	}
 
 }
