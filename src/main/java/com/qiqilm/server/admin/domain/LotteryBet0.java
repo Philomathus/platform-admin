@@ -89,6 +89,8 @@ public class LotteryBet0 extends BaseEntity {
 	private String   endTime;
 	@JsonIgnore
 	private String   tableLast;
+	@JsonIgnore
+	private boolean  abnormal = false;
 
 	@Override
 	public String toString() {

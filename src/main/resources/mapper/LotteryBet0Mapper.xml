@@ -22,57 +22,40 @@
 
 	<select id="selectLotteryBet0List" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
 		select * from (
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet0
-		<where><include refid="whereSelect"/></where> UNION ALL
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet1
-		<where><include refid="whereSelect"/></where> UNION ALL
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet2
-		<where><include refid="whereSelect"/></where> UNION ALL
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet3
-		<where><include refid="whereSelect"/></where> UNION ALL
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet4
-		<where><include refid="whereSelect"/></where> UNION ALL
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet5
-		<where><include refid="whereSelect"/></where> UNION ALL
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet6
-		<where><include refid="whereSelect"/></where> UNION ALL
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet7
-		<where><include refid="whereSelect"/></where> UNION ALL
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet8
-		<where><include refid="whereSelect"/></where> UNION ALL
-		select id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-			anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time from ${dbLottery}.lottery_bet9
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet0
+		<where><include refid="whereSelect"/></where>
+		UNION ALL
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet1
+		<where><include refid="whereSelect"/></where>
+		UNION ALL
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet2
+		<where><include refid="whereSelect"/></where>
+		UNION ALL
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet3
+		<where><include refid="whereSelect"/></where>
+		UNION ALL
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet4
+		<where><include refid="whereSelect"/></where>
+		UNION ALL
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet5
+		<where><include refid="whereSelect"/></where>
+		UNION ALL
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet6
+		<where><include refid="whereSelect"/></where>
+		UNION ALL
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet7
+		<where><include refid="whereSelect"/></where>
+		UNION ALL
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet8
+		<where><include refid="whereSelect"/></where>
+		UNION ALL
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet9
 		<where><include refid="whereSelect"/></where>
 		) a
 	</select>
 
 	<select id="selectLotteryBet0SingleList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
-		select id,
-		lottery_id,
-		puser_id,
-		issue,
-		status,
-		method_id,
-		bet_select,
-		bet_ids,
-		chip,
-		prize,
-		cost,
-		lottery_name,
-		anchor,
-		code,
-		bet_time,
-		FROM_UNIXTIME(update_time) update_time
-		from ${dbLottery}.lottery_bet${tableLast} a
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet${tableLast} a
 		<where>
 			<if test="puserId != null  and puserId != ''">
 				and puser_id = #{puserId}
@@ -80,6 +63,22 @@
 			<include refid="whereSelect"/>
 		</where>
 	</select>
+
+	<select id="selectLotteryBet0AbnormalList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
+		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet${tableLast} a
+		where a.puser_id = #{puserId} and a.issue in (
+			select issue from ${dbLottery}.lottery_bet${tableLast} where
+				puser_id = #{puserId}
+				and prize > 0
+				and (cost - (prize - cost)) / cost > 1
+				and (cost - (prize - cost)) / cost &lt; 1.04
+		) <include refid="whereSelect"/>
+	</select>
+
+	<sql id="Base_Column_List">
+		id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
+		anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time
+	</sql>
 
 	<sql id="whereSelect">
 		<if test="issue != null  and issue != ''">
@@ -95,4 +94,5 @@
 			and bet_time &gt;= #{startTime} and bet_time &lt;= #{endTime}
 		</if>
 	</sql>
+
 </mapper>
