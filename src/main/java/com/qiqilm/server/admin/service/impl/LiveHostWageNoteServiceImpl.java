@@ -6,13 +6,13 @@ import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteList;
 import com.qiqilm.server.admin.mapper.LiveHostWageNoteMapper;
 import com.qiqilm.server.admin.service.ILiveHostWageNoteService;
-import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 主播时长Service业务层处理
@@ -41,16 +41,18 @@ public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
 	/**
 	 * 查询主播时长列表
 	 *
-	 * @param liveHostWageNote 主播时长
+	 * @param dto 主播时长
 	 * @return 主播时长
 	 */
 	@Override
-	public List<LiveHostWageNote> selectLiveHostWageNoteList( LiveHostWageNote liveHostWageNote ) {
-		return liveHostWageNoteMapper.selectLiveHostWageNoteList( liveHostWageNote );
+	public List<LiveHostWageNote> selectLiveHostWageNoteList( LiveHostWageNote dto ) {
+		this.setTime( dto );
+		return liveHostWageNoteMapper.selectLiveHostWageNoteList( dto );
 	}
 
 	@Override
 	public List<RspLiveHostWageNoteFamily> familyPage( LiveHostWageNote dto ) {
+		this.setTime( dto );
 		BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
 		List<RspLiveHostWageNoteFamily> liveHostWageNotes = liveHostWageNoteMapper.familyPage( dto.getSelectDate()[ 0 ] + " - "
 				+ dto.getSelectDate()[ 1 ], dto );
@@ -75,8 +77,9 @@ public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
 
 	@Override
 	public List<RspLiveHostWageNoteList> hostPage( LiveHostWageNote dto ) {
-		BigDecimal                ticketCattyRatio  = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
-		List<RspLiveHostWageNoteList>    liveHostWageNotes = liveHostWageNoteMapper.hostPage( dto.getSelectDate()[ 0 ] + " - "
+		this.setTime( dto );
+		BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
+		List<RspLiveHostWageNoteList> liveHostWageNotes = liveHostWageNoteMapper.hostPage( dto.getSelectDate()[ 0 ] + " - "
 				+ dto.getSelectDate()[ 1 ], dto );
 		for ( RspLiveHostWageNoteList liveHostWageNote : liveHostWageNotes ) {
 			if ( liveHostWageNote.getAllticket() != null ) {
@@ -96,5 +99,17 @@ public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
 			}
 		}
 		return liveHostWageNotes;
+	}
+
+	private void setTime( LiveHostWageNote dto ) {
+		if ( dto.getSelectDate() == null || dto.getSelectDate().length == 0 ) {
+			Date             d          = new Date();
+			SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
+			String           dateNowStr = sdf.format( d );
+			dto.getSelectDate()[ 0 ] = dateNowStr;
+			dto.getSelectDate()[ 1 ] = dateNowStr;
+		}
+		dto.setStartTime( dto.getSelectDate()[ 0 ] + " 00:00:00" );
+		dto.setEndTime( dto.getSelectDate()[ 1 ] + " 23:59:59" );
 	}
 }
