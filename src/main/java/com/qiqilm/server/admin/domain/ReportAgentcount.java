@@ -68,11 +68,11 @@ public class ReportAgentcount implements Serializable {
 	/** 总入款笔数（当日总） */
 	private String totalRukuanbishu;
 
-	@Excel( name = "人/笔/（入款日总）", orderNum = "8" )
+	@Excel( name = "人/笔/（入款日总）", orderNum = "9" )
 	private String totalRukuanjineAll;
 
 	/** 总出款（当日总） */
-	@Excel( name = "人/笔/（出款总）", orderNum = "9" )
+	@Excel( name = "人/笔/（出款总）", orderNum = "8" )
 	private String totalChukuanjine;
 
 	/** 进入直播间次数 */
