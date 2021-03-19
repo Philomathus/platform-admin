@@ -23,8 +23,8 @@
 		<result property="currentSuccessRate" column="current_success_rate"/>
 		<result property="manWork" column="man_work"/>
 		<result property="userName" column="user_name"/>
-		<result property="createTimes" column="create_time"/>
-		<result property="updateTimes" column="update_time"/>
+		<result property="createTime" column="create_time"/>
+		<result property="updateTime" column="update_time"/>
 		<result property="first" column="first"/>
 
 		<result property="payRate" column="pay_rate"/>
