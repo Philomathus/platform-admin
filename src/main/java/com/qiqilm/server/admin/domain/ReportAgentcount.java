@@ -1,10 +1,14 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
-import com.qiqilm.server.admin.core.vo.BaseEntity;
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 代理统计，主要用于代理渠道的统计对象 report_agentcount
@@ -13,221 +17,120 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @date 2021-01-26
  */
 @Data
-public class ReportAgentcount extends BaseEntity {
-    private static final long serialVersionUID = 1L;
+public class ReportAgentcount implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
-    private String repId;
+	private String repId;
 
-    /** 渠道编码 */
-    @Excel(name = "渠道编码")
-    private String agentcode;
+	/** 渠道编码 */
+	@Excel( name = "渠道编码", orderNum = "0" )
+	private String agentcode;
 
-    /** 邀请账号 */
-    @Excel(name = "邀请账号")
-    private String agentname;
+	/** 邀请账号 */
+	@Excel( name = "邀请账号", orderNum = "1" )
+	private String agentname;
 
-    /** 统计时间 */
-    @Excel(name = "统计时间")
-    private String agenttime;
+	/** 统计时间 */
+	@Excel( name = "统计时间", orderNum = "12" )
+	private String agenttime;
 
-    /** 当日新注册人数 */
-    @Excel(name = "当日新注册人数")
-    private Long newmember;
+	/** 当日新注册人数 */
+	@Excel( name = "当日/总（注册人数）", orderNum = "2" )
+	private Long newmember;
 
-    /** 总邀请人数 */
-    @Excel(name = "总邀请人数")
-    private Long totalmember;
+	/** 总邀请人数 */
+	private Long totalmember;
 
-    /** 公司入款（首充） */
-    @Excel(name = "公司入款")
-    private String gsRukuanjine;
+	/** 公司入款（首充） */
+	@Excel( name = "公司入款（首充）", orderNum = "3" )
+	private String gsRukuanjine;
 
-    /** 线上入款（首充） */
-    @Excel(name = "线上入款")
-    private String xsRukuanjine;
+	/** 线上入款（首充） */
+	@Excel( name = "线上（首充）", orderNum = "4" )
+	private String xsRukuanjine;
 
-    /** 手工入款（首充） */
-    @Excel(name = "手工入款")
-    private String sgRukuanjine;
+	/** 手工入款（首充） */
+	@Excel( name = "手工入款（首充）", orderNum = "5" )
+	private String sgRukuanjine;
 
-    /** 入款总（首充） */
-    @Excel(name = "入款总")
-    private String totalfristRukuanjine;
+	/** 入款总（首充） */
+	@Excel( name = "入款总（首充）", orderNum = "6" )
+	private String totalfristRukuanjine;
 
-    /** 出款金额（首次） */
-    @Excel(name = "出款金额")
-    private String chukuanjine;
+	/** 出款金额（首次） */
+	@Excel( name = "出款金额（首充）", orderNum = "7" )
+	private String chukuanjine;
 
-    /** 总入款（当日总） */
-    @Excel(name = "总入款")
-    private String totalRukuanjine;
-    @Excel(name = "总入款人数（当日总）")
-    private String totalRukuanrenshu;
-    @Excel(name = "总入款笔数（当日总）")
-    private String totalRukuanbishu;
-    /** 总出款（当日总） */
-    @Excel(name = "总出款")
-    private String totalChukuanjine;
+	/** 总入款（当日总） */
+	private String totalRukuanjine;
+	/** 总入款人数（当日总） */
+	private String totalRukuanrenshu;
+	/** 总入款笔数（当日总） */
+	private String totalRukuanbishu;
 
-    /** 进入直播间次数 */
-    @Excel(name = "进入直播间次数")
-    private Long totalEnterlivetimes;
+	@Excel( name = "人/笔/（入款日总）", orderNum = "8" )
+	private String totalRukuanjineAll;
 
-    /** 代理线活跃的安卓用户 */
-    @Excel(name = "代理线活跃的安卓用户")
-    private Long totalActiveandroid;
+	/** 总出款（当日总） */
+	@Excel( name = "人/笔/（出款总）", orderNum = "9" )
+	private String totalChukuanjine;
 
-    /** 代理线活跃的苹果用户 */
-    @Excel(name = "代理线活跃的苹果用户")
-    private Long totalActiveios;
+	/** 进入直播间次数 */
+	private Long totalEnterlivetimes;
 
-    /** 代理线送礼 */
-    @Excel(name = "代理线送礼")
-    private String totalGiveprop;
+	/** 代理线活跃的安卓用户 */
+	private Long totalActiveandroid;
 
-    private String code;
+	/** 代理线活跃的苹果用户 */
+	private Long totalActiveios;
 
-    public void setRepId(String repId) {
-        this.repId = repId;
-    }
+	@Excel( name = "直播间次数/安卓/苹果", orderNum = "11" )
+	private String totalEnterliveActive;
 
-    public String getRepId() {
-        return repId;
-    }
-    public void setAgentcode(String agentcode) {
-        this.agentcode = agentcode;
-    }
+	/** 代理线送礼 */
+	@Excel( name = "送礼次数/金额", orderNum = "10" )
+	private String totalGiveprop;
 
-    public String getAgentcode() {
-        return agentcode;
-    }
-    public void setAgentname(String agentname) {
-        this.agentname = agentname;
-    }
+	private String code;
 
-    public String getAgentname() {
-        return agentname;
-    }
-    public void setAgenttime(String agenttime) {
-        this.agenttime = agenttime;
-    }
+	@JsonIgnore
+	private Map<String, Object> params = new HashMap<>();
 
-    public String getAgenttime() {
-        return agenttime;
-    }
-    public void setNewmember(Long newmember) {
-        this.newmember = newmember;
-    }
 
-    public Long getNewmember() {
-        return newmember;
-    }
-    public void setTotalmember(Long totalmember) {
-        this.totalmember = totalmember;
-    }
+	public String getTotalRukuanjineAll() {
+		if ( totalRukuanjine != null && totalRukuanrenshu != null && totalRukuanbishu != null ) {
+			return totalRukuanrenshu + "/" + totalRukuanbishu + "/" + totalRukuanjine;
+		}
+		return totalRukuanjineAll;
+	}
 
-    public Long getTotalmember() {
-        return totalmember;
-    }
-    public void setGsRukuanjine(String gsRukuanjine) {
-        this.gsRukuanjine = gsRukuanjine;
-    }
+	public String getTotalEnterliveActive() {
+		if ( totalEnterlivetimes != null && totalActiveandroid != null && totalActiveios != null ) {
+			return totalEnterlivetimes + "/" + totalActiveandroid + "/" + totalActiveios;
+		}
+		return totalEnterliveActive;
+	}
 
-    public String getGsRukuanjine() {
-        return gsRukuanjine;
-    }
-    public void setXsRukuanjine(String xsRukuanjine) {
-        this.xsRukuanjine = xsRukuanjine;
-    }
-
-    public String getXsRukuanjine() {
-        return xsRukuanjine;
-    }
-    public void setSgRukuanjine(String sgRukuanjine) {
-        this.sgRukuanjine = sgRukuanjine;
-    }
-
-    public String getSgRukuanjine() {
-        return sgRukuanjine;
-    }
-    public void setTotalfristRukuanjine(String totalfristRukuanjine) {
-        this.totalfristRukuanjine = totalfristRukuanjine;
-    }
-
-    public String getTotalfristRukuanjine() {
-        return totalfristRukuanjine;
-    }
-    public void setChukuanjine(String chukuanjine) {
-        this.chukuanjine = chukuanjine;
-    }
-
-    public String getChukuanjine() {
-        return chukuanjine;
-    }
-    public void setTotalRukuanjine(String totalRukuanjine) {
-        this.totalRukuanjine = totalRukuanjine;
-    }
-
-    public String getTotalRukuanjine() {
-        return totalRukuanjine;
-    }
-    public void setTotalChukuanjine(String totalChukuanjine) {
-        this.totalChukuanjine = totalChukuanjine;
-    }
-
-    public String getTotalChukuanjine() {
-        return totalChukuanjine;
-    }
-    public void setTotalEnterlivetimes(Long totalEnterlivetimes) {
-        this.totalEnterlivetimes = totalEnterlivetimes;
-    }
-
-    public Long getTotalEnterlivetimes() {
-        return totalEnterlivetimes;
-    }
-    public void setTotalActiveandroid(Long totalActiveandroid) {
-        this.totalActiveandroid = totalActiveandroid;
-    }
-
-    public Long getTotalActiveandroid() {
-        return totalActiveandroid;
-    }
-    public void setTotalActiveios(Long totalActiveios) {
-        this.totalActiveios = totalActiveios;
-    }
-
-    public Long getTotalActiveios() {
-        return totalActiveios;
-    }
-    public void setTotalGiveprop(String totalGiveprop) {
-        this.totalGiveprop = totalGiveprop;
-    }
-
-    public String getTotalGiveprop() {
-        return totalGiveprop;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("repId", getRepId())
-            .append("agentcode", getAgentcode())
-            .append("agentname", getAgentname())
-            .append("agenttime", getAgenttime())
-            .append("newmember", getNewmember())
-            .append("totalmember", getTotalmember())
-            .append("gsRukuanjine", getGsRukuanjine())
-            .append("xsRukuanjine", getXsRukuanjine())
-            .append("sgRukuanjine", getSgRukuanjine())
-            .append("totalfristRukuanjine", getTotalfristRukuanjine())
-            .append("chukuanjine", getChukuanjine())
-            .append("totalRukuanjine", getTotalRukuanjine())
-            .append("totalChukuanjine", getTotalChukuanjine())
-            .append("totalEnterlivetimes", getTotalEnterlivetimes())
-            .append("totalActiveandroid", getTotalActiveandroid())
-            .append("totalActiveios", getTotalActiveios())
-            .append("totalGiveprop", getTotalGiveprop())
-            .toString();
-    }
+	@Override
+	public String toString() {
+		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
+				.append( "repId", getRepId() )
+				.append( "agentcode", getAgentcode() )
+				.append( "agentname", getAgentname() )
+				.append( "agenttime", getAgenttime() )
+				.append( "newmember", getNewmember() )
+				.append( "totalmember", getTotalmember() )
+				.append( "gsRukuanjine", getGsRukuanjine() )
+				.append( "xsRukuanjine", getXsRukuanjine() )
+				.append( "sgRukuanjine", getSgRukuanjine() )
+				.append( "totalfristRukuanjine", getTotalfristRukuanjine() )
+				.append( "chukuanjine", getChukuanjine() )
+				.append( "totalRukuanjine", getTotalRukuanjine() )
+				.append( "totalChukuanjine", getTotalChukuanjine() )
+				.append( "totalEnterlivetimes", getTotalEnterlivetimes() )
+				.append( "totalActiveandroid", getTotalActiveandroid() )
+				.append( "totalActiveios", getTotalActiveios() )
+				.append( "totalGiveprop", getTotalGiveprop() )
+				.toString();
+	}
 }

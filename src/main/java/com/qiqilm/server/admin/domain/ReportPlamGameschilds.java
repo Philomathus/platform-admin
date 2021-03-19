@@ -2,8 +2,9 @@ package com.qiqilm.server.admin.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -72,7 +73,7 @@ public class ReportPlamGameschilds extends BaseEntity {
 
     /** 日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "日期", width = 30, databaseFormat = "yyyy-MM-dd")
     private Date begindate;
 
     @Override
