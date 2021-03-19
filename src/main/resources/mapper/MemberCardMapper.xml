@@ -8,7 +8,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="realName"    column="real_name"    />
         <result property="bankName"    column="bank_name"    />
-        <result property="bankCode"    column="bank_code"    />
         <result property="bankAccount"    column="bank_account"    />
         <result property="bankAddress"    column="bank_address"    />
         <result property="memberId"    column="member_id"    />
@@ -18,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMemberCardVo">
-        select id, real_name, bank_name, bank_code, bank_account, bank_address, member_id,  FROM_UNIXTIME(create_time) create_time ,  type, dv from ${dbMain}.member_card
+        select id, real_name, bank_name, bank_account, bank_address, member_id,  FROM_UNIXTIME(create_time) create_time ,  type, dv from ${dbMain}.member_card
     </sql>
 
     <select id="selectMemberCardList" parameterType="MemberCard" resultMap="MemberCardResult">
@@ -26,12 +25,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
             <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
-            <if test="bankCode != null  and bankCode != ''"> and bank_code = #{bankCode}</if>
             <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
             <if test="bankAddress != null  and bankAddress != ''"> and bank_address = #{bankAddress}</if>
             <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
             <if test="type != null "> and type = #{type}</if>
             <if test="dv != null "> and dv = #{dv}</if>
+        </where>
+    </select>
+    <select id="memberCardList" parameterType="MemberCard" resultMap="MemberCardResult">
+        <include refid="selectMemberCardVo"/>
+        <where>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
         </where>
     </select>
 
@@ -46,7 +50,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">id,</if>
             <if test="realName != null">real_name,</if>
             <if test="bankName != null">bank_name,</if>
-            <if test="bankCode != null">bank_code,</if>
             <if test="bankAccount != null">bank_account,</if>
             <if test="bankAddress != null">bank_address,</if>
             <if test="memberId != null">member_id,</if>
@@ -58,7 +61,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 <if test="id != null">#{id},</if>
                     <if test="realName != null">#{realName},</if>
                     <if test="bankName != null">#{bankName},</if>
-                    <if test="bankCode != null">#{bankCode},</if>
                     <if test="bankAccount != null">#{bankAccount},</if>
                     <if test="bankAddress != null">#{bankAddress},</if>
                     <if test="memberId != null">#{memberId},</if>
@@ -75,7 +77,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
             <if test="bankName != null">bank_name = #{bankName},</if>
 
-            <if test="bankCode != null">bank_code = #{bankCode},</if>
 
             <if test="bankAccount != null">bank_account = #{bankAccount},</if>
 

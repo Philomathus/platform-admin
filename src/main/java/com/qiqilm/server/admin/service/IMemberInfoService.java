@@ -61,4 +61,6 @@ public interface IMemberInfoService {
 	void outGMGameSucess( String orderId, String userId, Integer platformId, BigDecimal money, String account );
 
 	int changeSpeak(MemberInfo memberInfo);
+
+	AjaxResult unbindCard(MemberCard memberCard);
 }
