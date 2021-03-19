@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.domain.PayType;
@@ -78,8 +80,44 @@ public class PayChannelNewController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:add')" )
 	@Log( title = "【支付通道】", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody PayChannelNew payChannelNew) {
+	public Object add( @RequestBody PayChannelNew payChannelNew) {
+		Boolean b=judgeEnglish(payChannelNew);
 		return toAjax( payChannelNewService.insertPayChannelNew(payChannelNew) );
+	}
+
+	private Boolean judgeEnglish(PayChannelNew payChannelNew) {
+		String quickAmount = null;
+		if (payChannelNew.getQuickAmount()!=null)
+		quickAmount = payChannelNew.getQuickAmount();
+		boolean isWord=quickAmount.matches("[a-zA-Z]+");
+		return false;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(check("50,100,200,300，"));
+	}
+
+	public static boolean check(String a) {
+
+	if (a.contains("，")){
+		a.replace("，",",");
+		return true;
+	}
+    return false;
+	}
+	public static boolean isChinese(String str) {
+
+		String regEx = "[\\u4e00-\\u9fa5]+";
+
+		Pattern p = Pattern.compile(regEx);
+
+		Matcher m = p.matcher(str);
+
+		if (!m.find()){
+			return true;
+		}
+		return false;
+
 	}
 
 	/**

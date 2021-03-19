@@ -61,4 +61,6 @@ public interface MemberCardMapper {
 	public int deleteMemberCardByIds(String[] ids );
 
     public List<MemberCard> findList(@Param("memberId") String memberId);
+
+	List<MemberCard> memberCardList(String memberId);
 }

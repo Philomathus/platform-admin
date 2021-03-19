@@ -2,10 +2,12 @@ package com.qiqilm.server.admin.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -95,6 +97,9 @@ public class ReportMoneyinfo implements Serializable {
     private BigDecimal outMoney;//出款总额
     private BigDecimal countMoney;//合计
     private BigDecimal totalAccountGifts;//送礼总金额
+
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private Date updateTime;
 
     @JsonIgnore
     private Map<String, Object> params = new HashMap<>();

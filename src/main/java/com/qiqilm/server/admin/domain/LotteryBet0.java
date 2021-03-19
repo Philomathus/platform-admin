@@ -92,6 +92,9 @@ public class LotteryBet0 extends BaseEntity {
 	@JsonIgnore
 	private boolean  abnormal = false;
 
+	private BigDecimal totalCost;
+	private BigDecimal totalPrize;
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )

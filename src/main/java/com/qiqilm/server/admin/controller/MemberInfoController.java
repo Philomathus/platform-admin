@@ -337,4 +337,10 @@ public class MemberInfoController extends BaseController {
         rspBase.setData("成功");
         return rspBase;
     }
+    @Log(title = "解绑银行卡", businessType = BusinessType.UPDATE)
+    @PutMapping("/unbindCard")
+    public Object unbindCard(@RequestBody MemberCard memberCard) {
+        AjaxResult ajaxResult = memberInfoService.unbindCard(memberCard);
+        return (ajaxResult);
+    }
 }
