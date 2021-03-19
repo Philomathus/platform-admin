@@ -25,6 +25,12 @@
         select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from ${dbMain}.member_game_data
     </sql>
 
+    <!--打码逻辑开始-->
+    <select id="findExist" resultType="java.lang.Integer">
+		SELECT status FROM ${dbMain}.member_game_data${dbNodes}
+		WHERE id = #{keyId}
+	</select>
+    <!--打码逻辑结束-->
     <select id="selectMemberGameDataList" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberGameData">
         SELECT
         m.agent,

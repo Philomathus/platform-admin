@@ -55,7 +55,7 @@ public class MemberGameData extends BaseEntity {
 
     /** 本地平台id */
     @Excel(name = "本地平台id")
-    private Long platformId;
+    private Integer platformId;
 
     /** 代理编号 */
     @Excel(name = "代理编号")
@@ -67,148 +67,12 @@ public class MemberGameData extends BaseEntity {
 
     /** 0:未洗码1已经洗码 */
     @Excel(name = "0:未洗码1已经洗码")
-    private Long status;
+    private Integer status;
 
     /** 游戏开始时间 */
     @Excel(name = "游戏开始时间")
     private String gameStartTime;
-    /**
-     * 选择日期
-     */
-    private String[] selectDate;
 
-    private String startTime;
-    private String endTime;
-
-    private String platformName;
-    private String sonPlatformName;
-    private BigDecimal totalSuccessBet;
-    private BigDecimal totalBet;
-    private BigDecimal totalIncome;
-
-
-    public String[] getSelectDate() {
-        return selectDate;
-    }
-
-    public void setSelectDate(String[] selectDate) {
-        this.selectDate = selectDate;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public String getGameId() {
-        return gameId;
-    }
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-    public void setKindId(String kindId) {
-        this.kindId = kindId;
-    }
-
-    public String getKindId() {
-        return kindId;
-    }
-    public void setCellScore(String cellScore) {
-        this.cellScore = cellScore;
-    }
-
-    public String getCellScore() {
-        return cellScore;
-    }
-    public void setAllBet(String allBet) {
-        this.allBet = allBet;
-    }
-
-    public String getAllBet() {
-        return allBet;
-    }
-    public void setProfit(String profit) {
-        this.profit = profit;
-    }
-
-    public String getProfit() {
-        return profit;
-    }
-    public void setRevenue(String revenue) {
-        this.revenue = revenue;
-    }
-
-    public String getRevenue() {
-        return revenue;
-    }
-    public void setGameEndTime(String gameEndTime) {
-        this.gameEndTime = gameEndTime;
-    }
-
-    public String getGameEndTime() {
-        return gameEndTime;
-    }
-    public void setPlatformId(Long platformId) {
-        this.platformId = platformId;
-    }
-
-    public Long getPlatformId() {
-        return platformId;
-    }
-    public void setAgent(String agent) {
-        this.agent = agent;
-    }
-
-    public String getAgent() {
-        return agent;
-    }
-    public void setPlatformType(String platformType) {
-        this.platformType = platformType;
-    }
-
-    public String getPlatformType() {
-        return platformType;
-    }
-    public void setStatus(Long status) {
-        this.status = status;
-    }
-
-    public Long getStatus() {
-        return status;
-    }
-    public void setGameStartTime(String gameStartTime) {
-        this.gameStartTime = gameStartTime;
-    }
-
-    public String getGameStartTime() {
-        return gameStartTime;
-    }
 
     @Override
     public String toString() {

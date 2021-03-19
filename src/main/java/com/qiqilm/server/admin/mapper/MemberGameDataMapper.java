@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog;
 import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -67,5 +68,8 @@ public interface MemberGameDataMapper {
     RspLotteryBetLog findBetList(String gameId);
 
 	RspLotteryBetLog findBetLists(String gameId);
+
+
+	Integer findExist(@Param( "dbNodes" ) String dbNodes,@Param("keyId") String id);
 
 }

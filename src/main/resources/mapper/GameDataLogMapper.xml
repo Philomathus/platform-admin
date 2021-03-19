@@ -25,25 +25,12 @@
         select id, game_id, cx_agent, account, server_id, kind_id, table_id, chair_id, cell_score, all_bet, profit, revenue, game_start_time, game_end_time, platform_id, agent from db_data.game_data_log
     </sql>
 
-    <select id="selectGameDataLogList" parameterType="GameDataLog" resultMap="GameDataLogResult">
+    <select id="selectGameDataLogList"  resultMap="GameDataLogResult">
         <include refid="selectGameDataLogVo"/>
-        <where>
-            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
-            <if test="cxAgent != null  and cxAgent != ''"> and cx_agent = #{cxAgent}</if>
-            <if test="account != null  and account != ''"> and account = #{account}</if>
-            <if test="serverId != null  and serverId != ''"> and server_id = #{serverId}</if>
-            <if test="kindId != null  and kindId != ''"> and kind_id = #{kindId}</if>
-            <if test="tableId != null  and tableId != ''"> and table_id = #{tableId}</if>
-            <if test="chairId != null  and chairId != ''"> and chair_id = #{chairId}</if>
-            <if test="cellScore != null  and cellScore != ''"> and cell_score = #{cellScore}</if>
-            <if test="allBet != null  and allBet != ''"> and all_bet = #{allBet}</if>
-            <if test="profit != null  and profit != ''"> and profit = #{profit}</if>
-            <if test="revenue != null  and revenue != ''"> and revenue = #{revenue}</if>
-            <if test="gameStartTime != null  and gameStartTime != ''"> and game_start_time = #{gameStartTime}</if>
-            <if test="gameEndTime != null  and gameEndTime != ''"> and game_end_time = #{gameEndTime}</if>
-            <if test="platformId != null "> and platform_id = #{platformId}</if>
-            <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
-        </where>
+        where game_end_time &gt;=  #{start} and game_end_time &lt;=  #{end}
+        <if test="account != null "> and account = #{account}</if>
+        <if test="platformId != null "> and platform_id = #{platformId}</if>
+        and cx_agent = #{cxAgent}
     </select>
 
     <select id="selectGameDataLogById" parameterType="String" resultMap="GameDataLogResult">
