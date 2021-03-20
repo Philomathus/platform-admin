@@ -1,11 +1,13 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
+import com.qiqilm.server.admin.domain.ActivityMemberInfo;
+import com.qiqilm.server.admin.mapper.ActivityMemberInfoMapper;
+import com.qiqilm.server.admin.service.IActivityMemberInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.ActivityMemberInfoMapper;
-import com.qiqilm.server.admin.domain.ActivityMemberInfo;
-import com.qiqilm.server.admin.service.IActivityMemberInfoService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 会员推广管理Service业务层处理
@@ -82,5 +84,10 @@ public class ActivityMemberInfoServiceImpl implements IActivityMemberInfoService
     @Override
     public int deleteActivityMemberInfoById(String id) {
         return activityMemberInfoMapper.deleteActivityMemberInfoById(id);
+    }
+
+    @Override
+    public List<Map> selectIpList(ActivityMemberInfo activityMemberInfo) {
+        return activityMemberInfoMapper.selectIpList(activityMemberInfo);
     }
 }

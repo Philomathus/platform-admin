@@ -44,7 +44,7 @@ public class ActivityMemberInfo extends BaseEntity {
     private Long status;
 
     /** 会员vip */
-    //@Excel(name = "会员vip")
+    @Excel(name = "会员vip")
     private Long vip;
 
     private String[] selectDate;
@@ -73,7 +73,7 @@ public class ActivityMemberInfo extends BaseEntity {
     private Long sex;
 
     /** 注册时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "注册时间", width = 30, databaseFormat = "yyyy-MM-dd")
     private Date regTime;
 
@@ -122,8 +122,8 @@ public class ActivityMemberInfo extends BaseEntity {
     private String linkUrl;
 
     /** 登录时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    //@Excel(name = "登录时间", width = 30, databaseFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "登录时间", width = 30, databaseFormat = "yyyy-MM-dd")
     private Date loginTime;
 
     /** 保险箱余额 */
@@ -135,7 +135,7 @@ public class ActivityMemberInfo extends BaseEntity {
     private String boxPass;
 
     /** 上次洗码时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //@Excel(name = "上次洗码时间", width = 30, databaseFormat = "yyyy-MM-dd")
     private Date cleanTime;
 
@@ -186,6 +186,12 @@ public class ActivityMemberInfo extends BaseEntity {
     /** 设备ID */
     //@Excel(name = "设备ID")
     private String deviceId;
+
+
+
+    public void setPhone(String phone) {
+        this.phone = new StringBuilder( phone ).replace( 5, 7, "**" ).toString();
+    }
 
     @Override
     public String toString() {
