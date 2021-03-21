@@ -53,6 +53,8 @@
     <select id="selectActivityMemberInfoList" parameterType="ActivityMemberInfo" resultMap="ActivityMemberInfoResult">
         select id,reg_time,login_ip,phone,inviter_code,vip,login_time from member_info
         <where>
+            and inviter_code != null
+            and phone != null
             <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
             <if test="selectDate != null"> and reg_time >= '${selectDate[0]}'</if>
@@ -255,6 +257,8 @@
     <select id="selectIpList" resultType="java.util.Map">
         select inviter_code inviterCode,login_ip loginIp,COUNT(1) count from member_info
         <where>
+            and inviter_code != null
+            and phone != null
         <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
         <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
         <if test="selectDate != null"> and reg_time >= '${selectDate[0]}'</if>
