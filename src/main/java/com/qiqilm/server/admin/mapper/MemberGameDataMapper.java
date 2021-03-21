@@ -37,7 +37,7 @@ public interface MemberGameDataMapper {
 	 * @param memberGameData 会员注单数据
 	 * @return 结果
 	 */
-	public int insertMemberGameData(MemberGameData memberGameData);
+	public int insertMemberGameData(@Param("req")  MemberGameData memberGameData , @Param( "dbNodes" ) String dbNodes);
 
 	/**
 	 * 修改会员注单数据

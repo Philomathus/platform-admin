@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public interface IGameDataLogService {
 	/**
 	 * 游戏打码
 	 */
-	public void beatCode(Map<Integer,String> platformType,String cxAgent, String start, String end, String account, String platformId);
+	public void beatGameCode(Map<Integer,String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId);
 
 
 

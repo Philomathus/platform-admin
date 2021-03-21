@@ -48,6 +48,6 @@ public class GameDataTask {
 
         Date starDay = DateFormatUtils.addMin( endDay, -10);
 
-        gameDataLogService.beatCode(platformType,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
+        gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
     }
 }

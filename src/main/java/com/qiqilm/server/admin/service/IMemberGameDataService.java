@@ -29,13 +29,6 @@ public interface IMemberGameDataService {
 	 */
 	public List<RspMemberGameData> selectMemberGameDataList(MemberGameData memberGameData);
 
-	/**
-	 * 新增会员注单数据
-	 *
-	 * @param memberGameData 会员注单数据
-	 * @return 结果
-	 */
-	public int insertMemberGameData(MemberGameData memberGameData);
 
 	/**
 	 * 修改会员注单数据

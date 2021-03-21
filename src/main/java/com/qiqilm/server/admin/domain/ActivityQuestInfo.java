@@ -5,6 +5,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-25
  */
+@Data
 public class ActivityQuestInfo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -67,99 +69,9 @@ public class ActivityQuestInfo extends BaseEntity {
 
     /** 平台类型 */
     @Excel(name = "平台类型")
-    private Long platformId;
+    private Integer platformId;
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
-    public String getId() {
-        return id;
-    }
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-    public void setCtime(Date ctime) {
-        this.ctime = ctime;
-    }
-
-    public Date getCtime() {
-        return ctime;
-    }
-    public void setIndexs(Long indexs) {
-        this.indexs = indexs;
-    }
-
-    public Long getIndexs() {
-        return indexs;
-    }
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
-
-    public String getTypeId() {
-        return typeId;
-    }
-    public void setTarget(Long target) {
-        this.target = target;
-    }
-
-    public Long getTarget() {
-        return target;
-    }
-    public void setReward(BigDecimal reward) {
-        this.reward = reward;
-    }
-
-    public BigDecimal getReward() {
-        return reward;
-    }
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
-
-    public String getDetail() {
-        return detail;
-    }
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public String getGameId() {
-        return gameId;
-    }
-    public void setKindId(String kindId) {
-        this.kindId = kindId;
-    }
-
-    public String getKindId() {
-        return kindId;
-    }
-    public void setPlatformId(Long platformId) {
-        this.platformId = platformId;
-    }
-
-    public Long getPlatformId() {
-        return platformId;
-    }
 
     @Override
     public String toString() {

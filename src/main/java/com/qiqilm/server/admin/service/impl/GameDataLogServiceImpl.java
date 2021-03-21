@@ -1,20 +1,18 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import com.qiqilm.server.admin.domain.MemberGameData;
-import com.qiqilm.server.admin.mapper.MemberGameDataMapper;
+import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.mapper.*;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.GameDataLogMapper;
-import com.qiqilm.server.admin.domain.GameDataLog;
 import com.qiqilm.server.admin.service.IGameDataLogService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +31,18 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
     @Resource
     private MemberGameDataMapper memberGameDataMapper;
+
+    @Resource
+    private MemberBcodeMapper memberBcodeMapper;
+
+    @Resource
+    private MemberInfoMapper memberInfoMapper;
+
+    @Resource
+    private ActivityQuestInfoMapper questInfoMapper;
+
+    @Resource
+    private MemberQuestMapper memberQuestMapper;
 
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
@@ -60,10 +70,17 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
     @Override
     @Transactional
-    public void beatCode(Map<Integer,String> platformType,String cxAgent, String start, String end, String account, String platformId) {
-        Map<Integer,List<MemberGameData>> dataMap = new HashMap<>();
-        for(GameDataLog og: gameDataLogMapper.selectGameDataLogList(cxAgent,start,end,account,platformId)){
-            if ( memberGameDataMapper.findExist(og.getAccount().substring(og.getAccount().length()-1),og.getId()) != null ) {
+    public void beatGameCode(Map<Integer,String> platformType, Map<Integer, BigDecimal> beatRateMap,String cxAgent, String start, String end, String account, String platformId) {
+        List<GameDataLog> list =  gameDataLogMapper.selectGameDataLogList(cxAgent,start,end,account,platformId);
+        if(list.size()==0){
+            return;
+        }
+        Map<String, BigDecimal> willCodeMap = new HashMap<>();
+        List<MemberGameData> willCodeList =new ArrayList<>();
+        SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
+        MemberGameDataMapper mapper  = session.getMapper( MemberGameDataMapper.class );
+        for(GameDataLog og: list){
+            if ( mapper.findExist(og.getAccount().substring(og.getAccount().length()-1),og.getId()) != null ) {
                 continue;
             }
 
@@ -82,11 +99,146 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             gameDataLog.setPlatformType( platformType.get(og.getPlatformId()));
             gameDataLog.setPlatformId( og.getPlatformId());
             gameDataLog.setRevenue(og.getRevenue());
-            dataMap.putIfAbsent(og.getPlatformId(),new ArrayList<>());
-            dataMap.get(og.getPlatformId()).add(gameDataLog);
+
+            if(beatRateMap.containsKey(og.getPlatformId())){
+                BigDecimal beatAdd =new BigDecimal(og.getCellScore()).multiply(beatRateMap.get(og.getPlatformId())).setScale(4);
+                willCodeMap.putIfAbsent(og.getAccount(),BigDecimal.ZERO);
+                willCodeMap.put(og.getAccount(),willCodeMap.get(og.getAccount()).add(beatAdd));
+            }
+
+            willCodeList.add(gameDataLog);
         }
 
-        SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
+        insertBatch(session,mapper,willCodeList);
+
+        doBeatCode(willCodeMap);
+
+        deQuestCheck(willCodeList,willCodeMap);
+
+    }
+    //批量插入
+    public void insertBatch(SqlSession session,MemberGameDataMapper mapper,List<MemberGameData> willCodeList){
+        int              count   = 0;
+        for ( MemberGameData in : willCodeList ) {
+            try {
+                mapper.insertMemberGameData(in,in.getAccount().substring(in.getAccount().length()-1));
+                count += 1;
+                if ( count >= 500 ) {
+                    session.commit();
+                    count = 0;
+                }
+
+            } catch ( Exception e ) {
+                e.printStackTrace();
+            }
+
+        }
+        if ( count > 0 ) {
+            session.commit();
+
+        }
+    }
+
+    //实际打码
+    @Async
+    public void doBeatCode(Map<String, BigDecimal> willCodeMap){
+        Map<String, BigDecimal> codeAccountMap = new HashMap<>();
+        MemberBcode query = new MemberBcode();
+        query.setStatus(0);
+        //遍历有注单的会员
+        for(String user_id : willCodeMap.keySet()){
+            //记录此会员新的打码量
+            BigDecimal beatVal = BigDecimal.ZERO;
+            BigDecimal codeVal = willCodeMap.get(user_id);
+            //查询到此人需要打码的充值记录
+            query.setUserId(user_id);
+            List<MemberBcode> codeFlowlist = memberBcodeMapper.selectWillBcodeList(query);
+            for(MemberBcode codeFlow : codeFlowlist){
+                if(codeVal.compareTo(BigDecimal.ZERO)<=0){
+                    continue;
+                }
+                //此纪录最初打码量
+                BigDecimal oldCur =  codeFlow.getCur();
+                BigDecimal addCode = codeVal.add(oldCur);
+                if(addCode.compareTo(codeFlow.getIncome())>0){
+                    codeFlow.setCur(codeFlow.getIncome());
+                    codeFlow.setStatus(1);
+                    //codeFlow.setCreate_time(new Date());
+                }else if(addCode.compareTo(codeFlow.getIncome())==0){
+                    codeFlow.setCur(codeFlow.getIncome());
+                    codeFlow.setStatus(1);
+                    //codeFlow.setCreate_time(new Date());
+                }else{
+                    codeFlow.setCur(addCode);
+                }
+                beatVal = beatVal.add(codeFlow.getCur().subtract(oldCur));
+
+                codeVal = codeVal.subtract(codeFlow.getCur().subtract(oldCur));
+                memberBcodeMapper.updateMemberBcode(codeFlow);
+            }
+            if(codeAccountMap.containsKey(user_id)){
+                codeAccountMap.put(user_id,codeAccountMap.get(user_id).add(beatVal).setScale(4));
+            }else{
+                codeAccountMap.put(user_id,beatVal);
+            }
+        }
+
+        for(String userId:willCodeMap.keySet()){
+            BigDecimal c = codeAccountMap.get(userId);
+            if(c==null){
+                c = BigDecimal.ZERO;
+            }
+            BigDecimal w = willCodeMap.get(userId);
+            if(w==null){
+                w = BigDecimal.ZERO;
+            }
+            memberInfoMapper.updateMoneySelect(userId,null,null,null,c,w);
+        }
+    }
+    //做任务
+    @Async
+    public void deQuestCheck( final List<MemberGameData> list,Map<String, BigDecimal> willCodeMap){
+//查找全部任务
+        List<ActivityQuestInfo> listConfQuet = questInfoMapper.selectQuestList();
+        Set<Integer> questSet= listConfQuet.stream().map(ActivityQuestInfo::getPlatformId).collect(Collectors.toSet());
+        for(MemberGameData data : list){
+            //过滤没参加活动的游戏平台
+            if(!questSet.contains(data.getPlatformId()){
+                continue ;
+            }
+            int add = new BigDecimal(data.getCellScore()).intValue();
+            for(ActivityQuestInfo confQuest : listConfQuet){
+                if(confQuest.getPlatformId()!=data.getPlatformId()){
+                    continue;
+                }
+                if(!confQuest.getKindId().equals("0")&&!confQuest.getKindId().equals(data.getKindId())){
+                    continue;
+                }
+                MemberQuest memberQuest = memberQuestMapper.selectByPrimaryKey(data.getAccount().concat("_").concat(confQuest.getId()));
+                if(memberQuest==null){
+                    memberQuest = new MemberQuest();
+                    memberQuest.setMember_id(data.getAccount());
+                    memberQuest.setQuest_id(confQuest.getId());
+                    memberQuest.setId(data.getAccount().concat("_").concat(confQuest.getId()));
+                    memberQuest.setStatus(0);
+                    memberQuest.setCurNum(add);
+                    if(memberQuest.getCurNum()>=confQuest.getTarget()){
+                        memberQuest.setCurNum(confQuest.getTarget());
+                        memberQuest.setStatus(1);
+                    }
+                    memberQuestMapper.insert(memberQuest);
+                }else if(memberQuest.getStatus()==0){
+                    memberQuest.setCurNum(memberQuest.getCurNum()+add);
+                    if(memberQuest.getCurNum()>=confQuest.getTarget()){
+                        memberQuest.setCurNum(confQuest.getTarget());
+                        memberQuest.setStatus(1);
+                    }
+
+                    memberQuestMapper.updateByPrimaryKey(memberQuest);
+                }
+
+            }
+        }
 
     }
 
