@@ -29,11 +29,11 @@ public class MemberQuest extends BaseEntity {
 
     /** 0=进行中1=已经完成2 领奖完成 */
     @Excel(name = "0=进行中1=已经完成2 领奖完成")
-    private Long status;
+    private Integer status;
 
     /** 当前任务数量 */
     @Excel(name = "当前任务数量")
-    private Long curnum;
+    private Integer curnum;
 
     @Override
     public String toString() {

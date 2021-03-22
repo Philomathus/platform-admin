@@ -203,7 +203,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         Set<Integer> questSet= listConfQuet.stream().map(ActivityQuestInfo::getPlatformId).collect(Collectors.toSet());
         for(MemberGameData data : list){
             //过滤没参加活动的游戏平台
-            if(!questSet.contains(data.getPlatformId()){
+            if(!questSet.contains(data.getPlatformId())){
                 continue ;
             }
             int add = new BigDecimal(data.getCellScore()).intValue();
@@ -214,27 +214,26 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
                 if(!confQuest.getKindId().equals("0")&&!confQuest.getKindId().equals(data.getKindId())){
                     continue;
                 }
-                MemberQuest memberQuest = memberQuestMapper.selectByPrimaryKey(data.getAccount().concat("_").concat(confQuest.getId()));
+                MemberQuest memberQuest = memberQuestMapper.selectMemberQuestById(data.getAccount().concat("_").concat(confQuest.getId()));
                 if(memberQuest==null){
                     memberQuest = new MemberQuest();
-                    memberQuest.setMember_id(data.getAccount());
-                    memberQuest.setQuest_id(confQuest.getId());
+                    memberQuest.setMemberId(data.getAccount());
+                    memberQuest.setQuestId(confQuest.getId());
                     memberQuest.setId(data.getAccount().concat("_").concat(confQuest.getId()));
                     memberQuest.setStatus(0);
-                    memberQuest.setCurNum(add);
-                    if(memberQuest.getCurNum()>=confQuest.getTarget()){
-                        memberQuest.setCurNum(confQuest.getTarget());
+                    memberQuest.setCurnum(add);
+                    if(memberQuest.getCurnum()>=confQuest.getTarget()){
+                        memberQuest.setCurnum(confQuest.getTarget());
                         memberQuest.setStatus(1);
                     }
-                    memberQuestMapper.insert(memberQuest);
+                    memberQuestMapper.insertMemberQuest(memberQuest);
                 }else if(memberQuest.getStatus()==0){
-                    memberQuest.setCurNum(memberQuest.getCurNum()+add);
-                    if(memberQuest.getCurNum()>=confQuest.getTarget()){
-                        memberQuest.setCurNum(confQuest.getTarget());
+                    memberQuest.setCurnum(memberQuest.getCurnum()+add);
+                    if(memberQuest.getCurnum()>=confQuest.getTarget()){
+                        memberQuest.setCurnum(confQuest.getTarget());
                         memberQuest.setStatus(1);
                     }
-
-                    memberQuestMapper.updateByPrimaryKey(memberQuest);
+                    memberQuestMapper.updateMemberQuest(memberQuest);
                 }
 
             }

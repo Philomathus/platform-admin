@@ -45,7 +45,7 @@ public class ActivityQuestInfo extends BaseEntity {
 
     /** 目标任务量 */
     @Excel(name = "目标任务量")
-    private Long target;
+    private Integer target;
 
     /** 完成后增加的资金 */
     @Excel(name = "完成后增加的资金")
