@@ -188,17 +188,11 @@ public class MemberCacheManager {
 			liveUserMountMapper.insertLiveUserMount(query);
 		}else{
 			LiveUserMount db = list.get(0);
-			if(db.getIsUse().equals(1)){
-				if(db.getEffectiveTime().getTime()>System.currentTimeMillis()){
-					db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
-				}else{
-					Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
-					db.setEffectiveTime( d );
-				}
+			if(db.getEffectiveTime().getTime()>System.currentTimeMillis()){
+				db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
 			}else{
 				Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
 				db.setEffectiveTime( d );
-				db.setIsUse(0);
 			}
 
 			liveUserMountMapper.updateLiveUserMount(db);
@@ -223,19 +217,12 @@ public class MemberCacheManager {
 			liveUserMountMapper.insertLiveUserMount(query);
 		}else{
 			LiveUserMount db = list.get(0);
-			if(db.getIsUse().equals(1)){
-				if(db.getEffectiveTime().getTime()>System.currentTimeMillis()){
-					db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
-				}else{
-					Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
-					db.setEffectiveTime( d );
-				}
+			if(db.getEffectiveTime().getTime()>System.currentTimeMillis()){
+				db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
 			}else{
 				Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
 				db.setEffectiveTime( d );
-				db.setIsUse(0);
 			}
-
 			liveUserMountMapper.updateLiveUserMount(db);
 		}
 	}
