@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveMsgEngageMapper">
+
+    <resultMap type="LiveMsgEngage" id="LiveMsgEngageResult">
+        <result property="id"    column="id"    />
+        <result property="msg"    column="msg"    />
+    </resultMap>
+
+    <sql id="selectLiveMsgEngageVo">
+        select id, msg from 7700_live.live_msg_engage
+    </sql>
+
+    <select id="selectLiveMsgEngageList" parameterType="LiveMsgEngage" resultMap="LiveMsgEngageResult">
+        <include refid="selectLiveMsgEngageVo"/>
+        <where>
+            <if test="msg != null  and msg != ''"> and msg = #{msg}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveMsgEngageById" parameterType="Long" resultMap="LiveMsgEngageResult">
+        <include refid="selectLiveMsgEngageVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveMsgEngage" parameterType="LiveMsgEngage" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.live_msg_engage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="msg != null">msg,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="msg != null">#{msg},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLiveMsgEngage" parameterType="LiveMsgEngage">
+        update 7700_live.live_msg_engage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="msg != null">msg = #{msg},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveMsgEngageById" parameterType="Long">
+        delete from 7700_live.live_msg_engage where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveMsgEngageByIds" parameterType="String">
+        delete from 7700_live.live_msg_engage where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
