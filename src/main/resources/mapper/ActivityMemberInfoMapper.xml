@@ -51,13 +51,13 @@
     </sql>
 
     <select id="selectActivityMemberInfoList" parameterType="ActivityMemberInfo" resultMap="ActivityMemberInfoResult">
-        select id,reg_time,login_ip,phone,inviter_code from member_info
+        select id,reg_time,login_ip,phone,inviter_code,vip,login_time from member_info
         <where>
             <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
+            <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
             <if test="selectDate != null"> and reg_time >= '${selectDate[0]}'</if>
             <if test="selectDate != null"> and reg_time &lt;= '${selectDate[1]}'</if>
         </where>
-        order by reg_time desc
     </select>
 
     <select id="selectActivityMemberInfoById" parameterType="String" resultMap="ActivityMemberInfoResult">
@@ -252,4 +252,16 @@
             #{id}
         </foreach>
     </delete>
+    <select id="selectIpList" resultType="java.util.Map">
+        select inviter_code inviterCode,login_ip loginIp,COUNT(1) count from member_info
+        <where>
+        <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
+        <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
+        <if test="selectDate != null"> and reg_time >= '${selectDate[0]}'</if>
+        <if test="selectDate != null"> and reg_time &lt;= '${selectDate[1]}'</if>
+        </where>
+        GROUP BY login_ip HAVING COUNT(1) >= 2
+    </select>
+
+
 </mapper>

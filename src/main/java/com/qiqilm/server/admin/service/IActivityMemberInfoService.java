@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.ActivityMemberInfo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 会员推广管理Service接口
@@ -58,4 +59,6 @@ public interface IActivityMemberInfoService {
 	 * @return 结果
 	 */
 	public int deleteActivityMemberInfoById(String id);
+
+    List<Map> selectIpList(ActivityMemberInfo activityMemberInfo);
 }

@@ -180,6 +180,8 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		//新增佣金记录
 		this.recommendProcess( memberRechargeLog, memberInfo );
 		try {
+
+			memberCacheManager.bankChargeMount(memberRechargeLog.getMemberId());
 			if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
 				memberCacheManager.checkFirstChargeaddWheelTimes(memberRechargeLog.getMemberId());
 			}

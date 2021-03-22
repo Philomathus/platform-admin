@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.ActivityMemberInfo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 会员推广管理Mapper接口
@@ -58,4 +59,6 @@ public interface ActivityMemberInfoMapper {
 	 * @return 结果
 	 */
 	public int deleteActivityMemberInfoByIds(String[] ids );
+
+    List<Map> selectIpList(ActivityMemberInfo activityMemberInfo);
 }
