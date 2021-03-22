@@ -42,7 +42,8 @@
 			   bank_user_name,
 			   order_no,
 			   discount_bill,
-			   first
+			   first,
+		       ip
 		from member_recharge_log
 	</sql>
 
