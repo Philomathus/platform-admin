@@ -21,10 +21,11 @@ public class ActivityMemberInfo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 系统编号 */
+    @Excel(name = "系统编号", width = 30)
     private String id;
 
     /** 会员编号 */
-    @Excel(name = "会员编号")
+//    @Excel(name = "会员编号")
     private String memberCode;
 
     /** 代理编号 */
@@ -44,7 +45,7 @@ public class ActivityMemberInfo extends BaseEntity {
     private Long status;
 
     /** 会员vip */
-    //@Excel(name = "会员vip")
+    @Excel(name = "会员vip")
     private Long vip;
 
     private String[] selectDate;
@@ -53,7 +54,7 @@ public class ActivityMemberInfo extends BaseEntity {
     private BigDecimal totalAccount;
 
     /** 手机 */
-    @Excel(name = "手机")
+    @Excel(name = "手机", width = 30)
     private String phone;
 
     /** 邮箱 */
@@ -73,16 +74,20 @@ public class ActivityMemberInfo extends BaseEntity {
     private Long sex;
 
     /** 注册时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "注册时间", width = 30, databaseFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @Excel(name = "注册时间", width = 30, databaseFormat = "yyyy-MM-dd")
     private Date regTime;
+
+    /** 注册时间 */
+    @Excel(name = "注册时间", width = 30, databaseFormat = "yyyy-MM-dd")
+    private String regSTime;
 
     /** 注册ip */
     //@Excel(name = "注册ip")
     private String registIp;
 
     /** 登录ip */
-    @Excel(name = "登录ip")
+    @Excel(name = "登录ip", width = 30)
     private String loginIp;
 
     /** 登录地址 */
@@ -122,10 +127,12 @@ public class ActivityMemberInfo extends BaseEntity {
     private String linkUrl;
 
     /** 登录时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    //@Excel(name = "登录时间", width = 30, databaseFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @Excel(name = "登录时间", width = 30, databaseFormat = "yyyy-MM-dd")
     private Date loginTime;
-
+    /** 登录时间 */
+    @Excel(name = "登录时间", width = 30, databaseFormat = "yyyy-MM-dd")
+    private String loginSTime;
     /** 保险箱余额 */
     //@Excel(name = "保险箱余额")
     private BigDecimal boxAccount;
@@ -135,7 +142,7 @@ public class ActivityMemberInfo extends BaseEntity {
     private String boxPass;
 
     /** 上次洗码时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //@Excel(name = "上次洗码时间", width = 30, databaseFormat = "yyyy-MM-dd")
     private Date cleanTime;
 
@@ -186,6 +193,12 @@ public class ActivityMemberInfo extends BaseEntity {
     /** 设备ID */
     //@Excel(name = "设备ID")
     private String deviceId;
+
+
+
+    public void setPhone(String phone) {
+        this.phone = new StringBuilder( phone ).replace( 5, 7, "**" ).toString();
+    }
 
     @Override
     public String toString() {

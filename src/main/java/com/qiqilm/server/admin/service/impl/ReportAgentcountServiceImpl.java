@@ -22,7 +22,6 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 	@Autowired
 	private ReportAgentcountMapper reportAgentcountMapper;
 
-
 	/**
 	 * 查询代理统计，主要用于代理渠道的统计列表
 	 *
@@ -31,24 +30,25 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 	 */
 	@Override
 	public Object selectReportAgentcountList( ReportAgentcount reportAgentcount ) throws ParseException {
-		List<ReportAgentcount> allList    = new ArrayList<>();
-		String                 dateNowStr = dateNowStr();//获取当天时间字符串
-		setSelectTime( dateNowStr, reportAgentcount );//首次进入查询7天的数据
-
+		List<ReportAgentcount> allList   = new ArrayList<>();
+		String                 agenttime = null;
+		if ( reportAgentcount.getAgenttime() == null ) {
+			agenttime = dateYesterday();
+			reportAgentcount.setAgentname( agenttime );
+		} else {
+			agenttime = reportAgentcount.getAgenttime();
+		}
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "yyyy-MM-dd" );
-		String           beginTime        = ( String ) reportAgentcount.getParams().get( "beginTime" );
-		String           endTime          = ( String ) reportAgentcount.getParams().get( "endTime" );
-		Date             date             = simpleDateFormat.parse( endTime );
+		Date             date             = simpleDateFormat.parse( agenttime );
 		boolean          flag             = date.before( new Date() );
 		if ( !flag ) {
-			beginTime = dateNowStr();
-			endTime = dateNowStr();
+			agenttime = dateNowStr();
 		}
 		Map<String, Object> resultMap = new HashMap<>();
 		//断时间是否是正确时间
 		allList = reportAgentcountMapper.selectReportAgentcountList( reportAgentcount );
 		if ( reportAgentcount.getAgentcode() != null && allList.size() == 0 ) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
-			reportAgentcountMapper.calldataProrepPlamcom( beginTime, endTime, reportAgentcount.getAgentcode() );//调用存储过程
+			reportAgentcountMapper.calldataProrepPlamcom( agenttime, agenttime, reportAgentcount.getAgentcode() );//调用存储过程
 			List<ReportAgentcount> allList1 = reportAgentcountMapper.selectReportAgentcountList( reportAgentcount );
 			resultMap.put( "rows", allList1 );
 			return resultMap;
@@ -115,6 +115,15 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 		SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
 		String           dateNowStr = sdf.format( d );
 		return dateNowStr;
+	}
+
+	private String dateYesterday() {
+		Calendar cal = Calendar.getInstance();
+		cal.add( Calendar.DATE, -1 );
+		Date             d         = cal.getTime();
+		SimpleDateFormat sp        = new SimpleDateFormat( "yyyy-MM-dd" );
+		String           yesterday = sp.format( d );//获取昨天日期
+		return yesterday;
 	}
 
 	private String getPastDate( int past ) {

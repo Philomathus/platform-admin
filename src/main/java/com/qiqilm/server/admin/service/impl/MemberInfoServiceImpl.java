@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 会员信息 Service业务层处理
@@ -287,5 +288,21 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), true);
         }
         return 1;
+    }
+
+    @Override
+    public AjaxResult unbindCard(MemberCard member) {
+        String id = member.getId();
+        String memberId=member.getMemberId();
+        List<MemberCard> memberCardList=memberCardMapper.memberCardList(memberId);
+        MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
+        if (Objects.isNull(memberCard)){
+            return AjaxResult.success("卡号不存在");
+        }
+        if (memberCardList.size()>1&&memberCard.getDv()==1){
+            return AjaxResult.success("请先解绑副卡");
+        }
+        memberCardMapper.deleteMemberCardById(id);
+        return AjaxResult.success("解绑成功");
     }
 }
