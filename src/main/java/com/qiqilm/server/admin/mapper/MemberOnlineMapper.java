@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberOnline;
 
 /**
@@ -19,5 +20,7 @@ public interface MemberOnlineMapper {
 	 * @return 在线会员列表集合
 	 */
 	public List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline);
+
+	MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline);
 
 }

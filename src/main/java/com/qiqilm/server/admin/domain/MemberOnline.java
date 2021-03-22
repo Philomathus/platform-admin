@@ -6,6 +6,8 @@ import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.math.BigDecimal;
+
 /**
  * 在线会员列表对象 member_online
  *
@@ -27,6 +29,8 @@ public class MemberOnline extends BaseEntity {
     private String vip;
     private String nickName;
     private String loginIp;
+
+    private Integer total;
 
     @Override
     public String toString() {

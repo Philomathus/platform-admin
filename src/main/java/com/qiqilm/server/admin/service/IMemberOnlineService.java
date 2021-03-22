@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberOnline;
 
 /**
@@ -18,5 +19,7 @@ public interface IMemberOnlineService {
 	 * @return 在线会员列表集合
 	 */
 	public List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline);
+
+	MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline);
 
 }
