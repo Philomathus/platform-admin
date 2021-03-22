@@ -12,7 +12,7 @@
     </resultMap>
 
     <sql id="selectWheelHistoryVo">
-        select id, p_user_id, name, prize, c_time, wheel_type from 7700_live.wheel_history
+        select id, p_user_id, name, prize, c_time, wheel_type from ${dbLive}.wheel_history
     </sql>
 
     <select id="selectWheelHistoryList" parameterType="WheelHistory" resultMap="WheelHistoryResult">
@@ -34,7 +34,7 @@
     </select>
 
     <insert id="insertWheelHistory" parameterType="WheelHistory" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.wheel_history
+        insert into ${dbLive}.wheel_history
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pUserId != null">p_user_id,</if>
             <if test="name != null">name,</if>
@@ -52,7 +52,7 @@
     </insert>
 
     <update id="updateWheelHistory" parameterType="WheelHistory">
-        update 7700_live.wheel_history
+        update ${dbLive}.wheel_history
         <trim prefix="SET" suffixOverrides=",">
             <if test="pUserId != null">p_user_id = #{pUserId},</if>
 
@@ -69,11 +69,11 @@
     </update>
 
     <delete id="deleteWheelHistoryById" parameterType="Long">
-        delete from 7700_live.wheel_history where id = #{id}
+        delete from ${dbLive}.wheel_history where id = #{id}
     </delete>
 
     <delete id="deleteWheelHistoryByIds" parameterType="String">
-        delete from 7700_live.wheel_history where id in
+        delete from ${dbLive}.wheel_history where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

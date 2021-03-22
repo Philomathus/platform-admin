@@ -49,7 +49,7 @@
     </resultMap>
 
     <sql id="selectActivityMemberInfoVo">
-        select id, member_code, cx_agent, user_name, real_name, status, vip, total_account, phone, email, password, is_online, sex, reg_time, regist_ip, login_ip, login_address, login_dev, nick_name, birth_day, qq, wechat, head_img, online_time, link_url, login_time, box_account, box_pass, clean_time, level_integral, inviter_code, invite_money, code_account, PID, code_total, channelCode, speak, login_num, version, withdrawal_pass, device_id from 7700_main.member_info
+        select id, member_code, cx_agent, user_name, real_name, status, vip, total_account, phone, email, password, is_online, sex, reg_time, regist_ip, login_ip, login_address, login_dev, nick_name, birth_day, qq, wechat, head_img, online_time, link_url, login_time, box_account, box_pass, clean_time, level_integral, inviter_code, invite_money, code_account, PID, code_total, channelCode, speak, login_num, version, withdrawal_pass, device_id from ${dbMain}.member_info
     </sql>
 
     <select id="selectActivityMemberInfoList" parameterType="ActivityMemberInfo" resultMap="ActivityMemberInfoResult">
@@ -75,7 +75,7 @@
     </select>
 
     <insert id="insertActivityMemberInfo" parameterType="ActivityMemberInfo">
-        insert into 7700_main.member_info
+        insert into ${dbMain}.member_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="memberCode != null and memberCode != ''">member_code,</if>
@@ -165,7 +165,7 @@
     </insert>
 
     <update id="updateActivityMemberInfo" parameterType="ActivityMemberInfo">
-        update 7700_main.member_info
+        update ${dbMain}.member_info
         <trim prefix="SET" suffixOverrides=",">
             <if test="memberCode != null and memberCode != ''">member_code = #{memberCode},</if>
 
@@ -252,11 +252,11 @@
     </update>
 
     <delete id="deleteActivityMemberInfoById" parameterType="String">
-        delete from 7700_main.member_info where id = #{id}
+        delete from ${dbMain}.member_info where id = #{id}
     </delete>
 
     <delete id="deleteActivityMemberInfoByIds" parameterType="String">
-        delete from 7700_main.member_info where id in
+        delete from ${dbMain}.member_info where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
