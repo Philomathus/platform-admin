@@ -17,7 +17,7 @@ public interface LiveMsgEngageMapper {
 	 * @param id 【请填写功能名称】ID
 	 * @return 【请填写功能名称】
 	 */
-	public LiveMsgEngage selectLiveMsgEngageById(Long id);
+	public LiveMsgEngage selectLiveMsgEngageById(Integer id);
 
 	/**
 	 * 查询【请填写功能名称】列表
@@ -49,7 +49,7 @@ public interface LiveMsgEngageMapper {
 	 * @param id 【请填写功能名称】ID
 	 * @return 结果
 	 */
-	public int deleteLiveMsgEngageById(Long id);
+	public int deleteLiveMsgEngageById(Integer id);
 
 	/**
 	 * 批量删除【请填写功能名称】
@@ -57,5 +57,7 @@ public interface LiveMsgEngageMapper {
 	 * @param ids 需要删除的数据ID
 	 * @return 结果
 	 */
-	public int deleteLiveMsgEngageByIds(Long[] ids );
+	public int deleteLiveMsgEngageByIds(Integer[] ids );
+
+    LiveMsgEngage searchliveMsgEngage(String msg);
 }

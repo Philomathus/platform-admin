@@ -18,9 +18,13 @@
         </where>
     </select>
 
-    <select id="selectLiveMsgEngageById" parameterType="Long" resultMap="LiveMsgEngageResult">
+    <select id="selectLiveMsgEngageById" parameterType="Integer" resultMap="LiveMsgEngageResult">
         <include refid="selectLiveMsgEngageVo"/>
         where id = #{id}
+    </select>
+    <select id="searchliveMsgEngage" parameterType="String" resultMap="LiveMsgEngageResult">
+        <include refid="selectLiveMsgEngageVo"/>
+        where msg = #{msg}
     </select>
 
     <insert id="insertLiveMsgEngage" parameterType="LiveMsgEngage" useGeneratedKeys="true" keyProperty="id">

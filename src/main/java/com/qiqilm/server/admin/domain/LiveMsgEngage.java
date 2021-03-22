@@ -13,14 +13,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @date 2021-03-22
  */
 @Data
-public class LiveMsgEngage extends BaseEntity {
+public class LiveMsgEngage {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private Integer id;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}")
+    @Excel(name = "互动信息")
     private String msg;
 
     @Override

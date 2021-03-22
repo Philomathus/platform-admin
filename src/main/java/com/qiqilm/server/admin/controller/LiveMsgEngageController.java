@@ -24,7 +24,7 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 【请填写功能名称】Controller
+ * 主播互动信息Controller
  *
  * @author 77tv
  * @date 2021-03-22
@@ -36,7 +36,7 @@ public class LiveMsgEngageController extends BaseController {
 	private ILiveMsgEngageService liveMsgEngageService;
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveMsgEngage:list')" )
 	@GetMapping( "/list" )
@@ -47,7 +47,7 @@ public class LiveMsgEngageController extends BaseController {
 	}
     
 	/**
-	 * 导出【请填写功能名称】列表
+	 *
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveMsgEngage:export')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
@@ -62,37 +62,39 @@ public class LiveMsgEngageController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveMsgEngage:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
+	public AjaxResult getInfo( @PathVariable( "id" ) Integer id) {
 		return AjaxResult.success( liveMsgEngageService.selectLiveMsgEngageById(id) );
 	}
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveMsgEngage:add')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody LiveMsgEngage liveMsgEngage) {
-		return toAjax( liveMsgEngageService.insertLiveMsgEngage(liveMsgEngage) );
+		AjaxResult ajaxResult=liveMsgEngageService.insertLiveMsgEngage(liveMsgEngage);
+		return ajaxResult;
 	}
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveMsgEngage:edit')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LiveMsgEngage liveMsgEngage) {
-		return toAjax( liveMsgEngageService.updateLiveMsgEngage(liveMsgEngage) );
+		AjaxResult ajaxResult=liveMsgEngageService.updateLiveMsgEngage(liveMsgEngage);
+		return ajaxResult;
 	}
 
 	/**
-	 * 删除【请填写功能名称】
+	 * 删除
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveMsgEngage:remove')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
+	public AjaxResult remove( @PathVariable Integer[] ids ) {
 		return toAjax( liveMsgEngageService.deleteLiveMsgEngageByIds( ids ) );
 	}
 }

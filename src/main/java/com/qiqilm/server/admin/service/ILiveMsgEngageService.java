@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveMsgEngage;
 
 /**
@@ -17,7 +18,7 @@ public interface ILiveMsgEngageService {
 	 * @param id 【请填写功能名称】ID
 	 * @return 【请填写功能名称】
 	 */
-	public LiveMsgEngage selectLiveMsgEngageById(Long id);
+	public LiveMsgEngage selectLiveMsgEngageById(Integer id);
 
 	/**
 	 * 查询【请填写功能名称】列表
@@ -33,7 +34,7 @@ public interface ILiveMsgEngageService {
 	 * @param liveMsgEngage 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int insertLiveMsgEngage(LiveMsgEngage liveMsgEngage);
+	AjaxResult insertLiveMsgEngage(LiveMsgEngage liveMsgEngage);
 
 	/**
 	 * 修改【请填写功能名称】
@@ -41,7 +42,7 @@ public interface ILiveMsgEngageService {
 	 * @param liveMsgEngage 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int updateLiveMsgEngage(LiveMsgEngage liveMsgEngage);
+	AjaxResult updateLiveMsgEngage(LiveMsgEngage liveMsgEngage);
 
 	/**
 	 * 批量删除【请填写功能名称】
@@ -49,7 +50,7 @@ public interface ILiveMsgEngageService {
 	 * @param ids 需要删除的【请填写功能名称】ID
 	 * @return 结果
 	 */
-	public int deleteLiveMsgEngageByIds(Long[] ids );
+	public int deleteLiveMsgEngageByIds(Integer[] ids );
 
 	/**
 	 * 删除【请填写功能名称】信息
@@ -57,5 +58,5 @@ public interface ILiveMsgEngageService {
 	 * @param id 【请填写功能名称】ID
 	 * @return 结果
 	 */
-	public int deleteLiveMsgEngageById(Long id);
+	public int deleteLiveMsgEngageById(Integer id);
 }

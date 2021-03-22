@@ -1,12 +1,15 @@
 package com.qiqilm.server.admin.cache;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.domain.LiveMount;
+import com.qiqilm.server.admin.domain.LiveMsgEngage;
 import com.qiqilm.server.admin.domain.WheelLottery;
 import com.qiqilm.server.admin.domain.vo.H5PluginVo;
 import com.qiqilm.server.admin.mapper.LiveMountMapper;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @Log4j2
@@ -124,5 +128,17 @@ public class LiveCacheUtil {
 
 	public void setH5PluginVo( H5PluginVo vo ) {
 		setRedis( "h5-plugin", String.valueOf( vo.getType()), vo );
+	}
+
+	public void setLiveMsgEngage( List liveMsgEngageList) {
+		if(liveMsgEngageList.isEmpty()){
+			redisUtil.unlink("live:live-msg-engage");
+		}
+		redisUtil.strSet( "live:live-msg-engage",JsonUtil.object2Json(liveMsgEngageList));
+	}
+
+	public List<LiveMsgEngage> getLiveMsgEngage() {
+		String value = redisUtil.strGet("live:live-msg-engage");
+		return StringUtils.isNotBlank(value) ? JsonUtil.json2Array(value, new TypeReference<List<LiveMsgEngage>>() {}) : null;
 	}
 }
