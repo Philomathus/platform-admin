@@ -106,6 +106,8 @@ public class MemberWithdrawLog extends BaseEntity {
 	@Excel( name = "入款出款比", orderNum = "13" )
 	private BigDecimal rechargeWithdrawRate;
 
+	private String ip;
+
 	/**
 	 * 公司入款成功次数
 	 */

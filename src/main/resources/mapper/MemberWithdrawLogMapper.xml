@@ -42,7 +42,8 @@
         account,
         first,
         recharge_withdraw_rate,
-        bank_charge
+        bank_charge,
+        ip
         from `${dbMain}`.member_withdraw_log
     </sql>
 
