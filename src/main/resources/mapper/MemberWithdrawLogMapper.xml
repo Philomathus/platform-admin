@@ -70,6 +70,9 @@
                 and withdraw_money &gt;= #{priceMin}
                 and withdraw_money &lt;= #{priceMax}
             </if>
+            <if test="opName != null and opName != ''">
+                and op_name = #{opName}
+            </if>
             <if test="startTime != null and startTime != ''">
                 and update_time >= #{startTime}
                 and update_time &lt;= #{endTime}
