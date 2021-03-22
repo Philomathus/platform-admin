@@ -343,4 +343,10 @@ public class MemberInfoController extends BaseController {
         AjaxResult ajaxResult = memberInfoService.unbindCard(memberCard);
         return (ajaxResult);
     }
+    @Log(title = "修改用户银行卡信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeBank")
+    public Object changeBank(@RequestBody MemberCard memberCard) {
+        AjaxResult ajaxResult = memberInfoService.changeBank(memberCard);
+        return (ajaxResult);
+    }
 }
