@@ -60,8 +60,8 @@
         CONCAT(left(phone,5),'**',RIGHT(phone,4))
         end phone from member_info
         <where>
-<!--            and (inviter_code is not null and inviter_code != '')
-            and (phone is not null and phone !='')-->
+            and (inviter_code is not null and inviter_code != '')
+            and (phone is not null and phone !='')
             <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
             <if test="selectDate != null"> and reg_time >= '${selectDate[0]}'</if>
