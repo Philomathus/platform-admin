@@ -182,7 +182,7 @@ public class MemberCacheManager {
 		int day = 4;
 		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList(query);
 		if(list.size()==0){
-			query.setIsUse(1);
+			query.setIsUse(0);
 			Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
 			query.setEffectiveTime( d );
 			liveUserMountMapper.insertLiveUserMount(query);
