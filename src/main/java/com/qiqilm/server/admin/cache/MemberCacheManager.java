@@ -204,4 +204,39 @@ public class MemberCacheManager {
 			liveUserMountMapper.updateLiveUserMount(db);
 		}
 	}
+
+	public void bankChargeMount(  String pUserId ) {
+		int mountId = sysConfigCacheUtil.getConfInt("bank_mount");
+		if(mountId==0){
+			return;
+		}
+		//加坐骑33
+		LiveUserMount query = new LiveUserMount();
+		query.setUserId(pUserId);
+		query.setMountId(mountId);
+		int day = 1;
+		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList(query);
+		if(list.size()==0){
+			query.setIsUse(0);
+			Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+			query.setEffectiveTime( d );
+			liveUserMountMapper.insertLiveUserMount(query);
+		}else{
+			LiveUserMount db = list.get(0);
+			if(db.getIsUse().equals(1)){
+				if(db.getEffectiveTime().getTime()>System.currentTimeMillis()){
+					db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
+				}else{
+					Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+					db.setEffectiveTime( d );
+				}
+			}else{
+				Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+				db.setEffectiveTime( d );
+				db.setIsUse(0);
+			}
+
+			liveUserMountMapper.updateLiveUserMount(db);
+		}
+	}
 }
