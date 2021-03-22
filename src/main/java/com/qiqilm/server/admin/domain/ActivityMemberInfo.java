@@ -57,6 +57,8 @@ public class ActivityMemberInfo extends BaseEntity {
     @Excel(name = "手机", width = 30)
     private String phone;
 
+    private Boolean isTwoPw;
+
     /** 邮箱 */
     //@Excel(name = "邮箱")
     private String email;
@@ -196,9 +198,9 @@ public class ActivityMemberInfo extends BaseEntity {
 
 
 
-    public void setPhone(String phone) {
-        this.phone = new StringBuilder( phone ).replace( 5, 7, "**" ).toString();
-    }
+//    public void setPhone(String phone) {
+//        this.phone = new StringBuilder( phone ).replace( 5, 7, "**" ).toString();
+//    }
 
     @Override
     public String toString() {

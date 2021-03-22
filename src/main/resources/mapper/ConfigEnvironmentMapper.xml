@@ -22,6 +22,7 @@
         <include refid="selectConfigEnvironmentVo"/>
         <where>
             <if test="envTitle != null  and envTitle != ''">and env_title = #{envTitle}</if>
+            <if test="envCode != null and envCode != ''">and env_code = #{envCode}</if>
             <if test="envValue != null  and envValue != ''">and env_value = #{envValue}</if>
             <if test="envDes != null  and envDes != ''">and env_des = #{envDes}</if>
             <if test="envGroup != null ">and env_group = #{envGroup}</if>

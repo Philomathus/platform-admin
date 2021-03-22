@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -37,6 +40,8 @@ public class SysLoginController {
 	private TokenService          tokenService;
 	@Autowired
 	private ConfigDomainCacheUtil configDomainCacheUtil;
+	@Autowired
+    private HttpServletRequest request;
 
 	/**
 	 * 登录方法
@@ -53,6 +58,18 @@ public class SysLoginController {
 		LoginBody loginBody  = JsonUtil.json2Object( decryptStr, LoginBody.class );
 		// 生成令牌
 		return loginService.login( ip, loginBody );
+	}
+	/**
+	 * 登录方法
+	 *
+	 * @param data 登录加密信息
+	 * @return 结果
+	 */
+	@PostMapping( "/twoLogin" )
+	public AjaxResult twoLogin( HashMap data ) throws Exception {
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        String password = parameterMap.get("password")[0];
+        return loginService.twoLogin( password );
 	}
 
 	/**
