@@ -106,6 +106,12 @@ public class MemberWithdrawLog extends BaseEntity {
 	@Excel( name = "入款出款比", orderNum = "13" )
 	private BigDecimal rechargeWithdrawRate;
 
+	/**
+	 * 公司入款成功次数
+	 */
+	@Excel( name = "公司入款成功次数", orderNum = "14" )
+	private BigDecimal bankCharge;
+
 	@JsonIgnore
 	private String   bankCode;
 	@JsonIgnore
