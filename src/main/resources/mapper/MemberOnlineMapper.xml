@@ -17,6 +17,7 @@
         where 1=1
             <if test="searchValue != null and searchValue != ''"> and (m.user_name = #{searchValue} or o.id = #{searchValue})</if>
             <if test="nickName != null and nickName != ''"> and m.nick_name = #{nickName}</if>
+        order by o.online_time desc
     </select>
 
     <select id="selectMemberOnlineListCountTotal" parameterType="MemberOnline" resultMap="MemberOnlineResult">
