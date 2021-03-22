@@ -12,10 +12,17 @@
     </sql>
 
     <select id="selectMemberOnlineList" parameterType="MemberOnline" resultMap="MemberOnlineResult">
-        select o.online_time,o.id,m.user_name userName,m.vip,m.nick_name nickName,m.login_ip loginIp from
+        select FROM_UNIXTIME(o.online_time) online,o.id,m.user_name userName,m.vip,m.nick_name nickName,m.login_ip loginIp from
         7700_main.member_online o left join 7700_main.member_info m on m.id = o.id
         where 1=1
             <if test="searchValue != null and searchValue != ''"> and (m.user_name = #{searchValue} or o.id = #{searchValue})</if>
             <if test="nickName != null and nickName != ''"> and m.nick_name = #{nickName}</if>
+        order by o.online_time desc
+    </select>
+
+    <select id="selectMemberOnlineListCountTotal" parameterType="MemberOnline" resultMap="MemberOnlineResult">
+        select count(0) total from 7700_main.member_online
+        where 1=1
+        <if test="onlineTime != null and onlineTime != ''"> and online_time >= #{onlineTime}</if>
     </select>
 </mapper>

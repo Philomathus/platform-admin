@@ -299,7 +299,7 @@ public class MemberInfoController extends BaseController {
         return rspBase;
     }
 
-    @ApiOperation(value = "重置体现", notes = "重置体现")
+    @ApiOperation(value = "重置提现", notes = "重置提现")
     @PostMapping("/resettx")
     public Object resettx(HttpServletRequest request,
                           MemberInfo memberInfo) throws Exception {

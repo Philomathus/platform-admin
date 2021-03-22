@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.MemberOnlineMapper;
@@ -27,5 +29,10 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
     @Override
     public List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline) {
         return memberOnlineMapper.selectMemberOnlineList(memberOnline);
+    }
+
+    @Override
+    public MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline) {
+        return memberOnlineMapper.selectMemberOnlineListCountTotal(memberOnline);
     }
 }

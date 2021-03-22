@@ -81,6 +81,8 @@ public class MemberRechargeLog extends BaseEntity {
 	private String startDate;
 	private String endDate;
 
+	private String ip;
+
 	public String getStatusDesc() {
 		if ( status != null ) {
 			switch ( status ) {

@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,19 @@ public class MemberOnlineController extends BaseController {
 		startPage();
 		List<MemberOnline> list = memberOnlineService.selectMemberOnlineList(memberOnline);
 		return getDataTable( list );
+	}
+
+	/**
+	 * 统计在线会员
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:memberOnline:list')" )
+	@GetMapping( "/countTotal" )
+	public AjaxResult count() {
+		long now_time=System.currentTimeMillis()/1000 - 360;
+		MemberOnline memberOnline =new MemberOnline();
+		memberOnline.setOnlineTime(now_time);
+		MemberOnline memberOnline1 = memberOnlineService.selectMemberOnlineListCountTotal(memberOnline);
+		return AjaxResult.success(memberOnline1);
 	}
     
 	/**

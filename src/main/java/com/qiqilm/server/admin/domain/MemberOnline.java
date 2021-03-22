@@ -1,10 +1,15 @@
 package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.DateTime;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 在线会员列表对象 member_online
@@ -27,6 +32,11 @@ public class MemberOnline extends BaseEntity {
     private String vip;
     private String nickName;
     private String loginIp;
+
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private Date online;
+
+    private Integer total;
 
     @Override
     public String toString() {
