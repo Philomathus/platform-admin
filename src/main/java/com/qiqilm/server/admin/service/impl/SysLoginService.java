@@ -5,6 +5,8 @@ import com.qiqilm.server.admin.core.factory.AsyncFactory;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginBody;
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.ConfigEnvironment;
+import com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper;
 import com.qiqilm.server.admin.mapper.SystemIpWhiteMapper;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.utils.*;
@@ -17,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 登录校验方法
@@ -34,6 +37,8 @@ public class SysLoginService {
 	private ISysUserService       userService;
 	@Autowired
 	private SystemIpWhiteMapper   systemIpWhiteMapper;
+	@Autowired
+    private ConfigEnvironmentMapper configEnvironmentMapper;
 
 	/**
 	 * 登录验证
@@ -94,4 +99,19 @@ public class SysLoginService {
 		ajax.put( AdminConstants.TOKEN, token );
 		return ajax;
 	}
+
+    public AjaxResult twoLogin(String password) {
+        ConfigEnvironment configEnvironment = new ConfigEnvironment();
+        configEnvironment.setEnvCode("level_2_password");
+        List<ConfigEnvironment> configEnvironments = configEnvironmentMapper.selectConfigEnvironmentList(configEnvironment);
+        if (!configEnvironments.isEmpty()) {
+            configEnvironment = configEnvironments.get(0);
+            if (configEnvironment.getEnvStatus()==1) {
+                if (configEnvironment.getEnvValue().equals(password)) {
+                    return AjaxResult.success("登录成功");
+                }
+            }
+        }
+        return AjaxResult.error("登录失败");
+    }
 }

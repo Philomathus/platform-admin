@@ -21,7 +21,7 @@
 
     <sql id="selectLiveHostWageNoteVo">
         select o.id, o.family_id, o.host_id, o.start_time, o.end_time, o.live_time_sec, o.ticket, o.before_total_ticket,
-        FROM_UNIXTIME(o.create_time) create_time ,  o.remark, o.cp_cost, o.cp_prize, u.nick_name nickName
+        o.create_time, o.remark, o.cp_cost, o.cp_prize, u.nick_name nickName
         from ${dbLive}.live_host_wage_note o
         left join ${dbLive}.live_user u on o.host_id=u.id
     </sql>

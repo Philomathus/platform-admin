@@ -17,6 +17,7 @@
         <result property="isOnline"    column="is_online"    />
         <result property="sex"    column="sex"    />
         <result property="regTime"    column="reg_time"    />
+        <result property="regSTime"    column="reg_time"    />
         <result property="registIp"    column="regist_ip"    />
         <result property="loginIp"    column="login_ip"    />
         <result property="loginAddress"    column="login_address"    />
@@ -29,6 +30,7 @@
         <result property="onlineTime"    column="online_time"    />
         <result property="linkUrl"    column="link_url"    />
         <result property="loginTime"    column="login_time"    />
+        <result property="loginSTime"    column="login_time"    />
         <result property="boxAccount"    column="box_account"    />
         <result property="boxPass"    column="box_pass"    />
         <result property="cleanTime"    column="clean_time"    />
@@ -47,12 +49,19 @@
     </resultMap>
 
     <sql id="selectActivityMemberInfoVo">
-        select id, member_code, cx_agent, user_name, real_name, status, vip, total_account, phone, email, password, is_online, sex, reg_time, regist_ip, login_ip, login_address, login_dev, nick_name, birth_day, qq, wechat, head_img, online_time, link_url, login_time, box_account, box_pass, clean_time, level_integral, inviter_code, invite_money, code_account, PID, code_total, channelCode, speak, login_num, version, withdrawal_pass, device_id from 7700_main.member_info
+        select id, member_code, cx_agent, user_name, real_name, status, vip, total_account, phone, email, password, is_online, sex, reg_time, regist_ip, login_ip, login_address, login_dev, nick_name, birth_day, qq, wechat, head_img, online_time, link_url, login_time, box_account, box_pass, clean_time, level_integral, inviter_code, invite_money, code_account, PID, code_total, channelCode, speak, login_num, version, withdrawal_pass, device_id from ${dbMain}.member_info
     </sql>
 
     <select id="selectActivityMemberInfoList" parameterType="ActivityMemberInfo" resultMap="ActivityMemberInfoResult">
-        select id,reg_time,login_ip,phone,inviter_code,vip,login_time from member_info
+        select id,reg_time,login_ip,inviter_code,vip,login_time,CASE
+        WHEN ${isTwoPw} THEN
+        phone
+        ELSE
+        CONCAT(left(phone,5),'**',RIGHT(phone,4))
+        end phone from member_info
         <where>
+            and (inviter_code is not null and inviter_code != '')
+            and (phone is not null and phone !='')
             <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
             <if test="selectDate != null"> and reg_time >= '${selectDate[0]}'</if>
@@ -66,7 +75,7 @@
     </select>
 
     <insert id="insertActivityMemberInfo" parameterType="ActivityMemberInfo">
-        insert into 7700_main.member_info
+        insert into ${dbMain}.member_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="memberCode != null and memberCode != ''">member_code,</if>
@@ -156,7 +165,7 @@
     </insert>
 
     <update id="updateActivityMemberInfo" parameterType="ActivityMemberInfo">
-        update 7700_main.member_info
+        update ${dbMain}.member_info
         <trim prefix="SET" suffixOverrides=",">
             <if test="memberCode != null and memberCode != ''">member_code = #{memberCode},</if>
 
@@ -243,11 +252,11 @@
     </update>
 
     <delete id="deleteActivityMemberInfoById" parameterType="String">
-        delete from 7700_main.member_info where id = #{id}
+        delete from ${dbMain}.member_info where id = #{id}
     </delete>
 
     <delete id="deleteActivityMemberInfoByIds" parameterType="String">
-        delete from 7700_main.member_info where id in
+        delete from ${dbMain}.member_info where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -255,6 +264,8 @@
     <select id="selectIpList" resultType="java.util.Map">
         select inviter_code inviterCode,login_ip loginIp,COUNT(1) count from member_info
         <where>
+            and (inviter_code is not null and inviter_code != '')
+            and (phone is not null and phone !='')
         <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
         <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
         <if test="selectDate != null"> and reg_time >= '${selectDate[0]}'</if>

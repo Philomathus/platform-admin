@@ -42,7 +42,8 @@
 			   bank_user_name,
 			   order_no,
 			   discount_bill,
-			   first
+			   first,
+		       ip
 		from member_recharge_log
 	</sql>
 
@@ -234,6 +235,9 @@
 		where type = 1
 		<if test="req.bankUserName != null  and req.bankUserName != ''">
 			and bank_user_name like concat('%', #{req.bankUserName}, '%')
+		</if>
+		<if test="req.opName != null  and req.opName != ''">
+			and op_name like concat('%', #{req.opName}, '%')
 		</if>
 		<if test="req.rechargeUserName != null  and req.rechargeUserName != ''">
 			and recharge_user_name like concat('%', #{req.rechargeUserName}, '%')

@@ -63,4 +63,6 @@ public interface IMemberInfoService {
 	int changeSpeak(MemberInfo memberInfo);
 
 	AjaxResult unbindCard(MemberCard memberCard);
+
+    AjaxResult changeBank(MemberCard memberCard);
 }

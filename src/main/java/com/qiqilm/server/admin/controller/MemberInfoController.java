@@ -299,7 +299,7 @@ public class MemberInfoController extends BaseController {
         return rspBase;
     }
 
-    @ApiOperation(value = "重置体现", notes = "重置体现")
+    @ApiOperation(value = "重置提现", notes = "重置提现")
     @PostMapping("/resettx")
     public Object resettx(HttpServletRequest request,
                           MemberInfo memberInfo) throws Exception {
@@ -341,6 +341,12 @@ public class MemberInfoController extends BaseController {
     @PutMapping("/unbindCard")
     public Object unbindCard(@RequestBody MemberCard memberCard) {
         AjaxResult ajaxResult = memberInfoService.unbindCard(memberCard);
+        return (ajaxResult);
+    }
+    @Log(title = "修改用户银行卡信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeBank")
+    public Object changeBank(@RequestBody MemberCard memberCard) {
+        AjaxResult ajaxResult = memberInfoService.changeBank(memberCard);
         return (ajaxResult);
     }
 }
