@@ -16,7 +16,6 @@ import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.NameUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
-import org.apache.commons.collections4.list.LazyList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -304,5 +303,16 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         }
         memberCardMapper.deleteMemberCardById(id);
         return AjaxResult.success("解绑成功");
+    }
+
+    @Override
+    public AjaxResult changeBank(MemberCard member) {
+        String id = member.getId();
+        MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
+        memberCard.setBankName(member.getBankName());
+        memberCard.setBankAddress(member.getBankAddress());
+        memberCard.setBankAccount(member.getBankAccount());
+        memberCardMapper.updateMemberCard(memberCard);
+        return AjaxResult.success("修改银行卡信息成功");
     }
 }
