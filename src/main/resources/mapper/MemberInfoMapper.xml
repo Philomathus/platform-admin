@@ -120,6 +120,7 @@
 				and channelCode = #{channelcode}
 			</if>
 		</where>
+		order by reg_time desc
 	</select>
 
 	<select id="selectMemberInfoById" parameterType="String" resultMap="MemberInfoResult">
