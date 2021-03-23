@@ -35,4 +35,6 @@ public interface ILiveVideoService {
 	AjaxResult updateVideoSort( LiveVideo liveVideo );
 
 	public void processVideoSort();
+
+	List<String> selectOnlineLiveGroups();
 }

@@ -29,6 +29,12 @@ public interface LiveVideoMapper {
 	public List<LiveVideo> selectLiveVideoList(LiveVideo liveVideo);
 
 	/**
+	 * 在线群组
+	 * @return
+	 */
+	public List<String> selectOnlineLiveGroups();
+
+	/**
 	 * 修改直播
 	 *
 	 * @param liveVideo 直播
