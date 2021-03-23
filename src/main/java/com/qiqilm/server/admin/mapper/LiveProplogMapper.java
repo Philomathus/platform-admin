@@ -37,8 +37,6 @@ public interface LiveProplogMapper {
 	public int insertLiveProplog(LiveProplog liveProplog);
 
 
-
-	List<LiveProplog> findVideoPropList(@Param("start") String start, @Param("end") String end);
 	/**
 	 * 修改用户送礼日志
 	 *

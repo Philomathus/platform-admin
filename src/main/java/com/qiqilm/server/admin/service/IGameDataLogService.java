@@ -39,9 +39,7 @@ public interface IGameDataLogService {
 	public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String dbNodes, String start, String end);
 
 
-	public void beatLiveOther(String platformTypeId, BigDecimal beatRate, String start, String end);
-
-	public void beatLiveProp(String platformTypeId, BigDecimal beatRate, String start, String end);
+	public void beatLiveProp(String platformTypeId, BigDecimal beatRate, long start, long end);
 	/**
 	 * 批量删除总代理游戏注单
 	 *

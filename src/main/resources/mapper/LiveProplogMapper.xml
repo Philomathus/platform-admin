@@ -37,10 +37,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-    <select id="findVideoPropList" resultMap="LiveProplogResult">
-        <include refid="selectLiveProplogVo"/>
-        where  createtime &gt;=  #{start} and createtime &lt;=  #{end}
-    </select>
 
     <insert id="insertLiveProplog" parameterType="LiveProplog">
         insert into ${dbLive}.live_proplog

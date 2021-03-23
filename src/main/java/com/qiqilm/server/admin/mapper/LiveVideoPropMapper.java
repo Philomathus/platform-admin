@@ -2,7 +2,10 @@ package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.LiveProplog;
 import com.qiqilm.server.admin.domain.LiveVideoProp;
+import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 送礼物Mapper接口
@@ -26,6 +29,9 @@ public interface LiveVideoPropMapper {
 	 * @return 送礼物集合
 	 */
 	public List<LiveVideoProp> selectLiveVideoPropList(LiveVideoProp liveVideoProp);
+
+
+	public List<LiveVideoPropVo> findVideoPropList(@Param("start") long start, @Param("end") long end);
 
 	/**
 	 * 新增送礼物

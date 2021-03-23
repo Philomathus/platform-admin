@@ -5,7 +5,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import com.qiqilm.server.admin.mapper.*;
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -31,9 +33,6 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     private GameDataLogMapper gameDataLogMapper;
 
     @Resource
-    private LogMoneyMapper logMoneyMapper;
-
-    @Resource
     private MemberBcodeMapper memberBcodeMapper;
 
     @Resource
@@ -49,7 +48,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     private LotteryBetMapper lotteryBetMapper;
 
     @Resource
-    private LiveProplogMapper liveProplogMapper;
+    private LiveVideoPropMapper liveVideoPropMapper;
 
     @Resource
     private SqlSessionTemplate sqlSessionTemplate;
@@ -291,53 +290,75 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         deQuestCheck(willCodeList,willCodeMap);
     }
 
-    @Override
-    public void beatLiveOther(String platformTypeId, BigDecimal beatRate, String start, String end) {
-
-    }
 
     @Override
-    public void beatLiveProp(String platformTypeId, BigDecimal beatRate, String start, String end) {
-        List<LiveProplog> list =  liveProplogMapper.findVideoPropList(start,end);
+    public void beatLiveProp(String platformTypeId, BigDecimal beatRate, long start, long end) {
+        List<LiveVideoPropVo> list =  liveVideoPropMapper.findVideoPropList(start,end);
         if(list.size()==0){
             return;
         }
-
         Map<String, BigDecimal> willCodeMap = new HashMap<>();
-        List<MemberGameData> willCodeList =new ArrayList<>();
+        List<LogMoney> logList =new ArrayList<>();
         SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
-        MemberGameDataMapper mapper  = session.getMapper( MemberGameDataMapper.class );
-        for(LiveProplog og: list){
-            if ( mapper.findExist(og.getPuserId().substring(og.getPuserId().length()-1),og.getId()) != null ) {
+        LogMoneyMapper mapper  = session.getMapper( LogMoneyMapper.class );
+        for(LiveVideoPropVo og: list){
+            if ( mapper.findExist(og.getP_user_id().substring(og.getP_user_id().length()-1),og.getId()) != null ) {
                 continue;
             }
-            MemberGameData gameDataLog = new MemberGameData();
-            gameDataLog.setId( og.getId() );
-            gameDataLog.setGameId( og.getId());
-            gameDataLog.setAccount( og.getPuserId());
-            gameDataLog.setKindId( og.getLotteryId() );
-            gameDataLog.setCellScore( String.valueOf(og.getCost()));
-            gameDataLog.setAllBet(gameDataLog.getCellScore() );
-            gameDataLog.setProfit(String.valueOf(og.getPrize().subtract(og.getCost())));
-            gameDataLog.setGameStartTime(og.getBetTime());
-            gameDataLog.setGameEndTime( og.getUpdateTime());
-            gameDataLog.setAgent( og.getAnchor()>0? "80000":"10000" );
-            gameDataLog.setStatus( 0 );
-            gameDataLog.setPlatformType(platformTypeId);
-            gameDataLog.setPlatformId(4);
 
-            BigDecimal beatAdd = og.getCost().multiply(beatRate).setScale(4);
-            willCodeMap.putIfAbsent(og.getPuserId(),BigDecimal.ZERO);
-            willCodeMap.put(og.getPuserId(),willCodeMap.get(og.getPuserId()).add(beatAdd));
+            LogMoney log = new LogMoney();
+            log.setId( og.getId() );
+            log.setUserId( og.getP_user_id() );
+            log.setCreateTime( new Date(og.getCreate_time()*1000) );
+            log.setIncome( BigDecimal.ZERO );
+            log.setPay( BigDecimal.ZERO );
+            BigDecimal beatAdd;
+            if (og.getTotal_diamonds().compareTo(BigDecimal.ZERO)>0) {
+                log.setPay( og.getTotal_diamonds() );
+                beatAdd = log.getPay();
+            } else  {
+                log.setIncome( og.getTotal_diamonds().negate() );
+                beatAdd = log.getIncome();
+            }
+            log.setTotal( og.getCurrent_diamonds() );
+            log.setTotalBefore( og.getCurrent_diamonds().add(og.getTotal_diamonds()) );
 
-            willCodeList.add(gameDataLog);
+            log.setType( 1 );
+            if(og.getProp_id().compareTo("0")>0){
+                log.setDes( og.getProp_name().concat("礼物"));
+            }else{
+                log.setDes( og.getProp_name());
+            }
+
+            beatAdd = beatAdd.multiply(beatRate).setScale(4);
+            willCodeMap.putIfAbsent(og.getP_user_id(),BigDecimal.ZERO);
+            willCodeMap.put(og.getP_user_id(),willCodeMap.get(og.getP_user_id()).add(beatAdd));
+            logList.add(log);
+
         }
 
-        insertBatch(session,mapper,willCodeList);
+        int              count   = 0;
+        for ( LogMoney in : logList ) {
+            try {
+                mapper.insertLogMoney(in,in.getUserId().substring(in.getUserId().length()-1));
+                count += 1;
+                if ( count >= 500 ) {
+                    session.commit();
+                    count = 0;
+                }
+
+            } catch ( Exception e ) {
+                e.printStackTrace();
+            }
+
+        }
+        if ( count > 0 ) {
+            session.commit();
+
+        }
 
         doBeatCode(willCodeMap);
 
-        deQuestCheck(willCodeList,willCodeMap);
     }
 
     /**

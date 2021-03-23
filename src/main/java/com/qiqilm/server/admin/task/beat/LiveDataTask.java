@@ -44,10 +44,9 @@ public class LiveDataTask {
     public void runPropTask() throws Exception {
         Date endDay  = new Date();
         Date starDay = DateFormatUtils.addMin( endDay, -10);
-        String start = DateFormatUtils.formate( starDay );
-        String end = DateFormatUtils.formate( endDay );
+
         try {
-            gameDataLogService.beatLiveProp(platformTypeId,beatRate,start,end);
+            gameDataLogService.beatLiveProp(platformTypeId,beatRate,starDay.getTime()/1000,endDay.getTime()/1000);
         }catch (Exception e){
             log.error("礼物拉取注单异常,",e);
         }
