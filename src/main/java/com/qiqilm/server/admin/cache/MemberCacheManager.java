@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LiveUserMountMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.mapper.WheelUserMapper;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomUtils;
@@ -179,7 +180,10 @@ public class MemberCacheManager {
 		LiveUserMount query = new LiveUserMount();
 		query.setUserId(pUserId);
 		query.setMountId(33);
-		int day = 4;
+		int day = 3;
+		if(DateFormatUtils.getDaysOfHour(new Date())>12){
+			day +=1;
+		}
 		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList(query);
 		if(list.size()==0){
 			query.setIsUse(0);
@@ -209,6 +213,10 @@ public class MemberCacheManager {
 		query.setUserId(pUserId);
 		query.setMountId(mountId);
 		int day = 1;
+		if(DateFormatUtils.getDaysOfHour(new Date())>12){
+			day +=1;
+		}
+
 		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList(query);
 		if(list.size()==0){
 			query.setIsUse(0);
