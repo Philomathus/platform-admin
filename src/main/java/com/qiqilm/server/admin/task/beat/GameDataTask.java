@@ -48,6 +48,12 @@ public class GameDataTask {
 
         Date starDay = DateFormatUtils.addMin( endDay, -10);
 
-        gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
+        try {
+            gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
+
+        }catch (Exception e){
+            log.error("游戏拉取注单异常,",e);
+        }
+
     }
 }

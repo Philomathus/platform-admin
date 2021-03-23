@@ -113,6 +113,11 @@
         )
 	</insert>
 
+	<select id="findExist" resultType="java.lang.Integer">
+		SELECT status FROM log_money${dbNodes}
+		WHERE id = #{keyId}
+	</select>
+
 	<select id="findMark" resultMap="LogMoneyResult">
 		<include refid="selectLogMoneyVo"/>
 		where 1 = 1
