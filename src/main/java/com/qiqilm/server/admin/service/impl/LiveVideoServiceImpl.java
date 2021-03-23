@@ -474,4 +474,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			liveVideoMapper.updateLiveVideo( update );
 		}
 	}
+
+	@Override
+	public List<String> selectOnlineLiveGroups() {
+		return liveVideoMapper.selectOnlineLiveGroups();
+	}
 }
