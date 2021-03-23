@@ -72,10 +72,9 @@ public class LiveMsgEngageServiceImpl implements ILiveMsgEngageService {
      */
     @Override
     public AjaxResult updateLiveMsgEngage(LiveMsgEngage liveMsgEngage) {
-        LiveMsgEngage liveMsgEngage1=liveMsgEngageMapper.selectLiveMsgEngageById(liveMsgEngage.getId());
         LiveMsgEngage liveMsgEngage2=liveMsgEngageMapper.searchliveMsgEngage(liveMsgEngage.getMsg());
-        if (Objects.nonNull(liveMsgEngage1)||Objects.nonNull(liveMsgEngage2)){
-          return   AjaxResult.success("id或者互动消息重复");
+        if (Objects.nonNull(liveMsgEngage2)){
+          return   AjaxResult.success("互动消息重复");
         }
         liveMsgEngageMapper.updateLiveMsgEngage(liveMsgEngage);
         List<LiveMsgEngage> liveMsgEngageList=liveMsgEngageMapper.selectLiveMsgEngageList( null );
