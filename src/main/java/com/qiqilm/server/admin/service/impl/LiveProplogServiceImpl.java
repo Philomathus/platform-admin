@@ -1,12 +1,15 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveProplog;
 import com.qiqilm.server.admin.mapper.LiveProplogMapper;
 import com.qiqilm.server.admin.service.ILiveProplogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 用户送礼日志Service业务层处理
@@ -87,5 +90,19 @@ public class LiveProplogServiceImpl implements ILiveProplogService {
     @Override
     public int deleteLiveProplogById(Long id) {
         return liveProplogMapper.deleteLiveProplogById(id);
+    }
+
+    @Override
+    public AjaxResult getCount(LiveProplog liveProplog) {
+        if (liveProplog.getSelectDate() != null) {
+            liveProplog.setStartTime(liveProplog.getSelectDate()[0] + " 00:00:00");
+            liveProplog.setEndTime(liveProplog.getSelectDate()[1] + " 23:59:59");
+        }
+       LiveProplog liveProplog1= liveProplogMapper.countPropMoney(liveProplog);
+       if (Objects.isNull(liveProplog1)){
+           LiveProplog liveProplog2=new LiveProplog();
+           liveProplog2.setTotalPorp(BigDecimal.ZERO);
+       }
+        return AjaxResult.success(liveProplog1);
     }
 }
