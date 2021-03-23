@@ -5,7 +5,6 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUser;
-import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import com.qiqilm.server.admin.enums.BusinessType;
@@ -87,6 +86,9 @@ public class LiveUserController extends BaseController {
 		newLiveUser.setVExplain( liveUser.getVExplain() );
 		newLiveUser.setInvestorSendInfo( liveUser.getInvestorSendInfo() );
 		newLiveUser.setOpenPay( liveUser.getOpenPay() );
+		newLiveUser.setCoin( liveUser.getCoin() );
+		newLiveUser.setXpoint( liveUser.getXpoint() );
+		newLiveUser.setYpoint( liveUser.getYpoint() );
 		return toAjax( liveUserService.updateLiveUser( newLiveUser ) );
 	}
 

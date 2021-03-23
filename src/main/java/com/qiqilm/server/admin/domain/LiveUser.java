@@ -99,6 +99,12 @@ public class LiveUser extends BaseEntity {
 	/** 时薪 */
 	@Excel( name = "时薪" )
 	private BigDecimal coin;
+	/** 时薪 */
+	@Excel( name = "彩票抽成" )
+	private BigDecimal xpoint;
+	/** 时薪 */
+	@Excel( name = "礼物抽成" )
+	private BigDecimal ypoint;
 
 	/** 设置主播提现比例,如果为空,则使用后台通用比例 */
 	@Excel( name = "设置主播提现比例,如果为空,则使用后台通用比例" )
