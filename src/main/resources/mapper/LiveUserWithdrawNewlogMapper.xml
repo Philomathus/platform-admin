@@ -57,7 +57,7 @@
     </select>
 
     <insert id="insertLiveUserWithdrawNewlog" parameterType="LiveUserWithdrawNewlog">
-        insert into 7700_live.live_user_withdraw_newlog
+        insert into ${dbLive}.live_user_withdraw_newlog
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="userId != null">user_id,</if>
@@ -103,7 +103,7 @@
     </insert>
 
     <update id="updateLiveUserWithdrawNewlog" parameterType="LiveUserWithdrawNewlog">
-        update 7700_live.live_user_withdraw_newlog
+        update ${dbLive}.live_user_withdraw_newlog
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
 
@@ -146,11 +146,11 @@
     </update>
 
     <delete id="deleteLiveUserWithdrawNewlogById" parameterType="String">
-        delete from 7700_live.live_user_withdraw_newlog where id = #{id}
+        delete from ${dbLive}.live_user_withdraw_newlog where id = #{id}
     </delete>
 
     <delete id="deleteLiveUserWithdrawNewlogByIds" parameterType="String">
-        delete from 7700_live.live_user_withdraw_newlog where id in
+        delete from ${dbLive}.live_user_withdraw_newlog where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

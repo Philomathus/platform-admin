@@ -62,18 +62,6 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	}
 
 	/**
-	 * 新增主播用户信息
-	 *
-	 * @param liveUser 主播用户信息
-	 * @return 结果
-	 */
-	@Override
-	public int insertLiveUser( LiveUser liveUser ) {
-		liveUser.setCreateTime( DateUtils.getNowDate() );
-		return liveUserMapper.insertLiveUser( liveUser );
-	}
-
-	/**
 	 * 修改主播用户信息
 	 *
 	 * @param liveUser 主播用户信息

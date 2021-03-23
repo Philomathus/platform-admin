@@ -7,7 +7,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="com.qiqilm.server.admin.domain.LiveUser" id="LiveUserResult">
         <result property="id"    column="id"    />
         <result property="nickName"    column="nick_name"    />
-        <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="isAuthentication"    column="is_authentication"    />
         <result property="loginIp"    column="login_ip"    />
@@ -39,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveUserVo">
-        select u.id,u.nick_name,signature,FROM_UNIXTIME(u.create_time) create_time,FROM_UNIXTIME(u.update_time) update_time,
+        select u.id,u.nick_name,signature,FROM_UNIXTIME(u.update_time) update_time,
 		is_authentication,login_ip,focus_count,mobile,authentication_type,authentication_name,identify_hold_image,
 		identify_positive_image,identify_nagative_image, fans_count, ticket, refund_ticket,is_ban,v_explain,family_id,
 		coin,ticket_catty_ratio,open_pay,ban_remark,identify_number,login_time,logout_time,f.name family_name,
@@ -75,7 +74,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into ${dbLive}.live_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">nick_name,</if>
-            <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="isAuthentication != null">is_authentication,</if>
             <if test="loginIp != null">login_ip,</if>
@@ -101,7 +99,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">#{nickName},</if>
-			<if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
 			<if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
 			<if test="isAuthentication != null">#{isAuthentication},</if>
 			<if test="loginIp != null">#{loginIp},</if>
@@ -131,7 +128,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update ${dbLive}.live_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
-            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
             <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
             <if test="isAuthentication != null">is_authentication = #{isAuthentication},</if>
             <if test="loginIp != null">login_ip = #{loginIp},</if>
