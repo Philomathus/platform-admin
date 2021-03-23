@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.MemberGameData;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,5 +94,10 @@ public class LiveProplogController extends BaseController {
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
 		return toAjax( liveProplogService.deleteLiveProplogByIds( ids ) );
+	}
+	@PreAuthorize( "@ss.hasPermi('admin:liveProplog:list')" )
+	@GetMapping( "/getCount" )
+	public AjaxResult getCount( LiveProplog liveProplog ) {
+		return liveProplogService.getCount( liveProplog );
 	}
 }
