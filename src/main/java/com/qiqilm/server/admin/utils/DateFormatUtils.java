@@ -295,6 +295,21 @@ public abstract class DateFormatUtils {
 	}
 
 	/**
+	 * 获取小时
+	 *
+	 * @return
+	 */
+	public static int getDaysOfHour( Date date ) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime( date );
+		return calendar.get(Calendar.HOUR_OF_DAY);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getDaysOfHour(new Date(new Date().getTime())));
+	}
+
+	/**
 	 * 获取当前是一年中的第几天
 	 *
 	 * @return
