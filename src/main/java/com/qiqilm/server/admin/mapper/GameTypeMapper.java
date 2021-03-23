@@ -1,6 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.GameType;
+import com.qiqilm.server.admin.domain.req.ReqGameType;
+import com.qiqilm.server.admin.domain.rsp.RspGameType;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -66,4 +69,6 @@ public interface GameTypeMapper {
 	 * @return 结果
 	 */
 	public int deleteGameTypeByIds( String[] ids );
+
+	List<RspGameType> findList(@Param("req") ReqGameType req);
 }

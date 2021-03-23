@@ -140,4 +140,10 @@
         where status =1
     </select>
 
+    <select id="findSimpleLists" resultType="com.qiqilm.server.admin.domain.rsp.RspGamePlatform">
+        select *
+        from game_platform
+        where status =1
+    </select>
+
 </mapper>

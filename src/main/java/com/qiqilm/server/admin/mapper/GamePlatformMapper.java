@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.ConfigGametype;
 import com.qiqilm.server.admin.domain.GamePlatform;
-import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
+import com.qiqilm.server.admin.domain.rsp.RspGamePlatform;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -73,4 +73,6 @@ public interface GamePlatformMapper {
 
 
 	List<GamePlatform> findSimpleList();
+
+	List<RspGamePlatform> findSimpleLists();
 }
