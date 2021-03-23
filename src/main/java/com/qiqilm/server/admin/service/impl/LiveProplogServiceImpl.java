@@ -102,6 +102,7 @@ public class LiveProplogServiceImpl implements ILiveProplogService {
        if (Objects.isNull(liveProplog1)){
            LiveProplog liveProplog2=new LiveProplog();
            liveProplog2.setTotalPorp(BigDecimal.ZERO);
+           return AjaxResult.success(liveProplog2);
        }
         return AjaxResult.success(liveProplog1);
     }
