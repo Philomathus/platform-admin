@@ -37,6 +37,8 @@ public class MemberOnlineController extends BaseController {
 	@GetMapping( "/list" )
     	public TableDataInfo list(MemberOnline memberOnline) {
 		startPage();
+		long now_time=System.currentTimeMillis()/1000 - 360;
+		memberOnline.setOnlineTime(now_time);
 		List<MemberOnline> list = memberOnlineService.selectMemberOnlineList(memberOnline);
 		return getDataTable( list );
 	}
@@ -61,6 +63,8 @@ public class MemberOnlineController extends BaseController {
 	@Log( title = "在线会员列表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public void export(MemberOnline memberOnline, HttpServletResponse response) {
+		long now_time=System.currentTimeMillis()/1000 - 360;
+		memberOnline.setOnlineTime(now_time);
 		List<MemberOnline>      list = memberOnlineService.selectMemberOnlineList(memberOnline);
 		ExportExcelUtil.exportExcel( list, "在线会员列表", "在线会员列表表", MemberOnline.class, response );
 	}
