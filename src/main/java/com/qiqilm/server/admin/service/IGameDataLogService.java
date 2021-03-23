@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.qiqilm.server.admin.domain.GameDataLog;
+import com.qiqilm.server.admin.domain.LiveNote;
 
 /**
  * 总代理游戏注单Service接口
@@ -35,7 +36,12 @@ public interface IGameDataLogService {
 	public void beatGameCode(Map<Integer,String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId);
 
 
+	public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String dbNodes, String start, String end);
 
+
+	public void beatLiveOther(String platformTypeId, BigDecimal beatRate, String start, String end);
+
+	public void beatLiveProp(String platformTypeId, BigDecimal beatRate, String start, String end);
 	/**
 	 * 批量删除总代理游戏注单
 	 *

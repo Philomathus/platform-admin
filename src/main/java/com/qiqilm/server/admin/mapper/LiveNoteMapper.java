@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.LiveNote;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 彩票注单Mapper接口
@@ -18,6 +19,9 @@ public interface LiveNoteMapper {
 	 * @return 彩票注单
 	 */
 	public LiveNote selectLiveNoteById(String id);
+
+
+	List<LiveNote> findLotteryNoteList( @Param("start") String start, @Param("end") String end);
 
 	/**
 	 * 查询彩票注单列表

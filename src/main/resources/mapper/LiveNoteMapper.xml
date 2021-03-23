@@ -15,7 +15,7 @@
     </resultMap>
 
     <sql id="selectLiveNoteVo">
-        select id, user_id,  cost,  income,  kind_id, create_time ,  tar_id, type, end_time from ${dbLottery}.live_note
+        select id, user_id,  cost,  income,  kind_id, create_time ,  tar_id, type, end_time from ${dbLive}.live_note
     </sql>
 
     <select id="selectLiveNoteList" parameterType="LiveNote" resultMap="LiveNoteResult">
@@ -32,6 +32,12 @@
         </where>
     </select>
 
+    <select id="findLotteryNoteList" resultMap="LiveNoteResult">
+        <include refid="selectLiveNoteVo"/>
+        where  create_time &gt;=  #{start} and create_time &lt;=  #{end}
+    </select>
+
+
     <select id="selectLiveNoteById" parameterType="String" resultMap="LiveNoteResult">
         <include refid="selectLiveNoteVo"/>
         where id = #{id}
@@ -39,11 +45,11 @@
 
 
     <delete id="deleteLiveNoteById" parameterType="String">
-        delete from ${dbLottery}.live_note where id = #{id}
+        delete from ${dbLive}.live_note where id = #{id}
     </delete>
 
     <delete id="deleteLiveNoteByIds" parameterType="String">
-        delete from ${dbLottery}.live_note where id in
+        delete from ${dbLive}.live_note where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

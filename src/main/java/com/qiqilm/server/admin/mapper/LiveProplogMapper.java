@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.LiveProplog;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -35,6 +36,9 @@ public interface LiveProplogMapper {
 	 */
 	public int insertLiveProplog(LiveProplog liveProplog);
 
+
+
+	List<LiveProplog> findVideoPropList(@Param("start") String start, @Param("end") String end);
 	/**
 	 * 修改用户送礼日志
 	 *

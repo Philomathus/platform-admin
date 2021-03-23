@@ -27,21 +27,6 @@ public interface ILiveNoteService {
 	 */
 	public List<LiveNote> selectLiveNoteList(LiveNote liveNote);
 
-	/**
-	 * 新增彩票注单
-	 *
-	 * @param liveNote 彩票注单
-	 * @return 结果
-	 */
-	public int insertLiveNote(LiveNote liveNote);
-
-	/**
-	 * 修改彩票注单
-	 *
-	 * @param liveNote 彩票注单
-	 * @return 结果
-	 */
-	public int updateLiveNote(LiveNote liveNote);
 
 	/**
 	 * 批量删除彩票注单

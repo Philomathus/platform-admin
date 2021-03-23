@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+
 /**
  * 总代理游戏注单Service业务层处理
  *
@@ -43,6 +44,15 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
     @Resource
     private MemberQuestMapper memberQuestMapper;
+
+    @Resource
+    private LotteryBetMapper lotteryBetMapper;
+
+    @Resource
+    private LiveNoteMapper liveNoteMapper;
+
+    @Resource
+    private LiveProplogMapper liveProplogMapper;
 
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
@@ -241,6 +251,58 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
     }
 
+    @Override
+    public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String dbNodes, String start, String end) {
+        List<LotteryBet> list = lotteryBetMapper.selectLotteryBetList(dbNodes,start,end);
+        if(list.size()==0){
+            return;
+        }
+        Map<String, BigDecimal> willCodeMap = new HashMap<>();
+        List<MemberGameData> willCodeList =new ArrayList<>();
+        SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
+        MemberGameDataMapper mapper  = session.getMapper( MemberGameDataMapper.class );
+        for(LotteryBet og: list){
+            if ( mapper.findExist(og.getPuserId().substring(og.getPuserId().length()-1),og.getId()) != null ) {
+                continue;
+            }
+            MemberGameData gameDataLog = new MemberGameData();
+            gameDataLog.setId( og.getId() );
+            gameDataLog.setGameId( og.getId());
+            gameDataLog.setAccount( og.getPuserId());
+            gameDataLog.setKindId( og.getLotteryId() );
+            gameDataLog.setCellScore( String.valueOf(og.getCost()));
+            gameDataLog.setAllBet(gameDataLog.getCellScore() );
+            gameDataLog.setProfit(String.valueOf(og.getPrize().subtract(og.getCost())));
+            gameDataLog.setGameStartTime(og.getBetTime());
+            gameDataLog.setGameEndTime( og.getUpdateTime());
+            gameDataLog.setAgent( og.getAnchor()>0? "80000":"10000" );
+            gameDataLog.setStatus( 0 );
+            gameDataLog.setPlatformType(platformTypeId);
+            gameDataLog.setPlatformId(4);
+
+            BigDecimal beatAdd = og.getCost().multiply(beatRate).setScale(4);
+            willCodeMap.putIfAbsent(og.getPuserId(),BigDecimal.ZERO);
+            willCodeMap.put(og.getPuserId(),willCodeMap.get(og.getPuserId()).add(beatAdd));
+
+            willCodeList.add(gameDataLog);
+        }
+
+        insertBatch(session,mapper,willCodeList);
+
+        doBeatCode(willCodeMap);
+
+        deQuestCheck(willCodeList,willCodeMap);
+    }
+
+    @Override
+    public void beatLiveOther(String platformTypeId, BigDecimal beatRate, String start, String end) {
+
+    }
+
+    @Override
+    public void beatLiveProp(String platformTypeId, BigDecimal beatRate, String start, String end) {
+
+    }
 
     /**
      * 批量删除总代理游戏注单

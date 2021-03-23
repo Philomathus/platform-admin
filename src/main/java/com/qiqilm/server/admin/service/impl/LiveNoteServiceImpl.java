@@ -41,29 +41,6 @@ public class LiveNoteServiceImpl implements ILiveNoteService {
         return liveNoteMapper.selectLiveNoteList(liveNote);
     }
 
-    /**
-     * 新增彩票注单
-     *
-     * @param liveNote 彩票注单
-     * @return 结果
-     */
-    @Override
-    public int insertLiveNote(LiveNote liveNote) {
-        liveNote.setCreateTime(DateUtils.getNowDate());
-        liveNote.setCreateTime(DateUtils.getNowDate());
-        return liveNoteMapper.insertLiveNote(liveNote);
-    }
-
-    /**
-     * 修改彩票注单
-     *
-     * @param liveNote 彩票注单
-     * @return 结果
-     */
-    @Override
-    public int updateLiveNote(LiveNote liveNote) {
-        return liveNoteMapper.updateLiveNote(liveNote);
-    }
 
     /**
      * 批量删除彩票注单
