@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @date 2021-02-03
  */
 @Data
-public class LotteryBet extends BaseEntity {
+public class LotteryBet {
     private static final long serialVersionUID = 1L;
 
     /** id */

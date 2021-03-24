@@ -66,33 +66,5 @@ public class LiveNoteController extends BaseController {
 		return AjaxResult.success( liveNoteService.selectLiveNoteById(id) );
 	}
 
-	/**
-	 * 新增彩票注单
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveNote:add')" )
-	@Log( title = "彩票注单", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody LiveNote liveNote) {
-		return toAjax( liveNoteService.insertLiveNote(liveNote) );
-	}
 
-	/**
-	 * 修改彩票注单
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveNote:edit')" )
-	@Log( title = "彩票注单", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody LiveNote liveNote) {
-		return toAjax( liveNoteService.updateLiveNote(liveNote) );
-	}
-
-	/**
-	 * 删除彩票注单
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveNote:remove')" )
-	@Log( title = "彩票注单", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable String[] ids ) {
-		return toAjax( liveNoteService.deleteLiveNoteByIds( ids ) );
-	}
 }
