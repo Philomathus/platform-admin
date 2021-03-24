@@ -78,6 +78,11 @@ public class LocalDateTimeUtils {
 		return time.withHour( 23 ).withMinute( 59 ).withSecond( 59 ).withNano( 999999999 );
 	}
 
+	public  static String getFormatTimeSecond(long          sec){
+		LocalDateTime dateTime = LocalDateTimeUtils.getDateTimeOfTimestamp( sec * 1000L );
+		return  LocalDateTimeUtils.formatTime( dateTime, LocalDateTimeUtils.SPLIT_PATTERN_DATETIME );
+	}
+
 	public static void main( String[] args ) {
 		long          sec      = 1602034562;
 		LocalDateTime dateTime = LocalDateTimeUtils.getDateTimeOfTimestamp( sec * 1000L );
