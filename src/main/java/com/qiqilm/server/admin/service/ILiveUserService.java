@@ -31,14 +31,6 @@ public interface ILiveUserService {
 	public List<LiveUser> selectLiveUserList( LiveUser liveUser );
 
 	/**
-	 * 新增用户信息
-	 *
-	 * @param liveUser 用户信息
-	 * @return 结果
-	 */
-	public int insertLiveUser( LiveUser liveUser );
-
-	/**
 	 * 修改用户信息
 	 *
 	 * @param liveUser 用户信息

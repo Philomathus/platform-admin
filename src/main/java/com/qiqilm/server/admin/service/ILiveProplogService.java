@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveProplog;
 
 /**
@@ -58,4 +59,6 @@ public interface ILiveProplogService {
 	 * @return 结果
 	 */
 	public int deleteLiveProplogById(Long id);
+
+    AjaxResult getCount(LiveProplog liveProplog);
 }

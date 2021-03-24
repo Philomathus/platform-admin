@@ -60,4 +60,6 @@ public interface LiveProplogMapper {
 	 * @return 结果
 	 */
 	public int deleteLiveProplogByIds(Long[] ids );
+
+    LiveProplog countPropMoney(LiveProplog liveProplog);
 }

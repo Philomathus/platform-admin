@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveUserWithdrawNewlogMapper">
+
+    <resultMap type="LiveUserWithdrawNewlog" id="LiveUserWithdrawNewlogResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="orderExpression"    column="order_expression"    />
+        <result property="withdrawMoney"    column="withdraw_money"    />
+        <result property="bankUserName"    column="bank_user_name"    />
+        <result property="bankAccount"    column="bank_account"    />
+        <result property="bankAddress"    column="bank_address"    />
+        <result property="bankTypeId"    column="bank_type_id"    />
+        <result property="wstatus"    column="wstatus"    />
+        <result property="type"    column="type"    />
+        <result property="opName"    column="op_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="livetime"    column="livetime"    />
+        <result property="liveticket"    column="liveticket"    />
+        <result property="livepaijiang"    column="livepaijiang"    />
+    </resultMap>
+
+    <sql id="selectLiveUserWithdrawNewlogVo">
+        select id, user_id, nick_name, order_no, order_expression, withdraw_money, bank_user_name, bank_account, bank_address, bank_type_id, wstatus, type, op_name, remark,  FROM_UNIXTIME(create_time) create_time ,   FROM_UNIXTIME(update_time) update_time ,  livetime, liveticket, livepaijiang from 7700_live.live_user_withdraw_newlog
+    </sql>
+
+    <select id="selectLiveUserWithdrawNewlogList" parameterType="LiveUserWithdrawNewlog" resultMap="LiveUserWithdrawNewlogResult">
+        <include refid="selectLiveUserWithdrawNewlogVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="orderExpression != null  and orderExpression != ''"> and order_expression = #{orderExpression}</if>
+            <if test="withdrawMoney != null "> and withdraw_money = #{withdrawMoney}</if>
+            <if test="bankUserName != null  and bankUserName != ''"> and bank_user_name like concat('%', #{bankUserName}, '%')</if>
+            <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
+            <if test="bankAddress != null  and bankAddress != ''"> and bank_address = #{bankAddress}</if>
+            <if test="bankTypeId != null "> and bank_type_id = #{bankTypeId}</if>
+            <if test="wstatus != null "> and wstatus = #{wstatus}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="livetime != null "> and livetime = #{livetime}</if>
+            <if test="liveticket != null "> and liveticket = #{liveticket}</if>
+            <if test="livepaijiang != null "> and livepaijiang = #{livepaijiang}</if>
+            <if test="selectDate != null "> and create_time >= '${selectDate[0]}'</if>
+            <if test="selectDate != null "> and create_time &lt;= '${selectDate[1]}'</if>
+        </where>
+    </select>
+
+    <select id="selectLiveUserWithdrawNewlogById" parameterType="String" resultMap="LiveUserWithdrawNewlogResult">
+        <include refid="selectLiveUserWithdrawNewlogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveUserWithdrawNewlog" parameterType="LiveUserWithdrawNewlog">
+        insert into ${dbLive}.live_user_withdraw_newlog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="orderNo != null and orderNo != ''">order_no,</if>
+            <if test="orderExpression != null and orderExpression != ''">order_expression,</if>
+            <if test="withdrawMoney != null">withdraw_money,</if>
+            <if test="bankUserName != null and bankUserName != ''">bank_user_name,</if>
+            <if test="bankAccount != null and bankAccount != ''">bank_account,</if>
+            <if test="bankAddress != null">bank_address,</if>
+            <if test="bankTypeId != null">bank_type_id,</if>
+            <if test="wstatus != null">wstatus,</if>
+            <if test="type != null">type,</if>
+            <if test="opName != null">op_name,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="livetime != null">livetime,</if>
+            <if test="liveticket != null">liveticket,</if>
+            <if test="livepaijiang != null">livepaijiang,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="userId != null">#{userId},</if>
+                    <if test="nickName != null">#{nickName},</if>
+                    <if test="orderNo != null and orderNo != ''">#{orderNo},</if>
+                    <if test="orderExpression != null and orderExpression != ''">#{orderExpression},</if>
+                    <if test="withdrawMoney != null">#{withdrawMoney},</if>
+                    <if test="bankUserName != null and bankUserName != ''">#{bankUserName},</if>
+                    <if test="bankAccount != null and bankAccount != ''">#{bankAccount},</if>
+                    <if test="bankAddress != null">#{bankAddress},</if>
+                    <if test="bankTypeId != null">#{bankTypeId},</if>
+                    <if test="wstatus != null">#{wstatus},</if>
+                    <if test="type != null">#{type},</if>
+                    <if test="opName != null">#{opName},</if>
+                    <if test="remark != null">#{remark},</if>
+                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+                    <if test="livetime != null">#{livetime},</if>
+                    <if test="liveticket != null">#{liveticket},</if>
+                    <if test="livepaijiang != null">#{livepaijiang},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLiveUserWithdrawNewlog" parameterType="LiveUserWithdrawNewlog">
+        update ${dbLive}.live_user_withdraw_newlog
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+
+            <if test="nickName != null">nick_name = #{nickName},</if>
+
+            <if test="orderNo != null and orderNo != ''">order_no = #{orderNo},</if>
+
+            <if test="orderExpression != null and orderExpression != ''">order_expression = #{orderExpression},</if>
+
+            <if test="withdrawMoney != null">withdraw_money = #{withdrawMoney},</if>
+
+            <if test="bankUserName != null and bankUserName != ''">bank_user_name = #{bankUserName},</if>
+
+            <if test="bankAccount != null and bankAccount != ''">bank_account = #{bankAccount},</if>
+
+            <if test="bankAddress != null">bank_address = #{bankAddress},</if>
+
+            <if test="bankTypeId != null">bank_type_id = #{bankTypeId},</if>
+
+            <if test="wstatus != null">wstatus = #{wstatus},</if>
+
+            <if test="type != null">type = #{type},</if>
+
+            <if test="opName != null">op_name = #{opName},</if>
+
+            <if test="remark != null">remark = #{remark},</if>
+
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+
+            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
+
+            <if test="livetime != null">livetime = #{livetime},</if>
+
+            <if test="liveticket != null">liveticket = #{liveticket},</if>
+
+            <if test="livepaijiang != null">livepaijiang = #{livepaijiang},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveUserWithdrawNewlogById" parameterType="String">
+        delete from ${dbLive}.live_user_withdraw_newlog where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveUserWithdrawNewlogByIds" parameterType="String">
+        delete from ${dbLive}.live_user_withdraw_newlog where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

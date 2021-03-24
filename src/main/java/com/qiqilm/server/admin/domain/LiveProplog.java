@@ -67,6 +67,15 @@ public class LiveProplog extends BaseEntity {
 
     private String startTime;
     private String endTime;
+    private BigDecimal totalPorp;
+
+    public BigDecimal getTotalPorp() {
+        return totalPorp;
+    }
+
+    public void setTotalPorp(BigDecimal totalPorp) {
+        this.totalPorp = totalPorp;
+    }
 
     public String getStartTime() {
         return startTime;

@@ -72,6 +72,7 @@
 				and prize > 0
 				and (cost - (prize - cost)) / cost > 1
 				and (cost - (prize - cost)) / cost &lt; 1.04
+				and bet_select IN ( <![CDATA[ '小&大', '大&小', '双&单', '单&双', '质&合', '合&质' ]]> )
 		) <include refid="whereSelect"/>
 	</select>
 
@@ -139,6 +140,7 @@
 		and prize > 0
 		and (cost - (prize - cost)) / cost > 1
 		and (cost - (prize - cost)) / cost &lt; 1.04
+		and bet_select IN ( <![CDATA[ '小&大', '大&小', '双&单', '单&双', '质&合', '合&质' ]]> )
 		) <include refid="whereSelect"/>
 	</select>
 
