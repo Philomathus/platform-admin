@@ -25,7 +25,7 @@ public interface GamePlatformMapper {
 	 * @param id 【请填写功能名称】ID
 	 * @return 【请填写功能名称】
 	 */
-	public GamePlatform selectGamePlatformById(Long id);
+	public GamePlatform selectGamePlatformById(Integer id);
 
 	int changeStattus(GamePlatform gamePlatform);
 

@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.LiveProplog;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public interface LiveProplogMapper {
 	 * @return 结果
 	 */
 	public int insertLiveProplog(LiveProplog liveProplog);
+
 
 	/**
 	 * 修改用户送礼日志

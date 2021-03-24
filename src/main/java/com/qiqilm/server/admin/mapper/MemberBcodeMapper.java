@@ -29,6 +29,14 @@ public interface MemberBcodeMapper {
 	public List<MemberBcode> selectMemberBcodeList(MemberBcode memberBcode);
 
 	/**
+	 * 查询MemberBcode列表
+	 *
+	 * @param memberBcode MemberBcode
+	 * @return MemberBcode集合
+	 */
+	public List<MemberBcode> selectWillBcodeList(MemberBcode memberBcode);
+
+	/**
 	 * 新增MemberBcode
 	 *
 	 * @param memberBcode MemberBcode

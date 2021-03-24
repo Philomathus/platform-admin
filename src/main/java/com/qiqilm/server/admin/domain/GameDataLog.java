@@ -73,7 +73,7 @@ public class GameDataLog extends BaseEntity {
 
     /** 本地平台id */
     @Excel(name = "本地平台id")
-    private Long platformId;
+    private Integer platformId;
 
     /** 代理编号 */
     @Excel(name = "代理编号")

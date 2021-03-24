@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.task.beat;
 
 import com.qiqilm.server.admin.domain.GamePlatform;
+import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.service.IGameDataLogService;
 import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
@@ -13,46 +14,43 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * 游戏数据打码
+ * 彩票数据打码
  */
 @Log4j2
 @Component
-public class GameDataTask {
+public class LotteryDataTask {
+
+
     @Autowired
     private IGameDataLogService gameDataLogService;
     @Autowired
     private IGamePlatformService gamePlatformService;
 
-    @Value( "${spring.profiles.active}" )
-    private String profile;
-    private Map<Integer,String> platformType = new HashMap<>();
-    private Map<Integer, BigDecimal> beatRateMap = new HashMap<>();
+    private String platformTypeId;
+    private BigDecimal beatRate ;
+
 
     @PostConstruct
     public void init() {
-        for(GamePlatform gm: gamePlatformService.selectGamePlatformList(new GamePlatform())){
-            platformType.put(gm.getId(),gm.getGameTypeid());
-            beatRateMap.put(gm.getId(),gm.getRateBeat());
-        }
+        GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LOTTERY.getType());
+        platformTypeId = gamePlatform.getGameTypeid();
+        beatRate= gamePlatform.getRateBeat();
+
     }
-
-
-    @Scheduled( fixedDelay = 30000, initialDelay=1 )
+    @Scheduled( fixedDelay = 30000, initialDelay=5000 )
     public void runTask() throws Exception {
-
         Date endDay  = new Date();
-
         Date starDay = DateFormatUtils.addMin( endDay, -10);
-
-        try {
-            gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
-
-        }catch (Exception e){
-            log.error("游戏拉取注单异常,",e);
+        String start = DateFormatUtils.formate( starDay );
+        String end = DateFormatUtils.formate( endDay );
+        for(int i=0;i<10;i++){
+            try {
+                gameDataLogService.beatLotteryCode(platformTypeId,beatRate,String.valueOf(i),start,end);
+            }catch (Exception e){
+                log.error("彩票拉取注单异常,",e);
+            }
         }
 
     }

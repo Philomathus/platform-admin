@@ -23,7 +23,6 @@ public interface LotteryHistoryMapper {
 	/**
 	 * 查询全部彩种
 	 *
-	 * @param lotteryHistory 全部彩种
 	 * @return 全部彩种集合
 	 */
 	public List<LotteryHistory> selectLotteryHistoryNameList();

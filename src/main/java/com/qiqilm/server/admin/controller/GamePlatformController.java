@@ -42,7 +42,7 @@ public class GamePlatformController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('game:platform:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+	public AjaxResult getInfo( @PathVariable( "id" ) Integer id ) {
 		return AjaxResult.success( gamePlatformService.selectGamePlatformById( id ) );
 	}
 

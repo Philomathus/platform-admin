@@ -32,7 +32,7 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
      * @return 【请填写功能名称】
      */
     @Override
-    public GamePlatform selectGamePlatformById(Long id) {
+    public GamePlatform selectGamePlatformById(Integer id) {
         return gamePlatformMapper.selectGamePlatformById(id);
     }
 

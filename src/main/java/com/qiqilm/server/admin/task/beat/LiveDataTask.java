@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.task.beat;
 
 import com.qiqilm.server.admin.domain.GamePlatform;
+import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.service.IGameDataLogService;
 import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
@@ -13,47 +14,44 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * 游戏数据打码
+ * 送礼数据打码
  */
 @Log4j2
 @Component
-public class GameDataTask {
+public class LiveDataTask {
+
+
     @Autowired
     private IGameDataLogService gameDataLogService;
     @Autowired
     private IGamePlatformService gamePlatformService;
 
-    @Value( "${spring.profiles.active}" )
-    private String profile;
-    private Map<Integer,String> platformType = new HashMap<>();
-    private Map<Integer, BigDecimal> beatRateMap = new HashMap<>();
+    private String platformTypeId;
+    private BigDecimal beatRate ;
+
 
     @PostConstruct
     public void init() {
-        for(GamePlatform gm: gamePlatformService.selectGamePlatformList(new GamePlatform())){
-            platformType.put(gm.getId(),gm.getGameTypeid());
-            beatRateMap.put(gm.getId(),gm.getRateBeat());
-        }
+        GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LIVE.getType());
+        platformTypeId = gamePlatform.getGameTypeid();
+        beatRate= gamePlatform.getRateBeat();
+
     }
 
-
-    @Scheduled( fixedDelay = 30000, initialDelay=1 )
-    public void runTask() throws Exception {
-
+    @Scheduled( fixedDelay = 30000, initialDelay=2000  )
+    public void runPropTask() throws Exception {
         Date endDay  = new Date();
-
         Date starDay = DateFormatUtils.addMin( endDay, -10);
 
         try {
-            gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
-
+            gameDataLogService.beatLiveProp(platformTypeId,beatRate,starDay.getTime()/1000,endDay.getTime()/1000);
         }catch (Exception e){
-            log.error("游戏拉取注单异常,",e);
+            log.error("礼物拉取注单异常,",e);
         }
 
     }
+
+
 }

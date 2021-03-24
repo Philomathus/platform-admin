@@ -18,6 +18,20 @@
 		from member_bcode
 	</sql>
 
+	<select id="selectWillBcodeList" parameterType="com.qiqilm.server.admin.domain.MemberBcode" resultMap="MemberBcodeResult">
+		<include refid="selectMemberBcodeVo"/>
+		<where>
+			<if test="userId != null">
+				and user_id = #{userId}
+			</if>
+
+			<if test="status != null">
+				and status = #{status}
+			</if>
+		</where>
+		order by create_time asc
+	</select>
+
 	<select id="selectMemberBcodeList" parameterType="com.qiqilm.server.admin.domain.MemberBcode" resultMap="MemberBcodeResult">
 		<include refid="selectMemberBcodeVo"/>
 		<where>

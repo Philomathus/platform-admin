@@ -1,8 +1,11 @@
 package com.qiqilm.server.admin.service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.domain.GameDataLog;
+import com.qiqilm.server.admin.domain.LiveNote;
 
 /**
  * 总代理游戏注单Service接口
@@ -22,27 +25,21 @@ public interface IGameDataLogService {
 	/**
 	 * 查询总代理游戏注单列表
 	 *
-	 * @param gameDataLog 总代理游戏注单
 	 * @return 总代理游戏注单集合
 	 */
-	public List<GameDataLog> selectGameDataLogList(GameDataLog gameDataLog);
+	public List<GameDataLog> selectGameDataLogList(String cxAgent,String start, String end,String account, String platformId);
+
 
 	/**
-	 * 新增总代理游戏注单
-	 *
-	 * @param gameDataLog 总代理游戏注单
-	 * @return 结果
+	 * 游戏打码
 	 */
-	public int insertGameDataLog(GameDataLog gameDataLog);
+	public void beatGameCode(Map<Integer,String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId);
 
-	/**
-	 * 修改总代理游戏注单
-	 *
-	 * @param gameDataLog 总代理游戏注单
-	 * @return 结果
-	 */
-	public int updateGameDataLog(GameDataLog gameDataLog);
 
+	public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String dbNodes, String start, String end);
+
+
+	public void beatLiveProp(String platformTypeId, BigDecimal beatRate, long start, long end);
 	/**
 	 * 批量删除总代理游戏注单
 	 *
@@ -51,11 +48,5 @@ public interface IGameDataLogService {
 	 */
 	public int deleteGameDataLogByIds(String[] ids );
 
-	/**
-	 * 删除总代理游戏注单信息
-	 *
-	 * @param id 总代理游戏注单ID
-	 * @return 结果
-	 */
-	public int deleteGameDataLogById(String id);
+
 }
