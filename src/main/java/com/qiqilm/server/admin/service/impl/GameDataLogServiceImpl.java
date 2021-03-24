@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import com.qiqilm.server.admin.mapper.*;
+import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.ExecutorType;
@@ -298,7 +299,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             return;
         }
         Map<String, BigDecimal> willCodeMap = new HashMap<>();
-        List<LogMoney> logList =new ArrayList<>();
+        List<LogMoneyLive> logList =new ArrayList<>();
         SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
         LogMoneyMapper mapper  = session.getMapper( LogMoneyMapper.class );
         for(LiveVideoPropVo og: list){
@@ -306,10 +307,11 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
                 continue;
             }
 
-            LogMoney log = new LogMoney();
+            LogMoneyLive log = new LogMoneyLive();
             log.setId( og.getId() );
             log.setUserId( og.getP_user_id() );
-            log.setCreateTime( new Date(og.getCreate_time()*1000) );
+
+            log.setCreateTime(  LocalDateTimeUtils.getDateTimeOfTimestamp( og.getCreate_time() * 1000L ));
             log.setIncome( BigDecimal.ZERO );
             log.setPay( BigDecimal.ZERO );
             BigDecimal beatAdd =null;
@@ -342,9 +344,9 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         }
 
         int              count   = 0;
-        for ( LogMoney in : logList ) {
+        for ( LogMoneyLive in : logList ) {
             try {
-                mapper.insertLogMoney(in,in.getUserId().substring(in.getUserId().length()-1));
+                mapper.insertLogMoneyPop(in,in.getUserId().substring(in.getUserId().length()-1));
                 count += 1;
                 if ( count >= 500 ) {
                     session.commit();

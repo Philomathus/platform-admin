@@ -112,6 +112,14 @@
         #{req.id},#{req.userId},#{req.pay},#{req.income},#{req.userName},#{req.type},#{req.des},#{req.total},#{req.createTime},#{req.totalBefore},#{req.markorder},#{req.mark}
         )
 	</insert>
+	<insert id="insertLogMoneyPop">
+		insert ignore into log_money${dbNodes} (
+		id,user_id,pay,income,user_name,type,des, total, create_time, total_before,markorder,mark) values
+		(
+        #{req.id},#{req.userId},#{req.pay},#{req.income},#{req.userName},#{req.type},#{req.des},#{req.total},#{req.createTime},#{req.totalBefore},#{req.markorder},#{req.mark}
+        )
+	</insert>
+
 
 	<select id="findExist" resultType="java.lang.Integer">
 		SELECT type FROM log_money${dbNodes}
