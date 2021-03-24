@@ -27,7 +27,7 @@ spring:
       ## 连接池名称
       pool-name: HikariPool
       ## 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
-      max-lifetime: 600000
+      max-lifetime: 10000
       ## 数据库连接超时时间,默认30秒，即30000
       connection-timeout: 10000
       connection-test-query: SELECT 1 FROM DUAL
