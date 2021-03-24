@@ -37,7 +37,7 @@
             id,
             game_id,
             account,
-            kind_id
+            kind_id,
             cell_score,
             all_bet,
             profit,
