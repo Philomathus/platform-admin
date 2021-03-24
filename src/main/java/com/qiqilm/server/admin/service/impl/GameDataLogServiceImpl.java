@@ -312,13 +312,13 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             log.setCreateTime( new Date(og.getCreate_time()*1000) );
             log.setIncome( BigDecimal.ZERO );
             log.setPay( BigDecimal.ZERO );
-            BigDecimal beatAdd;
+            BigDecimal beatAdd =null;
             if (og.getTotal_diamonds().compareTo(BigDecimal.ZERO)>0) {
                 log.setPay( og.getTotal_diamonds() );
                 beatAdd = log.getPay();
             } else  {
                 log.setIncome( og.getTotal_diamonds().negate() );
-                beatAdd = log.getIncome();
+
             }
             log.setTotal( og.getCurrent_diamonds() );
             log.setTotalBefore( og.getCurrent_diamonds().add(og.getTotal_diamonds()) );
@@ -330,9 +330,13 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
                 log.setDes( og.getProp_name());
             }
 
-            beatAdd = beatAdd.multiply(beatRate).setScale(4);
-            willCodeMap.putIfAbsent(og.getP_user_id(),BigDecimal.ZERO);
-            willCodeMap.put(og.getP_user_id(),willCodeMap.get(og.getP_user_id()).add(beatAdd));
+
+            if(beatAdd!=null){
+                beatAdd = beatAdd.multiply(beatRate).setScale(4);
+                willCodeMap.putIfAbsent(og.getP_user_id(),BigDecimal.ZERO);
+                willCodeMap.put(og.getP_user_id(),willCodeMap.get(og.getP_user_id()).add(beatAdd));
+            }
+
             logList.add(log);
 
         }
