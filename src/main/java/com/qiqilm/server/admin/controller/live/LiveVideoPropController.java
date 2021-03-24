@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LiveProplog;
 import com.qiqilm.server.admin.domain.LiveVideoProp;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoPropService;
@@ -29,7 +30,8 @@ public class LiveVideoPropController extends BaseController {
 	/**
 	 * 查询送礼物列表
 	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/list" )
     	public TableDataInfo list(LiveVideoProp liveVideoProp) {
 		startPage();
@@ -41,6 +43,7 @@ public class LiveVideoPropController extends BaseController {
 	 * 导出送礼物列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
+	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(LiveVideoProp liveVideoProp) {
 		List<LiveVideoProp>      list = liveVideoPropService.selectLiveVideoPropList(liveVideoProp);
@@ -49,13 +52,13 @@ public class LiveVideoPropController extends BaseController {
 	}
 
 	/**
-	 * 获取送礼物详细信息
+	 * 统计礼物金额
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:query')" )
-	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( liveVideoPropService.selectLiveVideoPropById(id) );
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+	@GetMapping( "/getCount" )
+	public AjaxResult getCount( LiveVideoProp liveVideoProp ) {
+		LiveVideoProp liveVideoProp1;
+		liveVideoProp1=liveVideoPropService.getCount( liveVideoProp );
+		return AjaxResult.success(liveVideoProp1);
 	}
-
-
 }
