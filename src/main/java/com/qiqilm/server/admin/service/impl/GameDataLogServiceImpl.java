@@ -310,8 +310,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             LogMoneyLive log = new LogMoneyLive();
             log.setId( og.getId() );
             log.setUserId( og.getP_user_id() );
-
-            log.setCreateTime(  LocalDateTimeUtils.getDateTimeOfTimestamp( og.getCreate_time() * 1000L ));
+            log.setCreateTime( LocalDateTimeUtils.getFormatTimeSecond(og.getCreate_time()));
             log.setIncome( BigDecimal.ZERO );
             log.setPay( BigDecimal.ZERO );
             BigDecimal beatAdd =null;

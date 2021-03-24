@@ -55,7 +55,7 @@ public class LogMoneyLive {
 	private BigDecimal income;
 
 
-	private LocalDateTime createTime;
+	private String createTime;
 
 	/**
 	 * 支出
