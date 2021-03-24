@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
@@ -48,6 +49,8 @@ public class MemberInfoController extends BaseController {
     private MemberCacheManager memberCacheManager;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private MemberForbidUtil memberForbidUtil;
 
     /**
      * 查询用户信息列表
@@ -163,6 +166,8 @@ public class MemberInfoController extends BaseController {
         MemberInfo newMemberInfo = new MemberInfo();
         MemberInfo memberInfo = memberInfoService.selectMemberInfoById(req.getId());
         newMemberInfo.setStatus(req.getStatus());
+        memberForbidUtil.setPlatformUserStatus(memberInfo.getId(),req.getStatus());
+
         if (1 == req.getStatus()) {
             newMemberInfo.setLoginNum(0);
         }
@@ -181,6 +186,7 @@ public class MemberInfoController extends BaseController {
         MemberInfo newMemberInfo = new MemberInfo();
         MemberInfo memberInfo = memberInfoService.selectMemberInfoById(req.getId());
         newMemberInfo.setStatus(req.getStatus());
+        memberForbidUtil.setPlatformUserStatus(memberInfo.getId(),req.getStatus());
         //备注禁用原因
         if (req.getRemark() != null) {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
