@@ -99,6 +99,7 @@ public class LiveMountController extends BaseController {
 	@Log( title = "礼物列", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable Long[] ids ) {
+		global.refreshMountConfCache();
 		return toAjax( liveMountService.deleteLiveMountByIds( ids ) );
 	}
 }
