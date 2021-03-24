@@ -46,4 +46,12 @@ public class MemberForbidUtil {
 		redisUtil.hSet( Constants.TOKEN_USER_KEY + token, PlatformUserKey.SPEAK.getKey(), speak + "" );
 		return true;
 	}
+	public int setPlatformUserStatus( String pUserId, int status ) {
+		String token = redisUtil.strGet( Constants.USER_TOKEN_KEY + pUserId );
+		if ( Strings.isBlank( token ) ) {
+			return status;
+		}
+		redisUtil.hSet( Constants.TOKEN_USER_KEY + token, PlatformUserKey.STATUS.getKey(), status + "" );
+		return status;
+	}
 }
