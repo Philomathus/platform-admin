@@ -27,6 +27,6 @@ public class LiveVideoPropVo {
     @ApiModelProperty(value = "会员ID")
     private String p_user_id;
     @ApiModelProperty(value = "时间秒")
-    private Integer create_time;
+    private Long create_time;
 
 }
