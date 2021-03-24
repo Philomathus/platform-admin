@@ -323,7 +323,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             log.setTotal( og.getCurrent_diamonds() );
             log.setTotalBefore( og.getCurrent_diamonds().add(og.getTotal_diamonds()) );
 
-            log.setType( 1 );
+            log.setType( 16 );
             if(og.getProp_id().compareTo("0")>0){
                 log.setDes( og.getProp_name().concat("礼物"));
             }else{
