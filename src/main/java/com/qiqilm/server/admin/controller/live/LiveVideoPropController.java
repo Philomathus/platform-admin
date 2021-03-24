@@ -41,7 +41,6 @@ public class LiveVideoPropController extends BaseController {
 	 * 导出送礼物列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
-	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export(LiveVideoProp liveVideoProp) {
 		List<LiveVideoProp>      list = liveVideoPropService.selectLiveVideoPropList(liveVideoProp);
@@ -58,33 +57,5 @@ public class LiveVideoPropController extends BaseController {
 		return AjaxResult.success( liveVideoPropService.selectLiveVideoPropById(id) );
 	}
 
-	/**
-	 * 新增送礼物
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:add')" )
-	@Log( title = "送礼物", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody LiveVideoProp liveVideoProp) {
-		return toAjax( liveVideoPropService.insertLiveVideoProp(liveVideoProp) );
-	}
 
-	/**
-	 * 修改送礼物
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:edit')" )
-	@Log( title = "送礼物", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody LiveVideoProp liveVideoProp) {
-		return toAjax( liveVideoPropService.updateLiveVideoProp(liveVideoProp) );
-	}
-
-	/**
-	 * 删除送礼物
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:remove')" )
-	@Log( title = "送礼物", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( liveVideoPropService.deleteLiveVideoPropByIds( ids ) );
-	}
 }
