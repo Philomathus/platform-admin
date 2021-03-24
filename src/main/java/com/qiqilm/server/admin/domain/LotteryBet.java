@@ -22,10 +22,6 @@ public class LotteryBet {
     /** id */
     private String id;
 
-    /** 用户ID */
-    @Excel(name = "用户ID")
-    private Long userId;
-
     /** 下注彩种id */
     @Excel(name = "下注彩种id")
     private String lotteryId;
@@ -33,14 +29,6 @@ public class LotteryBet {
     /** 下注期数 */
     @Excel(name = "下注期数")
     private String issue;
-
-    /** 下注选择菜单 */
-    @Excel(name = "下注选择菜单")
-    private String methodId;
-
-    /** 下注选择 */
-    @Excel(name = "下注选择")
-    private String betSelect;
 
     /** 筹码 */
     @Excel(name = "筹码")
@@ -63,10 +51,6 @@ public class LotteryBet {
     @Excel(name = "投资")
     private BigDecimal cost;
 
-    /** 彩票名称 */
-    @Excel(name = "彩票名称")
-    private String lotteryName;
-
     /** 平台用户ID */
     @Excel(name = "平台用户ID")
     private String puserId;
@@ -75,29 +59,4 @@ public class LotteryBet {
     @Excel(name = "主播ID")
     private Integer anchor;
 
-    /** 开奖号码 */
-    @Excel(name = "开奖号码")
-    private String code;
-
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("userId", getUserId())
-                .append("lotteryId", getLotteryId())
-                .append("issue", getIssue())
-                .append("methodId", getMethodId())
-                .append("betSelect", getBetSelect())
-                .append("chip", getChip())
-                .append("betTime", getBetTime())
-                .append("prize", getPrize())
-                .append("cost", getCost())
-                .append("lotteryName", getLotteryName())
-                .append("puserId", getPuserId())
-                .append("anchor", getAnchor())
-                .append("code", getCode())
-                .append("updateTime", getUpdateTime())
-                .toString();
-    }
 }

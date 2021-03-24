@@ -6,30 +6,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="LotteryBet" id="LotteryBetResult">
         <result property="id"    column="id"    />
-        <result property="userId"    column="user_id"    />
         <result property="lotteryId"    column="lottery_id"    />
         <result property="issue"    column="issue"    />
-        <result property="methodId"    column="method_id"    />
-        <result property="betSelect"    column="bet_select"    />
         <result property="chip"    column="chip"    />
         <result property="betTime"    column="bet_time"    />
-        <result property="status"    column="status"    />
         <result property="prize"    column="prize"    />
         <result property="cost"    column="cost"    />
-        <result property="lotteryName"    column="lottery_name"    />
         <result property="puserId"    column="puser_id"    />
         <result property="anchor"    column="anchor"    />
-        <result property="code"    column="code"    />
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectLotteryBetVo">
-        select id, user_id, lottery_id, issue, method_id, bet_select, chip, bet_time, status, prize, cost, lottery_name, puser_id, anchor, code, update_time from ${dbLottery}.lottery_bet${dbNodes}
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet${dbNodes}
     </sql>
 
     <select id="selectLotteryBetList" parameterType="LotteryBet" resultMap="LotteryBetResult">
         <include refid="selectLotteryBetVo"/>
-        where bet_time &gt;=  #{start} and bet_time =  &lt;=  #{end} and status != 0
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status != 0
     </select>
     <select id="selectLotteryBetById" parameterType="String" resultMap="LotteryBetResult">
         <include refid="selectLotteryBetVo"/>
