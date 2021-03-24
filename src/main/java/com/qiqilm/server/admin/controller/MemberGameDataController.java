@@ -48,10 +48,11 @@ public class MemberGameDataController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:list')" )
 	@GetMapping( "/getCount" )
 	public AjaxResult getCount( MemberGameData memberGameData ) {
-		if (memberGameData.getSelectDate() != null) {
-			memberGameData.setStartTime(memberGameData.getSelectDate()[0] + " 00:00:00");
-			memberGameData.setEndTime(memberGameData.getSelectDate()[1] + " 23:59:59");
-		}
+		//不要把查询条件放到entity
+//		if ( memberGameData.getSelectDate() != null ) {
+//			memberGameData.setStartTime( memberGameData.getSelectDate()[ 0 ] );
+//			memberGameData.setEndTime( memberGameData.getSelectDate()[ 1 ] );
+//		}
 		return memberGameDataService.getCount( memberGameData );
 	}
 //
@@ -76,15 +77,6 @@ public class MemberGameDataController extends BaseController {
 		return AjaxResult.success( memberGameDataService.selectMemberGameDataById( id ) );
 	}
 
-	/**
-	 * 新增会员注单数据
-	 */
-	@PreAuthorize( "@ss.hasPermi('member:memberGameData:add')" )
-	@Log( title = "会员注单数据", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody MemberGameData memberGameData ) {
-		return toAjax( memberGameDataService.insertMemberGameData( memberGameData ) );
-	}
 
 	/**
 	 * 修改会员注单数据

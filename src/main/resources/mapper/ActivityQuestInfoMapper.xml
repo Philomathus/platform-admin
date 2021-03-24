@@ -24,6 +24,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, icon, title, ctime, indexs, type_id, target, reward, detail, content, game_id, kind_id, platform_id from activity_quest_info
     </sql>
 
+
+    <select id="selectQuestList" parameterType="ActivityQuestInfo" resultMap="ActivityQuestInfoResult">
+        <include refid="selectActivityQuestInfoVo"/>
+    </select>
+
     <select id="selectActivityQuestInfoList" parameterType="ActivityQuestInfo" resultMap="ActivityQuestInfoResult">
         <include refid="selectActivityQuestInfoVo"/>
         <where>

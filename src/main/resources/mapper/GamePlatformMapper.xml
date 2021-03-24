@@ -46,7 +46,7 @@
         where id = #{id}
     </update>
 
-    <select id="selectGamePlatformById" parameterType="Long" resultMap="GamePlatformResult">
+    <select id="selectGamePlatformById" parameterType="Integer" resultMap="GamePlatformResult">
         <include refid="selectGamePlatformVo"/>
         where id = #{id}
     </select>

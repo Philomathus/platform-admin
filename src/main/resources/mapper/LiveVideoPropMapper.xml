@@ -51,9 +51,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+
+
     <select id="selectLiveVideoPropById" parameterType="Long" resultMap="LiveVideoPropResult">
         <include refid="selectLiveVideoPropVo"/>
         where id = #{id}
+    </select>
+    <select id="findVideoPropList" resultType="com.qiqilm.server.admin.domain.vo.LiveVideoPropVo">
+        select id, prop_id,prop_name, total_diamonds, current_diamonds, p_user_id, to_user_id, create_time from ${dbLive}.live_video_prop
+        where  create_time &gt;=  #{start} and create_time &lt;=  #{end}
     </select>
 
     <select id="getCount" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">

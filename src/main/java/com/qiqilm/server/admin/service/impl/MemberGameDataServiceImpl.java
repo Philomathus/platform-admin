@@ -49,24 +49,14 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
      */
     @Override
     public List<RspMemberGameData> selectMemberGameDataList(MemberGameData memberGameData) {
-        if (memberGameData.getSelectDate() != null) {
-            memberGameData.setStartTime(memberGameData.getSelectDate()[0] + " 00:00:00");
-            memberGameData.setEndTime(memberGameData.getSelectDate()[1] + " 23:59:59");
-        }
+        //不要把查询条件放到entity
+//        if (memberGameData.getSelectDate() != null) {
+//            memberGameData.setStartTime(memberGameData.getSelectDate()[0] + " 00:00:00");
+//            memberGameData.setEndTime(memberGameData.getSelectDate()[1] + " 23:59:59");
+//        }
         List<RspMemberGameData> memberGameDatas = memberGameDataMapper.selectMemberGameDataList(memberGameData);
         return memberGameDatas;
 
-    }
-
-    /**
-     * 新增会员注单数据
-     *
-     * @param memberGameData 会员注单数据
-     * @return 结果
-     */
-    @Override
-    public int insertMemberGameData(MemberGameData memberGameData) {
-        return memberGameDataMapper.insertMemberGameData(memberGameData);
     }
 
     /**
@@ -105,13 +95,14 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
     @Override
     public AjaxResult getCount(MemberGameData memberGameData) {
         MemberGameData memberGameData1 = memberGameDataMapper.getCount(memberGameData);
-        if (Objects.isNull(memberGameData1)){
-            MemberGameData memberGameData2=new MemberGameData();
-            memberGameData2.setTotalBet(BigDecimal.ZERO);
-            memberGameData2.setTotalIncome(BigDecimal.ZERO);
-            memberGameData2.setTotalSuccessBet(BigDecimal.ZERO);
-            return AjaxResult.success(memberGameData2);
-        }
+        //不要把查询条件放到entity
+//        if (Objects.isNull(memberGameData1)){
+//            MemberGameData memberGameData2=new MemberGameData();
+//            memberGameData2.setTotalBet(BigDecimal.ZERO);
+//            memberGameData2.setTotalIncome(BigDecimal.ZERO);
+//            memberGameData2.setTotalSuccessBet(BigDecimal.ZERO);
+//            return AjaxResult.success(memberGameData2);
+//        }
         return AjaxResult.success(memberGameData1);
     }
 

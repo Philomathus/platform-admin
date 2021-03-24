@@ -17,7 +17,7 @@ public interface IGamePlatformService {
 	 * @param id 游戏平台ID
 	 * @return 游戏平台
 	 */
-	public GamePlatform selectGamePlatformById(Long id);
+	public GamePlatform selectGamePlatformById(Integer id);
 
 	/**
 	 * 查询游戏平台列表

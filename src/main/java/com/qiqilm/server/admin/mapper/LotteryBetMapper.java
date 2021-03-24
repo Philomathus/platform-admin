@@ -23,27 +23,10 @@ public interface LotteryBetMapper {
 
 	/**
 	 * 查询用户投资行为列表
-	 *
-	 * @param lotteryBet 用户投资行为
 	 * @return 用户投资行为集合
 	 */
-	public List<LotteryBet> selectLotteryBetList(LotteryBet lotteryBet);
+	public List<LotteryBet> selectLotteryBetList(@Param( "dbNodes" ) String dbNodes,@Param( "start" )String start,@Param( "end" )String end);
 
-	/**
-	 * 新增用户投资行为
-	 *
-	 * @param lotteryBet 用户投资行为
-	 * @return 结果
-	 */
-	public int insertLotteryBet(LotteryBet lotteryBet);
-
-	/**
-	 * 修改用户投资行为
-	 *
-	 * @param lotteryBet 用户投资行为
-	 * @return 结果
-	 */
-	public int updateLotteryBet(LotteryBet lotteryBet);
 
 	/**
 	 * 删除用户投资行为

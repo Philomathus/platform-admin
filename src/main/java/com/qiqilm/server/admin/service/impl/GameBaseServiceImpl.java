@@ -119,7 +119,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.FANY_SPORT.getType() );
+						EnumGamePlatform.FANY_SPORT.getType() );
 				BigDecimal backMoney = fanYSportService.queryCoin( gamePlatform, userId, date );
 
 				RspGameBalance rspGameBalance = new RspGameBalance();
@@ -138,7 +138,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.AFB.getType() );
+						EnumGamePlatform.AFB.getType() );
 				BigDecimal backMoney = afbService.queryCoin( gamePlatform, userId, date );
 
 				RspGameBalance rspGameBalance = new RspGameBalance();
@@ -157,7 +157,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.NEWWORLD_CHESS.getType() );
+						EnumGamePlatform.NEWWORLD_CHESS.getType() );
 				BigDecimal backMoney = newWorldService.queryCoin( gamePlatform, userId, date );
 
 				RspGameBalance rspGameBalance = new RspGameBalance();
@@ -176,7 +176,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.LEG_CHESS.getType() );
+						EnumGamePlatform.LEG_CHESS.getType() );
 				BigDecimal backMoney = legService.queryCoin( gamePlatform, userId, date );
 
 				RspGameBalance rspGameBalance = new RspGameBalance();
@@ -195,7 +195,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.KAIXUAN_CHESS.getType() );
+						EnumGamePlatform.KAIXUAN_CHESS.getType() );
 				BigDecimal backMoney = kaiXuanService.queryCoin( gamePlatform, userId, date );
 
 				RspGameBalance rspGameBalance = new RspGameBalance();
@@ -214,7 +214,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.MEITIAN_CHESS.getType() );
+						EnumGamePlatform.MEITIAN_CHESS.getType() );
 				BigDecimal backMoney = meiTianService.queryCoin( gamePlatform, userId );
 
 				RspGameBalance rspGameBalance = new RspGameBalance();
@@ -233,7 +233,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.ICG_DIANZI.getType() );
+						EnumGamePlatform.ICG_DIANZI.getType() );
 				BigDecimal backMoney = icgService.queryCoin( gamePlatform, userId );
 
 				RspGameBalance rspGameBalance = new RspGameBalance();
@@ -252,7 +252,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.SHABA_SPORT.getType() );
+						EnumGamePlatform.SHABA_SPORT.getType() );
 				BigDecimal backMoney = shabaService.queryCoin( gamePlatform, userId );
 
 				RspGameBalance rspGameBalance = new RspGameBalance();
@@ -271,7 +271,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.BBIN_LIVE.getType() );
+						EnumGamePlatform.BBIN_LIVE.getType() );
 				BigDecimal backMoney = bbinService.queryCoin( gamePlatform, userId.replace( "_", "BBIN" ) );
 
 				RspGameBalance rspGameBalance = new RspGameBalance();
@@ -290,7 +290,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.NG_LIVE.getType() );
+						EnumGamePlatform.NG_LIVE.getType() );
 				//获取token令牌
 				String     token     = PostData.getMGToken( restTemplate, gamePlatform );
 				BigDecimal backMoney = PostData.getMGBalance( restTemplate, token, userId, gamePlatform );
@@ -311,7 +311,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.MG_LIVE.getType() );
+						EnumGamePlatform.MG_LIVE.getType() );
 				//获取token令牌
 				String     token     = PostData.getMGToken( restTemplate, gamePlatform );
 				BigDecimal backMoney = PostData.getMGBalance( restTemplate, token, userId, gamePlatform );
@@ -332,7 +332,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.KY_CHESS.getType() );
+						EnumGamePlatform.KY_CHESS.getType() );
 				String resAll = PostData.getAllBalance( gamePlatform.getAgent(), userId, gamePlatform.getDes(),
 						gamePlatform.getMd5(), gamePlatform.getApiUrl() );
 
@@ -355,7 +355,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.OG_LIVE.getType() );
+						EnumGamePlatform.OG_LIVE.getType() );
 				HttpHeaders headers = new HttpHeaders();
 				thirdPMCacheManager.pullOgToken( userId, gamePlatform.getApiUrl(), gamePlatform.getDes(),
 						gamePlatform.getMd5() );
@@ -388,7 +388,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		return () -> {
 			try {
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
-						( long ) EnumGamePlatform.AG_LIVE.getType() );
+						EnumGamePlatform.AG_LIVE.getType() );
 
 				String orderId = PostData.createOrderId( gamePlatform.getAgent(), userId, EnumGamePlatform.AG_LIVE.getType(),
 						date );
@@ -424,7 +424,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		if ( gameMoney == null ) {
 			return AjaxResult.error( "用户未登陆此游戏" );
 		}
-		GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( ( long ) platformId );
+		GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( platformId );
 		Date         date         = new Date();
 		String       orderId      = PostData.createOrderId( gamePlatform.getAgent(), userId, platformId, date );
 		String       name         = gamePlatform.getName() + "人工下分";

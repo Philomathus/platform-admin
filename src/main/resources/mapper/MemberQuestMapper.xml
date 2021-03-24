@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MemberQuestMapper">
+
+    <resultMap type="MemberQuest" id="MemberQuestResult">
+        <result property="id"    column="id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="questId"    column="quest_id"    />
+        <result property="status"    column="status"    />
+        <result property="curnum"    column="curNum"    />
+    </resultMap>
+
+    <sql id="selectMemberQuestVo">
+        select id, member_id, quest_id, status, curNum from 7700_main.member_quest
+    </sql>
+
+    <select id="selectMemberQuestList" parameterType="MemberQuest" resultMap="MemberQuestResult">
+        <include refid="selectMemberQuestVo"/>
+        <where>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="questId != null  and questId != ''"> and quest_id = #{questId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="curnum != null "> and curNum = #{curnum}</if>
+        </where>
+    </select>
+
+    <select id="selectMemberQuestById" parameterType="String" resultMap="MemberQuestResult">
+        <include refid="selectMemberQuestVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMemberQuest" parameterType="MemberQuest">
+        insert into 7700_main.member_quest
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="questId != null">quest_id,</if>
+            <if test="status != null">status,</if>
+            <if test="curnum != null">curNum,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="questId != null">#{questId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="curnum != null">#{curnum},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMemberQuest" parameterType="MemberQuest">
+        update 7700_main.member_quest
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null">member_id = #{memberId},</if>
+
+            <if test="questId != null">quest_id = #{questId},</if>
+
+            <if test="status != null">status = #{status},</if>
+
+            <if test="curnum != null">curNum = #{curnum},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMemberQuestById" parameterType="String">
+        delete from 7700_main.member_quest where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberQuestByIds" parameterType="String">
+        delete from 7700_main.member_quest where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
