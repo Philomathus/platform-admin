@@ -25,7 +25,7 @@ public interface LotteryBetMapper {
 	 * 查询用户投资行为列表
 	 * @return 用户投资行为集合
 	 */
-	public List<LotteryBet> selectLotteryBetList(@Param( "dbNodes" ) String dbNodes,@Param( "start" )String start,@Param( "end" )String end);
+	public List<LotteryBet> selectLotteryBetList(@Param( "start" )String start,@Param( "end" )String end);
 
 
 	/**

@@ -22,8 +22,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectLotteryBetList" parameterType="LotteryBet" resultMap="LotteryBetResult">
-        <include refid="selectLotteryBetVo"/>
-        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status != 0
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet0
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
+        UNION ALL
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet1
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
+        UNION ALL
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet2
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
+        UNION ALL
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet3
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
+        UNION ALL
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet4
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
+        UNION ALL
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet5
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
+        UNION ALL
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet6
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
+        UNION ALL
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet7
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
+        UNION ALL
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet8
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
+        UNION ALL
+        select id,puser_id , lottery_id, issue, chip, prize, cost, anchor, bet_time,update_time from ${dbLottery}.lottery_bet9
+        where bet_time &gt;=  #{start} and bet_time  &lt;=  #{end} and status &gt; 0
     </select>
     <select id="selectLotteryBetById" parameterType="String" resultMap="LotteryBetResult">
         <include refid="selectLotteryBetVo"/>
