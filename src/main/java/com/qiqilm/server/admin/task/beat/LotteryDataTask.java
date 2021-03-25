@@ -45,12 +45,10 @@ public class LotteryDataTask {
         Date starDay = DateFormatUtils.addMin( endDay, -10);
         String start = DateFormatUtils.formate( starDay );
         String end = DateFormatUtils.formate( endDay );
-        for(int i=0;i<10;i++){
-            try {
-                gameDataLogService.beatLotteryCode(platformTypeId,beatRate,String.valueOf(i),start,end);
-            }catch (Exception e){
-                log.error("彩票拉取注单异常,",e);
-            }
+        try {
+            gameDataLogService.beatLotteryCode(platformTypeId,beatRate,start,end);
+        }catch (Exception e){
+            log.error("彩票拉取注单异常,",e);
         }
 
     }

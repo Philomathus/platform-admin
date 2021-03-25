@@ -249,8 +249,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     }
 
     @Override
-    public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String dbNodes, String start, String end) {
-        List<LotteryBet> list = lotteryBetMapper.selectLotteryBetList(dbNodes,start,end);
+    public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String start, String end) {
+        List<LotteryBet> list = lotteryBetMapper.selectLotteryBetList(start,end);
         if(list.size()==0){
             return;
         }
