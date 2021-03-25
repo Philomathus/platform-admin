@@ -9,6 +9,7 @@ public enum EnumMoney {
 
 
 	/*** 正常业务流程 type>0 **/
+	live(0,"直播消费"),
 	platform(1,"平台资金切换"),
 	charge(2,"线上充值"),//线上充值
 	withdrawauto(3,"会员取款"),
