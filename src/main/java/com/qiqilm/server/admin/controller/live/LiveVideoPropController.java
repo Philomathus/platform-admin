@@ -31,7 +31,6 @@ public class LiveVideoPropController extends BaseController {
 	 * 查询送礼物列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
-	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/list" )
     	public TableDataInfo list(LiveVideoProp liveVideoProp) {
 		startPage();
