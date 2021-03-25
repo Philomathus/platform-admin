@@ -309,6 +309,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     public AjaxResult changeBank(MemberCard member) {
         String id = member.getId();
         MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
+        memberCard.setRealName(member.getRealName());
         memberCard.setBankName(member.getBankName());
         memberCard.setBankAddress(member.getBankAddress());
         memberCard.setBankAccount(member.getBankAccount());
