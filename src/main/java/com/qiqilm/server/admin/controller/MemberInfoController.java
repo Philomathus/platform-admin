@@ -262,7 +262,8 @@ public class MemberInfoController extends BaseController {
         if (!redisUtil.lock(EnumLock.member, req.getId(), "1", 5)) {
             throw new BusinessException("请勿重复提交");
         }
-        rspBase = memberInfoService.addMemberMoneyOnly(ip, req.getId(), req.getScore(), req.getBeatNum(), req.getMk(),
+        String username = loginUser.getUser().getUserName();
+        rspBase = memberInfoService.addMemberMoneyOnly(ip, req.getId(), req.getScore(), req.getBeatNum(), req.getMk()+",操作人:"+username,
                 req.getOrdermk(), loginUser.getUsername());
         redisUtil.unLock(EnumLock.member, req.getId());
         return rspBase;
