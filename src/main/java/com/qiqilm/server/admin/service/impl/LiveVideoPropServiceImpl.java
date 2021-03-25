@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,16 +21,6 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     @Autowired
     private LiveVideoPropMapper liveVideoPropMapper;
 
-    /**
-     * 查询送礼物
-     *
-     * @param id 送礼物ID
-     * @return 送礼物
-     */
-    @Override
-    public LiveVideoProp selectLiveVideoPropById(Long id) {
-        return liveVideoPropMapper.selectLiveVideoPropById(id);
-    }
 
     /**
      * 查询送礼物列表
@@ -38,51 +30,20 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
      */
     @Override
     public List<LiveVideoProp> selectLiveVideoPropList(LiveVideoProp liveVideoProp) {
+        if ( liveVideoProp.getSelectDate() != null && liveVideoProp.getSelectDate().length > 0 ) {
+            liveVideoProp.setStartTime( liveVideoProp.getSelectDate()[ 0 ] + " 00:00:00");
+            liveVideoProp.setEndTime( liveVideoProp.getSelectDate()[ 1 ] + " 23:59:59");
+        }
         return liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp);
     }
 
-    /**
-     * 新增送礼物
-     *
-     * @param liveVideoProp 送礼物
-     * @return 结果
-     */
     @Override
-    public int insertLiveVideoProp(LiveVideoProp liveVideoProp) {
-        liveVideoProp.setCreateTime(DateUtils.getNowDate());
-        return liveVideoPropMapper.insertLiveVideoProp(liveVideoProp);
+    public LiveVideoProp getCount(LiveVideoProp liveVideoProp) {
+        if ( liveVideoProp.getSelectDate() != null && liveVideoProp.getSelectDate().length > 0 ) {
+            liveVideoProp.setStartTime( liveVideoProp.getSelectDate()[ 0 ] + " 00:00:00");
+            liveVideoProp.setEndTime( liveVideoProp.getSelectDate()[ 1 ] + " 23:59:59");
+        }
+        return liveVideoPropMapper.getCount(liveVideoProp);
     }
 
-    /**
-     * 修改送礼物
-     *
-     * @param liveVideoProp 送礼物
-     * @return 结果
-     */
-    @Override
-    public int updateLiveVideoProp(LiveVideoProp liveVideoProp) {
-        return liveVideoPropMapper.updateLiveVideoProp(liveVideoProp);
-    }
-
-    /**
-     * 批量删除送礼物
-     *
-     * @param ids 需要删除的送礼物ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLiveVideoPropByIds(Long[] ids) {
-        return liveVideoPropMapper.deleteLiveVideoPropByIds(ids);
-    }
-
-    /**
-     * 删除送礼物信息
-     *
-     * @param id 送礼物ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLiveVideoPropById(Long id) {
-        return liveVideoPropMapper.deleteLiveVideoPropById(id);
-    }
 }
