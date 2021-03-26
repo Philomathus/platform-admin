@@ -134,9 +134,9 @@
 
     <select id="getCountMemberGameDataList" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberGameData">
         SELECT
-        SUM(cell_score) totalSuccessBet,
-        SUM(all_bet) totalBet,
-        SUM(profit) totalIncome
+        cast(SUM(cell_score) AS decimal(10,2)) totalSuccessBet,
+        cast(SUM(all_bet) AS decimal(10,2)) totalBet,
+        cast(SUM(profit) AS decimal(10,2)) totalIncome
         FROM
         ${dbMain}.member_game_data${tableLast} m
         LEFT JOIN config_gametype cg ON m.agent = cg.platform_id
