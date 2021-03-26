@@ -44,24 +44,25 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
 	public Object selectReportMoneyinfoList( ReportMoneyinfo reportMoneyinfo ) throws ParseException {
 		String dateNowStr = dateNowStr();//获取当天时间字符串
 		setSelectTime( dateNowStr, reportMoneyinfo );//首次进入查询7天的数据
-
 		String beginTime     = ( String ) reportMoneyinfo.getParams().get( "beginTime" );
-		Date   beginTimeDate = DateFormatUtils.parse( beginTime, DateFormatUtils.SPLIT_PATTERN_DATE );
-
 		String endTime     = ( String ) reportMoneyinfo.getParams().get( "endTime" );
-		Date   endTimeDate = DateFormatUtils.parse( endTime, DateFormatUtils.SPLIT_PATTERN_DATE );
-
-		Date toDay = DateFormatUtils.parse( dateNowStr, DateFormatUtils.SPLIT_PATTERN_DATE );
-
 		Map<String, Object> resultMap = new HashMap<>();
-		if ( beginTimeDate.compareTo( toDay ) <= 0 && endTimeDate.compareTo( toDay ) >= 0 ) {
-			// 调用存储过程
+//		Date   beginTimeDate = DateFormatUtils.parse( beginTime, DateFormatUtils.SPLIT_PATTERN_DATE );
+//		Date   endTimeDate = DateFormatUtils.parse( endTime, DateFormatUtils.SPLIT_PATTERN_DATE );
+//		Date toDay = DateFormatUtils.parse( dateNowStr, DateFormatUtils.SPLIT_PATTERN_DATE );
+//		if ( beginTimeDate.compareTo( toDay ) <= 0 && endTimeDate.compareTo( toDay ) >= 0 ) {
+//			// 调用存储过程
+//			if(!redisUtil.exists( "admin-reportMoneyInfo" )){
+//				storage( dateNowStr );
+//				return new AjaxResult( 900, "报表正在生成，请稍后..." );
+//			}
+//			if("0".equals( redisUtil.strGet( "admin-reportMoneyInfo" ) )){
+//				return new AjaxResult( 900, "报表正在生成，请稍后..." );
+//			}
+//		}
+		if(dateNowStr.equals(beginTime) || dateNowStr.equals(endTime)){
 			if(!redisUtil.exists( "admin-reportMoneyInfo" )){
 				storage( dateNowStr );
-				return new AjaxResult( 900, "报表正在生成，请稍后..." );
-			}
-			if("0".equals( redisUtil.strGet( "admin-reportMoneyInfo" ) )){
-				return new AjaxResult( 900, "报表正在生成，请稍后..." );
 			}
 		}
 		List<ReportMoneyinfo> allList = reportMoneyinfoMapper.selectReportMoneyinfoList( reportMoneyinfo );
@@ -70,15 +71,19 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
 	}
 
 	public void storage( String dateNowStr ) {
-		if ( !redisUtil.exists( "admin-reportMoneyInfo" ) &&
-				redisUtil.strSetIfAbsent( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) ) ) {
+//		if ( !redisUtil.exists( "admin-reportMoneyInfo" ) &&
+//				redisUtil.strSetIfAbsent( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) ) ) {
+//			redisUtil.strSet( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) );
+//			threadPoolTaskExecutor.execute( () -> {
+//				String result = reportMoneyinfoMapper.calldataProrepPlamcom( dateNowStr, dateNowStr );
+//				if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportMoneyInfo" ) ) {
+//					redisUtil.strIncrement( "admin-reportMoneyInfo" );
+//				}
+//			} );
+//		}
+		if ( !redisUtil.exists( "admin-reportMoneyInfo" )){
+			String result = reportMoneyinfoMapper.calldataProrepPlamcom( dateNowStr, dateNowStr );
 			redisUtil.strSet( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) );
-			threadPoolTaskExecutor.execute( () -> {
-				String result = reportMoneyinfoMapper.calldataProrepPlamcom( dateNowStr, dateNowStr );
-				if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportMoneyInfo" ) ) {
-					redisUtil.strIncrement( "admin-reportMoneyInfo" );
-				}
-			} );
 		}
 	}
 
