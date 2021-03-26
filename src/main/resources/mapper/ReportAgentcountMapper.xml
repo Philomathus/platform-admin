@@ -51,7 +51,18 @@
         where class_two = #{classTwo,jdbcType=VARCHAR} and reporttime=#{time,jdbcType=VARCHAR}
         order by reporhour asc
     </select>
-
+    <select id="selectMemberAgent" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberAgent">
+        select
+        m.id,
+        m.vip,
+        m.total_account as totalAccount,
+        m.code_account as codeAccount,
+        l.times
+        from ${dbLive}.live_enter_log l,${dbMain}.member_info m
+        where m.inviter_code = #{agentcode}
+        and m.id = l.p_user_id
+        and  l.dtime = #{agenttime}
+    </select>
     <select id="existsPromotionCode" resultType="Integer">
         select count(0) from ${dbMain}.report_agentcode
         where `CODE` = #{code}
