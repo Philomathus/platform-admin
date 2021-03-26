@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.ReportAgentcount;
+import com.qiqilm.server.admin.domain.rsp.RspMemberAgent;
 import com.qiqilm.server.admin.domain.vo.ReportPlamHome;
 import org.apache.ibatis.annotations.Param;
 
@@ -29,4 +30,6 @@ public interface ReportAgentcountMapper {
 	void addPromotionCode(ReportAgentcount reportAgentcount);
 
 	void delPromotionCode(ReportAgentcount reportAgentcount);
+
+    List<RspMemberAgent> selectMemberAgent(ReportAgentcount reportAgentcount);
 }
