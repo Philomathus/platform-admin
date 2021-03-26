@@ -43,7 +43,7 @@ public class LiveDataTask {
 
     }
 
-    @Scheduled( fixedDelay = 10000, initialDelay=2000  )
+    @Scheduled( fixedDelay = 45000, initialDelay=2000  )
     public void runPropTask() throws Exception {
         if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName())){
             return;
