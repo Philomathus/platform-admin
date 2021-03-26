@@ -47,24 +47,22 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
         if ( StringUtils.isNotBlank( reqMemberGameData.getAccount() ) ) {
             String tableLast =  reqMemberGameData.getAccount().substring( reqMemberGameData.getAccount().length() - 1 );
             reqMemberGameData.setTableLast( tableLast );
-            return memberGameDataMapper.selectMemberGameDataSingleList( reqMemberGameData );
+            return memberGameDataMapper.selectMemberGameDataList( reqMemberGameData );
+        } else {
+            reqMemberGameData.setTableLast( "0" );
+            return memberGameDataMapper.selectMemberGameDataList( reqMemberGameData );
         }
-        return memberGameDataMapper.selectMemberGameDataList(reqMemberGameData);
     }
 
     @Override
-    public AjaxResult getCount(ReqMemberGameData reqMemberGameData) {
+    public RspMemberGameData getCount(ReqMemberGameData reqMemberGameData) {
         if (reqMemberGameData.getSelectDate() != null) {
             reqMemberGameData.setStartTime(reqMemberGameData.getSelectDate()[0] + " 00:00:00");
             reqMemberGameData.setEndTime(reqMemberGameData.getSelectDate()[1] + " 23:59:59");
         }
-        if ( StringUtils.isNotBlank( reqMemberGameData.getAccount() ) ) {
-            String tableLast =  reqMemberGameData.getAccount().substring( reqMemberGameData.getAccount().length() - 1 );
-            reqMemberGameData.setTableLast( tableLast );
-//            return memberGameDataMapper.getCountMemberGameDataSingleList( reqMemberGameData );
-        }
-//        return memberGameDataMapper.getCountMemberGameDataList(reqMemberGameData);
-        return null;
+        String tableLast =  reqMemberGameData.getAccount().substring( reqMemberGameData.getAccount().length() - 1 );
+        reqMemberGameData.setTableLast( tableLast );
+        return memberGameDataMapper.getCountMemberGameDataList( reqMemberGameData );
     }
 
     @Override

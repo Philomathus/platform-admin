@@ -3,6 +3,8 @@ package com.qiqilm.server.admin.domain.rsp;
 import com.qiqilm.server.admin.annotation.Excel;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class RspMemberGameData {
 
@@ -39,10 +41,15 @@ public class RspMemberGameData {
 
     private Integer status;
 
-
     @Excel(name = "子平台名称")
     private String sonPlatformName;
 
     @Excel(name = "平台名称")
     private String platformName;
+
+    private BigDecimal totalSuccessBet;
+
+    private BigDecimal totalBet;
+
+    private BigDecimal totalIncome;
 }

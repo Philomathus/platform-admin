@@ -22,13 +22,9 @@ public interface MemberGameDataMapper {
 	 * @param reqMemberGameData 会员注单数据
 	 * @return 会员注单数据集合
 	 */
-	public List<RspMemberGameData> selectMemberGameDataSingleList(ReqMemberGameData reqMemberGameData);
-
 	public List<RspMemberGameData> selectMemberGameDataList(ReqMemberGameData reqMemberGameData);
 
-    public MemberGameData getCountMemberGameDataSingleList(ReqMemberGameData reqMemberGameData);
-
-    public MemberGameData getCountMemberGameDataList(ReqMemberGameData reqMemberGameData);
+    public RspMemberGameData getCountMemberGameDataList(ReqMemberGameData reqMemberGameData);
 
 	public int insertMemberGameData(@Param("req")  MemberGameData memberGameData , @Param( "dbNodes" ) String dbNodes);
 

@@ -22,7 +22,7 @@ public interface IMemberGameDataService {
 	 */
 	public List<RspMemberGameData> selectMemberGameDataList(ReqMemberGameData reqMemberGameData);
 
-    public AjaxResult getCount(ReqMemberGameData reqMemberGameData);
+    public RspMemberGameData getCount(ReqMemberGameData reqMemberGameData);
 
 	AjaxResult getBetData(MemberGameData memberGameData);
 

@@ -50,7 +50,8 @@ public class MemberGameDataController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:list')" )
 	@GetMapping( "/getCount" )
 	public AjaxResult getCount( ReqMemberGameData reqMemberGameData ) {
-		return memberGameDataService.getCount( reqMemberGameData );
+		RspMemberGameData rspMemberGameData = memberGameDataService.getCount( reqMemberGameData );
+		return AjaxResult.success(rspMemberGameData);
 	}
 
 	/**
