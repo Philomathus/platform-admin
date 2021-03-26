@@ -285,7 +285,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				ext.put( "room_id", video.getId() ); //直播ID 也是room_id;只有与当前房间相同时，收到消息才响应
 				ext.put( "show_num", video.getMaxWatchNumber() );  //观看人数
 				ext.put( "fonts_color", "" ); //字体颜色
-				ext.put( "desc", "直播结束" );  //弹幕消息;
+				ext.put( "desc", "管理员关播" );  //弹幕消息;
 				ext.put( "desc2", "直播结束" );  //弹幕消息;
 				MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
 
