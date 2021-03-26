@@ -144,6 +144,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             session.commit();
 
         }
+        session.close();
     }
 
     //实际打码
@@ -361,6 +362,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             session.commit();
 
         }
+        session.close();
 
         doBeatCode(willCodeMap);
 
