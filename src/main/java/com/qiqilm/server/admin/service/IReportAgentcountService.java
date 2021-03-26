@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.domain.ReportAgentcount;
+import com.qiqilm.server.admin.domain.ReportPlamGameschilds;
+import com.qiqilm.server.admin.domain.rsp.RspMemberAgent;
 import com.qiqilm.server.admin.domain.vo.ReportPlamHome;
 
 import java.text.ParseException;
@@ -34,4 +36,6 @@ public interface IReportAgentcountService {
 	void delPromotionCode(ReportAgentcount reportAgentcount);
 
 	List<ReportAgentcount> exportAgentcountList(ReportAgentcount reportAgentcount);
+
+    List<RspMemberAgent> selectMemberAgent(ReportAgentcount reportAgentcount);
 }
