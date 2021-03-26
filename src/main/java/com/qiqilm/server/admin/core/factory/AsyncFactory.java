@@ -41,7 +41,7 @@ public class AsyncFactory {
 		return new TimerTask() {
 			@Override
 			public void run() {
-				String address = AddressUtils.getRealAddressByIP( ip );
+				String address = "";//AddressUtils.getRealAddressByIP( ip );
 				// 打印信息到日志
 				String s = AsyncFactory.getBlock( ip ) +
 						address +
@@ -83,8 +83,8 @@ public class AsyncFactory {
 		return new TimerTask() {
 			@Override
 			public void run() {
-				// 远程查询操作地点
-				operLog.setOperLocation( AddressUtils.getRealAddressByIP( operLog.getOperIp() ) );
+				// 远程查询操作地点 AddressUtils.getRealAddressByIP( operLog.getOperIp() )
+				operLog.setOperLocation( "" );
 				SpringUtils.getBean( ISysOperLogService.class ).insertOperlog( operLog );
 			}
 		};
