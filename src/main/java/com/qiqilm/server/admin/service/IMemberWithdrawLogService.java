@@ -40,4 +40,5 @@ public interface IMemberWithdrawLogService {
     AjaxResult withdrawReport(String id);
 
     AjaxResult getTotal(MemberWithdrawLog memberWithdrawLog );
+	List<MemberWithdrawLog> getWithdrawLogList();
 }
