@@ -54,11 +54,11 @@ public class SysLoginService {
 		}
 		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret, AuthUtil.getSecurityKeyStr(
 				"secretkey/googleAuthPrivateKey" ) );
-		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, loginBody.getGoogleAuthCode() ) ) {
+		/*if ( !GoogleAuthUtil.verifyCode( googleAuthKey, loginBody.getGoogleAuthCode() ) ) {
 			AsyncManager.me().execute( AsyncFactory.recordLogininfor( loginBody.getUsername(), AdminConstants.LOGIN_FAIL,
 					MessageUtils.message( "user.google.auth.error" ) ) );
 			return AjaxResult.error( "google验证码不正确，请检查" );
-		}
+		}*/
 
 		// 用户验证
 		Authentication authentication = null;
