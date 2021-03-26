@@ -1,18 +1,31 @@
 package com.qiqilm.server.admin.cache;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.qiqilm.server.admin.constant.Constants;
+import com.qiqilm.server.admin.domain.GameInfo;
+import com.qiqilm.server.admin.domain.req.ReqGameType;
 import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
+import com.qiqilm.server.admin.domain.rsp.RspGamePlatform;
 import com.qiqilm.server.admin.domain.rsp.RspGameType;
+import com.qiqilm.server.admin.domain.rsp.RspVipSet;
+import com.qiqilm.server.admin.mapper.ConfigVipMapper;
 import com.qiqilm.server.admin.mapper.GameInfoMapper;
+import com.qiqilm.server.admin.mapper.GamePlatformMapper;
+import com.qiqilm.server.admin.mapper.GameTypeMapper;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +39,15 @@ public class GameCacheManager {
 	private StringRedisTemplate stringRedisTemplate;
 	@Resource
 	private GameInfoMapper      gameInfoMapper;
+
+	@Resource
+	GameTypeMapper gameTypeMapper ;
+
+	@Resource
+	GamePlatformMapper gamePlatformMapper ;
+
+	@Resource
+	ConfigVipMapper configVipMapper ;
 
 	public List<RspGameType> getGamesTypes() {
 		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
@@ -44,7 +66,106 @@ public class GameCacheManager {
 			operations.set( Constants.CX_GAME.concat( "group:" ).concat( gameType.getId() ), JsonUtil.object2Json( gameList ) );
 		}
 	}
+	@PostConstruct
+	public void init(){
+		log.info("初始化游戏redis高速缓存开始");
+		long bTime = System.currentTimeMillis();
+		reSetGames();
+		log.info("初始化游戏redis缓存结束,用时 {}毫秒",System.currentTimeMillis()-bTime);
+		initGamePlatforms();
+		initVip();
 
+	}
+	public void initVip(){
+		List<RspVipSet> list =  configVipMapper.findListForCache();
+		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+		operations.set(Constants.CX_VIP.concat("list"), JSON.toJSONString(list));
+		for(RspVipSet p:list){
+			operations.set(Constants.CX_VIP.concat(String.valueOf(p.getLevel_flag())), JSON.toJSONString(p));
+		}
+
+	}
+
+	public void reSetGames(){
+		//初始化游戏 id:game
+		initGames();
+		//初始化游戏类型
+		initGamesTypes();
+		//初始化游戏类型和游戏的关联 typeId:gamesid
+		initGameGroup();
+	}
+
+
+	//初始化游戏
+	public void initGames(){
+
+		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+
+		for(RspGameInfo game : gameInfoMapper.findTypeList()){
+			operations.set(Constants.CX_GAME.concat("id:").concat(game.getId()), JSON.toJSONString(game));
+			if(game.getPlatformId()==3){
+				operations.set(Constants.CX_GAME.concat("liveId"), game.getId());
+			}
+		}
+	}
+
+	public void setGameInfo(GameInfo gameInfo ){
+		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+		RspGameInfo game = new RspGameInfo();
+		BeanUtils.copyProperties(gameInfo,game);
+		operations.set(Constants.CX_GAME.concat("id:").concat(game.getId()), JSON.toJSONString(game));
+		if(game.getPlatformId()==3){
+			operations.set(Constants.CX_GAME.concat("liveId"), game.getId());
+		}
+	}
+
+
+	public void initGamesTypes(){
+		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+		List<RspGameType> typeList =  gameTypeMapper.findList(new ReqGameType());
+		operations.set(Constants.CX_GAME.concat("type:list"), JSON.toJSONString(typeList.stream().filter(s->s.getStatus()>0).collect(Collectors.toList())));
+	}
+
+	/*public List<RspGameType> getGamesTypes(){
+		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+		String val = operations.get(Constants.CX_GAME.concat("type:list"));
+		return JSON.parseArray(val, RspGameType.class);
+	}*/
+
+	/**
+	 * 初始化游戏类型和游戏的关联
+	 */
+	/*public void initGameGroup(){
+		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+		for(RspGameType gameType : getGamesTypes() ){
+			List<String> gameList =  gameInfoMapper.findListByType(gameType.getId()).stream().map(RspGameInfo::getId).collect(Collectors.toList());
+			operations.set(Constants.CX_GAME.concat("group:").concat(gameType.getId()), JSON.toJSONString(gameList));
+		}
+	}*/
+
+	public void initGamePlatforms(){
+
+		List<String> allIds = new ArrayList<>();
+		Map<String,List<String>> groupMap = new HashMap<>();
+
+		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+		for(RspGamePlatform p: gamePlatformMapper.findSimpleLists()){
+			if(p.getGame_typeID()==null){
+				continue;
+			}
+			allIds.add(String.valueOf(p.getId()));
+			operations.set(Constants.CX_GAME.concat("platformId:").concat(String.valueOf(p.getId())), JSON.toJSONString(p));
+			if(!groupMap.containsKey(p.getGame_typeID())){
+				groupMap.put(p.getGame_typeID(), new ArrayList<>() );
+			}
+			groupMap.get(p.getGame_typeID()).add(String.valueOf(p.getId()));
+		}
+
+		operations.set(Constants.CX_GAME.concat("platformIds:list"), JSON.toJSONString(allIds));
+		for(String typeId : groupMap.keySet()){
+			operations.set(Constants.CX_GAME.concat("platformGroups:").concat(typeId), JSON.toJSONString(groupMap.get(typeId)));
+		}
+	}
 	public String getICGToken() {
 		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
 		return operations.get( Constants.PLATFORM_TOKEN.concat( "icg" ) );

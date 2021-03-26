@@ -78,4 +78,14 @@
 			#{id}
 		</foreach>
 	</delete>
+
+	<select id="findList" resultType="com.qiqilm.server.admin.domain.rsp.RspGameType">
+		select *
+		from game_type
+		where 1=1
+		<if test="req.name != null and req.name != ''">
+			and name = #{req.name}
+		</if>
+		order by indexs asc
+	</select>
 </mapper>

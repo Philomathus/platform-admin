@@ -34,11 +34,12 @@ public class GameTypeServiceImpl implements IGameTypeService {
 	@Autowired
 	private GameInfoMapper        gameInfoMapper;
 	@Autowired
-	private GameCacheManager      gameCacheManager;
+	private GameCacheManager gameCacheManager;
 	@Autowired
 	private GameTypeWithMapper    gameTypeWithMapper;
 	@Autowired
 	private ConfigDomainCacheUtil configDomainCacheUtil;
+
 
 	/**
 	 * 查询游戏类型
@@ -79,7 +80,9 @@ public class GameTypeServiceImpl implements IGameTypeService {
 	 */
 	@Override
 	public int insertGameType( GameType gameType ) {
-		return gameTypeMapper.insertGameType( gameType );
+		int i = gameTypeMapper.insertGameType(gameType);
+		gameCacheManager.initGamesTypes();
+		return i;
 	}
 
 	/**
@@ -90,7 +93,9 @@ public class GameTypeServiceImpl implements IGameTypeService {
 	 */
 	@Override
 	public int updateGameType( GameType gameType ) {
-		return gameTypeMapper.updateGameType( gameType );
+		int i = gameTypeMapper.updateGameType(gameType);
+		gameCacheManager.initGamesTypes();
+		return i;
 	}
 
 	/**
@@ -101,7 +106,9 @@ public class GameTypeServiceImpl implements IGameTypeService {
 	 */
 	@Override
 	public int deleteGameTypeByIds( String[] ids ) {
-		return gameTypeMapper.deleteGameTypeByIds( ids );
+		int i = gameTypeMapper.deleteGameTypeByIds(ids);
+		gameCacheManager.initGamesTypes();
+		return i;
 	}
 
 	/**
@@ -112,7 +119,9 @@ public class GameTypeServiceImpl implements IGameTypeService {
 	 */
 	@Override
 	public int deleteGameTypeById( String id ) {
-		return gameTypeMapper.deleteGameTypeById( id );
+		int i = gameTypeMapper.deleteGameTypeById(id);
+		gameCacheManager.initGamesTypes();
+		return i;
 	}
 
 	@Override

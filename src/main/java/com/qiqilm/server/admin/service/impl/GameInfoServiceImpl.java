@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.cache.GameCacheManager;
 import com.qiqilm.server.admin.domain.GameInfo;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.rsp.RspGameInfo;
@@ -29,6 +30,8 @@ public class GameInfoServiceImpl implements IGameInfoService {
 	private GamePlatformMapper    gamePlatformMapper;
 	@Autowired
 	private ConfigDomainCacheUtil configDomainCacheUtil;
+	@Autowired
+	private GameCacheManager gameCacheManager;
 
 	/**
 	 * 查询游戏信息
@@ -89,7 +92,9 @@ public class GameInfoServiceImpl implements IGameInfoService {
 	 */
 	@Override
 	public int insertGameInfo( GameInfo gameInfo ) {
-		return gameInfoMapper.insertGameInfo( gameInfo );
+		int i = gameInfoMapper.insertGameInfo(gameInfo);
+		gameCacheManager.setGameInfo(gameInfo);
+		return i;
 	}
 
 	/**
@@ -100,7 +105,13 @@ public class GameInfoServiceImpl implements IGameInfoService {
 	 */
 	@Override
 	public int updateGameInfo( GameInfo gameInfo ) {
-		return gameInfoMapper.updateGameInfo( gameInfo );
+		boolean updateOrder = gameInfo.getIndexs()!=gameInfo.getIndexs();
+		int i = gameInfoMapper.updateGameInfo(gameInfo);
+		gameCacheManager.setGameInfo(gameInfo);
+		if(updateOrder){
+			gameCacheManager.initGameGroup();
+		}
+		return i;
 	}
 
 	/**
