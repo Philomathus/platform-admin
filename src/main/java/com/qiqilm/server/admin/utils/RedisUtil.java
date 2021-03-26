@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.utils;
 
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.enums.EnumLock;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.BitFieldSubCommands;
 import org.springframework.data.redis.connection.DataType;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings( "unused" )
 @Component
+@Log4j2
 public class RedisUtil {
 
 	@Autowired
@@ -1009,5 +1011,35 @@ public class RedisUtil {
 
 	public RedisConnectionFactory getConnectionFactory() {
 		return stringRedisTemplate.getConnectionFactory();
+	}
+
+
+	/**
+	 * 分布式锁
+	 * @param lockKey 锁key
+	 * @param timeOut 时间秒
+	 * @return
+	 */
+	public boolean adminLock(EnumLock mode, String lockKey, int timeOut){
+		try {
+			Boolean lock =  stringRedisTemplate.opsForValue().setIfAbsent(  Constants.ADMIN_LOCK.concat( mode.getKey() ).concat( lockKey ), "0", Duration.ofSeconds( timeOut ) );
+			if(lock==null){
+				return  false;
+			}
+			return lock;
+		}catch ( Exception e){
+			log.error("admin加锁失败lockKey:{}",lockKey,e);
+			return  false;
+		}
+
+	}
+
+	/**
+	 * 分布式锁
+	 * @param lockKey 锁key
+	 * @return
+	 */
+	public boolean adminLock(EnumLock mode,String lockKey){
+		return this.adminLock(mode,lockKey,20);
 	}
 }
