@@ -28,8 +28,8 @@ import java.util.Map;
  * @date 2020/11/04
  */
 @Slf4j
-@Component
-@Aspect
+//@Component
+//@Aspect
 public class RequestLogAspect {
 
     /**
