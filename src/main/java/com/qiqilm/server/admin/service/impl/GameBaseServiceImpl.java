@@ -99,7 +99,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		forkJoinTasks.add( this.icgBalanceTask( userId ) );
 		forkJoinTasks.add( this.mtBalanceTask( userId ) );
 		forkJoinTasks.add( this.kxBalanceTask( userId, date ) );
-		forkJoinTasks.add( this.legBalanceTask( userId, date ) );
+		//forkJoinTasks.add( this.legBalanceTask( userId, date ) );
 		forkJoinTasks.add( this.newWorldBalanceTask( userId, date ) );
 		forkJoinTasks.add( this.afbBalanceTask( userId, date ) );
 		forkJoinTasks.add( this.fanyBalanceTask( userId, date ) );

@@ -234,13 +234,13 @@
 	<sql id="listWhere">
 		where type = 1
 		<if test="req.bankUserName != null  and req.bankUserName != ''">
-			and bank_user_name like concat('%', #{req.bankUserName}, '%')
+			and bank_user_name = #{req.bankUserName}
 		</if>
 		<if test="req.opName != null  and req.opName != ''">
-			and op_name like concat('%', #{req.opName}, '%')
+			and op_name = #{req.opName}
 		</if>
 		<if test="req.rechargeUserName != null  and req.rechargeUserName != ''">
-			and recharge_user_name like concat('%', #{req.rechargeUserName}, '%')
+			and recharge_user_name = #{req.rechargeUserName}
 		</if>
 		<if test="req.orderNo != null  and req.orderNo != ''">
 			and order_no = #{req.orderNo}
