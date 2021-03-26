@@ -11,7 +11,7 @@
     </resultMap>
 
     <sql id="selectMemberQuestVo">
-        select id, member_id, quest_id, status, curNum from 7700_main.member_quest
+        select id, member_id, quest_id, status, curNum from member_quest
     </sql>
 
     <select id="selectMemberQuestList" parameterType="MemberQuest" resultMap="MemberQuestResult">
@@ -30,7 +30,7 @@
     </select>
 
     <insert id="insertMemberQuest" parameterType="MemberQuest">
-        insert into 7700_main.member_quest
+        insert into member_quest
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="memberId != null">member_id,</if>
@@ -48,7 +48,7 @@
     </insert>
 
     <update id="updateMemberQuest" parameterType="MemberQuest">
-        update 7700_main.member_quest
+        update member_quest
         <trim prefix="SET" suffixOverrides=",">
             <if test="memberId != null">member_id = #{memberId},</if>
 
@@ -63,11 +63,11 @@
     </update>
 
     <delete id="deleteMemberQuestById" parameterType="String">
-        delete from 7700_main.member_quest where id = #{id}
+        delete from member_quest where id = #{id}
     </delete>
 
     <delete id="deleteMemberQuestByIds" parameterType="String">
-        delete from 7700_main.member_quest where id in
+        delete from member_quest where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
