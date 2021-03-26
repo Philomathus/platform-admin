@@ -2,9 +2,11 @@ package com.qiqilm.server.admin.task.beat;
 
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.enums.EnumGamePlatform;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IGameDataLogService;
 import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,8 @@ public class LotteryDataTask {
     private IGameDataLogService gameDataLogService;
     @Autowired
     private IGamePlatformService gamePlatformService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     private String platformTypeId;
     private BigDecimal beatRate ;
@@ -41,6 +45,9 @@ public class LotteryDataTask {
     }
     @Scheduled( fixedDelay = 30000, initialDelay=5000 )
     public void runTask() throws Exception {
+        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName())){
+            return;
+        }
         Date endDay  = new Date();
         Date starDay = DateFormatUtils.addMin( endDay, -10);
         String start = DateFormatUtils.formate( starDay );

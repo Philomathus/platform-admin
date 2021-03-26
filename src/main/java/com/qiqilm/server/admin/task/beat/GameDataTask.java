@@ -1,9 +1,11 @@
 package com.qiqilm.server.admin.task.beat;
 
 import com.qiqilm.server.admin.domain.GamePlatform;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IGameDataLogService;
 import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,8 @@ public class GameDataTask {
     private IGameDataLogService gameDataLogService;
     @Autowired
     private IGamePlatformService gamePlatformService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Value( "${spring.profiles.active}" )
     private String profile;
@@ -43,6 +47,9 @@ public class GameDataTask {
 
     @Scheduled( fixedDelay = 30000, initialDelay=1 )
     public void runTask() throws Exception {
+        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName())){
+            return;
+        }
 
         Date endDay  = new Date();
 

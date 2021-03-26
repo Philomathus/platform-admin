@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.task;
 
 import com.qiqilm.server.admin.domain.ConfigDomain;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IConfigDomainService;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class DomainTask {
 	@Autowired
 	private RobotMessage         robotMessage;
 
+	@Autowired
+	private RedisUtil redisUtil;
+
 	@Value( "${spring.profiles.active}" )
 	private String profile;
 
@@ -44,6 +49,10 @@ public class DomainTask {
 
 	@Scheduled( cron = "0 */5 * * * ?" )
 	public void checkDomain() {
+
+		if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),120)){
+			return;
+		}
 		if ( "7700".equals( profile ) || "dev".equals( profile ) ) {
 			return;
 		}
