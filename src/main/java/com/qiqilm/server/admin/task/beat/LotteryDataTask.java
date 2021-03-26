@@ -43,13 +43,13 @@ public class LotteryDataTask {
         beatRate= gamePlatform.getRateBeat();
 
     }
-    @Scheduled( fixedDelay = 30000, initialDelay=5000 )
+    @Scheduled( fixedDelay = 60000, initialDelay=5000 )
     public void runTask() throws Exception {
         if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName())){
             return;
         }
         Date endDay  = new Date();
-        Date starDay = DateFormatUtils.addMin( endDay, -10);
+        Date starDay = DateFormatUtils.addMin( endDay, -5);
         String start = DateFormatUtils.formate( starDay );
         String end = DateFormatUtils.formate( endDay );
         try {
