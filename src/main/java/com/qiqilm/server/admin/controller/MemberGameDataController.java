@@ -4,10 +4,12 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.req.ReqMemberGameData;
 import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
 import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
+import com.qiqilm.server.admin.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +33,9 @@ public class MemberGameDataController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list( MemberGameData memberGameData ) {
+	public TableDataInfo list( ReqMemberGameData reqMemberGameData ) {
 		startPage();
-		List<RspMemberGameData> list = memberGameDataService.selectMemberGameDataList( memberGameData );
+		List<RspMemberGameData> list = memberGameDataService.selectMemberGameDataList( reqMemberGameData );
 		return getDataTable( list );
 	}
 
@@ -47,54 +49,19 @@ public class MemberGameDataController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:list')" )
 	@GetMapping( "/getCount" )
-	public AjaxResult getCount( MemberGameData memberGameData ) {
-		//不要把查询条件放到entity
-//		if ( memberGameData.getSelectDate() != null ) {
-//			memberGameData.setStartTime( memberGameData.getSelectDate()[ 0 ] );
-//			memberGameData.setEndTime( memberGameData.getSelectDate()[ 1 ] );
-//		}
-		return memberGameDataService.getCount( memberGameData );
-	}
-//
-//	/**
-//	 * 导出会员注单数据列表
-//	 */
-//	@PreAuthorize( "@ss.hasPermi('member:memberGameData:export')" )
-//	@Log( title = "会员注单数据", businessType = BusinessType.EXPORT )
-//	@GetMapping( "/export" )
-//	public AjaxResult export( MemberGameData memberGameData ) {
-//		List<RspMemberGameData>      list = memberGameDataService.selectMemberGameDataList( memberGameData );
-//		ExcelUtil<MemberGameData> util = new ExcelUtil<MemberGameData>( MemberGameData.class );
-//		return util.exportExcel( list, "memberGameData" );
-//	}
-
-	/**
-	 * 获取会员注单数据详细信息
-	 */
-	@PreAuthorize( "@ss.hasPermi('member:memberGameData:query')" )
-	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
-		return AjaxResult.success( memberGameDataService.selectMemberGameDataById( id ) );
-	}
-
-
-	/**
-	 * 修改会员注单数据
-	 */
-	@PreAuthorize( "@ss.hasPermi('member:memberGameData:edit')" )
-	@Log( title = "会员注单数据", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody MemberGameData memberGameData ) {
-		return toAjax( memberGameDataService.updateMemberGameData( memberGameData ) );
+	public AjaxResult getCount( ReqMemberGameData reqMemberGameData ) {
+		return memberGameDataService.getCount( reqMemberGameData );
 	}
 
 	/**
-	 * 删除会员注单数据
+	 * 导出会员注单数据列表
 	 */
-	@PreAuthorize( "@ss.hasPermi('member:memberGameData:remove')" )
-	@Log( title = "会员注单数据", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable String[] ids ) {
-		return toAjax( memberGameDataService.deleteMemberGameDataByIds( ids ) );
+	@PreAuthorize( "@ss.hasPermi('member:memberGameData:export')" )
+	@Log( title = "会员注单数据", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public AjaxResult export( ReqMemberGameData reqMemberGameData) {
+		List<RspMemberGameData>      list = memberGameDataService.selectMemberGameDataList( reqMemberGameData );
+		ExcelUtil<RspMemberGameData> util = new ExcelUtil<RspMemberGameData>( RspMemberGameData.class );
+		return util.exportExcel( list, "memberGameData" );
 	}
 }

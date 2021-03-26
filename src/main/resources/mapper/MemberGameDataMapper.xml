@@ -67,6 +67,42 @@
         )
     </insert>
     <!--打码逻辑结束-->
+
+    <select id="selectMemberGameDataSingleList" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberGameData">
+        SELECT
+        m.agent,
+        m.game_id as gameId,
+        m.account,
+        m.cell_score,
+        m.all_bet,
+        m.profit,
+        m.revenue,
+        m.game_start_time,
+        m.game_end_time,
+        cg.platform_name AS platformName,
+        cg.son_platform_name AS sonPlatformName
+        FROM
+        ${dbMain}.member_game_data${tableLast} m
+        LEFT JOIN config_gametype cg ON m.agent = cg.platform_id
+        AND m.kind_id = cg.son_platform_id
+        <where>
+            <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+                m.game_end_time >= STR_TO_DATE(#{startTime},'%Y-%m-%d %H:%i:%s') and m.game_end_time &lt;= STR_TO_DATE(#{endTime},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="account != null and account != ''">
+                and m.account = #{account}
+            </if>
+            <if test="sonPlatformName != null and sonPlatformName != ''">
+                and cg.son_platform_name = #{sonPlatformName}
+            </if>
+            <if test="agent != null and agent != ''">
+                and m.agent = #{agent}
+            </if>
+        </where>
+        ORDER BY
+        m.game_end_time DESC
+    </select>
+
     <select id="selectMemberGameDataList" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberGameData">
         SELECT
         m.agent,
@@ -81,7 +117,26 @@
         cg.platform_name AS platformName,
         cg.son_platform_name AS sonPlatformName
         FROM
-        member_game_data m
+        (select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data0
+        UNION ALL
+        select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data1
+        UNION ALL
+        select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data2
+        UNION ALL
+        select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data3
+        UNION ALL
+        select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data4
+        UNION ALL
+        select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data5
+        UNION ALL
+        select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data6
+        UNION ALL
+        select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data7
+        UNION ALL
+        select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data8
+        UNION ALL
+        select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data9
+        ) m
         LEFT JOIN config_gametype cg ON m.agent = cg.platform_id
         AND m.kind_id = cg.son_platform_id
         <where>
@@ -98,60 +153,9 @@
             and m.agent = #{agent}
         </if>
         </where>
-        ORDER BY
-        m.game_end_time DESC
+        ORDER BY m.game_end_time DESC
     </select>
 
-
-    <select id="selectMemberGameDataById" parameterType="String" resultMap="MemberGameDataResult">
-        <include refid="selectMemberGameDataVo"/>
-        where id = #{id}
-    </select>
-
-
-    <update id="updateMemberGameData" parameterType="MemberGameData">
-        update ${dbMain}.member_game_data
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="gameId != null and gameId != ''">game_id = #{gameId},</if>
-
-            <if test="account != null">account = #{account},</if>
-
-            <if test="kindId != null">kind_id = #{kindId},</if>
-
-            <if test="cellScore != null">cell_score = #{cellScore},</if>
-
-            <if test="allBet != null">all_bet = #{allBet},</if>
-
-            <if test="profit != null">profit = #{profit},</if>
-
-            <if test="revenue != null">revenue = #{revenue},</if>
-
-            <if test="gameEndTime != null">game_end_time = #{gameEndTime},</if>
-
-            <if test="platformId != null">platform_id = #{platformId},</if>
-
-            <if test="agent != null">agent = #{agent},</if>
-
-            <if test="platformType != null">platform_type = #{platformType},</if>
-
-            <if test="status != null">status = #{status},</if>
-
-            <if test="gameStartTime != null">game_start_time = #{gameStartTime},</if>
-
-        </trim>
-        where id = #{id}
-    </update>
-
-    <delete id="deleteMemberGameDataById" parameterType="String">
-        delete from ${dbMain}.member_game_data where id = #{id}
-    </delete>
-
-    <delete id="deleteMemberGameDataByIds" parameterType="String">
-        delete from ${dbMain}.member_game_data where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
     <sql id="whereCount">
         <if test="gameId != null  and gameId != ''">and game_id = #{gameId}</if>
         <if test="account != null  and account != ''">and account = #{account}</if>
