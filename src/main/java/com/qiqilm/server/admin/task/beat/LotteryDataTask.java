@@ -43,7 +43,7 @@ public class LotteryDataTask {
         beatRate= gamePlatform.getRateBeat();
 
     }
-    @Scheduled( fixedDelay = 20000, initialDelay=5000 )
+    @Scheduled( fixedDelay = 60000, initialDelay=5000 )
     public void runTask() throws Exception {
         if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName())){
             return;
