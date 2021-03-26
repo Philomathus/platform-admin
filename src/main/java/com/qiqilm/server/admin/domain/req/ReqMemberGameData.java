@@ -20,7 +20,4 @@ public class ReqMemberGameData {
 
     /** 代理编号 */
     private String agent;
-
-    /** 子平台名称 */
-    private String sonPlatformName;
 }

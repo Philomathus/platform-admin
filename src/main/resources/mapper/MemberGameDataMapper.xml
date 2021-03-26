@@ -92,16 +92,23 @@
             <if test="account != null and account != ''">
                 and m.account = #{account}
             </if>
-            <if test="sonPlatformName != null and sonPlatformName != ''">
-                and cg.son_platform_name = #{sonPlatformName}
-            </if>
             <if test="agent != null and agent != ''">
                 and m.agent = #{agent}
             </if>
         </where>
-        ORDER BY
-        m.game_end_time DESC
     </select>
+
+    <sql id="whereSelect">
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            game_end_time >= STR_TO_DATE(#{startTime},'%Y-%m-%d %H:%i:%s') and game_end_time &lt;= STR_TO_DATE(#{endTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="account != null and account != ''">
+            and account = #{account}
+        </if>
+        <if test="agent != null and agent != ''">
+            and agent = #{agent}
+        </if>
+    </sql>
 
     <select id="selectMemberGameDataList" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberGameData">
         SELECT
@@ -118,41 +125,37 @@
         cg.son_platform_name AS sonPlatformName
         FROM
         (select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data0
+        <where><include refid="whereSelect"></include></where>
         UNION ALL
         select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data1
+        <where><include refid="whereSelect"></include></where>
         UNION ALL
         select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data2
+        <where><include refid="whereSelect"></include></where>
         UNION ALL
         select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data3
+        <where><include refid="whereSelect"></include></where>
         UNION ALL
         select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data4
+        <where><include refid="whereSelect"></include></where>
         UNION ALL
         select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data5
+        <where><include refid="whereSelect"></include></where>
         UNION ALL
         select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data6
+        <where><include refid="whereSelect"></include></where>
         UNION ALL
         select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data7
+        <where><include refid="whereSelect"></include></where>
         UNION ALL
         select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data8
+        <where><include refid="whereSelect"></include></where>
         UNION ALL
         select agent,game_id,account,cell_score,all_bet,profit,revenue,game_start_time,game_end_time,kind_id from member_game_data9
+        <where><include refid="whereSelect"></include></where>
         ) m
         LEFT JOIN config_gametype cg ON m.agent = cg.platform_id
         AND m.kind_id = cg.son_platform_id
-        <where>
-        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-            m.game_end_time >= STR_TO_DATE(#{startTime},'%Y-%m-%d %H:%i:%s') and m.game_end_time &lt;= STR_TO_DATE(#{endTime},'%Y-%m-%d %H:%i:%s')
-        </if>
-        <if test="account != null and account != ''">
-            and m.account = #{account}
-        </if>
-        <if test="sonPlatformName != null and sonPlatformName != ''">
-            and cg.son_platform_name = #{sonPlatformName}
-        </if>
-        <if test="agent != null and agent != ''">
-            and m.agent = #{agent}
-        </if>
-        </where>
         ORDER BY m.game_end_time DESC
     </select>
 
