@@ -38,7 +38,7 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
             if (StringUtils.isBlank(logMoney.getMark()) && logMoney.getType() == null) {
                 if (logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0) {
                     logMoney.setTableLast("0");
-                    return logMoneyMapper.selectLogMoneyList(logMoney);
+                    return logMoneyMapper.selectLogMoneySingleList(logMoney);
                 }
             }
         }
