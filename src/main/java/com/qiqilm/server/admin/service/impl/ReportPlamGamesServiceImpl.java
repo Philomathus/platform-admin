@@ -43,31 +43,39 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateNowStr = sdf.format(d);
 
-        Calendar beforeTime = Calendar.getInstance();
-        beforeTime.add(Calendar.MINUTE, -5);// 5分钟之前的时间
-        Date beforeD = beforeTime.getTime();
-        List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
+//        Calendar beforeTime = Calendar.getInstance();
+//        beforeTime.add(Calendar.MINUTE, -5);// 5分钟之前的时间
+//        Date beforeD = beforeTime.getTime();
+//      List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
         Map<String, Object> resultMap = new HashMap<>();
-        if (allList.size() == 0 && reportPlamGames.getBegindate().equals(dateNowStr)) {
-            storage(dateNowStr);
-            return new AjaxResult(900, "报表正在生成，请稍后...");
-        }
-        if (allList.size() != 0 && reportPlamGames.getBegindate().equals(dateNowStr)) {
-            Date updateTime = allList.get(0).getUpdateTime();
-            String reportCache = redisUtil.strGet("admin-reportPlamGames");
-            if ("1".equals(reportCache)) {
-                resultMap.put("rows", allList);
-            } else if ("0".equals(reportCache)) {
-                return new AjaxResult(900, "报表正在生成，请稍后...");
-            } else if (updateTime.getTime() <= beforeD.getTime()) {
-                storage(dateNowStr);
-                return new AjaxResult(900, "报表正在生成，请稍后...");
-            }
-        } else {
-            resultMap.put("rows", allList);
-        }
-        return resultMap;
+//        if (allList.size() == 0 && reportPlamGames.getBegindate().equals(dateNowStr)) {
+//            storage(dateNowStr);
+//            return new AjaxResult(900, "报表正在生成，请稍后...");
+//        }
+//        if (allList.size() != 0 && reportPlamGames.getBegindate().equals(dateNowStr)) {
+//            Date updateTime = allList.get(0).getUpdateTime();
+//            String reportCache = redisUtil.strGet("admin-reportPlamGames");
+//            if ("1".equals(reportCache)) {
+//                resultMap.put("rows", allList);
+//            } else if ("0".equals(reportCache)) {
+//                return new AjaxResult(900, "报表正在生成，请稍后...");
+//            } else if (updateTime.getTime() <= beforeD.getTime()) {
+//                storage(dateNowStr);
+//                return new AjaxResult(900, "报表正在生成，请稍后...");
+//            }
+//        } else {
+//            resultMap.put("rows", allList);
+//        }
 
+        if (dateNowStr.equals(reportPlamGames.getBegindate())) {
+            if (!redisUtil.exists("admin-reportPlamGames")){
+                storage(dateNowStr);
+                //return new AjaxResult(900, "报表正在生成，请稍后...");
+            }
+        }
+        List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
+        resultMap.put("rows", allList);
+        return resultMap;
     }
 
     @Override
@@ -78,16 +86,19 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 
 
     public void storage(String dateNowStr) {
-        if (!redisUtil.exists("admin-reportPlamGames")
-                && redisUtil.strSetIfAbsent("admin-reportPlamGames", "0", Duration.ofMinutes(5))) {
-            redisUtil.strSet("admin-reportPlamGames", "0", Duration.ofMinutes(5));
-            threadPoolTaskExecutor.execute(() -> {
-                String result = reportPlamGamesMapper.calldataProrepPlamcom(dateNowStr);
-                if (StringUtils.hasText(result) && redisUtil.exists("admin-reportPlamGames")) {
-                    redisUtil.strIncrement("admin-reportPlamGames");
-                }
-            });
-        }
+//        if (!redisUtil.exists("admin-reportPlamGames")
+//                && redisUtil.strSetIfAbsent("admin-reportPlamGames", "0", Duration.ofMinutes(5))) {
+//            redisUtil.strSet("admin-reportPlamGames", "0", Duration.ofMinutes(5));
+//            threadPoolTaskExecutor.execute(() -> {
+//                String result = reportPlamGamesMapper.calldataProrepPlamcom(dateNowStr);
+//                if (StringUtils.hasText(result) && redisUtil.exists("admin-reportPlamGames")) {
+//                    redisUtil.strIncrement("admin-reportPlamGames");
+//                }
+//            });
+//        }
+        redisUtil.strSet("admin-reportPlamGames", "0", Duration.ofMinutes(5));
+        reportPlamGamesMapper.calldataProrepPlamcom(dateNowStr);
+
     }
 
     @Override
