@@ -1,75 +1,98 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.LiveVideoPropMapper">
+	<resultMap type="LiveVideoProp" id="LiveVideoPropResult">
+		<result property="id" column="id"/>
+		<result property="propId" column="prop_id"/>
+		<result property="propName" column="prop_name"/>
+		<result property="totalScore" column="total_score"/>
+		<result property="totalDiamonds" column="total_diamonds"/>
+		<result property="totalTicket" column="total_ticket"/>
+		<result property="currentDiamonds" column="current_diamonds"/>
+		<result property="beforeTicket" column="before_ticket"/>
+		<result property="fromUserId" column="from_user_id"/>
+		<result property="pUserId" column="p_user_id"/>
+		<result property="pUserName" column="p_user_name"/>
+		<result property="toUserId" column="to_user_id"/>
+		<result property="createTime" column="create_time"/>
+		<result property="createDate" column="create_date"/>
+		<result property="createY" column="create_y"/>
+		<result property="createM" column="create_m"/>
+		<result property="createD" column="create_d"/>
+		<result property="createW" column="create_w"/>
+		<result property="num" column="num"/>
+		<result property="videoId" column="video_id"/>
+		<result property="groupId" column="group_id"/>
+		<result property="isRedEnvelope" column="is_red_envelope"/>
+		<result property="msg" column="msg"/>
+		<result property="actionstatus" column="ActionStatus"/>
+		<result property="errorinfo" column="ErrorInfo"/>
+		<result property="errorcode" column="ErrorCode"/>
+		<result property="createYm" column="create_ym"/>
+		<result property="isPrivate" column="is_private"/>
+		<result property="fromIp" column="from_ip"/>
+		<result property="isCoin" column="is_coin"/>
+	</resultMap>
 
-    <resultMap type="LiveVideoProp" id="LiveVideoPropResult">
-        <result property="id"    column="id"    />
-        <result property="propId"    column="prop_id"    />
-        <result property="propName"    column="prop_name"    />
-        <result property="totalScore"    column="total_score"    />
-        <result property="totalDiamonds"    column="total_diamonds"    />
-        <result property="totalTicket"    column="total_ticket"    />
-        <result property="currentDiamonds"    column="current_diamonds"    />
-        <result property="beforeTicket"    column="before_ticket"    />
-        <result property="fromUserId"    column="from_user_id"    />
-        <result property="pUserId"    column="p_user_id"    />
-        <result property="pUserName"    column="p_user_name"    />
-        <result property="toUserId"    column="to_user_id"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="createY"    column="create_y"    />
-        <result property="createM"    column="create_m"    />
-        <result property="createD"    column="create_d"    />
-        <result property="createW"    column="create_w"    />
-        <result property="num"    column="num"    />
-        <result property="videoId"    column="video_id"    />
-        <result property="groupId"    column="group_id"    />
-        <result property="isRedEnvelope"    column="is_red_envelope"    />
-        <result property="msg"    column="msg"    />
-        <result property="actionstatus"    column="ActionStatus"    />
-        <result property="errorinfo"    column="ErrorInfo"    />
-        <result property="errorcode"    column="ErrorCode"    />
-        <result property="createYm"    column="create_ym"    />
-        <result property="isPrivate"    column="is_private"    />
-        <result property="fromIp"    column="from_ip"    />
-        <result property="isCoin"    column="is_coin"    />
-    </resultMap>
+	<sql id="selectLiveVideoPropVo">
+		select id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id,
+		p_user_id, p_user_name, to_user_id, FROM_UNIXTIME(create_time) create_time , create_date, create_y, create_m, create_d,
+		create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private,
+		from_ip, is_coin from ${dbLive}.live_video_prop
+	</sql>
 
-    <sql id="selectLiveVideoPropVo">
-        select id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id, p_user_id, p_user_name, to_user_id,  FROM_UNIXTIME(create_time) create_time ,  create_date, create_y, create_m, create_d, create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private, from_ip, is_coin from ${dbLive}.live_video_prop
-    </sql>
-
-    <select id="selectLiveVideoPropList" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
-        <include refid="selectLiveVideoPropVo"/>
-        <where>
-            <if test="searchValue != null and searchValue !=''"> and (to_user_id = #{searchValue} or p_user_id =#{searchValue})</if>
-            <if test="startTime != null">
-                and FROM_UNIXTIME(create_time) &gt;= #{startTime} and FROM_UNIXTIME(create_time) &lt;= #{endTime}
-            </if>
-        </where>
-    </select>
+	<select id="selectLiveVideoPropList" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
+		<include refid="selectLiveVideoPropVo"/>
+		<where>
+			<if test="pUserId != null and pUserId != ''">
+				and p_user_id = #{pUserId}
+			</if>
+			<if test="toUserId != null">
+				and to_user_id =#{toUserId}
+			</if>
+			<if test="startTime != null">
+				and FROM_UNIXTIME(create_time) &gt;= #{startTime}
+				and FROM_UNIXTIME(create_time) &lt;= #{endTime}
+			</if>
+		</where>
+	</select>
 
 
+	<select id="selectLiveVideoPropById" parameterType="Long" resultMap="LiveVideoPropResult">
+		<include refid="selectLiveVideoPropVo"/>
+		where id = #{id}
+	</select>
 
-    <select id="selectLiveVideoPropById" parameterType="Long" resultMap="LiveVideoPropResult">
-        <include refid="selectLiveVideoPropVo"/>
-        where id = #{id}
-    </select>
-    <select id="findVideoPropList" resultType="com.qiqilm.server.admin.domain.vo.LiveVideoPropVo">
-        select id, prop_id,prop_name, total_diamonds, current_diamonds, p_user_id, to_user_id, create_time from ${dbLive}.live_video_prop
-        where  create_time &gt;=  #{start} and create_time &lt;=  #{end}
-    </select>
+	<select id="findVideoPropList" resultType="com.qiqilm.server.admin.domain.vo.LiveVideoPropVo">
+		select id,
+			   prop_id,
+			   prop_name,
+			   total_diamonds,
+			   current_diamonds,
+			   p_user_id,
+			   to_user_id,
+			   create_time
+		from ${dbLive}.live_video_prop
+		where create_time &gt;= #{start}
+		  and create_time &lt;= #{end}
+	</select>
 
-    <select id="getCount" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
-        select sum(total_diamonds) countTotal from ${dbLive}.live_video_prop
-        <where>
-        <if test="searchValue != null and searchValue !=''"> and (to_user_id = #{searchValue} or p_user_id =#{searchValue})</if>
-        <if test="startTime != null">
-           and FROM_UNIXTIME(create_time) &gt;= #{startTime} and FROM_UNIXTIME(create_time) &lt;= #{endTime}
-        </if>
-        </where>
-    </select>
-
+	<select id="getCount" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
+		select sum(total_diamonds) countTotal
+		from ${dbLive}.live_video_prop
+		<where>
+			<if test="pUserId != null and pUserId != ''">
+				and p_user_id = #{pUserId}
+			</if>
+			<if test="toUserId != null">
+				and to_user_id =#{toUserId}
+			</if>
+			<if test="startTime != null">
+				and FROM_UNIXTIME(create_time) &gt;= #{startTime}
+				and FROM_UNIXTIME(create_time) &lt;= #{endTime}
+			</if>
+		</where>
+	</select>
 </mapper>
