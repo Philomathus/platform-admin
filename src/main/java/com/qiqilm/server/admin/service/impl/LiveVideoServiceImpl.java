@@ -232,15 +232,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			}
 			updateHostWageNote.setBeforeTotalTicket( video.getVoteNumber() );
 
-			Map<String, Object> costMap = lotteryBetMapper.sumBatCostPrize( video.getUserId(),
-					oldHostWageNote.getStartTime(), updateHostWageNote.getEndTime() );
-			if ( !CollectionUtils.isEmpty( costMap ) ) {
-				updateHostWageNote.setCpCost( new BigDecimal( costMap.getOrDefault( "cost", "0" ).toString() ) );
-			} else {
-				updateHostWageNote.setCpCost( BigDecimal.ZERO );
-			}
-			updateHostWageNote.setCpPrize( BigDecimal.ZERO );
-
 			liveHostWageNoteMapper.updateLiveHostWageNote( updateHostWageNote );
 		} else {
 			LiveHostWageNote newHostWageNote = new LiveHostWageNote();
@@ -263,15 +254,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			newHostWageNote.setStartTime( videoBeginTime );
 
 			newHostWageNote.setCreateTimes( DateFormatUtils.formate( new Date() ) );
-
-			Map<String, Object> costMap = lotteryBetMapper.sumBatCostPrize( video.getUserId(),
-					newHostWageNote.getStartTime(), newHostWageNote.getEndTime() );
-			if ( !CollectionUtils.isEmpty( costMap ) ) {
-				newHostWageNote.setCpCost( new BigDecimal( costMap.getOrDefault( "cost", "0" ).toString() ) );
-			} else {
-				newHostWageNote.setCpCost( BigDecimal.ZERO );
-			}
-			newHostWageNote.setCpPrize( BigDecimal.ZERO );
 
 			liveHostWageNoteMapper.insertLiveHostWageNote( newHostWageNote );
 		}
