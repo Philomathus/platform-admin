@@ -8,7 +8,9 @@ import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
+import com.qiqilm.server.admin.utils.RobotMessage;
 import com.qiqilm.server.admin.utils.UuidUtil;
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -29,6 +31,7 @@ import javax.annotation.Resource;
  * @date 2021-03-17
  */
 @Service
+@Log4j2
 public class GameDataLogServiceImpl implements IGameDataLogService {
     @Resource
     private GameDataLogMapper gameDataLogMapper;
@@ -290,7 +293,28 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         doBeatCode(willCodeMap);
 
         deQuestCheck(willCodeList,willCodeMap);
+
+        noticeRobotMessage(willCodeList);
     }
+
+    @Async
+    public void noticeRobotMessage(List<MemberGameData> willCodeList ){
+        RobotMessage robotMessage =new RobotMessage();
+        BigDecimal temProfit = new BigDecimal(1000);
+        for(MemberGameData og:willCodeList){
+            try {
+                if(new BigDecimal( og.getProfit()).compareTo(temProfit )<0){
+                    continue;
+                }
+                robotMessage.sendByChatId(og.getAccount()+(og.getAgent().equals("80000")?"在直播间内":"在直播间外")+og.getKindId()+"盈利了:"+og.getProfit()+"元" ,"-1001086363769");
+            }catch ( Exception e ){
+                log.error("彩票消息推送异常"+e.getMessage());
+            }
+
+        }
+    }
+
+
 
 
     @Override
