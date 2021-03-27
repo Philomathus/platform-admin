@@ -81,10 +81,9 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
 //				}
 //			} );
 //		}
-		if ( !redisUtil.exists( "admin-reportMoneyInfo" )){
-			String result = reportMoneyinfoMapper.calldataProrepPlamcom( dateNowStr, dateNowStr );
-			redisUtil.strSet( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) );
-		}
+		redisUtil.strSet( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) );
+		reportMoneyinfoMapper.calldataProrepPlamcom( dateNowStr, dateNowStr );
+
 	}
 
 	//统计表头数据
