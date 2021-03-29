@@ -55,14 +55,11 @@
 	</sql>
 
 	<select id="selectMemberPayJourList" parameterType="MemberPayJour" resultMap="MemberPayJourResult">
-		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
 		<include refid="selectMemberPayJourVo"/>
 		<where>
 			<include refid="listWhere"/>
-		</where>) j
-		left join pay_platform_new p on j.platform_id = p.id
-		left join pay_channel_new c on j.channel_id = c.id
-		order by j.update_time desc
+		</where>
+		order by update_time desc
 	</select>
 
 	<select id="selectMemberPayJourById" parameterType="String" resultMap="MemberPayJourResult">

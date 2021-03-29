@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberPayJour;
+import com.qiqilm.server.admin.domain.PayChannelNew;
 
 import java.util.List;
 import java.util.Map;
