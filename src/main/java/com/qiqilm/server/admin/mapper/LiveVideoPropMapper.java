@@ -1,13 +1,12 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import com.qiqilm.server.admin.domain.LiveProplog;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveVideoProp;
+import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import org.apache.ibatis.annotations.Param;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 送礼物Mapper接口
@@ -23,11 +22,13 @@ public interface LiveVideoPropMapper {
 	 * @param liveVideoProp 送礼物
 	 * @return 送礼物集合
 	 */
-	public List<LiveVideoProp> selectLiveVideoPropList(LiveVideoProp liveVideoProp);
+	public List<LiveVideoProp> selectLiveVideoPropList( LiveVideoProp liveVideoProp );
 
-	public List<LiveVideoPropVo> findVideoPropList(@Param("start") long start, @Param("end") long end);
+	public List<LiveVideoPropVo> findVideoPropList( @Param( "start" ) long start, @Param( "end" ) long end );
 
-	LiveVideoProp getCount(LiveVideoProp liveVideoProp);
+	LiveVideoProp getCount( LiveVideoProp liveVideoProp );
 
-	BigDecimal sumHostProp( Long userId, String beginTime );
+	BigDecimal sumHostProp( @Param( "userId" ) Long userId, @Param( "beginTime" ) String beginTime );
+
+    List<RspTestAccountProp> testAccountPorpList(LiveVideoProp liveVideoProp1);
 }
