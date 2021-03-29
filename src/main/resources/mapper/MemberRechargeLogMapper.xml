@@ -269,4 +269,11 @@
 		select a.total, b.successMoney, totalSuccess / total successRate from (<include refid="totalCount"/>)a
 			left join (<include refid="successMoney"/>)b on 1 = 1
 	</select>
+
+	<update id="checkRechargeLogFail">
+		update member_recharge_log
+		set status = 4
+		where status = 0
+		and create_time &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+	</update>
 </mapper>
