@@ -14,7 +14,7 @@
     </resultMap>
 
     <sql id="selectLiveHostWageDayVo">
-        select id, family_id, host_id, start_time, end_time, live_time_sec, ticket, times from 7700_live.live_host_wage_day
+        select id, family_id, host_id, start_time, end_time, live_time_sec, ticket, times from ${dbLive}.live_host_wage_day
     </sql>
 
     <select id="selectLiveHostWageDayList" parameterType="LiveHostWageDay" resultMap="LiveHostWageDayResult">
@@ -36,7 +36,7 @@
     </select>
 
     <insert id="insertLiveHostWageDay" parameterType="LiveHostWageDay">
-        insert into 7700_live.live_host_wage_day
+        insert into ${dbLive}.live_host_wage_day
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="familyId != null">family_id,</if>
@@ -60,7 +60,7 @@
     </insert>
 
     <update id="updateLiveHostWageDay" parameterType="LiveHostWageDay">
-        update 7700_live.live_host_wage_day
+        update ${dbLive}.live_host_wage_day
         <trim prefix="SET" suffixOverrides=",">
             <if test="familyId != null">family_id = #{familyId},</if>
 
@@ -81,11 +81,11 @@
     </update>
 
     <delete id="deleteLiveHostWageDayById" parameterType="String">
-        delete from 7700_live.live_host_wage_day where id = #{id}
+        delete from ${dbLive}.live_host_wage_day where id = #{id}
     </delete>
 
     <delete id="deleteLiveHostWageDayByIds" parameterType="String">
-        delete from 7700_live.live_host_wage_day where id in
+        delete from ${dbLive}.live_host_wage_day where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

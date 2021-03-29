@@ -28,4 +28,7 @@ public interface LiveVideoPropMapper {
 	LiveVideoProp getCount( LiveVideoProp liveVideoProp );
 
 	BigDecimal sumHostProp( @Param( "userId" ) Long userId, @Param( "beginTime" ) String beginTime );
+
+	BigDecimal sumHostPropDay( @Param( "userId" ) Integer userId, @Param( "dayTime" ) String dayTime );
+
 }

@@ -38,7 +38,7 @@ public class LiveHostWageDay extends BaseEntity {
 
     /** 直播时长（秒） */
     @Excel(name = "直播时长")
-    private Long liveTimeSec;
+    private Integer liveTimeSec;
 
     /** 主播直播结算印票 */
     @Excel(name = "主播直播结算印票")
@@ -46,7 +46,7 @@ public class LiveHostWageDay extends BaseEntity {
 
     /** 上播次数 */
     @Excel(name = "上播次数")
-    private Long times;
+    private Integer times;
 
     @Override
     public String toString() {

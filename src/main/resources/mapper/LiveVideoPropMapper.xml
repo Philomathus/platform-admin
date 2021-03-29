@@ -100,4 +100,8 @@
 		select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and create_time >=
 		UNIX_TIMESTAMP(CONCAT(#{beginTime})) and create_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(NOW())
 	</select>
+
+	<select id="sumHostPropDay" resultType="java.math.BigDecimal">
+        select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and create_date = #{dayTime}
+	</select>
 </mapper>
