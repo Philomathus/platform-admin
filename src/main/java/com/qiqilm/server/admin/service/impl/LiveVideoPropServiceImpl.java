@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,20 +31,28 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
      */
     @Override
     public List<LiveVideoProp> selectLiveVideoPropList(LiveVideoProp liveVideoProp) {
-        if ( liveVideoProp.getSelectDate() != null && liveVideoProp.getSelectDate().length > 0 ) {
-            liveVideoProp.setStartTime( liveVideoProp.getSelectDate()[ 0 ] + " 00:00:00");
-            liveVideoProp.setEndTime( liveVideoProp.getSelectDate()[ 1 ] + " 23:59:59");
-        }
-        return liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp);
+        LiveVideoProp liveVideoProp1 = setTime(liveVideoProp);
+        return liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
     }
 
     @Override
     public LiveVideoProp getCount(LiveVideoProp liveVideoProp) {
+        LiveVideoProp liveVideoProp1 = setTime(liveVideoProp);
+        return liveVideoPropMapper.getCount(liveVideoProp1);
+    }
+
+    @Override
+    public List<RspTestAccountProp> testAccountPorpList(LiveVideoProp liveVideoProp) {
+        return liveVideoPropMapper.testAccountPorpList(liveVideoProp);
+    }
+
+
+    private  LiveVideoProp setTime(LiveVideoProp liveVideoProp){
         if ( liveVideoProp.getSelectDate() != null && liveVideoProp.getSelectDate().length > 0 ) {
             liveVideoProp.setStartTime( liveVideoProp.getSelectDate()[ 0 ] + " 00:00:00");
             liveVideoProp.setEndTime( liveVideoProp.getSelectDate()[ 1 ] + " 23:59:59");
         }
-        return liveVideoPropMapper.getCount(liveVideoProp);
+        return liveVideoProp;
     }
 
 }
