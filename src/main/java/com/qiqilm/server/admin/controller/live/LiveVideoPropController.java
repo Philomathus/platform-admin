@@ -4,8 +4,8 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.LiveProplog;
 import com.qiqilm.server.admin.domain.LiveVideoProp;
+import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoPropService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
@@ -60,4 +60,25 @@ public class LiveVideoPropController extends BaseController {
 		liveVideoProp1=liveVideoPropService.getCount( liveVideoProp );
 		return AjaxResult.success(liveVideoProp1);
 	}
+
+	/**
+	 * 查询送礼物列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+	@GetMapping( "/testAccountPorpList" )
+	public TableDataInfo testAccountPorpList(LiveVideoProp liveVideoProp) {
+		startPage();
+		List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList(liveVideoProp);
+		return getDataTable( list );
+	}
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
+	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
+	@GetMapping( "/exportTestAccountProplog" )
+	public AjaxResult exportTestAccountProplog(LiveVideoProp liveVideoProp) {
+		List<RspTestAccountProp>      list = liveVideoPropService.testAccountPorpList(liveVideoProp);
+		ExcelUtil<RspTestAccountProp> util = new ExcelUtil<>(RspTestAccountProp. class);
+		return util.exportExcel( list, "RspTestAccountProp" );
+	}
+
+
 }

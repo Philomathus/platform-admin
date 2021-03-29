@@ -149,6 +149,7 @@ public class LiveVideoProp extends BaseEntity {
     private String   endTime;
 
     private String countTotal;
+    private String testAccountCreateTime;
 
     /**
      * 发送结束时间
