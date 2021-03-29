@@ -39,11 +39,6 @@ public class MemberPayJour implements Serializable {
 	 */
 	private String channelId;
 
-	/**
-	 * 支付方式
-	 */
-	private String paymentMethod;
-
 	@Excel( name = "订单号", orderNum = "1" )
 	private String orderNo;
 
@@ -60,11 +55,6 @@ public class MemberPayJour implements Serializable {
 	 * 支付接口的支付地址
 	 */
 	private String paymentCode;
-
-	/**
-	 * 支付成功时间(上游回调时间)
-	 */
-	private String paymentTime;
 
 	@Excel( name = "商户下单时间", orderNum = "6" )
 	private String payTime;
@@ -174,13 +164,11 @@ public class MemberPayJour implements Serializable {
 				.append( "memberId", getMemberId() )
 				.append( "platformId", getPlatformId() )
 				.append( "channelId", getChannelId() )
-				.append( "paymentMethod", getPaymentMethod() )
 				.append( "orderNo", getOrderNo() )
 				.append( "tradeSn", getTradeSn() )
 				.append( "money", getMoney() )
 				.append( "subMoney", getSubMoney() )
 				.append( "paymentCode", getPaymentCode() )
-				.append( "paymentTime", getPaymentTime() )
 				.append( "payTime", getPayTime() )
 				.append( "status", getStatus() )
 				.append( "isPatchOrder", getIsPatchOrder() )

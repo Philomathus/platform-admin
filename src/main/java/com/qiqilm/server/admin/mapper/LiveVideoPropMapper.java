@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.LiveProplog;
@@ -24,17 +25,9 @@ public interface LiveVideoPropMapper {
 	 */
 	public List<LiveVideoProp> selectLiveVideoPropList(LiveVideoProp liveVideoProp);
 
-
 	public List<LiveVideoPropVo> findVideoPropList(@Param("start") long start, @Param("end") long end);
-
-	/**
-	 * 新增送礼物
-	 *
-	 * @param liveVideoProp 送礼物
-	 * @return 结果
-	 */
-	public int insertLiveVideoProp(LiveVideoProp liveVideoProp);
 
 	LiveVideoProp getCount(LiveVideoProp liveVideoProp);
 
+	BigDecimal sumHostProp( Long userId, String beginTime );
 }
