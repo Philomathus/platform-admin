@@ -30,5 +30,8 @@ public interface LiveVideoPropMapper {
 
 	BigDecimal sumHostProp( @Param( "userId" ) Long userId, @Param( "beginTime" ) String beginTime );
 
+	BigDecimal sumHostPropDay( @Param( "userId" ) Integer userId, @Param( "dayTime" ) String dayTime );
+
+
     List<RspTestAccountProp> testAccountPorpList(LiveVideoProp liveVideoProp1);
 }

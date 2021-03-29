@@ -119,4 +119,8 @@
 		ORDER BY
 		to_user_id
 	</select>
+
+	<select id="sumHostPropDay" resultType="java.math.BigDecimal">
+        select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and create_date = #{dayTime}
+	</select>
 </mapper>
