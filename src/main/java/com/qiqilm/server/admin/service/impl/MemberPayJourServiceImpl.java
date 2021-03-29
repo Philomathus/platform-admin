@@ -53,7 +53,7 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 		List<PayChannelNew> payChannelNews = payChannelNewMapper.selectPayChannelName();
 		for(MemberPayJour me : memberPayJours){
 			for(PayChannelNew pa : payChannelNews)
-			if(me.getChannelId().equals(pa.getId())){
+			if(me.getChannelId().equals(String.valueOf(pa.getId()))){
 				me.setPlatformName(pa.getPayPlatformName());
 				me.setChannelName(pa.getName());
 				me.setPayRate(pa.getPayRate());
