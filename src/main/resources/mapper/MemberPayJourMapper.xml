@@ -8,13 +8,11 @@
 		<result property="memberId" column="member_id"/>
 		<result property="platformId" column="platform_id"/>
 		<result property="channelId" column="channel_id"/>
-		<result property="paymentMethod" column="payment_method"/>
 		<result property="orderNo" column="order_no"/>
 		<result property="tradeSn" column="trade_sn"/>
 		<result property="money" column="money"/>
 		<result property="subMoney" column="sub_money"/>
 		<result property="paymentCode" column="payment_code"/>
-		<result property="paymentTime" column="payment_time"/>
 		<result property="payTime" column="pay_time"/>
 		<result property="status" column="status"/>
 		<result property="isPatchOrder" column="is_patch_order"/>
@@ -37,13 +35,11 @@
 			   member_id,
 			   platform_id,
 			   channel_id,
-			   payment_method,
 			   order_no,
 			   trade_sn,
 			   money,
 			   sub_money,
 			   payment_code,
-			   payment_time,
 			   pay_time,
 			   status,
 			   is_patch_order,
@@ -93,9 +89,6 @@
 			<if test="channelId != null">
 				channel_id,
 			</if>
-			<if test="paymentMethod != null">
-				payment_method,
-			</if>
 			<if test="orderNo != null">
 				order_no,
 			</if>
@@ -110,9 +103,6 @@
 			</if>
 			<if test="paymentCode != null">
 				payment_code,
-			</if>
-			<if test="paymentTime != null">
-				payment_time,
 			</if>
 			<if test="payTime != null">
 				pay_time,
@@ -161,9 +151,6 @@
 			<if test="channelId != null">
 				#{channelId},
 			</if>
-			<if test="paymentMethod != null">
-				#{paymentMethod},
-			</if>
 			<if test="orderNo != null">
 				#{orderNo},
 			</if>
@@ -178,9 +165,6 @@
 			</if>
 			<if test="paymentCode != null">
 				#{paymentCode},
-			</if>
-			<if test="paymentTime != null">
-				#{paymentTime},
 			</if>
 			<if test="payTime != null">
 				#{payTime},
@@ -230,9 +214,6 @@
 			<if test="channelId != null">
 				channel_id = #{channelId},
 			</if>
-			<if test="paymentMethod != null">
-				payment_method = #{paymentMethod},
-			</if>
 			<if test="orderNo != null">
 				order_no = #{orderNo},
 			</if>
@@ -247,9 +228,6 @@
 			</if>
 			<if test="paymentCode != null">
 				payment_code = #{paymentCode},
-			</if>
-			<if test="paymentTime != null">
-				payment_time = #{paymentTime},
 			</if>
 			<if test="payTime != null">
 				pay_time = #{payTime},

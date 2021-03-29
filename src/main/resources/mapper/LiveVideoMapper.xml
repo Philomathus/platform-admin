@@ -26,12 +26,14 @@
 		<result property="lineName" column="lineName"/>
 		<result property="lineStatus" column="lineStatus"/>
 		<result property="openPay" column="open_pay"/>
+		<result property="groupId" column="group_id"/>
 	</resultMap>
 
 	<sql id="selectLiveVideoVo">
 		SELECT
 		v.id,
 		v.user_id,
+		v.group_id,
 		title,
 		watch_number,
 		cate_id,

@@ -55,11 +55,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	@Resource
 	private LiveUserMapper         liveUserMapper;
 	@Resource
-	private LotteryBetMapper       lotteryBetMapper;
-	@Resource
 	private LivePayLogMapper       livePayLogMapper;
 	@Resource
 	private LiveVideoMapper        liveVideoMapper;
+	@Resource
+	private LiveVideoPropMapper    liveVideoPropMapper;
 
 	/**
 	 * 查询直播
@@ -210,7 +210,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	private void saveHostWageNote( LiveUser liveUser, LiveVideo video, boolean isAborted ) {
 		LiveHostWageNote oldHostWageNote = liveHostWageNoteMapper.beforeNote( video.getUserId() );
 		String           videoBeginTime  = DateFormatUtils.formate( video.getBeginTime() );
-		String           endTime         = DateFormatUtils.formate( video.getEndTime() );
+		String           endTime         = DateFormatUtils.formate( video.getMonitorTime() );
 		long             liveTimeSec     = 0;
 		try {
 			liveTimeSec = ( DateFormatUtils.getIntervalTime( video.getBeginTime(),
@@ -226,53 +226,20 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			updateHostWageNote.setEndTime( endTime );
 			updateHostWageNote.setRemark( remark );
 			updateHostWageNote.setLiveTimeSec( liveTimeSec );
-			if ( oldHostWageNote.getBeforeTotalTicket() != null ) {
-				updateHostWageNote.setTicket( video.getVoteNumber().subtract( oldHostWageNote.getBeforeTotalTicket() )
-						.add( oldHostWageNote.getTicket() ) );
-			}
 			updateHostWageNote.setBeforeTotalTicket( video.getVoteNumber() );
-
-			Map<String, Object> costMap = lotteryBetMapper.sumBatCostPrize( video.getUserId(),
-					oldHostWageNote.getStartTime(), updateHostWageNote.getEndTime() );
-			if ( !CollectionUtils.isEmpty( costMap ) ) {
-				updateHostWageNote.setCpCost( new BigDecimal( costMap.getOrDefault( "cost", "0" ).toString() ) );
-			} else {
-				updateHostWageNote.setCpCost( BigDecimal.ZERO );
-			}
-			updateHostWageNote.setCpPrize( BigDecimal.ZERO );
-
+			updateHostWageNote.setTicket( liveVideoPropMapper.sumHostProp( video.getUserId(), videoBeginTime ) );
 			liveHostWageNoteMapper.updateLiveHostWageNote( updateHostWageNote );
 		} else {
 			LiveHostWageNote newHostWageNote = new LiveHostWageNote();
 			newHostWageNote.setFamilyId( liveUser.getFamilyId() == null ? 0 : liveUser.getFamilyId() );
 			newHostWageNote.setHostId( video.getUserId() );
 			newHostWageNote.setEndTime( endTime );
-			newHostWageNote.setRemark( remark );
-			newHostWageNote.setBeforeTotalTicket( video.getVoteNumber() );
-
-			//log.warn( "主播:{} redis礼物数:{} beforeTotalTicket:{}", video.getUserId(), video.getVoteNumber(),
-			//		( oldHostWageNote == null ? 0 : oldHostWageNote.getBeforeTotalTicket() ) );
-			if ( oldHostWageNote != null ) {
-				//  直播间礼物数减去上次统计礼物数，就是本次礼物数
-				newHostWageNote.setTicket( video.getVoteNumber().subtract( oldHostWageNote.getBeforeTotalTicket() ).setScale( 2,
-						BigDecimal.ROUND_HALF_UP ) );
-			} else {
-				newHostWageNote.setTicket( video.getVoteNumber() );
-			}
-			newHostWageNote.setLiveTimeSec( liveTimeSec );
 			newHostWageNote.setStartTime( videoBeginTime );
-
 			newHostWageNote.setCreateTimes( DateFormatUtils.formate( new Date() ) );
-
-			Map<String, Object> costMap = lotteryBetMapper.sumBatCostPrize( video.getUserId(),
-					newHostWageNote.getStartTime(), newHostWageNote.getEndTime() );
-			if ( !CollectionUtils.isEmpty( costMap ) ) {
-				newHostWageNote.setCpCost( new BigDecimal( costMap.getOrDefault( "cost", "0" ).toString() ) );
-			} else {
-				newHostWageNote.setCpCost( BigDecimal.ZERO );
-			}
-			newHostWageNote.setCpPrize( BigDecimal.ZERO );
-
+			newHostWageNote.setRemark( remark );
+			newHostWageNote.setLiveTimeSec( liveTimeSec );
+			newHostWageNote.setBeforeTotalTicket( video.getVoteNumber() );
+			newHostWageNote.setTicket( liveVideoPropMapper.sumHostProp( video.getUserId(), videoBeginTime ) );
 			liveHostWageNoteMapper.insertLiveHostWageNote( newHostWageNote );
 		}
 	}
@@ -285,7 +252,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				ext.put( "room_id", video.getId() ); //直播ID 也是room_id;只有与当前房间相同时，收到消息才响应
 				ext.put( "show_num", video.getMaxWatchNumber() );  //观看人数
 				ext.put( "fonts_color", "" ); //字体颜色
-				ext.put( "desc", "直播结束" );  //弹幕消息;
+				ext.put( "desc", "管理员关播" );  //弹幕消息;
 				ext.put( "desc2", "直播结束" );  //弹幕消息;
 				MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
 
