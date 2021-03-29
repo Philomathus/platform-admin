@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.MemberPayJour;
+import com.qiqilm.server.admin.domain.PayChannelNew;
 import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,17 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 			memberPayJour.setSelectStartDate( selectDate[ 0 ] );
 			memberPayJour.setSelectEndDate( selectDate[ 1 ] );
 		}
-		return memberPayJourMapper.selectMemberPayJourList( memberPayJour );
+		List<MemberPayJour> memberPayJours = memberPayJourMapper.selectMemberPayJourList( memberPayJour );
+		List<MemberPayJour> memberPayJours1 = memberPayJourMapper.selectPayChannelNewList();
+		for(MemberPayJour me : memberPayJours){
+			for(MemberPayJour mem : memberPayJours1)
+			if(me.getChannelId().equals(mem.getId())){
+				me.setPlatformName(mem.getPlatformName());
+				me.setChannelName(mem.getChannelName());
+				me.setPayRate(mem.getPayRate());
+			}
+		}
+		return memberPayJours;
 	}
 
 	@Override
