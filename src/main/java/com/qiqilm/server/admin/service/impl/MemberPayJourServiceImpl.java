@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.PayChannelNew;
 import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
+import com.qiqilm.server.admin.mapper.PayChannelNewMapper;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ import java.util.Map;
 public class MemberPayJourServiceImpl implements IMemberPayJourService {
 	@Autowired
 	private MemberPayJourMapper memberPayJourMapper;
+
+	@Autowired
+	private PayChannelNewMapper payChannelNewMapper;
 
 	/**
 	 * 查询线上充值信息
@@ -46,13 +50,13 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 			memberPayJour.setSelectEndDate( selectDate[ 1 ] );
 		}
 		List<MemberPayJour> memberPayJours = memberPayJourMapper.selectMemberPayJourList( memberPayJour );
-		List<MemberPayJour> memberPayJours1 = memberPayJourMapper.selectPayChannelNewList();
+		List<PayChannelNew> payChannelNews = payChannelNewMapper.selectPayChannelName();
 		for(MemberPayJour me : memberPayJours){
-			for(MemberPayJour mem : memberPayJours1)
-			if(me.getChannelId().equals(mem.getId())){
-				me.setPlatformName(mem.getPlatformName());
-				me.setChannelName(mem.getChannelName());
-				me.setPayRate(mem.getPayRate());
+			for(PayChannelNew pa : payChannelNews)
+			if(me.getChannelId().equals(pa.getId())){
+				me.setPlatformName(pa.getPayPlatformName());
+				me.setChannelName(pa.getName());
+				me.setPayRate(pa.getPayRate());
 			}
 		}
 		return memberPayJours;
