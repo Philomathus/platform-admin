@@ -48,6 +48,4 @@ public interface MemberPayJourMapper {
 	public Map listCount( MemberPayJour req );
 
 	MemberPayJour findByOrderNo( String orderNo );
-
-	List<MemberPayJour> selectPayChannelNewList();
 }
