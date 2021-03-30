@@ -76,15 +76,4 @@ public class LotteryHistoryController extends BaseController {
 		return AjaxResult.success();
 	}
 
-
-	public static void main(String[] args) {
-		String ktime = "2021-03-30 15:22:00";
-		LocalDateTime now       = LocalDateTime.now();
-		now = now.minusMinutes(10);
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String localTime = df.format(now);
-		Integer i=ktime.compareTo(localTime);
-		System.out.println(i);
-	}
-
 }
