@@ -15,8 +15,6 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
@@ -33,18 +31,17 @@ import java.util.Map;
 @Log4j2
 public class MemberCacheManager {
 	@Resource
-    private MemberInfoMapper memberInfoMapper;
+	private MemberInfoMapper    memberInfoMapper;
 	@Autowired
-	private WheelUserMapper wheelUserMapper;
+	private WheelUserMapper     wheelUserMapper;
 	@Autowired
 	private LiveUserMountMapper liveUserMountMapper;
 
 	@Autowired
-	private RedisUtil redisUtil;
+	private RedisUtil          redisUtil;
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
-	@Autowired
-	StringRedisTemplate stringRedisTemplate;
+
 	public void init() {
 		initMemberCode();
 		//initWebSet();
@@ -56,21 +53,21 @@ public class MemberCacheManager {
 			return;
 		}
 		RedisAtomicLong entityIdCounter = new RedisAtomicLong( Constants.CX_MENBER_CODE,
-                redisUtil.getConnectionFactory() );
-		long            redisMaxCode    = Constants.INIT_MEMBERCODE + entityIdCounter.get();
+				redisUtil.getConnectionFactory() );
+		long redisMaxCode = Constants.INIT_MEMBERCODE + entityIdCounter.get();
 		if ( redisMaxCode < mysqlMaxCode ) {
 			entityIdCounter.set( mysqlMaxCode + 10 );
 		}
 	}
 
-//	public void initWebSet() {
-//		log.info( "初始化平台设置开始" );
-//		for ( RspWebSet set : configWebMapper.selectAll() ) {
-//			addWebSetVal( set.getKey_id(), set.getVal() );
-//			log.info( "{}：{}={}", set.getDes(), set.getKey_id(), set.getVal() );
-//		}
-//		log.info( "初始化平台设置结束" );
-//	}
+	//	public void initWebSet() {
+	//		log.info( "初始化平台设置开始" );
+	//		for ( RspWebSet set : configWebMapper.selectAll() ) {
+	//			addWebSetVal( set.getKey_id(), set.getVal() );
+	//			log.info( "{}：{}={}", set.getDes(), set.getKey_id(), set.getVal() );
+	//		}
+	//		log.info( "初始化平台设置结束" );
+	//	}
 
 	//获取登录信息
 	public Map<Object, Object> getMemberInfo( String token ) {
@@ -133,11 +130,11 @@ public class MemberCacheManager {
 	 *
 	 * @return
 	 */
-	public void delToken(String memberId) {
+	public void delToken( String memberId ) {
 		//大平台
-		String token = getTokenByUserId(memberId);
+		String token = getTokenByUserId( memberId );
 		redisUtil.unlink( Constants.TOKEN_USER_KEY + token );
-		if(StringUtils.isNotBlank( memberId )){
+		if ( StringUtils.isNotBlank( memberId ) ) {
 			redisUtil.unlink( Constants.USER_TOKEN_KEY + memberId );
 		}
 	}
@@ -149,7 +146,7 @@ public class MemberCacheManager {
 	 */
 	private String makeMemberCode() {
 		RedisAtomicLong entityIdCounter = new RedisAtomicLong( Constants.CX_MENBER_CODE,
-                redisUtil.getConnectionFactory() );
+				redisUtil.getConnectionFactory() );
 		return String.valueOf( Constants.INIT_MEMBERCODE + entityIdCounter.getAndIncrement() );
 	}
 
@@ -165,80 +162,76 @@ public class MemberCacheManager {
 		return member;
 	}
 
-	public void checkFirstChargeaddWheelTimes(  String pUserId ) {
-		WheelUser wheelUser = wheelUserMapper.selectWheelUserById(pUserId);
+	public void checkFirstChargeaddWheelTimes( String pUserId ) {
+		WheelUser wheelUser = wheelUserMapper.selectWheelUserById( pUserId );
 		if ( wheelUser == null ) {
 			wheelUser = new WheelUser();
 			wheelUser.setId( pUserId );
 			wheelUser.setTimes( 1 );
-			wheelUser.setSkinTimes(1);
-			wheelUserMapper.insertWheelUser(wheelUser);
+			wheelUser.setSkinTimes( 1 );
+			wheelUserMapper.insertWheelUser( wheelUser );
 
 		} else {
 			wheelUser.setTimes( 1 );
-			wheelUser.setSkinTimes(1);
-			wheelUserMapper.updateWheelUser(wheelUser);
+			wheelUser.setSkinTimes( 1 );
+			wheelUserMapper.updateWheelUser( wheelUser );
 		}
 		//加坐骑33
 		LiveUserMount query = new LiveUserMount();
-		query.setUserId(pUserId);
-		query.setMountId(33);
+		query.setUserId( pUserId );
+		query.setMountId( 33 );
 		int day = 3;
-		if(DateFormatUtils.getDaysOfHour(new Date())>12){
-			day +=1;
+		if ( DateFormatUtils.getDaysOfHour( new Date() ) > 12 ) {
+			day += 1;
 		}
-		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList(query);
-		if(list.size()==0){
-			query.setIsUse(0);
-			Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList( query );
+		if ( list.size() == 0 ) {
+			query.setIsUse( 0 );
+			Date d = new Date( System.currentTimeMillis() + day * 24 * 60 * 60 * 1000L );//过期时间
 			query.setEffectiveTime( d );
-			liveUserMountMapper.insertLiveUserMount(query);
-		}else{
-			LiveUserMount db = list.get(0);
-			if(db.getEffectiveTime().getTime()>System.currentTimeMillis()){
-				db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
-			}else{
-				Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+			liveUserMountMapper.insertLiveUserMount( query );
+		} else {
+			LiveUserMount db = list.get( 0 );
+			if ( db.getEffectiveTime().getTime() > System.currentTimeMillis() ) {
+				db.setEffectiveTime( new Date( db.getEffectiveTime().getTime() + day * 24 * 60 * 60 * 1000L ) );
+			} else {
+				Date d = new Date( System.currentTimeMillis() + day * 24 * 60 * 60 * 1000L );//过期时间
 				db.setEffectiveTime( d );
 			}
 
-			liveUserMountMapper.updateLiveUserMount(db);
+			liveUserMountMapper.updateLiveUserMount( db );
 		}
 	}
 
-	public void bankChargeMount(  String pUserId ) {
-		int mountId = sysConfigCacheUtil.getConfInt("bank_mount");
-		if(mountId==0){
+	public void bankChargeMount( String pUserId ) {
+		int mountId = sysConfigCacheUtil.getConfInt( "bank_mount" );
+		if ( mountId == 0 ) {
 			return;
 		}
 		//加坐骑33
 		LiveUserMount query = new LiveUserMount();
-		query.setUserId(pUserId);
-		query.setMountId(mountId);
+		query.setUserId( pUserId );
+		query.setMountId( mountId );
 		int day = 1;
-		if(DateFormatUtils.getDaysOfHour(new Date())>12){
-			day +=1;
+		if ( DateFormatUtils.getDaysOfHour( new Date() ) > 12 ) {
+			day += 1;
 		}
 
-		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList(query);
-		if(list.size()==0){
-			query.setIsUse(0);
-			Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList( query );
+		if ( list.size() == 0 ) {
+			query.setIsUse( 0 );
+			Date d = new Date( System.currentTimeMillis() + day * 24 * 60 * 60 * 1000L );//过期时间
 			query.setEffectiveTime( d );
-			liveUserMountMapper.insertLiveUserMount(query);
-		}else{
-			LiveUserMount db = list.get(0);
-			if(db.getEffectiveTime().getTime()>System.currentTimeMillis()){
-				db.setEffectiveTime(new Date( db.getEffectiveTime().getTime()+ day * 24 * 60 * 60 * 1000L ));
-			}else{
-				Date d    = new Date( new Date().getTime() + day * 24 * 60 * 60 * 1000L );//过期时间
+			liveUserMountMapper.insertLiveUserMount( query );
+		} else {
+			LiveUserMount db = list.get( 0 );
+			if ( db.getEffectiveTime().getTime() > System.currentTimeMillis() ) {
+				db.setEffectiveTime( new Date( db.getEffectiveTime().getTime() + day * 24 * 60 * 60 * 1000L ) );
+			} else {
+				Date d = new Date( System.currentTimeMillis() + day * 24 * 60 * 60 * 1000L );//过期时间
 				db.setEffectiveTime( d );
 			}
-			liveUserMountMapper.updateLiveUserMount(db);
+			liveUserMountMapper.updateLiveUserMount( db );
 		}
-	}
-	public String getWebSetVal( String key ) {
-		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-		return operations.get( Constants.CX_WEB_SET.concat( key ) );
 	}
 }
