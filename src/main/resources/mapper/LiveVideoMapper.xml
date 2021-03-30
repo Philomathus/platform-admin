@@ -253,4 +253,8 @@
 	<select id="selectLiveInPlayDetect" resultMap="LiveVideoResult">
 		select id, title, live_in, group_id, play_url from ${dbLive}.live_video where live_in = 1
 	</select>
+
+	<select id="countLineCount" resultType="java.lang.Integer">
+		select count(1) from ${dbLive}.live_video where live_in = 1 and pai_id = #{paiId}
+	</select>
 </mapper>

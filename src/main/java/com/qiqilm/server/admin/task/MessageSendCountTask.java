@@ -34,7 +34,7 @@ public class MessageSendCountTask {
 	//30分钟执行
 	@Scheduled( fixedDelay = 1800000, initialDelay = 1 )
 	public void runTask() {
-		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 600 ) ) {
+		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 1500 ) ) {
 			return;
 		}
 

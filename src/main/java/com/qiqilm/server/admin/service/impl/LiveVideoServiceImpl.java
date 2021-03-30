@@ -481,4 +481,17 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	public List<String> selectOnlineLiveGroups() {
 		return liveVideoMapper.selectOnlineLiveGroups();
 	}
+
+	@Override
+	public void updateNowLine() {
+		for(ServerLive serverLive : serverLiveMapper.selectServerLiveList(null)){
+			int num = liveVideoMapper.countLineCount(serverLive.getId());
+			if(num!=serverLive.getCountNum()){
+				ServerLive update = new ServerLive();
+				update.setCountNum(num);
+				update.setId(serverLive.getId());
+				serverLiveMapper.updateServerLive(update);
+			}
+		}
+	}
 }

@@ -33,10 +33,10 @@ public class DomainTask {
 	@Value( "${spring.profiles.active}" )
 	private String profile;
 
-	@Scheduled( cron = "0 */5 * * * ?" )
+	@Scheduled( fixedDelay = 300000, initialDelay=300000  )
 	public void checkDomain() {
 
-		if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),120)){
+		if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),200)){
 			return;
 		}
 		if ( "7700".equals( profile ) || "dev".equals( profile ) ) {

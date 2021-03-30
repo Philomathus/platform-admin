@@ -37,4 +37,6 @@ public interface ILiveVideoService {
 	public void processVideoSort();
 
 	List<String> selectOnlineLiveGroups();
+
+	void updateNowLine();
 }

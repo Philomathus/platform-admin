@@ -17,8 +17,10 @@ public class RechargeLogTask {
 	private RedisUtil                 redisUtil;
 
 	@Scheduled( cron = "0 * * * * ?" )
+
+	@Scheduled( fixedDelay = 60000, initialDelay=300000  )
 	public void runTask() {
-		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 59 ) ) {
+		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 50 ) ) {
 			return;
 		}
 		log.info( "执行30分钟未人工入款处理充值记录自动失败条数：" + memberRechargeLogService.checkRechargeLogFail() );

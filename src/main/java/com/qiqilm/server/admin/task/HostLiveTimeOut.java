@@ -38,12 +38,11 @@ public class HostLiveTimeOut {
                 }
 
             } );
+
+            liveVideoService.updateNowLine();
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
         }
-
-
-
 
     }
 
