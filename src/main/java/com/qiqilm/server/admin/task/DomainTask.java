@@ -33,20 +33,6 @@ public class DomainTask {
 	@Value( "${spring.profiles.active}" )
 	private String profile;
 
-	public static void main( String[] args ) {
-		String       url          = "https://api.17gaibian.com/verif/ping";
-		RestTemplate restTemplate = new RestTemplate();
-		try {
-			ResponseEntity<String> resultEntity = restTemplate.getForEntity( url, String.class );
-			if ( resultEntity.getStatusCode() == HttpStatus.OK ) {
-				System.out.println( "aa" );
-			}
-		} catch ( Exception e ) {
-			System.out.println( e.getMessage() );
-		}
-
-	}
-
 	@Scheduled( cron = "0 */5 * * * ?" )
 	public void checkDomain() {
 
