@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.domain.vo.HostPropDayVo;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageType;
 import com.qiqilm.server.admin.mapper.*;
@@ -492,6 +493,17 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				update.setId(serverLive.getId());
 				serverLiveMapper.updateServerLive(update);
 			}
+		}
+	}
+
+	@Override
+	public void countHostGift() {
+		String dayTime = LocalDate.now().plusDays(-1).toString();
+		for(HostPropDayVo v  : liveVideoPropMapper.sumHostPropDayList(dayTime)){
+			LiveHostWageDay updateLiveDay = new LiveHostWageDay();
+			updateLiveDay.setId(dayTime.concat("-").concat(String.valueOf(v.getHostId())));
+			updateLiveDay.setTicket(v.getSumHostProp());
+			liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
 		}
 	}
 }

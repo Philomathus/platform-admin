@@ -1,16 +1,28 @@
 package com.qiqilm.server.admin.task;
 
+import com.qiqilm.server.admin.enums.EnumLock;
+import com.qiqilm.server.admin.service.ILiveVideoService;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @Log4j2
 public class HostLiveGiftFix {
-
-
-    @Scheduled( fixedDelay = 60000, initialDelay = 60000 )
+    @Autowired
+    private ILiveVideoService liveVideoService;
+    @Autowired
+    private RedisUtil redisUtil;
+    @Scheduled(cron="0 0 2 * * ?" )
     public void listenerMonitor() {
+
+        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),1000000)){
+            return;
+        }
+
+        liveVideoService.countHostGift();
 
     }
 }

@@ -39,4 +39,6 @@ public interface ILiveVideoService {
 	List<String> selectOnlineLiveGroups();
 
 	void updateNowLine();
+
+	void countHostGift();
 }
