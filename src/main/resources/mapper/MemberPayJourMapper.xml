@@ -39,7 +39,6 @@
 			   trade_sn,
 			   money,
 			   sub_money,
-			   payment_code,
 			   pay_time,
 			   status,
 			   is_patch_order,

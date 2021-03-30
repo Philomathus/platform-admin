@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.im.MessageType;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.*;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -20,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -29,6 +31,7 @@ import java.util.*;
  * @date 2021-01-25
  */
 @Service
+@Log4j2
 public class LiveVideoServiceImpl implements ILiveVideoService {
 	public static final String REDIS_KEY_DETECT_PLAY = "live:liveVideo:detectPlay";
 
@@ -58,6 +61,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	private LiveVideoMapper        liveVideoMapper;
 	@Resource
 	private LiveVideoPropMapper    liveVideoPropMapper;
+
+	@Resource
+	private  LiveHostWageDayMapper liveHostWageDayMapper;
 
 	/**
 	 * 查询直播
@@ -248,6 +254,27 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			newHostWageNote.setBeforeTotalTicket( video.getVoteNumber() );
 			newHostWageNote.setTicket( liveVideoPropMapper.sumHostProp( video.getUserId(), videoBeginTime ) );
 			liveHostWageNoteMapper.insertLiveHostWageNote( newHostWageNote );
+		}
+
+
+		String dayTime = LocalDate.now().toString();
+		String hostLiveDayId = dayTime.concat("-").concat(String.valueOf(liveUser.getId()));
+		LiveHostWageDay hostLiveDay =  liveHostWageDayMapper.selectLiveHostWageDayById(hostLiveDayId);
+		if(hostLiveDay==null){
+			hostLiveDay = new LiveHostWageDay();
+			hostLiveDay.setHostId(liveUser.getId());
+			hostLiveDay.setId(hostLiveDayId);
+			hostLiveDay.setStartTime(DateFormatUtils.formate(new Date()));
+			hostLiveDay.setEndTime(hostLiveDay.getStartTime());
+			hostLiveDay.setFamilyId(liveUser.getFamilyId());
+			hostLiveDay.setLiveTimeSec(0);
+			hostLiveDay.setTimes(1);
+			liveHostWageDayMapper.insertLiveHostWageDay(hostLiveDay);
+		}else{
+			LiveHostWageDay updateLiveDay = new LiveHostWageDay();
+			updateLiveDay.setId(hostLiveDayId);
+			updateLiveDay.setTicket(liveVideoPropMapper.sumHostPropDay( video.getUserId().intValue(), dayTime ));
+			liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
 		}
 	}
 
