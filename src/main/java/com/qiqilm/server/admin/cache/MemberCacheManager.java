@@ -15,6 +15,8 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +43,8 @@ public class MemberCacheManager {
 	private RedisUtil redisUtil;
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
-
+	@Autowired
+	StringRedisTemplate stringRedisTemplate;
 	public void init() {
 		initMemberCode();
 		//initWebSet();
@@ -233,5 +236,9 @@ public class MemberCacheManager {
 			}
 			liveUserMountMapper.updateLiveUserMount(db);
 		}
+	}
+	public String getWebSetVal( String key ) {
+		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+		return operations.get( Constants.CX_WEB_SET.concat( key ) );
 	}
 }

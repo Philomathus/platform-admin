@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.qiqilm.server.admin.mapper.MessageSendMapper">
+	<select id="getLiveCount" resultType="java.lang.Integer">
+		select count(1) from cx_live.live_video where `live_in`=1
+	</select>
+
+	<select id="getPayCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+		count(status) count
+		FROM
+		(
+		SELECT
+		status
+		FROM
+		db_cx001.member_pay_jour
+		where update_time>=#{beginTime} and update_time <![CDATA[ <= ]]> #{endTime}
+		ORDER BY
+		update_time DESC
+		LIMIT 0,
+		200) a 	WHERE
+		a.`status` = 1
+	</select>
+
+	<select id="getCurCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1) from (
+		SELECT
+		*
+		FROM
+		db_cx001.member_pay_jour
+		where update_time>=#{beginTime} and update_time <![CDATA[ <= ]]> #{endTime}
+		ORDER BY
+		update_time DESC
+		LIMIT 0,
+		200) a
+	</select>
+
+	<select id="smsFailMessage" parameterType="java.lang.String" resultType="java.lang.String">
+		select message from cx_live.sms_fail_log where
+		 create_time>=#{beginTime} and create_time <![CDATA[ <= ]]> #{endTime}
+	</select>
+</mapper>
