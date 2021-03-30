@@ -3,9 +3,11 @@ package com.qiqilm.server.admin.task;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.req.ReqMemberOnline;
 import com.qiqilm.server.admin.domain.rsp.RspMemberOnline;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.MemberOnlineMapper;
 import com.qiqilm.server.admin.mapper.MessageSendMapper;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +28,15 @@ public class MessageSendCountTask {
 	private MemberOnlineMapper memberOnlineMapper;
 	@Autowired
 	private RobotMessage       robotMessage;
+	@Autowired
+	private RedisUtil          redisUtil;
 
 	//30分钟执行
 	@Scheduled( fixedDelay = 1800000, initialDelay = 1 )
 	public void runTask() {
+		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 600 ) ) {
+			return;
+		}
 
 		String flag = sysConfigCacheUtil.getConf( "messageBot" );
 		if ( flag.equals( "0" ) ) {

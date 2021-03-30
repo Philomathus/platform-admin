@@ -2,8 +2,10 @@ package com.qiqilm.server.admin.task;
 
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.MessageSendMapper;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +20,19 @@ import java.util.List;
 public class SmsFailMessageTask {
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
-
 	@Autowired
-	private MessageSendMapper messageSendMapper;
+	private RedisUtil          redisUtil;
 	@Autowired
-	private RobotMessage      robotMessage;
-
-	public static void main( String[] args ) throws Exception {
-		System.out.println( DateFormatUtils.formate( DateFormatUtils.addMin( new Date(), -2 ) ) );
-	}
+	private MessageSendMapper  messageSendMapper;
+	@Autowired
+	private RobotMessage       robotMessage;
 
 	//2分钟执行
 	@Scheduled( fixedDelay = 120000, initialDelay = 1 )
 	public void runTask() {
+		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 119 ) ) {
+			return;
+		}
 
 		String flag = sysConfigCacheUtil.getConf( "messageBot" );
 		if ( flag.equals( "0" ) ) {
