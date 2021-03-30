@@ -122,8 +122,6 @@
         f.nick_name familyNickName,
         SUM(o.live_time_sec) as alltime,
         sum(o.ticket) as allticket,
-<!--        sum(o.cp_cost) as allCpCost,-->
-<!--        sum(o.cp_prize) as allPrize,-->
         SUBSTR(o.create_time,1,10) as shijian,
         #{countTime} timedata
         from ${dbLive}.live_host_wage_note o
