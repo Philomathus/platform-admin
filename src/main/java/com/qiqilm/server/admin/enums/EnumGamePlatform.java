@@ -23,6 +23,9 @@ public enum EnumGamePlatform {
 	NEWWORLD_CHESS( 17, "新世界棋牌" ),
 	AFB( 18, "AFB电子" ),
 	FANY_SPORT( 19, "泛亚电竞" ),
+	BG_LIVE(21,"BG视讯"),
+	BG_FISH(22,"BG捕鱼"),
+	BG_DIANZI(23,"BG电游"),
 	PRAGMATIC_PLAY( 20, "PragmaticPlay" ),
 	BBIN_LIVE( 8, "BBIN视讯" );
 
