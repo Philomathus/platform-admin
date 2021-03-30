@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -209,23 +211,6 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		return AjaxResult.error( "更新订单状态失败" );
 	}
 
-	/**
-	 * 取报告
-	 *
-	 * @param id id
-	 * @return {@link AjaxResult}
-	 */
-	@Override
-	public AjaxResult withdrawReport( String id ) {
-		memberInfoMapper.call_pro_useranalysis( id );
-		return AjaxResult.success( memberInfoMapper.userWithdrawReportList() );
-	}
-
-	@Override
-	public AjaxResult getTotal( MemberWithdrawLog memberWithdrawLog ) {
-		return AjaxResult.success( memberWithdrawLogMapper.getTotal( memberWithdrawLog ) );
-	}
-
 	@Override
 	public AjaxResult abnormalWithdrawal( ReqMemberWithdrawLog req ) {
 		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
@@ -300,5 +285,36 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 
 		return AjaxResult.error( "更新订单状态失败" );
+	}
+
+	/**
+	 * 取报告
+	 *
+	 * @param id id
+	 * @return {@link AjaxResult}
+	 */
+	@Override
+	public AjaxResult withdrawReport( String id ) {
+		memberInfoMapper.call_pro_useranalysis( id );
+		return AjaxResult.success( memberInfoMapper.userWithdrawReportList() );
+	}
+
+	@Override
+	public AjaxResult getTotal( MemberWithdrawLog memberWithdrawLog ) {
+		return AjaxResult.success( memberWithdrawLogMapper.getTotal( memberWithdrawLog ) );
+	}
+
+	@Override
+	public List<MemberWithdrawLog> getWithdrawLogList() {
+		String date      = getTime();
+		String beginTime = date.split( " " )[ 0 ] + " 00:00:00";
+		return memberWithdrawLogMapper.getWithdrawLogList( date, beginTime );
+	}
+
+	public String getTime() {
+		SimpleDateFormat sdf     = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+		Calendar         nowTime = Calendar.getInstance();
+		nowTime.add( Calendar.MINUTE, -10 );
+		return sdf.format( nowTime.getTime() );
 	}
 }

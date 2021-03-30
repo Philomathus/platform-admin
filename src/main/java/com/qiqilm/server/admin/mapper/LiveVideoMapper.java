@@ -47,4 +47,6 @@ public interface LiveVideoMapper {
 	List<LiveVideo> selectLiveInVideoSort();
 
 	long countLiveInSort( Long sort );
+
+	List<LiveVideo> selectLiveInPlayDetect();
 }

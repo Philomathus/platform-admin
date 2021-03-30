@@ -47,4 +47,6 @@ public interface MemberWithdrawLogMapper {
 	MemberWithdrawLog selectByOrderNo( String orderNo );
 
     Map getTotal(MemberWithdrawLog memberWithdrawLog);
+
+    List<MemberWithdrawLog> getWithdrawLogList(String date, String beginTime);
 }
