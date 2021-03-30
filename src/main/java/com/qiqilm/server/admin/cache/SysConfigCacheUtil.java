@@ -3,7 +3,6 @@ package com.qiqilm.server.admin.cache;
 import com.qiqilm.server.admin.domain.ConfigEnvironment;
 import com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper;
 import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,8 +33,8 @@ public class SysConfigCacheUtil {
 		if ( exists == null || !exists ) {
 			this.refreshConfCache();
 		}
-		List<Object> objects = redisUtil.hMGet( SYS_CONFIG_KEY, codes );
-		List<String> resultList = new ArrayList<>(objects.size());
+		List<Object> objects    = redisUtil.hMGet( SYS_CONFIG_KEY, codes );
+		List<String> resultList = new ArrayList<>( objects.size() );
 		for ( Object object : objects ) {
 			String value = object != null ? configDomainCacheUtil.dynamicValue( object.toString() ) : null;
 			resultList.add( value );
@@ -67,6 +66,14 @@ public class SysConfigCacheUtil {
 	public int getConfInt( String code ) {
 		try {
 			return Integer.parseInt( getConf( code, "0" ) );
+		} catch ( NumberFormatException e ) {
+			return 0;
+		}
+	}
+
+	public int getConfInt( String code, int defaultValue ) {
+		try {
+			return Integer.parseInt( getConf( code, defaultValue + "" ) );
 		} catch ( NumberFormatException e ) {
 			return 0;
 		}
