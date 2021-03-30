@@ -10,11 +10,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +43,10 @@ public class TokenService {
 	@Autowired
 	private RedisUtil redisUtil;
 
-	/**
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    /**
 	 * 获取用户身份信息
 	 *
 	 * @return 用户信息
@@ -85,9 +88,11 @@ public class TokenService {
 	 */
 	public void delLoginUser( LoginUser loginUser ) {
 		if ( StringUtils.isNotEmpty( loginUser.getToken() ) ) {
-			String tokenKey = getTokenKey( loginUser.getToken() );
+/*			String tokenKey = getTokenKey( loginUser.getToken() );
 			String userKey  = getUserKey( loginUser.getUser().getUserId() );
-			redisUtil.unlink( Arrays.asList( tokenKey, userKey ) );
+			redisUtil.unlink( Arrays.asList( tokenKey, userKey ) );*/
+            String tokenKey = TokenService.getTokenKey(loginUser.getToken());
+            stringRedisTemplate.opsForHash().delete( "tokenKeys", tokenKey );
 		}
 	}
 
