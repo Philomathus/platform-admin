@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -40,5 +42,26 @@ public class HttpHelper {
 			}
 		}
 		return sb.toString();
+	}
+
+	public static boolean isConnServerByHttp( String serverUrl ) {
+		boolean           connFlag = false;
+		URL               url;
+		HttpURLConnection conn     = null;
+		try {
+			url = new URL( serverUrl );
+			conn = ( HttpURLConnection ) url.openConnection();
+			conn.setConnectTimeout( 5 * 1000 );
+			if ( conn.getResponseCode() == 200 ) {
+				connFlag = true;
+			}
+		} catch ( IOException e ) {
+			LOGGER.error( e.getMessage() );
+		} finally {
+			if ( conn != null ) {
+				conn.disconnect();
+			}
+		}
+		return connFlag;
 	}
 }

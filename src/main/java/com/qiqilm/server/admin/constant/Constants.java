@@ -51,6 +51,8 @@ public abstract class Constants {
 	public static final String  USER_SIGN                  = LIVE_PREX + "user-sign:";
 	public static final String  ADMIN_SIGN                 = LIVE_PREX + "admin-sign:";
 
+	public static final String REDIS_KEY_DETECT_PLAY = LIVE_PREX + "liveVideo:detectPlay";
+
 	public static final String   TIME                        = "time";
 	public static final Duration SESSION_VALID_TIME_DURATION = Duration.ofHours( 1 );
 	public static final String   DISCOUNT_BILL_LIMIT         = "0.5";

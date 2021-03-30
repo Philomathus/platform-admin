@@ -106,4 +106,18 @@ public class MemberWithdrawLogController extends BaseController {
 	public AjaxResult artificial( @RequestBody ReqMemberWithdrawLog req ) {
 		return memberWithdrawLogService.artificial( req );
 	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:abnormalWithdrawal')" )
+	@Log( title = "会员出款异常", businessType = BusinessType.AUDIT )
+	@PutMapping( "/abnormalWithdrawal" )
+	public AjaxResult abnormalWithdrawal( @RequestBody ReqMemberWithdrawLog req ) {
+		return memberWithdrawLogService.abnormalWithdrawal( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:manualWithdrawal')" )
+	@Log( title = "会员人工代付中", businessType = BusinessType.AUDIT )
+	@PutMapping( "/manualWithdrawal" )
+	public AjaxResult manualWithdrawal( @RequestBody ReqMemberWithdrawLog req ) {
+		return memberWithdrawLogService.manualWithdrawal( req );
+	}
 }

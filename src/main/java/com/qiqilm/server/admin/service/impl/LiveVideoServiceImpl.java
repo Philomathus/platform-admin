@@ -3,16 +3,14 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageType;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
-import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.VideoCacheUtil;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +96,15 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 					video.setLiveStatus( value.toString() );
 				}
 			} );
+			if ( StringUtils.isBlank( video.getLiveStatus() ) ) {
+				if ( !HttpHelper.isConnServerByHttp( video.getPlayUrl() ) ) {
+					redisUtil.hSet( Constants.REDIS_KEY_DETECT_PLAY, video.getId().toString(), "0" );
+					video.setLiveStatus( "0" );
+				} else {
+					redisUtil.hSet( Constants.REDIS_KEY_DETECT_PLAY, video.getId().toString(), "1" );
+					video.setLiveStatus( "1" );
+				}
+			}
 		} );
 		return liveVideos;
 	}
@@ -356,7 +363,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Override
 	public AjaxResult updateVideoSort( LiveVideo liveVideo ) {
-		if(!redisUtil.strSetIfAbsent( "admin:videoSort:" + liveVideo.getId(),"1", Duration.ofSeconds( 5 ) )){
+		if ( !redisUtil.strSetIfAbsent( "admin:videoSort:" + liveVideo.getId(), "1", Duration.ofSeconds( 5 ) ) ) {
 			return AjaxResult.error( "已有管理员正在设置此主播，请稍后重试" );
 		}
 		LiveVideo newLiveVideo = liveVideoMapper.selectLiveVideoSortById( liveVideo.getId() );
@@ -440,7 +447,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			}
 		} );
 
-		List<Long> resultList = new ArrayList<>(liveVideos.size());
+		List<Long> resultList = new ArrayList<>( liveVideos.size() );
 		for ( int i = 1; i <= liveVideos.size(); i++ ) {
 			Long sortHostId = sortHostMap.get( i );
 			if ( sortHostId != null ) {

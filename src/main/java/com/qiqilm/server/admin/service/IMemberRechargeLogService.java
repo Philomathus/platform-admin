@@ -39,4 +39,5 @@ public interface IMemberRechargeLogService {
 	AjaxResult refusedAudit( ReqMemberRechargeLog req );
 
 	AjaxResult recoverAudit( ReqMemberRechargeLog req );
+	int checkRechargeLogFail();
 }
