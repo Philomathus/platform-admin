@@ -1,6 +1,6 @@
 package com.qiqilm.server.admin.task;
 
-import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.req.ReqMemberOnline;
 import com.qiqilm.server.admin.domain.rsp.RspMemberOnline;
 import com.qiqilm.server.admin.mapper.MemberOnlineMapper;
@@ -18,37 +18,33 @@ import java.util.Date;
 @Log4j2
 @Component
 public class MessageSendCountTask {
-
-
 	@Autowired
-	private MemberCacheManager memberCacheManager;
-
+	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Autowired
-	private MessageSendMapper messageSendMapper;
-
+	private MessageSendMapper  messageSendMapper;
 	@Autowired
 	private MemberOnlineMapper memberOnlineMapper;
 	@Autowired
-	private RobotMessage robotMessage;
+	private RobotMessage       robotMessage;
 
 	//30分钟执行
 	@Scheduled( fixedDelay = 1800000, initialDelay = 1 )
 	public void runTask() {
 
-		String flag = memberCacheManager.getWebSetVal( "messageBot" );
+		String flag = sysConfigCacheUtil.getConf( "messageBot" );
 		if ( flag.equals( "0" ) ) {
 			return;
 		}
-		long now_time=System.currentTimeMillis()/1000 - 360;
+		long now_time = System.currentTimeMillis() / 1000 - 360;
 
-		ReqMemberOnline dto =new ReqMemberOnline();
-		dto.setNow_time(now_time);
+		ReqMemberOnline dto = new ReqMemberOnline();
+		dto.setNow_time( now_time );
 
-		RspMemberOnline memberOnline = memberOnlineMapper.sumCount(dto);
+		RspMemberOnline memberOnline = memberOnlineMapper.sumCount( dto );
 
 
 		Integer count = messageSendMapper.getLiveCount();
-		String  text  = "当前在线主播人数:" + count+"\n在线会员数量:"+memberOnline.getCount();
+		String  text  = "当前在线主播人数:" + count + "\n在线会员数量:" + memberOnline.getCount();
 		robotMessage.sendByChatId( text, "-485027924" );
 
 		String  day       = DateFormatUtils.formate( new Date(), "yyyy-MM-dd" );
@@ -56,12 +52,11 @@ public class MessageSendCountTask {
 		String  endTime   = day + " 23:59:59";
 		Integer payCount  = messageSendMapper.getPayCount( beginTime, endTime );
 
-		Integer curCount  = messageSendMapper.getCurCount( beginTime, endTime );
+		Integer curCount = messageSendMapper.getCurCount( beginTime, endTime );
 
-		BigDecimal bigDecimal = BigDecimal.ZERO;
-		if (curCount>0) {
-			bigDecimal = new BigDecimal( payCount*1.0/curCount*100).setScale(2, BigDecimal.ROUND_HALF_UP);
-			String paytext = "近200单充值成功率:" + bigDecimal+"%";
+		if ( curCount > 0 ) {
+			BigDecimal bigDecimal = new BigDecimal( payCount * 1.0 / curCount * 100 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+			String     paytext    = "近200单充值成功率:" + bigDecimal + "%";
 			robotMessage.sendByChatId( paytext, "-485027924" );
 		}
 	}
