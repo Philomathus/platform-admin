@@ -100,4 +100,27 @@
 		select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and create_time >=
 		UNIX_TIMESTAMP(CONCAT(#{beginTime})) and create_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(NOW())
 	</select>
+
+	<select id="testAccountPorpList" resultType="com.qiqilm.server.admin.domain.rsp.RspTestAccountProp">
+		SELECT
+		p_user_id as pUserId,
+		p_user_name as pUserName,
+		to_user_id as toUserId,
+		SUM( total_diamonds ) as totalDiamonds
+		FROM
+		${dbLive}.live_video_prop
+		WHERE
+		to_user_id NOT IN ( '0', '-1' )
+		AND p_user_id IN ( SELECT id FROM  ${dbMain}.member_info WHERE STATUS = '2' )
+		AND create_date = #{testAccountCreateTime}
+		GROUP BY
+		p_user_id,
+		to_user_id
+		ORDER BY
+		to_user_id
+	</select>
+
+	<select id="sumHostPropDay" resultType="java.math.BigDecimal">
+        select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and create_date = #{dayTime}
+	</select>
 </mapper>

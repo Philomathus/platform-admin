@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.LiveVideoProp;
+import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,4 +29,9 @@ public interface LiveVideoPropMapper {
 	LiveVideoProp getCount( LiveVideoProp liveVideoProp );
 
 	BigDecimal sumHostProp( @Param( "userId" ) Long userId, @Param( "beginTime" ) String beginTime );
+
+	BigDecimal sumHostPropDay( @Param( "userId" ) Integer userId, @Param( "dayTime" ) String dayTime );
+
+
+    List<RspTestAccountProp> testAccountPorpList(LiveVideoProp liveVideoProp1);
 }

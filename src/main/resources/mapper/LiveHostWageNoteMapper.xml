@@ -20,19 +20,32 @@
     </resultMap>
 
     <sql id="selectLiveHostWageNoteVo">
-        select o.id, o.family_id, o.host_id, o.start_time, o.end_time, o.live_time_sec, o.ticket, o.before_total_ticket,
-        o.create_time, o.remark, o.cp_cost, o.cp_prize, u.nick_name nickName
-        from ${dbLive}.live_host_wage_note o
-        left join ${dbLive}.live_user u on o.host_id=u.id
+        select id, family_id, host_id, start_time, end_time, live_time_sec, ticket, before_total_ticket,
+        create_time, remark, cp_cost, cp_prize
+        from ${dbLive}.live_host_wage_note
+    </sql>
+
+    <sql id="selectLiveHostWageDayVo">
+        select id, family_id, host_id, start_time, end_time, live_time_sec, ticket
+        from ${dbLive}.live_host_wage_day
+    </sql>
+
+    <sql id="whereSelect">
+        <where>
+            <if test="hostId != null ">and host_id = #{hostId}</if>
+            <if test="startTime != null and startTime != ''">and start_time >= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and start_time &lt;= #{endTime}</if>
+        </where>
     </sql>
 
     <select id="selectLiveHostWageNoteList" parameterType="LiveHostWageNote" resultMap="LiveHostWageNoteResult">
+        select a.*, u.nick_name nickName from (
         <include refid="selectLiveHostWageNoteVo"/>
-        <where>
-            <if test="hostId != null ">and o.host_id = #{hostId}</if>
-            <if test="startTime != null and startTime != ''">and o.start_time >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and o.start_time &lt;= #{endTime}</if>
-        </where>
+        <include refid="whereSelect"></include>
+        UNION ALL
+        <include refid="selectLiveHostWageDayVo"/>
+        <include refid="whereSelect"></include>) a
+        left join ${dbLive}.live_user u on a.host_id=u.id
     </select>
 
     <select id="selectLiveHostWageNoteById" parameterType="Long" resultMap="LiveHostWageNoteResult">
@@ -109,8 +122,6 @@
         f.nick_name familyNickName,
         SUM(o.live_time_sec) as alltime,
         sum(o.ticket) as allticket,
-        sum(o.cp_cost) as allCpCost,
-        sum(o.cp_prize) as allPrize,
         SUBSTR(o.create_time,1,10) as shijian,
         #{countTime} timedata
         from ${dbLive}.live_host_wage_note o
@@ -139,8 +150,6 @@
         u.nick_name nickName,
         SUM(o.live_time_sec) as alltime,
         sum(o.ticket) as allticket,
-        sum(o.cp_cost) as allCpCost,
-        sum(o.cp_prize) as allPrize,
         SUBSTR(o.create_time,1,10) as shijian,
         #{countTime} timedata
         from ${dbLive}.live_host_wage_note o
