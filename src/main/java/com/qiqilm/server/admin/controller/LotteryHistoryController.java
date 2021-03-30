@@ -1,5 +1,8 @@
 package com.qiqilm.server.admin.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,5 +57,34 @@ public class LotteryHistoryController extends BaseController {
 		return AjaxResult.success( list );
 	}
 
+	/**
+	 * 重新派奖
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryHistory:list')" )
+	@PostMapping( "/{id}" )
+	public AjaxResult changeStatus(@PathVariable String id) {
+		String ktime = lotteryHistoryService.selectKtimeById(id);
+		LocalDateTime now       = LocalDateTime.now();
+		now = now.minusMinutes(10);
+		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String localTime = df.format(now);
+		Integer i=ktime.compareTo(localTime);
+		if(i<0) {
+			return AjaxResult.error(0, "超过开奖时间10分钟不可再重新派奖");
+		}
+		lotteryHistoryService.changeStatus(id);
+		return AjaxResult.success();
+	}
+
+
+	public static void main(String[] args) {
+		String ktime = "2021-03-30 15:22:00";
+		LocalDateTime now       = LocalDateTime.now();
+		now = now.minusMinutes(10);
+		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String localTime = df.format(now);
+		Integer i=ktime.compareTo(localTime);
+		System.out.println(i);
+	}
 
 }
