@@ -130,6 +130,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			} catch ( Exception e ) {
 				//log.error( this.toString() + "(m)close", e );
 			}
+			log.error("异常下播主播：id:{}",id);
 		} else if ( "origin".equals( cause ) ) {
 			//log.info( "直播源切换,关闭所有直播。当前正在关闭====>room_id" + id );
 			//通知主播退出
