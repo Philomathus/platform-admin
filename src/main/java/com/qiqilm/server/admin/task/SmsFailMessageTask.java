@@ -36,7 +36,7 @@ public class SmsFailMessageTask {
 		}
 
 		String flag = sysConfigCacheUtil.getConf( "messageBot" );
-		if ( flag.equals( "0" ) ) {
+		if ( "0".equals( flag ) ) {
 			return;
 		}
 
@@ -46,12 +46,15 @@ public class SmsFailMessageTask {
 			beginTime = DateFormatUtils.formate( DateFormatUtils.addMin( new Date(), -3 ) );
 			endTime = DateFormatUtils.formate( new Date() );
 		} catch ( Exception e ) {
-			e.getMessage();
+			e.printStackTrace();
 		}
 		List<SmsFailLog> result = messageSendMapper.smsFailMessage( beginTime, endTime );
 
 		if ( result.size() > 0 ) {
-			String text = "短信错误告警,请检查处理,异常次数:" + result.size() + "\n异常原因:" + result.get( 0 ).toString();
+			SmsFailLog smsFailLog = result.get( 0 );
+			String text = "短信错误告警,请检查处理,异常次数:" + result.size()
+					+ "\n运营商名称:" + smsFailLog.getSmsSubname()
+					+ "\n异常原因:" + smsFailLog.getMessage();
 
 			robotMessage.sendByChatId( text, "-485027924" );
 		}
