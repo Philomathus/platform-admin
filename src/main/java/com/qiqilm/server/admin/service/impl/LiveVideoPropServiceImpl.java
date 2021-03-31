@@ -46,6 +46,11 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
         return liveVideoPropMapper.testAccountPorpList(liveVideoProp);
     }
 
+    @Override
+    public RspTestAccountProp testAccountCount(LiveVideoProp liveVideoProp) {
+        return liveVideoPropMapper.testAccountPorpCount(liveVideoProp);
+    }
+
 
     private  LiveVideoProp setTime(LiveVideoProp liveVideoProp){
         if ( liveVideoProp.getSelectDate() != null && liveVideoProp.getSelectDate().length > 0 ) {
