@@ -45,12 +45,7 @@ public class SmsFailLog {
 	@Override
 	public String toString() {
 		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
-				.append( "id", getId() )
-				.append( "code", getCode() )
 				.append( "message", getMessage() )
-				.append( "phone", getPhone() )
-				.append( "smsName", getSmsName() )
-				.append( "createTime", getCreateTime() )
 				.append( "smsSubname", getSmsSubname() )
 				.toString();
 	}
