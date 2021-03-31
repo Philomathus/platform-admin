@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.cache.VideoPayCacheUtil;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.*;
@@ -46,6 +47,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Autowired
 	private ServerImCacheUtil  serverImCacheUtil;
+	@Autowired
+	private VideoPayCacheUtil  videoPayCacheUtil;
 
 	@Autowired
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
@@ -57,14 +60,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	@Resource
 	private LiveUserMapper         liveUserMapper;
 	@Resource
-	private LivePayLogMapper       livePayLogMapper;
-	@Resource
 	private LiveVideoMapper        liveVideoMapper;
 	@Resource
 	private LiveVideoPropMapper    liveVideoPropMapper;
 
 	@Resource
-	private  LiveHostWageDayMapper liveHostWageDayMapper;
+	private LiveHostWageDayMapper liveHostWageDayMapper;
 
 	/**
 	 * 查询直播
@@ -138,7 +139,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			} catch ( Exception e ) {
 				//log.error( this.toString() + "(m)close", e );
 			}
-			log.error("异常下播主播：id:{}",id);
+			log.error( "异常下播主播：id:{}", id );
 		} else if ( "origin".equals( cause ) ) {
 			//log.info( "直播源切换,关闭所有直播。当前正在关闭====>room_id" + id );
 			//通知主播退出
@@ -201,12 +202,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		this.saveHostWageNote( liveUser, video, isAborted );
 
 		if ( !isAborted && video.getIsLivePay() ) {
-			// 收费房间主动下播关闭会员收费记录，以便以后开播重新记录
-
-			LivePayLog log = new LivePayLog();
-			log.setIsHistory( true );
-			log.setVideoId( id );
-			int i = livePayLogMapper.updateLivePayLog( log );
+			videoPayCacheUtil.unlink( id );
 		}
 
 		ServerLive serverLive = serverLiveMapper.selectServerLiveById( video.getPaiId() );
@@ -259,24 +255,24 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		}
 
 
-		String dayTime = LocalDate.now().toString();
-		String hostLiveDayId = dayTime.concat("-").concat(String.valueOf(liveUser.getId()));
-		LiveHostWageDay hostLiveDay =  liveHostWageDayMapper.selectLiveHostWageDayById(hostLiveDayId);
-		if(hostLiveDay==null){
+		String          dayTime       = LocalDate.now().toString();
+		String          hostLiveDayId = dayTime.concat( "-" ).concat( String.valueOf( liveUser.getId() ) );
+		LiveHostWageDay hostLiveDay   = liveHostWageDayMapper.selectLiveHostWageDayById( hostLiveDayId );
+		if ( hostLiveDay == null ) {
 			hostLiveDay = new LiveHostWageDay();
-			hostLiveDay.setHostId(liveUser.getId());
-			hostLiveDay.setId(hostLiveDayId);
-			hostLiveDay.setStartTime(DateFormatUtils.formate(new Date()));
-			hostLiveDay.setEndTime(hostLiveDay.getStartTime());
-			hostLiveDay.setFamilyId(liveUser.getFamilyId());
-			hostLiveDay.setLiveTimeSec(0);
-			hostLiveDay.setTimes(1);
-			liveHostWageDayMapper.insertLiveHostWageDay(hostLiveDay);
-		}else{
+			hostLiveDay.setHostId( liveUser.getId() );
+			hostLiveDay.setId( hostLiveDayId );
+			hostLiveDay.setStartTime( DateFormatUtils.formate( new Date() ) );
+			hostLiveDay.setEndTime( hostLiveDay.getStartTime() );
+			hostLiveDay.setFamilyId( liveUser.getFamilyId() );
+			hostLiveDay.setLiveTimeSec( 0 );
+			hostLiveDay.setTimes( 1 );
+			liveHostWageDayMapper.insertLiveHostWageDay( hostLiveDay );
+		} else {
 			LiveHostWageDay updateLiveDay = new LiveHostWageDay();
-			updateLiveDay.setId(hostLiveDayId);
-			updateLiveDay.setTicket(liveVideoPropMapper.sumHostPropDay( video.getUserId().intValue(), dayTime ));
-			liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
+			updateLiveDay.setId( hostLiveDayId );
+			updateLiveDay.setTicket( liveVideoPropMapper.sumHostPropDay( video.getUserId().intValue(), dayTime ) );
+			liveHostWageDayMapper.updateLiveHostWageDay( updateLiveDay );
 		}
 	}
 
@@ -350,6 +346,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			updateVideo.setCateId( 4L );// 设置主题ID为收费直播
 			updateVideo.setIsLivePay( true );
 			liveVideoMapper.updateLiveVideo( updateVideo );
+
+			// 初始化收费房缓存以及有效期
+			videoPayCacheUtil.initVideoPay( video.getId() );
+
 			//im
 			HashMap<String, Object> ext = new HashMap<>();
 			ext.put( "type", live_pay_type == 0 ? 32 : 40 );
