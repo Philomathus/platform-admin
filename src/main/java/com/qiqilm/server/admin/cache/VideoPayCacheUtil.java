@@ -58,7 +58,7 @@ public class VideoPayCacheUtil {
 	 */
 	public long countVideoPayMember( Long videoId ) {
 		Long size = redisUtil.sSize( REDIS_KEY + videoId );
-		return size == null ? 0 : size;
+		return size == null ? 0 : size - 1;
 	}
 
 	/**
