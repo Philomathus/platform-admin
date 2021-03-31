@@ -32,7 +32,7 @@ public class HostLiveTimeOut {
         try {
             Set<String> liveVideos = videoCacheUtil.getAbortVideoByMonitorTime();
             liveVideos.forEach( videoId -> {
-                if(!redisUtil.exists(Constants.redisPRex + "addVideo:" + videoId)){
+                if(!redisUtil.exists(Constants.redisPRex + "lock:host:" + videoId)){
                     liveVideoService.close( Long.valueOf(videoId), "timeOut" );
                 }
 
