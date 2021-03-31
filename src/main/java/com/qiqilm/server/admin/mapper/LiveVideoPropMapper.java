@@ -36,4 +36,6 @@ public interface LiveVideoPropMapper {
 	List<HostPropDayVo> sumHostPropDayList( @Param( "dayTime" ) String dayTime );
 
     List<RspTestAccountProp> testAccountPorpList(LiveVideoProp liveVideoProp1);
+
+	RspTestAccountProp testAccountPorpCount(LiveVideoProp liveVideoProp);
 }

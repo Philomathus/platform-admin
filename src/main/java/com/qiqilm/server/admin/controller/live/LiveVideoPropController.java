@@ -80,5 +80,10 @@ public class LiveVideoPropController extends BaseController {
 		return util.exportExcel( list, "RspTestAccountProp" );
 	}
 
-
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+	@GetMapping( "/testAccountCount" )
+	public AjaxResult testAccountCount( LiveVideoProp liveVideoProp ) {
+		RspTestAccountProp	liveVideoProp1=liveVideoPropService.testAccountCount( liveVideoProp );
+		return AjaxResult.success(liveVideoProp1);
+	}
 }
