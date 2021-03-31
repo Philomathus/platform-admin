@@ -71,5 +71,7 @@ public interface MemberInfoMapper {
 
     int countByUserName(String userName);
 
+    int countByPhone(String phone);
+
     String findBanRemark(@Param("memberid") String memberid);
 }
