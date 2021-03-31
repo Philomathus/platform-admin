@@ -51,7 +51,7 @@ public class SmsFailMessageTask {
 		List<SmsFailLog> result = messageSendMapper.smsFailMessage( beginTime, endTime );
 
 		if ( result.size() > 0 ) {
-			String text = "短信错误告警,请检查处理,异常次数:" + result.size() + "\n异常原因:" + result.get( 0 );
+			String text = "短信错误告警,请检查处理,异常次数:" + result.size() + "\n异常原因:" + result.get( 0 ).toString();
 
 			robotMessage.sendByChatId( text, "-485027924" );
 		}
