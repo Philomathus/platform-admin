@@ -21,6 +21,8 @@ public class RspTestAccountProp {
 	@Excel( name = "主播id", sort = 4 )
 	private String toUserId;
 
+	private BigDecimal testAccountPorpTotal;
+
 
 
 

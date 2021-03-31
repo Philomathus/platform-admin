@@ -109,17 +109,38 @@
 		SUM( total_diamonds ) as totalDiamonds
 		FROM
 		${dbLive}.live_video_prop
-		WHERE
-		to_user_id NOT IN ( '0', '-1' )
-		AND p_user_id IN ( SELECT id FROM  ${dbMain}.member_info WHERE STATUS = '2' )
-		AND create_date = #{testAccountCreateTime}
+		<where>
+			and to_user_id NOT IN ( '0', '-1' )
+			and p_user_id IN ( SELECT id FROM  ${dbMain}.member_info WHERE STATUS = '2' )
+			<if test="toUserId != null">
+				and to_user_id =#{toUserId}
+			</if>
+			<if test="testAccountCreateTime != null">
+				and create_date = #{testAccountCreateTime}
+			</if>
+		</where>
 		GROUP BY
 		p_user_id,
 		to_user_id
 		ORDER BY
 		to_user_id
 	</select>
-
+	<select id="testAccountPorpCount" resultType="com.qiqilm.server.admin.domain.rsp.RspTestAccountProp">
+		SELECT
+		SUM( total_diamonds ) as testAccountPorpTotal
+		FROM
+		${dbLive}.live_video_prop
+		<where>
+			and to_user_id NOT IN ( '0', '-1' )
+			and p_user_id IN ( SELECT id FROM  ${dbMain}.member_info WHERE STATUS = '2' )
+			<if test="toUserId != null">
+				and to_user_id =#{toUserId}
+			</if>
+			<if test="testAccountCreateTime != null">
+				and create_date = #{testAccountCreateTime}
+			</if>
+		</where>
+	</select>
 	<select id="sumHostPropDay" resultType="java.math.BigDecimal">
         select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and create_date = #{dayTime}
 	</select>
