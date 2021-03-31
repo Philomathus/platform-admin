@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.task;
 
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.domain.SmsFailLog;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.MessageSendMapper;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
@@ -47,7 +48,7 @@ public class SmsFailMessageTask {
 		} catch ( Exception e ) {
 			e.getMessage();
 		}
-		List<String> result = messageSendMapper.smsFailMessage( beginTime, endTime );
+		List<SmsFailLog> result = messageSendMapper.smsFailMessage( beginTime, endTime );
 
 		if ( result.size() > 0 ) {
 			String text = "短信错误告警,请检查处理,异常次数:" + result.size() + "\n异常原因:" + result.get( 0 );
