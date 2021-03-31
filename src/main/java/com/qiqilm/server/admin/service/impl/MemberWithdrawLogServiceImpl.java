@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -107,6 +108,29 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		BigDecimal now = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
 		logService.logmarkMoney( memberWithdrawLog.getMemberId(), memberWithdrawLog.getAccount(), EnumMoney.bohui, now, old,
 				"驳回人：" + userName + "-" + ip, memberWithdrawLog.getOrderNo() );
+	}
+
+	@Override
+	public AjaxResult refuseds( ReqMemberWithdrawLog req ) {
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String    userName  = loginUser.getUser().getUserName();
+
+		String ip = UserDataUtil.getIp( ServletUtil.getHttpServletRequest() );
+
+		if ( !redisUtil.lock( EnumLock.adminUser, userName, "1", 5 ) ) {
+			return AjaxResult.error( "请勿重复提交" );
+		}
+		List<MemberWithdrawLog> withdrawLogList = memberWithdrawLogMapper.selectByIds( req.getIds() );
+		for ( MemberWithdrawLog memberWithdrawLog : withdrawLogList ) {
+			memberWithdrawLog.setRemark( req.getRemark() );
+			memberWithdrawLog.setStatus( 2 );//审核不通过
+			memberWithdrawLog.setOpName( userName );
+			memberWithdrawLog.setUpdateTime( new Date() );
+			this.refusedUpdateProcess( memberWithdrawLog, userName, ip );
+		}
+
+		redisUtil.unLock( EnumLock.adminUser, userName );
+		return AjaxResult.success();
 	}
 
 	@Override

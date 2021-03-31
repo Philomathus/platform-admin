@@ -50,4 +50,6 @@ public interface MemberWithdrawLogMapper {
     Map getTotal(MemberWithdrawLog memberWithdrawLog);
 
     List<MemberWithdrawLog> getWithdrawLogList(@Param("date") String date, @Param("beginTime") String beginTime);
+
+	List<MemberWithdrawLog> selectByIds( @Param("array") List<String> ids );
 }
