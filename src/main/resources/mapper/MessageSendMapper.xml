@@ -37,8 +37,8 @@
 		200) a
 	</select>
 
-	<select id="smsFailMessage" parameterType="java.lang.String" resultType="java.lang.String">
-		select message from cx_live.sms_fail_log where
-		 create_time>=#{beginTime} and create_time <![CDATA[ <= ]]> #{endTime}
+	<select id="smsFailMessage" resultType="com.qiqilm.server.admin.domain.SmsFailLog">
+		select message,sms_subname as smsSubname from ${dbLive}.sms_fail_log where
+		 create_time>=#{beginTime} and create_time <![CDATA[ <= ]]> #{endTime} and code !='LimitExceeded.PhoneNumberDailyLimit'
 	</select>
 </mapper>
