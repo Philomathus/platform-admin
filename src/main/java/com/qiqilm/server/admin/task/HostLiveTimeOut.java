@@ -34,16 +34,14 @@ public class HostLiveTimeOut {
             liveVideos.forEach( videoId -> {
                 if(!redisUtil.exists(Constants.redisPRex + "addVideo:" + videoId)){
                     liveVideoService.close( Long.valueOf(videoId), "timeOut" );
-                    redisUtil.unlink(Constants.redisPRex + "addVideo:" + videoId);
                 }
 
             } );
+
+            liveVideoService.updateNowLine();
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
         }
-
-
-
 
     }
 

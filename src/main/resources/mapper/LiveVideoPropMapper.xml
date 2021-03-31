@@ -123,4 +123,8 @@
 	<select id="sumHostPropDay" resultType="java.math.BigDecimal">
         select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and create_date = #{dayTime}
 	</select>
+
+	<select id="sumHostPropDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
+        select to_user_id hostId, IFNULL(SUM(total_ticket),0) sumHostProp from ${dbLive}.live_video_prop  where create_date = #{dayTime} GROUP BY to_user_id
+	</select>
 </mapper>

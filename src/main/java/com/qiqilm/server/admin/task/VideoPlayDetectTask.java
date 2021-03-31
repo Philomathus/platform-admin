@@ -33,9 +33,9 @@ public class VideoPlayDetectTask {
 	/**
 	 * 视频播放检测
 	 */
-	@Scheduled( cron = "0 0/2 * * * ?" )
+	@Scheduled( fixedDelay = 120000, initialDelay=120000  )
 	public void videoPlayDetect() {
-		Boolean lock = redisUtil.strSetIfAbsent( "videoPlayDetect", "1", Duration.ofSeconds( 119 ) );
+		Boolean lock = redisUtil.strSetIfAbsent( "videoPlayDetect", "1", Duration.ofSeconds( 100 ) );
 		if ( lock != null && lock ) {
 			List<LiveVideo>     videoList = liveVideoMapper.selectLiveInPlayDetect();
 			Map<String, String> failMap   = new HashMap<>();
