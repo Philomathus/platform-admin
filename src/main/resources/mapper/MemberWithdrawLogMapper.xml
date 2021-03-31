@@ -300,7 +300,7 @@
     <select id="getWithdrawLogList" parameterType="java.lang.String" resultMap="MemberWithdrawLogResult">
         select
         <include refid="selectMemberWithdrawLogVo" />
-        from member_withdraw_log
+        from ${dbMain}.member_withdraw_log
         where `status`=0
         and create_time <![CDATA[ <= ]]> #{date} and create_time <![CDATA[ >= ]]> #{beginTime}
     </select>
