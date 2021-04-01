@@ -96,7 +96,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
         member.setIsOnline(0);
         member.setVip(1);//默认vip1
-        member.setStatus(1);
+        member.setStatus(2);
         member.setTotalAccount(BigDecimal.ZERO);
         member.setPassword(memberInfo.getPassword());
         member.setUserName(member.getMemberCode());
