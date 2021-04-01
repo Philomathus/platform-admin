@@ -532,7 +532,7 @@
 			</if>
 
 			<if test="code_total != null">
-				code_total = code_total + #{code_total}
+				code_total = convert(code_total + #{code_total},decimal(10,2))
 			</if>
 		</set>
 		where id = #{userId}
