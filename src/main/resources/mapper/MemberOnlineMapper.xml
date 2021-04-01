@@ -26,7 +26,7 @@
     </select>
 
     <select id="sumCount" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberOnline">
-        select count(online_time) count from member_online
+        select count(online_time) count from ${dbMain}.member_online
         where 1=1
         <if test="req.now_time != null and req.now_time != ''">
             and online_time <![CDATA[ >= ]]> #{req.now_time}

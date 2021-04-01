@@ -4,7 +4,7 @@
 
 <mapper namespace="com.qiqilm.server.admin.mapper.MessageSendMapper">
 	<select id="getLiveCount" resultType="java.lang.Integer">
-		select count(1) from cx_live.live_video where `live_in`=1
+		select count(1) from ${dbLive}.live_video where `live_in`=1
 	</select>
 
 	<select id="getPayCount" parameterType="java.lang.String" resultType="java.lang.Integer">
@@ -15,7 +15,7 @@
 		SELECT
 		status
 		FROM
-		db_cx001.member_pay_jour
+		${dbMain}.member_pay_jour
 		where update_time>=#{beginTime} and update_time <![CDATA[ <= ]]> #{endTime}
 		ORDER BY
 		update_time DESC
@@ -29,7 +29,7 @@
 		SELECT
 		*
 		FROM
-		db_cx001.member_pay_jour
+		${dbMain}.member_pay_jour
 		where update_time>=#{beginTime} and update_time <![CDATA[ <= ]]> #{endTime}
 		ORDER BY
 		update_time DESC

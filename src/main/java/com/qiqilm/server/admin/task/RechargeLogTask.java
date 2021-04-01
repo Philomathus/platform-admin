@@ -16,8 +16,6 @@ public class RechargeLogTask {
 	@Autowired
 	private RedisUtil                 redisUtil;
 
-	@Scheduled( cron = "0 * * * * ?" )
-
 	@Scheduled( fixedDelay = 60000, initialDelay=300000  )
 	public void runTask() {
 		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 50 ) ) {
