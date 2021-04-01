@@ -207,7 +207,12 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             }else{
                 w =w.setScale(2,BigDecimal.ROUND_DOWN);
             }
-            memberInfoMapper.updateMoneySelect(userId,null,null,null,c,w);
+            try {
+                memberInfoMapper.updateMoneySelect(userId,null,null,null,c,w);
+            }catch (Exception e){
+                log.error("打码异常code_account：{},code_total:{}",c,w,e);
+            }
+
         }
     }
     //做任务
