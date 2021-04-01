@@ -30,9 +30,9 @@ public class MessageSendTask {
 
 	@Scheduled( fixedDelay = 300000, initialDelay = 1 )
 	public void runTask() {
-		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 250 ) ) {
-			return;
-		}
+//		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 250 ) ) {
+//			return;
+//		}
 
 		String flag = sysConfigCacheUtil.getConf( "messageBot" );
 		if ( flag.equals( "0" ) ) {

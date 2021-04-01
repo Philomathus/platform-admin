@@ -32,13 +32,14 @@ public class MessageSendCountTask {
 	private RedisUtil          redisUtil;
 
 	//30分钟执行
-	@Scheduled( fixedDelay = 1800000, initialDelay = 1 )
+	@Scheduled( fixedDelay = 180000, initialDelay = 1 )
 	public void runTask() {
 		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 1500 ) ) {
 			return;
 		}
 
 		String flag = sysConfigCacheUtil.getConf( "messageBot" );
+		String online_user_telegram = sysConfigCacheUtil.getConf( "online_user_telegram" );
 		if ( flag.equals( "0" ) ) {
 			return;
 		}
@@ -52,7 +53,7 @@ public class MessageSendCountTask {
 
 		Integer count = messageSendMapper.getLiveCount();
 		String  text  = "当前在线主播人数:" + count + "\n在线会员数量:" + memberOnline.getCount();
-		robotMessage.sendByChatId( text, "-485027924" );
+		robotMessage.sendByChatId( text, online_user_telegram );
 
 		String  day       = DateFormatUtils.formate( new Date(), "yyyy-MM-dd" );
 		String  beginTime = day + " 00:00:00";
@@ -64,7 +65,7 @@ public class MessageSendCountTask {
 		if ( curCount > 0 ) {
 			BigDecimal bigDecimal = new BigDecimal( payCount * 1.0 / curCount * 100 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 			String     paytext    = "近200单充值成功率:" + bigDecimal + "%";
-			robotMessage.sendByChatId( paytext, "-485027924" );
+			robotMessage.sendByChatId( paytext, online_user_telegram );
 		}
 	}
 }
