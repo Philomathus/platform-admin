@@ -198,10 +198,14 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             BigDecimal c = codeAccountMap.get(userId);
             if(c==null){
                 c = BigDecimal.ZERO;
+            }else{
+                c=c.setScale(2,BigDecimal.ROUND_DOWN);
             }
             BigDecimal w = willCodeMap.get(userId);
             if(w==null){
                 w = BigDecimal.ZERO;
+            }else{
+                w =w.setScale(2,BigDecimal.ROUND_DOWN);
             }
             memberInfoMapper.updateMoneySelect(userId,null,null,null,c,w);
         }
