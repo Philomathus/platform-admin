@@ -32,7 +32,7 @@ public class MessageSendCountTask {
 	private RedisUtil          redisUtil;
 
 	//30分钟执行
-	@Scheduled( fixedDelay = 180000, initialDelay = 1 )
+	@Scheduled( fixedDelay = 1800000, initialDelay = 1 )
 	public void runTask() {
 		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 1500 ) ) {
 			return;
