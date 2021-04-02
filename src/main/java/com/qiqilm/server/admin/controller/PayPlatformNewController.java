@@ -69,6 +69,14 @@ public class PayPlatformNewController extends BaseController {
 	@Log( title = "支付平台", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayPlatformNew payPlatformNew ) {
+		payPlatformNew.setOrgId(payPlatformNew.getOrgId().trim());
+		payPlatformNew.setPlatPayUrl(payPlatformNew.getPlatPayUrl().trim());
+		payPlatformNew.setPlatQueryUrl(payPlatformNew.getPlatQueryUrl().trim());
+		payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
+		payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().trim());
+		payPlatformNew.setSignPublicKey(payPlatformNew.getSignPublicKey().trim());
+		payPlatformNew.setPlatWhiteIpList(payPlatformNew.getPlatWhiteIpList().
+				trim().replaceAll(" ","").replaceAll("，",","));
 		return toAjax( payPlatformNewService.insertPayPlatformNew( payPlatformNew ) );
 	}
 

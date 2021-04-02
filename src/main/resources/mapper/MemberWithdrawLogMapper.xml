@@ -46,6 +46,15 @@
         from `${dbMain}`.member_withdraw_log
     </sql>
 
+    <sql id="selectMemberWithdrawLogShunWeiVo">
+        select
+        withdraw_money withdrawMoney,
+        bank_name bankName,
+        bank_account bankAccount,
+        bank_user_name bankUserName
+        from `${dbMain}`.member_withdraw_log
+    </sql>
+
     <select id="selectMemberWithdrawLogList" parameterType="MemberWithdrawLog" resultMap="MemberWithdrawLogResult">
         <include refid="selectMemberWithdrawLogVo"/>
         <where>
@@ -306,6 +315,22 @@
     <select id="selectByIds" resultMap="MemberWithdrawLogResult">
         <include refid="selectMemberWithdrawLogVo" />
         where `status` != 2 and (op_name IS NULL or op_name = '') and id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectLocksByIds" resultMap="MemberWithdrawLogResult">
+        <include refid="selectMemberWithdrawLogVo" />
+        where `status` = 0 and id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectMemberWithdrawLogShunWeiList" resultType="com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei">
+        <include refid="selectMemberWithdrawLogShunWeiVo"/>
+        where `status` &lt;= 1 and id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
