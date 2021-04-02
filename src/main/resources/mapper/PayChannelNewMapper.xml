@@ -18,6 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isCanCallback"    column="is_can_callback"    />
         <result property="indexes"    column="indexes"    />
         <result property="openLevel"    column="open_level"    />
+        <result property="openLevelMax"    column="open_level_max"    />
         <result property="payPlatformId"    column="pay_platform_id"    />
         <result property="payTypeId"    column="pay_type_id"    />
         <result property="discountBill"    column="discount_bill"    />
@@ -32,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPayChannelNewVo">
-        select id, name, pay_method, pay_attr, fail_num, success_num, total_success_money, recharge_min, recharge_max, status, is_can_callback, indexes, open_level, pay_platform_id, pay_type_id, discount_bill, quick_amount, input_type, remark, creator, create_time, updator, update_time, pay_rate from pay_channel_new
+        select id, name, pay_method, pay_attr, fail_num, success_num, total_success_money, recharge_min, recharge_max, status, is_can_callback, indexes, open_level, open_level_max, pay_platform_id, pay_type_id, discount_bill, quick_amount, input_type, remark, creator, create_time, updator, update_time, pay_rate from pay_channel_new
     </sql>
 
     <select id="selectPayChannelNewList" parameterType="PayChannelNew" resultMap="PayChannelNewResult">
@@ -50,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isCanCallback != null "> and is_can_callback = #{isCanCallback}</if>
             <if test="indexes != null "> and indexes = #{indexes}</if>
             <if test="openLevel != null "> and open_level = #{openLevel}</if>
+            <if test="openLevelMax != null "> and open_level_max = #{openLevelMax}</if>
             <if test="payPlatformId != null  and payPlatformId != ''"> and pay_platform_id = #{payPlatformId}</if>
             <if test="payTypeId != null  and payTypeId != ''"> and pay_type_id = #{payTypeId}</if>
             <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
@@ -76,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         c.discount_bill discountBill,
         c.indexes,
         c.open_level openLevel,
+        c.open_level_max openLevelMax,
         c.pay_platform_id payPlatformId,
         c.pay_type_id payTypeId,
         t.name payTypeName,
@@ -127,6 +130,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isCanCallback != null">is_can_callback,</if>
             <if test="indexes != null">indexes,</if>
             <if test="openLevel != null">open_level,</if>
+            <if test="openLevelMax != null">open_level_max,</if>
             <if test="payPlatformId != null and payPlatformId != ''">pay_platform_id,</if>
             <if test="payTypeId != null and payTypeId != ''">pay_type_id,</if>
             <if test="discountBill != null">discount_bill,</if>
@@ -152,6 +156,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isCanCallback != null">#{isCanCallback},</if>
             <if test="indexes != null">#{indexes},</if>
             <if test="openLevel != null">#{openLevel},</if>
+            <if test="openLevelMax != null">#{openLevelMax},</if>
             <if test="payPlatformId != null and payPlatformId != ''">#{payPlatformId},</if>
             <if test="payTypeId != null and payTypeId != ''">#{payTypeId},</if>
             <if test="discountBill != null">#{discountBill},</if>
@@ -181,6 +186,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isCanCallback != null">is_can_callback = #{isCanCallback},</if>
             <if test="indexes != null">indexes = #{indexes},</if>
             <if test="openLevel != null">open_level = #{openLevel},</if>
+            <if test="openLevelMax != null">open_level_max = #{openLevelMax},</if>
             <if test="payPlatformId != null and payPlatformId != ''">pay_platform_id = #{payPlatformId},</if>
             <if test="payTypeId != null and payTypeId != ''">pay_type_id = #{payTypeId},</if>
             <if test="discountBill != null">discount_bill = #{discountBill},</if>

@@ -82,6 +82,8 @@ public class PayChannelNewController extends BaseController {
 	@PostMapping
 	public Object add( @RequestBody PayChannelNew payChannelNew) {
 		Boolean b=judgeEnglish(payChannelNew);
+		payChannelNew.setQuickAmount(payChannelNew.getQuickAmount().
+				trim().replaceAll(" ","").replaceAll("，",","));
 		return toAjax( payChannelNewService.insertPayChannelNew(payChannelNew) );
 	}
 
