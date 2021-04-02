@@ -119,6 +119,12 @@
 			<if test="channelcode != null  and channelcode != ''">
 				and channelCode = #{channelcode}
 			</if>
+			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+				and date_format(reg_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+			</if>
+			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+				and date_format(reg_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			</if>
 		</where>
 		order by reg_time desc
 	</select>
@@ -528,17 +534,26 @@
 			</if>
 
 			<if test="code_account != null">
-				code_account = code_account + #{code_account},
+				code_account = convert(code_account + #{code_account},decimal(15,2)),
 			</if>
 
 			<if test="code_total != null">
-				code_total = code_total + #{code_total}
+				code_total = convert(code_total + #{code_total},decimal(15,2))
 			</if>
 		</set>
 		where id = #{userId}
 		<if test="money != null">
 			and total_account + #{money} >= 0
 		</if>
+	</update>
+
+	<update id="updateBeatCode">
+		update member_info
+		<set>
+			code_account = convert(code_account + #{code_account},decimal(15,2)),
+			code_total = convert(code_total + #{code_total},decimal(15,2))
+		</set>
+		where id = #{userId} and status = 1
 	</update>
 	<insert id="call_pro_useranalysis" statementType="CALLABLE">
 		{call pro_useranalysis(#{userid,mode=IN,jdbcType=VARCHAR})}
