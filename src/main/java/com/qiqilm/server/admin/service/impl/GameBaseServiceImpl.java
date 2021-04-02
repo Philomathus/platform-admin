@@ -83,6 +83,8 @@ public class GameBaseServiceImpl implements IGameBaseService {
 	private AFBService            afbService;
 	@Resource
 	private FanYSportService      fanYSportService;
+	@Resource
+	private BGService bgService;
 
 	@Override
 	public AjaxResult balance( String userId ) {
@@ -103,6 +105,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		forkJoinTasks.add( this.newWorldBalanceTask( userId, date ) );
 		forkJoinTasks.add( this.afbBalanceTask( userId, date ) );
 		forkJoinTasks.add( this.fanyBalanceTask( userId, date ) );
+		forkJoinTasks.add( this.bgBalanceTask(userId));
 
 		List<Future<RspGameBalance>> futureList = forkJoinPool.invokeAll( forkJoinTasks );
 		Set<RspGameBalance> resultSet = futureList.stream().map( t -> {
@@ -125,6 +128,25 @@ public class GameBaseServiceImpl implements IGameBaseService {
 				RspGameBalance rspGameBalance = new RspGameBalance();
 				rspGameBalance.setType( EnumGamePlatform.FANY_SPORT.getType() );
 				rspGameBalance.setName( EnumGamePlatform.FANY_SPORT.getName() );
+				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+				return rspGameBalance;
+			} catch ( Exception e ) {
+				log.error( e.getMessage(), e );
+			}
+			return null;
+		};
+	}
+
+	private Callable<RspGameBalance> bgBalanceTask( final String userId ) {
+		return () -> {
+			try {
+				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
+						EnumGamePlatform.BG_LIVE.getType() );
+				BigDecimal backMoney = bgService.queryCoin( gamePlatform, userId,gamePlatform.getLinecode() );
+
+				RspGameBalance rspGameBalance = new RspGameBalance();
+				rspGameBalance.setType( EnumGamePlatform.BG_LIVE.getType() );
+				rspGameBalance.setName( EnumGamePlatform.BG_LIVE.getName() );
 				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
 				return rspGameBalance;
 			} catch ( Exception e ) {
@@ -479,6 +501,11 @@ public class GameBaseServiceImpl implements IGameBaseService {
 			case FANY_SPORT:
 				xiaFenResult = fanYSportService.transfer( gamePlatform, userId, orderId, date );
 				break;
+			case BG_LIVE:
+			case BG_DIANZI:
+			case BG_FISH:
+				 xiaFenResult = bgService.transfer( gamePlatform, userId, gamePlatform.getLinecode() );
+				 break;
 			default:
 				xiaFenResult = null;
 				break;

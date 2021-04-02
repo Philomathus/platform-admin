@@ -175,12 +175,14 @@ public class SysUserController extends BaseController {
 			if ( StringUtils.isNotBlank( sysUser.getGoogleAuthSecret() ) ) {
 				return AjaxResult.error( "该账户已绑定谷歌验证码，请勿重复绑定" );
 			}
-			SysUser update = new SysUser();
+			sysUser.setGoogleAuthSecret( RSACoder.encryptByPublicKey( googleAuthKey, AuthUtil.getSecurityKeyStr(
+                    "secretkey/googleAuthPublicKey" ) ) );
+/*			SysUser update = new SysUser();
 			update.setUserId( sysUser.getUserId() );
 
 			update.setGoogleAuthSecret( RSACoder.encryptByPublicKey( googleAuthKey, AuthUtil.getSecurityKeyStr(
-					"secretkey/googleAuthPublicKey" ) ) );
-			userService.updateUser( update );
+					"secretkey/googleAuthPublicKey" ) ) );*/
+			userService.updateUser2( sysUser );
 			return AjaxResult.success();
 		}
 		return AjaxResult.error( "验证码校验失败，请重新绑定" );

@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,9 @@ public class MessageSendCountTask {
 	@Autowired
 	private RedisUtil          redisUtil;
 
+	@Value( "${spring.profiles.active}" )
+	private String profile;
+
 	//30分钟执行
 	@Scheduled( fixedDelay = 1800000, initialDelay = 1 )
 	public void runTask() {
@@ -39,7 +43,11 @@ public class MessageSendCountTask {
 		}
 
 		String flag = sysConfigCacheUtil.getConf( "messageBot" );
+		String online_user_telegram = sysConfigCacheUtil.getConf( "online_user_telegram" );
 		if ( flag.equals( "0" ) ) {
+			return;
+		}
+		if(!profile.startsWith("77")||profile.equals("7700")){
 			return;
 		}
 		long now_time = System.currentTimeMillis() / 1000 - 360;
@@ -51,8 +59,8 @@ public class MessageSendCountTask {
 
 
 		Integer count = messageSendMapper.getLiveCount();
-		String  text  = "当前在线主播人数:" + count + "\n在线会员数量:" + memberOnline.getCount();
-		robotMessage.sendByChatId( text, "-485027924" );
+		String  text  = "当前在线主播数:" + count + "\n在线会员数:" + memberOnline.getCount();
+		robotMessage.sendByChatId( text, online_user_telegram );
 
 		String  day       = DateFormatUtils.formate( new Date(), "yyyy-MM-dd" );
 		String  beginTime = day + " 00:00:00";
@@ -64,7 +72,7 @@ public class MessageSendCountTask {
 		if ( curCount > 0 ) {
 			BigDecimal bigDecimal = new BigDecimal( payCount * 1.0 / curCount * 100 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 			String     paytext    = "近200单充值成功率:" + bigDecimal + "%";
-			robotMessage.sendByChatId( paytext, "-485027924" );
+			robotMessage.sendByChatId( paytext, online_user_telegram );
 		}
 	}
 }

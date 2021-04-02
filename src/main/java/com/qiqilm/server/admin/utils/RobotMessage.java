@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.utils;
 
 
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -11,7 +13,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class RobotMessage extends TelegramLongPollingBot {
-
+	@Autowired
+	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Override
 	public String getBotUsername() {
 		// 填写username
@@ -54,9 +57,9 @@ public class RobotMessage extends TelegramLongPollingBot {
 	}
 
 	public void send(String tex){
-
+		String withdraw_log_telegram = sysConfigCacheUtil.getConf( "withdraw_log_telegram" );
 		SendMessage message = new SendMessage()
-				.setChatId( "-434671494" )
+				.setChatId( withdraw_log_telegram )
 				.setText( tex);
 		try {
 			execute( message );

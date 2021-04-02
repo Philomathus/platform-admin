@@ -55,7 +55,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     private MemberCacheManager memberCacheManager;
     @Autowired
     private MemberForbidUtil memberForbidUtil;
-
+    @Autowired
+    private MemberBcodeMapper memberBcodeMapper;
     /**
      * 查询会员信息
      *
@@ -86,8 +87,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
      */
     @Override
     public AjaxResult insertMemberInfo(MemberInfo memberInfo) {
-        if (memberInfoMapper.countByUserName(memberInfo.getUserName()) > 0) {
-            return AjaxResult.error("此账号已经存在");
+        if (memberInfoMapper.countByPhone(memberInfo.getPhone()) > 0) {
+            return AjaxResult.error("此手机号已经存在");
         }
         MemberInfo member = memberCacheManager.createMember();
         if (StringUtils.isEmpty(member.getId())) {
@@ -96,10 +97,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
         member.setIsOnline(0);
         member.setVip(1);//默认vip1
-        member.setStatus(1);
+        member.setStatus(2);
         member.setTotalAccount(BigDecimal.ZERO);
         member.setPassword(memberInfo.getPassword());
-        member.setUserName(memberInfo.getUserName());
+        member.setUserName(member.getMemberCode());
+        member.setPhone(memberInfo.getPhone());
         member.setRegTime(new Date());
         member.setLevelIntegral(BigDecimal.ZERO);
         member.setBoxAccount(BigDecimal.ZERO);
@@ -315,5 +317,14 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         memberCard.setBankAccount(member.getBankAccount());
         memberCardMapper.updateMemberCard(memberCard);
         return AjaxResult.success("修改银行卡信息成功");
+    }
+
+    @Override
+    public void repairMemberBcode(String memberId) {
+        int count=memberBcodeMapper.countMemberBcodeStatus(memberId);
+        if (count>0){
+            return;
+        }
+        memberBcodeMapper.repairMemberInfo(memberId);
     }
 }
