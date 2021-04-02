@@ -51,12 +51,13 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 		}
 		List<MemberPayJour> memberPayJours = memberPayJourMapper.selectMemberPayJourList( memberPayJour );
 		List<PayChannelNew> payChannelNews = payChannelNewMapper.selectPayChannelName();
-		for(MemberPayJour me : memberPayJours){
-			for(PayChannelNew pa : payChannelNews)
-			if(me.getChannelId().equals(String.valueOf(pa.getId()))){
-				me.setPlatformName(pa.getPayPlatformName());
-				me.setChannelName(pa.getName());
-				me.setPayRate(pa.getPayRate());
+		for ( MemberPayJour me : memberPayJours ) {
+			for ( PayChannelNew pa : payChannelNews ) {
+				if ( me.getChannelId().equals( String.valueOf( pa.getId() ) ) ) {
+					me.setPlatformName( pa.getPayPlatformName() );
+					me.setChannelName( pa.getName() );
+					me.setPayRate( pa.getPayRate() );
+				}
 			}
 		}
 		return memberPayJours;

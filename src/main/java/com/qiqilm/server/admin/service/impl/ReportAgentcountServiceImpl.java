@@ -47,13 +47,15 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 		}
 		Map<String, Object> resultMap = new HashMap<>();
 		//断时间是否是正确时间
-		allList = reportAgentcountMapper.selectReportAgentcountList( reportAgentcount );
-		if ( (reportAgentcount.getAgentcode() != null && allList.size() == 0) ||  (reportAgentcount.getAgentcode() != null && dateNowStr().equals(agenttime))) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
+
+		//if ( (reportAgentcount.getAgentcode() != null && allList.size() == 0) ||  (reportAgentcount.getAgentcode() != null && dateNowStr().equals(agenttime))) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
+		if (reportAgentcount.getAgentcode() != null) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
 			reportAgentcountMapper.calldataProrepPlamcom( agenttime, agenttime, reportAgentcount.getAgentcode() );//调用存储过程
 			List<ReportAgentcount> allList1 = reportAgentcountMapper.selectReportAgentcountList( reportAgentcount );
 			resultMap.put( "rows", allList1 );
 			return resultMap;
 		}
+		allList = reportAgentcountMapper.selectReportAgentcountList( reportAgentcount );
 		resultMap.put( "rows", allList );
 		return resultMap;
 	}

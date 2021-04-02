@@ -46,4 +46,12 @@
     <select id="selectLotteryHistoryNameList" parameterType="LotteryHistory" resultMap="LotteryHistoryResult">
         select distinct name from ${dbLottery}.lottery_info
     </select>
+
+    <select id="selectKtimeById" resultType="java.lang.String">
+        select ktime from ${dbLottery}.lottery_history where id = #{id}
+    </select>
+
+    <update id="changeStatus">
+        update ${dbLottery}.lottery_history set status = 0 where id = #{id}
+    </update>
 </mapper>
