@@ -86,8 +86,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
      */
     @Override
     public AjaxResult insertMemberInfo(MemberInfo memberInfo) {
-        if (memberInfoMapper.countByUserName(memberInfo.getUserName()) > 0) {
-            return AjaxResult.error("此账号已经存在");
+        if (memberInfoMapper.countByPhone(memberInfo.getPhone()) > 0) {
+            return AjaxResult.error("此手机号已经存在");
         }
         MemberInfo member = memberCacheManager.createMember();
         if (StringUtils.isEmpty(member.getId())) {
@@ -96,10 +96,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
         member.setIsOnline(0);
         member.setVip(1);//默认vip1
-        member.setStatus(1);
+        member.setStatus(2);
         member.setTotalAccount(BigDecimal.ZERO);
         member.setPassword(memberInfo.getPassword());
-        member.setUserName(memberInfo.getUserName());
+        member.setUserName(member.getMemberCode());
+        member.setPhone(memberInfo.getPhone());
         member.setRegTime(new Date());
         member.setLevelIntegral(BigDecimal.ZERO);
         member.setBoxAccount(BigDecimal.ZERO);

@@ -91,8 +91,13 @@ public class MemberInfoController extends BaseController {
     @Log(title = "用户信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MemberInfo memberInfo) {
-        String userName = memberInfo.getUserName();
+//        String userName = memberInfo.getUserName();
         String password = memberInfo.getPassword();
+        String phone = memberInfo.getPhone();
+        if (phone == null) {
+            return AjaxResult.error("手机号不能为空");
+        }
+/*
         if (userName == null) {
             return AjaxResult.error("账号信息为空");
         }
@@ -105,7 +110,7 @@ public class MemberInfoController extends BaseController {
         }
         if (!this.checkUserName(userName)) {
             return AjaxResult.error("账号不合合法");
-        }
+        }*/
 
         if (StringUtils.isEmpty(password)) {
             return AjaxResult.error("密码不能为空");
