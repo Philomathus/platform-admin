@@ -105,7 +105,8 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	}
 
 	private void setPayTypeCache(PayType payType) {
-		List<PayType> payTypes = payTypeMapper.selectPayTypeList( null );
+		//緩存啟用中的支付類型
+		List<PayType> payTypes = payTypeMapper.selectCachePayTypeList( );
 		payCacheListUtil.setPayTypeList(payTypes);
 		payCacheListUtil.setPayType(payType);
 	}
@@ -113,7 +114,7 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	/**
 	 * 批量删除支付类型
 	 *
-	 * @param ids 需要删除的支付类型ID
+	 * @param
 	 * @return 结果
 	 */
 	@Override
