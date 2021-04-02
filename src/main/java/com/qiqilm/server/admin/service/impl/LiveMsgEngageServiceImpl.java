@@ -58,6 +58,10 @@ public class LiveMsgEngageServiceImpl implements ILiveMsgEngageService {
         if (Objects.nonNull(liveMsgEngage1)){
            return AjaxResult.success(msg+"已新增不能重复");
         }
+        List<LiveMsgEngage> msgEngageList=liveMsgEngageMapper.selectLiveMsgEngageList(null);
+        if (msgEngageList.size()>=10){
+            return AjaxResult.success("主播互动消息只能10条");
+        }
         liveMsgEngageMapper.insertLiveMsgEngage(liveMsgEngage);
         List<LiveMsgEngage> liveMsgEngageList=liveMsgEngageMapper.selectLiveMsgEngageList(null);
         liveCacheUtil.setLiveMsgEngage(liveMsgEngageList);
