@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
@@ -79,6 +80,17 @@ public class MemberWithdrawLogController extends BaseController {
 		ExportExcelUtil.exportExcel( list, "会员提现", "会员提现信息表", MemberWithdrawLog.class, response );
 	}
 
+	/**
+	 * 顺为代付格式导出会员提现信息列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:export')" )
+	@Log( title = "顺为代付格式会员提现信息", businessType = BusinessType.EXPORT )
+	@PostMapping( "/exportShunWei" )
+	public void exportShunWei( @RequestBody ReqMemberWithdrawLog req, HttpServletResponse response ) {
+		List<MemberWithdrawLogShunWei> list = memberWithdrawLogService.selectMemberWithdrawLogShunWeiList( req );
+		ExportExcelUtil.exportExcel( list, null, "顺为格式会员提现表", MemberWithdrawLogShunWei.class, response );
+	}
+
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:refused')" )
 	@Log( title = "会员提现拒绝", businessType = BusinessType.AUDIT )
 	@PutMapping( "/refused" )
@@ -91,6 +103,13 @@ public class MemberWithdrawLogController extends BaseController {
 	@PutMapping( "/refuseds" )
 	public AjaxResult refuseds( @RequestBody ReqMemberWithdrawLog req ) {
 		return memberWithdrawLogService.refuseds( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:lock')" )
+	@Log( title = "会员提现批量锁定", businessType = BusinessType.AUDIT )
+	@PutMapping( "/locks" )
+	public AjaxResult locks( @RequestBody ReqMemberWithdrawLog req ) {
+		return memberWithdrawLogService.locks( req );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:lock')" )
