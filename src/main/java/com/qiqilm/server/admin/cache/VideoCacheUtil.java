@@ -1,7 +1,9 @@
-package com.qiqilm.server.admin.utils;
+package com.qiqilm.server.admin.cache;
 
+import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.exception.BusinessException;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,9 @@ public class VideoCacheUtil {
 	private RedisUtil redisUtil;
 
 	// 直播间key 类型hash
-	public static final String REDIS_KEY   = Constants.redisPRex + "liveVideo:";
+	public static final String REDIS_KEY   = Constants.LIVE_PREX + "liveVideo:";
 	// 直播间monitorTime key 类型zset score为时间戳
-	public static final String REDIS_M_KEY = Constants.redisPRex + "liveVideoMT";
+	public static final String REDIS_M_KEY = Constants.LIVE_PREX + "liveVideoMT";
 
 	@Getter
 	public enum VideoKey {

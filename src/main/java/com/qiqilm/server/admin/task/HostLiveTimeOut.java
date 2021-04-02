@@ -1,10 +1,10 @@
 package com.qiqilm.server.admin.task;
 
+import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.ILiveVideoService;
-import com.qiqilm.server.admin.utils.Constants;
 import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.VideoCacheUtil;
+import com.qiqilm.server.admin.cache.VideoCacheUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -32,7 +32,7 @@ public class HostLiveTimeOut {
         try {
             Set<String> liveVideos = videoCacheUtil.getAbortVideoByMonitorTime();
             liveVideos.forEach( videoId -> {
-                if(!redisUtil.exists(Constants.redisPRex + "addVideo:" + videoId)){
+                if(!redisUtil.exists( Constants.LIVE_PREX + "lock:host:" + videoId)){
                     liveVideoService.close( Long.valueOf(videoId), "timeOut" );
                 }
 

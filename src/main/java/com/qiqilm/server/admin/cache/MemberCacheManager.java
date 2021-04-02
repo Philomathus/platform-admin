@@ -15,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
@@ -32,15 +33,21 @@ import java.util.Map;
 public class MemberCacheManager {
 	@Resource
 	private MemberInfoMapper    memberInfoMapper;
-	@Autowired
+	@Resource
 	private WheelUserMapper     wheelUserMapper;
-	@Autowired
+	@Resource
 	private LiveUserMountMapper liveUserMountMapper;
-
-	@Autowired
+	@Resource
 	private RedisUtil          redisUtil;
-	@Autowired
+	@Resource
 	private SysConfigCacheUtil sysConfigCacheUtil;
+
+	@Value( "${spring.profiles.active}" )
+	private String profile;
+
+	public String getAgent() {
+		return profile;
+	}
 
 	public void init() {
 		initMemberCode();
@@ -155,7 +162,7 @@ public class MemberCacheManager {
 	 */
 	public MemberInfo createMember() {
 		MemberInfo member = new MemberInfo();
-		member.setCxAgent( sysConfigCacheUtil.getConf( ConstantsWeb.agent_id ) );
+		member.setCxAgent( getAgent() );
 		member.setMemberCode( makeMemberCode() );
 		member.setHeadImg( String.valueOf( RandomUtils.nextInt( 1, 7 ) ) );
 		member.setId( member.getCxAgent().concat( "_" ).concat( member.getMemberCode() ) );

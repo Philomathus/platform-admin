@@ -534,11 +534,11 @@
 			</if>
 
 			<if test="code_account != null">
-				code_account = code_account + #{code_account},
+				code_account = convert(code_account + #{code_account},decimal(15,2)),
 			</if>
 
 			<if test="code_total != null">
-				code_total = code_total + #{code_total}
+				code_total = convert(code_total + #{code_total},decimal(15,2))
 			</if>
 		</set>
 		where id = #{userId}

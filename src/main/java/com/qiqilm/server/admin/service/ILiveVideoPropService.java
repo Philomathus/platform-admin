@@ -30,4 +30,5 @@ public interface ILiveVideoPropService {
 
     List<RspTestAccountProp> testAccountPorpList(LiveVideoProp liveVideoProp);
 
+	RspTestAccountProp testAccountCount(LiveVideoProp liveVideoProp);
 }
