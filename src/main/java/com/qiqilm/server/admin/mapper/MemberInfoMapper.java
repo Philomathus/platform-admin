@@ -55,6 +55,10 @@ public interface MemberInfoMapper {
                           @Param("code_account") BigDecimal code_account,
                           @Param("code_total") BigDecimal code_total);
 
+    int updateBeatCode(@Param("userId") String userId,
+                          @Param("code_account") BigDecimal code_account,
+                          @Param("code_total") BigDecimal code_total);
+
     void call_pro_useranalysis(@Param("userid") String userId);
 
     List<WithdrawReport> userWithdrawReportList();
