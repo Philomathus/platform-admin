@@ -40,7 +40,7 @@ public class PayCacheListUtil {
 	//获取支付类型list集合
 	public List<PayType> getTypes() {
 		if (!redisUtil.exists("pay:typeList")){
-			List<PayType> payTypes = payTypeMapper.selectPayTypeList( null );
+			List<PayType> payTypes = payTypeMapper.selectCachePayTypeList();
 			redisUtil.strSet( "pay:typeList",JsonUtil.object2Json(payTypes),Duration.ofHours(6));
 		}
 		String value = redisUtil.strGet("pay:typeList");
