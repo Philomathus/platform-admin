@@ -120,7 +120,7 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	@Override
 	public int deletePayTypeByIds( String id ) {
 		payTypeMapper.deletePayTypeById( id );
-		List<PayType> payTypes = payTypeMapper.selectPayTypeList( null );
+		List<PayType> payTypes = payTypeMapper.selectCachePayTypeList( );
 		payCacheListUtil.setPayTypeList(payTypes);
 		payCacheListUtil.delPayType(id);
 		return 1;

@@ -126,7 +126,7 @@
         </foreach>
     </delete>
 
-    <select id="selectPayTypeList" parameterType="PayType" resultMap="PayTypeResult">
+    <select id="selectCachePayTypeList" parameterType="PayType" resultMap="PayTypeResult">
         <include refid="selectPayTypeVo"/>
         where status = 1
     </select>
