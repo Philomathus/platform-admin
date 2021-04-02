@@ -107,7 +107,7 @@
         SELECT COUNT(*) FROM `config_environment` where env_code=#{envValue}
     </select>
     <select id="getValue" resultType="java.lang.String">
-        select dict_value+1 from sys_n_dict_data where dict_type= 'config_environment_group' ORDER BY dict_value desc LIMIT 1
+        select dict_value from sys_n_dict_data where dict_type= 'config_environment_group' ORDER BY dict_value desc LIMIT 1
     </select>
 
 </mapper>

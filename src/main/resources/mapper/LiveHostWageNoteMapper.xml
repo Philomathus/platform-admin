@@ -49,7 +49,12 @@
     </select>
 
     <select id="selectLiveHostWageNoteById" parameterType="Long" resultMap="LiveHostWageNoteResult">
+        select a.*, u.nick_name nickName from
         <include refid="selectLiveHostWageNoteVo"/>
+        <include refid="whereSelect"></include>
+        UNION ALL
+        <include refid="selectLiveHostWageDayVo"/>
+        <include refid="whereSelect"></include>
         where id = #{id}
     </select>
 
@@ -114,54 +119,134 @@
         select * from ${dbLive}.live_host_wage_note  l where l.host_id=#{userId}  ORDER BY create_time desc LIMIT 1
     </select>
 
-	<select id="familyPage" resultType="RspLiveHostWageNoteFamily">
-        select
-        o.family_id familyId,
+<!--	<select id="familyPage" resultType="RspLiveHostWageNoteFamily">-->
+<!--        select-->
+<!--        o.family_id familyId,-->
+<!--        f.name familyName,-->
+<!--        f.user_id familyUserId,-->
+<!--        f.nick_name familyNickName,-->
+<!--        SUM(o.live_time_sec) as alltime,-->
+<!--        sum(o.ticket) as allticket,-->
+<!--        SUBSTR(o.create_time,1,10) as shijian,-->
+<!--        #{countTime} timedata-->
+<!--        from ${dbLive}.live_host_wage_note o-->
+<!--        left join ${dbLive}.live_family f on o.family_id=f.id-->
+<!--        <where>-->
+<!--            <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>-->
+<!--            <if test="dto.familyName!=null and dto.familyName!=''">and f.name like concat('%',#{dto.familyName},'%')</if>-->
+<!--            <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>-->
+<!--            <if test="dto.startTime!=null">and o.create_time >= #{dto.startTime}</if>-->
+<!--            <if test="dto.endTime!=null">and o.create_time &lt;= #{dto.endTime}</if>-->
+<!--        </where>-->
+<!--        group by o.family_id order by o.family_id asc-->
+<!--    </select>-->
+
+    <select id="familyPage" resultType="RspLiveHostWageNoteFamily">
+        select o.*,
         f.name familyName,
         f.user_id familyUserId,
         f.nick_name familyNickName,
-        SUM(o.live_time_sec) as alltime,
-        sum(o.ticket) as allticket,
-        SUBSTR(o.create_time,1,10) as shijian,
-        #{countTime} timedata
-        from ${dbLive}.live_host_wage_note o
-        left join ${dbLive}.live_family f on o.family_id=f.id
+        #{countTime} timedata from
+        (select family_id familyId,
+        SUM(live_time_sec) as alltime,
+        sum(ticket) as allticket,
+        SUBSTR(create_time,1,10) as shijian
+        from ${dbLive}.live_host_wage_note
         <where>
-            <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
+            <if test="dto.familyId!=null">and family_id = #{dto.familyId}</if>
+            <if test="dto.startTime!=null">and create_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and create_time &lt;= #{dto.endTime}</if>
+        </where>
+        UNION ALL
+        select family_id familyId,
+        SUM(live_time_sec) as alltime,
+        sum(ticket) as allticket,
+        SUBSTR(start_time,1,10) as shijian
+        from ${dbLive}.live_host_wage_day
+        <where>
+            <if test="dto.familyId!=null">and family_id = #{dto.familyId}</if>
+            <if test="dto.startTime!=null">and start_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and start_time &lt;= #{dto.endTime}</if>
+        </where>
+        ) o
+        left join ${dbLive}.live_family f on o.familyId=f.id
+        <where>
             <if test="dto.familyName!=null and dto.familyName!=''">and f.name like concat('%',#{dto.familyName},'%')</if>
             <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>
-            <if test="dto.startTime!=null">and o.create_time >= #{dto.startTime}</if>
-            <if test="dto.endTime!=null">and o.create_time &lt;= #{dto.endTime}</if>
         </where>
-        group by o.family_id order by o.family_id asc
+        group by o.familyId order by o.familyId asc
     </select>
 
 	<select id="selectFamilyName" resultType="java.util.Map">
         select id,nick_name,name from ${dbLive}.live_family
     </select>
 
-	<select id="hostPage" resultType="RspLiveHostWageNoteList">
-        select
-        o.family_id familyId,
+<!--	<select id="hostPage" resultType="RspLiveHostWageNoteList">-->
+<!--        select-->
+<!--        o.family_id familyId,-->
+<!--        f.name familyName,-->
+<!--        f.user_id familyUserId,-->
+<!--        f.nick_name familyNickName,-->
+<!--        o.host_id hostId,-->
+<!--        u.nick_name nickName,-->
+<!--        SUM(o.live_time_sec) as alltime,-->
+<!--        sum(o.ticket) as allticket,-->
+<!--        SUBSTR(o.create_time,1,10) as shijian,-->
+<!--        #{countTime} timedata-->
+<!--        from ${dbLive}.live_host_wage_note o-->
+<!--        left join ${dbLive}.live_family f on o.family_id=f.id-->
+<!--        left join ${dbLive}.live_user u on o.host_id=u.id-->
+<!--        <where>-->
+<!--            <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>-->
+<!--            <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>-->
+<!--            <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>-->
+<!--            <if test="dto.startTime!=null">and o.create_time >= #{dto.startTime}</if>-->
+<!--            <if test="dto.endTime!=null">and o.create_time &lt;= #{dto.endTime}</if>-->
+<!--        </where>-->
+<!--        group by o.host_id order by o.create_time desc-->
+<!--    </select>-->
+
+    <select id="hostPage" resultType="RspLiveHostWageNoteList">
+        select o.*,
         f.name familyName,
         f.user_id familyUserId,
         f.nick_name familyNickName,
-        o.host_id hostId,
         u.nick_name nickName,
-        SUM(o.live_time_sec) as alltime,
-        sum(o.ticket) as allticket,
-        SUBSTR(o.create_time,1,10) as shijian,
         #{countTime} timedata
-        from ${dbLive}.live_host_wage_note o
-        left join ${dbLive}.live_family f on o.family_id=f.id
-        left join ${dbLive}.live_user u on o.host_id=u.id
+        from
+        (select family_id familyId,
+        host_id hostId,
+        create_time,
+        SUM(live_time_sec) as alltime,
+        sum(ticket) as allticket,
+        SUBSTR(create_time,1,10) as shijian
+        from ${dbLive}.live_host_wage_note
         <where>
-            <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
-            <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
-            <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
-            <if test="dto.startTime!=null">and o.create_time >= #{dto.startTime}</if>
-            <if test="dto.endTime!=null">and o.create_time &lt;= #{dto.endTime}</if>
+            <if test="dto.startTime!=null">and create_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and create_time &lt;= #{dto.endTime}</if>
+            <if test="dto.familyId!=null">and family_id = #{dto.familyId}</if>
+            <if test="dto.hostId!=null">and host_id = #{dto.hostId}</if>
         </where>
-        group by o.host_id order by o.create_time desc
+        UNION ALL
+        select family_id familyId,
+        host_id hostId,
+        start_time create_time,
+        SUM(live_time_sec) as alltime,
+        sum(ticket) as allticket,
+        SUBSTR(start_time,1,10) as shijian
+        from ${dbLive}.live_host_wage_day
+        <where>
+            <if test="dto.startTime!=null">and start_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and start_time &lt;= #{dto.endTime}</if>
+            <if test="dto.familyId!=null">and family_id = #{dto.familyId}</if>
+            <if test="dto.hostId!=null">and host_id = #{dto.hostId}</if>
+        </where>
+        ) o
+        left join ${dbLive}.live_family f on o.familyId=f.id
+        left join ${dbLive}.live_user u on o.hostId=u.id
+        <where>
+            <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
+        </where>
+        group by o.hostId order by o.create_time desc
     </select>
 </mapper>
