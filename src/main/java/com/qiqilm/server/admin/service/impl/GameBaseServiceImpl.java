@@ -85,27 +85,32 @@ public class GameBaseServiceImpl implements IGameBaseService {
 	private FanYSportService      fanYSportService;
 	@Resource
 	private BGService bgService;
+	@Resource
+	private MemberGameMoneyMapper memberGameMoneyMapper;
+
 
 	@Override
 	public AjaxResult balance( String userId ) {
 		final Date date = new Date();
-
+		List<Integer> lists = memberGameMoneyMapper.lists(userId);
 		Set<Callable<RspGameBalance>> forkJoinTasks = new HashSet<>();
-		forkJoinTasks.add( this.agBalanceTask( userId, date ) );
-		forkJoinTasks.add( this.ogBalanceTask( userId ) );
-		forkJoinTasks.add( this.kyBalanceTask( userId ) );
-		forkJoinTasks.add( this.mgBalanceTask( userId ) );
-		forkJoinTasks.add( this.ngBalanceTask( userId ) );
-		forkJoinTasks.add( this.bbinBalanceTask( userId ) );
-		forkJoinTasks.add( this.shabaBalanceTask( userId ) );
-		forkJoinTasks.add( this.icgBalanceTask( userId ) );
-		forkJoinTasks.add( this.mtBalanceTask( userId ) );
-		forkJoinTasks.add( this.kxBalanceTask( userId, date ) );
+		if (lists.contains(EnumGamePlatform.AG_LIVE.getType())) forkJoinTasks.add( this.agBalanceTask( userId, date ) );
+		if (lists.contains(EnumGamePlatform.OG_LIVE.getType())) forkJoinTasks.add( this.ogBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.KY_CHESS.getType())) forkJoinTasks.add( this.kyBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.MG_LIVE.getType())) forkJoinTasks.add( this.mgBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.NG_LIVE.getType())) forkJoinTasks.add( this.ngBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.BBIN_LIVE.getType())) forkJoinTasks.add( this.bbinBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.SHABA_SPORT.getType())) forkJoinTasks.add( this.shabaBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.ICG_DIANZI.getType())) forkJoinTasks.add( this.icgBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.MEITIAN_CHESS.getType())) forkJoinTasks.add( this.mtBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.KAIXUAN_CHESS.getType())) forkJoinTasks.add( this.kxBalanceTask( userId, date ) );
 		//forkJoinTasks.add( this.legBalanceTask( userId, date ) );
-		forkJoinTasks.add( this.newWorldBalanceTask( userId, date ) );
-		forkJoinTasks.add( this.afbBalanceTask( userId, date ) );
-		forkJoinTasks.add( this.fanyBalanceTask( userId, date ) );
-		forkJoinTasks.add( this.bgBalanceTask(userId));
+		if (lists.contains(EnumGamePlatform.NEWWORLD_CHESS.getType())) forkJoinTasks.add( this.newWorldBalanceTask( userId, date ) );
+		if (lists.contains(EnumGamePlatform.AFB.getType())) forkJoinTasks.add( this.afbBalanceTask( userId, date ) );
+		if (lists.contains(EnumGamePlatform.FANY_SPORT.getType())) forkJoinTasks.add( this.fanyBalanceTask( userId, date ) );
+		if (lists.contains(EnumGamePlatform.BG_LIVE.getType()) ) forkJoinTasks.add( this.bgBalanceTask(userId));
+		if (lists.contains(EnumGamePlatform.BG_DIANZI.getType()) ) forkJoinTasks.add( this.bgDzBalanceTask(userId));
+		if (lists.contains(EnumGamePlatform.BG_FISH.getType()) ) forkJoinTasks.add( this.bgFishlanceTask(userId));
 
 		List<Future<RspGameBalance>> futureList = forkJoinPool.invokeAll( forkJoinTasks );
 		Set<RspGameBalance> resultSet = futureList.stream().map( t -> {
@@ -147,6 +152,44 @@ public class GameBaseServiceImpl implements IGameBaseService {
 				RspGameBalance rspGameBalance = new RspGameBalance();
 				rspGameBalance.setType( EnumGamePlatform.BG_LIVE.getType() );
 				rspGameBalance.setName( EnumGamePlatform.BG_LIVE.getName() );
+				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+				return rspGameBalance;
+			} catch ( Exception e ) {
+				log.error( e.getMessage(), e );
+			}
+			return null;
+		};
+	}
+
+	private Callable<RspGameBalance> bgDzBalanceTask( final String userId ) {
+		return () -> {
+			try {
+				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
+						EnumGamePlatform.BG_DIANZI.getType() );
+				BigDecimal backMoney = bgService.queryCoin( gamePlatform, userId,gamePlatform.getLinecode() );
+
+				RspGameBalance rspGameBalance = new RspGameBalance();
+				rspGameBalance.setType( EnumGamePlatform.BG_DIANZI.getType() );
+				rspGameBalance.setName( EnumGamePlatform.BG_DIANZI.getName() );
+				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+				return rspGameBalance;
+			} catch ( Exception e ) {
+				log.error( e.getMessage(), e );
+			}
+			return null;
+		};
+	}
+
+	private Callable<RspGameBalance> bgFishlanceTask( final String userId ) {
+		return () -> {
+			try {
+				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
+						EnumGamePlatform.BG_FISH.getType() );
+				BigDecimal backMoney = bgService.queryCoin( gamePlatform, userId,gamePlatform.getLinecode() );
+
+				RspGameBalance rspGameBalance = new RspGameBalance();
+				rspGameBalance.setType( EnumGamePlatform.BG_FISH.getType() );
+				rspGameBalance.setName( EnumGamePlatform.BG_FISH.getName() );
 				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
 				return rspGameBalance;
 			} catch ( Exception e ) {
