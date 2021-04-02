@@ -45,7 +45,7 @@ public class MemberGiveCacheCleanTask {
 		} );
 
 		int totalcount = list.size();
-		int pagesize = 20;
+		int pagesize   = 20;
 		int pagecount  = 0;
 		int m          = totalcount % pagesize;
 		if ( m > 0 ) {
@@ -57,17 +57,15 @@ public class MemberGiveCacheCleanTask {
 		for ( int i = 1; i <= pagecount; i++ ) {
 			if ( m == 0 ) {
 				List<String> subList = list.subList( ( i - 1 ) * pagesize, pagesize * ( i ) );
-				redisUtil.hDelete( CACHE_GIVE_MONEY_MAP, subList.toArray());
+				redisUtil.hDelete( CACHE_GIVE_MONEY_MAP, subList.toArray() );
 			} else {
 				if ( i == pagecount ) {
 					List<String> subList = list.subList( ( i - 1 ) * pagesize, totalcount );
-					redisUtil.hDelete( CACHE_GIVE_MONEY_MAP, subList.toArray());
+					redisUtil.hDelete( CACHE_GIVE_MONEY_MAP, subList.toArray() );
 				} else {
 					List<String> subList = list.subList( ( i - 1 ) * pagesize, pagesize * ( i ) );
-					redisUtil.hDelete( CACHE_GIVE_MONEY_MAP, subList.toArray());
+					redisUtil.hDelete( CACHE_GIVE_MONEY_MAP, subList.toArray() );
 				}
-
-
 			}
 		}
 	}
