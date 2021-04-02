@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberBcode;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,14 @@ public interface MemberBcodeMapper {
 	 * @return MemberBcode集合
 	 */
 	public List<MemberBcode> selectMemberBcodeList(MemberBcode memberBcode);
+
+	/**
+	 * 查询MemberBcode列表
+	 *
+	 * @param memberBcode MemberBcode
+	 * @return MemberBcode集合
+	 */
+	public List<MemberBcode> selectWillBcodeList(MemberBcode memberBcode);
 
 	/**
 	 * 新增MemberBcode
@@ -61,4 +70,8 @@ public interface MemberBcodeMapper {
 	public int deleteMemberBcodeByIds(String[] ids );
 
 	MemberBcode getTotalData(MemberBcode memberBcode);
+
+    int countMemberBcodeStatus(@Param("memberId") String memberId);
+
+	void repairMemberInfo(@Param("memberId") String memberId);
 }

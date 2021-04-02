@@ -297,4 +297,17 @@
         left join (<include refid="getSuccessTotalSql"></include>)b on 1=1
     </select>
 
+    <select id="getWithdrawLogList" parameterType="java.lang.String" resultMap="MemberWithdrawLogResult">
+        <include refid="selectMemberWithdrawLogVo" />
+        where `status`=0
+        and create_time <![CDATA[ <= ]]> #{date} and create_time <![CDATA[ >= ]]> #{beginTime}
+    </select>
+
+    <select id="selectByIds" resultMap="MemberWithdrawLogResult">
+        <include refid="selectMemberWithdrawLogVo" />
+        where `status` != 2 and (op_name IS NULL or op_name = '') and id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

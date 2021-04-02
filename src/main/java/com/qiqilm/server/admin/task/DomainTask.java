@@ -1,8 +1,11 @@
 package com.qiqilm.server.admin.task;
 
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.ConfigDomain;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IConfigDomainService;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,30 +28,25 @@ public class DomainTask {
 	@Autowired
 	private RobotMessage         robotMessage;
 
+	@Autowired
+	private RedisUtil redisUtil;
+	@Autowired
+	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Value( "${spring.profiles.active}" )
 	private String profile;
 
-	public static void main( String[] args ) {
-		String       url          = "https://api.17gaibian.com/verif/ping";
-		RestTemplate restTemplate = new RestTemplate();
-		try {
-			ResponseEntity<String> resultEntity = restTemplate.getForEntity( url, String.class );
-			if ( resultEntity.getStatusCode() == HttpStatus.OK ) {
-				System.out.println( "aa" );
-			}
-		} catch ( Exception e ) {
-			System.out.println( e.getMessage() );
-		}
-
-	}
-
-	@Scheduled( cron = "0 */5 * * * ?" )
+	@Scheduled( fixedDelay = 300000, initialDelay=300000  )
 	public void checkDomain() {
+
+		if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),200)){
+			return;
+		}
 		if ( "7700".equals( profile ) || "dev".equals( profile ) ) {
 			return;
 		}
 		log.info( "轮询检测域名" + DateUtils.getTime() );
 		List<ConfigDomain> list = configDomainService.selectConfigDomainList( null );
+		String do_main_telegram = sysConfigCacheUtil.getConf( "do_main_telegram" );
 		for ( ConfigDomain li : list ) {
 			String url;
 			if ( li.getDgroup() == 4 ) {
@@ -58,10 +56,10 @@ public class DomainTask {
 			}
 			boolean a = doGet( url, 1 );
 			if ( !a ) {
-				String warnText = "域名 " + li.getDomain() + " 检测异常";
+				String warnText = "测试域名 " + li.getDomain() + " 检测异常";
 				log.error( warnText );
 				try {
-					robotMessage.sendByChatId( warnText, "-456729891" );
+					robotMessage.sendByChatId( warnText, do_main_telegram );
 				} catch ( Exception e ) {
 					log.error( e.getMessage(), e );
 				}

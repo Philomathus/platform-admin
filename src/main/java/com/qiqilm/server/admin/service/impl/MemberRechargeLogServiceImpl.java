@@ -300,4 +300,8 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		int i = memberRechargeLogMapper.updateMemberRechargeLog( update );
 		return i > 0 ? AjaxResult.success() : AjaxResult.error();
 	}
+	@Override
+	public int checkRechargeLogFail() {
+		return memberRechargeLogMapper.checkRechargeLogFail();
+	}
 }

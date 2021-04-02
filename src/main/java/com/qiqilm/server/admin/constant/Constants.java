@@ -41,6 +41,7 @@ public abstract class Constants {
 	public static final String  PLATFORM_TOKEN             = "CX:platform:token:";
 	public static final String  SESSION_CLICK_TIME         = "CX:platform:click:";
 	public static final String  SESSION_CLICK_LOCK         = "CX:platform:lock:";
+	public static final String  ADMIN_LOCK                 = "CX:admin:lock:";
 	public static final String  USER_TOKEN_KEY             = "CX:platform:user-token:";
 	public static final String  TOKEN_USER_KEY             = "CX:platform:token-user:";
 	public static final String  CX_HOME_NOTICE             = "CX:home-notices";
@@ -49,6 +50,8 @@ public abstract class Constants {
 	public static final String  HOST_SIGN                  = LIVE_PREX + "host-sign:";
 	public static final String  USER_SIGN                  = LIVE_PREX + "user-sign:";
 	public static final String  ADMIN_SIGN                 = LIVE_PREX + "admin-sign:";
+
+	public static final String REDIS_KEY_DETECT_PLAY = LIVE_PREX + "liveVideo:detectPlay";
 
 	public static final String   TIME                        = "time";
 	public static final Duration SESSION_VALID_TIME_DURATION = Duration.ofHours( 1 );

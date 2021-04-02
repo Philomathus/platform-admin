@@ -1,5 +1,8 @@
 package com.qiqilm.server.admin.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,5 +57,23 @@ public class LotteryHistoryController extends BaseController {
 		return AjaxResult.success( list );
 	}
 
+	/**
+	 * 重新派奖
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryHistory:list')" )
+	@PostMapping( "/{id}" )
+	public AjaxResult changeStatus(@PathVariable String id) {
+		String ktime = lotteryHistoryService.selectKtimeById(id);
+		LocalDateTime now       = LocalDateTime.now();
+		now = now.minusMinutes(2);
+		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String localTime = df.format(now);
+		Integer i=ktime.compareTo(localTime);
+		if(i>0) {
+			return AjaxResult.error(0, "超开奖时间2分钟后,方可人工派奖");
+		}
+		lotteryHistoryService.changeStatus(id);
+		return AjaxResult.success();
+	}
 
 }

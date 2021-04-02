@@ -143,16 +143,18 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 			// 封停账号
 			MemberInfo update = new MemberInfo();
 			update.setId( pUserId );
-			update.setStatus( 0 );
+			update.setSpeak( "1");
 			memberInfoMapper.updateMemberInfo( update );
+			memberForbidUtil.setPlatformUserSpeak( pUserId, true );
 		} else {
 			speakIpBlackListMapper.deleteSpeakIp( userIp );
 
 			// 解封账号
 			MemberInfo update = new MemberInfo();
 			update.setId( pUserId );
-			update.setStatus( 1 );
+			update.setSpeak( "0" );
 			memberInfoMapper.updateMemberInfo( update );
+			memberForbidUtil.setPlatformUserSpeak( pUserId, false );
 		}
 
 		return null;

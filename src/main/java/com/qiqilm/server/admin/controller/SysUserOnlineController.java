@@ -19,7 +19,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -69,7 +69,12 @@ public class SysUserOnlineController extends BaseController {
                 userOnlineList.add(user );
             }});
 		}
-		Collections.reverse( userOnlineList );
+        userOnlineList.sort(new Comparator<LoginUser>() {
+            @Override
+            public int compare(LoginUser o1, LoginUser o2) {
+                return (int)(o2.getLoginTime() - o1.getLoginTime());
+            }
+        });
 		return getDataTable2( userOnlineList );
 	}
 

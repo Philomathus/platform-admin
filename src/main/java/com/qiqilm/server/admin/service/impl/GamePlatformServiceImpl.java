@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.qiqilm.server.admin.cache.GameCacheManager;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.mapper.GamePlatformMapper;
@@ -25,6 +26,8 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
     private GamePlatformMapper gamePlatformMapper;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private GameCacheManager gameCacheManager;
     /**
      * 查询【请填写功能名称】
      *
@@ -32,14 +35,16 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
      * @return 【请填写功能名称】
      */
     @Override
-    public GamePlatform selectGamePlatformById(Long id) {
+    public GamePlatform selectGamePlatformById(Integer id) {
         return gamePlatformMapper.selectGamePlatformById(id);
     }
 
 
     @Override
     public int changeStatus(GamePlatform gamePlatform) {
-        return gamePlatformMapper.changeStattus(gamePlatform);
+        int i = gamePlatformMapper.changeStattus(gamePlatform);
+        gameCacheManager.initGamePlatforms();
+        return i;
     }
     /**
      * 查询【请填写功能名称】列表
@@ -66,7 +71,9 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String        username  = loginUser.getUsername();
         gamePlatform.setCreateBy(username);
-        return gamePlatformMapper.insertGamePlatform(gamePlatform);
+        int i = gamePlatformMapper.insertGamePlatform(gamePlatform);
+        gameCacheManager.initGamePlatforms();
+        return i;
     }
 
     /**
@@ -81,7 +88,9 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
         String        username  = loginUser.getUsername();
         gamePlatform.setUpdateBy(username);
         gamePlatform.setUpdateTime(new Date());
-        return gamePlatformMapper.updateGamePlatform(gamePlatform);
+        int i = gamePlatformMapper.updateGamePlatform(gamePlatform);
+        gameCacheManager.initGamePlatforms();
+        return i;
     }
 
     /**
@@ -92,7 +101,9 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
      */
     @Override
     public int deleteGamePlatformByIds(Long[] ids) {
-        return gamePlatformMapper.deleteGamePlatformByIds(ids);
+        int i = gamePlatformMapper.deleteGamePlatformByIds(ids);
+        gameCacheManager.initGamePlatforms();
+        return i ;
     }
 
     /**
@@ -103,6 +114,8 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
      */
     @Override
     public int deleteGamePlatformById(Long id) {
-        return gamePlatformMapper.deleteGamePlatformById(id);
+        int i = gamePlatformMapper.deleteGamePlatformById(id);
+        gameCacheManager.initGamePlatforms();
+        return i;
     }
 }

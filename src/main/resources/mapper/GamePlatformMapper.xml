@@ -46,7 +46,7 @@
         where id = #{id}
     </update>
 
-    <select id="selectGamePlatformById" parameterType="Long" resultMap="GamePlatformResult">
+    <select id="selectGamePlatformById" parameterType="Integer" resultMap="GamePlatformResult">
         <include refid="selectGamePlatformVo"/>
         where id = #{id}
     </select>
@@ -136,6 +136,12 @@
     <select id="findSimpleList" resultType="com.qiqilm.server.admin.domain.GamePlatform">
         select id, agent, name, api_url as apiUrl, record_url as recordUrl, des, md5, linecode, rate_clean as rateClean,
         game_typeID as gameTypeid, status, create_by as createBy,create_time as createTime,update_by as updateBy,update_time asupdateTime, rate_beat as rateBeat
+        from game_platform
+        where status =1
+    </select>
+
+    <select id="findSimpleLists" resultType="com.qiqilm.server.admin.domain.rsp.RspGamePlatform">
+        select *
         from game_platform
         where status =1
     </select>

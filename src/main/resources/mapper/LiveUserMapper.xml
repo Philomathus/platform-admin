@@ -7,7 +7,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="com.qiqilm.server.admin.domain.LiveUser" id="LiveUserResult">
         <result property="id"    column="id"    />
         <result property="nickName"    column="nick_name"    />
-        <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="isAuthentication"    column="is_authentication"    />
         <result property="loginIp"    column="login_ip"    />
@@ -29,6 +28,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="familyUserId"    column="family_user_id"    />
         <result property="familyNickName"    column="family_nick_name"    />
         <result property="coin"    column="coin"    />
+        <result property="xpoint"    column="xpoint"    />
+        <result property="ypoint"    column="ypoint"    />
         <result property="ticketCattyRatio"    column="ticket_catty_ratio"    />
         <result property="openPay"    column="open_pay"    />
         <result property="banRemark"    column="ban_remark"    />
@@ -37,11 +38,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveUserVo">
-        select u.id,u.nick_name,signature,FROM_UNIXTIME(u.create_time) create_time,FROM_UNIXTIME(u.update_time) update_time,
+        select u.id,u.nick_name,signature,FROM_UNIXTIME(u.update_time) update_time,
 		is_authentication,login_ip,focus_count,mobile,authentication_type,authentication_name,identify_hold_image,
 		identify_positive_image,identify_nagative_image, fans_count, ticket, refund_ticket,is_ban,v_explain,family_id,
 		coin,ticket_catty_ratio,open_pay,ban_remark,identify_number,login_time,logout_time,f.name family_name,
-        f.user_id family_user_id,f.nick_name family_nick_name
+        f.user_id family_user_id,f.nick_name family_nick_name,xpoint,ypoint
 		from ${dbLive}.live_user u left join ${dbLive}.live_family f on (f.id = u.family_id)
     </sql>
 
@@ -73,7 +74,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into ${dbLive}.live_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">nick_name,</if>
-            <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="isAuthentication != null">is_authentication,</if>
             <if test="loginIp != null">login_ip,</if>
@@ -99,7 +99,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">#{nickName},</if>
-			<if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
 			<if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
 			<if test="isAuthentication != null">#{isAuthentication},</if>
 			<if test="loginIp != null">#{loginIp},</if>
@@ -129,7 +128,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update ${dbLive}.live_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
-            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
             <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
             <if test="isAuthentication != null">is_authentication = #{isAuthentication},</if>
             <if test="loginIp != null">login_ip = #{loginIp},</if>
@@ -149,6 +147,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="identifyNumber != null">identify_number = #{identifyNumber},</if>
             <if test="familyId != null">family_id = #{familyId},</if>
             <if test="coin != null">coin = #{coin},</if>
+            <if test="xpoint != null">xpoint = #{xpoint},</if>
+            <if test="ypoint != null">ypoint = #{ypoint},</if>
             <if test="ticketCattyRatio != null">ticket_catty_ratio = #{ticketCattyRatio},</if>
             <if test="openPay != null">open_pay = #{openPay},</if>
             <if test="banRemark != null">ban_remark = #{banRemark},</if>

@@ -8,7 +8,7 @@
     </resultMap>
 
     <sql id="selectLiveMsgEngageVo">
-        select id, msg from 7700_live.live_msg_engage
+        select id, msg from ${dbLive}.live_msg_engage
     </sql>
 
     <select id="selectLiveMsgEngageList" parameterType="LiveMsgEngage" resultMap="LiveMsgEngageResult">
@@ -28,7 +28,7 @@
     </select>
 
     <insert id="insertLiveMsgEngage" parameterType="LiveMsgEngage" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.live_msg_engage
+        insert into ${dbLive}.live_msg_engage
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="msg != null">msg,</if>
         </trim>
@@ -38,7 +38,7 @@
     </insert>
 
     <update id="updateLiveMsgEngage" parameterType="LiveMsgEngage">
-        update 7700_live.live_msg_engage
+        update ${dbLive}.live_msg_engage
         <trim prefix="SET" suffixOverrides=",">
             <if test="msg != null">msg = #{msg},</if>
 
@@ -47,11 +47,11 @@
     </update>
 
     <delete id="deleteLiveMsgEngageById" parameterType="Long">
-        delete from 7700_live.live_msg_engage where id = #{id}
+        delete from ${dbLive}.live_msg_engage where id = #{id}
     </delete>
 
     <delete id="deleteLiveMsgEngageByIds" parameterType="String">
-        delete from 7700_live.live_msg_engage where id in
+        delete from ${dbLive}.live_msg_engage where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

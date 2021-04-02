@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,6 +17,7 @@ import java.util.Date;
  * @author 77tv
  * @date 2021-01-26
  */
+@Data
 public class LiveVideoProp extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -137,6 +140,16 @@ public class LiveVideoProp extends BaseEntity {
      * 发送开始时间
      */
     private String sendStartTime;
+
+    @JsonIgnore
+    private String[] selectDate;
+    @JsonIgnore
+    private String   startTime;
+    @JsonIgnore
+    private String   endTime;
+
+    private String countTotal;
+    private String testAccountCreateTime;
 
     /**
      * 发送结束时间

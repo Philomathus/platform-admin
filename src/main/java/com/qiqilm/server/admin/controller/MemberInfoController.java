@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
@@ -48,6 +49,8 @@ public class MemberInfoController extends BaseController {
     private MemberCacheManager memberCacheManager;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private MemberForbidUtil memberForbidUtil;
 
     /**
      * 查询用户信息列表
@@ -88,8 +91,13 @@ public class MemberInfoController extends BaseController {
     @Log(title = "用户信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MemberInfo memberInfo) {
-        String userName = memberInfo.getUserName();
+//        String userName = memberInfo.getUserName();
         String password = memberInfo.getPassword();
+        String phone = memberInfo.getPhone();
+        if (phone == null) {
+            return AjaxResult.error("手机号不能为空");
+        }
+/*
         if (userName == null) {
             return AjaxResult.error("账号信息为空");
         }
@@ -102,7 +110,7 @@ public class MemberInfoController extends BaseController {
         }
         if (!this.checkUserName(userName)) {
             return AjaxResult.error("账号不合合法");
-        }
+        }*/
 
         if (StringUtils.isEmpty(password)) {
             return AjaxResult.error("密码不能为空");
@@ -163,6 +171,8 @@ public class MemberInfoController extends BaseController {
         MemberInfo newMemberInfo = new MemberInfo();
         MemberInfo memberInfo = memberInfoService.selectMemberInfoById(req.getId());
         newMemberInfo.setStatus(req.getStatus());
+        memberForbidUtil.setPlatformUserStatus(memberInfo.getId(),req.getStatus());
+
         if (1 == req.getStatus()) {
             newMemberInfo.setLoginNum(0);
         }
@@ -181,6 +191,7 @@ public class MemberInfoController extends BaseController {
         MemberInfo newMemberInfo = new MemberInfo();
         MemberInfo memberInfo = memberInfoService.selectMemberInfoById(req.getId());
         newMemberInfo.setStatus(req.getStatus());
+        memberForbidUtil.setPlatformUserStatus(memberInfo.getId(),req.getStatus());
         //备注禁用原因
         if (req.getRemark() != null) {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
@@ -256,7 +267,8 @@ public class MemberInfoController extends BaseController {
         if (!redisUtil.lock(EnumLock.member, req.getId(), "1", 5)) {
             throw new BusinessException("请勿重复提交");
         }
-        rspBase = memberInfoService.addMemberMoneyOnly(ip, req.getId(), req.getScore(), req.getBeatNum(), req.getMk(),
+        String username = loginUser.getUser().getUserName();
+        rspBase = memberInfoService.addMemberMoneyOnly(ip, req.getId(), req.getScore(), req.getBeatNum(), req.getMk()+",操作人:"+username,
                 req.getOrdermk(), loginUser.getUsername());
         redisUtil.unLock(EnumLock.member, req.getId());
         return rspBase;
@@ -333,6 +345,43 @@ public class MemberInfoController extends BaseController {
         memberInfo.setId(memberInfo.getId());
         memberInfo.setWithdrawalPass("");
         memberInfoService.updateMemberInfo(memberInfo);
+        rspBase.setCode(Constants.URC_SUCCESS);
+        rspBase.setData("成功");
+        return rspBase;
+    }
+    @ApiOperation(value = "修復打碼", notes = "修復打碼")
+    @PostMapping("/memberBcodeRepair")
+    public Object memberBcodeRepair(HttpServletRequest request,
+                          MemberInfo memberInfo) throws Exception {
+        RspBase rspBase = new RspBase();
+        if (memberInfo.getGoogleAuthCode() == null) {
+            rspBase.setMsg("请输入google验证码");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+        if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+            rspBase.setMsg("未绑定google验证秘钥，无法审核");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        if (googleAuthSecret.length() == 32) {
+            rspBase.setMsg("google验证秘钥未加密，请重新登录");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+                "/googleAuthPrivateKey"));
+
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, memberInfo.getGoogleAuthCode())) {
+            rspBase.setMsg("google验证码不正确，请检查");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String memberId = memberInfo.getId();
+        memberInfoService.repairMemberBcode(memberId);
         rspBase.setCode(Constants.URC_SUCCESS);
         rspBase.setData("成功");
         return rspBase;

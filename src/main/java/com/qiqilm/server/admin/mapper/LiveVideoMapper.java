@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.qiqilm.server.admin.domain.LiveVideo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 直播Mapper接口
@@ -47,4 +48,8 @@ public interface LiveVideoMapper {
 	List<LiveVideo> selectLiveInVideoSort();
 
 	long countLiveInSort( Long sort );
+
+	Integer countLineCount(@Param("paiId") Long paiId );
+
+	List<LiveVideo> selectLiveInPlayDetect();
 }

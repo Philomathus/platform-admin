@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -47,4 +48,8 @@ public interface MemberWithdrawLogMapper {
 	MemberWithdrawLog selectByOrderNo( String orderNo );
 
     Map getTotal(MemberWithdrawLog memberWithdrawLog);
+
+    List<MemberWithdrawLog> getWithdrawLogList(@Param("date") String date, @Param("beginTime") String beginTime);
+
+	List<MemberWithdrawLog> selectByIds( @Param("array") List<String> ids );
 }

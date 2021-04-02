@@ -320,4 +320,9 @@ public class SysUserServiceImpl implements ISysUserService {
 		}
 		return successMsg.toString();
 	}
+
+    @Override
+    public void updateUser2(SysUser sysUser) {
+        userMapper.updateUser(sysUser);
+    }
 }

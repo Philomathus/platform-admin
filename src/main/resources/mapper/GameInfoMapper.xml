@@ -180,7 +180,7 @@
         on t1.game_id = t2.id) t3 order by t3.indexs asc
     </select>
     <select id="findTypeList" resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
-        select id, name,icon,edition_icon as editionIcon,indexs,is_full as isFull,is_wh as isWh,status,high_wide as highWide,platform_id as platformId
+        select id, name,icon,edition_icon as editionIcon,indexs,is_full as isFull,is_wh as isWh,status,high_wide as highWide,platform_id as platformId,kind_id as kindId
         from game_info
         where status = 1
     </select>

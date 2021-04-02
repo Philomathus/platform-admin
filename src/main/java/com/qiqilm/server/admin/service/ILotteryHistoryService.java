@@ -26,4 +26,14 @@ public interface ILotteryHistoryService {
 	 * @return 开奖历史集合
 	 */
 	public List<LotteryHistory> selectLotteryHistoryList();
+
+	/**
+	 * 重新派奖
+	 *
+	 * @param lotteryHistory 开奖历史
+	 * @return 开奖历史集合
+	 */
+	public String selectKtimeById(String id);
+
+	int changeStatus(String id);
 }

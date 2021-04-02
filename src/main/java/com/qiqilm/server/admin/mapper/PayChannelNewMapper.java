@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.PayChannelNew;
 import org.apache.ibatis.annotations.Param;
 
@@ -61,4 +62,6 @@ public interface PayChannelNewMapper {
 	public int deletePayChannelNewByIds(Long[] ids );
 
 	List<PayChannelNew> findList(@Param("req") PayChannelNew req);
+
+	List<PayChannelNew> selectPayChannelName();
 }

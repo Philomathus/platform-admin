@@ -69,7 +69,7 @@ public class LiveVideoController extends BaseController {
 	public AjaxResult close( @PathVariable( "ids" ) String ids ) {
 		String[] allId = ids.split( "," );
 		for ( String id : allId ) {
-			liveVideoService.close( Long.valueOf( id ), "origin" );
+			liveVideoService.close( Long.valueOf( id ), "admin" );
 		}
 		return AjaxResult.success();
 	}

@@ -26,12 +26,15 @@
 		<result property="lineName" column="lineName"/>
 		<result property="lineStatus" column="lineStatus"/>
 		<result property="openPay" column="open_pay"/>
+		<result property="groupId" column="group_id"/>
+		<result property="playUrl" column="play_url"/>
 	</resultMap>
 
 	<sql id="selectLiveVideoVo">
 		SELECT
 		v.id,
 		v.user_id,
+		v.group_id,
 		title,
 		watch_number,
 		cate_id,
@@ -51,6 +54,7 @@
 		s.name lineName,
 		s.status lineStatus,
 		live_image,
+		play_url,
 		u.open_pay
 		FROM
 		${dbLive}.live_video v
@@ -245,4 +249,12 @@
 		select count(0) from ${dbLive}.live_video where live_in = 1 and sort = #{sort}
 	</select>
 	<select id="selectOnlineLiveGroups" resultType="java.lang.String">select group_id FROM ${dbLive}.live_video where live_in = 1</select>
+
+	<select id="selectLiveInPlayDetect" resultMap="LiveVideoResult">
+		select id, title, live_in, group_id, play_url from ${dbLive}.live_video where live_in = 1
+	</select>
+
+	<select id="countLineCount" resultType="java.lang.Integer">
+		select count(1) from ${dbLive}.live_video where live_in = 1 and pai_id = #{paiId}
+	</select>
 </mapper>

@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveVideoProp;
+import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoPropService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
@@ -29,7 +30,7 @@ public class LiveVideoPropController extends BaseController {
 	/**
 	 * 查询送礼物列表
 	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
 	@GetMapping( "/list" )
     	public TableDataInfo list(LiveVideoProp liveVideoProp) {
 		startPage();
@@ -50,41 +51,39 @@ public class LiveVideoPropController extends BaseController {
 	}
 
 	/**
-	 * 获取送礼物详细信息
+	 * 统计礼物金额
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:query')" )
-	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( liveVideoPropService.selectLiveVideoPropById(id) );
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+	@GetMapping( "/getCount" )
+	public AjaxResult getCount( LiveVideoProp liveVideoProp ) {
+		LiveVideoProp liveVideoProp1;
+		liveVideoProp1=liveVideoPropService.getCount( liveVideoProp );
+		return AjaxResult.success(liveVideoProp1);
 	}
 
 	/**
-	 * 新增送礼物
+	 * 查询送礼物列表
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:add')" )
-	@Log( title = "送礼物", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody LiveVideoProp liveVideoProp) {
-		return toAjax( liveVideoPropService.insertLiveVideoProp(liveVideoProp) );
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+	@GetMapping( "/testAccountPorpList" )
+	public TableDataInfo testAccountPorpList(LiveVideoProp liveVideoProp) {
+		startPage();
+		List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList(liveVideoProp);
+		return getDataTable( list );
+	}
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
+	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
+	@GetMapping( "/exportTestAccountProplog" )
+	public AjaxResult exportTestAccountProplog(LiveVideoProp liveVideoProp) {
+		List<RspTestAccountProp>      list = liveVideoPropService.testAccountPorpList(liveVideoProp);
+		ExcelUtil<RspTestAccountProp> util = new ExcelUtil<>(RspTestAccountProp. class);
+		return util.exportExcel( list, "RspTestAccountProp" );
 	}
 
-	/**
-	 * 修改送礼物
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:edit')" )
-	@Log( title = "送礼物", businessType = BusinessType.UPDATE )
-	@PutMapping
-	public AjaxResult edit( @RequestBody LiveVideoProp liveVideoProp) {
-		return toAjax( liveVideoPropService.updateLiveVideoProp(liveVideoProp) );
-	}
-
-	/**
-	 * 删除送礼物
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:remove')" )
-	@Log( title = "送礼物", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( liveVideoPropService.deleteLiveVideoPropByIds( ids ) );
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
+	@GetMapping( "/testAccountCount" )
+	public AjaxResult testAccountCount( LiveVideoProp liveVideoProp ) {
+		RspTestAccountProp	liveVideoProp1=liveVideoPropService.testAccountCount( liveVideoProp );
+		return AjaxResult.success(liveVideoProp1);
 	}
 }

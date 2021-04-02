@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveFamily;
@@ -28,6 +29,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	private LiveUserMapper   liveUserMapper;
 	@Autowired
 	private LiveFamilyMapper liveFamilyMapper;
+	@Autowired
+	private ConfigDomainCacheUtil configDomainCacheUtil;
 
 	/**
 	 * 查询主播用户信息
@@ -38,8 +41,23 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	@Override
 	public LiveUser selectLiveUserById( Long id ) {
 		LiveUser liveUser = liveUserMapper.selectLiveUserById( id );
-		if ( liveUser != null && StringUtils.isNotBlank( liveUser.getMobile() ) ) {
-			liveUser.setMobile( new StringBuilder( liveUser.getMobile() ).replace( 3, 7, "****" ).toString() );
+		if ( liveUser != null ) {
+			if ( StringUtils.isNotBlank( liveUser.getMobile() ) ) {
+				liveUser.setMobile( new StringBuilder( liveUser.getMobile() ).replace( 3, 7, "****" ).toString() );
+			}
+			String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+			if ( StringUtils.isNotBlank( liveUser.getIdentifyHoldImage() )
+					&& !liveUser.getIdentifyHoldImage().startsWith( "http" ) ) {
+				liveUser.setIdentifyHoldImage( domainValue + liveUser.getIdentifyHoldImage() );
+			}
+			if ( StringUtils.isNotBlank( liveUser.getIdentifyNagativeImage() )
+					&& !liveUser.getIdentifyNagativeImage().startsWith( "http" ) ) {
+				liveUser.setIdentifyNagativeImage( domainValue + liveUser.getIdentifyNagativeImage() );
+			}
+			if ( StringUtils.isNotBlank( liveUser.getIdentifyPositiveImage() )
+					&& !liveUser.getIdentifyPositiveImage().startsWith( "http" ) ) {
+				liveUser.setIdentifyPositiveImage( domainValue + liveUser.getIdentifyPositiveImage() );
+			}
 		}
 		return liveUser;
 	}
@@ -59,18 +77,6 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			}
 		}
 		return liveUsers;
-	}
-
-	/**
-	 * 新增主播用户信息
-	 *
-	 * @param liveUser 主播用户信息
-	 * @return 结果
-	 */
-	@Override
-	public int insertLiveUser( LiveUser liveUser ) {
-		liveUser.setCreateTime( DateUtils.getNowDate() );
-		return liveUserMapper.insertLiveUser( liveUser );
 	}
 
 	/**

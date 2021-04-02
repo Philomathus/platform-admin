@@ -19,7 +19,7 @@ public interface IMemberWithdrawLogService {
 	 * @param id 会员提现信息ID
 	 * @return 会员提现信息
 	 */
-	public MemberWithdrawLog selectMemberWithdrawLogById(String id);
+	public MemberWithdrawLog selectMemberWithdrawLogById( String id );
 
 	/**
 	 * 查询会员提现信息列表
@@ -27,9 +27,11 @@ public interface IMemberWithdrawLogService {
 	 * @param memberWithdrawLog 会员提现信息
 	 * @return 会员提现信息集合
 	 */
-	public List<MemberWithdrawLog> selectMemberWithdrawLogList(MemberWithdrawLog memberWithdrawLog);
+	public List<MemberWithdrawLog> selectMemberWithdrawLogList( MemberWithdrawLog memberWithdrawLog );
 
 	AjaxResult refused( ReqMemberWithdrawLog req );
+
+	AjaxResult refuseds( ReqMemberWithdrawLog req );
 
 	AjaxResult lock( ReqMemberWithdrawLog req );
 
@@ -37,7 +39,13 @@ public interface IMemberWithdrawLogService {
 
 	AjaxResult artificial( ReqMemberWithdrawLog req );
 
-    AjaxResult withdrawReport(String id);
+	AjaxResult abnormalWithdrawal( ReqMemberWithdrawLog req );
 
-    AjaxResult getTotal(MemberWithdrawLog memberWithdrawLog );
+	AjaxResult manualWithdrawal( ReqMemberWithdrawLog req );
+
+	AjaxResult withdrawReport( String id );
+
+	AjaxResult getTotal( MemberWithdrawLog memberWithdrawLog );
+
+	List<MemberWithdrawLog> getWithdrawLogList();
 }

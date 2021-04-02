@@ -39,4 +39,14 @@ public class LotteryHistoryServiceImpl implements ILotteryHistoryService {
     public List<LotteryHistory> selectLotteryHistoryList() {
         return lotteryHistoryMapper.selectLotteryHistoryNameList();
     }
+
+    @Override
+    public String selectKtimeById(String id) {
+        return lotteryHistoryMapper.selectKtimeById(id);
+    }
+
+    @Override
+    public int changeStatus(String id) {
+        return lotteryHistoryMapper.changeStatus(id);
+    }
 }

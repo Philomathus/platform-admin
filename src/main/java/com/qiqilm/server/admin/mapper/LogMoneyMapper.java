@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.LogMoney;
+import com.qiqilm.server.admin.domain.LogMoneyLive;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -27,11 +28,14 @@ public interface LogMoneyMapper {
 
 	/**
 	 * 新增会员资金信息
-	 *
-	 * @param logMoney 会员资金信息
 	 * @return 结果
 	 */
 	public int insertLogMoney( @Param("req") LogMoney reqLogMoney, @Param( "dbNodes" ) String dbNodes);
+
+
+	public int insertLogMoneyPop(@Param("req") LogMoneyLive reqLogMoney, @Param( "dbNodes" ) String dbNodes);
+
+	Integer findExist(@Param( "dbNodes" ) String dbNodes,@Param("keyId") String id);
 
 	List<LogMoney> findMark( @Param( "userId" ) String userId, @Param( "mark" ) String mark,
 							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay,
