@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.domain.SysDictData;
 import com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper;
 import com.qiqilm.server.admin.mapper.SysDictDataMapper;
 import com.qiqilm.server.admin.service.IConfigEnvironmentService;
+import com.qiqilm.server.admin.utils.DictUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,8 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
 	private SysDictDataMapper       dictDataMapper;
 	@Autowired
 	private SysConfigCacheUtil      sysConfigCacheUtil;
+	@Autowired
+    private DictUtils dictUtils;
 
 	/**
 	 * 查询环境参数配置
@@ -69,9 +72,15 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
 			SysDictData dictData = new SysDictData();
 			dictData.setDictSort( configEnvironment.getEnvSort() );
 			dictData.setDictLabel( configEnvironment.getEnvTitle() );
-			dictData.setDictValue( configEnvironmentMapper.getValue() );
+            String value = configEnvironmentMapper.getValue();
+            dictData.setDictValue((int)(Float.parseFloat(value) +1)+"");
 			dictData.setDictType( "config_environment_group" );
 			dictData.setStatus( String.valueOf( 0 ) );
+			//加入Redis缓存
+            List<SysDictData> dictDataList = dictUtils.getDictCache("config_environment_group");
+            dictDataList.add(dictData);
+            dictUtils.setDictCache( "config_environment_group",dictDataList);
+            //加入数据库
 			return toAjax( dictDataMapper.insertDictData( dictData ) );
 		} else {
 			//判断名称是否存在

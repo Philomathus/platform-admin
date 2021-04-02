@@ -607,4 +607,7 @@
 	<select id="countByUserName" resultType="int">
 		select count(0) from member_info where user_name = #{userName}
 	</select>
+    <select id="countByPhone" resultType="int">
+        select count(0) from member_info where phone = #{pone}
+    </select>
 </mapper>

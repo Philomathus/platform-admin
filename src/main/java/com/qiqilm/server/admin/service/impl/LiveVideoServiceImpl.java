@@ -115,6 +115,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	@Override
 	public boolean close( Long id, String cause ) {
 		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
+		String why = "主播下播";
 		if ( "admin".equals( cause ) ) {
 			//通知主播退出
 			HashMap<String, Object> ext = new HashMap<>();
@@ -127,6 +128,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			} catch ( Exception e ) {
 				//log.error( this.toString() + "(m)close", e );
 			}
+			why = "管理员关播";
 		} else if ( "timeOut".equals( cause ) ) {
 			//log.error( "直播心跳超时====>room_id" + id );
 			//通知主播退出
@@ -141,6 +143,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				//log.error( this.toString() + "(m)close", e );
 			}
 			log.error( "异常下播主播：id:{}", id );
+			why = "异常下播";
 		} else if ( "origin".equals( cause ) ) {
 			//log.info( "直播源切换,关闭所有直播。当前正在关闭====>room_id" + id );
 			//通知主播退出
@@ -154,11 +157,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			} catch ( Exception e ) {
 				//log.error( this.toString() + "(m)close", e );
 			}
+			why = "直播源切换";
 		}
-		return close( id, false );
+		return close( id, false ,why);
 	}
 
-	public boolean close( Long id, boolean isAborted ) {
+	public boolean close( Long id, boolean isAborted ,String why) {
 		//关闭房间
 		LiveVideo updateVideo = new LiveVideo();
 		Date      now         = new Date();
@@ -213,7 +217,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			//	videoStreamUtil.setServerLive( serverLive );
 		}
 
-		this.closeVideoIMNotify( video, isAborted );
+		this.closeVideoIMNotify( video, isAborted ,why);
 
 		RedisCacheUtil.me.clear( id, this.getClass() );
 		return false;
@@ -277,7 +281,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		}
 	}
 
-	private void closeVideoIMNotify( LiveVideo video, boolean isAborted ) {
+	private void closeVideoIMNotify( LiveVideo video, boolean isAborted  ,String why) {
 		if ( Strings.isNotBlank( video.getGroupId() ) && !isAborted ) {
 			threadPoolTaskExecutor.execute( () -> {
 				HashMap<String, Object> ext = new HashMap<>();
@@ -285,7 +289,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				ext.put( "room_id", video.getId() ); //直播ID 也是room_id;只有与当前房间相同时，收到消息才响应
 				ext.put( "show_num", video.getMaxWatchNumber() );  //观看人数
 				ext.put( "fonts_color", "" ); //字体颜色
-				ext.put( "desc", "管理员关播" );  //弹幕消息;
+				ext.put( "desc", why );  //弹幕消息;
 				ext.put( "desc2", "直播结束" );  //弹幕消息;
 				MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
 
