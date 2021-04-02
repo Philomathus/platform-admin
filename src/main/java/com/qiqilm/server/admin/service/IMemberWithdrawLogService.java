@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 
 import java.util.List;
@@ -29,11 +30,15 @@ public interface IMemberWithdrawLogService {
 	 */
 	public List<MemberWithdrawLog> selectMemberWithdrawLogList( MemberWithdrawLog memberWithdrawLog );
 
+	public List<MemberWithdrawLogShunWei> selectMemberWithdrawLogShunWeiList(ReqMemberWithdrawLog req );
+
 	AjaxResult refused( ReqMemberWithdrawLog req );
 
 	AjaxResult refuseds( ReqMemberWithdrawLog req );
 
 	AjaxResult lock( ReqMemberWithdrawLog req );
+
+	AjaxResult locks( ReqMemberWithdrawLog req );
 
 	AjaxResult unlock( ReqMemberWithdrawLog req );
 
