@@ -349,6 +349,43 @@ public class MemberInfoController extends BaseController {
         rspBase.setData("成功");
         return rspBase;
     }
+    @ApiOperation(value = "修復打碼", notes = "修復打碼")
+    @PostMapping("/memberBcodeRepair")
+    public Object memberBcodeRepair(HttpServletRequest request,
+                          MemberInfo memberInfo) throws Exception {
+        RspBase rspBase = new RspBase();
+        if (memberInfo.getGoogleAuthCode() == null) {
+            rspBase.setMsg("请输入google验证码");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+        if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+            rspBase.setMsg("未绑定google验证秘钥，无法审核");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        if (googleAuthSecret.length() == 32) {
+            rspBase.setMsg("google验证秘钥未加密，请重新登录");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+                "/googleAuthPrivateKey"));
+
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, memberInfo.getGoogleAuthCode())) {
+            rspBase.setMsg("google验证码不正确，请检查");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String memberId = memberInfo.getId();
+        memberInfoService.repairMemberBcode(memberId);
+        rspBase.setCode(Constants.URC_SUCCESS);
+        rspBase.setData("成功");
+        return rspBase;
+    }
     @Log(title = "解绑银行卡", businessType = BusinessType.UPDATE)
     @PutMapping("/unbindCard")
     public Object unbindCard(@RequestBody MemberCard memberCard) {

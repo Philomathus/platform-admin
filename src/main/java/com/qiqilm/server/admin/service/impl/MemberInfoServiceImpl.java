@@ -55,7 +55,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     private MemberCacheManager memberCacheManager;
     @Autowired
     private MemberForbidUtil memberForbidUtil;
-
+    @Autowired
+    private MemberBcodeMapper memberBcodeMapper;
     /**
      * 查询会员信息
      *
@@ -316,5 +317,14 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         memberCard.setBankAccount(member.getBankAccount());
         memberCardMapper.updateMemberCard(memberCard);
         return AjaxResult.success("修改银行卡信息成功");
+    }
+
+    @Override
+    public void repairMemberBcode(String memberId) {
+        int count=memberBcodeMapper.countMemberBcodeStatus(memberId);
+        if (count>0){
+            return;
+        }
+        memberBcodeMapper.repairMemberInfo(memberId);
     }
 }

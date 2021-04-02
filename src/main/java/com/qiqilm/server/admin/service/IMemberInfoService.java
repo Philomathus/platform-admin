@@ -65,4 +65,6 @@ public interface IMemberInfoService {
 	AjaxResult unbindCard(MemberCard memberCard);
 
     AjaxResult changeBank(MemberCard memberCard);
+
+    void repairMemberBcode(String memberId);
 }
