@@ -111,7 +111,7 @@
 		${dbLive}.live_video_prop
 		<where>
 			and to_user_id NOT IN ( '0', '-1' )
-			and p_user_id IN ( SELECT id FROM  ${dbMain}.member_info WHERE STATUS = '2' )
+			and p_user_id IN ( SELECT id FROM  ${dbMain}.member_info WHERE STATUS  in ('2','0'))  )
 			<if test="toUserId != null">
 				and to_user_id =#{toUserId}
 			</if>

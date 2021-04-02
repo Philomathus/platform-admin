@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.cache.PayCacheListUtil;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.mapper.PayTypeMapper;
@@ -33,6 +34,8 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	private ConfigDomainCacheUtil configDomainCacheUtil;
 	@Autowired
 	private RedisUtil redisUtil;
+	@Autowired
+	private PayCacheListUtil payCacheListUtil;
 	/**
 	 * 查询支付类型
 	 *
@@ -79,7 +82,9 @@ public class PayTypeServiceImpl implements IPayTypeService {
 		payType.setCreateBy( username );
 		payType.setStatus( "0" );
 		payType.setCode( "PT-" + redisUtil.strIncrement( "pay_type" ).toString() );
-		return payTypeMapper.insertPayType( payType );
+		payTypeMapper.insertPayType( payType );
+		setPayTypeCache(payType);
+		return 1;
 	}
 
 	/**
@@ -94,7 +99,15 @@ public class PayTypeServiceImpl implements IPayTypeService {
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    username  = loginUser.getUsername();
 		payType.setUpdator( username );
-		return payTypeMapper.updatePayType( payType );
+		payTypeMapper.updatePayType( payType );
+		setPayTypeCache(payType);
+		return 1;
+	}
+
+	private void setPayTypeCache(PayType payType) {
+		List<PayType> payTypes = payTypeMapper.selectPayTypeList( null );
+		payCacheListUtil.setPayTypeList(payTypes);
+		payCacheListUtil.setPayType(payType);
 	}
 
 	/**
@@ -104,8 +117,12 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	 * @return 结果
 	 */
 	@Override
-	public int deletePayTypeByIds( String[] ids ) {
-		return payTypeMapper.deletePayTypeByIds( ids );
+	public int deletePayTypeByIds( String id ) {
+		payTypeMapper.deletePayTypeById( id );
+		List<PayType> payTypes = payTypeMapper.selectPayTypeList( null );
+		payCacheListUtil.setPayTypeList(payTypes);
+		payCacheListUtil.delPayType(id);
+		return 1;
 	}
 
 	/**
@@ -118,4 +135,5 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	public int deletePayTypeById( String id ) {
 		return payTypeMapper.deletePayTypeById( id );
 	}
+
 }

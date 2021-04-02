@@ -49,7 +49,7 @@ public interface IPayTypeService {
 	 * @param ids 需要删除的支付类型ID
 	 * @return 结果
 	 */
-	public int deletePayTypeByIds(String[] ids );
+	public int deletePayTypeByIds(String id );
 
 	/**
 	 * 删除支付类型信息
