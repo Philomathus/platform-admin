@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.task;
 
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.ConfigDomain;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IConfigDomainService;
@@ -29,7 +30,8 @@ public class DomainTask {
 
 	@Autowired
 	private RedisUtil redisUtil;
-
+	@Autowired
+	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Value( "${spring.profiles.active}" )
 	private String profile;
 
@@ -44,6 +46,7 @@ public class DomainTask {
 		}
 		log.info( "轮询检测域名" + DateUtils.getTime() );
 		List<ConfigDomain> list = configDomainService.selectConfigDomainList( null );
+		String do_main_telegram = sysConfigCacheUtil.getConf( "do_main_telegram" );
 		for ( ConfigDomain li : list ) {
 			String url;
 			if ( li.getDgroup() == 4 ) {
@@ -53,10 +56,10 @@ public class DomainTask {
 			}
 			boolean a = doGet( url, 1 );
 			if ( !a ) {
-				String warnText = "域名 " + li.getDomain() + " 检测异常";
+				String warnText = "测试域名 " + li.getDomain() + " 检测异常";
 				log.error( warnText );
 				try {
-					robotMessage.sendByChatId( warnText, "-456729891" );
+					robotMessage.sendByChatId( warnText, do_main_telegram );
 				} catch ( Exception e ) {
 					log.error( e.getMessage(), e );
 				}

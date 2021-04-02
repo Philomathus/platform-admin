@@ -36,6 +36,7 @@ public class SmsFailMessageTask {
 		}
 
 		String flag = sysConfigCacheUtil.getConf( "messageBot" );
+		String online_user_telegram = sysConfigCacheUtil.getConf( "online_user_telegram" );
 		if ( "0".equals( flag ) ) {
 			return;
 		}
@@ -56,7 +57,7 @@ public class SmsFailMessageTask {
 					+ "\n运营商名称:" + smsFailLog.getSmsSubname()
 					+ "\n异常原因:" + smsFailLog.getMessage();
 
-			robotMessage.sendByChatId( text, "-485027924" );
+			robotMessage.sendByChatId( text, online_user_telegram);
 		}
 	}
 }
