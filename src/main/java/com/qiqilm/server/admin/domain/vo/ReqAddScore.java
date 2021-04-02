@@ -12,4 +12,5 @@ public class ReqAddScore {
     private BigDecimal beatNum;
     private String ordermk;
     private Integer googleAuthCode;
+    private String password;
 }
