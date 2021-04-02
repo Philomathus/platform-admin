@@ -125,4 +125,9 @@
 		</trim>
 		where id = #{id}
 	</update>
+
+	<select id="lists" resultType="Integer">
+		select platform_id from member_game_money
+		where member_id =  #{member_id}
+	</select>
 </mapper>
