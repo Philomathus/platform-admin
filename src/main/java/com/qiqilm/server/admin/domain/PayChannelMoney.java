@@ -28,13 +28,25 @@ public class PayChannelMoney {
 	/** 通道费率 */
 	private BigDecimal channelPayRate;
 
+	/** 支付类型CODE */
+	private Integer typeCode;
+
+	/** 最低层级 */
+	private Long openLevelMin;
+
+	/** 最高层级 */
+	private Long openLevelMax;
+
 	@Override
 	public String toString() {
-		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
-				.append( "id", getId() )
-				.append( "money", getMoney() )
-				.append( "channelId", getChannelId() )
-				.append( "channelPayRate", getChannelPayRate() )
+		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+				.append("id", getId())
+				.append("money", getMoney())
+				.append("channelId", getChannelId())
+				.append("channelPayRate", getChannelPayRate())
+				.append("typeCode", getTypeCode())
+				.append("openLevelMin", getOpenLevelMin())
+				.append("openLevelMax", getOpenLevelMax())
 				.toString();
 	}
 }

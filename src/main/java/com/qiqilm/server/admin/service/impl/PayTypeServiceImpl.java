@@ -3,10 +3,10 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayType;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.PayTypeMapper;
 import com.qiqilm.server.admin.service.IPayTypeService;
 import com.qiqilm.server.admin.utils.DateUtils;
-import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import com.qiqilm.server.admin.utils.UuidUtil;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,8 +30,7 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	private TokenService          tokenService;
 	@Autowired
 	private ConfigDomainCacheUtil configDomainCacheUtil;
-	@Autowired
-	private RedisUtil redisUtil;
+
 	/**
 	 * 查询支付类型
 	 *
@@ -72,13 +70,21 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	 */
 	@Override
 	public int insertPayType( PayType payType ) {
+		if ( payType.getCode() == null ) {
+			throw new BusinessException( "支付类型编码不能为空" );
+		}
+		if ( payType.getCode() > 0 ) {
+			throw new BusinessException( "支付类型编码必须为负数" );
+		}
+		if ( payTypeMapper.countByCode( payType.getCode() ) > 0 ) {
+			throw new BusinessException( "支付类型编码已存在，请更换" );
+		}
 		payType.setId( UuidUtil.getRandomUuid() );
-		payType.setCreateTime(DateUtils.getNowDate() );
+		payType.setCreateTime( DateUtils.getNowDate() );
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    username  = loginUser.getUsername();
 		payType.setCreateBy( username );
 		payType.setStatus( "0" );
-		payType.setCode( "PT-" + redisUtil.strIncrement( "pay_type" ).toString() );
 		return payTypeMapper.insertPayType( payType );
 	}
 

@@ -6,10 +6,13 @@
 		<result property="money" column="money"/>
 		<result property="channelId" column="channel_id"/>
 		<result property="channelPayRate" column="channel_pay_rate"/>
+		<result property="typeCode" column="type_code"/>
+		<result property="openLevelMin" column="open_level_min"/>
+		<result property="openLevelMax" column="open_level_max"/>
 	</resultMap>
 
 	<sql id="selectPayChannelMoneyVo">
-		select id, money, channel_id, channel_pay_rate from ${dbMain}.pay_channel_money
+		select id, money, channel_id, channel_pay_rate, type_code, open_level_min, open_level_max from ${dbMain}.pay_channel_money
 	</sql>
 
 	<select id="selectPayChannelMoneyList" parameterType="PayChannelMoney" resultMap="PayChannelMoneyResult">
@@ -23,6 +26,15 @@
 			</if>
 			<if test="channelPayRate != null">
 				and channel_pay_rate = #{channelPayRate}
+			</if>
+			<if test="typeCode != null  and typeCode != ''">
+				and type_code = #{typeCode}
+			</if>
+			<if test="openLevelMin != null">
+				and open_level_min = #{openLevelMin}
+			</if>
+			<if test="openLevelMax != null">
+				and open_level_max = #{openLevelMax}
 			</if>
 		</where>
 	</select>
@@ -39,6 +51,15 @@
 			<if test="channelPayRate != null">
 				channel_pay_rate,
 			</if>
+			<if test="typeCode != null and typeCode != ''">
+				type_code,
+			</if>
+			<if test="openLevelMin != null">
+				open_level_min,
+			</if>
+			<if test="openLevelMax != null">
+				open_level_max,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="money != null">
@@ -50,11 +71,21 @@
 			<if test="channelPayRate != null">
 				#{channelPayRate},
 			</if>
+			<if test="typeCode != null and typeCode != ''">
+				#{typeCode},
+			</if>
+			<if test="openLevelMin != null">
+				#{openLevelMin},
+			</if>
+			<if test="openLevelMax != null">
+				#{openLevelMax},
+			</if>
 		</trim>
 	</insert>
 
 	<delete id="deleteByChannelIds">
-		delete from ${dbMain}.pay_channel_money where channel_id in
+		delete
+		from ${dbMain}.pay_channel_money where channel_id in
 		<foreach item="id" collection="channelIds" open="(" separator="," close=")">
 			#{id}
 		</foreach>
