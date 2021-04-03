@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.domain.PayChannelNew;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.PayChannelMoneyMapper;
 import com.qiqilm.server.admin.mapper.PayChannelNewMapper;
+import com.qiqilm.server.admin.mapper.PayTypeMapper;
 import com.qiqilm.server.admin.service.IPayChannelNewService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import com.qiqilm.server.admin.utils.ServletUtil;
@@ -31,6 +32,8 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 	private PayChannelNewMapper   payChannelNewMapper;
 	@Autowired
 	private PayChannelMoneyMapper payChannelMoneyMapper;
+	@Autowired
+	private PayTypeMapper         payTypeMapper;
 	@Autowired
 	private TokenService          tokenService;
 
@@ -95,13 +98,16 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 				if ( StringUtils.isBlank( channelNew.getQuickAmount() ) || channelNew.getPayRate() == null ) {
 					throw new BusinessException( "快捷金额或通道费率不能为空，请补全" );
 				}
-				String[] moneys = channelNew.getQuickAmount().split( "," );
+				Integer  typeCode = payTypeMapper.selectCodeById( channelNew.getPayTypeId() );
+				String[] moneys   = channelNew.getQuickAmount().split( "," );
 				for ( String money : moneys ) {
 					PayChannelMoney payChannelMoney = new PayChannelMoney();
 					payChannelMoney.setMoney( Long.parseLong( money ) );
 					payChannelMoney.setChannelId( channelNew.getId() );
 					payChannelMoney.setChannelPayRate( channelNew.getPayRate() );
-					payChannelMoney.setTypeId( channelNew.getPayTypeId() );
+					payChannelMoney.setTypeCode( typeCode );
+					payChannelMoney.setOpenLevelMin( channelNew.getOpenLevel() == null ? 1 : channelNew.getOpenLevel() );
+					payChannelMoney.setOpenLevelMax( channelNew.getOpenLevelMax() == null ? 50 : channelNew.getOpenLevelMax() );
 					payChannelMoneyMapper.insertPayChannelMoney( payChannelMoney );
 				}
 			} else {
