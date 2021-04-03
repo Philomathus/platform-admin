@@ -28,6 +28,9 @@ public class PayChannelMoney {
 	/** 通道费率 */
 	private BigDecimal channelPayRate;
 
+	/** 支付类型ID */
+	private String typeId;
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
@@ -35,6 +38,7 @@ public class PayChannelMoney {
 				.append( "money", getMoney() )
 				.append( "channelId", getChannelId() )
 				.append( "channelPayRate", getChannelPayRate() )
+				.append( "typeId", getTypeId() )
 				.toString();
 	}
 }

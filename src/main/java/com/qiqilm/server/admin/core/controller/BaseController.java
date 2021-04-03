@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.core.page.PageDomain;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.page.TableSupport;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.exception.ControllerExceptionHandler;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.WebDataBinder;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author 77tv
  */
 @Log4j2
-public class BaseController {
+public class BaseController extends ControllerExceptionHandler {
 
 	/**
 	 * 将前台传递过来的日期格式的字符串，自动转化为Date类型

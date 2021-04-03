@@ -6,10 +6,11 @@
 		<result property="money" column="money"/>
 		<result property="channelId" column="channel_id"/>
 		<result property="channelPayRate" column="channel_pay_rate"/>
+		<result property="typeId" column="type_id"/>
 	</resultMap>
 
 	<sql id="selectPayChannelMoneyVo">
-		select id, money, channel_id, channel_pay_rate from ${dbMain}.pay_channel_money
+		select id, money, channel_id, channel_pay_rate, type_id from ${dbMain}.pay_channel_money
 	</sql>
 
 	<select id="selectPayChannelMoneyList" parameterType="PayChannelMoney" resultMap="PayChannelMoneyResult">
@@ -23,6 +24,9 @@
 			</if>
 			<if test="channelPayRate != null">
 				and channel_pay_rate = #{channelPayRate}
+			</if>
+			<if test="typeId != null  and typeId != ''">
+				and type_id = #{typeId}
 			</if>
 		</where>
 	</select>
@@ -39,6 +43,9 @@
 			<if test="channelPayRate != null">
 				channel_pay_rate,
 			</if>
+			<if test="typeId != null and typeId != ''">
+				type_id,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="money != null">
@@ -50,11 +57,15 @@
 			<if test="channelPayRate != null">
 				#{channelPayRate},
 			</if>
+			<if test="typeId != null and typeId != ''">
+				#{typeId},
+			</if>
 		</trim>
 	</insert>
 
 	<delete id="deleteByChannelIds">
-		delete from ${dbMain}.pay_channel_money where channel_id in
+		delete
+		from ${dbMain}.pay_channel_money where channel_id in
 		<foreach item="id" collection="channelIds" open="(" separator="," close=")">
 			#{id}
 		</foreach>

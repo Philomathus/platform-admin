@@ -101,6 +101,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 					payChannelMoney.setMoney( Long.parseLong( money ) );
 					payChannelMoney.setChannelId( channelNew.getId() );
 					payChannelMoney.setChannelPayRate( channelNew.getPayRate() );
+					payChannelMoney.setTypeId( channelNew.getPayTypeId() );
 					payChannelMoneyMapper.insertPayChannelMoney( payChannelMoney );
 				}
 			} else {
