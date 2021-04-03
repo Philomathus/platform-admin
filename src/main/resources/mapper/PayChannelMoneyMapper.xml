@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayChannelMoneyMapper">
+	<resultMap type="PayChannelMoney" id="PayChannelMoneyResult">
+		<result property="id" column="id"/>
+		<result property="money" column="money"/>
+		<result property="channelId" column="channel_id"/>
+		<result property="channelPayRate" column="channel_pay_rate"/>
+	</resultMap>
+
+	<sql id="selectPayChannelMoneyVo">
+		select id, money, channel_id, channel_pay_rate from ${dbMain}.pay_channel_money
+	</sql>
+
+	<select id="selectPayChannelMoneyList" parameterType="PayChannelMoney" resultMap="PayChannelMoneyResult">
+		<include refid="selectPayChannelMoneyVo"/>
+		<where>
+			<if test="money != null">
+				and money = #{money}
+			</if>
+			<if test="channelId != null">
+				and channel_id = #{channelId}
+			</if>
+			<if test="channelPayRate != null">
+				and channel_pay_rate = #{channelPayRate}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertPayChannelMoney" parameterType="PayChannelMoney" useGeneratedKeys="true" keyProperty="id">
+		insert into ${dbMain}.pay_channel_money
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="money != null">
+				money,
+			</if>
+			<if test="channelId != null">
+				channel_id,
+			</if>
+			<if test="channelPayRate != null">
+				channel_pay_rate,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="money != null">
+				#{money},
+			</if>
+			<if test="channelId != null">
+				#{channelId},
+			</if>
+			<if test="channelPayRate != null">
+				#{channelPayRate},
+			</if>
+		</trim>
+	</insert>
+
+	<delete id="deleteByChannelIds">
+		delete from ${dbMain}.pay_channel_money where channel_id in
+		<foreach item="id" collection="channelIds" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>
