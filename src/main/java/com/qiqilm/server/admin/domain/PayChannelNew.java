@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 pay_channel_new
+ * pay_channel_new
  *
  * @author 77tv
  * @date 2021-01-27
