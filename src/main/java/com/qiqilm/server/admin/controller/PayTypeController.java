@@ -85,8 +85,7 @@ public class PayTypeController extends BaseController {
 	@Log( title = "支付类型", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{id}" )
 	public AjaxResult remove( @PathVariable String id ) {
-		return toAjax(
-				payTypeService.deletePayTypeByIds( id) );
+		return toAjax( payTypeService.deletePayTypeById( id) );
 	}
 
 	/**

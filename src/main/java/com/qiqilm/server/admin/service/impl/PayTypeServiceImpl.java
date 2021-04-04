@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
-import com.qiqilm.server.admin.cache.PayCacheListUtil;
+import com.qiqilm.server.admin.cache.PayCacheUtil;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.exception.BusinessException;
@@ -32,7 +32,7 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	@Autowired
 	private ConfigDomainCacheUtil configDomainCacheUtil;
 	@Autowired
-	private PayCacheListUtil      payCacheListUtil;
+	private PayCacheUtil          payCacheUtil;
 
 	/**
 	 * 查询支付类型
@@ -111,24 +111,8 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	}
 
 	private void setPayTypeCache( PayType payType ) {
-		//緩存啟用中的支付類型
-		List<PayType> payTypes = payTypeMapper.selectCachePayTypeList();
-		payCacheListUtil.setPayTypeList( payTypes );
-		payCacheListUtil.setPayType( payType );
-	}
-
-	/**
-	 * 批量删除支付类型
-	 *
-	 * @return 结果
-	 */
-	@Override
-	public int deletePayTypeByIds( String id ) {
-		payTypeMapper.deletePayTypeById( id );
-		List<PayType> payTypes = payTypeMapper.selectCachePayTypeList();
-		payCacheListUtil.setPayTypeList( payTypes );
-		payCacheListUtil.delPayType( id );
-		return 1;
+		payCacheUtil.clearPayTypeList();
+		payCacheUtil.setPayType( payType );
 	}
 
 	/**
@@ -139,7 +123,11 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	 */
 	@Override
 	public int deletePayTypeById( String id ) {
-		return payTypeMapper.deletePayTypeById( id );
+		int i = payTypeMapper.deletePayTypeById( id );
+		if ( i > 0 ) {
+			payCacheUtil.clearPayTypeList();
+		}
+		return i;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.PayCacheUtil;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayChannelMoney;
 import com.qiqilm.server.admin.domain.PayChannelNew;
@@ -36,6 +37,8 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 	private PayTypeMapper         payTypeMapper;
 	@Autowired
 	private TokenService          tokenService;
+	@Autowired
+	private PayCacheUtil          payCacheUtil;
 
 	/**
 	 * 查询支付通道
@@ -127,6 +130,8 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 			} else {
 				payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( payChannelNew.getId() ) );
 			}
+			// 更新缓存
+			payCacheUtil.setPayChannel( channelNew );
 		}
 		return i;
 	}
@@ -143,6 +148,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 		int i = payChannelNewMapper.deletePayChannelNewByIds( ids );
 		if ( i > 0 ) {
 			payChannelMoneyMapper.deleteByChannelIds( Arrays.asList( ids ) );
+			payCacheUtil.clearPayChannel( ids );
 		}
 		return i;
 	}
@@ -159,6 +165,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 		int i = payChannelNewMapper.deletePayChannelNewById( id );
 		if ( i > 0 ) {
 			payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( id ) );
+			payCacheUtil.clearPayChannel( id );
 		}
 		return i;
 	}
