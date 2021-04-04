@@ -276,4 +276,8 @@
 		where status = 0
 		and create_time &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
 	</update>
+
+	<select id="countRechargeDaySucess" parameterType="java.lang.String" resultType="Integer">
+		select COUNT(1) from member_recharge_log where  date(update_time) = curdate() and  member_id = #{memberId} and status = 3;
+	</select>
 </mapper>
