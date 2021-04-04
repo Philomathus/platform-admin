@@ -88,10 +88,16 @@ public class PayCacheUtil {
 	 * @param payTypeId 支付类型ID
 	 * @return 支付类型
 	 */
-	private PayType getPayType( String payTypeId ) {
+	public PayType getPayType( String payTypeId ) {
 		this.existsPayType( payTypeId );
 		String value = redisUtil.strGet( TYPE + payTypeId );
 		return StringUtils.isNotBlank( value ) ? JsonUtil.json2Object( value, PayType.class ) : null;
+	}
+
+	public void clearPayType( String... payTypeIds ) {
+		for ( String payTypeId : payTypeIds ) {
+			redisUtil.unlink( TYPE + payTypeId );
+		}
 	}
 
 	public void existsPayPlatform( Long payPlatformId ) {
