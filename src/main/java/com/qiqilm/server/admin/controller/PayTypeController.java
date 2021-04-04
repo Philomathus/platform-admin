@@ -83,9 +83,10 @@ public class PayTypeController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:remove')" )
 	@Log( title = "支付类型", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable String[] ids ) {
-		return toAjax( payTypeService.deletePayTypeByIds( ids ) );
+	@DeleteMapping( "/{id}" )
+	public AjaxResult remove( @PathVariable String id ) {
+		return toAjax(
+				payTypeService.deletePayTypeByIds( id) );
 	}
 
 	/**

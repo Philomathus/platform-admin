@@ -227,4 +227,9 @@
 		from pay_type
 		where code = #{code}
 	</select>
+
+	<select id="selectCachePayTypeList" parameterType="PayType" resultMap="PayTypeResult">
+		<include refid="selectPayTypeVo"/>
+		where status = 1
+	</select>
 </mapper>
