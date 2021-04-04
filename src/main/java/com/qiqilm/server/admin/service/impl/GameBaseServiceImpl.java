@@ -100,6 +100,9 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		if (lists.contains(EnumGamePlatform.MG_LIVE.getType())) forkJoinTasks.add( this.mgBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.NG_LIVE.getType())) forkJoinTasks.add( this.ngBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.BBIN_LIVE.getType())) forkJoinTasks.add( this.bbinBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.BBIN_SPORT.getType())) forkJoinTasks.add( this.bbinSpBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.BBIN_DIANZI.getType())) forkJoinTasks.add( this.bbindzBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.BBIN_FISH.getType())) forkJoinTasks.add( this.bbinfhBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.SHABA_SPORT.getType())) forkJoinTasks.add( this.shabaBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.ICG_DIANZI.getType())) forkJoinTasks.add( this.icgBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.MEITIAN_CHESS.getType())) forkJoinTasks.add( this.mtBalanceTask( userId ) );
@@ -342,6 +345,61 @@ public class GameBaseServiceImpl implements IGameBaseService {
 				RspGameBalance rspGameBalance = new RspGameBalance();
 				rspGameBalance.setType( EnumGamePlatform.BBIN_LIVE.getType() );
 				rspGameBalance.setName( EnumGamePlatform.BBIN_LIVE.getName() );
+				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+				return rspGameBalance;
+			} catch ( Exception e ) {
+				log.error( e.getMessage(), e );
+			}
+			return null;
+		};
+	}
+	private Callable<RspGameBalance> bbinSpBalanceTask( final String userId ) {
+		return () -> {
+			try {
+				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
+						EnumGamePlatform.BBIN_SPORT.getType() );
+				BigDecimal backMoney = bbinService.queryCoin( gamePlatform, userId.replace( "_", "BBIN" ) );
+
+				RspGameBalance rspGameBalance = new RspGameBalance();
+				rspGameBalance.setType( EnumGamePlatform.BBIN_SPORT.getType() );
+				rspGameBalance.setName( EnumGamePlatform.BBIN_SPORT.getName() );
+				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+				return rspGameBalance;
+			} catch ( Exception e ) {
+				log.error( e.getMessage(), e );
+			}
+			return null;
+		};
+	}
+	private Callable<RspGameBalance> bbindzBalanceTask( final String userId ) {
+		return () -> {
+			try {
+				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
+						EnumGamePlatform.BBIN_DIANZI.getType() );
+				BigDecimal backMoney = bbinService.queryCoin( gamePlatform, userId.replace( "_", "BBIN" ) );
+
+				RspGameBalance rspGameBalance = new RspGameBalance();
+				rspGameBalance.setType( EnumGamePlatform.BBIN_DIANZI.getType() );
+				rspGameBalance.setName( EnumGamePlatform.BBIN_DIANZI.getName() );
+				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+				return rspGameBalance;
+			} catch ( Exception e ) {
+				log.error( e.getMessage(), e );
+			}
+			return null;
+		};
+	}
+
+	private Callable<RspGameBalance> bbinfhBalanceTask( final String userId ) {
+		return () -> {
+			try {
+				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
+						EnumGamePlatform.BBIN_FISH.getType() );
+				BigDecimal backMoney = bbinService.queryCoin( gamePlatform, userId.replace( "_", "BBIN" ) );
+
+				RspGameBalance rspGameBalance = new RspGameBalance();
+				rspGameBalance.setType( EnumGamePlatform.BBIN_FISH.getType() );
+				rspGameBalance.setName( EnumGamePlatform.BBIN_FISH.getName() );
 				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
 				return rspGameBalance;
 			} catch ( Exception e ) {
