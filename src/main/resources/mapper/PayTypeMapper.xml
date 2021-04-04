@@ -227,4 +227,11 @@
 		from pay_type
 		where code = #{code}
 	</select>
+
+	<select id="selectCachePayTypeList" resultMap="PayTypeResult">
+		<include refid="selectPayTypeVo"/>
+		where (id in (select DISTINCT pay_type_id from pay_channel_new where `status` = '1'))
+		   or (type in ('2', '3') and `status` = '1')
+		order by indexes
+	</select>
 </mapper>

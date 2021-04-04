@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.PayCacheUtil;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayChannelMoney;
 import com.qiqilm.server.admin.domain.PayChannelNew;
@@ -36,6 +37,8 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 	private PayTypeMapper         payTypeMapper;
 	@Autowired
 	private TokenService          tokenService;
+	@Autowired
+	private PayCacheUtil          payCacheUtil;
 
 	/**
 	 * 查询支付通道
@@ -67,10 +70,17 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 	 */
 	@Override
 	public int insertPayChannelNew( PayChannelNew payChannelNew ) {
-		payChannelNew.setCreateTime( DateUtils.getNowDate() );
+		if ( payChannelNew.getPayRate() == null ) {
+			throw new BusinessException( "通道费率不得为空" );
+		}
+		if ( payChannelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
+				|| payChannelNew.getPayRate().compareTo( new BigDecimal( "0.02" ) ) < 0 ) {
+			throw new BusinessException( "通道费率不得大于0.4或小于0.02" );
+		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    username  = loginUser.getUsername();
 		payChannelNew.setCreator( username );
+		payChannelNew.setCreateTime( DateUtils.getNowDate() );
 		payChannelNew.setStatus( "0" );
 		payChannelNew.setFailNum( 0 );
 		payChannelNew.setSuccessNum( 0 );
@@ -95,8 +105,15 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 		if ( i > 0 ) {
 			PayChannelNew channelNew = payChannelNewMapper.selectPayChannelNewById( payChannelNew.getId() );
 			if ( "1".equals( channelNew.getStatus() ) ) {
-				if ( StringUtils.isBlank( channelNew.getQuickAmount() ) || channelNew.getPayRate() == null ) {
-					throw new BusinessException( "快捷金额或通道费率不能为空，请补全" );
+				if ( StringUtils.isBlank( channelNew.getQuickAmount() ) ) {
+					throw new BusinessException( "快捷金额不能为空，请补全" );
+				}
+				if ( payChannelNew.getPayRate() == null ) {
+					throw new BusinessException( "通道费率不得为空" );
+				}
+				if ( payChannelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
+						|| payChannelNew.getPayRate().compareTo( new BigDecimal( "0.02" ) ) < 0 ) {
+					throw new BusinessException( "通道费率不得大于0.4或小于0.02" );
 				}
 				Integer  typeCode = payTypeMapper.selectCodeById( channelNew.getPayTypeId() );
 				String[] moneys   = channelNew.getQuickAmount().split( "," );
@@ -113,6 +130,8 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 			} else {
 				payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( payChannelNew.getId() ) );
 			}
+			// 更新缓存
+			payCacheUtil.setPayChannel( channelNew );
 		}
 		return i;
 	}
@@ -129,6 +148,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 		int i = payChannelNewMapper.deletePayChannelNewByIds( ids );
 		if ( i > 0 ) {
 			payChannelMoneyMapper.deleteByChannelIds( Arrays.asList( ids ) );
+			payCacheUtil.clearPayChannel( ids );
 		}
 		return i;
 	}
@@ -145,6 +165,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 		int i = payChannelNewMapper.deletePayChannelNewById( id );
 		if ( i > 0 ) {
 			payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( id ) );
+			payCacheUtil.clearPayChannel( id );
 		}
 		return i;
 	}
