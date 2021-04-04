@@ -108,11 +108,11 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 				if ( StringUtils.isBlank( channelNew.getQuickAmount() ) ) {
 					throw new BusinessException( "快捷金额不能为空，请补全" );
 				}
-				if ( payChannelNew.getPayRate() == null ) {
+				if ( channelNew.getPayRate() == null ) {
 					throw new BusinessException( "通道费率不得为空" );
 				}
-				if ( payChannelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
-						|| payChannelNew.getPayRate().compareTo( new BigDecimal( "0.02" ) ) < 0 ) {
+				if ( channelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
+						|| channelNew.getPayRate().compareTo( new BigDecimal( "0.02" ) ) < 0 ) {
 					throw new BusinessException( "通道费率不得大于0.4或小于0.02" );
 				}
 				payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( payChannelNew.getId() ) );
