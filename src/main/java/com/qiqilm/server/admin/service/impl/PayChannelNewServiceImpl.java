@@ -67,10 +67,17 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 	 */
 	@Override
 	public int insertPayChannelNew( PayChannelNew payChannelNew ) {
-		payChannelNew.setCreateTime( DateUtils.getNowDate() );
+		if ( payChannelNew.getPayRate() == null ) {
+			throw new BusinessException( "通道费率不得为空" );
+		}
+		if ( payChannelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
+				|| payChannelNew.getPayRate().compareTo( new BigDecimal( "0.02" ) ) < 0 ) {
+			throw new BusinessException( "通道费率不得大于0.4或小于0.02" );
+		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    username  = loginUser.getUsername();
 		payChannelNew.setCreator( username );
+		payChannelNew.setCreateTime( DateUtils.getNowDate() );
 		payChannelNew.setStatus( "0" );
 		payChannelNew.setFailNum( 0 );
 		payChannelNew.setSuccessNum( 0 );
@@ -95,8 +102,15 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 		if ( i > 0 ) {
 			PayChannelNew channelNew = payChannelNewMapper.selectPayChannelNewById( payChannelNew.getId() );
 			if ( "1".equals( channelNew.getStatus() ) ) {
-				if ( StringUtils.isBlank( channelNew.getQuickAmount() ) || channelNew.getPayRate() == null ) {
-					throw new BusinessException( "快捷金额或通道费率不能为空，请补全" );
+				if ( StringUtils.isBlank( channelNew.getQuickAmount() ) ) {
+					throw new BusinessException( "快捷金额不能为空，请补全" );
+				}
+				if ( payChannelNew.getPayRate() == null ) {
+					throw new BusinessException( "通道费率不得为空" );
+				}
+				if ( payChannelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
+						|| payChannelNew.getPayRate().compareTo( new BigDecimal( "0.02" ) ) < 0 ) {
+					throw new BusinessException( "通道费率不得大于0.4或小于0.02" );
 				}
 				Integer  typeCode = payTypeMapper.selectCodeById( channelNew.getPayTypeId() );
 				String[] moneys   = channelNew.getQuickAmount().split( "," );
