@@ -162,8 +162,10 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 
 		BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "recharge_day_first_rate");
 
-		chargeGive = chargeGive.add(memberRechargeLog.getDiscountBill().multiply( ticketCattyRatio )// 单日首次彩金
-				.setScale( 2, BigDecimal.ROUND_HALF_UP ));
+		if(memberRechargeLogMapper.countRechargeDaySucess(memberInfo.getId())==0){
+			chargeGive = chargeGive.add(memberRechargeLog.getDiscountBill().multiply( ticketCattyRatio )// 单日首次彩金
+					.setScale( 2, BigDecimal.ROUND_HALF_UP ));
+		}
 
 		BigDecimal add = memberRechargeLog.getRechargeMoney().add( chargeGive );
 
