@@ -132,6 +132,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 				payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( payChannelNew.getId() ) );
 			}
 			// 更新缓存
+			payCacheUtil.clearPayTypeList();
 			payCacheUtil.setPayChannel( channelNew );
 		}
 		return i;
@@ -150,6 +151,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 		if ( i > 0 ) {
 			payChannelMoneyMapper.deleteByChannelIds( Arrays.asList( ids ) );
 			payCacheUtil.clearPayChannel( ids );
+			payCacheUtil.clearPayTypeList();
 		}
 		return i;
 	}
@@ -167,6 +169,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 		if ( i > 0 ) {
 			payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( id ) );
 			payCacheUtil.clearPayChannel( id );
+			payCacheUtil.clearPayTypeList();
 		}
 		return i;
 	}
