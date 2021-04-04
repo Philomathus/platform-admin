@@ -37,33 +37,6 @@ public class PayCacheUtil {
 	@Autowired
 	private PayChannelNewMapper  payChannelNewMapper;
 
-	public void existsPayTypeList() {
-		if ( !redisUtil.exists( TYPE_LIST ) ) {
-			List<PayType> payTypes = payTypeMapper.selectCachePayTypeList();
-			if ( payTypes.isEmpty() ) {
-				return;
-			}
-			this.setPayTypeList( payTypes );
-		}
-	}
-
-	//获取支付类型list集合
-	public List<PayType> getPayTypeList() {
-		this.existsPayTypeList();
-		String value = redisUtil.strGet( TYPE_LIST );
-		return StringUtils.isNotBlank( value ) ? JsonUtil.json2Array( value, new TypeReference<List<PayType>>() {} ) : null;
-	}
-
-	/**
-	 * 获取支付类型列表缓存
-	 *
-	 * @param payTypes 支付类型列表
-	 */
-	public void setPayTypeList( List<PayType> payTypes ) {
-		redisUtil.unlink( TYPE_LIST );
-		redisUtil.strSet( TYPE_LIST, JsonUtil.object2Json( payTypes ), Duration.ofHours( 6 ) );
-	}
-
 	public void clearPayTypeList() {
 		redisUtil.unlink( TYPE_LIST );
 	}

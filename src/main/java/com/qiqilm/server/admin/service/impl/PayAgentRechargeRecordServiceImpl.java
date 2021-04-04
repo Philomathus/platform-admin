@@ -109,33 +109,33 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
     public AjaxResult deposit(PayAgentRechargeRecord dto) {
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    userName  = loginUser.getUser().getUserName();
-        PayAgentRechargeRecord Record = new PayAgentRechargeRecord();
-        MemberInfo memberInfo             = memberInfoMapper.selectMemberInfoById( dto.getRechargeAcount() );
+        String     rechargeAcount       = dto.getRechargeAcount();
+        MemberInfo memberInfo             = memberInfoMapper.selectMemberInfoById( rechargeAcount );
         if (memberInfo==null){
             return AjaxResult.error( "会员不存在，请核实" );
         }
         String orderNo = "CT" + DateFormatUtils.formate( new Date(), "yyyyMMddHHmmss" )
                 + memberInfo.getMemberCode();
+        BigDecimal BalanceAmount = dto.getMoney();
+        PayAgentRechargeRecord Record = new PayAgentRechargeRecord();
         Record.setOrderNo( orderNo );
-        Record.setRechargeAcount( dto.getRechargeAcount() );
+        Record.setRechargeAcount( rechargeAcount );
         Record.setRechargeNickName( memberInfo.getNickName() );
         Record.setType( dto.getType() );
         Record.setRemark( dto.getRemark() );
-        Record.setMoney( dto.getMoney() );
+        Record.setMoney( BalanceAmount );
         Record.setCreateTime( DateUtils.getNowDate() );
         Record.setOpName( userName );
         payAgentRechargeRecordMapper.insertPayAgentRechargeRecord(Record);
         //加钱，payAgentRechargeAccount和PayAgentRechargeTrade
-        String     Account       = dto.getRechargeAcount();
-        BigDecimal BalanceAmount = dto.getMoney().negate();
-        payAgentRechargeRecordMapper.updateByBalanceAmount( Account, BalanceAmount );
+        payAgentRechargeRecordMapper.updateByBalanceAmount( rechargeAcount, BalanceAmount );
 
         //PayAgentRechargeTradelog表
         PayAgentRechargeTradeLog payAgentRechargeTradeLog = new PayAgentRechargeTradeLog();
         payAgentRechargeTradeLog.setOrderNo( orderNo );
-        payAgentRechargeTradeLog.setAccount( dto.getRechargeAcount() );
+        payAgentRechargeTradeLog.setAccount( rechargeAcount );
         payAgentRechargeTradeLog.setNickName( memberInfo.getNickName() );
-        payAgentRechargeTradeLog.setIncome( dto.getMoney() );
+        payAgentRechargeTradeLog.setIncome( BalanceAmount );
         payAgentRechargeTradeLog.setCreateTime(  DateUtils.getNowDate() );
         payAgentRechargeTradeLog.setRemark( dto.getRemark() );
         payAgentRechargeTradeLog.setName( "人工存入" );
