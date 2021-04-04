@@ -89,7 +89,7 @@ public class PayTypeServiceImpl implements IPayTypeService {
 		payType.setCreateBy( username );
 		payType.setStatus( "0" );
 
-		setPayTypeCache( payType );
+		setPayTypeCache( payType.getId() );
 		return payTypeMapper.insertPayType( payType );
 	}
 
@@ -106,13 +106,13 @@ public class PayTypeServiceImpl implements IPayTypeService {
 		String    username  = loginUser.getUsername();
 		payType.setUpdator( username );
 		payTypeMapper.updatePayType( payType );
-		setPayTypeCache( payType );
+		setPayTypeCache( payType.getId() );
 		return 1;
 	}
 
-	private void setPayTypeCache( PayType payType ) {
+	private void setPayTypeCache( String payTypeId ) {
 		payCacheUtil.clearPayTypeList();
-		payCacheUtil.setPayType( payType );
+		payCacheUtil.clearPayType( payTypeId );
 	}
 
 	/**
