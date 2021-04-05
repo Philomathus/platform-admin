@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
+import com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth;
 import com.qiqilm.server.admin.mapper.ReportPlamGamesMapper;
 import com.qiqilm.server.admin.service.IReportPlamGamesService;
 import com.qiqilm.server.admin.utils.RedisUtil;
@@ -106,5 +107,25 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
         List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
         return allList;
     }
+
+    @Override
+    public List<RspPlamGamesMonth> selectReportPlamGamesListMonth(ReportPlamGames reportPlamGames) {
+        String begindate=null;
+        if (reportPlamGames.getBegindate()==null){
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            String dateNowStr = sdf.format(d);
+            begindate=dateNowStr+"-01";
+        }else {
+            begindate = reportPlamGames.getBegindate();
+        }
+        reportPlamGames.setEndDate(begindate.replace("01","31"));
+        List<RspPlamGamesMonth> allList = reportPlamGamesMapper.selectReportPlamGamesListMonth(reportPlamGames);
+        for (RspPlamGamesMonth rsplist:allList) {
+            rsplist.setDate(begindate.substring(0,7));
+        }
+        return allList;
+    }
+
 
 }

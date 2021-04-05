@@ -67,6 +67,7 @@ public class ReportPlamGames implements Serializable {
 
 	@Excel( name = "日期" )
 	private String     begindate;
+	private String endDate;
 	private Integer    countBetPeople;
 	private BigDecimal countBetMoney;
 
