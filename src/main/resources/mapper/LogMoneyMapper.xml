@@ -31,7 +31,7 @@
 			   total_before,
 			   mark,
 			   markorder
-		from ${dbMain}.log_money
+		from ${dbMain}.log_money${dbNodes}
 	</sql>
 
 	<select id="selectLogMoneySingleList" parameterType="LogMoney" resultMap="LogMoneyResult">
