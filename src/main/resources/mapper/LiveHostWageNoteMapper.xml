@@ -94,7 +94,7 @@
         select * from ${dbLive}.live_host_wage_day  l where l.host_id=#{userId}  ORDER BY start_time desc LIMIT 1
     </select>
 
-	<select id="familyPage" resultType="RspLiveHostWageNoteFamily">
+	<select id="familyPage" parameterType="LiveHostWageNote" resultType="RspLiveHostWageNoteFamily">
         select
         o.family_id familyId,
         f.name familyName,
@@ -120,7 +120,7 @@
         select id,nick_name,name from ${dbLive}.live_family
     </select>
 
-	<select id="hostPage" resultType="RspLiveHostWageNoteList">
+	<select id="hostPage" parameterType="LiveHostWageNote" resultType="RspLiveHostWageNoteList">
         select
         o.family_id familyId,
         f.name familyName,
@@ -136,7 +136,7 @@
         left join ${dbLive}.live_family f on o.family_id=f.id
         left join ${dbLive}.live_user u on o.host_id=u.id
         where o.live_time_sec > 0
-            <if test="dto.dateDay!=null">and o.id like '${dto.dateDay}%'</if>
+            <if test="dto.id!=null">and o.id like '${dto.dateDay}%'</if>
             <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
             <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
             <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
