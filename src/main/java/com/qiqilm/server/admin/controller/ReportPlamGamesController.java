@@ -2,8 +2,11 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
+import com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IReportPlamGamesService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
@@ -67,5 +70,13 @@ public class ReportPlamGamesController extends BaseController {
 	public void export( ReportPlamGames reportPlamGames, HttpServletResponse response ) {
 		List<ReportPlamGames> list = reportPlamGamesService.exportPlamGamesList( reportPlamGames );
 		ExportExcelUtil.exportExcel( list, "游戏投注报表", "游戏投注报表", ReportPlamGames.class, response );
+	}
+	@PreAuthorize( "@ss.hasPermi('admin:report-plam-games:list')" )
+	@GetMapping( "/listMonth" )
+	public TableDataInfo listMonth( ReportPlamGames reportPlamGames ) throws ParseException {
+		startPage();
+		List<RspPlamGamesMonth> list=reportPlamGamesService.selectReportPlamGamesListMonth( reportPlamGames );
+		return getDataTable( list );
+
 	}
 }
