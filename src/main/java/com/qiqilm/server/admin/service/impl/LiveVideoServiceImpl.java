@@ -503,12 +503,16 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Override
 	public void countHostGift() {
+		long s = System.currentTimeMillis();
+		log.info("开始执行主播礼物计算,彩票投注");
 		String dayTime = LocalDate.now().plusDays(-1).toString();
 		List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime);
+		log.info("收礼物主播数：{}",propDayVos.size());
 		String begin = dayTime.concat(" 00:00:00");
 		String end = dayTime.concat(" 23:59:59");
 
 		List<HostPropDayVo> lotteryDayVos = liveVideoPropMapper.sumHostLotteryDayList(begin,end);
+		log.info("投注主播数：{}",lotteryDayVos.size());
 
 
 		Map<String,LiveHostWageDay> updateMap = new HashMap<>();
@@ -536,7 +540,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		for(LiveHostWageDay updateLiveDay:updateMap.values()){
 			liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
 		}
-
+		log.info("结束执行主播礼物计算,执行时间：{}ms",System.currentTimeMillis()-s);
 
 	}
 }
