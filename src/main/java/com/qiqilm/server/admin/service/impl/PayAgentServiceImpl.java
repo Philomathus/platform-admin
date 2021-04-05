@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
@@ -44,7 +45,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional( rollbackFor = Exception.class )
 	public void processOrderPay( String merOrderNo, String orderNo, PayAgentPlatform payAgentPlatform, boolean isSuccess ) {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
 		PayAgentLog       payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( merOrderNo );
@@ -128,10 +129,14 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		if ( withdrawLog.getWithdrawMoney() == null || withdrawLog.getWithdrawMoney().compareTo( BigDecimal.ZERO ) <= 0 ) {
 			log.warn( "提现金额有误 - withdrawOrderNo:{};withdrawMoney:{}", reqPayAgent.getWithdrawOrderNo(),
 					withdrawLog.getWithdrawMoney() );
-			return AjaxResult.error( "提现金额有误" );
+			return AjaxResult.error( "提现金额不得低于0元" );
 		}
 		if ( withdrawLog.getStatus() != 1 ) {
 			return AjaxResult.error( "审核流程非法" );
+		}
+		if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 300 ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持300元以上出款" );
 		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
@@ -161,7 +166,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional( rollbackFor = Exception.class )
 	public void processOrder( PayAgentPlatform payAgentPlatform, MemberWithdrawLog memberWithdrawLog,
 							  Date now, int status, int orderState ) {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectMemberWithdrawLogById( memberWithdrawLog.getId() );
