@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class LiveHostWageNote {
 	private static final long serialVersionUID = 1L;
 
-	private Long id;
+	private String id;
 
 	/** 家族ID */
 	private Long familyId;
@@ -35,6 +35,9 @@ public class LiveHostWageNote {
 	/** 主播直播结算印票 */
 	private BigDecimal ticket;
 
+	/** 上播次数 */
+	private BigDecimal times;
+
 	/** 历史印票总数 */
 	private BigDecimal beforeTotalTicket;
 
@@ -45,6 +48,8 @@ public class LiveHostWageNote {
 	private BigDecimal cpPrize;
 
 	private String createTimes;
+
+	private String dateDay;
 
 	private String remark;
 
