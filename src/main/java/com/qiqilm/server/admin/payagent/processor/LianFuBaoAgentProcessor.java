@@ -46,6 +46,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 				"secretkey/payAgentPrivateKey" ) );
 		String signStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
 
+		log.warn( signStr );
 		String sign = DigestUtils.md5Hex( signStr ).toUpperCase();
 		bodyMap.put( "sign", sign );
 
