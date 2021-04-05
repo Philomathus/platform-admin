@@ -59,7 +59,7 @@ public class MessageSendCountTask {
 
 
 		Integer count = messageSendMapper.getLiveCount();
-		String  text  = "当前在线主播数:" + count + "\n在线会员数:" + memberOnline.getCount();
+		String  text  = "当前在线主播数:" + count + "\n5分钟活跃会员数:" + memberOnline.getCount();
 		robotMessage.sendByChatId( text, online_user_telegram );
 
 		String  day       = DateFormatUtils.formate( new Date(), "yyyy-MM-dd" );
