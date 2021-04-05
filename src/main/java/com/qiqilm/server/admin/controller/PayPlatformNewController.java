@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
 import com.qiqilm.server.admin.service.IPayService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class PayPlatformNewController extends BaseController {
 	@GetMapping( "/export" )
 	public AjaxResult export( PayPlatformNew payPlatformNew ) {
 		List<PayPlatformNew>      list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
-		ExcelUtil<PayPlatformNew> util = new ExcelUtil<>( PayPlatformNew.class );
+		ExcelUtil<PayPlatformNew> util = new ExcelUtil<PayPlatformNew>( PayPlatformNew.class );
 		return util.exportExcel( list, "payPlatformNew" );
 	}
 
@@ -69,14 +70,22 @@ public class PayPlatformNewController extends BaseController {
 	@Log( title = "支付平台", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayPlatformNew payPlatformNew ) {
-		payPlatformNew.setOrgId( payPlatformNew.getOrgId().trim() );
-		payPlatformNew.setPlatPayUrl( payPlatformNew.getPlatPayUrl().trim() );
-		payPlatformNew.setPlatQueryUrl( payPlatformNew.getPlatQueryUrl().trim() );
-		payPlatformNew.setSignMd5( payPlatformNew.getSignMd5().trim() );
-		payPlatformNew.setSignPrivateKey( payPlatformNew.getSignPrivateKey().trim() );
-		payPlatformNew.setSignPublicKey( payPlatformNew.getSignPublicKey().trim() );
-		payPlatformNew.setPlatWhiteIpList( payPlatformNew.getPlatWhiteIpList().
-				trim().replaceAll( " ", "" ).replaceAll( "，", "," ) );
+		payPlatformNew.setOrgId(payPlatformNew.getOrgId().trim());
+		payPlatformNew.setPlatPayUrl(payPlatformNew.getPlatPayUrl().trim());
+		if(StringUtils.isNotBlank(payPlatformNew.getPlatQueryUrl())) {
+			payPlatformNew.setPlatQueryUrl(payPlatformNew.getPlatQueryUrl().trim());
+		}
+		payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())) {
+			payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().trim());
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey())) {
+		    payPlatformNew.setSignPublicKey(payPlatformNew.getSignPublicKey().trim());
+     	}
+		if(StringUtils.isNotBlank(payPlatformNew.getPlatWhiteIpList())) {
+			payPlatformNew.setPlatWhiteIpList(payPlatformNew.getPlatWhiteIpList().
+					trim().replaceAll(" ", "").replaceAll("，", ","));
+		}
 		return toAjax( payPlatformNewService.insertPayPlatformNew( payPlatformNew ) );
 	}
 
