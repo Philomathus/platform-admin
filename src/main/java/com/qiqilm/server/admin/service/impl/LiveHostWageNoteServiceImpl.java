@@ -6,11 +6,16 @@ import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteList;
 import com.qiqilm.server.admin.mapper.LiveHostWageNoteMapper;
 import com.qiqilm.server.admin.service.ILiveHostWageNoteService;
+import com.qiqilm.server.admin.utils.StringUtils;
+import org.apache.htrace.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -76,9 +81,14 @@ public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
 	}
 
 	@Override
-	public List<RspLiveHostWageNoteList> hostPage( LiveHostWageNote dto ) {
+	public List<RspLiveHostWageNoteList> hostPage( LiveHostWageNote dto ) throws ParseException {
 		this.setTime( dto );
 		BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
+
+		//获取昨日日期
+		if(StringUtils.isNotBlank(dto.getDateDay())) {
+			dto.setDateDay(yesterday(dto.getDateDay()));
+		}
 		List<RspLiveHostWageNoteList> liveHostWageNotes = liveHostWageNoteMapper.hostPage( dto.getSelectDate()[ 0 ] + " - "
 				+ dto.getSelectDate()[ 1 ], dto );
 		for ( RspLiveHostWageNoteList liveHostWageNote : liveHostWageNotes ) {
@@ -102,14 +112,28 @@ public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
 	}
 
 	private void setTime( LiveHostWageNote dto ) {
-		if ( dto.getSelectDate() == null || dto.getSelectDate().length == 0 ) {
+		if ( dto.getDateDay() == null ) {
 			Date             d          = new Date();
 			SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
 			String           dateNowStr = sdf.format( d );
 			dto.getSelectDate()[ 0 ] = dateNowStr;
 			dto.getSelectDate()[ 1 ] = dateNowStr;
+			dto.setStartTime(dto.getSelectDate()[ 0 ] + " 00:00:00");
+			dto.setEndTime(dto.getSelectDate()[ 1 ] + " 23:59:59");
+		} else {
+			dto.setStartTime(dto.getDateDay() + " 00:00:00");
+			dto.setEndTime(dto.getDateDay() + " 23:59:59");
 		}
-		dto.setStartTime( dto.getSelectDate()[ 0 ] + " 00:00:00" );
-		dto.setEndTime( dto.getSelectDate()[ 1 ] + " 23:59:59" );
 	}
+
+	private String yesterday(String dateDay) throws ParseException {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		long dif = df.parse(dateDay).getTime()-86400*1000;//减一天
+		Date date=new Date();
+		date.setTime(dif);
+		return df.format(date);
+	}
+
+
+
 }

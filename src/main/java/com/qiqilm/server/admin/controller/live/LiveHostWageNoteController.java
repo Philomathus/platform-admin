@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -53,7 +54,7 @@ public class LiveHostWageNoteController extends BaseController {
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:list')" )
 	@GetMapping( "hostPage" )
-	public TableDataInfo getPage( LiveHostWageNote dto ) {
+	public TableDataInfo getPage( LiveHostWageNote dto ) throws ParseException {
 		startPage();
 		List<RspLiveHostWageNoteList> list = liveHostWageNoteService.hostPage( dto );
 		return getDataTable( list );
@@ -76,7 +77,7 @@ public class LiveHostWageNoteController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveHostWageNote:export')" )
 	@Log( title = "主播统计时长", businessType = BusinessType.EXPORT )
 	@GetMapping( "/exportHost" )
-	public void exportHost( LiveHostWageNote dto, HttpServletResponse response ) {
+	public void exportHost( LiveHostWageNote dto, HttpServletResponse response ) throws ParseException {
 		List<RspLiveHostWageNoteList> list = liveHostWageNoteService.hostPage( dto );
 		ExportExcelUtil.exportExcel( list, "主播统计时长", "主播统计时长", RspLiveHostWageNoteList.class, response );
 	}

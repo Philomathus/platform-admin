@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.domain.LiveHostWageNote;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteList;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -31,5 +32,5 @@ public interface ILiveHostWageNoteService {
 
     public List<RspLiveHostWageNoteFamily> familyPage( LiveHostWageNote dto);
 
-    public List<RspLiveHostWageNoteList> hostPage( LiveHostWageNote dto);
+    public List<RspLiveHostWageNoteList> hostPage( LiveHostWageNote dto) throws ParseException;
 }
