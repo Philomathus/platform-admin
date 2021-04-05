@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeLianFuBaoType;
 import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -29,7 +30,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 		BankCodeLianFuBaoType bankCodeType = BankCodeLianFuBaoType.getCodeByDesc( withdrawLog.getBankName() );
 		if ( bankCodeType == null ) {
 			log.warn( "此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
-			throw new BaseException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
+			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
 		}
 		withdrawLog.setBankCode( bankCodeType.name() );
 
