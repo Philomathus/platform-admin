@@ -65,6 +65,11 @@ public class PayTypeServiceImpl implements IPayTypeService {
 		return payTypes;
 	}
 
+	@Override
+	public Integer existCode(Integer code) {
+		return payTypeMapper.existCode(code);
+	}
+
 	/**
 	 * 新增支付类型
 	 *
