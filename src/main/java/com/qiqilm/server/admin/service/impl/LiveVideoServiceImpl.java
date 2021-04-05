@@ -504,11 +504,39 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	@Override
 	public void countHostGift() {
 		String dayTime = LocalDate.now().plusDays(-1).toString();
-		for(HostPropDayVo v  : liveVideoPropMapper.sumHostPropDayList(dayTime)){
+		List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime);
+		String begin = dayTime.concat(" 00:00:00");
+		String end = dayTime.concat(" 23:59:59");
+
+		List<HostPropDayVo> lotteryDayVos = liveVideoPropMapper.sumHostLotteryDayList(begin,end);
+
+
+		Map<String,LiveHostWageDay> updateMap = new HashMap<>();
+
+
+		for(HostPropDayVo v  : propDayVos){
 			LiveHostWageDay updateLiveDay = new LiveHostWageDay();
 			updateLiveDay.setId(dayTime.concat("-").concat(String.valueOf(v.getHostId())));
 			updateLiveDay.setTicket(v.getSumHostProp());
+			updateMap.put(updateLiveDay.getId(),updateLiveDay);
+		}
+		String id ;
+		for(HostPropDayVo v  : lotteryDayVos){
+			id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
+			LiveHostWageDay updateLiveDay = updateMap.get(id);
+			if(updateLiveDay==null){
+				updateLiveDay = new LiveHostWageDay();
+				updateLiveDay.setId(id);
+				updateMap.put(updateLiveDay.getId(),updateLiveDay);
+			}
+			updateLiveDay.setLotteryCost(v.getSumHostProp());
+
+		}
+
+		for(LiveHostWageDay updateLiveDay:updateMap.values()){
 			liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
 		}
+
+
 	}
 }

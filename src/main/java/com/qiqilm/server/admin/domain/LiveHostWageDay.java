@@ -44,21 +44,12 @@ public class LiveHostWageDay extends BaseEntity {
     @Excel(name = "主播直播结算印票")
     private BigDecimal ticket;
 
+    /** 主播直播结算印票 */
+    @Excel(name = "主播直播彩票投注")
+    private BigDecimal lotteryCost;
+
     /** 上播次数 */
     @Excel(name = "上播次数")
     private Integer times;
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("familyId", getFamilyId())
-            .append("hostId", getHostId())
-            .append("startTime", getStartTime())
-            .append("endTime", getEndTime())
-            .append("liveTimeSec", getLiveTimeSec())
-            .append("ticket", getTicket())
-            .append("times", getTimes())
-            .toString();
-    }
 }
