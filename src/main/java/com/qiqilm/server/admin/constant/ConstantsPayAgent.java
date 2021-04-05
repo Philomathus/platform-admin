@@ -7,13 +7,15 @@ package com.qiqilm.server.admin.constant;
  */
 public abstract class ConstantsPayAgent {
 	// 亨鑫代付
-	public static final String HENG_XIN  = "hengXin";
+	public static final String HENG_XIN    = "hengXin";
 	// 顺为代付
-	public static final String SHUN_WEI  = "shunWei";
+	public static final String SHUN_WEI    = "shunWei";
 	// 天天代付
-	public static final String TIAN_TIAN = "tianTian";
+	public static final String TIAN_TIAN   = "tianTian";
 	// 咪咪代付
-	public static final String MIMI      = "mimi";
+	public static final String MIMI        = "mimi";
 	// 小飞代付
-	public static final String XIAO_FEI  = "xiaoFei";
+	public static final String XIAO_FEI    = "xiaoFei";
+	// 联付宝
+	public static final String LIAN_FU_BAO = "lianFuBao";
 }
