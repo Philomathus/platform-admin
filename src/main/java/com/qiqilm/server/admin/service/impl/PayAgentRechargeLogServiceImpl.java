@@ -38,6 +38,11 @@ public class PayAgentRechargeLogServiceImpl implements IPayAgentRechargeLogServi
      */
     @Override
     public List<PayAgentRechargeLog> selectPayAgentRechargeLogList(PayAgentRechargeLog payAgentRechargeLog) {
+        String[] selectDate = payAgentRechargeLog.getSelectDate();
+        if ( selectDate != null && selectDate.length > 0 ) {
+            payAgentRechargeLog.setSelectStartDate( selectDate[ 0 ] );
+            payAgentRechargeLog.setSelectEndDate( selectDate[ 1 ] );
+        }
         return payAgentRechargeLogMapper.selectPayAgentRechargeLogList(payAgentRechargeLog);
     }
 
@@ -88,6 +93,11 @@ public class PayAgentRechargeLogServiceImpl implements IPayAgentRechargeLogServi
 
     @Override
     public PayAgentRechargeLog count(PayAgentRechargeLog payAgentRechargeLog) {
+        String[] selectDate = payAgentRechargeLog.getSelectDate();
+        if ( selectDate != null && selectDate.length > 0 ) {
+            payAgentRechargeLog.setSelectStartDate( selectDate[ 0 ] );
+            payAgentRechargeLog.setSelectEndDate( selectDate[ 1 ] );
+        }
         return payAgentRechargeLogMapper.count(payAgentRechargeLog);
     }
 }
