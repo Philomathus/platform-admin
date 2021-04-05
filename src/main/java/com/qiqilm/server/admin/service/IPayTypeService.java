@@ -27,6 +27,8 @@ public interface IPayTypeService {
 	 */
 	public List<PayType> selectPayTypeList(PayType payType);
 
+	Integer existCode(Integer code);
+
 	/**
 	 * 新增支付类型
 	 *

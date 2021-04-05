@@ -67,6 +67,11 @@
 		where id = #{id}
 	</select>
 
+	<select id="existCode" parameterType="Integer" resultType="java.lang.Integer">
+		select count(0) from ${dbMain}.pay_type
+		where code = #{code}
+	</select>
+
 	<insert id="insertPayType" parameterType="PayType">
 		insert into pay_type
 		<trim prefix="(" suffix=")" suffixOverrides=",">
