@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberGameMoney;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -42,4 +43,6 @@ public interface MemberGameMoneyMapper {
 	 * @return 结果
 	 */
 	public int updateMemberGameMoney( MemberGameMoney memberGameMoney );
+
+	List<Integer> lists(@Param("member_id") String member_id);
 }

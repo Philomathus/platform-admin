@@ -58,4 +58,10 @@ public interface PayTypeMapper {
 	 * @return 结果
 	 */
 	public int deletePayTypeByIds(String[] ids );
+
+	Integer selectCodeById( String payTypeId );
+
+	int countByCode( Integer code );
+
+	List<PayType> selectCachePayTypeList();
 }

@@ -25,7 +25,7 @@ public class PayType extends BaseEntity {
 
     /** 编码 */
     @Excel(name = "编码")
-    private String code;
+    private Integer code;
 
     /** 图标 */
     @Excel(name = "图标")

@@ -44,14 +44,6 @@ public interface IPayTypeService {
 	public int updatePayType(PayType payType);
 
 	/**
-	 * 批量删除支付类型
-	 *
-	 * @param ids 需要删除的支付类型ID
-	 * @return 结果
-	 */
-	public int deletePayTypeByIds(String[] ids );
-
-	/**
 	 * 删除支付类型信息
 	 *
 	 * @param id 支付类型ID

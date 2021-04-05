@@ -48,4 +48,7 @@ public interface MemberRechargeLogMapper {
 
 	public Map listCount( @Param( "req" ) ReqMemberRechargeLog req );
 	int checkRechargeLogFail();
+
+
+	int countRechargeDaySucess(@Param("memberId") String memberId);
 }
