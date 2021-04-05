@@ -6,7 +6,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeLianFuBaoType;
-import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
@@ -20,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import java.math.RoundingMode;
 import java.util.*;
 
 @Repository( value = ConstantsPayAgent.LIAN_FU_BAO + "PayAgentProcessor" )
@@ -36,7 +36,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 
 		SortedMap<String, Object> bodyMap = new TreeMap<>();
 		bodyMap.put( "merOrderNo", withdrawLog.getOrderNo() );
-		bodyMap.put( "amount", withdrawLog.getWithdrawMoney() );
+		bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
 		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIAN_FU_BAO );
 		bodyMap.put( "bankCode", withdrawLog.getBankCode() );
 		bodyMap.put( "submitTime", reqPayAgent.getCurrentTime().getTime() );
@@ -131,10 +131,10 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 
 	@Override
 	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-		MemberWithdrawLog         withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-		PayAgentPlatform          payAgentPlatform =
+		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+		PayAgentPlatform payAgentPlatform =
 				payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-		SortedMap<String, Object> bodyMap          = new TreeMap<>();
+		SortedMap<String, Object> bodyMap = new TreeMap<>();
 		bodyMap.put( "merOrderNo", withdrawLog.getOrderNo() );
 		bodyMap.put( "submitTime", withdrawLog.getUpdateTime().getTime() );
 
