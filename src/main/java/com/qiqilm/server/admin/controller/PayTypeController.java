@@ -45,7 +45,7 @@ public class PayTypeController extends BaseController {
 	public AjaxResult existCode( @PathVariable( "code" ) Integer code  ) {
 		int i = payTypeService.existCode( code );
 		if(i>0){
-			AjaxResult.error(0,"此支付编码已存在");
+			return AjaxResult.error(0,"此支付编码已存在");
 		}
 		return null;
 	}
