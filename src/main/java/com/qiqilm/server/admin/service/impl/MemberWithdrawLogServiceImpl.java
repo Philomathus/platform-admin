@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
@@ -64,6 +65,11 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	@Override
 	public List<MemberWithdrawLog> selectMemberWithdrawLogList( MemberWithdrawLog memberWithdrawLog ) {
 		return memberWithdrawLogMapper.selectMemberWithdrawLogList( memberWithdrawLog );
+	}
+
+	@Override
+	public List<MemberWithdrawLogShunWei> selectMemberWithdrawLogShunWeiList(ReqMemberWithdrawLog req) {
+		return memberWithdrawLogMapper.selectMemberWithdrawLogShunWeiList( req.getIds() );
 	}
 
 	@Override
@@ -165,6 +171,43 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 
 		return AjaxResult.error( "更新订单状态失败" );
+	}
+
+	@Override
+	public AjaxResult locks(ReqMemberWithdrawLog req) {
+		List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.selectLocksByIds( req.getIds() );
+		for ( MemberWithdrawLog memberWithdrawLog : memberWithdrawLogList ) {
+			if (memberWithdrawLog == null) {
+				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"订单不存在");
+			}
+			if (memberWithdrawLog.getStatus() == 1) {
+				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"订单已被锁定,请刷新界面");
+			}
+			if (memberWithdrawLog.getStatus() == 2) {
+				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"订单已被拒绝");
+			}
+			if (memberWithdrawLog.getStatus() != 5 && 1 < memberWithdrawLog.getStatus()) {
+				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"审核流程非法");
+			}
+			LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+			String userName = loginUser.getUser().getUserName();
+
+			if (!StringUtils.isEmpty(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"订单只能由" + memberWithdrawLog.getOpName() + "处理");
+			}
+
+			memberWithdrawLog.setRemark(req.getRemark());
+			memberWithdrawLog.setStatus(1);
+			memberWithdrawLog.setOpName(userName);
+			memberWithdrawLog.setUpdateTime(new Date());
+			int i = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
+			if (i > 0) {
+				continue;
+			}else {
+				return AjaxResult.error(memberWithdrawLog.getOrderNo() + "更新订单状态失败");
+			}
+		}
+        return AjaxResult.success("批量锁定成功");
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 pay_channel_new
+ * pay_channel_new
  *
  * @author 77tv
  * @date 2021-01-27
@@ -66,9 +66,13 @@ public class PayChannelNew extends BaseEntity {
     @Excel(name = "排序号")
     private Long indexes;
 
-    /** 开放层级 */
-    @Excel(name = "开放层级")
+    /** 最小开放层级 */
+    @Excel(name = "最小开放层级")
     private Long openLevel;
+
+    /** 最大开放层级 */
+    @Excel(name = "最大开放层级")
+    private Long openLevelMax;
 
     /** 支付平台编号 */
     @Excel(name = "支付平台编号")

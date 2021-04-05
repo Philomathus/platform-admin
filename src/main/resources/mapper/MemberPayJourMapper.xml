@@ -276,7 +276,7 @@
 			and (trade_sn = #{searchOrderNo} or order_no = #{searchOrderNo})
 		</if>
 		<if test="searchValue != null and searchValue != ''">
-			and (member_id = #{searchValue} or user_name = #{searchValue})
+			and member_id in (SELECT id from member_info where (user_name = #{searchValue} or id = #{searchValue}))
 		</if>
 		<if test="selectStartDate != null and selectStartDate != ''">
 			and update_time <![CDATA[ >= ]]> #{selectStartDate} and update_time <![CDATA[ <= ]]> #{selectEndDate}

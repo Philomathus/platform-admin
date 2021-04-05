@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
@@ -56,6 +57,8 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	private TokenService            tokenService;
 	@Autowired
 	private RedisUtil               redisUtil;
+	@Autowired
+	private SysConfigCacheUtil sysConfigCacheUtil;
 
 
 	/**
@@ -156,6 +159,13 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 
 		BigDecimal chargeGive = memberRechargeLog.getDiscountBill().multiply( memberRechargeLog.getRechargeMoney() )
 				.setScale( 2, BigDecimal.ROUND_HALF_UP ); // 充值彩金
+
+		BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "recharge_day_first_rate");
+
+		if(memberRechargeLogMapper.countRechargeDaySucess(memberInfo.getId())==0){
+			chargeGive = chargeGive.add(memberRechargeLog.getRechargeMoney().multiply( ticketCattyRatio )// 单日首次彩金
+					.setScale( 2, BigDecimal.ROUND_HALF_UP ));
+		}
 
 		BigDecimal add = memberRechargeLog.getRechargeMoney().add( chargeGive );
 

@@ -27,6 +27,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -210,18 +211,44 @@ public class MemberInfoController extends BaseController {
     }
 
     /**
-     * 重置密码123456
+     * 重置密码
      *
      * @return
      */
-    @ApiOperation(value = "重置密码123456", notes = "重置密码123456")
-    @RequestMapping(value = "/reset/{id}", method = RequestMethod.DELETE)
-    @Log(title = "重置密码123456", businessType = BusinessType.UPDATE)
-    public Object reset(@ApiParam(required = true, name = "id", value = "系统编号")
-                        @PathVariable("id") String id) {
+    @ApiOperation(value = "重置密码", notes = "重置密码")
+    @RequestMapping(value = "/reset", method = RequestMethod.POST)
+    @Log(title = "重置密码", businessType = BusinessType.UPDATE)
+    public Object reset(HttpServletRequest request, ReqAddScore req) throws Exception {
+        RspBase rspBase = new RspBase();
+        if (req.getGoogleAuthCode() == null) {
+            rspBase.setMsg("请输入google验证码");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+        if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+            rspBase.setMsg("未绑定google验证秘钥，无法审核");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        if (googleAuthSecret.length() == 32) {
+            rspBase.setMsg("google验证秘钥未加密，请重新登录");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+                "/googleAuthPrivateKey"));
+
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, req.getGoogleAuthCode())) {
+            rspBase.setMsg("google验证码不正确，请检查");
+            rspBase.setCode(1);
+            return rspBase;
+        }
         MemberInfo memberInfo = new MemberInfo();
-        memberInfo.setId(id);
-        memberInfo.setPassword("123456");
+        memberInfo.setId(req.getId());
+        memberInfo.setPassword(req.getPassword());
         memberInfoService.updateMemberInfo(memberInfo);
         return new RspBase();
     }
@@ -345,6 +372,43 @@ public class MemberInfoController extends BaseController {
         memberInfo.setId(memberInfo.getId());
         memberInfo.setWithdrawalPass("");
         memberInfoService.updateMemberInfo(memberInfo);
+        rspBase.setCode(Constants.URC_SUCCESS);
+        rspBase.setData("成功");
+        return rspBase;
+    }
+    @ApiOperation(value = "修復打碼", notes = "修復打碼")
+    @PostMapping("/memberBcodeRepair")
+    public Object memberBcodeRepair(HttpServletRequest request,
+                          MemberInfo memberInfo) throws Exception {
+        RspBase rspBase = new RspBase();
+        if (memberInfo.getGoogleAuthCode() == null) {
+            rspBase.setMsg("请输入google验证码");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+        if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+            rspBase.setMsg("未绑定google验证秘钥，无法审核");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        if (googleAuthSecret.length() == 32) {
+            rspBase.setMsg("google验证秘钥未加密，请重新登录");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+                "/googleAuthPrivateKey"));
+
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, memberInfo.getGoogleAuthCode())) {
+            rspBase.setMsg("google验证码不正确，请检查");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String memberId = memberInfo.getId();
+        memberInfoService.repairMemberBcode(memberId);
         rspBase.setCode(Constants.URC_SUCCESS);
         rspBase.setData("成功");
         return rspBase;
