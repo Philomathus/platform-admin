@@ -38,12 +38,6 @@ public class PayAgentPlatformController extends BaseController {
 	public TableDataInfo list( PayAgentPlatform payAgentPlatform ) {
 		startPage();
 		List<PayAgentPlatform> list = payAgentPlatformService.selectPayAgentPlatformList( payAgentPlatform );
-		for ( PayAgentPlatform agentPlatform : list ) {
-			agentPlatform.setSignMd5( "*********" );
-			agentPlatform.setHeaderKey( "*********" );
-			agentPlatform.setSignPublicKey( "*********" );
-			agentPlatform.setSignPrivateKey( "*********" );
-		}
 		return getDataTable( list );
 	}
 
@@ -68,7 +62,7 @@ public class PayAgentPlatformController extends BaseController {
 	@GetMapping( "/export" )
 	public AjaxResult export( PayAgentPlatform payAgentPlatform ) {
 		List<PayAgentPlatform>      list = payAgentPlatformService.selectPayAgentPlatformList( payAgentPlatform );
-		ExcelUtil<PayAgentPlatform> util = new ExcelUtil<PayAgentPlatform>( PayAgentPlatform.class );
+		ExcelUtil<PayAgentPlatform> util = new ExcelUtil<>( PayAgentPlatform.class );
 		return util.exportExcel( list, "payAgentPlatform" );
 	}
 

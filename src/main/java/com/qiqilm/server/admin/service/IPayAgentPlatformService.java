@@ -1,8 +1,6 @@
 package com.qiqilm.server.admin.service;
 
-import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
-import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 
 import java.util.List;
 
