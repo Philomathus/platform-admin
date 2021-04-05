@@ -35,6 +35,8 @@ public interface LiveVideoPropMapper {
 
 	List<HostPropDayVo> sumHostPropDayList( @Param( "dayTime" ) String dayTime );
 
+	List<HostPropDayVo> sumHostLotteryDayList( @Param( "begin" ) String begin, @Param( "end" ) String end);
+
     List<RspTestAccountProp> testAccountPorpList(LiveVideoProp liveVideoProp1);
 
 	RspTestAccountProp testAccountPorpCount(LiveVideoProp liveVideoProp);
