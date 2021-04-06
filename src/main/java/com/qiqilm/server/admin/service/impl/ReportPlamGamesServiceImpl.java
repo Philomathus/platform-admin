@@ -13,6 +13,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -124,12 +125,33 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
         }
         String endDate=getEndDate(begindate);
         reportPlamGames.setEndDate(endDate);
-
         List<RspPlamGamesMonth> allList = reportPlamGamesMapper.selectReportPlamGamesListMonth(reportPlamGames);
         for (RspPlamGamesMonth rsplist:allList) {
             rsplist.setDate(begindate.substring(0,7));
         }
         return allList;
+    }
+    @Override
+    public RspPlamGamesMonth countBet(ReportPlamGames reportPlamGames) throws ParseException{
+        String begindate=null;
+        if (reportPlamGames.getBegindate()==null){
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            String dateNowStr = sdf.format(d);
+            begindate=dateNowStr+"-01";
+            reportPlamGames.setBegindate(begindate);
+        }else {
+            begindate = reportPlamGames.getBegindate();
+        }
+        String endDate=getEndDate(begindate);
+        reportPlamGames.setEndDate(endDate);
+        RspPlamGamesMonth rspPlamGamesMonth=reportPlamGamesMapper.countBetMonth(reportPlamGames);
+        if (Objects.isNull(rspPlamGamesMonth)){
+            RspPlamGamesMonth rspPlamGamesMonth2=new RspPlamGamesMonth();
+            rspPlamGamesMonth2.setCountBetMoney(BigDecimal.ZERO);
+            return rspPlamGamesMonth2;
+        }
+        return rspPlamGamesMonth;
     }
 
     private String getEndDate(String begindate) throws ParseException {
@@ -148,12 +170,8 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
         } else {
             lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         }
-        // 设置日历中月份的最大天数
-        cal.set(Calendar.DAY_OF_MONTH, lastDay);
-        // 格式化日期，获取最后时刻
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String lastDayOfMonth = sdf.format(cal.getTime()) ;
-        return lastDayOfMonth;
+        String endDate=begindate.substring(0,8)+lastDay;
+        return endDate;
     }
 
 

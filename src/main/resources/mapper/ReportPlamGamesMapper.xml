@@ -58,4 +58,17 @@
         </where>
         GROUP BY gameplame
     </select>
+
+    <select id="countBetMonth"  resultType="com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth">
+        select SUM(plampfit)  as countBetMoney  from report_plam_games
+        <where>
+            <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
+            <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
+                AND date_format(begindate,'%y%m%d') &gt;= date_format(#{begindate},'%y%m%d')
+            </if>
+            <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
+                AND date_format(begindate,'%y%m%d') &lt;= date_format(#{endDate},'%y%m%d')
+            </if>
+        </where>
+    </select>
 </mapper>
