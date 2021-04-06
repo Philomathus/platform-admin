@@ -117,7 +117,17 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 		log.warn( sign + " : " + resultMap.get( "sign" ).toString() );
 		if ( sign.equalsIgnoreCase( resultMap.get( "sign" ).toString() ) ) {
 			if ( orderState > 0 ) {
-				payAgentService.processOrderPay( merOrderNo, orderNo, payAgentPlatform, orderState == 1 );
+				MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
+				if ( withdrawLog == null ) {
+					log.error( "提现相关记录丢失 - merOrderNo:{}", merOrderNo );
+					return "fail";
+				}
+				if ( withdrawLog.getStatus() == 6 ) {
+					log.error( "已有代付记录 - merOrderNo:{}", merOrderNo );
+					return "success";
+				}
+				PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( merOrderNo );
+				payAgentService.processOrderPay( withdrawLog, payAgentLog, orderNo, payAgentPlatform, orderState == 1 );
 			}
 			return "success";
 		}
