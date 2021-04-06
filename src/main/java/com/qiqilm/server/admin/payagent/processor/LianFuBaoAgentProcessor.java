@@ -5,8 +5,7 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
-import com.qiqilm.server.admin.enums.BankCodeHengXinType;
-import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.enums.BankCodeLianFuBaoType;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
@@ -25,12 +24,12 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.*;
 
-@Repository( value = ConstantsPayAgent.HENG_XIN + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.LIAN_FU_BAO + "PayAgentProcessor" )
 @Log4j2
-public class HengXinPayAgentProcessor extends AbstractPayAgent {
+public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 	@Override
 	public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
-		BankCodeHengXinType bankCodeType = BankCodeHengXinType.getCodeByDesc( withdrawLog.getBankName() );
+		BankCodeLianFuBaoType bankCodeType = BankCodeLianFuBaoType.getCodeByDesc( withdrawLog.getBankName() );
 		if ( bankCodeType == null ) {
 			log.warn( "此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
 			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
@@ -40,9 +39,9 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 		SortedMap<String, Object> bodyMap = new TreeMap<>();
 		bodyMap.put( "merOrderNo", withdrawLog.getOrderNo() );
 		bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
-		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.HENG_XIN );
+		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIAN_FU_BAO );
 		bodyMap.put( "bankCode", withdrawLog.getBankCode() );
-		bodyMap.put( "submitTime", Timestamp.valueOf( reqPayAgent.getCurrentTime() ).getTime() );
+		bodyMap.put( "submitTime", reqPayAgent.getCurrentTime().getTime() );
 		bodyMap.put( "bankAccountNo", withdrawLog.getBankAccount() );
 		bodyMap.put( "bankAccountName", withdrawLog.getBankUserName() );
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -191,10 +190,10 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 
 	@Override
 	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-		MemberWithdrawLog         withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-		PayAgentPlatform          payAgentPlatform =
+		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+		PayAgentPlatform payAgentPlatform =
 				payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-		SortedMap<String, Object> bodyMap          = new TreeMap<>();
+		SortedMap<String, Object> bodyMap = new TreeMap<>();
 		bodyMap.put( "merOrderNo", withdrawLog.getOrderNo() );
 		bodyMap.put( "submitTime", withdrawLog.getUpdateTime().getTime() );
 

@@ -38,12 +38,6 @@ public class PayAgentPlatformController extends BaseController {
 	public TableDataInfo list( PayAgentPlatform payAgentPlatform ) {
 		startPage();
 		List<PayAgentPlatform> list = payAgentPlatformService.selectPayAgentPlatformList( payAgentPlatform );
-		for ( PayAgentPlatform agentPlatform : list ) {
-			agentPlatform.setSignMd5( "*********" );
-			agentPlatform.setHeaderKey( "*********" );
-			agentPlatform.setSignPublicKey( "*********" );
-			agentPlatform.setSignPrivateKey( "*********" );
-		}
 		return getDataTable( list );
 	}
 
@@ -68,7 +62,7 @@ public class PayAgentPlatformController extends BaseController {
 	@GetMapping( "/export" )
 	public AjaxResult export( PayAgentPlatform payAgentPlatform ) {
 		List<PayAgentPlatform>      list = payAgentPlatformService.selectPayAgentPlatformList( payAgentPlatform );
-		ExcelUtil<PayAgentPlatform> util = new ExcelUtil<PayAgentPlatform>( PayAgentPlatform.class );
+		ExcelUtil<PayAgentPlatform> util = new ExcelUtil<>( PayAgentPlatform.class );
 		return util.exportExcel( list, "payAgentPlatform" );
 	}
 
@@ -131,5 +125,17 @@ public class PayAgentPlatformController extends BaseController {
 	@PostMapping( "/payAgentOrder" )
 	public AjaxResult payAgentOrder( @RequestBody ReqPayAgent reqPayAgent ) throws Exception {
 		return payAgentService.payAgentOrder( reqPayAgent );
+	}
+
+	/**
+	 * 批量代付下单
+	 *
+	 * @return
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentPlatform:order')" )
+	@Log( title = "批量代付下单", businessType = BusinessType.ORDER )
+	@PostMapping( "/payAgentOrders" )
+	public AjaxResult payAgentOrders( @RequestBody ReqPayAgent reqPayAgent ) throws Exception {
+		return payAgentService.payAgentOrders( reqPayAgent );
 	}
 }

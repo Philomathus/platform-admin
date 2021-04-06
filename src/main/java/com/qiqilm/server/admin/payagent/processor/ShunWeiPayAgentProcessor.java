@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeShunWeiType;
 import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
@@ -35,7 +36,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		BankCodeShunWeiType bankCodeType = BankCodeShunWeiType.getCodeByDesc( withdrawLog.getBankName() );
 		if ( bankCodeType == null ) {
 			log.warn( "此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
-			throw new BaseException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
+			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
 		}
 		withdrawLog.setBankCode( bankCodeType.name() );
 
@@ -177,7 +178,17 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 			String order_num    = ( String ) signMap.get( "order_num" );
 			String remit_result = ( String ) signMap.get( "remit_result" );
 
-			payAgentService.processOrderPay( order_num, "", payAgentPlatform, "SUCCESS".equals( remit_result ) );
+			MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( order_num );
+			if ( withdrawLog == null ) {
+				log.error( "提现相关记录丢失 - merOrderNo:{}", order_num );
+				return "fail";
+			}
+			if ( withdrawLog.getStatus() == 6 ) {
+				log.error( "已有代付记录 - merOrderNo:{}", order_num );
+				return "ok";
+			}
+			PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( order_num );
+			payAgentService.processOrderPay( withdrawLog, payAgentLog, "", payAgentPlatform, "SUCCESS".equals( remit_result ) );
 
 			return "ok";
 		}
@@ -199,17 +210,17 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 
 		String mySign = this.assemblyUrl( requestMap ) + "&key=" + signMd5;
 		log.warn( mySign );
-		String amount        = requestMap.remove( "amount" ).toString();
-		String bankAccountNo = requestMap.remove( "bankAccountNo" ).toString();
-		String clientCode    = requestMap.get( "clientCode" ).toString();
-		String clientOrderNo = requestMap.get( "clientOrderNo" ).toString();
+		BigDecimal amount        = new BigDecimal( requestMap.remove( "amount" ).toString() );
+		String     bankAccountNo = requestMap.remove( "bankAccountNo" ).toString();
+		String     clientCode    = requestMap.get( "clientCode" ).toString();
+		String     clientOrderNo = requestMap.get( "clientOrderNo" ).toString();
 		mySign = DigestUtils.md5Hex( mySign );
 		requestMap.put( "dateTime", DateFormatUtils.formate( new Date(), DateFormatUtils.TIGHT_PATTERN_DATETIME ) );
 		requestMap.put( "sign", "" );
 		requestMap.put( "code", "99" );
 		if ( ( reSign ).equalsIgnoreCase( mySign ) ) {
 			MemberWithdrawLog memberWithdrawLog = withdrawLogMapper.selectByOrderNo( clientOrderNo );
-			if ( memberWithdrawLog == null || !amount.equals( memberWithdrawLog.getWithdrawMoney().toString() )
+			if ( memberWithdrawLog == null || amount.compareTo( memberWithdrawLog.getWithdrawMoney() ) != 0
 					|| !bankAccountNo.equals( memberWithdrawLog.getBankAccount() )
 					|| !clientCode.equals( payAgentPlatform.getMerId() ) ) {
 				requestMap.put( "msg", "订单不匹配" );
@@ -226,7 +237,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 			return requestMap;
 		}
 		requestMap.put( "msg", "验签失败" );
-		return null;
+		return requestMap;
 	}
 
 	@Override
