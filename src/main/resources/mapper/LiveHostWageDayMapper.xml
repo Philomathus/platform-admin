@@ -18,42 +18,49 @@
         select id, family_id, host_id, start_time, end_time, live_time_sec, ticket,lottery_cost, times from ${dbLive}.live_host_wage_day
     </sql>
 
-    <select id="selectLiveHostWageDayList" parameterType="LiveHostWageDay" resultMap="LiveHostWageDayResult">
-        <include refid="selectLiveHostWageDayVo"/>
+    <sql id="whereSelect">
         <where>
-            <if test="familyId != null "> and family_id = #{familyId}</if>
-            <if test="hostId != null "> and host_id = #{hostId}</if>
-            <if test="startTime != null  and startTime != ''"> and start_time = #{startTime}</if>
-            <if test="endTime != null  and endTime != ''"> and end_time = #{endTime}</if>
-            <if test="liveTimeSec != null "> and live_time_sec = #{liveTimeSec}</if>
-            <if test="ticket != null "> and ticket = #{ticket}</if>
-            <if test="times != null "> and times = #{times}</if>
+            <if test="hostId != null ">and host_id = #{hostId}</if>
+            <if test="startTime != null and startTime != ''">and start_time >= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and end_time &lt;= #{endTime}</if>
         </where>
+    </sql>
+
+    <select id="selectLiveHostWageDayList" parameterType="LiveHostWageDay" resultMap="LiveHostWageDayResult">
+        select a.*, u.nick_name nickName from (
+        select id, family_id, host_id, start_time, end_time, live_time_sec, ticket, times
+        from ${dbLive}.live_host_wage_day
+        <where>
+            <if test="hostId != null ">host_id = #{hostId}</if>
+            <if test="startTime != null and startTime != ''">and start_time >= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and end_time &lt;= #{endTime}</if>
+        </where>) a
+        left join ${dbLive}.live_user u on a.host_id=u.id
     </select>
 
-    <select id="selectLiveHostWageDayById" parameterType="String" resultMap="LiveHostWageDayResult">
+    <select id="selectLiveHostWageDayById" parameterType="Long" resultMap="LiveHostWageDayResult">
         <include refid="selectLiveHostWageDayVo"/>
+        <include refid="whereSelect"></include>
         where id = #{id}
     </select>
 
-    <insert id="insertLiveHostWageDay" parameterType="LiveHostWageDay">
+
+    <insert id="insertLiveHostWageDay" parameterType="LiveHostWageDay" useGeneratedKeys="true" keyProperty="id">
         insert into ${dbLive}.live_host_wage_day
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
             <if test="familyId != null">family_id,</if>
             <if test="hostId != null">host_id,</if>
-            <if test="startTime != null">start_time,</if>
-            <if test="endTime != null">end_time,</if>
+            <if test="startTime != null and startTime != ''">start_time,</if>
+            <if test="endTime != null and endTime != ''">end_time,</if>
             <if test="liveTimeSec != null">live_time_sec,</if>
             <if test="ticket != null">ticket,</if>
             <if test="times != null">times,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="familyId != null">#{familyId},</if>
             <if test="hostId != null">#{hostId},</if>
-            <if test="startTime != null">#{startTime},</if>
-            <if test="endTime != null">#{endTime},</if>
+            <if test="startTime != null and startTime != ''">#{startTime},</if>
+            <if test="endTime != null and endTime != ''">#{endTime},</if>
             <if test="liveTimeSec != null">#{liveTimeSec},</if>
             <if test="ticket != null">#{ticket},</if>
             <if test="times != null">#{times},</if>
@@ -67,9 +74,9 @@
 
             <if test="hostId != null">host_id = #{hostId},</if>
 
-            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="startTime != null and startTime != ''">start_time = #{startTime},</if>
 
-            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="endTime != null and endTime != ''">end_time = #{endTime},</if>
 
             <if test="liveTimeSec != null">live_time_sec = #{liveTimeSec},</if>
 
@@ -83,14 +90,58 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteLiveHostWageDayById" parameterType="String">
-        delete from ${dbLive}.live_host_wage_day where id = #{id}
-    </delete>
+    <select id="beforeDay" resultMap="LiveHostWageDayResult">
+        select * from ${dbLive}.live_host_wage_day  l where l.host_id=#{userId}  ORDER BY start_time desc LIMIT 1
+    </select>
 
-    <delete id="deleteLiveHostWageDayByIds" parameterType="String">
-        delete from ${dbLive}.live_host_wage_day where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+    <select id="familyPage" parameterType="LiveHostWageDay" resultType="RspLiveHostWageDayFamily">
+        select
+        o.family_id familyId,
+        f.name familyName,
+        f.user_id familyUserId,
+        f.nick_name familyNickName,
+        SUM(o.live_time_sec) as alltime,
+        sum(o.ticket) as allticket,
+        SUBSTR(o.start_time,1,10) as shijian,
+        #{countTime} timedata
+        from ${dbLive}.live_host_wage_day o
+        left join ${dbLive}.live_family f on o.family_id=f.id
+        <where>
+            <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
+            <if test="dto.familyName!=null and dto.familyName!=''">and f.name like concat('%',#{dto.familyName},'%')</if>
+            <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>
+            <if test="dto.startTime!=null">and o.start_time >= #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and o.end_time &lt;= #{dto.endTime}</if>
+        </where>
+        group by o.family_id order by o.family_id asc
+    </select>
+
+    <select id="selectFamilyName" resultType="java.util.Map">
+        select id,nick_name,name from ${dbLive}.live_family
+    </select>
+
+    <select id="hostPage" parameterType="LiveHostWageDay" resultType="RspLiveHostWageDayList">
+        select
+        o.family_id familyId,
+        f.name familyName,
+        f.user_id familyUserId,
+        f.nick_name familyNickName,
+        o.host_id hostId,
+        u.nick_name nickName,
+        SUM(o.live_time_sec) as alltime,
+        sum(o.ticket) as allticket,
+        SUBSTR(o.start_time,1,10) as shijian,
+        #{countTime} timedata
+        from ${dbLive}.live_host_wage_day o
+        left join ${dbLive}.live_family f on o.family_id=f.id
+        left join ${dbLive}.live_user u on o.host_id=u.id
+        where o.live_time_sec > 0
+        <if test="dto.id!=null">and o.id like '${dto.dateDay}%'</if>
+        <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
+        <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
+        <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
+        <if test="dto.startTime!=null">and o.start_time >= #{dto.startTime}</if>
+        <if test="dto.endTime!=null">and o.end_time &lt;= #{dto.endTime}</if>
+        group by o.host_id order by o.start_time desc
+    </select>
 </mapper>
