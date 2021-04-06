@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
@@ -46,7 +47,6 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 				"secretkey/payAgentPrivateKey" ) );
 		String signStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
 
-		log.warn( signStr );
 		String sign = DigestUtils.md5Hex( signStr ).toUpperCase();
 		bodyMap.put( "sign", sign );
 
@@ -92,7 +92,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 
 		String dataStr = requestMap.getOrDefault( "data", "" ).toString();
 
-		String data = RSACoder.decryptByPrivateKey( dataStr, payAgentPlatform.getSignPrivateKey() );
+		String data = RSACoder.decryptByPrivateKeyShunWei( dataStr, payAgentPlatform.getSignPrivateKey() );
 		log.info( data );
 		Map<String, Object> resultMap = JsonUtil.json2Map( data );
 
@@ -138,12 +138,12 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 		String signStr = this.assemblyUrl( signMap ) + "&key=" + signMd5;
 		String mySign  = DigestUtils.md5Hex( signStr );
 
-		String amount        = signMap.remove( "amount" ).toString();
-		String bankAccountNo = signMap.remove( "bankAccountNo" ).toString();
+		BigDecimal amount        = new BigDecimal( signMap.remove( "amount" ).toString() );
+		String     bankAccountNo = signMap.remove( "bankAccountNo" ).toString();
 		signMap.put( "submitTime", String.valueOf( System.currentTimeMillis() ) );
 		signMap.put( "code", "1001" );
 		signMap.put( "message", "签名错误" );
-		if ( org.apache.commons.lang3.StringUtils.equals( sign, mySign ) ) {
+		if ( org.apache.commons.lang3.StringUtils.equalsIgnoreCase( sign, mySign ) ) {
 			String            merId             = signMap.getOrDefault( "merId", "" ).toString();
 			String            merOrderNo        = signMap.getOrDefault( "merOrderNo", "" ).toString();
 			MemberWithdrawLog memberWithdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
@@ -151,7 +151,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 				signMap.put( "code", "1002" );
 				signMap.put( "message", "订单不存在" );
 				return signMap;
-			} else if ( !amount.equals( memberWithdrawLog.getWithdrawMoney().toString() ) ) {
+			} else if ( amount.compareTo( memberWithdrawLog.getWithdrawMoney() ) != 0 ) {
 				signMap.put( "code", "1004" );
 				signMap.put( "message", "金额不匹配" );
 				return signMap;

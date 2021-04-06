@@ -68,6 +68,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
 	public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
 		if ( this.checkWhiteIp( payAgentPlatform.getPlatWhiteIpList(), realIp ) ) {
 			log.warn( "请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json( requestMap ) );
+			return "fail";
 		}
 		String                    orderId = ( String ) requestMap.get( "OrderId" );
 		SortedMap<String, Object> map     = new TreeMap<>( requestMap );
