@@ -126,4 +126,16 @@ public class PayAgentPlatformController extends BaseController {
 	public AjaxResult payAgentOrder( @RequestBody ReqPayAgent reqPayAgent ) throws Exception {
 		return payAgentService.payAgentOrder( reqPayAgent );
 	}
+
+	/**
+	 * 批量代付下单
+	 *
+	 * @return
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentPlatform:order')" )
+	@Log( title = "批量代付下单", businessType = BusinessType.ORDER )
+	@PostMapping( "/payAgentOrders" )
+	public AjaxResult payAgentOrders( @RequestBody ReqPayAgent reqPayAgent ) throws Exception {
+		return payAgentService.payAgentOrders( reqPayAgent );
+	}
 }

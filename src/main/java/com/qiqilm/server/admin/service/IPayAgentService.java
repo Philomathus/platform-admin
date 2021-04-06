@@ -13,6 +13,8 @@ public interface IPayAgentService {
 
 	AjaxResult payAgentOrder( ReqPayAgent reqPayAgent ) throws Exception;
 
+	AjaxResult payAgentOrders( ReqPayAgent reqPayAgent );
+
 	void processOrderPay( MemberWithdrawLog withdrawLog, PayAgentLog payAgentLog, String orderNo,
 						  PayAgentPlatform payAgentPlatform, boolean isSuccess );
 
