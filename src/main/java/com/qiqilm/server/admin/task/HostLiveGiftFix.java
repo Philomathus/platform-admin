@@ -15,7 +15,7 @@ public class HostLiveGiftFix {
     private ILiveVideoService liveVideoService;
     @Autowired
     private RedisUtil redisUtil;
-    @Scheduled(cron="0 0 2 * * ?" )
+    @Scheduled(cron="0 0 11 * * ?" )
     public void listenerMonitor() {
 
         if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),1000000)){
