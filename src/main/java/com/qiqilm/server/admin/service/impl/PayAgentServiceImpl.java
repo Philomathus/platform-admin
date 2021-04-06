@@ -196,7 +196,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		}
 
 		BasePayAgent       basePayAgent   = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
-		Map<String,String> failReasonList = new HashMap<>()
+		Map<String,String> failReasonList = new HashMap<>();
 		for ( MemberWithdrawLog withdrawLog : withdrawLogs ) {
 			ReqPayAgent newReqPayAgent = new ReqPayAgent();
 			newReqPayAgent.setCurrentTime( new Date() );
