@@ -16,8 +16,6 @@
 
     <sql id="selectLiveHostWageDayVo">
         select id, family_id, host_id, start_time, end_time, live_time_sec, ticket,lottery_cost, times from ${dbLive}.live_host_wage_day
-        select id, family_id, host_id, start_time, end_time, live_time_sec, ticket, times
-        from ${dbLive}.live_host_wage_day
     </sql>
 
     <sql id="whereSelect">
