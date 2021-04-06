@@ -20,12 +20,11 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Log4j2
@@ -154,6 +153,65 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.success( "代付订单提交成功" );
 		}
 		return AjaxResult.error( StringUtils.hasText( reqPayAgent.getFailReason() ) ? reqPayAgent.getFailReason() : "代付失败" );
+	}
+
+	@Override
+	public AjaxResult payAgentOrders( ReqPayAgent reqPayAgent ) {
+		if ( CollectionUtils.isEmpty( reqPayAgent.getWithdrawOrderNos() ) || reqPayAgent.getPayAgentPlatId() == null ) {
+			return AjaxResult.error( "订单号或代付平台ID不能为空" );
+		}
+		if ( reqPayAgent.getGoogleAuthCode() == null ) {
+			return AjaxResult.error( "请输入google验证码" );
+		}
+		PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( reqPayAgent.getPayAgentPlatId() );
+		if ( payAgentPlatform == null ) {
+			log.warn( "代付平台未找到 - payAgentPlatId:{}", reqPayAgent.getPayAgentPlatId() );
+			return AjaxResult.error( "代付平台未找到" );
+		}
+
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String    userName  = loginUser.getUser().getUserName();
+
+
+		List<MemberWithdrawLog> withdrawLogs = withdrawLogMapper.selectPayAgentOrder( reqPayAgent.getWithdrawOrderNos(),
+				userName );
+		if ( CollectionUtils.isEmpty( withdrawLogs ) ) {
+			return AjaxResult.error( "未匹配到可提现订单" );
+		}
+
+		String googleAuthSecret = sysUserMapper.selectGoogleAuthKeyByUserName( userName );
+
+		if ( !StringUtils.hasText( googleAuthSecret ) ) {
+			return AjaxResult.error( "未绑定google验证秘钥，无法审核" );
+		}
+		String googleAuthKey = "";
+		try {
+			googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret,
+					AuthUtil.getSecurityKeyStr( "secretkey/googleAuthPrivateKey" ) );
+		} catch ( Exception e ) {
+			log.error( e.getMessage(), e );
+		}
+		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, reqPayAgent.getGoogleAuthCode() ) ) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
+
+		BasePayAgent       basePayAgent   = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
+		Map<String,String> failReasonList = new HashMap<>()
+		for ( MemberWithdrawLog withdrawLog : withdrawLogs ) {
+			ReqPayAgent newReqPayAgent = new ReqPayAgent();
+			newReqPayAgent.setCurrentTime( new Date() );
+			newReqPayAgent.setWithdrawOrderNo( withdrawLog.getOrderNo() );
+			try {
+				if ( basePayAgent.orderPay( withdrawLog, payAgentPlatform, newReqPayAgent ) ) {
+					this.processOrder( payAgentPlatform, withdrawLog, newReqPayAgent.getCurrentTime(), 4, 0 );
+				}
+
+			} catch ( Exception e ) {
+				log.error( "代付下单失败 - 订单号：{};失败原因：{}", withdrawLog.getOrderNo(), e.getMessage(), e );
+			}
+		}
+
+		return null;
 	}
 
 	@Override

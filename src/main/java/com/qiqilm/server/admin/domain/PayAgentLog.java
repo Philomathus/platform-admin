@@ -1,13 +1,13 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
-import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 代付信息日志对象 pay_agent_log
@@ -16,62 +16,66 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @date 2021-01-26
  */
 @Data
-public class PayAgentLog extends BaseEntity {
-    private static final long serialVersionUID = 1L;
+public class PayAgentLog {
+	private static final long serialVersionUID = 1L;
 
-    /** 主键 */
-    private Long id;
+	/** 主键 */
+	private Long id;
 
-    /** 提现订单号 */
-    @Excel(name = "提现订单号")
-    private String withdrawOrderNo;
+	/** 提现订单号 */
+	@Excel( name = "提现订单号" )
+	private String withdrawOrderNo;
 
-    /** 三方代付订单号 */
-    @Excel(name = "三方代付订单号")
-    private String payAgentOrderNo;
+	/** 三方代付订单号 */
+	@Excel( name = "三方代付订单号" )
+	private String payAgentOrderNo;
 
-    /** 三方代付平台ID */
-    private Long payAgentPlatId;
+	/** 三方代付平台ID */
+	private Long payAgentPlatId;
 
-    /** 三方代付平台名称 */
-    @Excel(name = "三方代付平台名称")
-    private String payAgentPlatName;
+	/** 三方代付平台名称 */
+	@Excel( name = "三方代付平台名称" )
+	private String payAgentPlatName;
 
-    /** 会员ID */
-    @Excel(name = "会员ID")
-    private String memberId;
+	/** 会员ID */
+	@Excel( name = "会员ID" )
+	private String memberId;
 
-    /** 会员账号 */
-    @Excel(name = "会员账号")
-    private String memberAccount;
+	/** 会员账号 */
+	@Excel( name = "会员账号" )
+	private String memberAccount;
 
-    /** 提现金额 */
-    @Excel(name = "提现金额")
-    private BigDecimal withdrawMoney;
+	/** 提现金额 */
+	@Excel( name = "提现金额" )
+	private BigDecimal withdrawMoney;
 
-    /** 回调时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "回调时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date callbackTime;
+	@JsonFormat( pattern = "yyyy-MM-dd" )
+	@Excel( name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd" )
+	private Date createTime;
 
-    /** 回调状态 0 回调中 1 成功 2失败 */
-    @Excel(name = "回调状态")
-    private Integer callbackStatus;
+	/** 回调时间 */
+	@JsonFormat( pattern = "yyyy-MM-dd" )
+	@Excel( name = "回调时间", width = 30, dateFormat = "yyyy-MM-dd" )
+	private Date callbackTime;
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("withdrawOrderNo", getWithdrawOrderNo())
-            .append("payAgentOrderNo", getPayAgentOrderNo())
-            .append("payAgentPlatId", getPayAgentPlatId())
-            .append("payAgentPlatName", getPayAgentPlatName())
-            .append("memberId", getMemberId())
-            .append("memberAccount", getMemberAccount())
-            .append("withdrawMoney", getWithdrawMoney())
-            .append("createTime", getCreateTime())
-            .append("callbackTime", getCallbackTime())
-            .append("callbackStatus", getCallbackStatus())
-            .toString();
-    }
+	/** 回调状态 0 回调中 1 成功 2失败 */
+	@Excel( name = "回调状态" )
+	private Integer callbackStatus;
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
+				.append( "id", getId() )
+				.append( "withdrawOrderNo", getWithdrawOrderNo() )
+				.append( "payAgentOrderNo", getPayAgentOrderNo() )
+				.append( "payAgentPlatId", getPayAgentPlatId() )
+				.append( "payAgentPlatName", getPayAgentPlatName() )
+				.append( "memberId", getMemberId() )
+				.append( "memberAccount", getMemberAccount() )
+				.append( "withdrawMoney", getWithdrawMoney() )
+				.append( "createTime", getCreateTime() )
+				.append( "callbackTime", getCallbackTime() )
+				.append( "callbackStatus", getCallbackStatus() )
+				.toString();
+	}
 }
