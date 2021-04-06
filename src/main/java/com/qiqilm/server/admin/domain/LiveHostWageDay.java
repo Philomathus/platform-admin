@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import java.math.BigDecimal;
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -44,9 +45,24 @@ public class LiveHostWageDay extends BaseEntity {
     @Excel(name = "主播直播结算印票")
     private BigDecimal ticket;
 
+    /** 主播直播结算印票 */
+    @Excel(name = "主播直播彩票投注")
+    private BigDecimal lotteryCost;
+
     /** 上播次数 */
     @Excel(name = "上播次数")
     private Integer times;
+
+    private String createTimes;
+
+    private String dateDay;
+
+    private BigDecimal settlementRate;
+    @JsonIgnore
+    private String[]   selectDate = new String[ 2 ];
+    private String     familyName;
+    private String     familyNickName;
+    private String     nickName;
 
     @Override
     public String toString() {

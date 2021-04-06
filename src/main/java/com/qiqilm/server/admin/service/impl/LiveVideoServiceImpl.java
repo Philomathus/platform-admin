@@ -53,9 +53,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Autowired
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-
-	@Resource
-	private LiveHostWageNoteMapper liveHostWageNoteMapper;
 	@Resource
 	private ServerLiveMapper       serverLiveMapper;
 	@Resource
@@ -224,41 +221,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	}
 
 	private void saveHostWageNote( LiveUser liveUser, LiveVideo video, boolean isAborted ) {
-		LiveHostWageNote oldHostWageNote = liveHostWageNoteMapper.beforeNote( video.getUserId() );
-		String           videoBeginTime  = DateFormatUtils.formate( video.getBeginTime() );
-		String           endTime         = DateFormatUtils.formate( video.getMonitorTime() );
-		long             liveTimeSec     = 0;
-		try {
-			liveTimeSec = ( DateFormatUtils.getIntervalTime( video.getBeginTime(),
-					video.getMonitorTime() ) / 1000 );
-		} catch ( Exception e ) {
-			//log.error( e.getMessage(), e );
-		}
-		String remark = isAborted ? "异常下播" : "主动下播";
-
-		if ( oldHostWageNote != null && oldHostWageNote.getStartTime().equals( videoBeginTime ) ) {
-			LiveHostWageNote updateHostWageNote = new LiveHostWageNote();
-			updateHostWageNote.setId( oldHostWageNote.getId() );
-			updateHostWageNote.setEndTime( endTime );
-			updateHostWageNote.setRemark( remark );
-			updateHostWageNote.setLiveTimeSec( liveTimeSec );
-			updateHostWageNote.setBeforeTotalTicket( video.getVoteNumber() );
-			updateHostWageNote.setTicket( liveVideoPropMapper.sumHostProp( video.getUserId(), videoBeginTime ) );
-			liveHostWageNoteMapper.updateLiveHostWageNote( updateHostWageNote );
-		} else {
-			LiveHostWageNote newHostWageNote = new LiveHostWageNote();
-			newHostWageNote.setFamilyId( liveUser.getFamilyId() == null ? 0 : liveUser.getFamilyId() );
-			newHostWageNote.setHostId( video.getUserId() );
-			newHostWageNote.setEndTime( endTime );
-			newHostWageNote.setStartTime( videoBeginTime );
-			newHostWageNote.setCreateTimes( DateFormatUtils.formate( new Date() ) );
-			newHostWageNote.setRemark( remark );
-			newHostWageNote.setLiveTimeSec( liveTimeSec );
-			newHostWageNote.setBeforeTotalTicket( video.getVoteNumber() );
-			newHostWageNote.setTicket( liveVideoPropMapper.sumHostProp( video.getUserId(), videoBeginTime ) );
-			liveHostWageNoteMapper.insertLiveHostWageNote( newHostWageNote );
-		}
-
 
 		String          dayTime       = LocalDate.now().toString();
 		String          hostLiveDayId = dayTime.concat( "-" ).concat( String.valueOf( liveUser.getId() ) );
@@ -503,12 +465,44 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Override
 	public void countHostGift() {
+		long s = System.currentTimeMillis();
+		log.info("开始执行主播礼物计算,彩票投注");
 		String dayTime = LocalDate.now().plusDays(-1).toString();
-		for(HostPropDayVo v  : liveVideoPropMapper.sumHostPropDayList(dayTime)){
+		List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime);
+		log.info("收礼物主播数：{}",propDayVos.size());
+		String begin = dayTime.concat(" 00:00:00");
+		String end = dayTime.concat(" 23:59:59");
+
+		List<HostPropDayVo> lotteryDayVos = liveVideoPropMapper.sumHostLotteryDayList(begin,end);
+		log.info("投注主播数：{}",lotteryDayVos.size());
+
+
+		Map<String,LiveHostWageDay> updateMap = new HashMap<>();
+
+
+		for(HostPropDayVo v  : propDayVos){
 			LiveHostWageDay updateLiveDay = new LiveHostWageDay();
 			updateLiveDay.setId(dayTime.concat("-").concat(String.valueOf(v.getHostId())));
 			updateLiveDay.setTicket(v.getSumHostProp());
+			updateMap.put(updateLiveDay.getId(),updateLiveDay);
+		}
+		String id ;
+		for(HostPropDayVo v  : lotteryDayVos){
+			id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
+			LiveHostWageDay updateLiveDay = updateMap.get(id);
+			if(updateLiveDay==null){
+				updateLiveDay = new LiveHostWageDay();
+				updateLiveDay.setId(id);
+				updateMap.put(updateLiveDay.getId(),updateLiveDay);
+			}
+			updateLiveDay.setLotteryCost(v.getSumHostProp());
+
+		}
+
+		for(LiveHostWageDay updateLiveDay:updateMap.values()){
 			liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
 		}
+		log.info("结束执行主播礼物计算,执行时间：{}ms",System.currentTimeMillis()-s);
+
 	}
 }

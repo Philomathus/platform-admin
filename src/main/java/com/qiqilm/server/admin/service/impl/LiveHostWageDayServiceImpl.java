@@ -1,6 +1,18 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.domain.LiveHostWageDay;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList;
+import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
@@ -17,70 +29,108 @@ import com.qiqilm.server.admin.service.ILiveHostWageDayService;
 public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     @Autowired
     private LiveHostWageDayMapper liveHostWageDayMapper;
+    @Autowired
+    private SysConfigCacheUtil sysConfigCacheUtil;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询主播时长
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id 主播时长ID
+     * @return 主播时长
      */
     @Override
-    public LiveHostWageDay selectLiveHostWageDayById(String id) {
-        return liveHostWageDayMapper.selectLiveHostWageDayById(id);
+    public LiveHostWageDay selectLiveHostWageDayById(String id ) {
+        return liveHostWageDayMapper.selectLiveHostWageDayById( id );
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询主播时长列表
      *
-     * @param liveHostWageDay 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param dto 主播时长
+     * @return 主播时长
      */
     @Override
-    public List<LiveHostWageDay> selectLiveHostWageDayList(LiveHostWageDay liveHostWageDay) {
-        return liveHostWageDayMapper.selectLiveHostWageDayList(liveHostWageDay);
+    public List<LiveHostWageDay> selectLiveHostWageDayList( LiveHostWageDay dto ) {
+        this.setTime( dto );
+        return liveHostWageDayMapper.selectLiveHostWageDayList( dto );
     }
 
-    /**
-     * 新增【请填写功能名称】
-     *
-     * @param liveHostWageDay 【请填写功能名称】
-     * @return 结果
-     */
     @Override
-    public int insertLiveHostWageDay(LiveHostWageDay liveHostWageDay) {
-        return liveHostWageDayMapper.insertLiveHostWageDay(liveHostWageDay);
+    public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto ) {
+        this.setTime( dto );
+        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
+        List<RspLiveHostWageDayFamily> liveHostWageDays = liveHostWageDayMapper.familyPage( dto.getSelectDate()[ 0 ] + " - "
+                + dto.getSelectDate()[ 1 ], dto );
+        for ( RspLiveHostWageDayFamily liveHostWageDay : liveHostWageDays ) {
+            if ( liveHostWageDay.getAllticket() != null ) {
+                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getAllticket() );
+                //判断是否是散户
+                if ( liveHostWageDay.getFamilyId() == 0 && dto.getSettlementRate() != null ) {
+                    liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
+                            BigDecimal.ROUND_HALF_UP ) );
+                    liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
+                    liveHostWageDay.setFamilyName( "直播家族散户(未入家族)" );
+                } else {
+                    liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
+                            BigDecimal.ROUND_HALF_UP ) );
+                    liveHostWageDay.setSettlementRate( ticketCattyRatio );
+                }
+            }
+        }
+        return liveHostWageDays;
     }
 
-    /**
-     * 修改【请填写功能名称】
-     *
-     * @param liveHostWageDay 【请填写功能名称】
-     * @return 结果
-     */
     @Override
-    public int updateLiveHostWageDay(LiveHostWageDay liveHostWageDay) {
-        return liveHostWageDayMapper.updateLiveHostWageDay(liveHostWageDay);
+    public List<RspLiveHostWageDayList> hostPage(LiveHostWageDay dto ) throws ParseException {
+        this.setTime( dto );
+        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
+
+        //获取昨日日期
+        if(StringUtils.isNotBlank(dto.getDateDay())) {
+            dto.setDateDay(yesterday(dto.getDateDay()));
+        }
+        List<RspLiveHostWageDayList> liveHostWageDays = liveHostWageDayMapper.hostPage( dto.getSelectDate()[ 0 ] + " - "
+                + dto.getSelectDate()[ 1 ], dto );
+        for ( RspLiveHostWageDayList liveHostWageDay : liveHostWageDays ) {
+            if ( liveHostWageDay.getAllticket() != null ) {
+                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getAllticket() );
+                //判断是否是散户
+                if ( liveHostWageDay.getFamilyId() == 0 && dto.getSettlementRate() != null ) {
+                    liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
+                            BigDecimal.ROUND_HALF_UP ) );
+                    liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
+                    liveHostWageDay.setFamilyName( "直播家族散户(未入家族)" );
+                } else {
+                    liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
+                            BigDecimal.ROUND_HALF_UP ) );
+                    liveHostWageDay.setSettlementRate( ticketCattyRatio );
+
+                }
+            }
+        }
+        return liveHostWageDays;
     }
 
-    /**
-     * 批量删除【请填写功能名称】
-     *
-     * @param ids 需要删除的【请填写功能名称】ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLiveHostWageDayByIds(String[] ids) {
-        return liveHostWageDayMapper.deleteLiveHostWageDayByIds(ids);
+    private void setTime( LiveHostWageDay dto ) {
+        if ( dto.getDateDay() == null ) {
+            Date d          = new Date();
+            SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
+            String           dateNowStr = sdf.format( d );
+            dto.getSelectDate()[ 0 ] = dateNowStr;
+            dto.getSelectDate()[ 1 ] = dateNowStr;
+            dto.setStartTime(dto.getSelectDate()[ 0 ] + " 00:00:00");
+            dto.setEndTime(dto.getSelectDate()[ 1 ] + " 23:59:59");
+        } else {
+            dto.setStartTime(dto.getDateDay() + " 00:00:00");
+            dto.setEndTime(dto.getDateDay() + " 23:59:59");
+        }
     }
 
-    /**
-     * 删除【请填写功能名称】信息
-     *
-     * @param id 【请填写功能名称】ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLiveHostWageDayById(String id) {
-        return liveHostWageDayMapper.deleteLiveHostWageDayById(id);
+    private String yesterday(String dateDay) throws ParseException {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        long dif = df.parse(dateDay).getTime()-86400*1000;//减一天
+        Date date=new Date();
+        date.setTime(dif);
+        return df.format(date);
     }
 }
