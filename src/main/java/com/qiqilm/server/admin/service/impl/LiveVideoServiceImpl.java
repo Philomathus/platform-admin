@@ -505,7 +505,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	public void countHostGift() {
 		long s = System.currentTimeMillis();
 		log.info("开始执行主播礼物计算,彩票投注");
-		String dayTime = LocalDate.now().plusDays(-1).toString();
+		String dayTime = LocalDate.now().plusDays(0).toString();
 		List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime);
 		log.info("收礼物主播数：{}",propDayVos.size());
 		String begin = dayTime.concat(" 00:00:00");
