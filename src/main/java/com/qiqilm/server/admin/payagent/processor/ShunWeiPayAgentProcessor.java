@@ -178,7 +178,17 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 			String order_num    = ( String ) signMap.get( "order_num" );
 			String remit_result = ( String ) signMap.get( "remit_result" );
 
-			payAgentService.processOrderPay( order_num, "", payAgentPlatform, "SUCCESS".equals( remit_result ) );
+			MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( order_num );
+			if ( withdrawLog == null ) {
+				log.error( "提现相关记录丢失 - merOrderNo:{}", order_num );
+				return "fail";
+			}
+			if ( withdrawLog.getStatus() == 6 ) {
+				log.error( "已有代付记录 - merOrderNo:{}", order_num );
+				return "ok";
+			}
+			PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( order_num );
+			payAgentService.processOrderPay( withdrawLog, payAgentLog, "", payAgentPlatform, "SUCCESS".equals( remit_result ) );
 
 			return "ok";
 		}

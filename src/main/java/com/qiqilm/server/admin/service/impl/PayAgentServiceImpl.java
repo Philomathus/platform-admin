@@ -46,17 +46,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
-	public void processOrderPay( String merOrderNo, String orderNo, PayAgentPlatform payAgentPlatform, boolean isSuccess ) {
-		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
-		PayAgentLog       payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( merOrderNo );
-		if ( withdrawLog == null ) {
-			log.error( "提现相关记录丢失 - merOrderNo:{}", merOrderNo );
-			throw new IllegalStateException( "提现相关记录丢失,请检查!" );
-		}
-		if ( withdrawLog.getStatus() != 4 ) {
-			log.error( "已有代付记录 - merOrderNo:{}", merOrderNo );
-			throw new IllegalStateException( "已有代付记录,请检查!" );
-		}
+	public void processOrderPay( MemberWithdrawLog withdrawLog, PayAgentLog payAgentLog, String orderNo,
+								 PayAgentPlatform payAgentPlatform, boolean isSuccess ) {
 		Date              now            = new Date();
 		MemberWithdrawLog newWithdrawLog = new MemberWithdrawLog();
 		newWithdrawLog.setId( withdrawLog.getId() );
