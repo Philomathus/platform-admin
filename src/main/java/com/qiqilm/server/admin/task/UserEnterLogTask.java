@@ -42,7 +42,7 @@ public class UserEnterLogTask {
     @Scheduled( fixedDelay = 600000, initialDelay = 60000 )
     public void runTask() {
 
-        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 50 ) ) {
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 300 ) ) {
             return;
         }
 
@@ -66,7 +66,7 @@ public class UserEnterLogTask {
         try {
 
             try {
-                String paytext="测试数据忽略 10分钟直播间活跃人数:"+count;
+                String paytext="10分钟直播间活跃人数:"+count;
                 robotMessage.sendByChatId(paytext, online_user_telegram);
 
             } catch (Exception e) {
