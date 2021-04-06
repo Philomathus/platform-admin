@@ -38,9 +38,8 @@
         left join ${dbLive}.live_user u on a.host_id=u.id
     </select>
 
-    <select id="selectLiveHostWageDayById" parameterType="LiveHostWageDay" resultMap="LiveHostWageDayResult">
+    <select id="selectLiveHostWageDayById" parameterType="String" resultMap="LiveHostWageDayResult">
         <include refid="selectLiveHostWageDayVo"/>
-        <include refid="whereSelect"></include>
         where id = #{id}
     </select>
 
