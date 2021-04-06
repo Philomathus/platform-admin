@@ -39,10 +39,6 @@ public class RspLiveHostWageDayList {
     @Excel( name = "统计日期", orderNum = "9" )
     private String timedata;
 
-
-
-
-
     private int alltime;
 
     private BigDecimal allCpCost;
