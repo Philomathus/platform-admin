@@ -89,6 +89,7 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 	public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
 		if ( this.checkWhiteIp( payAgentPlatform.getPlatWhiteIpList(), realIp ) ) {
 			log.warn( "请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json( requestMap ) );
+			return "fail";
 		}
 
 		String dataStr = requestMap.getOrDefault( "data", "" ).toString();
@@ -141,22 +142,26 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 			log.warn( "请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json( requestMap ) );
 			return null;
 		}
-		SortedMap<String, Object> signMap = new TreeMap<>( requestMap );
 
-		String sign = signMap.remove( "sign" ).toString();
+		SortedMap<String, Object> requestSignMap = new TreeMap<>( requestMap );
+		String                    sign           = requestSignMap.remove( "sign" ).toString();
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"payAgentPrivateKey" ) );
-		String signStr = this.assemblyUrl( signMap ) + "&key=" + signMd5;
+		String signStr = this.assemblyUrl( requestSignMap ) + "&key=" + signMd5;
 		String mySign  = DigestUtils.md5Hex( signStr );
 
-		BigDecimal amount        = new BigDecimal( signMap.remove( "amount" ).toString() );
-		String     bankAccountNo = signMap.remove( "bankAccountNo" ).toString();
+		String     merId         = requestSignMap.getOrDefault( "merId", "" ).toString();
+		String     merOrderNo    = requestSignMap.getOrDefault( "merOrderNo", "" ).toString();
+		BigDecimal amount        = new BigDecimal( requestSignMap.getOrDefault( "amount", "0" ).toString() );
+		String     bankAccountNo = requestSignMap.getOrDefault( "bankAccountNo", "" ).toString();
+
+		SortedMap<String, Object> signMap = new TreeMap<>();
 		signMap.put( "submitTime", String.valueOf( System.currentTimeMillis() ) );
 		signMap.put( "code", "1001" );
 		signMap.put( "message", "签名错误" );
+		signMap.put( "merId", payAgentPlatform.getMerId() );
+		signMap.put( "merOrderNo", merOrderNo );
 		if ( org.apache.commons.lang3.StringUtils.equalsIgnoreCase( sign, mySign ) ) {
-			String            merId             = signMap.getOrDefault( "merId", "" ).toString();
-			String            merOrderNo        = signMap.getOrDefault( "merOrderNo", "" ).toString();
 			MemberWithdrawLog memberWithdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
 			if ( memberWithdrawLog == null ) {
 				signMap.put( "code", "1002" );
@@ -173,12 +178,13 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 			} else if ( !merId.equals( payAgentPlatform.getMerId() ) ) {
 				signMap.put( "code", "9999" );
 				signMap.put( "message", "商户号错误" );
-				return signMap;
+			} else {
+				signMap.put( "code", "0" );
+				signMap.put( "message", "成功" );
 			}
-			signMap.put( "code", "0" );
-			signMap.put( "message", "成功" );
-			return signMap;
 		}
+		String resultSignStr = this.assemblyUrl( signMap ) + "&key=" + signMd5;
+		signMap.put( "sign", DigestUtils.md5Hex( resultSignStr ) );
 		return signMap;
 	}
 
