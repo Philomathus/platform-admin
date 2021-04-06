@@ -42,7 +42,7 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
 		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.HENG_XIN );
 		bodyMap.put( "bankCode", withdrawLog.getBankCode() );
-		bodyMap.put( "submitTime", Timestamp.valueOf( reqPayAgent.getCurrentTime() ).getTime() );
+		bodyMap.put( "submitTime", reqPayAgent.getCurrentTime().getTime() );
 		bodyMap.put( "bankAccountNo", withdrawLog.getBankAccount() );
 		bodyMap.put( "bankAccountName", withdrawLog.getBankUserName() );
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
