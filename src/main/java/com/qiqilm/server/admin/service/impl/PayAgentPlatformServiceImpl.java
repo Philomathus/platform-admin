@@ -6,7 +6,10 @@ import com.qiqilm.server.admin.mapper.PayAgentPlatformMapper;
 import com.qiqilm.server.admin.mapper.SysUserMapper;
 import com.qiqilm.server.admin.payagent.PayAgentProcessorFactoryUtil;
 import com.qiqilm.server.admin.service.IPayAgentPlatformService;
+import com.qiqilm.server.admin.utils.AuthUtil;
+import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +44,7 @@ public class PayAgentPlatformServiceImpl implements IPayAgentPlatformService {
 	 */
 	@Override
 	public PayAgentPlatform selectPayAgentPlatformById( Long id ) {
-		PayAgentPlatform agentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(id);
+		PayAgentPlatform agentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( id );
 		agentPlatform.setSignMd5( "*********" );
 		agentPlatform.setHeaderKey( "*********" );
 		agentPlatform.setSignPublicKey( "*********" );
@@ -57,7 +60,14 @@ public class PayAgentPlatformServiceImpl implements IPayAgentPlatformService {
 	 */
 	@Override
 	public List<PayAgentPlatform> selectPayAgentPlatformList( PayAgentPlatform payAgentPlatform ) {
-		return payAgentPlatformMapper.selectPayAgentPlatformList( payAgentPlatform );
+		List<PayAgentPlatform> payAgentPlatforms = payAgentPlatformMapper.selectPayAgentPlatformList( payAgentPlatform );
+		for ( PayAgentPlatform agentPlatform : payAgentPlatforms ) {
+			agentPlatform.setSignMd5( "*********" );
+			agentPlatform.setHeaderKey( "*********" );
+			agentPlatform.setSignPublicKey( "*********" );
+			agentPlatform.setSignPrivateKey( "*********" );
+		}
+		return payAgentPlatforms;
 	}
 
 	/**
@@ -68,6 +78,16 @@ public class PayAgentPlatformServiceImpl implements IPayAgentPlatformService {
 	 */
 	@Override
 	public int insertPayAgentPlatform( PayAgentPlatform payAgentPlatform ) {
+		payAgentPlatform.setStatus( "0" );
+		if ( StringUtils.isNotBlank( payAgentPlatform.getSignMd5() ) ) {
+			try {
+				payAgentPlatform.setSignMd5( RSACoder.encryptByPublicKey( payAgentPlatform.getSignMd5(),
+						AuthUtil.getSecurityKeyStr( "secretkey/payAgentPublicKey" ) ) );
+			} catch ( Exception e ) {
+				log.error( e.getMessage(), e );
+				return 0;
+			}
+		}
 		return payAgentPlatformMapper.insertPayAgentPlatform( payAgentPlatform );
 	}
 

@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.payagent;
 import com.google.common.collect.Sets;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
+import com.qiqilm.server.admin.mapper.PayAgentLogMapper;
 import com.qiqilm.server.admin.mapper.PayAgentPlatformMapper;
 import com.qiqilm.server.admin.service.IPayAgentService;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +20,8 @@ public abstract class AbstractPayAgent implements BasePayAgent {
 	protected PayAgentPlatformMapper  payAgentPlatformMapper;
 	@Autowired
 	protected MemberWithdrawLogMapper withdrawLogMapper;
+	@Autowired
+	protected PayAgentLogMapper       payAgentLogMapper;
 	@Autowired
 	protected RestTemplate            restTemplate;
 	@Autowired

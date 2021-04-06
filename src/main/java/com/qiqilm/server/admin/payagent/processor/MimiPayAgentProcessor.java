@@ -96,7 +96,17 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 				signMd5;
 		if ( org.apache.commons.lang3.StringUtils.equals( sign, DigestUtils.md5Hex( sb ) ) ) {
 			int status = Integer.parseInt( requestMap.get( "opstate" ).toString() );
-			payAgentService.processOrderPay( orderId, "", payAgentPlatform, status == 0 );
+			MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( orderId );
+			if ( withdrawLog == null ) {
+				log.error( "提现相关记录丢失 - merOrderNo:{}", orderId );
+				return "fail";
+			}
+			if ( withdrawLog.getStatus() == 6 ) {
+				log.error( "已有代付记录 - merOrderNo:{}", orderId );
+				return "opstate=0";
+			}
+			PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( orderId );
+			payAgentService.processOrderPay( withdrawLog, payAgentLog, "", payAgentPlatform, status == 0 );
 			return "opstate=0";
 		}
 		return "fail";
