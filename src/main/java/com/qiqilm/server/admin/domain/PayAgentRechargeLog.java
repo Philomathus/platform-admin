@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.domain;
 
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
@@ -42,6 +44,13 @@ public class PayAgentRechargeLog extends BaseEntity {
 
     private Integer countNumber;
     private BigDecimal countMoney;
+    @JsonIgnore
+    private String[] selectDate;
+    private String   selectStartDate;
+    @JsonIgnore
+    private String   selectEndDate;
+    @JsonIgnore
+    private String   searchValue;
 
 
 
