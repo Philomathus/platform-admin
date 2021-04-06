@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.mapper;
 
 
 import com.qiqilm.server.admin.domain.ReportPlamGames;
+import com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface ReportPlamGamesMapper {
 	String calldataProrepPlamcom(@Param( "timedateta" ) String timedateta);
 
     ReportPlamGames countBetData(ReportPlamGames reportPlamGames);
+
+    List<RspPlamGamesMonth> selectReportPlamGamesListMonth(ReportPlamGames reportPlamGames);
 }

@@ -23,9 +23,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="rechargeAcount != null  and rechargeAcount != ''"> and recharge_acount = #{rechargeAcount}</if>
             <if test="rechargeNickName != null  and rechargeNickName != ''"> and recharge_nick_name like concat('%', #{rechargeNickName}, '%')</if>
-            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
             <if test="money != null "> and money = #{money}</if>
+            <if test="searchValue != null and searchValue != ''">
+                and member_id in (SELECT id from member_info where (user_name = #{searchValue} or id = #{searchValue}))
+            </if>
+            <if test="selectStartDate != null and selectStartDate != ''">
+                and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
         </where>
     </select>
 
@@ -88,6 +92,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rechargeNickName != null  and rechargeNickName != ''"> and recharge_nick_name like concat('%', #{rechargeNickName}, '%')</if>
             <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="searchValue != null and searchValue != ''">
+                and member_id in (SELECT id from member_info where (user_name = #{searchValue} or id = #{searchValue}))
+            </if>
+            <if test="selectStartDate != null and selectStartDate != ''">
+                and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
         </where>
     </select>
 </mapper>

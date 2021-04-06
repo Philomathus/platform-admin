@@ -3,7 +3,9 @@ package com.qiqilm.server.admin.service;
 
 
 import com.qiqilm.server.admin.domain.ReportPlamGames;
+import com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -27,4 +29,6 @@ public interface IReportPlamGamesService {
 	ReportPlamGames countBetData(ReportPlamGames reportPlamGames);
 
 	List<ReportPlamGames> exportPlamGamesList(ReportPlamGames reportPlamGames);
+
+    List<RspPlamGamesMonth> selectReportPlamGamesListMonth(ReportPlamGames reportPlamGames) throws ParseException;
 }
