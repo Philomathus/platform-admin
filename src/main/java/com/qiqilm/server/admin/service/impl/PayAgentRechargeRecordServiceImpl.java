@@ -105,6 +105,11 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
 	}
 
 	@Override
+	public PayAgentRechargeRecord getCount(PayAgentRechargeRecord payAgentRechargeRecord) {
+		return payAgentRechargeRecordMapper.getCount(payAgentRechargeRecord);
+	}
+
+	@Override
 	@Transactional( rollbackFor = Exception.class )
 	public AjaxResult deposit( PayAgentRechargeRecord dto ) {
 		LoginUser  loginUser      = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
