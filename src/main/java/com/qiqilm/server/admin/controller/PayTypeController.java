@@ -47,7 +47,7 @@ public class PayTypeController extends BaseController {
 		if(i>0){
 			return AjaxResult.error(0,"此支付编码已存在");
 		}
-		return null;
+		return AjaxResult.success();
 	}
 
 	/**
