@@ -69,7 +69,7 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
                     liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
                             BigDecimal.ROUND_HALF_UP ) );
                     liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
-                    liveHostWageDay.setFamilyName( "直播家族散户(未入家族)" );
+                    liveHostWageDay.setFamilyName( "散户" );
                 } else {
                     liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
                             BigDecimal.ROUND_HALF_UP ) );
@@ -99,7 +99,7 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
                     liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
                             BigDecimal.ROUND_HALF_UP ) );
                     liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
-                    liveHostWageDay.setFamilyName( "直播家族散户(未入家族)" );
+                    liveHostWageDay.setFamilyName( "散户" );
                 } else {
                     liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
                             BigDecimal.ROUND_HALF_UP ) );
