@@ -126,8 +126,49 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 	@Override
 	public Map<String, Object> reverseCheckOrderPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap,
 													 String realIp ) throws Exception {
+		if ( this.checkWhiteIp( payAgentPlatform.getPlatWhiteIpList(), realIp ) ) {
+			log.warn( "请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json( requestMap ) );
+			return null;
+		}
+		SortedMap<String, Object> signMap = new TreeMap<>( requestMap );
 
-		return null;
+		String sign = signMap.remove( "sign" ).toString();
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+				"payAgentPrivateKey" ) );
+		String signStr = this.assemblyUrl( signMap ) + "&key=" + signMd5;
+		String mySign  = DigestUtils.md5Hex( signStr );
+
+		String amount        = signMap.remove( "amount" ).toString();
+		String bankAccountNo = signMap.remove( "bankAccountNo" ).toString();
+		signMap.put( "submitTime", String.valueOf( System.currentTimeMillis() ) );
+		signMap.put( "code", "1001" );
+		signMap.put( "message", "签名错误" );
+		if ( org.apache.commons.lang3.StringUtils.equals( sign, mySign ) ) {
+			String            merId             = signMap.getOrDefault( "merId", "" ).toString();
+			String            merOrderNo        = signMap.getOrDefault( "merOrderNo", "" ).toString();
+			MemberWithdrawLog memberWithdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
+			if ( memberWithdrawLog == null ) {
+				signMap.put( "code", "1002" );
+				signMap.put( "message", "订单不存在" );
+				return signMap;
+			} else if ( !amount.equals( memberWithdrawLog.getWithdrawMoney().toString() ) ) {
+				signMap.put( "code", "1004" );
+				signMap.put( "message", "金额不匹配" );
+				return signMap;
+			} else if ( !bankAccountNo.equals( memberWithdrawLog.getBankAccount() ) ) {
+				signMap.put( "code", "1003" );
+				signMap.put( "message", "银行卡号不匹配" );
+				return signMap;
+			} else if ( !merId.equals( payAgentPlatform.getMerId() ) ) {
+				signMap.put( "code", "9999" );
+				signMap.put( "message", "商户号错误" );
+				return signMap;
+			}
+			signMap.put( "code", "0" );
+			signMap.put( "message", "成功" );
+			return signMap;
+		}
+		return signMap;
 	}
 
 	@Override
