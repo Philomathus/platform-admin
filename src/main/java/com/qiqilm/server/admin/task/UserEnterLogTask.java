@@ -42,7 +42,7 @@ public class UserEnterLogTask {
     @Scheduled( fixedDelay = 600000, initialDelay = 60000 )
     public void runTask() {
 
-        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 300 ) ) {
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 500 ) ) {
             return;
         }
 
