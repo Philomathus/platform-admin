@@ -39,7 +39,7 @@ public class UserEnterLogTask {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Scheduled( fixedDelay = 600000, initialDelay = 60000 )
+    @Scheduled(cron="0 0 0-23 * * ?" )
     public void runTask() {
 
         if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 500 ) ) {
