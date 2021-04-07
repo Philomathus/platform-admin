@@ -18,13 +18,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="businessEndTime"    column="business_end_time"    />
         <result property="rechargeDiscountRate"    column="recharge_discount_rate"    />
         <result property="status"    column="status"    />
+        <result property="showStatus"    column="show_status"    />
         <result property="createTime"    column="create_time"    />
         <result property="beforeLoginTime"    column="before_login_time"    />
         <result property="loginTime"    column="login_time"    />
     </resultMap>
 
     <sql id="selectPayAgentRechargeAccountVo">
-        select id, account, nick_name, balance_amount, recharge_num, qq_account, wechat_account, alipay_account, mobile, business_begin_time, business_end_time, recharge_discount_rate, status, create_time, before_login_time, login_time from pay_agent_recharge_account
+        select id, account, nick_name, balance_amount, recharge_num, qq_account, wechat_account, alipay_account, mobile, business_begin_time, business_end_time, recharge_discount_rate, status, show_status, create_time, before_login_time, login_time from pay_agent_recharge_account
     </sql>
 
     <select id="selectPayAgentRechargeAccountList" parameterType="PayAgentRechargeAccount" resultMap="PayAgentRechargeAccountResult">
@@ -84,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="businessEndTime != null">#{businessEndTime},</if>
             <if test="rechargeDiscountRate != null">#{rechargeDiscountRate},</if>
             <if test="status != null">#{status},</if>
+            <if test="showStatus != null">#{showStatus},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="beforeLoginTime != null">#{beforeLoginTime},</if>
             <if test="loginTime != null">#{loginTime},</if>
@@ -105,6 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="businessEndTime != null">business_end_time = #{businessEndTime},</if>
             <if test="rechargeDiscountRate != null">recharge_discount_rate = #{rechargeDiscountRate},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="showStatus != null">show_status = #{showStatus},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="beforeLoginTime != null">before_login_time = #{beforeLoginTime},</if>
             <if test="loginTime != null">login_time = #{loginTime},</if>
