@@ -112,7 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="sucRate" resultType="Integer">
-        select count(1) from(select `status`,'id' from member_pay_jour where channel_id = #{id} order by create_time desc limit 50) d where `status` = 1
+        select count(1) from(select `status`,'id' from member_pay_jour where channel_id = #{id} and create_time &lt;= DATE_SUB(NOW(), INTERVAL 1 MINUTE) order by create_time desc limit 50) d where `status` = 1
     </select>
 
     <select id="countRate" resultType="Integer">
