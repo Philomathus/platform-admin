@@ -139,7 +139,7 @@ public class PayCacheUtil {
 	}
 
     public void setPayChannelSuccessRate(Long id,String successRate) {
-		redisUtil.strSet( CHANNELSUCCESSRATE + id, successRate, Duration.ofMinutes( 10 ));
+		redisUtil.strSet( CHANNELSUCCESSRATE + id, successRate, Duration.ofMinutes( 1 ));
     }
 
 	public String getPayChannelSuccessRate(Long id) {
