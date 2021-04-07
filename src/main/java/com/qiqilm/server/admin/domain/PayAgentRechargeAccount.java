@@ -1,13 +1,14 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 【请填写功能名称】对象 pay_agent_recharge_account
@@ -74,6 +75,10 @@ public class PayAgentRechargeAccount extends BaseEntity {
     @Excel(name = "状态 1正常 0拉黑")
     private String status;
 
+    /** 状态 1正常 0拉黑 */
+    @Excel(name = "状态 1显示 0隐藏")
+    private String showStatus;
+
     /** 上次登录时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "上次登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
@@ -104,6 +109,7 @@ public class PayAgentRechargeAccount extends BaseEntity {
             .append("businessEndTime", getBusinessEndTime())
             .append("rechargeDiscountRate", getRechargeDiscountRate())
             .append("status", getStatus())
+            .append("showStatus", getShowStatus())
             .append("createTime", getCreateTime())
             .append("beforeLoginTime", getBeforeLoginTime())
             .append("loginTime", getLoginTime())
