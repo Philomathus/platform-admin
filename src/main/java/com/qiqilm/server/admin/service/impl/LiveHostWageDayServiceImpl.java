@@ -56,24 +56,28 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     }
 
     @Override
-    public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto ) {
+    public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto ) throws ParseException {
         this.setTime( dto );
-        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
-        List<RspLiveHostWageDayFamily> liveHostWageDays = liveHostWageDayMapper.familyPage( dto.getSelectDate()[ 0 ] + " - "
-                + dto.getSelectDate()[ 1 ], dto );
+        //获取昨日日期
+        if(StringUtils.isNotBlank(dto.getDateDay())) {
+            dto.setDateDay(yesterday(dto.getDateDay()));
+        }
+//        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
+        List<RspLiveHostWageDayFamily> liveHostWageDays = liveHostWageDayMapper.familyPage( dto );
         for ( RspLiveHostWageDayFamily liveHostWageDay : liveHostWageDays ) {
             if ( liveHostWageDay.getAllticket() != null ) {
-                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getAllticket() );
+//                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getAllticket() );
                 //判断是否是散户
-                if ( liveHostWageDay.getFamilyId() == 0 && dto.getSettlementRate() != null ) {
-                    liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
-                            BigDecimal.ROUND_HALF_UP ) );
-                    liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
-                    liveHostWageDay.setFamilyName( "散户" );
-                } else {
-                    liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
-                            BigDecimal.ROUND_HALF_UP ) );
-                    liveHostWageDay.setSettlementRate( ticketCattyRatio );
+                if (liveHostWageDay.getFamilyId() == 0) {
+//                    liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
+//                            BigDecimal.ROUND_HALF_UP ) );
+//                    liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
+                    liveHostWageDay.setFamilyName("散户");
+//                } else {
+//                    liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
+//                             BigDecimal.ROUND_HALF_UP ) );
+//                    liveHostWageDay.setSettlementRate( ticketCattyRatio );
+//                }
                 }
             }
         }
@@ -83,28 +87,27 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     @Override
     public List<RspLiveHostWageDayList> hostPage(LiveHostWageDay dto ) throws ParseException {
         this.setTime( dto );
-        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
+//        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
 
         //获取昨日日期
         if(StringUtils.isNotBlank(dto.getDateDay())) {
             dto.setDateDay(yesterday(dto.getDateDay()));
         }
-        List<RspLiveHostWageDayList> liveHostWageDays = liveHostWageDayMapper.hostPage( dto.getSelectDate()[ 0 ] + " - "
-                + dto.getSelectDate()[ 1 ], dto );
+        List<RspLiveHostWageDayList> liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
         for ( RspLiveHostWageDayList liveHostWageDay : liveHostWageDays ) {
-            if ( liveHostWageDay.getAllticket() != null ) {
-                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getAllticket() );
+            if ( liveHostWageDay.getTicket() != null ) {
+//                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getTicket() );
                 //判断是否是散户
-                if ( liveHostWageDay.getFamilyId() == 0 && dto.getSettlementRate() != null ) {
-                    liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
-                            BigDecimal.ROUND_HALF_UP ) );
-                    liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
+                if ( liveHostWageDay.getFamilyId() == 0 ) {
+//                    liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
+//                            BigDecimal.ROUND_HALF_UP ) );
+//                    liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
                     liveHostWageDay.setFamilyName( "散户" );
-                } else {
-                    liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
-                            BigDecimal.ROUND_HALF_UP ) );
-                    liveHostWageDay.setSettlementRate( ticketCattyRatio );
-
+//                } else {
+//                    liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
+//                            BigDecimal.ROUND_HALF_UP ) );
+//                    liveHostWageDay.setSettlementRate( ticketCattyRatio );
+//
                 }
             }
         }

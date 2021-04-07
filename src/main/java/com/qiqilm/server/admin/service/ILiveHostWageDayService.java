@@ -31,7 +31,7 @@ public interface ILiveHostWageDayService {
 	 */
 	public List<LiveHostWageDay> selectLiveHostWageDayList(LiveHostWageDay liveHostWageDay);
 
-	public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto);
+	public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto) throws ParseException;
 
 	public List<RspLiveHostWageDayList> hostPage(LiveHostWageDay dto) throws ParseException;
 }

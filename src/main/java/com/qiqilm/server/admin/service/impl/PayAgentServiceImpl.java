@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.google.common.collect.ImmutableMap;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
@@ -195,8 +196,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
 
-		BasePayAgent       basePayAgent   = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
-		Map<String,String> failReasonList = new HashMap<>();
+		BasePayAgent        basePayAgent   = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
+		Map<String, String> failReasonList = new TreeMap<>();
+		int                 sucessNum      = 0;
 		for ( MemberWithdrawLog withdrawLog : withdrawLogs ) {
 			ReqPayAgent newReqPayAgent = new ReqPayAgent();
 			newReqPayAgent.setCurrentTime( new Date() );
@@ -205,13 +207,13 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				if ( basePayAgent.orderPay( withdrawLog, payAgentPlatform, newReqPayAgent ) ) {
 					this.processOrder( payAgentPlatform, withdrawLog, newReqPayAgent.getCurrentTime(), 4, 0 );
 				}
-
+				sucessNum++;
 			} catch ( Exception e ) {
 				log.error( "代付下单失败 - 订单号：{};失败原因：{}", withdrawLog.getOrderNo(), e.getMessage(), e );
+				failReasonList.put( withdrawLog.getOrderNo(), newReqPayAgent.getFailReason() );
 			}
 		}
-
-		return null;
+		return AjaxResult.success( ImmutableMap.of( "fail", failReasonList, "sucess", sucessNum ) );
 	}
 
 	@Override
