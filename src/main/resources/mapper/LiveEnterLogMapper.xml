@@ -30,7 +30,7 @@
         </trim>
     </insert>
 
-    <update id="addTimes" parameterType="LiveEnterLog">
+    <update id="addTimes">
         update  ${dbLive}.live_enter_log
         set times = times + #{c} where id = #{id}
     </update>
