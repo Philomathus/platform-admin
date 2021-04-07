@@ -57,14 +57,13 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
 
     @Override
     public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto ) throws ParseException {
-        this.setfamilyPageTime( dto );
+        this.setTime( dto );
         //获取昨日日期
         if(StringUtils.isNotBlank(dto.getDateDay())) {
             dto.setDateDay(yesterday(dto.getDateDay()));
         }
 //        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
-        List<RspLiveHostWageDayFamily> liveHostWageDays = liveHostWageDayMapper.familyPage( dto.getSelectDate()[ 0 ] + " - "
-                + dto.getSelectDate()[ 1 ], dto );
+        List<RspLiveHostWageDayFamily> liveHostWageDays = liveHostWageDayMapper.familyPage( dto );
         for ( RspLiveHostWageDayFamily liveHostWageDay : liveHostWageDays ) {
             if ( liveHostWageDay.getAllticket() != null ) {
 //                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getAllticket() );
@@ -94,8 +93,7 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
         if(StringUtils.isNotBlank(dto.getDateDay())) {
             dto.setDateDay(yesterday(dto.getDateDay()));
         }
-        List<RspLiveHostWageDayList> liveHostWageDays = liveHostWageDayMapper.hostPage( dto.getSelectDate()[ 0 ] + " - "
-                + dto.getSelectDate()[ 1 ], dto );
+        List<RspLiveHostWageDayList> liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
         for ( RspLiveHostWageDayList liveHostWageDay : liveHostWageDays ) {
             if ( liveHostWageDay.getTicket() != null ) {
 //                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getTicket() );
@@ -114,13 +112,6 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
             }
         }
         return liveHostWageDays;
-    }
-
-    private void setfamilyPageTime( LiveHostWageDay dto ) {
-        if ( dto.getSelectDate() != null ) {
-            dto.setStartTime(dto.getSelectDate()[ 0 ] + " 00:00:00");
-            dto.setEndTime(dto.getSelectDate()[ 1 ] + " 23:59:59");
-        }
     }
 
     private void setTime( LiveHostWageDay dto ) {

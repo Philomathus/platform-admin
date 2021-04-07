@@ -22,13 +22,13 @@ public class RspLiveHostWageDayList {
     private String nickName;
 
     @Excel( name = "直播总时长（小时）", orderNum = "4" )
-    private String alltimeDes;
+    private String timeDes;
 
     @Excel( name = "主播结算印票", orderNum = "5" )
     private String ticket;
 
-    @Excel( name = "主播结算印票", orderNum = "6" )
-    private BigDecimal allticketRes;
+    @Excel( name = "主播折扣结算印票", orderNum = "6" )
+    private BigDecimal ticketRes;
 
     @Excel( name = "彩票投注", orderNum = "7" )
     private BigDecimal lotteryCost;
@@ -45,8 +45,8 @@ public class RspLiveHostWageDayList {
     @Excel( name = "礼物结算比例", orderNum = "11" )
     private Integer liwujiesuanbili;
 
-    @Excel( name = "统计日期", orderNum = "12" )
-    private String timedata;
+//    @Excel( name = "统计日期", orderNum = "12" )
+//    private String timedata;
 
     private int livetime;
 
@@ -61,7 +61,7 @@ public class RspLiveHostWageDayList {
     private Integer familyUserId;
     private String  familyNickName;
 
-    public String getAlltimeDes() {
+    public String getTimeDes() {
         if ( !StringUtils.isEmpty( livetime ) ) {
             double df = livetime;
             return new Formatter().format( "%.2f", df / 3600 ).toString();
@@ -69,9 +69,9 @@ public class RspLiveHostWageDayList {
         return "";
     }
 
-    public BigDecimal getAllticketRes() {
-        if ( allticketRes != null ) {
-            return allticketRes.setScale(2, BigDecimal.ROUND_HALF_UP);
+    public BigDecimal getTicketRes() {
+        if ( ticketRes != null ) {
+            return ticketRes.setScale(2, BigDecimal.ROUND_HALF_UP);
         }
         return null;
     }

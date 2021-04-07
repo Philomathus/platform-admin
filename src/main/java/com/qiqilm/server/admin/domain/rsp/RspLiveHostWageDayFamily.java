@@ -39,8 +39,8 @@ public class RspLiveHostWageDayFamily {
     @Excel( name = "派奖千六", orderNum = "9" )
     private String costQianliu;
 
-    @Excel( name = "统计日期", orderNum = "10" )
-    private String timedata;
+//    @Excel( name = "统计日期", orderNum = "10" )
+//    private String timedata;
 
     private int alltime;
 
