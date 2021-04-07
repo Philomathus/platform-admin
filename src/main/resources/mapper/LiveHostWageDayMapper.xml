@@ -96,6 +96,8 @@
     <select id="familyPage" parameterType="LiveHostWageDay" resultType="RspLiveHostWageDayFamily">
         select
         o.family_id familyId,
+        o.lottery_cost lotteryCost,
+        o.times,
         f.name familyName,
         f.user_id familyUserId,
         f.nick_name familyNickName,
@@ -126,6 +128,8 @@
         f.user_id familyUserId,
         f.nick_name familyNickName,
         o.host_id hostId,
+        o.lottery_cost lotteryCost,
+        o.times,
         u.nick_name nickName,
         SUM(o.live_time_sec) as alltime,
         sum(o.ticket) as allticket,

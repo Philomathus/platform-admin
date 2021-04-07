@@ -47,6 +47,10 @@ public class PayAgentRechargeRecord extends BaseEntity {
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
     public Date createTime;
 
+    private String depositTotal;
+    private String proposedTotal;
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

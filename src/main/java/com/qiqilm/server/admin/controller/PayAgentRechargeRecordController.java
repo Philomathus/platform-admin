@@ -43,6 +43,17 @@ public class PayAgentRechargeRecordController extends BaseController {
 		List<PayAgentRechargeRecord> list = payAgentRechargeRecordService.selectPayAgentRechargeRecordList(payAgentRechargeRecord);
 		return getDataTable( list );
 	}
+
+	/**
+	 * 统计【代充存提】
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeRecord:list')" )
+	@GetMapping( "/getCount" )
+	public AjaxResult getCount( PayAgentRechargeRecord payAgentRechargeRecord ) {
+		PayAgentRechargeRecord payAgentRechargeRecord1;
+		payAgentRechargeRecord1=payAgentRechargeRecordService.getCount( payAgentRechargeRecord );
+		return AjaxResult.success(payAgentRechargeRecord1);
+	}
     
 	/**
 	 * 导出【代充存提】列表
