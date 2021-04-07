@@ -39,7 +39,7 @@ public class UserEnterLogTask {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Scheduled( fixedDelay = 600000, initialDelay = 60000 )
+    @Scheduled(cron="0 0 0-23 * * ?" )
     public void runTask() {
 
         if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 500 ) ) {
@@ -59,21 +59,19 @@ public class UserEnterLogTask {
         try {
             count = liveLogService.banchUpdateEnterLog();
         }catch (Exception e){
-            log.info("批量插入进直播间会员数异常",e);
-            count = 0;
+            log.error("进直播间会员数异常",e);
+            count = -1;
         }
 
         try {
-
-            try {
-                String paytext="10分钟直播间活跃人数:"+count;
-                robotMessage.sendByChatId(paytext, online_user_telegram);
-
-            } catch (Exception e) {
-                log.error("电报发送消息失败" + e.getMessage());
+            String paytext="10分钟直播间活跃人数:"+count;
+            if(count<0){
+                paytext="10分钟直播间活跃人数异常";
             }
-        }catch ( Exception e ) {
-            log.error( e.getMessage(), e );
+            robotMessage.sendByChatId(paytext, online_user_telegram);
+
+        } catch (Exception e) {
+            log.error("电报发送消息失败" ,e);
         }
 
     }
