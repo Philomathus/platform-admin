@@ -101,7 +101,7 @@ public class ConfigWaiterController extends BaseController {
 	/**
 	 * 修改启用状态
 	 */
-	@PreAuthorize("@ss.hasPermi('admin:systemIpWhite:edit')")
+	@PreAuthorize("@ss.hasPermi('admin:configWaiter:edit')")
 	@Log(title = "客服管理", businessType = BusinessType.UPDATE)
 	@PutMapping("/changeStatus")
 	public AjaxResult changeStatus(@RequestBody ConfigWaiter configWaitere) {

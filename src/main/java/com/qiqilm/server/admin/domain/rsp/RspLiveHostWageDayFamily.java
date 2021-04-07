@@ -24,20 +24,20 @@ public class RspLiveHostWageDayFamily {
     @Excel( name = "直播总时长（小时）", orderNum = "4" )
     private String alltimeDes;
 
-    @Excel( name = "主播总结算印票", orderNum = "5" )
+    @Excel( name = "主播礼物总结算", orderNum = "5" )
     private String allticket;
 
-    @Excel( name = "主播折扣结算印票", orderNum = "6" )
+    @Excel( name = "主播礼物折扣结算", orderNum = "6" )
     private BigDecimal allticketRes;
 
     @Excel( name = "彩票投注", orderNum = "7" )
     private BigDecimal lotteryCost;
 
-    @Excel( name = "上播次数", orderNum = "8" )
-    private Integer times;
-
-    @Excel( name = "派奖千六", orderNum = "9" )
+    @Excel( name = "派奖千六", orderNum = "8" )
     private String costQianliu;
+
+    @Excel( name = "上播次数", orderNum = "9" )
+    private Integer times;
 
 //    @Excel( name = "统计日期", orderNum = "10" )
 //    private String timedata;
