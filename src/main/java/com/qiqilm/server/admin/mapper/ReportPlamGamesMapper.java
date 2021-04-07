@@ -28,4 +28,6 @@ public interface ReportPlamGamesMapper {
     ReportPlamGames countBetData(ReportPlamGames reportPlamGames);
 
     List<RspPlamGamesMonth> selectReportPlamGamesListMonth(ReportPlamGames reportPlamGames);
+
+    RspPlamGamesMonth countBetMonth(ReportPlamGames reportPlamGames);
 }

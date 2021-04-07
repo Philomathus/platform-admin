@@ -31,4 +31,6 @@ public interface IReportPlamGamesService {
 	List<ReportPlamGames> exportPlamGamesList(ReportPlamGames reportPlamGames);
 
     List<RspPlamGamesMonth> selectReportPlamGamesListMonth(ReportPlamGames reportPlamGames) throws ParseException;
+
+	RspPlamGamesMonth countBet(ReportPlamGames reportPlamGames) throws ParseException;
 }
