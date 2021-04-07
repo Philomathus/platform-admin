@@ -50,11 +50,9 @@ public interface LiveHostWageDayMapper {
 
 	public LiveHostWageDay beforeDay( @Param( "userId" ) Long userId );
 
-	public List<RspLiveHostWageDayFamily> familyPage(@Param( "countTime" ) String countTime,
-													  @Param( "dto" ) LiveHostWageDay dto );
+	public List<RspLiveHostWageDayFamily> familyPage(@Param( "dto" ) LiveHostWageDay dto );
 
 	public List<Map<String, Object>> selectFamilyName();
 
-	public List<RspLiveHostWageDayList> hostPage(@Param( "countTime" ) String countTime,
-												  @Param( "dto" ) LiveHostWageDay dto );
+	public List<RspLiveHostWageDayList> hostPage(@Param( "dto" ) LiveHostWageDay dto );
 }
