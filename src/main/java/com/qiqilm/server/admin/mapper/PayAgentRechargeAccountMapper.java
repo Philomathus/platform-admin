@@ -1,9 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -61,4 +61,6 @@ public interface PayAgentRechargeAccountMapper {
 	public int deletePayAgentRechargeAccountByIds(Long[] ids );
 
 	int memberIdSearchRepeat(@Param("account") String account);
+
+    void updateGoogle(PayAgentRechargeAccount payAgentRechargeAccount);
 }

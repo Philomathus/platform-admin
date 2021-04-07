@@ -96,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update pay_agent_recharge_account
         <trim prefix="SET" suffixOverrides=",">
             <if test="account != null and account != ''">account = #{account},</if>
+            <if test="googleAuthSecret != null and googleAuthSecret != ''">google_auth_secret = #{googleAuthSecret},</if>
             <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="balanceAmount != null">balance_amount = #{balanceAmount},</if>
             <if test="rechargeNum != null">recharge_num = #{rechargeNum},</if>
@@ -129,4 +130,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select count(0) from pay_agent_recharge_account
         where account = #{account}
     </select>
+    <update id="updateGoogle">
+        update pay_agent_recharge_account set google_auth_secret = #{googleAuthSecret} where id=#{id}
+    </update>
 </mapper>
