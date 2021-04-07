@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.LiveVideoProp;
 import com.qiqilm.server.admin.domain.PayAgentRechargeRecord;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +21,8 @@ public interface PayAgentRechargeRecordMapper {
 	 * @return 【请填写功能名称】
 	 */
 	public PayAgentRechargeRecord selectPayAgentRechargeRecordById(String orderNo);
+
+	PayAgentRechargeRecord getCount(PayAgentRechargeRecord payAgentRechargeRecord );
 
 	/**
 	 * 查询【请填写功能名称】列表
