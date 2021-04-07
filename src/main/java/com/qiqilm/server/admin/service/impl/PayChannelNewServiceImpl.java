@@ -61,36 +61,36 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 	@Override
 	public List<PayChannelNew> selectPayChannelNewList( PayChannelNew payChannelNew ) {
 		List<PayChannelNew> list = payChannelNewMapper.findList(payChannelNew);
-		for ( PayChannelNew me : list ) {
-			if(me.getStatus().equals("1")){
-				//前50笔成功率
-				Integer countSuc = payChannelNewMapper.sucRate(me.getId());
-				String rateSuc = "0%";
-				//if(count != 0){
-				double d = ((float)countSuc/50)*100;
-				rateSuc = String.format("%.2f",  d)+"%";
-				//}
-				me.setPayTypeName(me.getPayTypeName()+":"+rateSuc);
-			}
-			//前50笔成功率
-			//Integer count = payChannelNewMapper.countRate(me.getId());
-			//Integer countSuc = payChannelNewMapper.sucRate(me.getId());
-			//String rateSuc = "0%";
-			//if(count != 0){
+//		for ( PayChannelNew me : list ) {
+//			if(me.getStatus().equals("1")){
+//				//前50笔成功率
+//				Integer countSuc = payChannelNewMapper.sucRate(me.getId());
+//				String rateSuc = "0%";
+//				//if(count != 0){
 //				double d = ((float)countSuc/50)*100;
 //				rateSuc = String.format("%.2f",  d)+"%";
-			//}
-			//今日成功率
-//			Integer countd = payChannelNewMapper.todaycount(me.getId(),0);
-//			Integer countdSuc = payChannelNewMapper.todaycount(me.getId(),1);
-//			String todaySuc = "0%";
-//			if(countd != 0){
-//				double c = ((float)countdSuc/countd)*100;
-//				todaySuc = String.format("%.2f", c)+"%";
+//				//}
+//				me.setPayTypeName(me.getPayTypeName()+":"+rateSuc);
 //			}
-			//me.setPayPlatformName(me.getPayPlatformName()+":"+rateSuc);
-			//me.setPayTypeName(me.getPayTypeName()+"前50笔:"+rateSuc);
-		}
+//			//前50笔成功率
+//			//Integer count = payChannelNewMapper.countRate(me.getId());
+//			//Integer countSuc = payChannelNewMapper.sucRate(me.getId());
+//			//String rateSuc = "0%";
+//			//if(count != 0){
+////				double d = ((float)countSuc/50)*100;
+////				rateSuc = String.format("%.2f",  d)+"%";
+//			//}
+//			//今日成功率
+////			Integer countd = payChannelNewMapper.todaycount(me.getId(),0);
+////			Integer countdSuc = payChannelNewMapper.todaycount(me.getId(),1);
+////			String todaySuc = "0%";
+////			if(countd != 0){
+////				double c = ((float)countdSuc/countd)*100;
+////				todaySuc = String.format("%.2f", c)+"%";
+////			}
+//			//me.setPayPlatformName(me.getPayPlatformName()+":"+rateSuc);
+//			//me.setPayTypeName(me.getPayTypeName()+"前50笔:"+rateSuc);
+//		}
 		return list;
 	}
 
