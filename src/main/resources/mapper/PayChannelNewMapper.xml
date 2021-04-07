@@ -233,4 +233,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select c.id, p.name payPlatformName, c.name name, c.pay_rate payRate from pay_channel_new c
         left join pay_platform_new p on c.pay_platform_id = p.id
     </select>
+    <select id="successRate"  resultType="java.lang.String">
+        select fun_channelsuccess(#{id})
+    </select>
 </mapper>

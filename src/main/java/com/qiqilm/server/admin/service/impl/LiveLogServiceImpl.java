@@ -44,7 +44,12 @@ public class LiveLogServiceImpl implements ILiveLogService {
             cmap.put(id, cmap.get(id) + 1);
         }
         long now = System.currentTimeMillis();
-        dobanchUpdate(cmap);
+        try {
+            dobanchUpdate(cmap);
+        }catch (Exception e){
+            log.error("批量插入进直播间会员数异常",e);
+        }
+
         log.info("批量插入进直播间会员数：{},执行时间:{}ms", cmap.size(), System.currentTimeMillis() - now);
         return cmap.size();
 
@@ -68,7 +73,7 @@ public class LiveLogServiceImpl implements ILiveLogService {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("插入会员进入日志异常",e);
             }
         }
         if (count > 0) {

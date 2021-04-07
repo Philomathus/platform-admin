@@ -15,7 +15,7 @@
 
 
     <insert id="addEnterLog" parameterType="LiveEnterLog">
-        insert into  ${dbLive}.live_enter_log
+        INSERT IGNORE  INTO  ${dbLive}.live_enter_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="p_user_id != null">p_user_id,</if>
@@ -30,7 +30,7 @@
         </trim>
     </insert>
 
-    <update id="addTimes" parameterType="LiveEnterLog">
+    <update id="addTimes">
         update  ${dbLive}.live_enter_log
         set times = times + #{c} where id = #{id}
     </update>

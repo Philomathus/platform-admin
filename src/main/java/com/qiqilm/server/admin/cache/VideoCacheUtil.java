@@ -156,7 +156,7 @@ public class VideoCacheUtil {
 	 * @return 所有一分钟内未刷新心跳时间的直播间ID
 	 */
 	public Set<String> getAbortVideoByMonitorTime() {
-		return redisUtil.zRangeByScore( REDIS_M_KEY, 0, System.currentTimeMillis() - 60000L );
+		return redisUtil.zRangeByScore( REDIS_M_KEY, 0, System.currentTimeMillis() - 300000L );
 	}
 
 	/**
