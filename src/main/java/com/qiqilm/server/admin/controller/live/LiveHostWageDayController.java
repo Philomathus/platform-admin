@@ -40,7 +40,7 @@ public class LiveHostWageDayController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('admin:liveHostWageNote:list')")
     @GetMapping("/familyPage")
-    public TableDataInfo familyPage(LiveHostWageDay dto) {
+    public TableDataInfo familyPage(LiveHostWageDay dto) throws ParseException {
         startPage();
         List<RspLiveHostWageDayFamily> list = liveHostWageDayService.familyPage(dto);
         return getDataTable(list);
@@ -60,7 +60,7 @@ public class LiveHostWageDayController extends BaseController {
     @PreAuthorize("@ss.hasPermi('admin:liveHostWageNote:export')")
     @Log(title = "家族直播时长", businessType = BusinessType.EXPORT)
     @GetMapping("/exportFamily")
-    public void exportFamily(LiveHostWageDay dto, HttpServletResponse response) {
+    public void exportFamily(LiveHostWageDay dto, HttpServletResponse response) throws ParseException {
         List<RspLiveHostWageDayFamily> list = liveHostWageDayService.familyPage(dto);
         ExportExcelUtil.exportExcel(list, "家族直播时长", "家族直播时长", RspLiveHostWageDayFamily.class, response);
     }

@@ -103,11 +103,15 @@
         f.nick_name familyNickName,
         SUM(o.live_time_sec) as alltime,
         sum(o.ticket) as allticket,
+        sum(IFNULL(o.ticket,0) * IFNULL(u.ypoint,0)) as allticketRes,
+        SUM(convert(IFNULL(o.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2))) as costQianliu,
         SUBSTR(o.start_time,1,10) as shijian,
         #{countTime} timedata
         from ${dbLive}.live_host_wage_day o
         left join ${dbLive}.live_family f on o.family_id=f.id
+        left join ${dbLive}.live_user u on o.host_id = u.id
         <where>
+            <if test="dto.dateDay!=null">and o.id like '${dto.dateDay}%'</if>
             <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
             <if test="dto.familyName!=null and dto.familyName!=''">and f.name like concat('%',#{dto.familyName},'%')</if>
             <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>
@@ -131,15 +135,18 @@
         o.lottery_cost lotteryCost,
         o.times,
         u.nick_name nickName,
-        SUM(o.live_time_sec) as alltime,
-        sum(o.ticket) as allticket,
+        IFNULL(u.xpoint,0) as lotteryBili,
+        IFNULL(u.ypoint,0) as liwujiesuanbili,
+        convert(IFNULL(o.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as costQianliu,
+        o.live_time_sec as livetime,
+        o.ticket as ticket,
         SUBSTR(o.start_time,1,10) as shijian,
         #{countTime} timedata
         from ${dbLive}.live_host_wage_day o
         left join ${dbLive}.live_family f on o.family_id=f.id
         left join ${dbLive}.live_user u on o.host_id=u.id
         where o.live_time_sec > 0
-        <if test="dto.id!=null">and o.id like '${dto.dateDay}%'</if>
+        <if test="dto.dateDay!=null">and o.id like '${dto.dateDay}%'</if>
         <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
         <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>

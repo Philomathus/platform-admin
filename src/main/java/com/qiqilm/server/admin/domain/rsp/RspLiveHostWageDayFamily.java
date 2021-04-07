@@ -24,10 +24,10 @@ public class RspLiveHostWageDayFamily {
     @Excel( name = "直播总时长（小时）", orderNum = "4" )
     private String alltimeDes;
 
-    @Excel( name = "主播直播总结算印票", orderNum = "5" )
+    @Excel( name = "主播总结算印票", orderNum = "5" )
     private String allticket;
 
-    @Excel( name = "主播直播结算印票", orderNum = "6" )
+    @Excel( name = "主播折扣结算印票", orderNum = "6" )
     private BigDecimal allticketRes;
 
     @Excel( name = "彩票投注", orderNum = "7" )
@@ -36,7 +36,10 @@ public class RspLiveHostWageDayFamily {
     @Excel( name = "上播次数", orderNum = "8" )
     private Integer times;
 
-    @Excel( name = "统计日期", orderNum = "9" )
+    @Excel( name = "派奖千六", orderNum = "9" )
+    private String costQianliu;
+
+    @Excel( name = "统计日期", orderNum = "10" )
     private String timedata;
 
     private int alltime;
@@ -48,6 +51,13 @@ public class RspLiveHostWageDayFamily {
     private String shijian;
 
     private BigDecimal settlementRate;
+
+    public BigDecimal getAllticketRes() {
+        if ( allticketRes != null ) {
+            return allticketRes.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+        return null;
+    }
 
     public String getAlltimeDes() {
         if ( !StringUtils.isEmpty( alltime ) ) {
