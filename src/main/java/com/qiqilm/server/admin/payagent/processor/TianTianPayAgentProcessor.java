@@ -68,6 +68,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
 	public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
 		if ( this.checkWhiteIp( payAgentPlatform.getPlatWhiteIpList(), realIp ) ) {
 			log.warn( "请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json( requestMap ) );
+			return "fail";
 		}
 		String                    orderId = ( String ) requestMap.get( "OrderId" );
 		SortedMap<String, Object> map     = new TreeMap<>( requestMap );
@@ -83,7 +84,18 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
 		mySign = DigestUtils.md5Hex( mySign );
 		if ( org.apache.commons.lang3.StringUtils.equals( sign, mySign ) ) {
 			int status = ( int ) requestMap.get( "Status" );
-			payAgentService.processOrderPay( orderId, "", payAgentPlatform, status == 4 );
+
+			MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( orderId );
+			if ( withdrawLog == null ) {
+				log.error( "提现相关记录丢失 - merOrderNo:{}", orderId );
+				return "fail";
+			}
+			if ( withdrawLog.getStatus() == 6 ) {
+				log.error( "已有代付记录 - merOrderNo:{}", orderId );
+				return "200";
+			}
+			PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( orderId );
+			payAgentService.processOrderPay( withdrawLog, payAgentLog, "", payAgentPlatform, status == 4 );
 			return "200";
 		}
 		return "fail";

@@ -30,7 +30,13 @@ public class RspLiveHostWageNoteFamily {
 	@Excel( name = "主播直播结算印票", orderNum = "6" )
 	private BigDecimal allticketRes;
 
-	@Excel( name = "统计日期", orderNum = "7" )
+	@Excel( name = "彩票投注", orderNum = "7" )
+	private BigDecimal lotteryCost;
+
+	@Excel( name = "上播次数", orderNum = "8" )
+	private Integer times;
+
+	@Excel( name = "统计日期", orderNum = "9" )
 	private String timedata;
 
 	private int alltime;

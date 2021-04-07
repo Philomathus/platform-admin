@@ -27,6 +27,7 @@ public class PayCacheUtil {
 	public static final String TYPE      = "pay:type:";
 	public static final String PLATFORM  = "pay:platform:";
 	public static final String CHANNEL   = "pay:channel:";
+	public static final String CHANNELSUCCESSRATE   = "pay:channelSuccessRate:";
 
 	@Autowired
 	private RedisUtil            redisUtil;
@@ -135,5 +136,13 @@ public class PayCacheUtil {
 		for ( Long payChannelId : payChannelIds ) {
 			redisUtil.unlink( CHANNEL + payChannelId );
 		}
+	}
+
+    public void setPayChannelSuccessRate(Long id,String successRate) {
+		redisUtil.strSet( CHANNELSUCCESSRATE + id, successRate, Duration.ofMinutes( 1 ));
+    }
+
+	public String getPayChannelSuccessRate(Long id) {
+	 return	redisUtil.strGet( CHANNELSUCCESSRATE + id);
 	}
 }

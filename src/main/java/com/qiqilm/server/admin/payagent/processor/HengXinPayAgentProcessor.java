@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeHengXinType;
 import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -19,6 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Repository( value = ConstantsPayAgent.HENG_XIN + "PayAgentProcessor" )
@@ -29,13 +33,13 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 		BankCodeHengXinType bankCodeType = BankCodeHengXinType.getCodeByDesc( withdrawLog.getBankName() );
 		if ( bankCodeType == null ) {
 			log.warn( "此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
-			throw new BaseException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
+			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
 		}
 		withdrawLog.setBankCode( bankCodeType.name() );
 
 		SortedMap<String, Object> bodyMap = new TreeMap<>();
 		bodyMap.put( "merOrderNo", withdrawLog.getOrderNo() );
-		bodyMap.put( "amount", withdrawLog.getWithdrawMoney() );
+		bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
 		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.HENG_XIN );
 		bodyMap.put( "bankCode", withdrawLog.getBankCode() );
 		bodyMap.put( "submitTime", reqPayAgent.getCurrentTime().getTime() );
@@ -70,13 +74,13 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		if ( !CollectionUtils.isEmpty( resultMap )
-				&& "200".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
-			log.info( "代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
-			return true;
-		}
-		if ( !CollectionUtils.isEmpty( resultMap ) && resultMap.get( "message" ) != null ) {
-			reqPayAgent.setFailReason( resultMap.get( "message" ).toString() );
+		if ( !CollectionUtils.isEmpty( resultMap ) ) {
+			if ( "200".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
+				log.info( "代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
+				return true;
+			} else {
+				reqPayAgent.setFailReason( resultMap.getOrDefault( "message", "" ).toString() );
+			}
 		}
 		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
 		return false;
@@ -86,11 +90,12 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 	public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
 		if ( this.checkWhiteIp( payAgentPlatform.getPlatWhiteIpList(), realIp ) ) {
 			log.warn( "请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json( requestMap ) );
+			return "fail";
 		}
 
 		String dataStr = requestMap.getOrDefault( "data", "" ).toString();
 
-		String data = RSACoder.decryptByPrivateKey( dataStr, payAgentPlatform.getSignPrivateKey() );
+		String data = RSACoder.decryptByPrivateKeyShunWei( dataStr, payAgentPlatform.getSignPrivateKey() );
 		log.info( data );
 		Map<String, Object> resultMap = JsonUtil.json2Map( data );
 
@@ -114,7 +119,17 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 		log.warn( sign + " : " + resultMap.get( "sign" ).toString() );
 		if ( sign.equalsIgnoreCase( resultMap.get( "sign" ).toString() ) ) {
 			if ( orderState > 0 ) {
-				payAgentService.processOrderPay( merOrderNo, orderNo, payAgentPlatform, orderState == 1 );
+				MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
+				if ( withdrawLog == null ) {
+					log.error( "提现相关记录丢失 - merOrderNo:{}", merOrderNo );
+					return "fail";
+				}
+				if ( withdrawLog.getStatus() == 6 ) {
+					log.error( "已有代付记录 - merOrderNo:{}", merOrderNo );
+					return "success";
+				}
+				PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( merOrderNo );
+				payAgentService.processOrderPay( withdrawLog, payAgentLog, orderNo, payAgentPlatform, orderState == 1 );
 			}
 			return "success";
 		}
@@ -128,28 +143,32 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 			log.warn( "请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json( requestMap ) );
 			return null;
 		}
-		SortedMap<String, Object> signMap = new TreeMap<>( requestMap );
 
-		String sign = signMap.remove( "sign" ).toString();
+		SortedMap<String, Object> requestSignMap = new TreeMap<>( requestMap );
+		String                    sign           = requestSignMap.remove( "sign" ).toString();
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"payAgentPrivateKey" ) );
-		String signStr = this.assemblyUrl( signMap ) + "&key=" + signMd5;
+		String signStr = this.assemblyUrl( requestSignMap ) + "&key=" + signMd5;
 		String mySign  = DigestUtils.md5Hex( signStr );
 
-		String amount        = signMap.remove( "amount" ).toString();
-		String bankAccountNo = signMap.remove( "bankAccountNo" ).toString();
+		String     merId         = requestSignMap.getOrDefault( "merId", "" ).toString();
+		String     merOrderNo    = requestSignMap.getOrDefault( "merOrderNo", "" ).toString();
+		BigDecimal amount        = new BigDecimal( requestSignMap.getOrDefault( "amount", "0" ).toString() );
+		String     bankAccountNo = requestSignMap.getOrDefault( "bankAccountNo", "" ).toString();
+
+		SortedMap<String, Object> signMap = new TreeMap<>();
 		signMap.put( "submitTime", String.valueOf( System.currentTimeMillis() ) );
 		signMap.put( "code", "1001" );
 		signMap.put( "message", "签名错误" );
-		if ( org.apache.commons.lang3.StringUtils.equals( sign, mySign ) ) {
-			String            merId             = signMap.getOrDefault( "merId", "" ).toString();
-			String            merOrderNo        = signMap.getOrDefault( "merOrderNo", "" ).toString();
+		signMap.put( "merId", payAgentPlatform.getMerId() );
+		signMap.put( "merOrderNo", merOrderNo );
+		if ( org.apache.commons.lang3.StringUtils.equalsIgnoreCase( sign, mySign ) ) {
 			MemberWithdrawLog memberWithdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
 			if ( memberWithdrawLog == null ) {
 				signMap.put( "code", "1002" );
 				signMap.put( "message", "订单不存在" );
 				return signMap;
-			} else if ( !amount.equals( memberWithdrawLog.getWithdrawMoney().toString() ) ) {
+			} else if ( amount.compareTo( memberWithdrawLog.getWithdrawMoney() ) != 0 ) {
 				signMap.put( "code", "1004" );
 				signMap.put( "message", "金额不匹配" );
 				return signMap;
@@ -160,12 +179,13 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
 			} else if ( !merId.equals( payAgentPlatform.getMerId() ) ) {
 				signMap.put( "code", "9999" );
 				signMap.put( "message", "商户号错误" );
-				return signMap;
+			} else {
+				signMap.put( "code", "0" );
+				signMap.put( "message", "成功" );
 			}
-			signMap.put( "code", "0" );
-			signMap.put( "message", "成功" );
-			return signMap;
 		}
+		String resultSignStr = this.assemblyUrl( signMap ) + "&key=" + signMd5;
+		signMap.put( "sign", DigestUtils.md5Hex( resultSignStr ) );
 		return signMap;
 	}
 

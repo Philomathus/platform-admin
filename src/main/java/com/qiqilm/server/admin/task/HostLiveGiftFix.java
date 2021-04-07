@@ -18,7 +18,7 @@ public class HostLiveGiftFix {
     @Scheduled(cron="0 0 2 * * ?" )
     public void listenerMonitor() {
 
-        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),1000000)){
+        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),900)){
             return;
         }
 

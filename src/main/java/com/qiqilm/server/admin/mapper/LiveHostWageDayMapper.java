@@ -1,8 +1,13 @@
 package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
+import com.qiqilm.server.admin.domain.LiveHostWageDay;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -12,50 +17,42 @@ import com.qiqilm.server.admin.domain.LiveHostWageDay;
  */
 public interface LiveHostWageDayMapper {
 	/**
-	 * 查询【请填写功能名称】
+	 * 查询主播时长
 	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 【请填写功能名称】
+	 * @param id 主播时长ID
+	 * @return 主播时长
 	 */
-	public LiveHostWageDay selectLiveHostWageDayById(String id);
+	public LiveHostWageDay selectLiveHostWageDayById(String id );
 
 	/**
-	 * 查询【请填写功能名称】列表
+	 * 查询主播时长列表
 	 *
-	 * @param liveHostWageDay 【请填写功能名称】
-	 * @return 【请填写功能名称】集合
+	 * @param liveHostWageDay 主播时长
+	 * @return 主播时长集合
 	 */
-	public List<LiveHostWageDay> selectLiveHostWageDayList(LiveHostWageDay liveHostWageDay);
+	public List<LiveHostWageDay> selectLiveHostWageDayList( LiveHostWageDay liveHostWageDay );
 
 	/**
-	 * 新增【请填写功能名称】
+	 * 新增主播时长
 	 *
-	 * @param liveHostWageDay 【请填写功能名称】
+	 * @param liveHostWageDay 主播时长
 	 * @return 结果
 	 */
-	public int insertLiveHostWageDay(LiveHostWageDay liveHostWageDay);
+	public int insertLiveHostWageDay( LiveHostWageDay liveHostWageDay );
 
 	/**
-	 * 修改【请填写功能名称】
+	 * 修改主播时长
 	 *
-	 * @param liveHostWageDay 【请填写功能名称】
+	 * @param liveHostWageDay 主播时长
 	 * @return 结果
 	 */
-	public int updateLiveHostWageDay(LiveHostWageDay liveHostWageDay);
+	public int updateLiveHostWageDay( LiveHostWageDay liveHostWageDay );
 
-	/**
-	 * 删除【请填写功能名称】
-	 *
-	 * @param id 【请填写功能名称】ID
-	 * @return 结果
-	 */
-	public int deleteLiveHostWageDayById(String id);
+	public LiveHostWageDay beforeDay( @Param( "userId" ) Long userId );
 
-	/**
-	 * 批量删除【请填写功能名称】
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deleteLiveHostWageDayByIds(String[] ids );
+	public List<RspLiveHostWageDayFamily> familyPage(@Param( "dto" ) LiveHostWageDay dto );
+
+	public List<Map<String, Object>> selectFamilyName();
+
+	public List<RspLiveHostWageDayList> hostPage(@Param( "dto" ) LiveHostWageDay dto );
 }

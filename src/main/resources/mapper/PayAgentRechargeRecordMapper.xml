@@ -38,6 +38,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="getCount" parameterType="PayAgentRechargeRecord" resultMap="PayAgentRechargeRecordResult">
+        SELECT
+        sum(CASE WHEN 0 > money THEN money ELSE 0 END) AS proposedTotal,
+        sum(CASE WHEN money > 0 THEN money ELSE 0 END) AS depositTotal
+        from ${dbMain}.pay_agent_recharge_record
+        <where>
+            <if test="rechargeAcount != null  and rechargeAcount != ''"> and recharge_acount = #{rechargeAcount}</if>
+            <if test="rechargeNickName != null  and rechargeNickName != ''"> and recharge_nick_name like concat('%', #{rechargeNickName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+
     <select id="selectPayAgentRechargeRecordById" parameterType="String" resultMap="PayAgentRechargeRecordResult">
         <include refid="selectPayAgentRechargeRecordVo"/>
         where order_no = #{orderNo}

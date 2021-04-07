@@ -63,5 +63,13 @@ public interface PayChannelNewMapper {
 
 	List<PayChannelNew> findList(@Param("req") PayChannelNew req);
 
+	Integer sucRate(@Param("id") Long id);
+
+	Integer countRate(@Param("id") Long id);
+
+	Integer todaycount(@Param("id") Long ide,@Param("status") Integer status);
+
 	List<PayChannelNew> selectPayChannelName();
+
+	String successRate(@Param("id") Long id);
 }

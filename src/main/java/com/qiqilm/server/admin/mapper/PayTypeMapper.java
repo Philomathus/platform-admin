@@ -19,6 +19,8 @@ public interface PayTypeMapper {
 	 */
 	public PayType selectPayTypeById(String id);
 
+	Integer existCode(Integer code);
+
 	/**
 	 * 查询支付类型列表
 	 *

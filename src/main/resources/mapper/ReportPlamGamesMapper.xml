@@ -44,4 +44,41 @@
             <if test="begindate != null "> and begindate = #{begindate}</if>
         </where>
     </select>
+
+    <select id="selectReportPlamGamesListMonth"  resultType="com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth">
+        select gameplame,SUM(plampfit)  as yingli  from report_plam_games
+        <where>
+            <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
+            <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
+                AND  begindate &gt;=  STR_TO_DATE(#{begindate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
+                AND begindate &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
+            </if>
+        </where>
+        GROUP BY gameplame
+        UNION all
+        select '直播送礼' as liveprop ,SUM(total_giveprop) from report_moneyinfo
+        <where>
+            <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
+                AND  reptime &gt;= STR_TO_DATE(#{begindate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
+                AND reptime &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="countBetMonth"  resultType="com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth">
+        select SUM(plampfit)  as countBetMoney  from report_plam_games
+        <where>
+            <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
+            <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
+                AND date_format(begindate,'%y%m%d') &gt;= date_format(#{begindate},'%y%m%d')
+            </if>
+            <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
+                AND date_format(begindate,'%y%m%d') &lt;= date_format(#{endDate},'%y%m%d')
+            </if>
+        </where>
+    </select>
 </mapper>

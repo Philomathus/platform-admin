@@ -38,6 +38,19 @@ public class PayTypeController extends BaseController {
 	}
 
 	/**
+	 * 编码失去焦点验证是否已存在
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payType:add')" )
+	@GetMapping( "/existCode/{code}" )
+	public AjaxResult existCode( @PathVariable( "code" ) Integer code  ) {
+		int i = payTypeService.existCode( code );
+		if(i>0){
+			return AjaxResult.error(0,"此支付编码已存在");
+		}
+		return AjaxResult.success();
+	}
+
+	/**
 	 * 导出支付类型列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:export')" )

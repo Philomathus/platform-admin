@@ -3,14 +3,18 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
+import com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth;
 import com.qiqilm.server.admin.mapper.ReportPlamGamesMapper;
 import com.qiqilm.server.admin.service.IReportPlamGamesService;
 import com.qiqilm.server.admin.utils.RedisUtil;
+import com.sun.tools.internal.ws.wsdl.document.soap.SOAPUse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.*;
@@ -106,5 +110,70 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
         List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
         return allList;
     }
+
+    @Override
+    public List<RspPlamGamesMonth> selectReportPlamGamesListMonth(ReportPlamGames reportPlamGames) throws ParseException {
+        String begindate=null;
+        if (reportPlamGames.getBegindate()==null){
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            String dateNowStr = sdf.format(d);
+            begindate=dateNowStr+"-01";
+            reportPlamGames.setBegindate(begindate);
+        }else {
+            begindate = reportPlamGames.getBegindate();
+        }
+        String endDate=getEndDate(begindate);
+        reportPlamGames.setEndDate(endDate);
+        List<RspPlamGamesMonth> allList = reportPlamGamesMapper.selectReportPlamGamesListMonth(reportPlamGames);
+        for (RspPlamGamesMonth rsplist:allList) {
+            rsplist.setDate(begindate.substring(0,7));
+        }
+        return allList;
+    }
+    @Override
+    public RspPlamGamesMonth countBet(ReportPlamGames reportPlamGames) throws ParseException{
+        String begindate=null;
+        if (reportPlamGames.getBegindate()==null){
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            String dateNowStr = sdf.format(d);
+            begindate=dateNowStr+"-01";
+            reportPlamGames.setBegindate(begindate);
+        }else {
+            begindate = reportPlamGames.getBegindate();
+        }
+        String endDate=getEndDate(begindate);
+        reportPlamGames.setEndDate(endDate);
+        RspPlamGamesMonth rspPlamGamesMonth=reportPlamGamesMapper.countBetMonth(reportPlamGames);
+        if (Objects.isNull(rspPlamGamesMonth)){
+            RspPlamGamesMonth rspPlamGamesMonth2=new RspPlamGamesMonth();
+            rspPlamGamesMonth2.setCountBetMoney(BigDecimal.ZERO);
+            return rspPlamGamesMonth2;
+        }
+        return rspPlamGamesMonth;
+    }
+
+    private String getEndDate(String begindate) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
+        Date date = simpleDateFormat.parse(begindate);
+
+        int month=date.getMonth()+1;
+        Calendar cal = Calendar.getInstance();
+        // 设置月份
+        cal.set(Calendar.MONTH, month - 1);
+        // 获取月份的最大天数
+        int lastDay = 0;
+        //2月份每年的天数不固定
+        if (month == 2) {
+            lastDay = cal.getLeastMaximum(Calendar.DAY_OF_MONTH);
+        } else {
+            lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        }
+        String endDate=begindate.substring(0,8)+lastDay;
+        return endDate;
+    }
+
+
 
 }

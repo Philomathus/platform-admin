@@ -107,7 +107,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="req.status != null and req.status != ''">
             and c.status = #{req.status}
         </if>
-        ORDER BY c.create_time desc
+        ORDER BY c.indexes
+    </select>
+
+
+    <select id="sucRate" resultType="Integer">
+        select count(1) from(select `status`,'id' from member_pay_jour where channel_id = #{id} and create_time &lt;= DATE_SUB(NOW(), INTERVAL 1 MINUTE) order by create_time desc limit 50) d where `status` = 1
+    </select>
+
+    <select id="countRate" resultType="Integer">
+        select count(1) from (select id from member_pay_jour where channel_id = #{id} limit 50) t
+    </select>
+
+    <select id="todaycount" resultType="Integer">
+        select count(1) from member_pay_jour where channel_id = #{id} and update_time >= curdate()
+        <if test="status == 1">
+            and status = 1
+        </if>
     </select>
 
     <select id="selectPayChannelNewById" parameterType="Long" resultMap="PayChannelNewResult">
@@ -216,5 +232,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectPayChannelName" resultType="PayChannelNew">
         select c.id, p.name payPlatformName, c.name name, c.pay_rate payRate from pay_channel_new c
         left join pay_platform_new p on c.pay_platform_id = p.id
+    </select>
+    <select id="successRate"  resultType="java.lang.String">
+        select fun_channelsuccess(#{id})
     </select>
 </mapper>

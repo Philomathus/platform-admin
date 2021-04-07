@@ -60,6 +60,8 @@ public interface IPayAgentRechargeRecordService {
 	 */
 	public int deletePayAgentRechargeRecordById(String orderNo);
 
+	PayAgentRechargeRecord getCount(PayAgentRechargeRecord payAgentRechargeRecord);
+
 	AjaxResult deposit(PayAgentRechargeRecord dto);
 
 	AjaxResult proposed(PayAgentRechargeRecord dto);
