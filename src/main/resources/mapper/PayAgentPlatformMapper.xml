@@ -78,15 +78,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updatePayAgentPlatform" parameterType="PayAgentPlatform">
         update pay_agent_platform
         <trim prefix="SET" suffixOverrides=",">
-            <if test="code != null and code != ''">code = #{code},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="merId != null and merId != ''">mer_id = #{merId},</if>
             <if test="payOrderAddr != null and payOrderAddr != ''">pay_order_addr = #{payOrderAddr},</if>
             <if test="payOrderQueryAddr != null">pay_order_query_addr = #{payOrderQueryAddr},</if>
             <if test="headerKey != null">header_key = #{headerKey},</if>
-            <if test="signMd5 != null">sign_md5 = #{signMd5},</if>
-            <if test="signPublicKey != null">sign_public_key = #{signPublicKey},</if>
-            <if test="signPrivateKey != null">sign_private_key = #{signPrivateKey},</if>
             <if test="platWhiteIpList != null">plat_white_ip_list = #{platWhiteIpList},</if>
             <if test="status != null and status != ''">status = #{status},</if>
         </trim>

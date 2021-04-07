@@ -85,8 +85,20 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
 
 		String signStr = this.assemblyUrl( sortedMap ) + signMd5;
 		if ( StringUtils.equals( sign, DigestUtils.md5Hex( signStr ).toUpperCase() ) ) {
-			String status = requestMap.getOrDefault( "status", "" ).toString();
-			payAgentService.processOrderPay( requestMap.get( "outOrderNum" ).toString(), requestMap.get( "orderNum" ).toString(),
+			String status      = requestMap.getOrDefault( "status", "" ).toString();
+			String outOrderNum = requestMap.getOrDefault( "outOrderNum", "" ).toString();
+
+			MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( outOrderNum );
+			if ( withdrawLog == null ) {
+				log.error( "提现相关记录丢失 - merOrderNo:{}", outOrderNum );
+				return "fail";
+			}
+			if ( withdrawLog.getStatus() == 6 ) {
+				log.error( "已有代付记录 - merOrderNo:{}", outOrderNum );
+				return "success";
+			}
+			PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( outOrderNum );
+			payAgentService.processOrderPay( withdrawLog, payAgentLog, requestMap.get( "orderNum" ).toString(),
 					payAgentPlatform, StringUtils.equals( status, "success" ) );
 			return "success";
 		}

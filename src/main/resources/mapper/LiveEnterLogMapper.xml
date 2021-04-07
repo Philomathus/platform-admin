@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveEnterLogMapper">
+
+    <resultMap type="LiveEnterLog" id="LiveEnterLogResult">
+        <result property="id"    column="id"    />
+        <result property="pUserId"    column="p_user_id"    />
+        <result property="dtime"    column="dtime"    />
+        <result property="times"    column="times"    />
+    </resultMap>
+
+    <sql id="selectLiveEnterLogVo">
+        select id, p_user_id, dtime, times from ${dbLive}.live_enter_log
+    </sql>
+
+
+    <insert id="addEnterLog" parameterType="LiveEnterLog">
+        insert into  ${dbLive}.live_enter_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="p_user_id != null">p_user_id,</if>
+            <if test="dtime != null">dtime,</if>
+            <if test="times != null">times,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="p_user_id != null">#{p_user_id},</if>
+            <if test="dtime != null">#{dtime},</if>
+            <if test="times != null">#{times},</if>
+        </trim>
+    </insert>
+
+    <update id="addTimes" parameterType="LiveEnterLog">
+        update  ${dbLive}.live_enter_log
+        set times = times + #{c} where id = #{id}
+    </update>
+
+
+</mapper>

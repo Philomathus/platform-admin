@@ -77,6 +77,10 @@ public class ReportPlamGamesController extends BaseController {
 		startPage();
 		List<RspPlamGamesMonth> list=reportPlamGamesService.selectReportPlamGamesListMonth( reportPlamGames );
 		return getDataTable( list );
-
+	}
+	@GetMapping( value = "/countBet" )
+	public AjaxResult countBet( ReportPlamGames reportPlamGames ) throws ParseException {
+		RspPlamGamesMonth rspPlamGamesMonth = reportPlamGamesService.countBet( reportPlamGames );
+		return AjaxResult.success( rspPlamGamesMonth );
 	}
 }

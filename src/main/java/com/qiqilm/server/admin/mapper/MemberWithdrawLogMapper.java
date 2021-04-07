@@ -58,4 +58,6 @@ public interface MemberWithdrawLogMapper {
 	List<MemberWithdrawLog> selectLocksByIds( @Param("array") List<String> ids );
 
 	List<MemberWithdrawLogShunWei> selectMemberWithdrawLogShunWeiList(@Param("array") List<String> ids);
+
+	List<MemberWithdrawLog> selectPayAgentOrder( List<String> withdrawOrderNos, String userName );
 }
