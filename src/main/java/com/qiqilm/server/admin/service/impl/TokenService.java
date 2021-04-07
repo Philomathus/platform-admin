@@ -148,6 +148,13 @@ public class TokenService {
 		//获取截止时间
         long expireDate = System.currentTimeMillis() + Duration.ofMinutes(expireTime).toMillis();
         Map<String, Object> map = new HashMap<>();
+        //登录前先清除之前的登录的token
+        Object userKeys = redisUtil.hGet("userKeys", userKey);
+        if (userKeys!=null) {
+            String tokenId = (String)(JsonUtil.json2Map((String) userKeys)).get("userKey");
+            String tokenKeyOld = TokenService.getTokenKey(tokenId);
+            stringRedisTemplate.opsForHash().delete( "tokenKeys", tokenKeyOld );
+        }
         map.put("loginUser", JsonUtil.object2Json(loginUser));
         map.put("expireDate",expireDate);
         redisUtil.hSet("tokenKeys",tokenKey,JsonUtil.object2Json(map));
