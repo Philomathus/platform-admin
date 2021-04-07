@@ -1,26 +1,18 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.domain.PayType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
+import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 【代充人管理】Controller
@@ -44,7 +36,7 @@ public class PayAgentRechargeAccountController extends BaseController {
 		List<PayAgentRechargeAccount> list = payAgentRechargeAccountService.selectPayAgentRechargeAccountList(payAgentRechargeAccount);
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出【代充人管理】列表
 	 */
@@ -103,6 +95,15 @@ public class PayAgentRechargeAccountController extends BaseController {
 	@Log( title = "代充人", businessType = BusinessType.UPDATE )
 	@PutMapping( "/changeStatus" )
 	public AjaxResult changeStatus( @RequestBody PayAgentRechargeAccount payAgentRechargeAccount ) {
+		return toAjax( payAgentRechargeAccountService.updatePayAgentRechargeAccount(payAgentRechargeAccount));
+	}
+	/**
+	 * 状态修改
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccount:edit')" )
+	@Log( title = "代充人", businessType = BusinessType.UPDATE )
+	@PutMapping( "/changeShowStatus" )
+	public AjaxResult changeShowStatus( @RequestBody PayAgentRechargeAccount payAgentRechargeAccount ) {
 		return toAjax( payAgentRechargeAccountService.updatePayAgentRechargeAccount(payAgentRechargeAccount));
 	}
 }
