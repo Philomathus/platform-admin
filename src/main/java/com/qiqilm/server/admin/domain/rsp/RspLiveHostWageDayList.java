@@ -37,7 +37,7 @@ public class RspLiveHostWageDayList {
     private Integer times;
 
     @Excel( name = "派奖千六", orderNum = "9" )
-    private Integer costQianliu;
+    private String costQianliu;
 
     @Excel( name = "彩票比例", orderNum = "10" )
     private BigDecimal lotteryBili;
