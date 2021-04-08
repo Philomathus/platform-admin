@@ -9,40 +9,43 @@ import java.util.Formatter;
 
 @Data
 public class RspLiveHostWageDayList {
-    @Excel( name = "家族ID", orderNum = "0" )
-    private Integer familyId;
-
-    @Excel( name = "家族名称", orderNum = "1" )
-    private String familyName;
-
-    @Excel( name = "主播ID", orderNum = "2" )
+    @Excel( name = "主播ID", orderNum = "0" )
     private Integer hostId;
 
-    @Excel( name = "主播昵称", orderNum = "3" )
+    @Excel( name = "主播昵称", orderNum = "2" )
     private String nickName;
 
-    @Excel( name = "直播总时长（小时）", orderNum = "4" )
+    @Excel( name = "家族ID", orderNum = "2" )
+    private Integer familyId;
+
+    @Excel( name = "家族名称", orderNum = "3" )
+    private String familyName;
+
+    @Excel( name = "直播时长", orderNum = "4" )
     private String timeDes;
 
-    @Excel( name = "主播结算印票", orderNum = "5" )
+    @Excel( name = "时薪", orderNum = "5" )
+    private String coin;
+
+    @Excel( name = "收礼金额", orderNum = "6" )
     private String ticket;
 
-    @Excel( name = "礼物结算比例", orderNum = "6" )
+    @Excel( name = "礼物提成", orderNum = "7" )
     private BigDecimal liwujiesuanbili;
 
-    @Excel( name = "主播折扣结算印票", orderNum = "7" )
+    @Excel( name = "礼物结算", orderNum = "8" )
     private BigDecimal ticketRes;
 
-    @Excel( name = "彩票比例", orderNum = "8" )
+    @Excel( name = "彩票投注", orderNum = "9" )
     private BigDecimal lotteryBili;
 
-    @Excel( name = "派奖千六", orderNum = "9" )
+    @Excel( name = "彩票提成", orderNum = "10" )
     private String costQianliu;
 
-    @Excel( name = "彩票投注", orderNum = "10" )
+    @Excel( name = "彩票结算", orderNum = "11" )
     private BigDecimal lotteryCost;
 
-    @Excel( name = "开播次数", orderNum = "11" )
+    @Excel( name = "开播次数", orderNum = "12" )
     private Integer times;
 
 

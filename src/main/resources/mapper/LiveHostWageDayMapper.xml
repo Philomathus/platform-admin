@@ -139,8 +139,8 @@
         o.ticket as ticket,
         IFNULL(o.ticket,0) * IFNULL(u.ypoint,0) as ticketRes,
         convert(IFNULL(o.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as costQianliu,
-        SUBSTR(o.start_time,1,10) as shijian
-<!--        #{countTime} timedata-->
+        SUBSTR(o.start_time,1,10) as shijian,
+        u.coin
         from ${dbLive}.live_host_wage_day o
         left join ${dbLive}.live_family f on o.family_id=f.id
         left join ${dbLive}.live_user u on o.host_id=u.id
@@ -149,6 +149,6 @@
         <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
         <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
-        group by o.host_id order by o.start_time desc
+        group by o.family_id order by o.family_id
     </select>
 </mapper>

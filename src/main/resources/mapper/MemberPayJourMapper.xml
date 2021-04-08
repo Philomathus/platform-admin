@@ -281,6 +281,12 @@
 		<if test="selectStartDate != null and selectStartDate != ''">
 			and update_time <![CDATA[ >= ]]> #{selectStartDate} and update_time <![CDATA[ <= ]]> #{selectEndDate}
 		</if>
+		<if test="channelIds != null">
+			and channel_id in
+			<foreach item="id" collection="channelIds" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
 	</sql>
 
 	<sql id="transactionsTotal">

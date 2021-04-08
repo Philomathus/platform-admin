@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.domain.PayChannelNew;
 import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
 import com.qiqilm.server.admin.mapper.PayChannelNewMapper;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,10 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 			memberPayJour.setSelectStartDate( selectDate[ 0 ] );
 			memberPayJour.setSelectEndDate( selectDate[ 1 ] );
 		}
+		if(memberPayJour.getChannelName() != null){
+			List<String> payChannelNewIds =  payChannelNewMapper.selectPayChannelNewIdByName(memberPayJour.getChannelName());
+			memberPayJour.setChannelIds(payChannelNewIds);
+		}
 		List<MemberPayJour> memberPayJours = memberPayJourMapper.selectMemberPayJourList( memberPayJour );
 		List<PayChannelNew> payChannelNews = payChannelNewMapper.selectPayChannelName();
 		for ( MemberPayJour me : memberPayJours ) {
@@ -69,6 +74,10 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 		if ( selectDate != null && selectDate.length > 0 ) {
 			memberPayJour.setSelectStartDate( selectDate[ 0 ] );
 			memberPayJour.setSelectEndDate( selectDate[ 1 ] );
+		}
+		if(memberPayJour.getChannelName() != null){
+			List<String> payChannelNewIds =  payChannelNewMapper.selectPayChannelNewIdByName(memberPayJour.getChannelName());
+			memberPayJour.setChannelIds(payChannelNewIds);
 		}
 		return memberPayJourMapper.listCount( memberPayJour );
 	}

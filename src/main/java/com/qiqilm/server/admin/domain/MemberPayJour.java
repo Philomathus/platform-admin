@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 /**
  * 线上充值信息对象 member_pay_jour
@@ -123,6 +124,8 @@ public class MemberPayJour implements Serializable {
 	private String   selectStartDate;
 	@JsonIgnore
 	private String   selectEndDate;
+	@JsonIgnore
+	private List<String> channelIds;
 
 	public String getCurrentSuccessRateStr() {
 		if ( currentSuccessRate != null ) {
