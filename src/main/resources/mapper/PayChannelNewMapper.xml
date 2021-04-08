@@ -236,4 +236,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="successRate"  resultType="java.lang.String">
         select fun_channelsuccess(#{id})
     </select>
+
+    <select id="selectPayChannelNewIdByName" parameterType="String" resultType="java.lang.String">
+        select id from  pay_channel_new where name like concat('%', #{name}, '%')
+    </select>
 </mapper>

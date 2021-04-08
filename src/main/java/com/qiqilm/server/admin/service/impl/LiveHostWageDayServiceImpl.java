@@ -58,10 +58,6 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     @Override
     public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto ) throws ParseException {
         this.setTime( dto );
-        //获取昨日日期
-        if(StringUtils.isNotBlank(dto.getDateDay())) {
-            dto.setDateDay(yesterday(dto.getDateDay()));
-        }
 //        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
         List<RspLiveHostWageDayFamily> liveHostWageDays = liveHostWageDayMapper.familyPage( dto );
         for ( RspLiveHostWageDayFamily liveHostWageDay : liveHostWageDays ) {
@@ -89,10 +85,6 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
         this.setTime( dto );
 //        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
 
-        //获取昨日日期
-        if(StringUtils.isNotBlank(dto.getDateDay())) {
-            dto.setDateDay(yesterday(dto.getDateDay()));
-        }
         List<RspLiveHostWageDayList> liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
         for ( RspLiveHostWageDayList liveHostWageDay : liveHostWageDays ) {
             if ( liveHostWageDay.getTicket() != null ) {
@@ -127,13 +119,5 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
             dto.setStartTime(dto.getDateDay() + " 00:00:00");
             dto.setEndTime(dto.getDateDay() + " 23:59:59");
         }
-    }
-
-    private String yesterday(String dateDay) throws ParseException {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        long dif = df.parse(dateDay).getTime()-86400*1000;//减一天
-        Date date=new Date();
-        date.setTime(dif);
-        return df.format(date);
     }
 }

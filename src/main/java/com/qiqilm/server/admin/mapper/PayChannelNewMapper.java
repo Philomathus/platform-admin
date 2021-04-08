@@ -72,4 +72,7 @@ public interface PayChannelNewMapper {
 	List<PayChannelNew> selectPayChannelName();
 
 	String successRate(@Param("id") Long id);
+
+	List<String> selectPayChannelNewIdByName(String name);
+
 }
