@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -68,7 +69,7 @@ public class PayAgentLog {
 	 * 请求参数
 	 */
 	@JsonIgnore
-	private Map<String, Object> params;
+	private Map<String, Object> params = new HashMap<>();
 
 	@Override
 	public String toString() {
