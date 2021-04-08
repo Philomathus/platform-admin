@@ -281,11 +281,8 @@
 		<if test="selectStartDate != null and selectStartDate != ''">
 			and update_time <![CDATA[ >= ]]> #{selectStartDate} and update_time <![CDATA[ <= ]]> #{selectEndDate}
 		</if>
-		<if test="channelIds != null">
-			and channel_id in
-			<foreach item="id" collection="channelIds" open="(" separator="," close=")">
-				#{id}
-			</foreach>
+		<if test="channelName != null and channelName != ''">
+			and channel_id in (SELECT id from pay_channel_new where name like concat(#{channelName}, '%'))
 		</if>
 	</sql>
 
