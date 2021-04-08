@@ -36,7 +36,8 @@ public class MessageSendCountTask {
 	private String profile;
 
 	//30分钟执行
-	@Scheduled( fixedDelay = 1800000, initialDelay = 1 )
+	//@Scheduled( fixedDelay = 1800000, initialDelay = 1 )
+	@Scheduled(cron="0 0 0-23 * * ?" )
 	public void runTask() {
 		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 1500 ) ) {
 			return;

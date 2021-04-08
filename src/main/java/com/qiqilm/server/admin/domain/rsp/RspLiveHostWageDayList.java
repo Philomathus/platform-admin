@@ -27,23 +27,24 @@ public class RspLiveHostWageDayList {
     @Excel( name = "主播结算印票", orderNum = "5" )
     private String ticket;
 
-    @Excel( name = "主播折扣结算印票", orderNum = "6" )
+    @Excel( name = "礼物结算比例", orderNum = "6" )
+    private BigDecimal liwujiesuanbili;
+
+    @Excel( name = "主播折扣结算印票", orderNum = "7" )
     private BigDecimal ticketRes;
 
-    @Excel( name = "彩票投注", orderNum = "7" )
-    private BigDecimal lotteryCost;
-
-    @Excel( name = "上播次数", orderNum = "8" )
-    private Integer times;
+    @Excel( name = "彩票比例", orderNum = "8" )
+    private BigDecimal lotteryBili;
 
     @Excel( name = "派奖千六", orderNum = "9" )
-    private Integer costQianliu;
+    private String costQianliu;
 
-    @Excel( name = "彩票比例", orderNum = "10" )
-    private Integer lotteryBili;
+    @Excel( name = "彩票投注", orderNum = "10" )
+    private BigDecimal lotteryCost;
 
-    @Excel( name = "礼物结算比例", orderNum = "11" )
-    private Integer liwujiesuanbili;
+    @Excel( name = "开播次数", orderNum = "11" )
+    private Integer times;
+
 
 //    @Excel( name = "统计日期", orderNum = "12" )
 //    private String timedata;
