@@ -50,10 +50,6 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 			memberPayJour.setSelectStartDate( selectDate[ 0 ] );
 			memberPayJour.setSelectEndDate( selectDate[ 1 ] );
 		}
-		if(memberPayJour.getChannelName() != null){
-			List<String> payChannelNewIds =  payChannelNewMapper.selectPayChannelNewIdByName(memberPayJour.getChannelName());
-			memberPayJour.setChannelIds(payChannelNewIds);
-		}
 		List<MemberPayJour> memberPayJours = memberPayJourMapper.selectMemberPayJourList( memberPayJour );
 		List<PayChannelNew> payChannelNews = payChannelNewMapper.selectPayChannelName();
 		for ( MemberPayJour me : memberPayJours ) {
@@ -74,10 +70,6 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 		if ( selectDate != null && selectDate.length > 0 ) {
 			memberPayJour.setSelectStartDate( selectDate[ 0 ] );
 			memberPayJour.setSelectEndDate( selectDate[ 1 ] );
-		}
-		if(memberPayJour.getChannelName() != null){
-			List<String> payChannelNewIds =  payChannelNewMapper.selectPayChannelNewIdByName(memberPayJour.getChannelName());
-			memberPayJour.setChannelIds(payChannelNewIds);
 		}
 		return memberPayJourMapper.listCount( memberPayJour );
 	}

@@ -61,7 +61,7 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
 //        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
         List<RspLiveHostWageDayFamily> liveHostWageDays = liveHostWageDayMapper.familyPage( dto );
         for ( RspLiveHostWageDayFamily liveHostWageDay : liveHostWageDays ) {
-            if ( liveHostWageDay.getAllticket() != null ) {
+            if ( liveHostWageDay.getLiwu() != null ) {
 //                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getAllticket() );
                 //判断是否是散户
                 if (liveHostWageDay.getFamilyId() == 0) {

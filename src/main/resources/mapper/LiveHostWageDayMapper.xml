@@ -95,28 +95,45 @@
 
     <select id="familyPage" parameterType="LiveHostWageDay" resultType="RspLiveHostWageDayFamily">
         select
-        o.family_id familyId,
-        o.lottery_cost lotteryCost,
-        o.times,
-        f.name familyName,
-        f.user_id familyUserId,
-        f.nick_name familyNickName,
-        SUM(o.live_time_sec) as alltime,
-        sum(o.ticket) as allticket,
-        sum(IFNULL(o.ticket,0) * IFNULL(u.ypoint,0)) as allticketRes,
-        SUM(convert(IFNULL(o.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2))) as costQianliu,
-        SUBSTR(o.start_time,1,10) as shijian
-<!--        #{countTime} timedata-->
-        from ${dbLive}.live_host_wage_day o
-        left join ${dbLive}.live_family f on o.family_id=f.id
-        left join ${dbLive}.live_user u on o.host_id = u.id
+        t.family_id familyId,
+        t.name familyName,
+        t.user_id familyUserId,
+        t.nick_name familyNickName,
+        SUM(t.livetime) as livetime,
+        SUM(t.livetimejiesuan) as livetimejiesuan,
+        SUM(t.liwu) as liwu,
+        SUM(t.ticket) as liwujiesuan,
+        SUM(t.lottery_cost) as lotteryCost,
+        SUM(t.cost_qianliu) as costQianliu,
+        SUM(t.times) as times
+        from (
+        select
+        d.family_id,
+        f.user_id,
+        f.name,
+        f.nick_name,
+        d.host_id,
+        convert(d.live_time_sec/60/60,decimal(10,2)) as livetime,
+        u.weibo_money as lwrenwu,
+        u.weixin_price as screnwu,
+        u.coin,
+        IF(u.weixin_price > convert(d.live_time_sec/60/60,decimal(10,2)) or u.weixin_price > d.ticket ,0, convert(u.weixin_price * u.coin,decimal(10,2))) as livetimejiesuan,
+        d.ticket as liwu,
+        IFNULL(u.ypoint,0) as liwujiesuanbili,
+        convert(IFNULL(d.ticket,0) * IFNULL(u.ypoint,0),decimal(10,2)) as ticket,
+        d.lottery_cost,IFNULL(u.xpoint,0) as lotterylibi,
+        convert(IFNULL(d.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as cost_qianliu,
+        d.times
+        from ${dbLive}.live_host_wage_day d
+        LEFT JOIN ${dbLive}.live_user u on d.host_id = u.id
+        LEFT JOIN ${dbLive}.live_family f on d.family_id=f.id
         <where>
-            <if test="dto.dateDay!=null">and o.id like '${dto.dateDay}%'</if>
-            <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
+            <if test="dto.dateDay!=null">and d.id like '${dto.dateDay}%'</if>
+            <if test="dto.familyId!=null">and d.family_id = #{dto.familyId}</if>
             <if test="dto.familyName!=null and dto.familyName!=''">and f.name like concat('%',#{dto.familyName},'%')</if>
             <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>
-        </where>
-        group by o.family_id order by o.family_id asc
+        </where>) t
+        GROUP BY t.family_id ORDER BY t.family_id
     </select>
 
     <select id="selectFamilyName" resultType="java.util.Map">
@@ -125,30 +142,33 @@
 
     <select id="hostPage" parameterType="LiveHostWageDay" resultType="RspLiveHostWageDayList">
         select
-        o.family_id familyId,
+        d.family_id familyId,
+        d.host_id hostId,
+        d.ticket liwu,
+        convert(d.live_time_sec/60/60,decimal(10,2)) as livetime,
+        d.lottery_cost lotteryCost,
+        d.times,
         f.name familyName,
         f.user_id familyUserId,
         f.nick_name familyNickName,
-        o.host_id hostId,
-        o.lottery_cost lotteryCost,
-        o.times,
         u.nick_name nickName,
         IFNULL(u.xpoint,0) as lotteryBili,
         IFNULL(u.ypoint,0) as liwujiesuanbili,
-        o.live_time_sec as livetime,
-        o.ticket as ticket,
-        IFNULL(o.ticket,0) * IFNULL(u.ypoint,0) as ticketRes,
-        convert(IFNULL(o.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as costQianliu,
-        SUBSTR(o.start_time,1,10) as shijian,
-        u.coin
-        from ${dbLive}.live_host_wage_day o
-        left join ${dbLive}.live_family f on o.family_id=f.id
-        left join ${dbLive}.live_user u on o.host_id=u.id
-        where o.live_time_sec > 0
-        <if test="dto.dateDay!=null">and o.id like '${dto.dateDay}%'</if>
-        <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
-        <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
+        IFNULL(d.ticket,0) * IFNULL(u.ypoint,0) as ticket,
+        convert(IFNULL(d.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as costQianliu,
+        IF(u.weixin_price > convert(d.live_time_sec/60/60,decimal(10,2)) or u.weixin_price > d.ticket ,0, convert(u.weixin_price * u.coin,decimal(10,2))) as livetimejiesuan,
+<!--        SUBSTR(d.start_time,1,10) as shijian,-->
+        u.coin,
+        u.weibo_money as lwrenwu,
+        u.weixin_price as screnwu
+        from ${dbLive}.live_host_wage_day d
+        left join ${dbLive}.live_family f on d.family_id=f.id
+        left join ${dbLive}.live_user u on d.host_id=u.id
+        where d.live_time_sec > 0
+        <if test="dto.dateDay!=null">and d.id like '${dto.dateDay}%'</if>
+        <if test="dto.familyId!=null">and d.family_id = #{dto.familyId}</if>
+        <if test="dto.hostId!=null">and d.host_id = #{dto.hostId}</if>
         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
-        order by o.family_id
+        order by d.family_id
     </select>
 </mapper>

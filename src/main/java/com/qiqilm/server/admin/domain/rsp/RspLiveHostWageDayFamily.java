@@ -22,27 +22,28 @@ public class RspLiveHostWageDayFamily {
     private String familyNickName;
 
     @Excel( name = "直播时长", orderNum = "4" )
-    private String alltimeDes;
+    private String livetime;
 
-    @Excel( name = "收礼金额", orderNum = "5" )
-    private String allticket;
+    @Excel( name = "时长结算", orderNum = "5" )
+    private String livetimejiesuan;
 
-    @Excel( name = "收礼结算", orderNum = "6" )
-    private BigDecimal allticketRes;
+    @Excel( name = "礼物金额", orderNum = "6" )
+    private String liwu;
 
-    @Excel( name = "彩票投注", orderNum = "7" )
+    @Excel( name = "礼物结算", orderNum = "7" )
+    private BigDecimal liwujiesuan;
+
+    @Excel( name = "彩票投注", orderNum = "8" )
     private BigDecimal lotteryCost;
 
-    @Excel( name = "彩票结算", orderNum = "8" )
+    @Excel( name = "彩票结算", orderNum = "9" )
     private String costQianliu;
 
-    @Excel( name = "开播次数", orderNum = "9" )
+    @Excel( name = "开播次数", orderNum = "10" )
     private Integer times;
 
 //    @Excel( name = "统计日期", orderNum = "10" )
 //    private String timedata;
-
-    private int alltime;
 
     private BigDecimal allCpCost;
 
@@ -53,17 +54,9 @@ public class RspLiveHostWageDayFamily {
     private BigDecimal settlementRate;
 
     public BigDecimal getAllticketRes() {
-        if ( allticketRes != null ) {
-            return allticketRes.setScale(2, BigDecimal.ROUND_HALF_UP);
+        if ( liwujiesuan != null ) {
+            return liwujiesuan.setScale(2, BigDecimal.ROUND_HALF_UP);
         }
         return null;
-    }
-
-    public String getAlltimeDes() {
-        if ( !StringUtils.isEmpty( alltime ) ) {
-            double df = alltime;
-            return new Formatter().format( "%.2f", df / 3600 ).toString();
-        }
-        return "";
     }
 }
