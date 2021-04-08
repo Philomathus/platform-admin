@@ -220,7 +220,7 @@
 			<if test="tex4 != null">
 				tex4 = #{tex4},
 			</if>
-			<if test="tex5 != null and tex5 != ''">
+			<if test="tex5 != null">
 				tex5 = #{tex5},
 			</if>
 		</trim>
