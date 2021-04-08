@@ -76,6 +76,10 @@ public class PayAgentRechargeAccount extends BaseEntity {
     private String status;
 
     /** 状态 1正常 0拉黑 */
+    @Excel(name = "谷歌验证码")
+    private String googleAuthSecret;
+
+    /** 状态 1正常 0拉黑 */
     @Excel(name = "状态 1显示 0隐藏")
     private String showStatus;
 

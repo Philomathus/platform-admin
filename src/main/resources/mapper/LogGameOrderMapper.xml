@@ -35,7 +35,7 @@
 				and b_time >= #{startTime}
 			</if>
 			<if test="endTime != null and endTime != ''">
-				and e_time &lt;= #{endTime}
+				and b_time &lt;= #{endTime}
 			</if>
 		</where>
 	</select>

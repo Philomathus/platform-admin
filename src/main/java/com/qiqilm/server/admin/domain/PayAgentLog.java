@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.annotation.Excel;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 代付信息日志对象 pay_agent_log
@@ -61,6 +63,12 @@ public class PayAgentLog {
 	/** 回调状态 0 回调中 1 成功 2失败 */
 	@Excel( name = "回调状态" )
 	private Integer callbackStatus;
+
+	/**
+	 * 请求参数
+	 */
+	@JsonIgnore
+	private Map<String, Object> params;
 
 	@Override
 	public String toString() {

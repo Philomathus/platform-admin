@@ -73,7 +73,7 @@ public class LiveLogServiceImpl implements ILiveLogService {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("插入会员进入日志异常",e);
             }
         }
         if (count > 0) {
