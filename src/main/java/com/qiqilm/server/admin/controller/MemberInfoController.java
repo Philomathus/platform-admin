@@ -291,13 +291,15 @@ public class MemberInfoController extends BaseController {
         }
 
         String ip = UserDataUtil.getIp(request);
-        if (!redisUtil.lock(EnumLock.member, req.getId(), "1", 5)) {
+        if (!redisUtil.lock(EnumLock.member, "addScore"+req.getId(), "1", 15)) {
             throw new BusinessException("请勿重复提交");
         }
         String username = loginUser.getUser().getUserName();
         rspBase = memberInfoService.addMemberMoneyOnly(ip, req.getId(), req.getScore(), req.getBeatNum(), req.getMk()+",操作人:"+username,
                 req.getOrdermk(), loginUser.getUsername());
-        redisUtil.unLock(EnumLock.member, req.getId());
+        if(rspBase.getCode() == 2){
+            redisUtil.unLock(EnumLock.member, "addScore"+req.getId());
+        }
         return rspBase;
     }
 
