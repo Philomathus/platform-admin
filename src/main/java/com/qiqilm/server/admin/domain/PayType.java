@@ -62,6 +62,16 @@ public class PayType extends BaseEntity {
     @Excel(name = "开放层级")
     private Long openLevel;
 
+    @Excel(name = "文本1")
+    private String tex1;
+    @Excel(name = "文本2")
+    private String tex2;
+    @Excel(name = "文本3")
+    private String tex3;
+    @Excel(name = "文本4")
+    private String tex4;
+    @Excel(name = "文本5")
+    private String tex5;
 
 
     @Override
@@ -80,6 +90,11 @@ public class PayType extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("updator", getUpdator())
                 .append("updateTime", getUpdateTime())
+                .append("tex1", getTex1())
+                .append("tex2", getTex2())
+                .append("tex3", getTex3())
+                .append("tex4", getTex4())
+                .append("tex5", getTex5())
                 .append("openLevel", getOpenLevel())
                 .toString();
     }
