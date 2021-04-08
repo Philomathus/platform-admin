@@ -281,11 +281,8 @@
 		<if test="selectStartDate != null and selectStartDate != ''">
 			and update_time <![CDATA[ >= ]]> #{selectStartDate} and update_time <![CDATA[ <= ]]> #{selectEndDate}
 		</if>
-		<if test="channelIds != null">
-			and channel_id in
-			<foreach item="id" collection="channelIds" open="(" separator="," close=")">
-				#{id}
-			</foreach>
+		<if test="channelName != null and channelName != ''">
+			and channel_id in (SELECT id from pay_channel_new where name like concat(#{channelName}, '%'))
 		</if>
 	</sql>
 
@@ -304,18 +301,18 @@
 		and is_patch_order = 1
 	</sql>
 
-	<sql id="failureRate">
-		select count(*) failCount
+	<sql id="successCountRate">
+		select count(*) successCount
 		from member_pay_jour
 		where 1=1
 		<include refid="listWhere"/>
-		and status = 0
+		and status = 1
 	</sql>
 
 	<select id="listCount" resultType="java.util.Map">
-		select *, 1 - c.failCount / a.total failRate from (<include refid="transactionsTotal"/>)a
+		select *, c.successCount / a.total failRate from (<include refid="transactionsTotal"/>)a
 			left join (<include refid="replenishmentTotal"/>)b on 1 = 1
-			left join (<include refid="failureRate"/>)c on 1 = 1
+			left join (<include refid="successCountRate"/>)c on 1 = 1
 	</select>
 
 	<select id="findByOrderNo" resultMap="MemberPayJourResult">
