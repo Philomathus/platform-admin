@@ -149,6 +149,6 @@
         <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
         <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
-        group by o.family_id order by o.family_id
+        order by o.family_id
     </select>
 </mapper>
