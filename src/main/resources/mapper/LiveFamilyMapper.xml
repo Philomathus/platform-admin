@@ -64,6 +64,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <select id="selectLiveFamilyName" parameterType="String" resultMap="LiveFamilyResult">
+        <include refid="selectLiveFamilyVo"/>
+        where name = #{name}
+    </select>
     <insert id="insertLiveFamily" parameterType="LiveFamily" useGeneratedKeys="true" keyProperty="id">
         insert into ${dbLive}.live_family
         <trim prefix="(" suffix=")" suffixOverrides=",">

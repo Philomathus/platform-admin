@@ -71,8 +71,8 @@ public class LiveFamilyController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveFamily:add')" )
 	@Log( title = "家族", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LiveFamily liveFamily ) {
-		return toAjax( liveFamilyService.insertLiveFamily( liveFamily ) );
+	public Object add( @RequestBody LiveFamily liveFamily ) {
+		return AjaxResult.success( liveFamilyService.insertLiveFamily( liveFamily ) );
 	}
 
 	/**

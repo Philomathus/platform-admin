@@ -1,6 +1,11 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+import java.util.Objects;
+
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.mapper.LiveUserMapper;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +23,8 @@ import com.qiqilm.server.admin.service.ILiveFamilyService;
 public class LiveFamilyServiceImpl implements ILiveFamilyService {
     @Autowired
     private LiveFamilyMapper liveFamilyMapper;
-
+    @Autowired
+    private LiveUserMapper liveUserMapper;
     /**
      * 查询家族
      *
@@ -48,9 +54,25 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
      * @return 结果
      */
     @Override
-    public int insertLiveFamily(LiveFamily liveFamily) {
+    public AjaxResult insertLiveFamily(LiveFamily liveFamily) {
        // liveFamily.setCreateTime(DateUtils.getNowDate());
-        return liveFamilyMapper.insertLiveFamily(liveFamily);
+        String name = liveFamily.getName();
+       LiveFamily getliveFamily= liveFamilyMapper.selectLiveFamilyName(name);
+       if (Objects.nonNull(getliveFamily)){
+           return   AjaxResult.success(liveFamily.getName()+"，家族已被创建");
+       }
+        Long userId = liveFamily.getUserId();
+        LiveUser liveUser = liveUserMapper.selectLiveUserById(userId);
+        if (Objects.isNull(liveUser)){
+            return AjaxResult.success("主播不存在,无法创建家族");
+        }else {
+            Integer isBan = liveUser.getIsBan();
+            Long familyId = liveUser.getFamilyId();
+            Integer familyChieftain = liveUser.getFamilyChieftain();
+        }
+
+        liveFamilyMapper.insertLiveFamily(liveFamily);
+        return null;
     }
 
     /**

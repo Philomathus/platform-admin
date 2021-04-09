@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveFamily;
 
 /**
@@ -33,7 +34,7 @@ public interface ILiveFamilyService {
 	 * @param liveFamily 家族
 	 * @return 结果
 	 */
-	public int insertLiveFamily(LiveFamily liveFamily);
+	public AjaxResult insertLiveFamily(LiveFamily liveFamily);
 
 	/**
 	 * 修改家族
