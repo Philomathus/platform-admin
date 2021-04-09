@@ -61,16 +61,15 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
 //			}
 //		}
 		if(dateNowStr.equals(beginTime) || dateNowStr.equals(endTime)){
-			if(!redisUtil.exists( "admin-reportMoneyInfo" )){
-				storage( dateNowStr );
-			}
+			reportMoneyinfoMapper.calldataProrepPlamcom( dateNowStr, dateNowStr );
+
 		}
 		List<ReportMoneyinfo> allList = reportMoneyinfoMapper.selectReportMoneyinfoList( reportMoneyinfo );
 		resultMap.put( "rows", allList );
 		return resultMap;
 	}
 
-	public void storage( String dateNowStr ) {
+//	public void storage( String dateNowStr ) {
 //		if ( !redisUtil.exists( "admin-reportMoneyInfo" ) &&
 //				redisUtil.strSetIfAbsent( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) ) ) {
 //			redisUtil.strSet( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) );
@@ -81,10 +80,10 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
 //				}
 //			} );
 //		}
-		redisUtil.strSet( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) );
-		reportMoneyinfoMapper.calldataProrepPlamcom( dateNowStr, dateNowStr );
-
-	}
+//		redisUtil.strSet( "admin-reportMoneyInfo", "0", Duration.ofMinutes( 5 ) );
+//		reportMoneyinfoMapper.calldataProrepPlamcom( dateNowStr, dateNowStr );
+//
+//	}
 
 	//统计表头数据
 	@Override
