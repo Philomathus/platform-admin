@@ -85,7 +85,8 @@ public class ServerLiveController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('server:live:list')" )
 	@GetMapping( "/getAlllist" )
 	public TableDataInfo getAlllist( ServerLive serverLive ) {
-		List<ServerLive> list = serverLiveService.selectServerLiveList( serverLive );
+        serverLive.setType(1);
+		List<ServerLive> list = serverLiveService.selectServerLiveList( serverLive);
 		return getDataTable( list );
 	}
 }

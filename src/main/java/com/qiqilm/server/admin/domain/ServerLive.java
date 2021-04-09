@@ -80,7 +80,17 @@ public class ServerLive extends BaseEntity {
 	 */
 	private Integer countNum;
 
-	public Long getId() {
+	private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public Long getId() {
 		return id;
 	}
 
