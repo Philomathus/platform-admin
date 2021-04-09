@@ -70,6 +70,7 @@ public class ReportPlamGames implements Serializable {
 	private String endDate;
 	private Integer    countBetPeople;
 	private BigDecimal countBetMoney;
+	private BigDecimal memberProfit;
 
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
 	private Date updateTime;
