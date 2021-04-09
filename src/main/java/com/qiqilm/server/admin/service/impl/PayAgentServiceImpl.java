@@ -88,7 +88,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
 		for ( PayAgentLog payAgentLog : payAgentLogs ) {
 			for ( PayAgentPlatform payAgentPlatform : payAgentPlatforms ) {
-				if ( payAgentLog.getPayAgentPlatId().equals( payAgentPlatform.getId().toString() ) ) {
+				if ( payAgentLog.getPayAgentPlatId().toString().equals( payAgentPlatform.getId().toString() ) ) {
 					BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 					try {
 						basePayAgent.queryOrderPay( payAgentLog );
