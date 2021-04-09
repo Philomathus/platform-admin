@@ -80,6 +80,8 @@ public class LiveUserController extends BaseController {
 		newLiveUser.setCoin( liveUser.getCoin() );
 		newLiveUser.setXpoint( liveUser.getXpoint() );
 		newLiveUser.setYpoint( liveUser.getYpoint() );
+		newLiveUser.setWeiboMoney(liveUser.getWeiboMoney());
+		newLiveUser.setWeixinPrice(liveUser.getWeixinPrice());
 		return toAjax( liveUserService.updateLiveUser( newLiveUser ) );
 	}
 

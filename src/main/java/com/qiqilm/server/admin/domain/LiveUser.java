@@ -124,6 +124,8 @@ public class LiveUser {
 	private String logoutTime;
 
 	private Date updateTime;
+	private BigDecimal weiboMoney;
+	private BigDecimal weixinPrice;
 
 	public String getAuthStr() {
 		if ( isAuthentication != null ) {
