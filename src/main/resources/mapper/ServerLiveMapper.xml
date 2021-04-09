@@ -41,7 +41,9 @@
 	<select id="selectServerLiveList" parameterType="ServerLive" resultMap="ServerLiveResult">
 		<include refid="selectServerLiveVo"/>
 		<where>
-            and status between 1 and 2
+            <if test="type==1">
+                and status between 1 and 2
+            </if>
 			<if test="name != null  and name != ''">
 				and name like concat('%', #{name}, '%')
 			</if>
