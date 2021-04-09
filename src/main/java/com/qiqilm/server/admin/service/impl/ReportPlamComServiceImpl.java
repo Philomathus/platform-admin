@@ -59,7 +59,7 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 		//Date                beforeD = beforeTime.getTime();
 		Map<String, Object> resultMap = new HashMap<>();
 		if (reportPlamCom.getReporttime().equals( dateNowStr ) ) {
-			if (!redisUtil.exists("admin-reportPlamGames")) {
+			if (!redisUtil.exists("admin-reportPlamCom")) {
 				storage(dateNowStr);
 			}
 		}
