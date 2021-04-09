@@ -69,6 +69,14 @@ public interface IServerSmsService {
 	int effect( long id );
 
 	/**
+	 * 取消激活SMS短信服务配置信息
+	 *
+	 * @param id SMS短信服务配置ID
+	 * @return 结果
+	 */
+	int noEffect( long id );
+
+	/**
 	 * 测试SMS短信服务配置信息
 	 *
 	 * @param id     SMS短信服务配置ID
@@ -76,4 +84,5 @@ public interface IServerSmsService {
 	 * @return 结果
 	 */
 	AjaxResult smsTest( long id, String mobile );
+
 }

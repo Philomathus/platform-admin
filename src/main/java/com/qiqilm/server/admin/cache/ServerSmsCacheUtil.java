@@ -18,8 +18,6 @@ import java.util.List;
 @Log4j2
 @Component
 public class ServerSmsCacheUtil {
-	public static final String SERVER_SMS = Constants.CONFIG_PREX + "serverSms:effect";
-
 	private static final String SERVER_SMS_LIST = Constants.CONFIG_PREX + "serverSms:list";
 	private static final String SERVER_SMS_HASH = Constants.CONFIG_PREX + "serverSms:hash";
 
@@ -27,34 +25,6 @@ public class ServerSmsCacheUtil {
 	private RedisUtil       redisUtil;
 	@Autowired
 	private ServerSmsMapper serverSmsMapper;
-
-	public void setServerSms( ServerSms serverSms ) {
-		redisUtil.unlink( SERVER_SMS );
-		redisUtil.strSet( SERVER_SMS, JsonUtil.object2Json( serverSms ) );
-	}
-
-	public ServerSms getEffect() {
-		this.exists();
-		String value = redisUtil.strGet( SERVER_SMS );
-		return value == null ? null : JsonUtil.json2Object( value, ServerSms.class );
-	}
-
-	private void exists() {
-		if ( !redisUtil.exists( SERVER_SMS ) ) {
-			List<ServerSms> serverSmsList = serverSmsMapper.selectServerSmsByEffect();
-			if ( serverSmsList.isEmpty() ) {
-				return;
-			}
-			ServerSms serverSms = serverSmsList.get( 0 );
-			if ( serverSms != null ) {
-				this.setServerSms( serverSms );
-			}
-		}
-	}
-
-	public void clear() {
-		redisUtil.unlink( SERVER_SMS );
-	}
 
 	public void setServerSmsCache( ServerSms serverSms ) {
 		String smsId = serverSms.getId().toString();
