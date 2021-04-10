@@ -173,6 +173,6 @@
 
 	<select id="selectServerSmsByEffect" resultMap="ServerSmsResult">
 		<include refid="selectServerSmsVo"/>
-		where is_effect = 1
+		where is_effect = 1 order by is_effect desc, id asc
 	</select>
 </mapper>

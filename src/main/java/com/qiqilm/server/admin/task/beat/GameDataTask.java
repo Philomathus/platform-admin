@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -54,12 +55,45 @@ public class GameDataTask {
         Date endDay  = new Date();
 
         Date starDay = DateFormatUtils.addMin( endDay, -10);
+        String begin = DateFormatUtils.formate( starDay );
+        if(! DateUtils.isSameDay(starDay,starDay)){
+            Date bDay = DateFormatUtils.getTomorrowMorning(starDay);
+            String end = DateFormatUtils.formate( bDay );
+
+            try {
+                gameDataLogService.beatGameCodeAgent(begin,platformType,beatRateMap,profile, begin,end,null,null);
+
+            }catch (Exception e){
+                log.error("1游戏拉取注单异常,",e);
+            }
+
+            begin = end;
+            end = DateFormatUtils.formate( endDay );
+
+            try {
+                gameDataLogService.beatGameCodeAgent(end,platformType,beatRateMap,profile, begin,end,null,null);
+
+            }catch (Exception e){
+                log.error("2游戏拉取注单异常,",e);
+            }
+            return;
+        }
+
+
+        try {
+            gameDataLogService.beatGameCodeAgent(begin,platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
+
+        }catch (Exception e){
+            log.error("新游戏拉取注单异常,",e);
+        }
+
+
 
         try {
             gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
 
         }catch (Exception e){
-            log.error("游戏拉取注单异常,",e);
+            log.error("旧游戏拉取注单异常,",e);
         }
 
     }
