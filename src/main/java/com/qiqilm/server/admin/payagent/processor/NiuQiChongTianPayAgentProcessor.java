@@ -9,7 +9,9 @@ import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeShunWeiType;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
+import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -49,7 +51,9 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 		dataMap.put( "bankcode", withdrawLog.getBankCode() );
 		dataMap.put( "list", JsonUtil.object2Json(list) );
 		dataMap.put( "callback_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.NIU_QI_CHONG_TIAN );
-		String tempStr = this.assemblyUrl( dataMap ) +"&key="+payAgentPlatform.getSignMd5();
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+				"secretkey/payAgentPrivateKey" ) );
+		String tempStr = this.assemblyUrl( dataMap ) +"&key="+signMd5;
 		String sign = DigestUtils.md5Hex( tempStr).toUpperCase();
 		dataMap.put( "sign", sign );
 
@@ -94,7 +98,9 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 
 		String     rspSign = requestMap.remove("sign").toString();
 		SortedMap<String, Object> bodyMap          = new TreeMap<>(requestMap);
-		String tempStr = this.assemblyUrl( bodyMap ) +"&key="+payAgentPlatform.getSignMd5();
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+				"secretkey/payAgentPrivateKey" ) );
+		String tempStr = this.assemblyUrl( bodyMap ) +"&key="+signMd5;
 		log.info( "牛气冲天回调待签名字符串:" + requestMap );
 		String sign = DigestUtils.md5Hex( tempStr).toUpperCase();
 		if ( ( rspSign ).equalsIgnoreCase( sign ) ) {
@@ -132,7 +138,9 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 		dataMap.put( "out_trade_no", withdrawLog.getOrderNo() );
 		dataMap.put( "applytime", System.currentTimeMillis()+"" );
 
-		String tempStr = this.assemblyUrl( dataMap ) +"&key="+payAgentPlatform.getSignMd5();
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+				"secretkey/payAgentPrivateKey" ) );
+		String tempStr = this.assemblyUrl( dataMap ) +"&key="+signMd5;
 		String sign = DigestUtils.md5Hex( tempStr).toUpperCase();
 		dataMap.put( "sign", sign );
 
@@ -163,103 +171,5 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 			log.error( e.getMessage(), e );
 		}
 
-	}
-
-	public static void main(String[] args) {
-//		List list=new ArrayList();
-//		Map mapList=new LinkedHashMap();
-//		mapList.put( "amount", "100.00" );
-//		mapList.put( "accountname", "张三" );
-//		mapList.put( "bankname", "中国建设银行" );
-//		mapList.put( "cardnumber", "623668422000056502" );
-//		mapList.put( "subbranch","" );
-//		mapList.put( "province", "");
-//		mapList.put( "city", "");
-//		mapList.put( "mobile", "18092780735" );
-//		mapList.put("out_trade_no", "gfjhgddgljfsdflkj3dfg" );
-//		mapList.put( "attach","" );
-//		mapList.put( "extends","rrr" );
-//		list.add(mapList);
-//		Map<String, Object> dataMap = new TreeMap<>();
-//		dataMap.put( "mchid", "11188" );
-//		dataMap.put( "addtime", System.currentTimeMillis()+"");
-//		dataMap.put( "bankcode","unionpay" );
-//		dataMap.put( "list",JsonUtil.object2Json(list));
-//		dataMap.put( "callback_url", "http://df.wuhuifangshinad.com/Payment_index.html" );
-//		String tempStr = assemblyUrl( dataMap ) +"&key="+"p5u9xj6d8tkl9m0ctryf1c8oor46k2ix";
-//		System.out.println("代签名字符串:"+tempStr);
-//		String sign = DigestUtils.md5Hex( tempStr).toUpperCase();
-//		dataMap.put( "sign", sign );
-//		System.out.println("请求参数:"+dataMap);
-//
-//		MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-//		requestMap.setAll( dataMap );
-//
-//		log.warn( JsonUtil.object2Json( requestMap ) );
-//
-//		HttpHeaders httpHeaders = new HttpHeaders();
-//		httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
-//		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity( requestMap, httpHeaders );
-//		Map resultMap = null;
-//		try {
-//			RestTemplate restTemplate=new RestTemplate();
-//			resultMap = restTemplate.postForObject( "http://dfapi.wuhuifangshinad.com/Payment_index.html", httpEntity, Map.class );
-//			System.out.println("返回参数:"+JsonUtil.object2Json(resultMap));
-//		} catch ( Exception e ) {
-//			log.error( e.getMessage(), e );
-//		}
-//		if ( !CollectionUtils.isEmpty( resultMap ) ) {
-//			if ( "success".equals( resultMap.getOrDefault( "status", "" ).toString() )) {
-//				Map<String, Object> result = ( Map) resultMap.get( "data" );
-//				String status = result.getOrDefault("status", "").toString();
-//				String success = result.getOrDefault("success", "").toString();
-//				if ("1".equals(status)&&"1".equals(success)){
-//					log.info( "代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
-//					System.out.println("1111111111111111111111");
-//					List<Map<String,Object>> listResult= (List<Map<String, Object>>) result.getOrDefault("list", new ArrayList<>());
-//					for (Map map:listResult) {
-//						String outTradeNo = (String) map.getOrDefault("out_trade_no", "");
-//						String statusRsp = map.getOrDefault("status", "").toString();
-//						if ("1".equals(statusRsp)&&"gfjhgddgljfsdflkj3dfg".equals(outTradeNo)){
-//							System.out.println("3333333333333333");
-//						}
-//
-//					}
-//					if (listResult.contains("status=1")){
-//						System.out.println("22222222222222222222");
-//					}
-//					System.out.println(listResult);
-//
-//				}
-//			} else {
-//				System.out.println("222222222222222222222222");
-//			}
-//		}
-//		Map<String, Object> dataMap          = new TreeMap<>();
-//		dataMap.put( "mchid",  "11188"  );
-//		dataMap.put( "out_trade_no","gfsrdfddg3dfg" );
-//		dataMap.put( "applytime", System.currentTimeMillis()+"" );
-//
-//		String tempStr =assemblyUrl( dataMap ) +"&key="+"p5u9xj6d8tkl9m0ctryf1c8oor46k2ix";
-//		String sign = DigestUtils.md5Hex( tempStr).toUpperCase();
-//		dataMap.put( "sign", sign );
-//
-//		MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-//		requestMap.setAll( dataMap );
-//		log.warn( JsonUtil.object2Json( requestMap ) );
-//		HttpHeaders httpHeaders = new HttpHeaders();
-//		httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
-//		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity( requestMap, httpHeaders );
-//		Map<String, Object> resultMap = null;
-//		try {
-//			RestTemplate restTemplate=new RestTemplate();
-//			resultMap = restTemplate.postForObject( "http://dfapi.wuhuifangshinad.com/Payment_dfpay_query.html", httpEntity, Map.class );
-//			if (!CollectionUtils.isEmpty(resultMap)&&"1".equals(resultMap.getOrDefault( "status", "" ).toString())){
-//				System.out.println("333333333333333");
-//			}
-//			System.out.println(resultMap);
-//		} catch ( Exception e ) {
-//			log.error( e.getMessage(), e );
-//		}
 	}
 }
