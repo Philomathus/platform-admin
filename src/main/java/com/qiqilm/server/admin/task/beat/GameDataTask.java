@@ -55,19 +55,23 @@ public class GameDataTask {
         Date endDay  = new Date();
 
         Date starDay = DateFormatUtils.addMin( endDay, -10);
-
+        String begin = DateFormatUtils.formate( starDay );
         if(! DateUtils.isSameDay(starDay,starDay)){
             Date bDay = DateFormatUtils.getTomorrowMorning(starDay);
+            String end = DateFormatUtils.formate( bDay );
 
             try {
-                gameDataLogService.beatGameCodeAgent(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( bDay ),null,null);
+                gameDataLogService.beatGameCodeAgent(begin,platformType,beatRateMap,profile, begin,end,null,null);
 
             }catch (Exception e){
                 log.error("1游戏拉取注单异常,",e);
             }
 
+            begin = end;
+            end = DateFormatUtils.formate( endDay );
+
             try {
-                gameDataLogService.beatGameCodeAgent(platformType,beatRateMap,profile, DateFormatUtils.formate( bDay ),DateFormatUtils.formate( endDay ),null,null);
+                gameDataLogService.beatGameCodeAgent(end,platformType,beatRateMap,profile, begin,end,null,null);
 
             }catch (Exception e){
                 log.error("2游戏拉取注单异常,",e);
@@ -76,13 +80,20 @@ public class GameDataTask {
         }
 
 
+        try {
+            gameDataLogService.beatGameCodeAgent(begin,platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
+
+        }catch (Exception e){
+            log.error("新游戏拉取注单异常,",e);
+        }
+
+
 
         try {
             gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
-            gameDataLogService.beatGameCodeAgent(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
 
         }catch (Exception e){
-            log.error("游戏拉取注单异常,",e);
+            log.error("旧游戏拉取注单异常,",e);
         }
 
     }
