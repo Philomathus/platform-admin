@@ -47,7 +47,7 @@ public class HelpNotice {
         Map<String,Object> info = new HashMap<>();
         info.put("user_id","admin");
         info.put("user_level","50");
-        info.put("nick_name","77小助手");
+        info.put("nick_name",sysConfigCacheUtil.getConf( "77_help_nick_name" ));
         info.put("officer","2");
         info.put("guardType","2");
         ext.put( "sender", info );
