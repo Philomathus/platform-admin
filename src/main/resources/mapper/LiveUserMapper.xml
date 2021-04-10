@@ -37,10 +37,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="logoutTime"    column="logout_time"    />
         <result property="weixinPrice"    column="weixin_price"    />
         <result property="weiboMoney"    column="weibo_money"    />
+        <result property="familyChieftain"    column="family_chieftain"    />
     </resultMap>
 
     <sql id="selectLiveUserVo">
-        select u.id,u.nick_name,u.weixin_price,u.weibo_money,signature,FROM_UNIXTIME(u.update_time) update_time,
+        select u.id,u.nick_name,u.weixin_price,u.weibo_money,u.family_chieftain,signature,FROM_UNIXTIME(u.update_time) update_time,
 		is_authentication,login_ip,focus_count,mobile,authentication_type,authentication_name,identify_hold_image,
 		identify_positive_image,identify_nagative_image, fans_count, ticket, refund_ticket,is_ban,v_explain,family_id,
 		coin,ticket_catty_ratio,open_pay,ban_remark,identify_number,login_time,logout_time,f.name family_name,
