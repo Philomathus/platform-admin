@@ -37,7 +37,7 @@
     </select>
 
     <select id="countBetData" resultType="com.qiqilm.server.admin.domain.ReportPlamGames">
-        select sum(gamecell) as countBetMoney,sum(gamepepole) as countBetPeople
+        select sum(gamecell) as countBetMoney,sum(gamepepole) as countBetPeople,sum(gameprofit) as memberProfit
         from ${dbMain}.report_plam_games
         <where>
             <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>

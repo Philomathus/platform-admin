@@ -56,29 +56,36 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 		}
 		Calendar beforeTime = Calendar.getInstance();
 		beforeTime.add( Calendar.MINUTE, -5 );// 5分钟之前的时间
-		Date                beforeD = beforeTime.getTime();
-		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList( reportPlamCom );
-		if ( allList.size() == 0 && reportPlamCom.getReporttime().equals( dateNowStr ) ) {
-			storage( dateNowStr );
-			return new AjaxResult( 900, "报表正在生成，请稍后..." );
-		}
+		//Date                beforeD = beforeTime.getTime();
 		Map<String, Object> resultMap = new HashMap<>();
-		if ( allList.size() != 0 && reportPlamCom.getReporttime().equals( dateNowStr ) ) {
-			Date   updateTime  = allList.get( 0 ).getUpdateTime();
-			String reportCache = redisUtil.strGet( "admin-reportPlamCom" );
-			if ( "1".equals( reportCache ) ) {
-				resultMap.put( "rows", allList );
-			} else if ( "0".equals( reportCache ) ) {
-				return new AjaxResult( 900, "报表正在生成，请稍后..." );
-			} else if ( updateTime.getTime() <= beforeD.getTime() ) {
-				storage( dateNowStr );
-				return new AjaxResult( 900, "报表正在生成，请稍后..." );
+		if (reportPlamCom.getReporttime().equals( dateNowStr ) ) {
+			if (!redisUtil.exists("admin-reportPlamCom")) {
+				storage(dateNowStr);
 			}
-		} else {
-			resultMap.put( "rows", allList );
 		}
+		List<ReportPlamCom> allList = reportPlamComMapper.selectReportPlamComList( reportPlamCom );
+		resultMap.put( "rows", allList );
 		return resultMap;
 
+//		if ( allList.size() == 0 && reportPlamCom.getReporttime().equals( dateNowStr ) ) {
+//			storage( dateNowStr );
+//			return new AjaxResult( 900, "报表正在生成，请稍后..." );
+//		}
+//		Map<String, Object> resultMap = new HashMap<>();
+//		if ( allList.size() != 0 && reportPlamCom.getReporttime().equals( dateNowStr ) ) {
+//			Date   updateTime  = allList.get( 0 ).getUpdateTime();
+//			String reportCache = redisUtil.strGet( "admin-reportPlamCom" );
+//			if ( "1".equals( reportCache ) ) {
+//				resultMap.put( "rows", allList );
+//			} else if ( "0".equals( reportCache ) ) {
+//				return new AjaxResult( 900, "报表正在生成，请稍后..." );
+//			} else if ( updateTime.getTime() <= beforeD.getTime() ) {
+//				storage( dateNowStr );
+//				return new AjaxResult( 900, "报表正在生成，请稍后..." );
+//			}
+//		} else {
+//			resultMap.put( "rows", allList );
+//		}
 	}
 
 	@Override
@@ -88,15 +95,17 @@ public class ReportPlamComServiceImpl implements IReportPlamComService {
 	}
 
 	public void storage( String dateNowStr ) {
-		if ( !redisUtil.exists( "admin-reportPlamCom" )
-				&& redisUtil.strSetIfAbsent( "admin-reportPlamCom", "0", Duration.ofMinutes( 5 ) ) ) {
-			threadPoolTaskExecutor.execute( () -> {
-				String result = reportPlamComMapper.calldataProrepPlamcom( dateNowStr );
-				if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamCom" ) ) {
-					redisUtil.strIncrement( "admin-reportPlamCom" );
-				}
-			} );
-		}
+//		if ( !redisUtil.exists( "admin-reportPlamCom" )
+//				&& redisUtil.strSetIfAbsent( "admin-reportPlamCom", "0", Duration.ofMinutes( 5 ) ) ) {
+//			threadPoolTaskExecutor.execute( () -> {
+//				String result = reportPlamComMapper.calldataProrepPlamcom( dateNowStr );
+//				if ( StringUtils.hasText( result ) && redisUtil.exists( "admin-reportPlamCom" ) ) {
+//					redisUtil.strIncrement( "admin-reportPlamCom" );
+//				}
+//			} );
+//		}
+		redisUtil.strSet("admin-reportPlamCom", "0", Duration.ofMinutes(5));
+		reportPlamComMapper.calldataProrepPlamcom(dateNowStr);
 	}
 
 }
