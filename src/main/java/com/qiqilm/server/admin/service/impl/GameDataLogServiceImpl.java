@@ -175,7 +175,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
         deQuestCheck(willCodeList,willCodeMap);
 
-        log.error("1111111新拉单拉取条数：{}",list.size());
+        log.error("1111111新拉单拉取条数：{},实际插入:{}",list.size(),willCodeList.size());
     }
 
     //批量插入

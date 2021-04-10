@@ -33,6 +33,7 @@ public interface IGameDataLogService {
 	/**
 	 * 游戏打码
 	 */
+	@Deprecated
 	public void beatGameCode(Map<Integer,String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId);
 
 	public void beatGameCodeAgent(String dTime,Map<Integer,String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId);
