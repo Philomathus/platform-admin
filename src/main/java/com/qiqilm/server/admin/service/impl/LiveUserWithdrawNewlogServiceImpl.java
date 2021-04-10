@@ -1,12 +1,24 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.util.Date;
 import java.util.List;
-import com.qiqilm.server.admin.utils.DateUtils;
+
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.LiveHostWageDay;
+import com.qiqilm.server.admin.domain.MemberRechargeLog;
+import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.enums.EnumLock;
+import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
+import com.qiqilm.server.admin.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LiveUserWithdrawNewlogMapper;
 import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
 import com.qiqilm.server.admin.service.ILiveUserWithdrawNewlogService;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * 主播提现管理Service业务层处理
@@ -18,6 +30,12 @@ import com.qiqilm.server.admin.service.ILiveUserWithdrawNewlogService;
 public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlogService {
     @Autowired
     private LiveUserWithdrawNewlogMapper liveUserWithdrawNewlogMapper;
+    @Autowired
+    private TokenService            tokenService;
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
+    private LiveHostWageDayMapper liveHostWageDayMapper;
 
     /**
      * 查询主播提现管理
@@ -38,6 +56,11 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
      */
     @Override
     public List<LiveUserWithdrawNewlog> selectLiveUserWithdrawNewlogList(LiveUserWithdrawNewlog liveUserWithdrawNewlog) {
+        String[] searchTime = liveUserWithdrawNewlog.getSearchTime();
+        if ( searchTime != null && searchTime.length > 0 ) {
+            liveUserWithdrawNewlog.setStartTime(searchTime[ 0 ]);
+            liveUserWithdrawNewlog.setEndTime(searchTime[ 1 ]);
+        }
         return liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogList(liveUserWithdrawNewlog);
     }
 
@@ -85,5 +108,258 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
     @Override
     public int deleteLiveUserWithdrawNewlogById(String id) {
         return liveUserWithdrawNewlogMapper.deleteLiveUserWithdrawNewlogById(id);
+    }
+
+    @Override
+    public AjaxResult unlock(LiveUserWithdrawNewlog req) {
+        LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(req.getId());
+        if ( liveUserWithdrawNewlog == null ) {
+            return AjaxResult.error( "订单不存在" );
+        }
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        if ( !StringUtils.isEmpty( liveUserWithdrawNewlog.getOpName() ) && !userName.equals( liveUserWithdrawNewlog.getOpName() ) ) {
+            return AjaxResult.error( "该订单只能由" + liveUserWithdrawNewlog.getOpName() + "处理" );
+        }
+        if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
+            return AjaxResult.error( "请勿重复提交" );
+        }
+        LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
+        update.setId(liveUserWithdrawNewlog.getId());
+        update.setRemark( "取消锁定人：" + userName );
+        update.setOpName( "" );
+        update.setWstatus(Long.valueOf(3));//审核通过
+        update.setUpdateTime( new Date() );
+        int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(update);
+        return i > 0 ? AjaxResult.success() : AjaxResult.error("解锁订单状态失败");
+    }
+
+    @Override
+    public AjaxResult refused(LiveUserWithdrawNewlog req) {
+        LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(req.getId());
+        if ( liveUserWithdrawNewlog == null ) {
+            return AjaxResult.error( "订单不存在" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus() == 2 ) {
+            return AjaxResult.error( "订单重复处理" );
+        }
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+
+        if ( !StringUtils.isEmpty( liveUserWithdrawNewlog.getOpName() ) && !userName.equals( liveUserWithdrawNewlog.getOpName() ) ) {
+            return AjaxResult.error( "该订单只能由" + liveUserWithdrawNewlog.getOpName() + "处理" );
+        }
+        if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
+            return AjaxResult.error( "请勿重复提交" );
+        }
+
+        LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
+        update.setId(liveUserWithdrawNewlog.getId());
+        update.setRemark( req.getRemark() );
+        update.setWstatus(Long.valueOf(2));//审核不通过
+        update.setOpName( "" );
+        update.setUpdateTime( new Date() );
+        int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(update);
+        return i > 0 ? AjaxResult.success() : AjaxResult.error("更新订单拒绝状态失败");
+    }
+
+    @Override
+    public AjaxResult artificial(LiveUserWithdrawNewlog req) {
+        LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(req.getId());
+        if ( liveUserWithdrawNewlog == null ) {
+            return AjaxResult.error( "订单不存在" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus() == 2 ) {
+            return AjaxResult.error( "该订单已被拒绝" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus() == 4 ) {
+            return AjaxResult.error( "订单状态有误，请刷新数据后重试" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus() != 3 && 3 < liveUserWithdrawNewlog.getWstatus() ) {
+            return AjaxResult.error( "审核流程非法" );
+        }
+        if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
+            return AjaxResult.error( "请勿重复提交" );
+        }
+
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        if ( StringUtils.hasText( liveUserWithdrawNewlog.getOpName() ) && !userName.equals( liveUserWithdrawNewlog.getOpName() ) ) {
+            return AjaxResult.error( "该订单只能由" + liveUserWithdrawNewlog.getOpName() + "处理" );
+        }
+
+        LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
+        update.setId(liveUserWithdrawNewlog.getId());
+        update.setWstatus(Long.valueOf(4));//出款
+        update.setOpName( userName );
+        update.setUpdateTime( new Date() );
+        int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(update);
+        return i > 0 ? AjaxResult.success() : AjaxResult.error("更新订单出款状态失败");
+
+    }
+
+    @Override
+    public AjaxResult recoverAudit(LiveUserWithdrawNewlog req) {
+        LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(req.getId());
+        if ( liveUserWithdrawNewlog == null ) {
+            return AjaxResult.error( "订单不存在" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus() != 2 && liveUserWithdrawNewlog.getWstatus() != 3 ) {
+            return AjaxResult.error( "只有拒绝和审核通过才能恢复提交申请" );
+        }
+
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        if ( StringUtils.hasText( liveUserWithdrawNewlog.getOpName() ) && !userName.equals( liveUserWithdrawNewlog.getOpName() ) ) {
+            return AjaxResult.error( "该订单只能由" + liveUserWithdrawNewlog.getOpName() + "处理" );
+        }
+        if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
+            return AjaxResult.error( "请勿重复提交" );
+        }
+
+        LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
+        update.setId( liveUserWithdrawNewlog.getId() );
+        update.setWstatus( Long.valueOf(1) );
+        update.setOpName( userName );
+        update.setUpdateTime( new Date() );
+        int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
+        return i > 0 ? AjaxResult.success() : AjaxResult.error("恢复订单状态失败");
+    }
+
+    @Override
+    public AjaxResult finalAudit(LiveUserWithdrawNewlog req) {
+        LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(req.getId());
+        if ( liveUserWithdrawNewlog == null ) {
+            return AjaxResult.error( "订单不存在" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus() != 1 ) {
+            return AjaxResult.error( "订单状态有误，请刷新数据后重试" );
+        }
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        if ( StringUtils.hasText( liveUserWithdrawNewlog.getOpName() ) && !userName.equals( liveUserWithdrawNewlog.getOpName() ) ) {
+            return AjaxResult.error( "该订单只能由" + liveUserWithdrawNewlog.getOpName() + "处理" );
+        }
+        if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
+            return AjaxResult.error( "请勿重复提交" );
+        }
+        LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
+        update.setId(liveUserWithdrawNewlog.getId());
+        update.setWstatus(Long.valueOf(3));//审核通过
+        update.setOpName( "" );
+        update.setUpdateTime( new Date() );
+        int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(update);
+        return i > 0 ? AjaxResult.success() : AjaxResult.error("更新订单审核通过状态失败");
+
+    }
+
+    @Override
+    public AjaxResult getTotal(LiveUserWithdrawNewlog req) {
+        String[] searchTime = req.getSearchTime();
+        if ( searchTime != null && searchTime.length > 0 ) {
+            req.setStartTime(searchTime[ 0 ]);
+            req.setEndTime(searchTime[ 1 ]);
+        }
+        return AjaxResult.success( liveUserWithdrawNewlogMapper.getTotal( req ) );
+    }
+
+    @Override
+    public AjaxResult withdrawSucc(LiveUserWithdrawNewlog req) {
+        LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(req.getId());
+        if ( liveUserWithdrawNewlog == null ) {
+            return AjaxResult.error( "订单不存在" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus()!=4 ) {
+            return AjaxResult.error( "该订单未提交出款" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus() == 5 ) {
+            return AjaxResult.error( "订单状态有误，请刷新数据后重试" );
+        }
+        if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
+            return AjaxResult.error( "请勿重复提交" );
+        }
+
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        if ( StringUtils.hasText( liveUserWithdrawNewlog.getOpName() ) && !userName.equals( liveUserWithdrawNewlog.getOpName() ) ) {
+            return AjaxResult.error( "该订单只能由" + liveUserWithdrawNewlog.getOpName() + "处理" );
+        }
+
+        LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
+        update.setId(liveUserWithdrawNewlog.getId());
+        update.setWstatus(Long.valueOf(5));//出款
+        update.setOpName( userName );
+        update.setUpdateTime( new Date() );
+        int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(update);
+        return i > 0 ? AjaxResult.success() : AjaxResult.error("更新订单出款成功状态失败");
+    }
+
+    @Override
+    public AjaxResult withdrawRefused(LiveUserWithdrawNewlog req) {
+        LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(req.getId());
+        if ( liveUserWithdrawNewlog == null ) {
+            return AjaxResult.error( "订单不存在" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus() == 1 ) {
+            return AjaxResult.error( "订单重复处理" );
+        }
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+
+        if ( !StringUtils.isEmpty( liveUserWithdrawNewlog.getOpName() ) && !userName.equals( liveUserWithdrawNewlog.getOpName() ) ) {
+            return AjaxResult.error( "该订单只能由" + liveUserWithdrawNewlog.getOpName() + "处理" );
+        }
+        if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
+            return AjaxResult.error( "请勿重复提交" );
+        }
+        LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
+        update.setId(liveUserWithdrawNewlog.getId());
+        update.setRemark( req.getRemark() );
+        update.setWstatus(Long.valueOf(1));//审核不通过
+        update.setOpName( userName );
+        update.setUpdateTime( new Date() );
+        int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(update);
+        return i > 0 ? AjaxResult.success() : AjaxResult.error("更新订单拒绝出款状态失败");
+    }
+
+    @Override
+    @Transactional( rollbackFor = Exception.class )
+    public AjaxResult updateOrder(LiveUserWithdrawNewlog req) {
+        LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(req.getId());
+        if ( liveUserWithdrawNewlog == null ) {
+            return AjaxResult.error( "订单不存在" );
+        }
+        if ( liveUserWithdrawNewlog.getWstatus() !=1 ) {
+            return AjaxResult.error( "订单重复处理" );
+        }
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+
+        if ( !StringUtils.isEmpty( liveUserWithdrawNewlog.getOpName() ) && !userName.equals( liveUserWithdrawNewlog.getOpName() ) ) {
+            return AjaxResult.error( "该订单只能由" + liveUserWithdrawNewlog.getOpName() + "处理" );
+        }
+        if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
+            return AjaxResult.error( "请勿重复提交" );
+        }
+        //判断事家族还是成员
+        Long type = liveUserWithdrawNewlog.getType();
+        String time = DateFormatUtils.formate( new Date(), "yyyy-MM-dd" );
+        if (type==1){
+            //1家族
+            List<String> strings = liveHostWageDayMapper.getliveHostWageDay(time, liveUserWithdrawNewlog.getFamilyId());
+            //调存贮过程
+            for (String hostid:strings){
+                liveUserWithdrawNewlogMapper.calldataProrepLiveTixianorder(time,hostid);
+            }
+        }else {
+            //2个人
+            liveUserWithdrawNewlogMapper.calldataProrepLiveTixianorder(time,liveUserWithdrawNewlog.getUserId().toString());
+        }
+        LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
+        update.setId(liveUserWithdrawNewlog.getId());
+        update.setUpdateTime( new Date() );
+        int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(update);
+        return i > 0 ? AjaxResult.success() : AjaxResult.error("重置订单状态失败");
+
     }
 }
