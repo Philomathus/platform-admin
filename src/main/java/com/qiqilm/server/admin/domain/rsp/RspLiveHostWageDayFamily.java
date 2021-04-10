@@ -42,9 +42,6 @@ public class RspLiveHostWageDayFamily {
     @Excel( name = "开播次数", orderNum = "10" )
     private Integer times;
 
-//    @Excel( name = "统计日期", orderNum = "10" )
-//    private String timedata;
-
     private BigDecimal allCpCost;
 
     private BigDecimal allPrize;
