@@ -12,7 +12,7 @@ public class RspLiveHostWageDayList {
     @Excel( name = "主播ID", orderNum = "0" )
     private Integer hostId;
 
-    @Excel( name = "主播昵称", orderNum = "2" )
+    @Excel( name = "主播昵称", orderNum = "1" )
     private String nickName;
 
     @Excel( name = "家族ID", orderNum = "2" )
