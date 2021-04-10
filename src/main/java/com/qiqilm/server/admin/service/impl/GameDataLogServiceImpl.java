@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import com.qiqilm.server.admin.mapper.*;
+import com.qiqilm.server.admin.task.beat.GameDataTableHelp;
 import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import com.qiqilm.server.admin.utils.UuidUtil;
@@ -126,6 +127,57 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         deQuestCheck(willCodeList,willCodeMap);
 
     }
+
+    @Override
+    public void beatGameCodeAgent(String dTime,Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId) {
+        String sday  = dTime.substring(0,10).replace("-","");
+        List<GameDataLog> list =  gameDataLogMapper.selectGameDataAgentList(GameDataTableHelp.getGameDataByAgent(cxAgent,sday),start,end,account,platformId);
+        if(list.size()==0){
+            return;
+        }
+        Map<String, BigDecimal> willCodeMap = new HashMap<>();
+        List<MemberGameData> willCodeList =new ArrayList<>();
+        SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
+        MemberGameDataMapper mapper  = session.getMapper( MemberGameDataMapper.class );
+        for(GameDataLog og: list){
+            if ( mapper.findExist(og.getAccount().substring(og.getAccount().length()-1),og.getId()) != null ) {
+                continue;
+            }
+
+            MemberGameData gameDataLog = new MemberGameData();
+            gameDataLog.setId( og.getId() );
+            gameDataLog.setGameId( og.getGameId());
+            gameDataLog.setAccount( og.getAccount());
+            gameDataLog.setKindId( og.getKindId() );
+            gameDataLog.setCellScore( og.getCellScore() );
+            gameDataLog.setAllBet( og.getAllBet() );
+            gameDataLog.setProfit( og.getProfit() );
+            gameDataLog.setGameStartTime(og.getGameStartTime());
+            gameDataLog.setGameEndTime( og.getGameEndTime());
+            gameDataLog.setAgent( og.getAgent() );
+            gameDataLog.setStatus( 0 );
+            gameDataLog.setPlatformType( platformType.get(og.getPlatformId()));
+            gameDataLog.setPlatformId( og.getPlatformId());
+            gameDataLog.setRevenue(og.getRevenue());
+
+            if(beatRateMap.containsKey(og.getPlatformId())){
+                BigDecimal beatAdd =new BigDecimal(og.getCellScore()).multiply(beatRateMap.get(og.getPlatformId())).setScale(4);
+                willCodeMap.putIfAbsent(og.getAccount(),BigDecimal.ZERO);
+                willCodeMap.put(og.getAccount(),willCodeMap.get(og.getAccount()).add(beatAdd));
+            }
+
+            willCodeList.add(gameDataLog);
+        }
+
+        insertBatch(session,mapper,willCodeList);
+
+        doBeatCode(willCodeMap);
+
+        deQuestCheck(willCodeList,willCodeMap);
+
+        log.error("1111111新拉单拉取条数：{}",list.size());
+    }
+
     //批量插入
     public void insertBatch(SqlSession session,MemberGameDataMapper mapper,List<MemberGameData> willCodeList){
         int              count   = 0;
