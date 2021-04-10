@@ -28,17 +28,12 @@ import java.util.*;
 public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 	@Override
 	public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
-		BankCodeShunWeiType bankCodeType = BankCodeShunWeiType.getCodeByDesc( withdrawLog.getBankName() );
-		if ( bankCodeType == null ) {
-			log.warn( "此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
-			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
-		}
-		withdrawLog.setBankCode( bankCodeType.name() );
+		withdrawLog.setBankCode( "unionpay" );
 		List list=new ArrayList();
 		Map mapList=new LinkedHashMap();
-		mapList.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
-		mapList.put( "accountname ", withdrawLog.getBankUserName() );
-		mapList.put( "bankname ", withdrawLog.getBankName() );
+		mapList.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString() );
+		mapList.put( "accountname", withdrawLog.getBankUserName() );
+		mapList.put( "bankname", withdrawLog.getBankName() );
 		mapList.put( "cardnumber", withdrawLog.getBankAccount() );
 		mapList.put( "subbranch","" );
 		mapList.put( "province", "");
