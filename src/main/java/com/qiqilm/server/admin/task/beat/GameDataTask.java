@@ -80,13 +80,20 @@ public class GameDataTask {
         }
 
 
-
         try {
-            gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
             gameDataLogService.beatGameCodeAgent(begin,platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
 
         }catch (Exception e){
-            log.error("游戏拉取注单异常,",e);
+            log.error("新游戏拉取注单异常,",e);
+        }
+
+
+
+        try {
+            gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
+
+        }catch (Exception e){
+            log.error("旧游戏拉取注单异常,",e);
         }
 
     }
