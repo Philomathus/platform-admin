@@ -79,10 +79,20 @@ public class ServerSmsController extends BaseController {
 	 * 激活SMS短信服务配置
 	 */
 	@PreAuthorize( "@ss.hasPermi('server:sms:effect')" )
-	@Log( title = "SMS短信服务配置", businessType = BusinessType.EFFECT )
+	@Log( title = "SMS短信服务配置-激活", businessType = BusinessType.EFFECT )
 	@PutMapping( "/effect/{id}" )
 	public AjaxResult effect( @PathVariable long id ) {
 		return toAjax( serverSmsService.effect( id ) );
+	}
+
+	/**
+	 * 取消激活SMS短信服务配置
+	 */
+	@PreAuthorize( "@ss.hasPermi('server:sms:effect')" )
+	@Log( title = "SMS短信服务配置-取消激活", businessType = BusinessType.EFFECT )
+	@PutMapping( "/noEffect/{id}" )
+	public AjaxResult noEffect( @PathVariable long id ) {
+		return toAjax( serverSmsService.noEffect( id ) );
 	}
 
 	/**

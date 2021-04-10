@@ -428,7 +428,7 @@ public class RedisUtil {
 	 *
 	 * @return 当前队列的长度
 	 */
-	public Long leftPushIfPresent( String key, String value ) {
+	public Long lLeftPushIfPresent( String key, String value ) {
 		return stringRedisTemplate.opsForList().leftPushIfPresent( key, value );
 	}
 
@@ -476,7 +476,7 @@ public class RedisUtil {
 	 *
 	 * @return 当前队列的长度
 	 */
-	public Long rightPushIfPresent( String key, String value ) {
+	public Long lRightPushIfPresent( String key, String value ) {
 		return stringRedisTemplate.opsForList().rightPushIfPresent( key, value );
 	}
 

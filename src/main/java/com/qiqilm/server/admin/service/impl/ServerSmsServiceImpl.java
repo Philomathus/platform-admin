@@ -15,11 +15,13 @@ import com.baidubce.services.sms.model.SendMessageV3Request;
 import com.baidubce.services.sms.model.SendMessageV3Response;
 import com.qiqilm.server.admin.cache.ServerSmsCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ServerSms;
 import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.mapper.ServerSmsMapper;
 import com.qiqilm.server.admin.service.IServerSmsService;
 import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
@@ -27,7 +29,6 @@ import com.tencentcloudapi.common.profile.HttpProfile;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,8 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	private ServerSmsMapper    serverSmsMapper;
 	@Autowired
 	private ServerSmsCacheUtil serverSmsCacheUtil;
+	@Autowired
+	private TokenService       tokenService;
 
 	/**
 	 * 查询SMS短信服务配置
@@ -78,6 +81,9 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	 */
 	@Override
 	public int insertServerSms( ServerSms serverSms ) {
+		serverSms.setIsEffect( 0 );
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		serverSms.setIdentify( loginUser.getUsername() );
 		return serverSmsMapper.insertServerSms( serverSms );
 	}
 
@@ -91,7 +97,10 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	public int updateServerSms( ServerSms serverSms ) {
 		int i = serverSmsMapper.updateServerSms( serverSms );
 		if ( i > 0 ) {
-			serverSmsCacheUtil.clear();
+			ServerSms newServerSms = serverSmsMapper.selectServerSmsById( serverSms.getId() );
+			if ( newServerSms.getIsEffect() == 1 ) {
+				serverSmsCacheUtil.setServerSmsCache( newServerSms );
+			}
 		}
 		return i;
 	}
@@ -104,7 +113,13 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	 */
 	@Override
 	public int deleteServerSmsByIds( Long[] ids ) {
-		return serverSmsMapper.deleteServerSmsByIds( ids );
+		int i = serverSmsMapper.deleteServerSmsByIds( ids );
+		if ( i > 0 ) {
+			for ( Long id : ids ) {
+				serverSmsCacheUtil.clearCache( id );
+			}
+		}
+		return i;
 	}
 
 	/**
@@ -115,26 +130,34 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	 */
 	@Override
 	public int deleteServerSmsById( Long id ) {
-		return serverSmsMapper.deleteServerSmsById( id );
+		int i = serverSmsMapper.deleteServerSmsById( id );
+		if ( i > 0 ) {
+			serverSmsCacheUtil.clearCache( id );
+		}
+		return i;
 	}
 
 	@Override
-	@Transactional( rollbackFor = Exception.class )
 	public int effect( long id ) {
-		List<ServerSms> serverSmsList = serverSmsMapper.selectServerSmsByEffect();
-
-		for ( ServerSms serverSms : serverSmsList ) {
-			ServerSms update = new ServerSms();
-			update.setId( serverSms.getId() );
-			update.setIsEffect( 0 );
-			serverSmsMapper.updateServerSms( update );
-		}
 		ServerSms update = new ServerSms();
 		update.setId( id );
 		update.setIsEffect( 1 );
 		int i = serverSmsMapper.updateServerSms( update );
 		if ( i > 0 ) {
-			serverSmsCacheUtil.clear();
+			ServerSms newServerSms = serverSmsMapper.selectServerSmsById( id );
+			serverSmsCacheUtil.setServerSmsCache( newServerSms );
+		}
+		return i;
+	}
+
+	@Override
+	public int noEffect( long id ) {
+		ServerSms update = new ServerSms();
+		update.setId( id );
+		update.setIsEffect( 0 );
+		int i = serverSmsMapper.updateServerSms( update );
+		if ( i > 0 ) {
+			serverSmsCacheUtil.clearCache( id );
 		}
 		return i;
 	}
