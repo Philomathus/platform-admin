@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nickName != null">nick_name,</if>
             <if test="userId != null">user_id,</if>
             <if test="userCount != null">user_count,</if>
-            <if test="createTime != null">create_time,</if>
+            <if test="createTimes != null">create_time,</if>
             <if test="createDate != null">create_date,</if>
             <if test="createY != null">create_y,</if>
             <if test="createM != null">create_m,</if>
@@ -101,7 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nickName != null">#{nickName},</if>
             <if test="userId != null">#{userId},</if>
             <if test="userCount != null">#{userCount},</if>
-            <if test="createTime != null">#{createTime},</if>
+            <if test="createTimes != null">#{createTimes},</if>
             <if test="createDate != null">#{createDate},</if>
             <if test="createY != null">#{createY},</if>
             <if test="createM != null">#{createM},</if>
