@@ -25,7 +25,7 @@ import java.util.*;
 
 @Repository( value = ConstantsPayAgent.NIU_QI_CHONG_TIAN + "PayAgentProcessor" )
 @Log4j2
-public class NiuQiPayAgentProcessor extends AbstractPayAgent  {
+public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 	@Override
 	public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
 		BankCodeShunWeiType bankCodeType = BankCodeShunWeiType.getCodeByDesc( withdrawLog.getBankName() );
