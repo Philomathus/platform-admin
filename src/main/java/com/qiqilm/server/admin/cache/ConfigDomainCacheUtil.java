@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -38,10 +39,13 @@ public class ConfigDomainCacheUtil {
 		return redisUtil.sRemove( CONFIG_DOMAIN + code, domain ) > 0;
 	}
 
-	public boolean refreshKey( String code ) {
+	public void refreshKey( String code ) {
 		List<String> domains = configDomainMapper.selectDomainsByCode( code );
+		if ( CollectionUtils.isEmpty( domains ) ) {
+			return;
+		}
 		redisUtil.unlink( CONFIG_DOMAIN + code );
-		return redisUtil.sAdd( CONFIG_DOMAIN + code, domains.toArray( new String[ 0 ] ) ) > 0;
+		redisUtil.sAdd( CONFIG_DOMAIN + code, domains.toArray( new String[ 0 ] ) );
 	}
 
 	public String getValue( String code ) {
@@ -51,6 +55,9 @@ public class ConfigDomainCacheUtil {
 				this.refreshKey( code );
 			}
 			String domain = redisUtil.sRandom( CONFIG_DOMAIN + code );
+			if ( domain == null ) {
+				return null;
+			}
 			DOMAIN_CACHE.put( code, domain );
 			return DOMAIN_CACHE.getIfPresent( code );
 		}
