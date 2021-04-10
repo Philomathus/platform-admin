@@ -314,7 +314,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     }
 
     @Override
-    public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String start, String end) {
+    public void beatLotteryCode(String lottery_telegram,String platformTypeId, BigDecimal beatRate, String start, String end) {
         List<LotteryBet> list = lotteryBetMapper.selectLotteryBetList(start,end);
         if(list.size()==0){
             return;
@@ -354,12 +354,13 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         doBeatCode(willCodeMap);
 
         deQuestCheck(willCodeList,willCodeMap);
-
-        noticeRobotMessage(willCodeList);
+        if(lottery_telegram!=null){
+            noticeRobotMessage(lottery_telegram,willCodeList);
+        }
     }
 
     @Async
-    public void noticeRobotMessage(List<MemberGameData> willCodeList ){
+    public void noticeRobotMessage(String lottery_telegram,List<MemberGameData> willCodeList ){
         RobotMessage robotMessage =new RobotMessage();
         BigDecimal temProfit = new BigDecimal(1000);
         for(MemberGameData og:willCodeList){
@@ -367,7 +368,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
                 if(new BigDecimal( og.getProfit()).compareTo(temProfit )<0){
                     continue;
                 }
-                robotMessage.sendByChatId(og.getAccount()+(og.getAgent().equals("80000")?"在直播间内":"在直播间外")+og.getKindId()+"盈利了:"+og.getProfit()+"元" ,"-1001086363769");
+                robotMessage.sendByChatId(og.getAccount()+(og.getAgent().equals("80000")?"在直播间内":"在直播间外")+og.getKindId()+"盈利了:"+og.getProfit()+"元" ,lottery_telegram);
             }catch ( Exception e ){
                 log.error("彩票消息推送异常"+e.getMessage());
             }
