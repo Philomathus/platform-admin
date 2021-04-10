@@ -95,7 +95,7 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
         liveFamily.setVideoTime(0L);
         liveFamily.setScore(0L);
         liveFamily.setLiveLevel(1L);
-        liveFamily.setFamilyRecom("");
+        liveFamily.setFamilyRecom((int)((Math.random()*9+1)*100000)+"");
         liveFamilyMapper.insertLiveFamily(liveFamily);
 
         liveUser.setId(userId);
@@ -106,7 +106,7 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
     }
 
     public static void main(String[] args) {
-        System.out.println((int) ((Math.random() * 9 + 1) * 100000));
+        System.out.println((int)((Math.random()*9+1)*100000)+"");
     }
 
     /**
