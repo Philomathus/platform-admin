@@ -9,6 +9,7 @@ public enum EnumLock {
 
     member("member:"),
     adminUser("adminUser:"),
+    Anchor("Anchor"),
 
 
     adminTask("adminTask:");

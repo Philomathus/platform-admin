@@ -2,7 +2,10 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
+import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 
 /**
  * 主播提现管理Service接口
@@ -58,4 +61,24 @@ public interface ILiveUserWithdrawNewlogService {
 	 * @return 结果
 	 */
 	public int deleteLiveUserWithdrawNewlogById(String id);
+
+	//解锁
+	AjaxResult unlock(LiveUserWithdrawNewlog req );
+	//拒绝
+	AjaxResult refused( LiveUserWithdrawNewlog req );
+	//出款
+	AjaxResult artificial( LiveUserWithdrawNewlog req );
+	//恢复状态
+	AjaxResult recoverAudit( LiveUserWithdrawNewlog req );
+	//审核
+	AjaxResult finalAudit( LiveUserWithdrawNewlog req );
+
+	AjaxResult getTotal( LiveUserWithdrawNewlog req );
+
+	AjaxResult withdrawSucc( LiveUserWithdrawNewlog req );
+
+	AjaxResult withdrawRefused( LiveUserWithdrawNewlog req );
+
+	AjaxResult updateOrder( LiveUserWithdrawNewlog req );
+
 }
