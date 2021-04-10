@@ -12,15 +12,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userName"    column="user_name"    />
         <result property="money"    column="money"    />
         <result property="createTime"    column="create_time"    />
+        <result property="opIp"    column="op_ip"    />
     </resultMap>
 
     <sql id="selectPayAgentRechargeLogVo">
-        select order_no, recharge_acount, recharge_nick_name, member_id, user_name, money, create_time from pay_agent_recharge_log
+        select order_no, recharge_acount, recharge_nick_name, member_id, user_name, money, create_time, op_ip from pay_agent_recharge_log
     </sql>
 
     <select id="selectPayAgentRechargeLogList" parameterType="PayAgentRechargeLog" resultMap="PayAgentRechargeLogResult">
         <include refid="selectPayAgentRechargeLogVo"/>
         <where>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
             <if test="rechargeAcount != null  and rechargeAcount != ''"> and recharge_acount = #{rechargeAcount}</if>
             <if test="rechargeNickName != null  and rechargeNickName != ''"> and recharge_nick_name like concat('%', #{rechargeNickName}, '%')</if>
             <if test="money != null "> and money = #{money}</if>
@@ -48,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userName != null and userName != ''">user_name,</if>
             <if test="money != null">money,</if>
             <if test="createTime != null and createTime != ''">create_time,</if>
+            <if test="opIp != null and opIp != ''">op_ip,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderNo != null">#{orderNo},</if>
@@ -57,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userName != null and userName != ''">#{userName},</if>
             <if test="money != null">#{money},</if>
             <if test="createTime != null and createTime != ''">#{createTime},</if>
+            <if test="opIp != null and opIp != ''">#{opIp},</if>
          </trim>
     </insert>
 
@@ -69,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userName != null and userName != ''">user_name = #{userName},</if>
             <if test="money != null">money = #{money},</if>
             <if test="createTime != null and createTime != ''">create_time = #{createTime},</if>
+            <if test="opIp != null and opIp != ''">op_ip = #{opIp},</if>
         </trim>
         where order_no = #{orderNo}
     </update>

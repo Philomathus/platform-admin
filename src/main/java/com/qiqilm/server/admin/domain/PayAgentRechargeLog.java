@@ -42,6 +42,10 @@ public class PayAgentRechargeLog extends BaseEntity {
     @Excel(name = "上分金额")
     private BigDecimal money;
 
+    /** 操作IP */
+    @Excel(name = "操作IP")
+    private String opIp;
+
     private Integer countNumber;
     private BigDecimal countMoney;
     @JsonIgnore
