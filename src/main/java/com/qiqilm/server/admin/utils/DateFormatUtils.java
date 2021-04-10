@@ -305,10 +305,6 @@ public abstract class DateFormatUtils {
 		return calendar.get(Calendar.HOUR_OF_DAY);
 	}
 
-	public static void main(String[] args) {
-		System.out.println(getDaysOfHour(new Date(new Date().getTime())));
-	}
-
 	/**
 	 * 获取当前是一年中的第几天
 	 *
@@ -406,12 +402,17 @@ public abstract class DateFormatUtils {
 	 *
 	 * @return Date
 	 */
-	public static Date getTomorrowMorning() {
+	public static Date getTomorrowMorning(Date dateCur) {
 		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateCur);
 		cal.add( Calendar.DATE, 1 );
 		cal.set( Calendar.HOUR_OF_DAY, 0 );
 		cal.set( Calendar.MINUTE, 0 );
 		cal.set( Calendar.SECOND, 0 );
 		return cal.getTime();
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getTomorrowMorning(new Date()));
 	}
 }

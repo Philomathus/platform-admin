@@ -33,6 +33,14 @@
         and cx_agent = #{cxAgent}
     </select>
 
+    <select id="selectGameDataAgentList"  resultMap="GameDataLogResult">
+        select id, game_id, cx_agent, account, server_id, kind_id, table_id, chair_id, cell_score, all_bet, profit, revenue, game_start_time, game_end_time, platform_id,
+        agent from db_data.${tableNode}
+        where game_end_time &gt;=  #{start} and game_end_time &lt;=  #{end}
+        <if test="account != null "> and account = #{account}</if>
+        <if test="platformId != null "> and platform_id = #{platformId}</if>
+    </select>
+
     <select id="selectGameDataLogById" parameterType="String" resultMap="GameDataLogResult">
         <include refid="selectGameDataLogVo"/>
         where id = #{id}

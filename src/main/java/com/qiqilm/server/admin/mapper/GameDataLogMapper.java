@@ -28,6 +28,8 @@ public interface GameDataLogMapper {
 	public List<GameDataLog> selectGameDataLogList(@Param( "cxAgent" )String cxAgent,@Param( "start" )String start,@Param( "end" )String end,@Param( "account" )String account,@Param( "platformId" )String platformId);
 
 
+	public List<GameDataLog> selectGameDataAgentList(@Param( "tableNode" )String tableNode,@Param( "start" )String start,@Param( "end" )String end,@Param( "account" )String account,@Param( "platformId" )String platformId);
+
 	/**
 	 * 批量删除总代理游戏注单
 	 *
