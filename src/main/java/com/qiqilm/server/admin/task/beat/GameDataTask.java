@@ -88,13 +88,5 @@ public class GameDataTask {
         }
 
 
-
-        try {
-            gameDataLogService.beatGameCode(platformType,beatRateMap,profile, DateFormatUtils.formate( starDay ),DateFormatUtils.formate( endDay ),null,null);
-
-        }catch (Exception e){
-            log.error("旧游戏拉取注单异常,",e);
-        }
-
     }
 }
