@@ -129,12 +129,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     }
 
     @Override
-    public void beatGameCodeAgent(Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId) {
-        String sday  = start.substring(0,10).replace("-","");
-        String eday  = end.substring(0,10).replace("-","");
-        if(!sday.equals(eday)){
-            log.error("查询日志异常start:{},end:{}",start,end);
-        }
+    public void beatGameCodeAgent(String dTime,Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId) {
+        String sday  = dTime.substring(0,10).replace("-","");
         List<GameDataLog> list =  gameDataLogMapper.selectGameDataAgentList(GameDataTableHelp.getGameDataByAgent(cxAgent,sday),start,end,account,platformId);
         if(list.size()==0){
             return;
