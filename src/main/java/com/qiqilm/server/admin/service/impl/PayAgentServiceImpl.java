@@ -127,6 +127,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 2000 ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持2000元以上出款" );
 		}
+		if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 5000 ) ) > 0 ) {
+			return AjaxResult.error( "代付暂不支持5000元以上出款" );
+		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
 		if ( StringUtils.hasText( withdrawLog.getOpName() ) && !userName.equals( withdrawLog.getOpName() ) ) {
