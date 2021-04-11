@@ -12,7 +12,7 @@
     </resultMap>
 
     <sql id="selectBankListVo">
-        select id, bank_name, bank_code, bank_icon, status, sort from 7700_main.bank_list
+        select id, bank_name, bank_code, bank_icon, status, sort from ${dbMain}.bank_list
     </sql>
 
     <select id="selectBankListList" parameterType="BankList" resultMap="BankListResult">
@@ -29,7 +29,7 @@
     </select>
 
     <insert id="insertBankList" parameterType="BankList" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_main.bank_list
+        insert into ${dbMain}.bank_list
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="bankName != null and bankName != ''">bank_name,</if>
             <if test="bankCode != null and bankCode != ''">bank_code,</if>
@@ -47,7 +47,7 @@
     </insert>
 
     <update id="updateBankList" parameterType="BankList">
-        update 7700_main.bank_list
+        update ${dbMain}.bank_list
         <trim prefix="SET" suffixOverrides=",">
             <if test="bankName != null and bankName != ''">bank_name = #{bankName},</if>
     
@@ -64,11 +64,11 @@
     </update>
 
     <delete id="deleteBankListById" parameterType="Long">
-        delete from 7700_main.bank_list where id = #{id}
+        delete from ${dbMain}.bank_list where id = #{id}
     </delete>
 
     <delete id="deleteBankListByIds" parameterType="String">
-        delete from 7700_main.bank_list where id in
+        delete from ${dbMain}.bank_list where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
