@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.task.beat;
 
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.enums.EnumLock;
@@ -32,6 +33,11 @@ public class LotteryDataTask {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private SysConfigCacheUtil sysConfigCacheUtil;
+    @Value( "${spring.profiles.active}" )
+    private String profile;
+
     private String platformTypeId;
     private BigDecimal beatRate ;
 
@@ -48,12 +54,17 @@ public class LotteryDataTask {
         if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName())){
             return;
         }
+
+        if(!profile.startsWith("77")||profile.equals("7700")){
+            return;
+        }
+        String lottery_telegram = sysConfigCacheUtil.getConf( "lottery_telegram" );
         Date endDay  = new Date();
         Date starDay = DateFormatUtils.addMin( endDay, -5);
         String start = DateFormatUtils.formate( starDay );
         String end = DateFormatUtils.formate( endDay );
         try {
-            gameDataLogService.beatLotteryCode(platformTypeId,beatRate,start,end);
+            gameDataLogService.beatLotteryCode(lottery_telegram,platformTypeId,beatRate,start,end);
         }catch (Exception e){
             log.error("彩票拉取注单异常,",e);
         }
