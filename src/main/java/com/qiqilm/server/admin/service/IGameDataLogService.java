@@ -38,7 +38,7 @@ public interface IGameDataLogService {
 
 	public void beatGameCodeAgent(String dTime,Map<Integer,String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId);
 
-	public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String start, String end);
+	public void beatLotteryCode(String lottery_telegram,String platformTypeId, BigDecimal beatRate, String start, String end);
 
 
 	public void beatLiveProp(String platformTypeId, BigDecimal beatRate, long start, long end);

@@ -3,12 +3,10 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ServerIm;
 import com.qiqilm.server.admin.im.TLSSigAPIv2;
 import com.qiqilm.server.admin.mapper.ServerImMapper;
 import com.qiqilm.server.admin.service.IServerImService;
-import com.qiqilm.server.admin.utils.ServletUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,8 +64,6 @@ public class ServerImServiceImpl implements IServerImService {
 	 */
 	@Override
 	public int insertServerIm( ServerIm serverIm ) {
-		LoginUser loginUser   = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		serverIm.setIdentify( loginUser.getUsername() );
 		return serverImMapper.insertServerIm( serverIm );
 	}
 
@@ -79,10 +75,8 @@ public class ServerImServiceImpl implements IServerImService {
 	 */
 	@Override
 	public int updateServerIm( ServerIm serverIm ) {
-		LoginUser loginUser   = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		serverIm.setIdentify( loginUser.getUsername() );
-		int       i           = serverImMapper.updateServerIm( serverIm );
-		ServerIm  newServerIm = serverImMapper.selectServerImById( serverIm.getId() );
+		int      i           = serverImMapper.updateServerIm( serverIm );
+		ServerIm newServerIm = serverImMapper.selectServerImById( serverIm.getId() );
 		if ( i > 0 && newServerIm.getIsEffect() == 1 ) {
 			serverImCacheUtil.setServerIm( newServerIm );
 		}

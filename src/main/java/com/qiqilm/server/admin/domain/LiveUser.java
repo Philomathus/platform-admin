@@ -120,12 +120,19 @@ public class LiveUser {
 	@Excel( name = "主播禁播原因", orderNum = "15" )
 	private String banRemark;
 
+	/** 主播禁播原因 */
+	@Excel( name = "礼物任务", orderNum = "15" )
+	private BigDecimal weiboMoney;
+
+	/** 主播禁播原因 */
+	@Excel( name = "时薪任务", orderNum = "15" )
+	private BigDecimal weixinPrice;
+
 	private String loginTime;
 	private String logoutTime;
 
 	private Date updateTime;
-	private BigDecimal weiboMoney;
-	private BigDecimal weixinPrice;
+	private Integer familyChieftain;
 
 	public String getAuthStr() {
 		if ( isAuthentication != null ) {

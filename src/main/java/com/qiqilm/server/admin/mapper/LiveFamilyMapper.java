@@ -64,4 +64,6 @@ public interface LiveFamilyMapper {
     //修改加入家族人数
     @Update( "update ${dbLive}.live_family set user_count = ${user_count} where id= ${familyId}" )
     int updateFamilyID(@Param( "user_count" ) Integer user_count, @Param( "familyId" ) Integer familyId );
+
+	LiveFamily selectLiveFamilyName(@Param( "name") String name);
 }
