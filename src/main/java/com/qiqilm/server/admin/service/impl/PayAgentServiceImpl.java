@@ -25,7 +25,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 @Log4j2
@@ -77,12 +80,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
 	@Override
 	public void queryAgent4Status5Min() {
-		PayAgentLog payAgentLogQuery = new PayAgentLog();
-		payAgentLogQuery.setCallbackStatus( 0 );
-		Calendar nowTime = Calendar.getInstance();
-		nowTime.add( Calendar.MINUTE, -5 );
-		payAgentLogQuery.setCreateTime( nowTime.getTime() );
-		List<PayAgentLog> payAgentLogs = payAgentLogMapper.selectPayAgentLogList( payAgentLogQuery );
+		List<PayAgentLog> payAgentLogs = payAgentLogMapper.findNoCallback();
 
 		List<PayAgentPlatform> payAgentPlatforms = payAgentPlatformMapper.selectPayAgentPlatformList( null );
 
@@ -256,6 +254,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		if ( status != 4 ) {
 			newPayAgentLog.setCallbackTime( now );
 			newPayAgentLog.setCallbackStatus( orderState );
+		} else {
+			newPayAgentLog.setCallbackStatus( 0 );
 		}
 		if ( payAgentLog == null ) {
 			newPayAgentLog.setCreateTime( now );
