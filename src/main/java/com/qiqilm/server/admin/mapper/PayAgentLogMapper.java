@@ -60,4 +60,6 @@ public interface PayAgentLogMapper {
 	public int deletePayAgentLogByIds(Long[] ids );
 
 	PayAgentLog selectByWithdrawOrderNo( String merOrderNo );
+
+	List<PayAgentLog> findNoCallback();
 }

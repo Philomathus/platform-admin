@@ -110,4 +110,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectPayAgentLogVo"/>
         where withdraw_order_no = #{merOrderNo}
 	</select>
+
+    <select id="findNoCallback" resultMap="PayAgentLogResult">
+        <include refid="selectPayAgentLogVo"/>
+        where (callback_status = 0 or callback_status is null)
+          and create_time <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+    </select>
 </mapper>
