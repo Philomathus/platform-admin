@@ -339,7 +339,7 @@
 
     <select id="selectPayAgentOrder" resultMap="MemberWithdrawLogResult">
         <include refid="selectMemberWithdrawLogVo" />
-        where `status` = 1 and op_name = #{userName} and withdraw_money > 0 and withdraw_money <![CDATA[ <= ]]> 300
+        where `status` = 1 and op_name = #{userName} and withdraw_money > 0 and withdraw_money <![CDATA[ <= ]]> 2000
         and order_no in
         <foreach item="orderNo" collection="withdrawOrderNos" open="(" separator="," close=")">
             #{orderNo}
