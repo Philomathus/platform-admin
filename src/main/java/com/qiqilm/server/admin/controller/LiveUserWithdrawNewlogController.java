@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -94,5 +96,69 @@ public class LiveUserWithdrawNewlogController extends BaseController {
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( liveUserWithdrawNewlogService.deleteLiveUserWithdrawNewlogByIds( ids ) );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:unlock')" )
+	@Log( title = "提现解锁", businessType = BusinessType.AUDIT )
+	@PutMapping( "/unlock" )
+	public AjaxResult unlock( @RequestBody LiveUserWithdrawNewlog req ) {
+		return liveUserWithdrawNewlogService.unlock( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:artificial')" )
+	@Log( title = "主播提现出款", businessType = BusinessType.AUDIT )
+	@PutMapping( "/artificial" )
+	public AjaxResult artificial( @RequestBody LiveUserWithdrawNewlog req ) {
+		return liveUserWithdrawNewlogService.artificial( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:refused')" )
+	@Log( title = "提现拒绝", businessType = BusinessType.AUDIT )
+	@PutMapping( "/refused" )
+	public AjaxResult refused( @RequestBody LiveUserWithdrawNewlog req ) {
+		return liveUserWithdrawNewlogService.refused( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:finalAudit')" )
+	@Log( title = "主播提现审核", businessType = BusinessType.AUDIT )
+	@PutMapping( "/finalAudit" )
+	public AjaxResult finalAudit( @RequestBody LiveUserWithdrawNewlog req ) {
+		return liveUserWithdrawNewlogService.finalAudit( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:recoverAudit')" )
+	@Log( title = "主播提现恢复审核状态", businessType = BusinessType.AUDIT )
+	@PutMapping( "/recoverAudit" )
+	public AjaxResult recoverAudit( @RequestBody LiveUserWithdrawNewlog req ) {
+		return liveUserWithdrawNewlogService.recoverAudit( req );
+	}
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:withdrawSucc')" )
+	@Log( title = "主播提现出款成功", businessType = BusinessType.AUDIT )
+	@PutMapping( "/withdrawSucc" )
+	public AjaxResult withdrawSucc( @RequestBody LiveUserWithdrawNewlog req ) {
+		return liveUserWithdrawNewlogService.withdrawSucc( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:withdrawRefused')" )
+	@Log( title = "主播提现拒绝出款", businessType = BusinessType.AUDIT )
+	@PutMapping( "/withdrawRefused" )
+	public AjaxResult withdrawRefused( @RequestBody LiveUserWithdrawNewlog req ) {
+		return liveUserWithdrawNewlogService.withdrawRefused( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:updateOrder')" )
+	@Log( title = "主播提现订单重置", businessType = BusinessType.AUDIT )
+	@PutMapping( "/updateOrder" )
+	public AjaxResult updateOrder( @RequestBody LiveUserWithdrawNewlog req ) {
+		return liveUserWithdrawNewlogService.updateOrder( req );
+	}
+
+	/**
+	 * 获取主播提现信息统计
+	 */
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:query')" )
+	@GetMapping( value = "/countTotal" )
+	public AjaxResult getTotal( LiveUserWithdrawNewlog req ) {
+		return liveUserWithdrawNewlogService.getTotal( req );
 	}
 }

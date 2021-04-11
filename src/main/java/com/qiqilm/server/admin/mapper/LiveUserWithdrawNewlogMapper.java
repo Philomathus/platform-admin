@@ -1,8 +1,11 @@
 package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
+import com.qiqilm.server.admin.domain.MemberWithdrawLog;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 主播提现管理Mapper接口
@@ -58,4 +61,9 @@ public interface LiveUserWithdrawNewlogMapper {
 	 * @return 结果
 	 */
 	public int deleteLiveUserWithdrawNewlogByIds(String[] ids );
+
+	Map getTotal(LiveUserWithdrawNewlog liveUserWithdrawNewlog);
+
+	String calldataProrepLiveTixianorder(@Param( "p_begintime" ) String p_begintime,@Param( "hostid" ) String hostid);
+
 }

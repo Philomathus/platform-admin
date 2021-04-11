@@ -171,4 +171,9 @@
         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
         order by d.family_id
     </select>
+    <select id="getliveHostWageDay" resultType="java.lang.String">
+        SELECT host_id AS hostId from ${dbLive}.live_host_wage_day
+        where id  like concat('%',#{createTime},'%') and  family_id = #{familyId}
+    </select>
+
 </mapper>
