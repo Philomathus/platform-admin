@@ -126,8 +126,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "审核流程非法" );
 		}
 		if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
-				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 300 ) ) > 0 ) {
-			return AjaxResult.error( "此代付暂不支持300元以上出款" );
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 2000 ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持2000元以上出款" );
 		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
