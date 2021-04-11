@@ -25,7 +25,7 @@
     </resultMap>
 
     <sql id="selectLiveUserWithdrawNewlogVo">
-        select id, user_id, family_id, nick_name, order_no, withdraw_money, bank_user_name, bank_account, bank_address, bank_type_id, wstatus, type, op_name, remark,   create_time ,    update_time ,  livetime, liveticket, livepaijiang from 7700_live.live_user_withdraw_newlog
+        select id, user_id, family_id, nick_name, order_no, withdraw_money, bank_user_name, bank_account, bank_address, bank_type_id, wstatus, type, op_name, remark,   create_time ,    update_time ,  livetime, liveticket, livepaijiang from ${dbLive}.live_user_withdraw_newlog
     </sql>
 
     <select id="selectLiveUserWithdrawNewlogList" parameterType="LiveUserWithdrawNewlog" resultMap="LiveUserWithdrawNewlogResult">
@@ -59,7 +59,7 @@
     </select>
 
     <insert id="insertLiveUserWithdrawNewlog" parameterType="LiveUserWithdrawNewlog">
-        insert into 7700_live.live_user_withdraw_newlog
+        insert into ${dbLive}.live_user_withdraw_newlog
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="userId != null">user_id,</if>
@@ -105,7 +105,7 @@
     </insert>
 
     <update id="updateLiveUserWithdrawNewlog" parameterType="LiveUserWithdrawNewlog">
-        update 7700_live.live_user_withdraw_newlog
+        update ${dbLive}.live_user_withdraw_newlog
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
     
@@ -148,11 +148,11 @@
     </update>
 
     <delete id="deleteLiveUserWithdrawNewlogById" parameterType="String">
-        delete from 7700_live.live_user_withdraw_newlog where id = #{id}
+        delete from ${dbLive}.live_user_withdraw_newlog where id = #{id}
     </delete>
 
     <delete id="deleteLiveUserWithdrawNewlogByIds" parameterType="String">
-        delete from 7700_live.live_user_withdraw_newlog where id in
+        delete from ${dbLive}.live_user_withdraw_newlog where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -160,7 +160,7 @@
 
     <select id="getTotal" parameterType="LiveUserWithdrawNewlog" resultType="java.util.Map">
         select count(id) as countNumber, IFNULL(sum(withdraw_money), 0) as countWithdrawMoney
-        from 7700_live.live_user_withdraw_newlog
+        from ${dbLive}.live_user_withdraw_newlog
         <where>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="familyId != null "> and family_id = #{familyId}</if>
@@ -184,7 +184,7 @@
         </where>
     </select>
     <select id="calldataProrepLiveTixianorder" resultType="string" statementType="CALLABLE">
-       {call 7700_live.prorep_live_tixianorder(#{p_begintime,mode=IN,jdbcType=VARCHAR},#{hostid,mode=IN,jdbcType=VARCHAR},#{kj_result,mode=OUT,jdbcType=VARCHAR})}
+       {call ${dbLive}.prorep_live_tixianorder(#{p_begintime,mode=IN,jdbcType=VARCHAR},#{hostid,mode=IN,jdbcType=VARCHAR},#{kj_result,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
 </mapper>
