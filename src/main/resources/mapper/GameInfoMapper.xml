@@ -29,7 +29,7 @@
     </sql>
 
     <select id="selectGameInfoList"  resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
-        select a.id, a.name,a.icon,a.edition_icon as editionIcon,a.indexs,a.is_full as isFull,a.is_wh as isWh,a.status,a.high_wide as highWide,b.name as platformName
+        select a.id, a.name,a.icon,a.edition_icon as editionIcon,a.indexs,a.is_full as isFull,a.is_wh as isWh,a.status,a.high_wide as highWide,b.name as platformName,b.agent as agent
         from ${dbMain}.game_info a
         left join  ${dbMain}.game_platform b
         on a.platform_id=b.id
