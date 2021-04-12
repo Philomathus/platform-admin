@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.ServerLiveCacheUtil;
 import com.qiqilm.server.admin.domain.ServerLive;
 import com.qiqilm.server.admin.mapper.ServerLiveMapper;
@@ -32,7 +31,7 @@ public class ServerLiveServiceImpl implements IServerLiveService {
 	 */
 	@Override
 	public ServerLive selectServerLiveById( Long id ) {
-		return RedisCacheUtil.me.get( id, () -> serverLiveMapper.selectServerLiveById( id ) );
+		return serverLiveMapper.selectServerLiveById( id );
 	}
 
 	/**
@@ -67,7 +66,10 @@ public class ServerLiveServiceImpl implements IServerLiveService {
 	public int updateServerLive( ServerLive serverLive ) {
 		int i = serverLiveMapper.updateServerLive( serverLive );
 		if ( i > 0 ) {
-			RedisCacheUtil.me.clear( serverLive.getId(), ServerLive.class );
+			ServerLive newServerLive = serverLiveMapper.selectServerLiveById( serverLive.getId() );
+			if ( newServerLive.getStatus() > 0 ) {
+				serverLiveCacheUtil.setServerLive( newServerLive );
+			}
 		}
 		return i;
 	}
@@ -82,7 +84,7 @@ public class ServerLiveServiceImpl implements IServerLiveService {
 	public int deleteServerLiveByIds( Long[] ids ) {
 		int i = serverLiveMapper.deleteServerLiveByIds( ids );
 		if ( i > 0 ) {
-			Arrays.stream( ids ).forEach( id -> RedisCacheUtil.me.clear( id, ServerLive.class ) );
+			Arrays.stream( ids ).forEach( id -> serverLiveCacheUtil.clear( id ) );
 		}
 		return i;
 	}
@@ -97,7 +99,7 @@ public class ServerLiveServiceImpl implements IServerLiveService {
 	public int deleteServerLiveById( Long id ) {
 		int i = serverLiveMapper.deleteServerLiveById( id );
 		if ( i > 0 ) {
-			RedisCacheUtil.me.clear( id, ServerLive.class );
+			serverLiveCacheUtil.clear( id );
 		}
 		return i;
 	}

@@ -20,14 +20,12 @@ import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -411,6 +409,20 @@ public class MemberInfoController extends BaseController {
         }
         String memberId = memberInfo.getId();
         memberInfoService.repairMemberBcode(memberId);
+        rspBase.setCode(Constants.URC_SUCCESS);
+        rspBase.setData("成功");
+        return rspBase;
+    }
+
+    @ApiOperation(value = "修改vip等级", notes = "修改vip等级")
+    @PostMapping("/updateVip")
+    public Object updateVip(HttpServletRequest request,
+                          MemberInfo memberInfo) throws Exception {
+        RspBase rspBase = new RspBase();
+        String memberId = memberInfo.getId();
+        Integer vip = memberInfo.getVip();
+        String nickName = memberInfo.getNickName();
+        memberInfoService.updateVip(memberId,vip,nickName);
         rspBase.setCode(Constants.URC_SUCCESS);
         rspBase.setData("成功");
         return rspBase;
