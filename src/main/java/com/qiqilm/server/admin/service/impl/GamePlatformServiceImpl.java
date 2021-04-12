@@ -42,7 +42,15 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
 
     @Override
     public int changeStatus(GamePlatform gamePlatform) {
-        int i = gamePlatformMapper.changeStattus(gamePlatform);
+        GamePlatform obj = gamePlatformMapper.selectGamePlatformById(gamePlatform.getId());
+        GamePlatform update = new GamePlatform();
+        update.setId(obj.getId());
+        if(obj.getStatus()==0){
+            update.setStatus(1);
+        }else{
+            update.setStatus(0);
+        }
+        int i = gamePlatformMapper.updateGamePlatform(update);
         gameCacheManager.initGamePlatforms();
         return i;
     }
