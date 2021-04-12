@@ -340,7 +340,8 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         }
         //判断事家族还是成员
         Long type = liveUserWithdrawNewlog.getType();
-        String time = DateFormatUtils.formate( new Date(), "yyyy-MM-dd" );
+        Date createTime = liveUserWithdrawNewlog.getCreateTime();
+        String time = DateFormatUtils.formate( createTime, "yyyy-MM-dd" );
         if (type==1){
             //1家族
             List<String> strings = liveHostWageDayMapper.getliveHostWageDay(time, liveUserWithdrawNewlog.getFamilyId());
