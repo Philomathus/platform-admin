@@ -8,10 +8,10 @@ import java.util.List;
 @Getter
 public enum BankCodeLianFuBaoType {
 	//
-	ICBC( Arrays.asList( "工商银行" ) ),
+	ICBC( Arrays.asList( "工商银行", "中国工商银行", "中国工商" ) ),
 	CCB( Arrays.asList( "建设银行" ) ),
 	ABC( Arrays.asList( "农业银行" ) ),
-	PSBS( Arrays.asList( "邮政储蓄银行", "邮政银行" ) ),
+	PSBS( Arrays.asList( "邮政储蓄银行", "中国邮政储蓄银行", "中国邮政银行", "中国邮政储蓄", "中国邮政", "邮政银行" ) ),
 	BOC( Arrays.asList( "中国银行" ) ),
 	BOCO( Arrays.asList( "交通银行" ) ),
 	CMB( Arrays.asList( "招商银行" ) ),
@@ -22,7 +22,7 @@ public enum BankCodeLianFuBaoType {
 	CTTIC( Arrays.asList( "中信银行" ) ),
 	GDB( Arrays.asList( "广东发展银行", "广发银行" ) ),
 	SDB( Arrays.asList( "深圳发展银行" ) ),
-	SPDB( Arrays.asList( "浦东发展银行", "浦发银行" ) ),
+	SPDB( Arrays.asList( "浦发银行", "上海浦东发展银行", "浦东发展银行" ) ),
 	PINGANBANK( Arrays.asList( "平安银行" ) ),
 	HXB( Arrays.asList( "华夏银行" ) ),
 	SHB( Arrays.asList( "上海银行" ) ),
