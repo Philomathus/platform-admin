@@ -25,6 +25,11 @@ public class ValidatorUtil {
     public static final String REGEX_MOBILE = "^((17[0-9])|(14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
 
     /**
+     * 正则表达式：11位数字
+     */
+    public static final String Number11 = "([0-9]){11}$";
+
+    /**
      * 正则表达式：验证邮箱
      */
     public static final String REGEX_EMAIL = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
@@ -80,6 +85,16 @@ public class ValidatorUtil {
     }
 
     /**
+     * 校验是十一位数字
+     *
+     * @param mobile
+     * @return 校验通过返回true，否则返回false
+     */
+    public static boolean isNumber11(String mobile) {
+        return Pattern.matches(Number11, mobile);
+    }
+
+    /**
      * 校验邮箱
      *
      * @param email
@@ -129,4 +144,7 @@ public class ValidatorUtil {
         return Pattern.matches(REGEX_IP_ADDR, ipAddr);
     }
 
+    public static void main(String[] args) {
+        System.out.println(Pattern.matches(Number11, "2222222222"));
+    }
 }
