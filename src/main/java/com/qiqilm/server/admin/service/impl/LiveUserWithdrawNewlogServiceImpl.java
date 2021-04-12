@@ -329,9 +329,6 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         if ( liveUserWithdrawNewlog == null ) {
             return AjaxResult.error( "订单不存在" );
         }
-        if ( liveUserWithdrawNewlog.getWstatus() !=1 ) {
-            return AjaxResult.error( "订单重复处理" );
-        }
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    userName  = loginUser.getUser().getUserName();
 
