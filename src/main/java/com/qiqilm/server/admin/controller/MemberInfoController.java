@@ -421,7 +421,8 @@ public class MemberInfoController extends BaseController {
         RspBase rspBase = new RspBase();
         String memberId = memberInfo.getId();
         Integer vip = memberInfo.getVip();
-        memberInfoService.updateVip(memberId,vip);
+        String nickName = memberInfo.getNickName();
+        memberInfoService.updateVip(memberId,vip,nickName);
         rspBase.setCode(Constants.URC_SUCCESS);
         rspBase.setData("成功");
         return rspBase;
