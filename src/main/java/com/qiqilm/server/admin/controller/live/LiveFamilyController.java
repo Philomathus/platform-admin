@@ -82,7 +82,7 @@ public class LiveFamilyController extends BaseController {
 	@Log( title = "家族", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LiveFamily liveFamily ) {
-		return toAjax( liveFamilyService.updateLiveFamily( liveFamily ) );
+		return AjaxResult.success( liveFamilyService.updateLiveFamily( liveFamily ) );
 	}
 
 	/**
