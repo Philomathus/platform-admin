@@ -114,7 +114,7 @@ public class GameCacheManager {
 		RspGameInfo game = new RspGameInfo();
 		BeanUtils.copyProperties(gameInfo,game);
 		operations.set(Constants.CX_GAME.concat("id:").concat(game.getId()), JSON.toJSONString(game));
-		if(game.getPlatformId()==3){
+		if(game.getPlatformId() != null && game.getPlatformId()==3){
 			operations.set(Constants.CX_GAME.concat("liveId"), game.getId());
 		}
 	}

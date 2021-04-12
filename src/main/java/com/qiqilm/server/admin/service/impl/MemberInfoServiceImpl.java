@@ -89,8 +89,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public AjaxResult insertMemberInfo(MemberInfo memberInfo) {
         //校验是不是手机号
-        if (!ValidatorUtil.isMobile(memberInfo.getPhone())) {
-            return AjaxResult.error("手机号格式错误");
+        if (!ValidatorUtil.isNumber11(memberInfo.getPhone())) {
+            return AjaxResult.error("手机号必须是11位数字");
         }
         if (memberInfoMapper.countByPhone(memberInfo.getPhone()) > 0) {
             return AjaxResult.error("此手机号已经存在");
@@ -331,5 +331,10 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             return;
         }
         memberBcodeMapper.repairMemberInfo(memberId);
+    }
+
+    @Override
+    public void updateVip(String memberId, Integer vip, String nickName) {
+        memberBcodeMapper.updateVip(memberId,vip,nickName);
     }
 }

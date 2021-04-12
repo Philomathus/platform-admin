@@ -67,4 +67,6 @@ public interface IMemberInfoService {
     AjaxResult changeBank(MemberCard memberCard);
 
     void repairMemberBcode(String memberId);
+
+    void updateVip(String memberId, Integer vip, String nickName);
 }

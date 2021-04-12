@@ -4,7 +4,6 @@ import com.qiqilm.server.admin.domain.MemberBcode;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * MemberBcodeMapper接口
@@ -74,4 +73,6 @@ public interface MemberBcodeMapper {
     int countMemberBcodeStatus(@Param("memberId") String memberId);
 
 	void repairMemberInfo(@Param("memberId") String memberId);
+
+    void updateVip(@Param("memberId") String memberId, @Param("vip") Integer vip,@Param("nickName") String nickName);
 }
