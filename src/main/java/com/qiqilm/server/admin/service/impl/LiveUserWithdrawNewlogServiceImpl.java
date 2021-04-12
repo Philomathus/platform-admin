@@ -329,9 +329,6 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         if ( liveUserWithdrawNewlog == null ) {
             return AjaxResult.error( "订单不存在" );
         }
-        if ( liveUserWithdrawNewlog.getWstatus() !=1 ) {
-            return AjaxResult.error( "订单重复处理" );
-        }
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    userName  = loginUser.getUser().getUserName();
 
@@ -343,7 +340,8 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         }
         //判断事家族还是成员
         Long type = liveUserWithdrawNewlog.getType();
-        String time = DateFormatUtils.formate( new Date(), "yyyy-MM-dd" );
+        Date createTime = liveUserWithdrawNewlog.getCreateTime();
+        String time = DateFormatUtils.formate( createTime, "yyyy-MM-dd" );
         if (type==1){
             //1家族
             List<String> strings = liveHostWageDayMapper.getliveHostWageDay(time, liveUserWithdrawNewlog.getFamilyId());
