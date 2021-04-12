@@ -56,7 +56,7 @@ public class DomainTask {
 			}
 			boolean a = doGet( url, 1 );
 			if ( !a ) {
-				String warnText = "测试域名 " + li.getDomain() + " 检测异常";
+				String warnText = "7701代理测试域名 " + li.getDomain() + " 检测异常";
 				log.error( warnText );
 				try {
 					robotMessage.sendByChatId( warnText, do_main_telegram );
