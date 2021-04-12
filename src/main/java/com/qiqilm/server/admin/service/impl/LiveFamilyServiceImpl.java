@@ -119,20 +119,20 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
     public AjaxResult updateLiveFamily(LiveFamily liveFamily) {
         LiveFamily getliveFamily = liveFamilyMapper.selectLiveFamilyName(liveFamily.getName());
         //如果修改了家族长id
-        if(getliveFamily.getUserId() != liveFamily.getUserId()){
+        if(!getliveFamily.getUserId().equals( liveFamily.getUserId())){
             LiveUser liveUser = liveUserMapper.selectLiveUserById(liveFamily.getUserId());
             if (Objects.isNull(liveUser)) {
-                return AjaxResult.error(0, "主播不存在,无法创建家族");
+                return AjaxResult.error(0, "主播不存在,无法成为此家族长");
             } else {
                 if (liveUser.getIsBan() == 1) {
-                    return AjaxResult.error(0, "该主播已被禁播,无法创建家族");
+                    return AjaxResult.error(0, "该主播已被禁播,无法成为此家族长");
                 }
                 if (liveUser.getFamilyId() != 0) {
-                    return AjaxResult.error(0, "该主播已有家族,无法创建家族");
+                    return AjaxResult.error(0, "该主播已有家族,无法成为此家族长");
                 }
                 if (liveUser.getFamilyChieftain() != null) {
                     if (liveUser.getFamilyChieftain() == 1) {
-                        return AjaxResult.error(0, "该主播已是家族长,无法再创建家族");
+                        return AjaxResult.error(0, "该主播已是家族长,无法再成为此家族长");
                     }
                 }
             }
