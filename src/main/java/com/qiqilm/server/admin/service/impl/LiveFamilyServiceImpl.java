@@ -117,20 +117,9 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
      */
     @Override
     public int updateLiveFamily(LiveFamily liveFamily) {
-
         return liveFamilyMapper.updateLiveFamily(liveFamily);
     }
 
-    /**
-     * 批量删除家族
-     *
-     * @param ids 需要删除的家族ID
-     * @return 结果
-     */
-    @Override
-    public int deleteLiveFamilyByIds(Long[] ids) {
-        return liveFamilyMapper.deleteLiveFamilyByIds(ids);
-    }
 
     /**
      * 删除家族信息
@@ -140,6 +129,12 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
      */
     @Override
     public int deleteLiveFamilyById(Long id) {
+        LiveFamily liveFamily = liveFamilyMapper.selectLiveFamilyById(id);
+        LiveUser liveUser = new LiveUser();
+        liveUser.setId(liveFamily.getUserId());
+        liveUser.setFamilyId(0L);
+        liveUser.setFamilyChieftain(0);
+        liveUserMapper.updateLiveUser(liveUser);
         return liveFamilyMapper.deleteLiveFamilyById(id);
     }
 }

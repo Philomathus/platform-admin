@@ -90,8 +90,8 @@ public class LiveFamilyController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveFamily:remove')" )
 	@Log( title = "家族", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( liveFamilyService.deleteLiveFamilyByIds( ids ) );
+	@DeleteMapping( "/{id}" )
+	public AjaxResult remove( @PathVariable Long id ) {
+		return toAjax( liveFamilyService.deleteLiveFamilyById( id ) );
 	}
 }

@@ -156,7 +156,7 @@
         IFNULL(u.ypoint,0) as liwujiesuanbili,
         IFNULL(d.ticket,0) * IFNULL(u.ypoint,0) as ticket,
         convert(IFNULL(d.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as costQianliu,
-        IF(u.weixin_price > convert(d.live_time_sec/60/60,decimal(10,2)) or u.weixin_price > d.ticket ,0, convert(u.weixin_price * u.coin,decimal(10,2))) as livetimejiesuan,
+        IF(u.weixin_price > convert(d.live_time_sec/60/60,decimal(10,2)) or u.weibo_money > d.ticket ,0, convert(u.weixin_price * u.coin,decimal(10,2))) as livetimejiesuan,
 <!--        SUBSTR(d.start_time,1,10) as shijian,-->
         u.coin,
         u.weibo_money as lwrenwu,

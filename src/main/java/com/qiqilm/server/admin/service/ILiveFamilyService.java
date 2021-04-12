@@ -45,14 +45,6 @@ public interface ILiveFamilyService {
 	public int updateLiveFamily(LiveFamily liveFamily);
 
 	/**
-	 * 批量删除家族
-	 *
-	 * @param ids 需要删除的家族ID
-	 * @return 结果
-	 */
-	public int deleteLiveFamilyByIds(Long[] ids );
-
-	/**
 	 * 删除家族信息
 	 *
 	 * @param id 家族ID
