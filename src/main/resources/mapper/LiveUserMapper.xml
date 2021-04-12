@@ -99,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="ticketCattyRatio != null">ticket_catty_ratio,</if>
             <if test="openPay != null">open_pay,</if>
             <if test="banRemark != null">ban_remark,</if>
+            <if test="familyChieftain != null">family_chieftain,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">#{nickName},</if>
@@ -124,6 +125,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="ticketCattyRatio != null and ticketCattyRatio != ''">#{ticketCattyRatio},</if>
 			<if test="openPay != null">#{openPay},</if>
 			<if test="banRemark != null">#{banRemark},</if>
+            <if test="familyChieftain != null">#{familyChieftain},</if>
          </trim>
     </insert>
 
@@ -157,6 +159,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="banRemark != null">ban_remark = #{banRemark},</if>
             <if test="weiboMoney != null">weibo_money = #{weiboMoney},</if>
             <if test="weixinPrice != null">weixin_price = #{weixinPrice},</if>
+            <if test="familyChieftain != null">family_chieftain = #{familyChieftain},</if>
         </trim>
         where id = #{id}
     </update>
@@ -170,4 +173,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null  and updateTime != ''"> and create_date = #{updateTime}</if>
         </where>
     </select>
+
+   <update id="updateLiveUserByFamilyId" parameterType="integer">
+       UPDATE ${dbLive}.live_user SET family_id = 0 where family_id = #{familyId};
+   </update>
 </mapper>

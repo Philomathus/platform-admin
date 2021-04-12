@@ -167,6 +167,11 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
         liveUser.setFamilyId(0L);
         liveUser.setFamilyChieftain(0);
         liveUserMapper.updateLiveUser(liveUser);
+
+        //将此家族下所有主播的family改成0
+        int familyId = new Long(id).intValue();
+        liveUserMapper.updateLiveUserByFamilyId(familyId);
+
         return liveFamilyMapper.deleteLiveFamilyById(id);
     }
 }
