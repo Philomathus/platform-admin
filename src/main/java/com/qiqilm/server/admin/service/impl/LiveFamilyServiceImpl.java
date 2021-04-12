@@ -8,8 +8,6 @@ import java.util.Objects;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
-import com.qiqilm.server.admin.utils.StringUtils;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
@@ -118,8 +116,23 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
     @Override
     public AjaxResult updateLiveFamily(LiveFamily liveFamily) {
         LiveFamily getliveFamily = liveFamilyMapper.selectLiveFamilyName(liveFamily.getName());
+
+        //判断是否封停解封
+        if(liveFamily.getStatus() != null ){
+            if(liveFamily.getStatus() == 3){
+                //将此家族下所有主播禁播
+                liveFamilyMapper.updateLiveFamily(liveFamily);
+                int familyId = new Long(liveFamily.getId()).intValue();
+                liveUserMapper.updateLiveUserIsBanStopByFamilyId(familyId,liveFamily.getMemo());
+            }else if(liveFamily.getStatus() == 1){
+                liveFamilyMapper.updateLiveFamily(liveFamily);
+                int familyId = new Long(liveFamily.getId()).intValue();
+                liveUserMapper.updateLiveUserIsBanKeepByFamilyId(familyId,liveFamily.getMemo());
+            }
+        }
+
         //如果修改了家族长id
-        if(!getliveFamily.getUserId().equals( liveFamily.getUserId())){
+        if(liveFamily.getUserId() != null && !getliveFamily.getUserId().equals( liveFamily.getUserId())){
             LiveUser liveUser = liveUserMapper.selectLiveUserById(liveFamily.getUserId());
             if (Objects.isNull(liveUser)) {
                 return AjaxResult.error(0, "主播不存在,无法成为此家族长");
