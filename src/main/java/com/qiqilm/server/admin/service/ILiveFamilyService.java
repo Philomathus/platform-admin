@@ -42,7 +42,7 @@ public interface ILiveFamilyService {
 	 * @param liveFamily 家族
 	 * @return 结果
 	 */
-	public int updateLiveFamily(LiveFamily liveFamily);
+	public AjaxResult updateLiveFamily(LiveFamily liveFamily);
 
 	/**
 	 * 删除家族信息

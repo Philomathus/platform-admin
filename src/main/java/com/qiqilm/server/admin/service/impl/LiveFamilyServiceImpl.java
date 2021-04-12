@@ -116,8 +116,40 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
      * @return 结果
      */
     @Override
-    public int updateLiveFamily(LiveFamily liveFamily) {
-        return liveFamilyMapper.updateLiveFamily(liveFamily);
+    public AjaxResult updateLiveFamily(LiveFamily liveFamily) {
+        LiveFamily getliveFamily = liveFamilyMapper.selectLiveFamilyName(liveFamily.getName());
+        //如果修改了家族长id
+        if(getliveFamily.getUserId() != liveFamily.getUserId()){
+            LiveUser liveUser = liveUserMapper.selectLiveUserById(liveFamily.getUserId());
+            if (Objects.isNull(liveUser)) {
+                return AjaxResult.error(0, "主播不存在,无法创建家族");
+            } else {
+                if (liveUser.getIsBan() == 1) {
+                    return AjaxResult.error(0, "该主播已被禁播,无法创建家族");
+                }
+                if (liveUser.getFamilyId() != 0) {
+                    return AjaxResult.error(0, "该主播已有家族,无法创建家族");
+                }
+                if (liveUser.getFamilyChieftain() != null) {
+                    if (liveUser.getFamilyChieftain() == 1) {
+                        return AjaxResult.error(0, "该主播已是家族长,无法再创建家族");
+                    }
+                }
+            }
+
+            liveUser.setId(getliveFamily.getUserId());
+            liveUser.setFamilyId(0L);
+            liveUser.setFamilyChieftain(0);
+            liveUserMapper.updateLiveUser(liveUser);
+
+            LiveUser liveUser1 = new LiveUser();
+            liveUser1.setId(liveFamily.getUserId());
+            liveUser1.setFamilyId(getliveFamily.getId());
+            liveUser1.setFamilyChieftain(1);
+            liveUserMapper.updateLiveUser(liveUser1);
+        }
+        liveFamilyMapper.updateLiveFamily(liveFamily);
+        return AjaxResult.success("修改" + liveFamily.getName() + "家族成功");
     }
 
 
