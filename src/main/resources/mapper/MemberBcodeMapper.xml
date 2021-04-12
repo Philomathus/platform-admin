@@ -179,4 +179,7 @@
 	<update id="repairMemberInfo">
 		update  member_info set code_account = level_integral where id = #{memberId};
 	</update>
+    <update id="updateVip">
+        update  member_info set vip = #{vip} where id = #{memberId};
+    </update>
 </mapper>
