@@ -117,7 +117,6 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
      */
     @Override
     public int updateLiveFamily(LiveFamily liveFamily) {
-
         return liveFamilyMapper.updateLiveFamily(liveFamily);
     }
 
@@ -140,6 +139,12 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
      */
     @Override
     public int deleteLiveFamilyById(Long id) {
+        LiveFamily liveFamily = liveFamilyMapper.selectLiveFamilyById(id);
+        LiveUser liveUser = new LiveUser();
+        liveUser.setId(liveFamily.getUserId());
+        liveUser.setFamilyId(0L);
+        liveUser.setFamilyChieftain(0);
+        liveUserMapper.updateLiveUser(liveUser);
         return liveFamilyMapper.deleteLiveFamilyById(id);
     }
 }
