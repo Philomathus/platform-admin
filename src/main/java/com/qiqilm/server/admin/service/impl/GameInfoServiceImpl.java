@@ -46,13 +46,24 @@ public class GameInfoServiceImpl implements IGameInfoService {
 
 	@Override
 	public Integer updateStatus( GameInfo gameInfo ) {
-		return gameInfoMapper.updateStatus( gameInfo );
+        int i = gameInfoMapper.updateStatus(gameInfo);
+//        int i = gameInfoMapper.updateGameInfo(gameInfo);
+        updateRedis(gameInfo);
+        return i;
 
 	}
 
-	@Override
+    private void updateRedis(GameInfo gameInfo) {
+        gameInfo = gameInfoMapper.selectGameInfoById(gameInfo.getId());
+        gameCacheManager.setGameInfo(gameInfo);
+        gameCacheManager.initGameGroup();
+    }
+
+    @Override
 	public int changeIsWh( GameInfo gameInfo ) {
-		return gameInfoMapper.changeIsWh( gameInfo );
+        int i = gameInfoMapper.changeIsWh(gameInfo);
+        updateRedis(gameInfo);
+		return i;
 
 	}
 
