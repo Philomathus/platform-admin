@@ -208,6 +208,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setLiveImage(liveImage);
             liveVideo.setHostName(hostInfo.getNickName());
             liveVideo.setNewPlayFlv(flv);
+            liveVideo.setPlayUrl( flv );
             liveVideoMapper.updateLiveVideo2(liveVideo);
         }else {
             //新增
@@ -227,6 +228,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setLotteryId(1002);
             liveVideo.setNewPlayFlv(flv);
             liveVideo.setLotteryName("一分快三");
+			liveVideo.setPlayUrl( flv );
             setIms(liveVideo, id, title);
             liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
             liveVideoMapper.insertLiveVideo(liveVideo);
