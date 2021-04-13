@@ -45,8 +45,8 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "order_num", withdrawLog.getOrderNo() );
 		dataMap.put( "amount", withdrawLog.getWithdrawMoney().multiply( new BigDecimal( 100 ) ).setScale( 0,
 				BigDecimal.ROUND_HALF_EVEN ).toString() );
-		dataMap.put( "bank_account_name", withdrawLog.getBankUserName() );
-		dataMap.put( "bank_account_no", withdrawLog.getBankAccount() );
+		dataMap.put( "bank_account_name", withdrawLog.getBankUserName().trim() );
+		dataMap.put( "bank_account_no", withdrawLog.getBankAccount().trim() );
 		dataMap.put( "bank_code", withdrawLog.getBankCode() );
 		String randStr = this.generateRandNum( dataMap.size() + 1 );
 		dataMap.put( "random_str", randStr );
