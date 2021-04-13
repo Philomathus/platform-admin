@@ -119,12 +119,14 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
 
         //判断是否封停解封
         if(liveFamily.getStatus() != null ){
-            if(liveFamily.getStatus() == 3){
+            if(liveFamily.getStatus() == 8){
+                liveFamily.setStatus(3);
                 //将此家族下所有主播禁播
                 liveFamilyMapper.updateLiveFamily(liveFamily);
                 int familyId = new Long(liveFamily.getId()).intValue();
                 liveUserMapper.updateLiveUserIsBanStopByFamilyId(familyId,"家族封停原因:"+liveFamily.getMemo());
-            }else if(liveFamily.getStatus() == 1 && liveFamily.getMemo() != null){
+            }else if(liveFamily.getStatus() == 9){
+                liveFamily.setStatus(1);
                 liveFamilyMapper.updateLiveFamily(liveFamily);
                 int familyId = new Long(liveFamily.getId()).intValue();
                 liveUserMapper.updateLiveUserIsBanKeepByFamilyId(familyId,"家族解封原因:"+liveFamily.getMemo());
