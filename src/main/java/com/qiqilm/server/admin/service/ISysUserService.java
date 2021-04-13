@@ -150,4 +150,6 @@ public interface ISysUserService {
 	public String importUser( List<SysUser> userList, Boolean isUpdateSupport, String operName );
 
     public void updateUser2(SysUser sysUser);
+
+    void sendMsg(String msg, String memberId);
 }

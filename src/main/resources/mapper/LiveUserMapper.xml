@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isBan"    column="is_ban"    />
         <result property="identifyNumber"    column="identify_number"    />
         <result property="familyId"    column="family_id"    />
+        <result property="roboter"    column="roboter"    />
         <result property="familyName"    column="family_name"    />
         <result property="familyUserId"    column="family_user_id"    />
         <result property="familyNickName"    column="family_nick_name"    />
@@ -38,15 +39,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="weixinPrice"    column="weixin_price"    />
         <result property="weiboMoney"    column="weibo_money"    />
         <result property="familyChieftain"    column="family_chieftain"    />
+        <result property="liveIn"    column="live_in"    />
     </resultMap>
 
     <sql id="selectLiveUserVo">
-        select u.id,u.nick_name,u.weixin_price,u.weibo_money,u.family_chieftain,signature,FROM_UNIXTIME(u.update_time) update_time,
+        select u.id,u.roboter,g.live_in,u.nick_name,u.weixin_price,u.weibo_money,u.family_chieftain,signature,FROM_UNIXTIME(u.update_time) update_time,
 		is_authentication,login_ip,focus_count,mobile,authentication_type,authentication_name,identify_hold_image,
-		identify_positive_image,identify_nagative_image, fans_count, ticket, refund_ticket,is_ban,v_explain,family_id,
+		identify_positive_image,identify_nagative_image, u.fans_count, ticket, refund_ticket,is_ban,v_explain,family_id,
 		coin,ticket_catty_ratio,open_pay,ban_remark,identify_number,login_time,logout_time,f.name family_name,
-        f.user_id family_user_id,f.nick_name family_nick_name,xpoint,ypoint
+        f.user_id family_user_id,f.nick_name family_nick_name,u.xpoint,u.ypoint
 		from ${dbLive}.live_user u left join ${dbLive}.live_family f on (f.id = u.family_id)
+		left join ${dbLive}.live_video g on (u.id = g.user_id)
     </sql>
 
     <select id="selectLiveUserList" parameterType="LiveUser" resultMap="LiveUserResult">
@@ -78,10 +81,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">nick_name,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
             <if test="isAuthentication != null">is_authentication,</if>
             <if test="loginIp != null">login_ip,</if>
             <if test="focusCount != null">focus_count,</if>
             <if test="mobile != null and mobile != ''">mobile,</if>
+            <if test="headImage != null and headImage != ''">head_image,</if>
             <if test="authenticationType != null">authentication_type,</if>
             <if test="authenticationName != null">authentication_name,</if>
             <if test="identifyHoldImage != null">identify_hold_image,</if>
@@ -91,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vExplain != null">v_explain,</if>
             <if test="fansCount != null">fans_count,</if>
             <if test="ticket != null">ticket,</if>
+            <if test="roboter != null">roboter,</if>
             <if test="refundTicket != null">refund_ticket,</if>
             <if test="isBan != null">is_ban,</if>
             <if test="identifyNumber != null">identify_number,</if>
@@ -104,11 +110,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null and nickName != ''">#{nickName},</if>
 			<if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
 			<if test="isAuthentication != null">#{isAuthentication},</if>
 			<if test="loginIp != null">#{loginIp},</if>
 			<if test="focusCount != null">#{focusCount},</if>
             <if test="vExplain != null">#{vExplain},</if>
 			<if test="mobile != null and mobile != ''">#{mobile},</if>
+            <if test="headImage != null and headImage != ''">#{headImage},</if>
 			<if test="authenticationType != null">#{authenticationType},</if>
 			<if test="authenticationName != null">#{authenticationName},</if>
 			<if test="identifyHoldImage != null">#{identifyHoldImage},</if>
@@ -117,6 +125,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="investorSendInfo != null">#{investorSendInfo},</if>
 			<if test="fansCount != null">#{fansCount},</if>
 			<if test="ticket != null">#{ticket},</if>
+            <if test="roboter != null">#{roboter},</if>
 			<if test="refundTicket != null">#{refundTicket},</if>
 			<if test="isBan != null">#{isBan},</if>
 			<if test="identifyNumber != null">#{identifyNumber},</if>
@@ -185,4 +194,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateLiveUserIsBanKeepByFamilyId" parameterType="integer">
         UPDATE ${dbLive}.live_user SET is_ban = 0 and ban_remark = #{remark} where family_id = #{familyId};
     </update>
+    <select id="selectLiveUsersByMobile" resultMap="LiveUserResult">
+        <include refid="selectLiveUserVo"/>
+        <where>
+            mobile = #{mobile}
+        </where>
+    </select>
 </mapper>
