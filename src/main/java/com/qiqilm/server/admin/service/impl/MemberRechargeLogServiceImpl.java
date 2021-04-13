@@ -166,6 +166,10 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 			chargeGive = chargeGive.add(memberRechargeLog.getRechargeMoney().multiply( ticketCattyRatio )// 单日首次彩金
 					.setScale( 2, BigDecimal.ROUND_HALF_UP ));
 		}
+		//套利号无优惠
+		if(memberInfo.getStatus()==4){
+			chargeGive = BigDecimal.ZERO;
+		}
 
 		BigDecimal add = memberRechargeLog.getRechargeMoney().add( chargeGive );
 
