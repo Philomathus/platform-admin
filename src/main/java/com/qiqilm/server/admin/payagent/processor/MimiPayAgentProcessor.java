@@ -90,7 +90,7 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 		String sign = requestMap.get( "sign" ).toString();
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"payAgentPrivateKey" ) );
+				"secretkey/payAgentPrivateKey" ) );
 
 		String sb = "orderid=" + orderId + "&opstate=" + requestMap.get( "opstate" ) + "&ovalue=" + requestMap.get( "ovalue" ) +
 				signMd5;
