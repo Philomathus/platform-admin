@@ -171,7 +171,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		Map<String, String>       map       = paramSort( signMap, signMap.get( "random_str" ).toString() );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"payAgentPrivateKey" ) );
+				"secretkey/payAgentPrivateKey" ) );
 
 		String sign = DigestUtils.md5Hex( JsonUtil.object2Json( map ).concat( signMd5 ) );
 		if ( ( reSign ).equalsIgnoreCase( sign ) ) {
@@ -206,7 +206,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		String reSign = requestMap.remove( "sign" ).toString();
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"payAgentPrivateKey" ) );
+				"secretkey/payAgentPrivateKey" ) );
 
 		String mySign = this.assemblyUrl( requestMap ) + "&key=" + signMd5;
 		log.warn( mySign );
@@ -254,7 +254,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		log.info( "签名原文串：{}", JsonUtil.object2Json( paramMap ) );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"payAgentPrivateKey" ) );
+				"secretkey/payAgentPrivateKey" ) );
 
 		String sign = DigestUtils.md5Hex( JsonUtil.object2Json( paramMap ).concat( signMd5 ) );
 		paramMap.put( "request_sign", sign );
