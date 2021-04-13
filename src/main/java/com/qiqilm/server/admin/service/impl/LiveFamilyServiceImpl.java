@@ -124,7 +124,7 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
                 liveFamilyMapper.updateLiveFamily(liveFamily);
                 int familyId = new Long(liveFamily.getId()).intValue();
                 liveUserMapper.updateLiveUserIsBanStopByFamilyId(familyId,"家族封停原因:"+liveFamily.getMemo());
-            }else if(liveFamily.getStatus() == 1){
+            }else if(liveFamily.getStatus() == 1 && liveFamily.getMemo() != null){
                 liveFamilyMapper.updateLiveFamily(liveFamily);
                 int familyId = new Long(liveFamily.getId()).intValue();
                 liveUserMapper.updateLiveUserIsBanKeepByFamilyId(familyId,"家族解封原因:"+liveFamily.getMemo());
