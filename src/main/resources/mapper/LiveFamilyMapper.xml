@@ -149,4 +149,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteLiveFamilyById" parameterType="Long">
         delete from ${dbLive}.live_family where id = #{id}
     </delete>
+
+    <update id="updateLiveFamilyStatusById" parameterType="Long">
+        UPDATE ${dbLive}.live_family SET status = 4 where id = #{id};
+    </update>
 </mapper>

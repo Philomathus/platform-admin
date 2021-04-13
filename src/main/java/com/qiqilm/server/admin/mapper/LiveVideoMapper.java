@@ -1,10 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-import java.util.Map;
-
 import com.qiqilm.server.admin.domain.LiveVideo;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 直播Mapper接口
@@ -43,6 +42,20 @@ public interface LiveVideoMapper {
 	 */
 	public int updateLiveVideo(LiveVideo liveVideo);
 
+	/**
+	 * 修改直播,结束时间可以为null
+	 *
+	 * @param liveVideo 直播
+	 * @return 结果
+	 */
+	public int updateLiveVideo2(LiveVideo liveVideo);
+    /**
+     * 新增直播
+     *
+     * @param liveVideo 直播
+     * @return 结果
+     */
+    public int insertLiveVideo(LiveVideo liveVideo);
 	LiveVideo selectLiveVideoSortById( Long id );
 
 	List<LiveVideo> selectLiveInVideoSort();
@@ -52,4 +65,6 @@ public interface LiveVideoMapper {
 	Integer countLineCount(@Param("paiId") Long paiId );
 
 	List<LiveVideo> selectLiveInPlayDetect();
+
+    List<LiveVideo> selectLiveVideoList2(LiveVideo liveVideo);
 }

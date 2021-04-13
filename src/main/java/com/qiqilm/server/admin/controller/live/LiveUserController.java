@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 主播用户信息Controller
@@ -63,6 +64,35 @@ public class LiveUserController extends BaseController {
 	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
 		return AjaxResult.success( liveUserService.selectLiveUserById( id ) );
 	}
+    /**
+     * 新增//用户信息
+     */
+    @PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
+    @Log( title = "//用户信息", businessType = BusinessType.INSERT )
+    @PostMapping
+    public AjaxResult add(@RequestBody LiveUser liveUser) {
+        return liveUserService.insertLiveUser(liveUser) ;
+    }
+
+    /**
+     * 开播
+     */
+//    @PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
+    @Log( title = "开播", businessType = BusinessType.INSERT )
+    @PostMapping("openLive")
+    public AjaxResult openLive(@RequestBody Map map) throws Exception {
+        return liveUserService.openLive(map) ;
+    }
+
+    /**
+     * 关播
+     */
+//    @PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
+    @Log( title = "关播", businessType = BusinessType.INSERT )
+    @PostMapping("closeLive")
+    public AjaxResult closeLive(@RequestBody Map map) {
+        return liveUserService.closeLive(map) ;
+    }
 
 	/**
 	 * 认证主播用户信息

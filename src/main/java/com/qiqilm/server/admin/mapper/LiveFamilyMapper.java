@@ -59,4 +59,6 @@ public interface LiveFamilyMapper {
     int updateFamilyID(@Param( "user_count" ) Integer user_count, @Param( "familyId" ) Integer familyId );
 
 	LiveFamily selectLiveFamilyName(@Param( "name") String name);
+
+	int updateLiveFamilyStatusById(Long id);
 }
