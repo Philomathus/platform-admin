@@ -185,6 +185,6 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
         int familyId = new Long(id).intValue();
         liveUserMapper.updateLiveUserByFamilyId(familyId);
 
-        return liveFamilyMapper.deleteLiveFamilyById(id);
+        return liveFamilyMapper.updateLiveFamilyStatusById(id);
     }
 }
