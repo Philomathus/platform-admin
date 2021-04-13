@@ -414,28 +414,21 @@
             <if test="virtualWatchNumber != null">virtual_watch_number,</if>
             <if test="voteNumber != null">vote_number,</if>
             <if test="cateId != null">cate_id,</if>
-            <if test="province != null">province,</if>
-            <if test="city != null">city,</if>
             <if test="createTime != null">create_time,</if>
             <if test="beginTime != null">begin_time,</if>
             <if test="endTime != null">end_time,</if>
             <if test="endDate != null">end_date,</if>
             <if test="groupId != null and groupId != ''">group_id,</if>
-            <if test="destroyGroupStatus != null">destroy_group_status,</if>
-            <if test="longPollingKey != null and longPollingKey != ''">long_polling_key,</if>
             <if test="maxWatchNumber != null">max_watch_number,</if>
             <if test="roomType != null">room_type,</if>
             <if test="isPlayback != null">is_playback,</if>
             <if test="videoVid != null">video_vid,</if>
             <if test="monitorTime != null">monitor_time,</if>
-            <if test="isDelete != null">is_delete,</if>
             <if test="robotNum != null">robot_num,</if>
             <if test="robotTime != null">robot_time,</if>
             <if test="channelid != null and channelid != ''">channelid,</if>
             <if test="isAborted != null">is_aborted,</if>
-            <if test="isDelVod != null">is_del_vod,</if>
             <if test="onlineStatus != null">online_status,</if>
-            <if test="tipoffCount != null">tipoff_count,</if>
             <if test="privateKey != null">private_key,</if>
             <if test="shareType != null and shareType != ''">share_type,</if>
             <if test="sort != null">sort,</if>
