@@ -41,8 +41,8 @@ public class HuaZiPayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "out_trade_no", withdrawLog.getOrderNo() );
 		bodyMap.put( "amount_str", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ).toString() );
 		bodyMap.put( "service", "agent_distribution" );
-		bodyMap.put( "bank_account_name", withdrawLog.getBankUserName() );
-		bodyMap.put( "bank_account_no", withdrawLog.getBankAccount() );
+		bodyMap.put( "bank_account_name", withdrawLog.getBankUserName().trim() );
+		bodyMap.put( "bank_account_no", withdrawLog.getBankAccount().trim() );
 		bodyMap.put( "bank_name", "邮政银行".equals( withdrawLog.getBankName() ) ? "邮政储蓄银行" : withdrawLog.getBankName() );
 		bodyMap.put( "bank_site_name", withdrawLog.getBankAddress() );
 		bodyMap.put( "input_charset", "UTF-8" );
