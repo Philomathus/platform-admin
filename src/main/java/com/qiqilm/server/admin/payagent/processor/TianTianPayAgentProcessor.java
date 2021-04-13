@@ -78,7 +78,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
 		map.forEach( ( k, v ) -> stringBuilder.append( v ) );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"payAgentPrivateKey" ) );
+				"secretkey/payAgentPrivateKey" ) );
 
 		String mySign = stringBuilder.toString() + signMd5;
 		mySign = DigestUtils.md5Hex( mySign );

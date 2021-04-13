@@ -40,27 +40,21 @@ public class PayAgentPlatform extends BaseEntity {
     private String payOrderQueryAddr;
 
     /** 头部key */
-    @Excel(name = "头部key")
     private String headerKey;
 
     /** md5加密密钥 */
-    @Excel(name = "md5加密密钥")
     private String signMd5;
 
     /** 加密公钥 */
-    @Excel(name = "加密公钥")
     private String signPublicKey;
 
     /** 解密私钥 */
-    @Excel(name = "解密私钥")
     private String signPrivateKey;
 
     /** 平台IP白名单 */
-    @Excel(name = "平台IP白名单")
     private String platWhiteIpList;
 
     /** 状态 1启用 0禁用 */
-    @Excel(name = "状态")
     private String status;
 
     @Override
