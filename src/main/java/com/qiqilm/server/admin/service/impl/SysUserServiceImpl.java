@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.mapper.SysUserMapper;
 import com.qiqilm.server.admin.mapper.SysUserRoleMapper;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.utils.SecurityUtils;
+import com.qiqilm.server.admin.utils.SmsApi;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class SysUserServiceImpl implements ISysUserService {
 	private SysRoleMapper     roleMapper;
 	@Autowired
 	private SysUserRoleMapper userRoleMapper;
+	@Autowired
+    private SmsApi smsApi;
 
 	/**
 	 * 根据条件分页查询用户列表
@@ -324,5 +327,10 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public void updateUser2(SysUser sysUser) {
         userMapper.updateUser(sysUser);
+    }
+
+    @Override
+    public void sendMsg(String msg, String memberId) {
+//        smsApi.sendSms()
     }
 }

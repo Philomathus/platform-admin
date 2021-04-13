@@ -26,6 +26,9 @@ public class ServerSmsCacheUtil {
 	@Autowired
 	private ServerSmsMapper serverSmsMapper;
 
+    public long countCache(){
+        return redisUtil.lSize( SERVER_SMS_LIST );
+    }
 	public void setServerSmsCache( ServerSms serverSms ) {
 		String smsId = serverSms.getId().toString();
 		Long   size  = redisUtil.lSize( SERVER_SMS_LIST );

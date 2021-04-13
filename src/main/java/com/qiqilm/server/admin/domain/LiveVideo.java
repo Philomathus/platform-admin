@@ -30,7 +30,7 @@ public class LiveVideo extends BaseEntity {
 
 	/** 项目id */
 	@Excel( name = "项目id" )
-	private Long userId;
+	private Integer userId;
 
 	/** 是否直播中 1-直播中 0-已停止;2:正在创建直播;3:历史数据 */
 	@Excel( name = "是否直播中 1-直播中 0-已停止;2:正在创建直播;3:历史数据" )
@@ -50,7 +50,7 @@ public class LiveVideo extends BaseEntity {
 
 	/** 主题id（2最新3颜值4收费5游戏） */
 	@Excel( name = "主题id", readConverterExp = "2=最新3颜值4收费5游戏" )
-	private Long cateId;
+	private Integer cateId;
 
 	/** 开始时间 */
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
@@ -184,11 +184,11 @@ public class LiveVideo extends BaseEntity {
 
 	/** 分类id */
 	@Excel( name = "分类id" )
-	private Long classifiedId;
+	private Integer classifiedId;
 
 	/** 绑定彩票ID */
 	@Excel( name = "绑定彩票ID" )
-	private Long lotteryId;
+	private Integer lotteryId;
 
 	/** MD5加密推流地址(弃用) */
 	@Excel( name = "MD5加密推流地址(弃用)" )

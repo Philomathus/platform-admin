@@ -5,17 +5,28 @@ import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveFamily;
 import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
+import com.qiqilm.server.admin.domain.vo.PageVO;
+import com.qiqilm.server.admin.exception.BusinessException;
+import com.qiqilm.server.admin.im.GroupType;
+import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
+import com.qiqilm.server.admin.mapper.LiveVideoMapper;
 import com.qiqilm.server.admin.service.ILiveUserService;
+import com.qiqilm.server.admin.utils.AesUtil;
 import com.qiqilm.server.admin.utils.DateUtils;
 import com.qiqilm.server.admin.utils.StringUtils;
+import com.qiqilm.server.admin.utils.ValidatorUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 主播用户信息Service业务层处理
@@ -23,6 +34,7 @@ import java.util.List;
  * @author 77tv
  * @date 2021-01-26
  */
+@Slf4j
 @Service
 public class LiveUserServiceImpl implements ILiveUserService {
 	@Autowired
@@ -31,7 +43,10 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	private LiveFamilyMapper liveFamilyMapper;
 	@Autowired
 	private ConfigDomainCacheUtil configDomainCacheUtil;
-
+    @Autowired
+    private LiveVideoMapper liveVideoMapper;
+    @Autowired
+    private ImApi imApi;
 	/**
 	 * 查询主播用户信息
 	 *
@@ -119,4 +134,119 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	public List<RspLotteryBet> selectAnchorAward( ReqLotteryBat req ) {
 		return liveUserMapper.selectAnchorAward( req );
 	}
+
+    @Override
+    public AjaxResult insertLiveUser(LiveUser liveUser) {
+//	    查询手机号是否存在
+        List<LiveUser> list = liveUserMapper.selectLiveUsersByMobile(liveUser.getMobile());
+        if (list.isEmpty()) {
+            if (ValidatorUtil.isNumber11(liveUser.getMobile())) {
+                liveUser.setCreateTime(new Date());
+                liveUser.setUpdateTime(new Date());
+                liveUser.setRoboter(1);
+                liveUserMapper.insertLiveUser(liveUser)  ;
+                return AjaxResult.success("添加成功");
+            }else {
+                return AjaxResult.error("手机号格式错误");
+            }
+
+        }else {
+            return AjaxResult.error("手机号已存在");
+        }
+    }
+
+    /**
+     * 开放的生活
+     *
+     * @param map 地图
+     * @return {@link AjaxResult}
+     * @throws Exception 异常
+     */
+    @Override
+    public AjaxResult openLive(Map map) throws Exception {
+        Integer id = (Integer)map.get("id");
+        String title = (String)map.get("title");
+        String flv = (String)map.get("flv");
+        LiveVideo liveVideo = liveVideoMapper.selectLiveVideoById(new Long(id));
+        if (liveVideo!=null) {
+            //修改
+            liveVideo.setLiveIn(1);
+            liveVideo.setBeginTime(new Date());
+            liveVideo.setEndTime(null);
+            liveVideo.setEndDate(null);
+            liveVideo.setTitle(title);
+            liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
+            setIms(liveVideo, id, title);
+            liveVideoMapper.updateLiveVideo2(liveVideo);
+        }else {
+            //新增
+            liveVideo.setLiveIn(1);
+            liveVideo.setUserId( id );
+            liveVideo.setBeginTime(new Date());
+            liveVideo.setEndTime(null);
+            liveVideo.setCateId(2);
+            liveVideo.setEndDate(null);
+            liveVideo.setTitle(title);
+            liveVideo.setLotteryId(1002);
+            liveVideo.setLotteryName("一分快三");
+            setIms(liveVideo, id, title);
+            liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
+            liveVideoMapper.insertLiveVideo(liveVideo);
+        }
+        return null;
+    }
+
+    /**
+     * 设置ims
+     *
+     * @param liveVideo 视频直播
+     * @param id        id
+     * @param title     标题
+     */
+    private void setIms(LiveVideo liveVideo, Object id, String title) {
+        if ( !org.springframework.util.StringUtils.hasText( liveVideo.getGroupId() ) ) {
+            //创建 im 聊天群
+            String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM, title );
+            if ( groupId == null ) {
+                throw new BusinessException( "创建直播失败,请联系客服" );
+            }
+            log.info( "主播调用开播接口 - 开始创建群组 - userId:{};groupId:{}", id, groupId );
+            liveVideo.setGroupId( groupId );
+        } else {
+            //im 连接测试
+            try {
+                imApi.getGroupUser( liveVideo.getGroupId(), PageVO.ofPage( 1, 1 ) );
+            } catch ( Exception e ) {
+                log.error( "主播调用开播接口 - 测试群组失败 - userId:{};groupId:{}", id, liveVideo.getGroupId(), e );
+                //创建 im 聊天群
+                String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM, title );
+                log.info( "主播调用开播接口 - 开始创建群组 - userId:{};groupId:{}", id, groupId );
+                liveVideo.setGroupId( groupId );
+            }
+        }
+    }
+
+
+    /**
+     * 接近生活
+     *
+     * @param map 地图
+     * @return {@link AjaxResult}
+     */
+    @Override
+    public AjaxResult closeLive(Map map) {
+        LiveVideo liveVideo = new LiveVideo();
+        liveVideo.setUserId((Integer)map.get("id"));
+        List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList(liveVideo);
+        if (!liveVideos.isEmpty()) {
+            liveVideo = liveVideos.get(0);
+            liveVideo.setEndDate(new Date());
+            liveVideo.setEndTime(new Date());
+            liveVideo.setLiveIn(0);
+            liveVideoMapper.updateLiveVideo(liveVideo);
+            return AjaxResult.success("关播成功");
+        }else {
+            return AjaxResult.error("直播不存在");
+        }
+    }
 }
