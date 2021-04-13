@@ -1,13 +1,12 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.qiqilm.server.admin.cache.RedisCacheUtil;
-import com.qiqilm.server.admin.cache.ServerImCacheUtil;
-import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
-import com.qiqilm.server.admin.cache.VideoPayCacheUtil;
-import com.qiqilm.server.admin.cache.VideoCacheUtil;
+import com.qiqilm.server.admin.cache.*;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.domain.LiveHostWageDay;
+import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.domain.LiveVideo;
+import com.qiqilm.server.admin.domain.ServerLive;
 import com.qiqilm.server.admin.domain.vo.HostPropDayVo;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageType;
@@ -96,6 +95,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 					video.setLiveStatus( value.toString() );
 				}
 			} );
+			if ( video.getLineStatus() == null ) {
+				video.setLineStatus( 0 );
+			}
 			if ( StringUtils.isBlank( video.getLiveStatus() ) ) {
 				if ( !HttpHelper.isConnServerByHttp( video.getPlayUrl() ) ) {
 					redisUtil.hSet( Constants.REDIS_KEY_DETECT_PLAY, video.getId().toString(), "0" );
@@ -112,7 +114,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	@Override
 	public boolean close( Long id, String cause ) {
 		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
-		String why = "主播下播";
+		String    why   = "主播下播";
 		if ( "admin".equals( cause ) ) {
 			//通知主播退出
 			HashMap<String, Object> ext = new HashMap<>();
@@ -156,10 +158,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			}
 			why = "直播源切换";
 		}
-		return close( id, false ,why);
+		return close( id, false, why );
 	}
 
-	public boolean close( Long id, boolean isAborted ,String why) {
+	public boolean close( Long id, boolean isAborted, String why ) {
 		//关闭房间
 		LiveVideo updateVideo = new LiveVideo();
 		Date      now         = new Date();
@@ -199,7 +201,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
 
-		LiveUser liveUser = liveUserMapper.selectLiveUserById( id);
+		LiveUser liveUser = liveUserMapper.selectLiveUserById( id );
 
 		this.saveHostWageNote( liveUser, video, isAborted );
 
@@ -214,7 +216,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			//	videoStreamUtil.setServerLive( serverLive );
 		}
 
-		this.closeVideoIMNotify( video, isAborted ,why);
+		this.closeVideoIMNotify( video, isAborted, why );
 
 		RedisCacheUtil.me.clear( id, this.getClass() );
 		return false;
@@ -243,7 +245,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		}
 	}
 
-	private void closeVideoIMNotify( LiveVideo video, boolean isAborted  ,String why) {
+	private void closeVideoIMNotify( LiveVideo video, boolean isAborted, String why ) {
 		if ( Strings.isNotBlank( video.getGroupId() ) && !isAborted ) {
 			threadPoolTaskExecutor.execute( () -> {
 				HashMap<String, Object> ext = new HashMap<>();
@@ -310,7 +312,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			updateVideo.setLivePayType( live_pay_type );
 			updateVideo.setLiveFee( live_fee );
 			updateVideo.setLivePayTime( ( int ) ( System.currentTimeMillis() / 1000 ) );
-			updateVideo.setCateId( 4);// 设置主题ID为收费直播
+			updateVideo.setCateId( 4 );// 设置主题ID为收费直播
 			updateVideo.setIsLivePay( true );
 			liveVideoMapper.updateLiveVideo( updateVideo );
 
@@ -452,13 +454,13 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Override
 	public void updateNowLine() {
-		for(ServerLive serverLive : serverLiveMapper.selectServerLiveList(null)){
-			int num = liveVideoMapper.countLineCount(serverLive.getId());
-			if(num!=serverLive.getCountNum()){
+		for ( ServerLive serverLive : serverLiveMapper.selectServerLiveList( null ) ) {
+			int num = liveVideoMapper.countLineCount( serverLive.getId() );
+			if ( num != serverLive.getCountNum() ) {
 				ServerLive update = new ServerLive();
-				update.setCountNum(num);
-				update.setId(serverLive.getId());
-				serverLiveMapper.updateServerLive(update);
+				update.setCountNum( num );
+				update.setId( serverLive.getId() );
+				serverLiveMapper.updateServerLive( update );
 			}
 		}
 	}
@@ -466,43 +468,43 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	@Override
 	public void countHostGift() {
 		long s = System.currentTimeMillis();
-		log.info("开始执行主播礼物计算,彩票投注");
-		String dayTime = LocalDate.now().plusDays(-1).toString();
-		List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime);
-		log.info("收礼物主播数：{}",propDayVos.size());
-		String begin = dayTime.concat(" 00:00:00");
-		String end = dayTime.concat(" 23:59:59");
+		log.info( "开始执行主播礼物计算,彩票投注" );
+		String              dayTime    = LocalDate.now().plusDays( -1 ).toString();
+		List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList( dayTime );
+		log.info( "收礼物主播数：{}", propDayVos.size() );
+		String begin = dayTime.concat( " 00:00:00" );
+		String end   = dayTime.concat( " 23:59:59" );
 
-		List<HostPropDayVo> lotteryDayVos = liveVideoPropMapper.sumHostLotteryDayList(begin,end);
-		log.info("投注主播数：{}",lotteryDayVos.size());
-
-
-		Map<String,LiveHostWageDay> updateMap = new HashMap<>();
+		List<HostPropDayVo> lotteryDayVos = liveVideoPropMapper.sumHostLotteryDayList( begin, end );
+		log.info( "投注主播数：{}", lotteryDayVos.size() );
 
 
-		for(HostPropDayVo v  : propDayVos){
+		Map<String, LiveHostWageDay> updateMap = new HashMap<>();
+
+
+		for ( HostPropDayVo v : propDayVos ) {
 			LiveHostWageDay updateLiveDay = new LiveHostWageDay();
-			updateLiveDay.setId(dayTime.concat("-").concat(String.valueOf(v.getHostId())));
-			updateLiveDay.setTicket(v.getSumHostProp());
-			updateMap.put(updateLiveDay.getId(),updateLiveDay);
+			updateLiveDay.setId( dayTime.concat( "-" ).concat( String.valueOf( v.getHostId() ) ) );
+			updateLiveDay.setTicket( v.getSumHostProp() );
+			updateMap.put( updateLiveDay.getId(), updateLiveDay );
 		}
-		String id ;
-		for(HostPropDayVo v  : lotteryDayVos){
-			id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-			LiveHostWageDay updateLiveDay = updateMap.get(id);
-			if(updateLiveDay==null){
+		String id;
+		for ( HostPropDayVo v : lotteryDayVos ) {
+			id = dayTime.concat( "-" ).concat( String.valueOf( v.getHostId() ) );
+			LiveHostWageDay updateLiveDay = updateMap.get( id );
+			if ( updateLiveDay == null ) {
 				updateLiveDay = new LiveHostWageDay();
-				updateLiveDay.setId(id);
-				updateMap.put(updateLiveDay.getId(),updateLiveDay);
+				updateLiveDay.setId( id );
+				updateMap.put( updateLiveDay.getId(), updateLiveDay );
 			}
-			updateLiveDay.setLotteryCost(v.getSumHostProp());
+			updateLiveDay.setLotteryCost( v.getSumHostProp() );
 
 		}
 
-		for(LiveHostWageDay updateLiveDay:updateMap.values()){
-			liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
+		for ( LiveHostWageDay updateLiveDay : updateMap.values() ) {
+			liveHostWageDayMapper.updateLiveHostWageDay( updateLiveDay );
 		}
-		log.info("结束执行主播礼物计算,执行时间：{}ms",System.currentTimeMillis()-s);
+		log.info( "结束执行主播礼物计算,执行时间：{}ms", System.currentTimeMillis() - s );
 
 	}
 }

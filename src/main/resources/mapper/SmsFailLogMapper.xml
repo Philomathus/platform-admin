@@ -47,7 +47,7 @@
                     <if test="message != null">#{message},</if>
                     <if test="phone != null">#{phone},</if>
                     <if test="smsName != null">#{smsName},</if>
-                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                <if test="createTime != null">#{createTime},</if>
                     <if test="smsSubname != null">#{smsSubname},</if>
              </trim>
     </insert>
@@ -56,17 +56,17 @@
         update 7700_live.sms_fail_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="code != null">code = #{code},</if>
-    
+
             <if test="message != null">message = #{message},</if>
-    
+
             <if test="phone != null">phone = #{phone},</if>
-    
+
             <if test="smsName != null">sms_name = #{smsName},</if>
-    
+
             <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
-    
+
             <if test="smsSubname != null">sms_subname = #{smsSubname},</if>
-    
+
         </trim>
         where id = #{id}
     </update>
