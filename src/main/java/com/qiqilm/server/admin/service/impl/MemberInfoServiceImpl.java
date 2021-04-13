@@ -326,10 +326,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
     @Override
     public void repairMemberBcode(String memberId) {
-        int count=memberBcodeMapper.countMemberBcodeStatus(memberId);
-        if (count>0){
-            return;
-        }
+//        int count=memberBcodeMapper.countMemberBcodeStatus(memberId);
+//        if (count>0){
+//            return;
+//        }
+        memberBcodeMapper.updateMemberBcodeStatus(memberId);
         memberBcodeMapper.repairMemberInfo(memberId);
     }
 
