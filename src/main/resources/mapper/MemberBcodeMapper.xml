@@ -171,11 +171,13 @@
 	</select>
 
 
-	<select id="countMemberBcodeStatus" parameterType="java.lang.String" resultType="Integer">
-		select COUNT(1)  from member_bcode where user_id = #{memberId} and status = 0;
-	</select>
+<!--	<select id="countMemberBcodeStatus" parameterType="java.lang.String" resultType="Integer">-->
+<!--		select COUNT(1)  from member_bcode where user_id = #{memberId} and status = 0;-->
+<!--	</select>-->
 
-
+	<update id="updateMemberBcodeStatus">
+		update  member_bcode set status = 1,cur=income where user_id = #{memberId};
+	</update>
 	<update id="repairMemberInfo">
 		update  member_info set code_account = level_integral where id = #{memberId};
 	</update>

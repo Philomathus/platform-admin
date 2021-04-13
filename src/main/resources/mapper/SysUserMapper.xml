@@ -249,4 +249,8 @@
 			#{userId}
 		</foreach>
 	</delete>
+
+	<update id="updateGoogle">
+		update sys_n_user set google_auth_secret = #{googleAuthSecret} where user_id=#{userId}
+	</update>
 </mapper>

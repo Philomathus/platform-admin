@@ -101,4 +101,6 @@ public interface SysUserMapper {
 	 */
 	public int checkUserNameUnique( String userName );
 
+	void updateGoogle( SysUser user );
+
 }

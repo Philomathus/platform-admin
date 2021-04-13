@@ -12,14 +12,12 @@ import com.qiqilm.server.admin.domain.vo.PageVO;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.im.GroupType;
 import com.qiqilm.server.admin.im.ImApi;
+import com.qiqilm.server.admin.im.vo.api.ImInfo;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
 import com.qiqilm.server.admin.mapper.LiveVideoMapper;
 import com.qiqilm.server.admin.service.ILiveUserService;
-import com.qiqilm.server.admin.utils.AesUtil;
-import com.qiqilm.server.admin.utils.DateUtils;
-import com.qiqilm.server.admin.utils.StringUtils;
-import com.qiqilm.server.admin.utils.ValidatorUtil;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -155,6 +153,26 @@ public class LiveUserServiceImpl implements ILiveUserService {
         }
     }
 
+    public void imReg( LiveUser hostInfo ){
+        boolean regOk =false;
+        if ( hostInfo.getExpiryAfter() == null || hostInfo.getExpiryAfter() < 0 ) {
+            regOk = imApi.register( ImInfo.of( String.valueOf( hostInfo.getId() ) ) );
+            if ( !regOk ) {
+                log.error( "主播第一次注册IM失败hostId:{}", hostInfo.getId() );
+                regOk = imApi.register( ImInfo.of( String.valueOf( hostInfo.getId() ) ) );
+            }
+            if ( !regOk ) {
+                log.error( "主播第二次注册IM失败hostId:{}", hostInfo.getId() );
+            }
+            if ( regOk ) {//更新注册IM标识
+                LiveUser update = new LiveUser();
+                update.setId( hostInfo.getId() );
+                update.setExpiryAfter( 1l);
+                liveUserMapper.updateLiveUser(update);
+            }
+        }
+    }
+
     /**
      * 开放的生活
      *
@@ -164,15 +182,16 @@ public class LiveUserServiceImpl implements ILiveUserService {
      */
     @Override
     public AjaxResult openLive(Map map) throws Exception {
-        LiveVideo liveVideo = new LiveVideo();
         Integer id = (Integer)map.get("id");
         String title = (String)map.get("title");
         String flv = (String)map.get("flv");
-        liveVideo.setUserId(new Long(id));
-        List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList2(liveVideo);
-        if (!liveVideos.isEmpty()) {
+        LiveVideo liveVideo = liveVideoMapper.selectLiveVideoById(new Long(id));
+        log.error("虚拟主播开播map:{}", JsonUtil.object2Json( map ));
+        LiveUser hostInfo =  liveUserMapper.selectLiveUserById(new Long(id));
+        imReg(hostInfo);
+
+        if (liveVideo!=null) {
             //修改
-            liveVideo = liveVideos.get(0);
             liveVideo.setLiveIn(1);
             liveVideo.setBeginTime(new Date());
             liveVideo.setEndTime(null);
@@ -180,14 +199,26 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setTitle(title);
             liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
             setIms(liveVideo, id, title);
+            liveVideo.setCreateType(true);
+            liveVideo.setHostName(hostInfo.getNickName());
+            liveVideo.setNewPlayFlv(flv);
             liveVideoMapper.updateLiveVideo2(liveVideo);
         }else {
             //新增
+            liveVideo = new LiveVideo();
+            liveVideo.setId(new Long(id));
             liveVideo.setLiveIn(1);
+            liveVideo.setUserId( id );
             liveVideo.setBeginTime(new Date());
             liveVideo.setEndTime(null);
+            liveVideo.setHostName(hostInfo.getNickName());
+            liveVideo.setCateId(2);
             liveVideo.setEndDate(null);
+            liveVideo.setCreateType(true);
             liveVideo.setTitle(title);
+            liveVideo.setLotteryId(1002);
+            liveVideo.setNewPlayFlv(flv);
+            liveVideo.setLotteryName("一分快三");
             setIms(liveVideo, id, title);
             liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
             liveVideoMapper.insertLiveVideo(liveVideo);
@@ -235,7 +266,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
     @Override
     public AjaxResult closeLive(Map map) {
         LiveVideo liveVideo = new LiveVideo();
-        liveVideo.setUserId((Long)map.get("id"));
+        liveVideo.setUserId((Integer)map.get("id"));
         List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList(liveVideo);
         if (!liveVideos.isEmpty()) {
             liveVideo = liveVideos.get(0);

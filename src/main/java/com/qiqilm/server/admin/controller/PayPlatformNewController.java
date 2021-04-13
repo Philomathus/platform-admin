@@ -50,7 +50,7 @@ public class PayPlatformNewController extends BaseController {
 	@GetMapping( "/export" )
 	public AjaxResult export( PayPlatformNew payPlatformNew ) {
 		List<PayPlatformNew>      list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
-		ExcelUtil<PayPlatformNew> util = new ExcelUtil<>( PayPlatformNew.class );
+		ExcelUtil<PayPlatformNew> util = new ExcelUtil<PayPlatformNew>( PayPlatformNew.class );
 		return util.exportExcel( list, "payPlatformNew" );
 	}
 

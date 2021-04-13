@@ -42,8 +42,8 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIAN_FU_BAO );
 		bodyMap.put( "bankCode", withdrawLog.getBankCode() );
 		bodyMap.put( "submitTime", reqPayAgent.getCurrentTime().getTime() );
-		bodyMap.put( "bankAccountNo", withdrawLog.getBankAccount() );
-		bodyMap.put( "bankAccountName", withdrawLog.getBankUserName() );
+		bodyMap.put( "bankAccountNo", withdrawLog.getBankAccount().trim() );
+		bodyMap.put( "bankAccountName", withdrawLog.getBankUserName().trim() );
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"secretkey/payAgentPrivateKey" ) );
 		String signStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
