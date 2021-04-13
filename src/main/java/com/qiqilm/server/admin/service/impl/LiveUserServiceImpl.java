@@ -179,6 +179,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideoMapper.updateLiveVideo2(liveVideo);
         }else {
             //新增
+            liveVideo = new LiveVideo();
             liveVideo.setId(new Long(id));
             liveVideo.setLiveIn(1);
             liveVideo.setUserId( id );
