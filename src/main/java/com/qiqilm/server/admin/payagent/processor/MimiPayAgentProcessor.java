@@ -45,8 +45,8 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 		String sign = DigestUtils.md5Hex( sb );
 		dataMap.put( "sign", sign );
 		dataMap.put( "hrefbackurl", "" );
-		dataMap.put( "accountname", withdrawLog.getBankUserName() );
-		dataMap.put( "cardnumber", withdrawLog.getBankAccount() );
+		dataMap.put( "accountname", withdrawLog.getBankUserName().trim() );
+		dataMap.put( "cardnumber", withdrawLog.getBankAccount().trim() );
 		dataMap.put( "bankname", withdrawLog.getBankName() );
 		dataMap.put( "province", "" );
 		dataMap.put( "city", "" );
