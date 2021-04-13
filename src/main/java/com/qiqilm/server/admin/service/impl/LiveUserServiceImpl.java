@@ -175,6 +175,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setTitle(title);
             liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
             setIms(liveVideo, id, title);
+            liveVideo.setCreateType(true);
             liveVideoMapper.updateLiveVideo2(liveVideo);
         }else {
             //新增
@@ -185,6 +186,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setEndTime(null);
             liveVideo.setCateId(2);
             liveVideo.setEndDate(null);
+            liveVideo.setCreateType(true);
             liveVideo.setTitle(title);
             liveVideo.setLotteryId(1002);
             liveVideo.setLotteryName("一分快三");

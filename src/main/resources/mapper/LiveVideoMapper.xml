@@ -25,6 +25,7 @@
         <result property="isLivePay" column="is_live_pay"/>
         <result property="lineName" column="lineName"/>
         <result property="lineStatus" column="lineStatus"/>
+        <result column="create_type" property="createType"/>
         <result property="openPay" column="open_pay"/>
         <result property="groupId" column="group_id"/>
         <result property="playUrl" column="play_url"/>

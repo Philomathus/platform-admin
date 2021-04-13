@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -173,6 +174,9 @@ public class LiveVideo extends BaseEntity {
 	/** 付费人数 */
 	@Excel( name = "付费人数" )
 	private Long livePayCount;
+
+	@ApiModelProperty(value = "0:APP端创建的直播;1:PC端创建的直播")
+	private Boolean createType;
 
 	/** 直播的时长 */
 	@Excel( name = "直播的时长" )
