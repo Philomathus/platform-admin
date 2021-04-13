@@ -17,6 +17,7 @@ import com.qiqilm.server.admin.cache.ServerSmsCacheUtil;
 import com.qiqilm.server.admin.domain.ServerSms;
 import com.qiqilm.server.admin.domain.SmsFailLog;
 import com.qiqilm.server.admin.exception.BusinessException;
+import com.qiqilm.server.admin.mapper.ServerSmsMapper;
 import com.qiqilm.server.admin.service.ISmsFailLogService;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -37,6 +39,8 @@ public class SmsApi {
 	private ServerSmsCacheUtil serverSmsCacheUtil;
 	@Autowired
 	private ISmsFailLogService smsFailLogService;
+    @Autowired
+    private ServerSmsMapper serverSmsMapper;
 
 	private static String createPhoneCode() {
 		StringBuilder code = new StringBuilder();
@@ -52,16 +56,16 @@ public class SmsApi {
 			index = 0;
 		}
 		ServerSms serverSms = serverSmsCacheUtil.getServerSmsCache( index );
-		String    code;
+		String    code = createPhoneCode() + index;
 		switch ( serverSms.getProvider() ) {
 		case 0:
-			code = this.sendSmsTencent( serverSms, phone, index );
+			code = this.sendSmsTencent( serverSms, phone, code );
 			break;
 		case 1:
-			code = this.sendSmsAliyun( serverSms, phone, index );
+			code = this.sendSmsAliyun( serverSms, phone, code );
 			break;
 		case 2:
-			code = this.sendSmsBaidu( serverSms, phone,index );
+			code = this.sendSmsBaidu( serverSms, phone,code );
 			break;
 		default:
 			throw new BusinessException( "不支持的短信运营商类型" );
@@ -69,8 +73,38 @@ public class SmsApi {
 		return code;
 	}
 
-	private String sendSmsTencent( ServerSms serverSms, String phone, int index ) {
-		final String code = createPhoneCode() + index;
+	public String sendMemSms( String phone, String msg ) {
+        if (StringUtils.isEmpty(phone)) {
+            throw new BusinessException( "手机号不能为空" );
+        }
+        if (StringUtils.isEmpty(msg)) {
+            throw new BusinessException( "发送信息不能为空" );
+        }
+        ServerSms serverSms1 = new ServerSms();
+        serverSms1.setName("会员通知");
+        List<ServerSms> serverSmsList = serverSmsMapper.selectServerSmsList(serverSms1);
+        if (serverSmsList.isEmpty()) {
+            throw new BusinessException( "会员sms通道不存在,无法发送" );
+        }else {
+            ServerSms serverSms = serverSmsList.get(0);
+            switch ( serverSms.getProvider() ) {
+                case 0:
+                    msg = this.sendSmsTencent( serverSms, phone, msg );
+                    break;
+                case 1:
+                    msg = this.sendSmsAliyun( serverSms, phone, msg );
+                    break;
+                case 2:
+                    msg = this.sendSmsBaidu( serverSms, phone,msg );
+                    break;
+                default:
+                    throw new BusinessException( "不支持的短信运营商类型" );
+            }
+        }
+		return msg;
+	}
+
+	private String sendSmsTencent( ServerSms serverSms, String phone, String msg ) {
 		try {
 			Credential  cred        = new Credential( serverSms.getAppKey(), serverSms.getAppAccess() );
 			HttpProfile httpProfile = new HttpProfile();
@@ -89,11 +123,11 @@ public class SmsApi {
 			 * 例如+8613711112222， 其中前面有一个+号 ，86为国家码，13711112222为手机号，最多不要超过200个手机号*/
 			String[] phoneNumbers = { "+86" + phone };
 			req.setPhoneNumberSet( phoneNumbers );
-			String[] templateParams = { code };
+			String[] templateParams = { msg };
 			req.setTemplateParamSet( templateParams );
 			com.tencentcloudapi.sms.v20190711.models.SendSmsResponse res = client.SendSms( req );
 			if ( res.getSendStatusSet() != null && "Ok".equalsIgnoreCase( res.getSendStatusSet()[ 0 ].getCode() ) ) {
-				return code;
+				return msg;
 			} else {
 				String rspCode    = res.getSendStatusSet()[ 0 ].getCode();
 				String rspMessage = res.getSendStatusSet()[ 0 ].getMessage();
@@ -108,9 +142,7 @@ public class SmsApi {
 		}
 	}
 
-	private String sendSmsAliyun( ServerSms serverSms, String phone, int index ) {
-		final String code = createPhoneCode() + index;
-
+	private String sendSmsAliyun( ServerSms serverSms, String phone, String msg ) {
 		System.setProperty( "sun.net.client.defaultConnectTimeout", "10000" );
 		System.setProperty( "sun.net.client.defaultReadTimeout", "10000" );
 		final String regionId = serverSms.getRegion();
@@ -125,19 +157,19 @@ public class SmsApi {
 		smsRequest.setPhoneNumbers( phone );
 		smsRequest.setSignName( serverSms.getSignature() );
 		smsRequest.setTemplateCode( serverSms.getTemplate() );
-		smsRequest.setTemplateParam( "{\"code\":" + code + "}" );
+		smsRequest.setTemplateParam( "{\"msg\":" + msg + "}" );
 
 		try {
 			SendSmsResponse sendSmsResponse = acsClient.getAcsResponse( smsRequest );
 			if ( sendSmsResponse.getCode() != null && "OK".equals( sendSmsResponse.getCode() ) ) {
-				return code;
+				return msg;
 			} else {
 				String rspCode    = sendSmsResponse.getCode();
 				String rspMessage = sendSmsResponse.getMessage();
 				String smsName    = "阿里云";
 				String subname    = serverSms.getName();
 				errorLog( rspCode, rspMessage, phone, smsName, subname );
-				// {"requestId":"01C0231F-AF35-4AE8-A92B-BC10ACDB90C6","bizId":null,"code":"isv.SMS_TEMPLATE_ILLEGAL",
+				// {"requestId":"01C0231F-AF35-4AE8-A92B-BC10ACDB90C6","bizId":null,"msg":"isv.SMS_TEMPLATE_ILLEGAL",
 				// "message":"模板不合法(不存在或被拉黑)"}
 				log.warn( "阿里云短信发送失败:{}", JsonUtil.object2Json( sendSmsResponse ) );
 				throw new BusinessException( JsonUtil.object2Json( sendSmsResponse ) );
@@ -147,8 +179,7 @@ public class SmsApi {
 		}
 	}
 
-	private String sendSmsBaidu( ServerSms serverSms, String phone, int index ) {
-		final String           code   = createPhoneCode() + index;
+	private String sendSmsBaidu( ServerSms serverSms, String phone, String msg ) {
 		SmsClientConfiguration config = new SmsClientConfiguration();
 		config.setCredentials( new DefaultBceCredentials( serverSms.getAppKey(), serverSms.getAppAccess() ) );
 		config.setEndpoint( serverSms.getRegion() );
@@ -159,14 +190,14 @@ public class SmsApi {
 		request.setSignatureId( serverSms.getSignature() );
 		request.setTemplate( serverSms.getTemplate() );
 		Map<String, String> contentVar = new HashMap<>();
-		contentVar.put( "code", code );
+		contentVar.put( "msg", msg );
 		contentVar.put( "minute", "1" );
 		request.setContentVar( contentVar );
 		try {
 			SendMessageV3Response sendSmsResponse = client.sendMessage( request );
 			// 解析请求响应 response.isSuccess()为true 表示成功
 			if ( sendSmsResponse != null && sendSmsResponse.isSuccess() ) {
-				return code;
+				return msg;
 			} else {
 				String rspCode    = sendSmsResponse.getCode();
 				String rspMessage = sendSmsResponse.getMessage();

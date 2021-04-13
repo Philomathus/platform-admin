@@ -2,10 +2,12 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.annotation.DataScope;
 import com.qiqilm.server.admin.constant.UserConstants;
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.SysRole;
 import com.qiqilm.server.admin.domain.SysUser;
 import com.qiqilm.server.admin.domain.SysUserRole;
 import com.qiqilm.server.admin.exception.CustomException;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.mapper.SysRoleMapper;
 import com.qiqilm.server.admin.mapper.SysUserMapper;
 import com.qiqilm.server.admin.mapper.SysUserRoleMapper;
@@ -38,6 +40,8 @@ public class SysUserServiceImpl implements ISysUserService {
 	private SysUserRoleMapper userRoleMapper;
 	@Autowired
     private SmsApi smsApi;
+	@Autowired
+    private MemberInfoMapper memberInfoMapper;
 
 	/**
 	 * 根据条件分页查询用户列表
@@ -331,6 +335,8 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Override
     public void sendMsg(String msg, String memberId) {
-//        smsApi.sendSms()
+        MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(memberId);
+        String phone = memberInfo.getPhone();
+        smsApi.sendMemSms(phone,msg);
     }
 }

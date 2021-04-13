@@ -185,6 +185,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
         Integer id = (Integer)map.get("id");
         String title = (String)map.get("title");
         String flv = (String)map.get("flv");
+        String liveImage = "";
+        Object liveImage1 = map.get("liveImage");
+        if (liveImage1!=null) {
+            liveImage = (String)map.get("liveImage");
+        }
         LiveVideo liveVideo = liveVideoMapper.selectLiveVideoById(new Long(id));
         log.error("虚拟主播开播map:{}", JsonUtil.object2Json( map ));
         LiveUser hostInfo =  liveUserMapper.selectLiveUserById(new Long(id));
@@ -200,6 +205,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
             setIms(liveVideo, id, title);
             liveVideo.setCreateType(true);
+            liveVideo.setLiveImage(liveImage);
             liveVideo.setHostName(hostInfo.getNickName());
             liveVideo.setNewPlayFlv(flv);
             liveVideoMapper.updateLiveVideo2(liveVideo);
@@ -216,6 +222,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setEndDate(null);
             liveVideo.setCreateType(true);
             liveVideo.setTitle(title);
+            liveVideo.setPaiId( new Long(-1));
+            liveVideo.setLiveImage(liveImage);
             liveVideo.setLotteryId(1002);
             liveVideo.setNewPlayFlv(flv);
             liveVideo.setLotteryName("一分快三");
@@ -267,7 +275,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
     public AjaxResult closeLive(Map map) {
         LiveVideo liveVideo = new LiveVideo();
         liveVideo.setUserId((Integer)map.get("id"));
-        List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList(liveVideo);
+        List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList2(liveVideo);
         if (!liveVideos.isEmpty()) {
             liveVideo = liveVideos.get(0);
             liveVideo.setEndDate(new Date());
