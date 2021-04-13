@@ -199,7 +199,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
 
-		LiveUser liveUser = liveUserMapper.selectLiveUserById( video.getUserId() );
+		LiveUser liveUser = liveUserMapper.selectLiveUserById( id);
 
 		this.saveHostWageNote( liveUser, video, isAborted );
 
@@ -310,7 +310,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			updateVideo.setLivePayType( live_pay_type );
 			updateVideo.setLiveFee( live_fee );
 			updateVideo.setLivePayTime( ( int ) ( System.currentTimeMillis() / 1000 ) );
-			updateVideo.setCateId( 4L );// 设置主题ID为收费直播
+			updateVideo.setCateId( 4);// 设置主题ID为收费直播
 			updateVideo.setIsLivePay( true );
 			liveVideoMapper.updateLiveVideo( updateVideo );
 
