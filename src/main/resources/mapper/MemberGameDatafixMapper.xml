@@ -23,6 +23,10 @@
             <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
+    
+    <select id="getgameDatafix" resultMap="MemberGameDatafixResult">
+        select id, user_id, game_start_time, game_end_time, platform_id, status from ${dbMain}.member_game_datafix  WHERE STATUS=0 LIMIT 1
+    </select>
 
 
     <insert id="insertMemberGameDatafix" parameterType="MemberGameDatafix">
@@ -44,5 +48,22 @@
             <if test="status != null">#{status},</if>
         </trim>
     </insert>
+
+    <update id="updateMemberGameDatafix" parameterType="MemberGameDatafix">
+        update ${dbMain}.member_game_datafix
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+
+            <if test="gameStartTime != null">game_start_time = #{gameStartTime},</if>
+
+            <if test="gameEndTime != null">game_end_time = #{gameEndTime},</if>
+
+            <if test="platformId != null">platform_id = #{platformId},</if>
+
+            <if test="status != null">status = #{status},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
 
 </mapper>
