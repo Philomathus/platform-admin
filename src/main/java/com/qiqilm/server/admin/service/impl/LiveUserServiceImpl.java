@@ -153,8 +153,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
         }
     }
 
-    public void imReg( Integer id){
-        LiveUser hostInfo =  liveUserMapper.selectLiveUserById(new Long(id));
+    public void imReg( LiveUser hostInfo ){
         boolean regOk =false;
         if ( hostInfo.getExpiryAfter() == null || hostInfo.getExpiryAfter() < 0 ) {
             regOk = imApi.register( ImInfo.of( String.valueOf( hostInfo.getId() ) ) );
@@ -188,8 +187,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
         String flv = (String)map.get("flv");
         LiveVideo liveVideo = liveVideoMapper.selectLiveVideoById(new Long(id));
         log.error("虚拟主播开播map:{}", JsonUtil.object2Json( map ));
-
-        imReg(id);
+        LiveUser hostInfo =  liveUserMapper.selectLiveUserById(new Long(id));
+        imReg(hostInfo);
 
         if (liveVideo!=null) {
             //修改
@@ -201,6 +200,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
             setIms(liveVideo, id, title);
             liveVideo.setCreateType(true);
+            liveVideo.setHostName(hostInfo.getNickName());
+            liveVideo.setNewPlayFlv(flv);
             liveVideoMapper.updateLiveVideo2(liveVideo);
         }else {
             //新增
@@ -210,11 +211,13 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setUserId( id );
             liveVideo.setBeginTime(new Date());
             liveVideo.setEndTime(null);
+            liveVideo.setHostName(hostInfo.getNickName());
             liveVideo.setCateId(2);
             liveVideo.setEndDate(null);
             liveVideo.setCreateType(true);
             liveVideo.setTitle(title);
             liveVideo.setLotteryId(1002);
+            liveVideo.setNewPlayFlv(flv);
             liveVideo.setLotteryName("一分快三");
             setIms(liveVideo, id, title);
             liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
