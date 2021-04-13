@@ -48,7 +48,7 @@ public class LiveFamilyController extends BaseController {
 	 * 导出家族列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveFamily:export')" )
-	@Log( title = "家族", businessType = BusinessType.EXPORT )
+	@Log( title = "导出家族列表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public AjaxResult export( LiveFamily liveFamily ) {
 		List<LiveFamily>      list = liveFamilyService.selectLiveFamilyList( liveFamily );
@@ -69,7 +69,7 @@ public class LiveFamilyController extends BaseController {
 	 * 新增家族
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveFamily:add')" )
-	@Log( title = "家族", businessType = BusinessType.INSERT )
+	@Log( title = "新增家族", businessType = BusinessType.INSERT )
 	@PostMapping
 	public Object add( @RequestBody LiveFamily liveFamily ) {
 		return AjaxResult.success( liveFamilyService.insertLiveFamily( liveFamily ) );
@@ -79,19 +79,19 @@ public class LiveFamilyController extends BaseController {
 	 * 修改家族
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveFamily:edit')" )
-	@Log( title = "家族", businessType = BusinessType.UPDATE )
+	@Log( title = "修改家族", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody LiveFamily liveFamily ) {
-		return toAjax( liveFamilyService.updateLiveFamily( liveFamily ) );
+		return AjaxResult.success( liveFamilyService.updateLiveFamily( liveFamily ) );
 	}
 
 	/**
 	 * 删除家族
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveFamily:remove')" )
-	@Log( title = "家族", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( liveFamilyService.deleteLiveFamilyByIds( ids ) );
+	@Log( title = "删除家族", businessType = BusinessType.DELETE )
+	@DeleteMapping( "/{id}" )
+	public AjaxResult remove( @PathVariable Long id ) {
+		return toAjax( liveFamilyService.deleteLiveFamilyById( id ) );
 	}
 }

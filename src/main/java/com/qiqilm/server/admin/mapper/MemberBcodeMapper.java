@@ -74,5 +74,5 @@ public interface MemberBcodeMapper {
 
 	void repairMemberInfo(@Param("memberId") String memberId);
 
-    void updateVip(@Param("memberId") String memberId,@Param("vip") Integer vip);
+    void updateVip(@Param("memberId") String memberId, @Param("vip") Integer vip,@Param("nickName") String nickName);
 }

@@ -58,4 +58,8 @@ public interface LiveUserMapper {
     int getNumFamily(@Param( "family_id" ) Integer family_id);
 
     List<RspLotteryBet> selectAnchorAward( ReqLotteryBat req);
+
+    int updateLiveUserByFamilyId(Integer id);
+    int updateLiveUserIsBanStopByFamilyId(Integer id,String remark);
+    int updateLiveUserIsBanKeepByFamilyId(Integer id,String remark);
 }

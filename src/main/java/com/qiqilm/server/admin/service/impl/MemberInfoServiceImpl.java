@@ -334,7 +334,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
-    public void updateVip(String memberId, Integer vip) {
-        memberBcodeMapper.updateVip(memberId,vip);
+    public void updateVip(String memberId, Integer vip, String nickName) {
+        memberBcodeMapper.updateVip(memberId,vip,nickName);
     }
 }
