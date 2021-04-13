@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.im;
 
+import com.qiqilm.server.admin.domain.vo.PageVO;
 import com.qiqilm.server.admin.im.vo.*;
 import com.qiqilm.server.admin.im.vo.api.ImInfo;
 
@@ -60,5 +61,6 @@ public interface ImApi {
 
 	//回调相关
 
-
+    //history
+    GroupMemberListRsp getGroupUser( String groupId, PageVO vo );   //组成员
 }

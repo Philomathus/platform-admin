@@ -34,10 +34,14 @@ public class LiveUser {
 	@Excel( name = "登陆IP", orderNum = "5" )
 	private String loginIp;
 
+    /** 头像地址 */
+    private String headImage;
+
 	/** 关注的人数 */
 	@Excel( name = "关注的人数", orderNum = "9" )
 	private Long focusCount;
 
+    private Date createTime;
 	/** 手机号 */
 	@Excel( name = "手机号", orderNum = "6" )
 	private String mobile;
@@ -132,7 +136,9 @@ public class LiveUser {
 	private String logoutTime;
 
 	private Date updateTime;
-	private Integer familyChieftain;
+	private Integer roboter;
+    private Integer familyChieftain;
+    private Integer liveIn;
 
 	public String getAuthStr() {
 		if ( isAuthentication != null ) {
