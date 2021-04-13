@@ -40,6 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="weiboMoney"    column="weibo_money"    />
         <result property="familyChieftain"    column="family_chieftain"    />
         <result property="liveIn"    column="live_in"    />
+        <result property="expiryAfter"  column="expiry_after"    />
     </resultMap>
 
     <sql id="selectLiveUserVo">
@@ -160,6 +161,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isBan != null">is_ban = #{isBan},</if>
             <if test="identifyNumber != null">identify_number = #{identifyNumber},</if>
             <if test="familyId != null">family_id = #{familyId},</if>
+            <if test="expiryAfter != null">expiry_after = #{expiryAfter},</if>
             <if test="coin != null">coin = #{coin},</if>
             <if test="xpoint != null">xpoint = #{xpoint},</if>
             <if test="ypoint != null">ypoint = #{ypoint},</if>

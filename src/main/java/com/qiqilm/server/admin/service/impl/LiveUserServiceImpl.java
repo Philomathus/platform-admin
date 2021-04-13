@@ -12,6 +12,7 @@ import com.qiqilm.server.admin.domain.vo.PageVO;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.im.GroupType;
 import com.qiqilm.server.admin.im.ImApi;
+import com.qiqilm.server.admin.im.vo.api.ImInfo;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
 import com.qiqilm.server.admin.mapper.LiveVideoMapper;
@@ -152,6 +153,27 @@ public class LiveUserServiceImpl implements ILiveUserService {
         }
     }
 
+    public void imReg( Integer id){
+        LiveUser hostInfo =  liveUserMapper.selectLiveUserById(new Long(id));
+        boolean regOk =false;
+        if ( hostInfo.getExpiryAfter() == null || hostInfo.getExpiryAfter() < 0 ) {
+            regOk = imApi.register( ImInfo.of( String.valueOf( hostInfo.getId() ) ) );
+            if ( !regOk ) {
+                log.error( "主播第一次注册IM失败hostId:{}", hostInfo.getId() );
+                regOk = imApi.register( ImInfo.of( String.valueOf( hostInfo.getId() ) ) );
+            }
+            if ( !regOk ) {
+                log.error( "主播第二次注册IM失败hostId:{}", hostInfo.getId() );
+            }
+            if ( regOk ) {//更新注册IM标识
+                LiveUser update = new LiveUser();
+                update.setId( hostInfo.getId() );
+                update.setExpiryAfter( 1l);
+                liveUserMapper.updateLiveUser(update);
+            }
+        }
+    }
+
     /**
      * 开放的生活
      *
@@ -166,6 +188,9 @@ public class LiveUserServiceImpl implements ILiveUserService {
         String flv = (String)map.get("flv");
         LiveVideo liveVideo = liveVideoMapper.selectLiveVideoById(new Long(id));
         log.error("虚拟主播开播map:{}", JsonUtil.object2Json( map ));
+
+        imReg(id);
+
         if (liveVideo!=null) {
             //修改
             liveVideo.setLiveIn(1);
