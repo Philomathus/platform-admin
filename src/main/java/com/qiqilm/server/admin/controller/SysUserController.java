@@ -184,6 +184,7 @@ public class SysUserController extends BaseController {
     /**
      * 重置代充人谷歌秘钥
      */
+    @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeAccount:reset')")
     @GetMapping("updateGoogleAuth")
     @Log(title = "重置代充人谷歌秘钥", businessType = BusinessType.UPDATE)
     public AjaxResult updateGoogleAuth(Long id, int googleAuthCode) throws Exception{
@@ -211,6 +212,7 @@ public class SysUserController extends BaseController {
     /**
      * 重置用户谷歌秘钥
      */
+    @PreAuthorize("@ss.hasPermi('system:user:reset')")
     @GetMapping("updateUserGoogleAuth")
     @Log(title = "重置用户谷歌秘钥", businessType = BusinessType.UPDATE)
     public AjaxResult updateUserGoogleAuth(Long id,int googleAuthCode) throws Exception{
