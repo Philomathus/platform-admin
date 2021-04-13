@@ -164,15 +164,12 @@ public class LiveUserServiceImpl implements ILiveUserService {
      */
     @Override
     public AjaxResult openLive(Map map) throws Exception {
-        LiveVideo liveVideo = new LiveVideo();
         Integer id = (Integer)map.get("id");
         String title = (String)map.get("title");
         String flv = (String)map.get("flv");
-        liveVideo.setUserId(new Long(id));
-        List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList2(liveVideo);
-        if (!liveVideos.isEmpty()) {
+        LiveVideo liveVideo = liveVideoMapper.selectLiveVideoById(new Long(id));
+        if (liveVideo!=null) {
             //修改
-            liveVideo = liveVideos.get(0);
             liveVideo.setLiveIn(1);
             liveVideo.setBeginTime(new Date());
             liveVideo.setEndTime(null);
@@ -184,10 +181,14 @@ public class LiveUserServiceImpl implements ILiveUserService {
         }else {
             //新增
             liveVideo.setLiveIn(1);
+            liveVideo.setUserId( id );
             liveVideo.setBeginTime(new Date());
             liveVideo.setEndTime(null);
+            liveVideo.setCateId(2);
             liveVideo.setEndDate(null);
             liveVideo.setTitle(title);
+            liveVideo.setLotteryId(1002);
+            liveVideo.setLotteryName("一分快三");
             setIms(liveVideo, id, title);
             liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
             liveVideoMapper.insertLiveVideo(liveVideo);
@@ -235,7 +236,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
     @Override
     public AjaxResult closeLive(Map map) {
         LiveVideo liveVideo = new LiveVideo();
-        liveVideo.setUserId((Long)map.get("id"));
+        liveVideo.setUserId((Integer)map.get("id"));
         List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList(liveVideo);
         if (!liveVideos.isEmpty()) {
             liveVideo = liveVideos.get(0);
