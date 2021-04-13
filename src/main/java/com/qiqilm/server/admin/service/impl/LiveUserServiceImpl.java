@@ -16,10 +16,7 @@ import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
 import com.qiqilm.server.admin.mapper.LiveVideoMapper;
 import com.qiqilm.server.admin.service.ILiveUserService;
-import com.qiqilm.server.admin.utils.AesUtil;
-import com.qiqilm.server.admin.utils.DateUtils;
-import com.qiqilm.server.admin.utils.StringUtils;
-import com.qiqilm.server.admin.utils.ValidatorUtil;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -168,6 +165,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
         String title = (String)map.get("title");
         String flv = (String)map.get("flv");
         LiveVideo liveVideo = liveVideoMapper.selectLiveVideoById(new Long(id));
+        log.error("虚拟主播开播map:{}", JsonUtil.object2Json( map ));
         if (liveVideo!=null) {
             //修改
             liveVideo.setLiveIn(1);
@@ -180,6 +178,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideoMapper.updateLiveVideo2(liveVideo);
         }else {
             //新增
+            liveVideo.setId(new Long(id));
             liveVideo.setLiveIn(1);
             liveVideo.setUserId( id );
             liveVideo.setBeginTime(new Date());

@@ -176,7 +176,7 @@
 <!--	</select>-->
 
 	<update id="updateMemberBcodeStatus">
-		update  member_bcode set status = 1 where user_id = #{memberId};
+		update  member_bcode set status = 1,cur=income where user_id = #{memberId};
 	</update>
 	<update id="repairMemberInfo">
 		update  member_info set code_account = level_integral where id = #{memberId};
