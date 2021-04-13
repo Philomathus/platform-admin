@@ -42,7 +42,7 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "accountName", withdrawLog.getBankUserName() );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"payAgentPrivateKey" ) );
+				"secretkey/payAgentPrivateKey" ) );
 
 		String signStr = this.assemblyUrl( dataMap ) + signMd5;
 		dataMap.put( "sign", DigestUtils.md5Hex( signStr ).toUpperCase() );

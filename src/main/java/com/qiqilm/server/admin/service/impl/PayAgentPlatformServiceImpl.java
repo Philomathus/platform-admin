@@ -1,10 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
-import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
 import com.qiqilm.server.admin.mapper.PayAgentPlatformMapper;
-import com.qiqilm.server.admin.mapper.SysUserMapper;
-import com.qiqilm.server.admin.payagent.PayAgentProcessorFactoryUtil;
 import com.qiqilm.server.admin.service.IPayAgentPlatformService;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
@@ -25,16 +22,7 @@ import java.util.List;
 @Service
 public class PayAgentPlatformServiceImpl implements IPayAgentPlatformService {
 	@Autowired
-	private PayAgentPlatformMapper  payAgentPlatformMapper;
-	@Autowired
-	private MemberWithdrawLogMapper memberWithdrawLogMapper;
-	@Autowired
-	private SysUserMapper           sysUserMapper;
-	@Autowired
-	private TokenService            tokenService;
-
-	@Autowired
-	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
+	private PayAgentPlatformMapper payAgentPlatformMapper;
 
 	/**
 	 * 查询代付平台
@@ -45,10 +33,12 @@ public class PayAgentPlatformServiceImpl implements IPayAgentPlatformService {
 	@Override
 	public PayAgentPlatform selectPayAgentPlatformById( Long id ) {
 		PayAgentPlatform agentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( id );
-		agentPlatform.setSignMd5( "*********" );
-		agentPlatform.setHeaderKey( "*********" );
-		agentPlatform.setSignPublicKey( "*********" );
-		agentPlatform.setSignPrivateKey( "*********" );
+		if ( agentPlatform != null ) {
+			agentPlatform.setSignMd5( StringUtils.isNotBlank( agentPlatform.getSignMd5() ) ? "*********" : null );
+			agentPlatform.setHeaderKey( StringUtils.isNotBlank( agentPlatform.getHeaderKey() ) ? "*********" : null );
+			agentPlatform.setSignPublicKey( StringUtils.isNotBlank( agentPlatform.getSignPublicKey() ) ? "*********" : null );
+			agentPlatform.setSignPrivateKey( StringUtils.isNotBlank( agentPlatform.getSignPrivateKey() ) ? "*********" : null );
+		}
 		return agentPlatform;
 	}
 
@@ -62,10 +52,14 @@ public class PayAgentPlatformServiceImpl implements IPayAgentPlatformService {
 	public List<PayAgentPlatform> selectPayAgentPlatformList( PayAgentPlatform payAgentPlatform ) {
 		List<PayAgentPlatform> payAgentPlatforms = payAgentPlatformMapper.selectPayAgentPlatformList( payAgentPlatform );
 		for ( PayAgentPlatform agentPlatform : payAgentPlatforms ) {
-			agentPlatform.setSignMd5( "*********" );
-			agentPlatform.setHeaderKey( "*********" );
-			agentPlatform.setSignPublicKey( "*********" );
-			agentPlatform.setSignPrivateKey( "*********" );
+			if ( agentPlatform != null ) {
+				agentPlatform.setSignMd5( StringUtils.isNotBlank( agentPlatform.getSignMd5() ) ? "*********" : null );
+				agentPlatform.setHeaderKey( StringUtils.isNotBlank( agentPlatform.getHeaderKey() ) ? "*********" : null );
+				agentPlatform.setSignPublicKey( StringUtils.isNotBlank( agentPlatform.getSignPublicKey() ) ? "*********" :
+						null );
+				agentPlatform.setSignPrivateKey( StringUtils.isNotBlank( agentPlatform.getSignPrivateKey() ) ? "*********" :
+						null );
+			}
 		}
 		return payAgentPlatforms;
 	}
@@ -99,6 +93,26 @@ public class PayAgentPlatformServiceImpl implements IPayAgentPlatformService {
 	 */
 	@Override
 	public int updatePayAgentPlatform( PayAgentPlatform payAgentPlatform ) {
+		if ( "*********".equals( payAgentPlatform.getHeaderKey() ) ) {
+			payAgentPlatform.setHeaderKey( null );
+		}
+		if ( "*********".equals( payAgentPlatform.getSignPrivateKey() ) ) {
+			payAgentPlatform.setSignPrivateKey( null );
+		}
+		if ( "*********".equals( payAgentPlatform.getSignPublicKey() ) ) {
+			payAgentPlatform.setSignPublicKey( null );
+		}
+		if ( "*********".equals( payAgentPlatform.getSignMd5() ) ) {
+			payAgentPlatform.setSignMd5( null );
+		} else if ( StringUtils.isNotBlank( payAgentPlatform.getSignMd5() ) ) {
+			try {
+				payAgentPlatform.setSignMd5( RSACoder.encryptByPublicKey( payAgentPlatform.getSignMd5(),
+						AuthUtil.getSecurityKeyStr( "secretkey/payAgentPublicKey" ) ) );
+			} catch ( Exception e ) {
+				log.error( e.getMessage(), e );
+				return 0;
+			}
+		}
 		return payAgentPlatformMapper.updatePayAgentPlatform( payAgentPlatform );
 	}
 
