@@ -179,10 +179,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    </update>
 
     <update id="updateLiveUserIsBanStopByFamilyId" parameterType="integer">
-        UPDATE ${dbLive}.live_user SET is_ban = 1 and ban_remark = #{remark} where family_id = #{familyId};
+        UPDATE ${dbLive}.live_user SET is_ban = 1,ban_remark = #{remark} where family_id = #{familyId};
     </update>
 
     <update id="updateLiveUserIsBanKeepByFamilyId" parameterType="integer">
-        UPDATE ${dbLive}.live_user SET is_ban = 0 and ban_remark = #{remark} where family_id = #{familyId};
+        UPDATE ${dbLive}.live_user SET is_ban = 0, ban_remark = #{remark} where family_id = #{familyId};
     </update>
 </mapper>
