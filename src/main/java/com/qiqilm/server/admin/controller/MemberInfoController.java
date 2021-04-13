@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -297,6 +298,27 @@ public class MemberInfoController extends BaseController {
                 req.getOrdermk(), loginUser.getUsername());
         if(rspBase.getCode() == 2){
             redisUtil.unLock(EnumLock.member, "addScore"+req.getId());
+        }
+        return rspBase;
+    }
+
+    /**
+     * 发送短信
+     *
+     * @return
+     */
+    @ApiOperation(value = "会员发送短信", notes = "会员发送短信")
+    @RequestMapping(value = "/sendMsg", method = RequestMethod.POST)
+    @Log(title = "会员发送短信", businessType = BusinessType.UPDATE)
+    public RspBase sendMsg(@RequestBody Map map) throws Exception {
+        RspBase rspBase = new RspBase();
+        String msg = (String)map.get("msg");
+        String memberId = (String)map.get("memberId");
+        if (StringUtils.isNotBlank(msg) && StringUtils.isNotBlank(memberId)) {
+            sysUserService.sendMsg(msg,memberId);
+            rspBase.setMsg("发送成功");
+        }else {
+            rspBase.setMsg("发送失败");
         }
         return rspBase;
     }

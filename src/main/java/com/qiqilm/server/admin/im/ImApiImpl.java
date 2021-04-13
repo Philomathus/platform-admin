@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
+import com.qiqilm.server.admin.domain.GroupMemberList;
+import com.qiqilm.server.admin.domain.vo.PageVO;
 import com.qiqilm.server.admin.im.vo.*;
 import com.qiqilm.server.admin.im.vo.api.*;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -297,4 +299,12 @@ public class ImApiImpl implements ImApi {
 		onlineMemberNum.setGroupId( groupId );
 		return doPost( onlineMemberNum, OnlineMemberNumRsp.class, 1 );
 	}
+
+    @Override
+    public GroupMemberListRsp getGroupUser(String groupId, PageVO vo) {
+        GroupMemberList memberList = new GroupMemberList();
+        memberList.setGroupId( groupId );
+        memberList.setPageVO( vo );
+        return doPost( memberList, GroupMemberListRsp.class, 1 );
+    }
 }
