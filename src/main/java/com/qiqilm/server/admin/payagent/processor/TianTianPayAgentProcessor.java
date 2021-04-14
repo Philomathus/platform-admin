@@ -28,9 +28,9 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "timestamp", String.valueOf( time ) );
 		dataMap.put( "accesskey", payAgentPlatform.getMerId() );
 		dataMap.put( "bankname", withdrawLog.getBankName() );
-		dataMap.put( "realname", withdrawLog.getBankUserName() );
+		dataMap.put( "realname", withdrawLog.getBankUserName().trim() );
 		dataMap.put( "money", withdrawLog.getWithdrawMoney().toString() );
-		dataMap.put( "cardnumber", withdrawLog.getBankAccount() );
+		dataMap.put( "cardnumber", withdrawLog.getBankAccount().trim() );
 		dataMap.put( "orderid", withdrawLog.getOrderNo() );
 		dataMap.put( "callbackurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.TIAN_TIAN );
 		dataMap.put( "ext", "ext" );

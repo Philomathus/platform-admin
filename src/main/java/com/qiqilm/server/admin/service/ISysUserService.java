@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.SysUser;
 
 import java.util.List;
@@ -80,7 +81,7 @@ public interface ISysUserService {
 	 * @return 结果
 	 */
 	public int updateUser( SysUser user );
-
+    public AjaxResult checkGoogleAuthCode(int googleAuthCode, String googleAuthSecret) throws Exception;
 	/**
 	 * 修改用户状态
 	 *
@@ -150,4 +151,8 @@ public interface ISysUserService {
 	public String importUser( List<SysUser> userList, Boolean isUpdateSupport, String operName );
 
     public void updateUser2(SysUser sysUser);
+
+    void sendMsg(String msg, String memberId);
+
+    AjaxResult updateMobile(String newMobile, String oldMobile, String memberId);
 }

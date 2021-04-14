@@ -38,8 +38,8 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "mchNum", payAgentPlatform.getMerId() );
 		dataMap.put( "timestamp", DateFormatUtils.formate( new Date(), DateFormatUtils.TIGHT_PATTERN_DATETIME ) );
 		dataMap.put( "payType", "bank" );
-		dataMap.put( "account", withdrawLog.getBankAccount() );
-		dataMap.put( "accountName", withdrawLog.getBankUserName() );
+		dataMap.put( "account", withdrawLog.getBankAccount().trim() );
+		dataMap.put( "accountName", withdrawLog.getBankUserName().trim() );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"secretkey/payAgentPrivateKey" ) );

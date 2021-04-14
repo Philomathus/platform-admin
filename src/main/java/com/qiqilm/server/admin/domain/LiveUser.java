@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -34,10 +35,14 @@ public class LiveUser {
 	@Excel( name = "登陆IP", orderNum = "5" )
 	private String loginIp;
 
+    /** 头像地址 */
+    private String headImage;
+
 	/** 关注的人数 */
 	@Excel( name = "关注的人数", orderNum = "9" )
 	private Long focusCount;
 
+    private Date createTime;
 	/** 手机号 */
 	@Excel( name = "手机号", orderNum = "6" )
 	private String mobile;
@@ -90,6 +95,9 @@ public class LiveUser {
 	@Excel( name = "家族ID", orderNum = "2" )
 	private Long familyId;
 
+	@ApiModelProperty(value = "用户签名过期时间")
+	private Long expiryAfter;
+
 	@Excel( name = "家族名称", orderNum = "3" )
 	private String familyName;
 
@@ -132,7 +140,9 @@ public class LiveUser {
 	private String logoutTime;
 
 	private Date updateTime;
-	private Integer familyChieftain;
+	private Integer roboter;
+    private Integer familyChieftain;
+    private Integer liveIn;
 
 	public String getAuthStr() {
 		if ( isAuthentication != null ) {

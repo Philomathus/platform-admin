@@ -53,7 +53,7 @@ public class ConfigEnvironmentController extends BaseController {
 	/**
 	 * 获取环境参数配置详细信息
 	 */
-	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:query')" )
+	//@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:query')" )
 	@GetMapping( value = "/{envCode}" )
 	public AjaxResult getInfo( @PathVariable( "envCode" ) String envCode ) {
 		return AjaxResult.success( configEnvironmentService.selectConfigEnvironmentById( envCode ) );
