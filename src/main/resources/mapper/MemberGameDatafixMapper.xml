@@ -18,9 +18,14 @@
     </sql>
 
     <select id="selectMemberGameDatafixList" parameterType="MemberGameDatafix" resultMap="MemberGameDatafixResult">
-        <include refid="selectMemberGameDatafixVo"/>
+        select a.id, a.user_id, a.game_start_time, a.game_end_time, a.platform_id, a.status ,b.name as platformName
+        from ${dbMain}.member_game_datafix a
+        left join  ${dbMain}.game_platform b
+        on a.platform_id=b.id
         <where>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="platformId != null "> and a.platform_id = #{platformId}</if>
+            <if test="userId != null and userId != '' ">and a.user_id= #{userId}</if>
         </where>
     </select>
     
