@@ -197,6 +197,10 @@ public class VideoCacheUtil {
 		}
 	}
 
+	public void putHostGroupId( int videoId,String groupId ) {
+		redisUtil.hSet(REDIS_KEY.concat(String.valueOf(videoId)) ,"groupId",groupId);
+	}
+
 	/**
 	 * 获取指定直播间心跳监控时间
 	 *

@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
+import com.qiqilm.server.admin.cache.VideoCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveFamily;
 import com.qiqilm.server.admin.domain.LiveUser;
@@ -45,6 +46,9 @@ public class LiveUserServiceImpl implements ILiveUserService {
     private LiveVideoMapper liveVideoMapper;
     @Autowired
     private ImApi imApi;
+
+    @Autowired
+    private VideoCacheUtil videoCacheUtil;
 
     /**
      * 查询主播用户信息
@@ -264,6 +268,10 @@ public class LiveUserServiceImpl implements ILiveUserService {
                 log.info("主播调用开播接口 - 开始创建群组 - userId:{};groupId:{}", id, groupId);
                 liveVideo.setGroupId(groupId);
             }
+        }
+
+        if(liveVideo.getGroupId()!=null){
+            videoCacheUtil.putHostGroupId(liveVideo.getUserId(),liveVideo.getGroupId());
         }
     }
 
