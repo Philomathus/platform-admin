@@ -367,11 +367,17 @@ public class SysUserServiceImpl implements ISysUserService {
     public AjaxResult updateMobile(String newMobile, String oldMobile, String memberId) {
         //校验旧手机号
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(memberId);
-        String  phone =memberInfo.getPhone();
-//        if (StringUtils.isNotEmpty(phone)&&phone.equals(oldMobile)) {
+        int count = memberInfoMapper.countByPhone(newMobile);
+        if (count == 0) {
             memberInfo.setPhone(newMobile);
             memberInfoMapper.updateMemberInfo(memberInfo);
             return AjaxResult.success("手机号修改成功");
+        }else {
+            return AjaxResult.error("手机号已存在");
+
+        }
+//        if (StringUtils.isNotEmpty(phone)&&phone.equals(oldMobile)) {
+
 /*        }else {
             return AjaxResult.error("旧手机号错误");
         }*/
