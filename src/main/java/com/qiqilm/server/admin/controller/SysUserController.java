@@ -6,7 +6,6 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
 import com.qiqilm.server.admin.domain.SysRole;
 import com.qiqilm.server.admin.domain.SysUser;
@@ -191,23 +190,14 @@ public class SysUserController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
         String googleAuthSecret = userService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
 
-        if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
-            return AjaxResult.error(0,"未绑定google验证秘钥，无法审核");
-        }
-        if (googleAuthSecret.length() == 32) {
-            return AjaxResult.error(0,"google验证秘钥未加密，请重新登录");
-        }
-        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
-                "/googleAuthPrivateKey"));
-
-        if (!GoogleAuthUtil.verifyCode(googleAuthKey, googleAuthCode)) {
-            return AjaxResult.error("google验证码不正确，请检查");
-        }
+        AjaxResult x = userService.checkGoogleAuthCode(googleAuthCode, googleAuthSecret);
+        if (x != null) return x;
         PayAgentRechargeAccount payAgentRechargeAccount = payAgentRechargeAccountMapper.selectPayAgentRechargeAccountById(id);
         payAgentRechargeAccount.setGoogleAuthSecret(null);
         payAgentRechargeAccountMapper.updateGoogle(payAgentRechargeAccount);
         return AjaxResult.success();
     }
+
 
     /**
      * 重置用户谷歌秘钥
