@@ -15,6 +15,7 @@
 		<result property="smsSdkAppid" column="sms_sdk_appid"/>
 		<result property="identify" column="identify"/>
 		<result property="isEffect" column="is_effect"/>
+		<result property="updateTime" column="update_time"/>
 	</resultMap>
 
 	<sql id="selectServerSmsVo">
@@ -28,7 +29,8 @@
 			   template,
 			   sms_sdk_appid,
 			   identify,
-			   is_effect
+			   is_effect,
+		       update_time
 		from ${dbLive}.server_sms
 	</sql>
 
@@ -85,6 +87,9 @@
 			<if test="isEffect != null">
 				is_effect,
 			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null and name != ''">
@@ -116,6 +121,9 @@
 			</if>
 			<if test="isEffect != null">
 				#{isEffect},
+			</if>
+			<if test="updateTime != null">
+				#{update_time},
 			</if>
 		</trim>
 	</insert>
@@ -153,6 +161,9 @@
 			<if test="isEffect != null">
 				is_effect = #{isEffect},
 			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime},
+			</if>
 		</trim>
 		where id = #{id}
 	</update>
@@ -173,6 +184,6 @@
 
 	<select id="selectServerSmsByEffect" resultMap="ServerSmsResult">
 		<include refid="selectServerSmsVo"/>
-		where is_effect = 1 order by is_effect desc, id asc
+		where is_effect = 1 order by is_effect desc, update_time asc
 	</select>
 </mapper>

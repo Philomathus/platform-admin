@@ -49,14 +49,14 @@ public class PayAgentRechargeBankServiceImpl implements IPayAgentRechargeBankSer
 	@Override
 	public List<PayAgentRechargeBank> selectPayAgentRechargeBankList( PayAgentRechargeBank payAgentRechargeBank ) {
 		List<PayAgentRechargeBank> banks = payAgentRechargeBankMapper.selectPayAgentRechargeBankList( payAgentRechargeBank );
-		if ( !CollectionUtils.isEmpty( banks ) ) {
-			String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
-			for ( PayAgentRechargeBank bank : banks ) {
-				if ( StringUtils.isNotBlank( bank.getIcon() ) && !bank.getIcon().startsWith( "http" ) ) {
-					bank.setIcon( domainValue + bank.getIcon() );
-				}
-			}
-		}
+//		if ( !CollectionUtils.isEmpty( banks ) ) {
+//			String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+//			for ( PayAgentRechargeBank bank : banks ) {
+//				if ( StringUtils.isNotBlank( bank.getIcon() ) && !bank.getIcon().startsWith( "http" ) ) {
+//					bank.setIcon( domainValue + bank.getIcon() );
+//				}
+//			}
+//		}
 		return banks;
 	}
 

@@ -61,9 +61,10 @@ public class ConfigBank extends BaseEntity {
     private BigDecimal discountBill;
 
     /** 开放层级 */
-    @Excel(name = "开放层级")
+    @Excel(name = "开放层级最小")
     private Long openLevel;
-
+    @Excel(name = "开放层级最大")
+    private Integer openLevelMax;
 
 
     @Override
@@ -86,6 +87,7 @@ public class ConfigBank extends BaseEntity {
             .append("bankAddress", getBankAddress())
             .append("discountBill", getDiscountBill())
             .append("openLevel", getOpenLevel())
+            .append("openLevelMax", getOpenLevelMax())
             .toString();
     }
 }

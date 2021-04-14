@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UserDataUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,6 +40,8 @@ public abstract class ControllerExceptionHandler {
 			rspError.setCode( ErrCode.SESSION_EXPIRE_FAIL );
 			rspError.setMsg( e.getMessage() );
 			return rspError;
+		} else if ( e instanceof AccessDeniedException ) {
+			return RspBase.businessError( e.getMessage() );
 		} else {
 			HttpServletRequest request = ServletUtil.getHttpServletRequest();
 			log.error( "异常请求url:{},IP:{},msg:{}", request.getRequestURL().toString(), UserDataUtil.getIp( request ),
