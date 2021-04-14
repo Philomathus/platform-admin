@@ -39,11 +39,10 @@ public class LiveHostPreServiceImpl implements ILiveHostPreService {
     @Override
     public List<LiveHostPre> selectLiveHostPreList(LiveHostPre liveHostPre) {
         if (liveHostPre.getLive() != null && liveHostPre.getLive().length > 0) {
-            String liveI = null;
+            String liveI = "";
             for (int i = 0; i < liveHostPre.getLive().length; i++) {
-                liveI = " and live_" + liveHostPre.getLive()[i] + " = 1 " + liveI;
+                liveI = " and live_" + liveHostPre.getLive()[i] + " = 1" + liveI;
             }
-            liveI = liveI.substring(0, liveI.length() - 4);
             liveHostPre.setLiveI(liveI);
         }
         return liveHostPreMapper.selectLiveHostPreList(liveHostPre);
