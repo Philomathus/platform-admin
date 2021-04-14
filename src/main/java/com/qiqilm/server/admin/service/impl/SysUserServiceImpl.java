@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.annotation.DataScope;
 import com.qiqilm.server.admin.constant.UserConstants;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.SysRole;
 import com.qiqilm.server.admin.domain.SysUser;
@@ -12,9 +13,7 @@ import com.qiqilm.server.admin.mapper.SysRoleMapper;
 import com.qiqilm.server.admin.mapper.SysUserMapper;
 import com.qiqilm.server.admin.mapper.SysUserRoleMapper;
 import com.qiqilm.server.admin.service.ISysUserService;
-import com.qiqilm.server.admin.utils.SecurityUtils;
-import com.qiqilm.server.admin.utils.SmsApi;
-import com.qiqilm.server.admin.utils.StringUtils;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -162,6 +161,30 @@ public class SysUserServiceImpl implements ISysUserService {
 		return userMapper.updateUser( user );
 	}
 
+    /**
+     * 检查谷歌身份验证代码
+     *
+     * @param googleAuthCode   谷歌身份验证代码
+     * @param googleAuthSecret 谷歌身份验证的秘密
+     * @return {@link AjaxResult}
+     * @throws Exception 异常
+     */
+    @Override
+    public AjaxResult checkGoogleAuthCode(int googleAuthCode, String googleAuthSecret) throws Exception {
+        if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+            return AjaxResult.error(0,"未绑定google验证秘钥，无法审核");
+        }
+        if (googleAuthSecret.length() == 32) {
+            return AjaxResult.error(0,"google验证秘钥未加密，请重新登录");
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+                "/googleAuthPrivateKey"));
+
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, googleAuthCode)) {
+            return AjaxResult.error("google验证码不正确，请检查");
+        }
+        return null;
+    }
 	/**
 	 * 修改用户状态
 	 *
@@ -338,5 +361,19 @@ public class SysUserServiceImpl implements ISysUserService {
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(memberId);
         String phone = memberInfo.getPhone();
         smsApi.sendMemSms(phone,msg);
+    }
+
+    @Override
+    public AjaxResult updateMobile(String newMobile, String oldMobile, String memberId) {
+        //校验旧手机号
+        MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(memberId);
+        String  phone =memberInfo.getPhone();
+//        if (StringUtils.isNotEmpty(phone)&&phone.equals(oldMobile)) {
+            memberInfo.setPhone(newMobile);
+            memberInfoMapper.updateMemberInfo(memberInfo);
+            return AjaxResult.success("手机号修改成功");
+/*        }else {
+            return AjaxResult.error("旧手机号错误");
+        }*/
     }
 }
