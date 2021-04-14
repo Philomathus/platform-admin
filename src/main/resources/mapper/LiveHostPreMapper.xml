@@ -44,7 +44,9 @@
         <include refid="selectLiveHostPreVo"/>
         <where>
             <if test="dateDay != null "> and id like concat(#{dateDay}, '%')</if>
-            <if test="live != null "> and live_${live} = 1</if>
+            <if test="live != null and live.length != 0">
+                ${liveI}
+            </if>
             <if test="familyId != null "> and family_id = #{familyId}</if>
             <if test="hostId != null "> and host_id = #{hostId}</if>
             <if test="hostName != null  and hostName != ''"> and host_name like concat('%', #{hostName}, '%')</if>
