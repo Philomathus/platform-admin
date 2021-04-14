@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户信息Service接口
@@ -41,4 +42,12 @@ public interface ILiveUserService {
 	public AjaxResult updateFamilyID( Long familyId, Long id );
 
 	List<RspLotteryBet> selectAnchorAward( ReqLotteryBat req );
+
+    public AjaxResult insertLiveUser(LiveUser liveUser);
+
+    AjaxResult openLive(Map map) throws Exception;
+
+    AjaxResult closeLive(Map map);
+
+    AjaxResult updateMobile(String newMobile, String oldMobile, String id);
 }

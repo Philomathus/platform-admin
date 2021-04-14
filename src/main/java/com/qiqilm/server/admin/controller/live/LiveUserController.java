@@ -4,14 +4,15 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveUserService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import com.qiqilm.server.admin.utils.StringUtils;
+import com.qiqilm.server.admin.service.ISysUserService;
+import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 主播用户信息Controller
@@ -32,7 +34,10 @@ import java.util.List;
 public class LiveUserController extends BaseController {
 	@Autowired
 	private ILiveUserService liveUserService;
-
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private ISysUserService userService;
 	/**
 	 * 查询主播用户信息列表
 	 */
@@ -63,6 +68,60 @@ public class LiveUserController extends BaseController {
 	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
 		return AjaxResult.success( liveUserService.selectLiveUserById( id ) );
 	}
+    /**
+     * 新增//用户信息
+     */
+    @PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
+    @Log( title = "//用户信息", businessType = BusinessType.INSERT )
+    @PostMapping
+    public AjaxResult add(@RequestBody LiveUser liveUser) {
+        return liveUserService.insertLiveUser(liveUser) ;
+    }
+    /**
+     * 发送短信
+     *
+     * @return
+     */
+    @ApiOperation(value = "修改手机号", notes = "修改手机号")
+    @RequestMapping(value = "/updateMobile", method = RequestMethod.POST)
+    @Log(title = "会员发送短信", businessType = BusinessType.UPDATE)
+    public AjaxResult updateMobile(@RequestBody Map map) throws Exception {
+        String id = (String)map.get("userId");
+        String newMobile = (String)map.get("newMobile");
+        String oldMobile = (String)map.get("oldMobile");
+        String googleAuthCode = (String)map.get("googleAuthCode");
+        if (!ValidatorUtil.isNumber11(newMobile)) {
+            return AjaxResult.error("新手机号格式错误: 11位数字");
+        }
+/*        if (!ValidatorUtil.isNumber11(oldMobile)) {
+            return AjaxResult.error("旧手机号格式错误: 11位数字");
+        }*/
+        //校验谷歌验证码
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = userService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+        AjaxResult x = userService.checkGoogleAuthCode(Integer.parseInt(googleAuthCode), googleAuthSecret);
+        if (x != null) return x;
+        return liveUserService.updateMobile(newMobile,oldMobile,id);
+    }
+    /**
+     * 开播
+     */
+//    @PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
+    @Log( title = "开播", businessType = BusinessType.INSERT )
+    @PostMapping("openLive")
+    public AjaxResult openLive(@RequestBody Map map) throws Exception {
+        return liveUserService.openLive(map) ;
+    }
+
+    /**
+     * 关播
+     */
+//    @PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
+    @Log( title = "关播", businessType = BusinessType.INSERT )
+    @PostMapping("closeLive")
+    public AjaxResult closeLive(@RequestBody Map map) {
+        return liveUserService.closeLive(map) ;
+    }
 
 	/**
 	 * 认证主播用户信息

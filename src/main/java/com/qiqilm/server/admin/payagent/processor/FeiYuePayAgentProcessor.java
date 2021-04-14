@@ -42,8 +42,8 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "outTradeNo", withdrawLog.getOrderNo() );
 		bodyMap.put( "subbranchName", withdrawLog.getBankAddress() );
 		bodyMap.put( "bankCode", withdrawLog.getBankCode() );
-		bodyMap.put( "bankCardNo", withdrawLog.getBankAccount() );
-		bodyMap.put( "bankAccount", withdrawLog.getBankUserName() );
+		bodyMap.put( "bankCardNo", withdrawLog.getBankAccount().trim() );
+		bodyMap.put( "bankAccount", withdrawLog.getBankUserName().trim() );
 		bodyMap.put( "subbranchProvince", "中国" );
 		bodyMap.put( "orderScore", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ).toString() );
 		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.FEI_YUE );

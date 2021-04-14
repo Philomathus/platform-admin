@@ -6,7 +6,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeShunWeiType;
-import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
@@ -28,9 +27,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-@Repository( value = ConstantsPayAgent.SHUN_WEI + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.SHUN_WEI2 + "PayAgentProcessor" )
 @Log4j2
-public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
+public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
 	@Override
 	public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
 		BankCodeShunWeiType bankCodeType = BankCodeShunWeiType.getCodeByDesc( withdrawLog.getBankName() );
@@ -59,7 +58,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		String sign = DigestUtils.md5Hex( JsonUtil.object2Json( paramMap ).concat( signMd5 ) );
 
 		paramMap.put( "request_sign", sign );
-		paramMap.put( "callback_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.SHUN_WEI );
+		paramMap.put( "callback_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.SHUN_WEI2 );
 
 		// 参数加密
 		String encryptData = RSACoder.encryptByPublicKey( JsonUtil.object2Json( paramMap ),

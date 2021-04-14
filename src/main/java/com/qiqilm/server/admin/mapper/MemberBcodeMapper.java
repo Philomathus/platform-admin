@@ -70,9 +70,11 @@ public interface MemberBcodeMapper {
 
 	MemberBcode getTotalData(MemberBcode memberBcode);
 
-    int countMemberBcodeStatus(@Param("memberId") String memberId);
+//    int countMemberBcodeStatus(@Param("memberId") String memberId);
 
 	void repairMemberInfo(@Param("memberId") String memberId);
 
     void updateVip(@Param("memberId") String memberId, @Param("vip") Integer vip,@Param("nickName") String nickName);
+
+	void updateMemberBcodeStatus(@Param("memberId") String memberId);
 }

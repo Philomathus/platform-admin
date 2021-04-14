@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.SmsFailLogMapper">
+
+    <resultMap type="SmsFailLog" id="SmsFailLogResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="message"    column="message"    />
+        <result property="phone"    column="phone"    />
+        <result property="smsName"    column="sms_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="smsSubname"    column="sms_subname"    />
+    </resultMap>
+
+    <sql id="selectSmsFailLogVo">
+        select id, code, message, phone, sms_name,  FROM_UNIXTIME(create_time) create_time ,  sms_subname from 7700_live.sms_fail_log
+    </sql>
+
+    <select id="selectSmsFailLogList" parameterType="SmsFailLog" resultMap="SmsFailLogResult">
+        <include refid="selectSmsFailLogVo"/>
+        <where>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="message != null  and message != ''"> and message = #{message}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="smsName != null  and smsName != ''"> and sms_name like concat('%', #{smsName}, '%')</if>
+            <if test="smsSubname != null  and smsSubname != ''"> and sms_subname like concat('%', #{smsSubname}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectSmsFailLogById" parameterType="Long" resultMap="SmsFailLogResult">
+        <include refid="selectSmsFailLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSmsFailLog" parameterType="SmsFailLog" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.sms_fail_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">code,</if>
+            <if test="message != null">message,</if>
+            <if test="phone != null">phone,</if>
+            <if test="smsName != null">sms_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="smsSubname != null">sms_subname,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="code != null">#{code},</if>
+                    <if test="message != null">#{message},</if>
+                    <if test="phone != null">#{phone},</if>
+                    <if test="smsName != null">#{smsName},</if>
+                <if test="createTime != null">#{createTime},</if>
+                    <if test="smsSubname != null">#{smsSubname},</if>
+             </trim>
+    </insert>
+
+    <update id="updateSmsFailLog" parameterType="SmsFailLog">
+        update 7700_live.sms_fail_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+
+            <if test="message != null">message = #{message},</if>
+
+            <if test="phone != null">phone = #{phone},</if>
+
+            <if test="smsName != null">sms_name = #{smsName},</if>
+
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+
+            <if test="smsSubname != null">sms_subname = #{smsSubname},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSmsFailLogById" parameterType="Long">
+        delete from 7700_live.sms_fail_log where id = #{id}
+    </delete>
+
+    <delete id="deleteSmsFailLogByIds" parameterType="String">
+        delete from 7700_live.sms_fail_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
