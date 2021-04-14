@@ -30,6 +30,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 		serverSms.setIsEffect( 0 );
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		serverSms.setIdentify( loginUser.getUsername() );
+		serverSms.setUpdateTime(new Date());
 		return serverSmsMapper.insertServerSms( serverSms );
 	}
 
@@ -95,6 +97,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	 */
 	@Override
 	public int updateServerSms( ServerSms serverSms ) {
+		serverSms.setUpdateTime(new Date());
 		int i = serverSmsMapper.updateServerSms( serverSms );
 		if ( i > 0 ) {
 			ServerSms newServerSms = serverSmsMapper.selectServerSmsById( serverSms.getId() );
@@ -142,6 +145,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 		ServerSms update = new ServerSms();
 		update.setId( id );
 		update.setIsEffect( 1 );
+		update.setUpdateTime(new Date());
 		int i = serverSmsMapper.updateServerSms( update );
 		if ( i > 0 ) {
 			ServerSms newServerSms = serverSmsMapper.selectServerSmsById( id );
@@ -155,6 +159,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 		ServerSms update = new ServerSms();
 		update.setId( id );
 		update.setIsEffect( 0 );
+		update.setUpdateTime(new Date());
 		int i = serverSmsMapper.updateServerSms( update );
 		if ( i > 0 ) {
 			serverSmsCacheUtil.clearCache( id );

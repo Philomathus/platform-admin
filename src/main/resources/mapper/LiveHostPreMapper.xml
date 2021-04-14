@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveHostPreMapper">
+
+    <resultMap type="LiveHostPre" id="LiveHostPreResult">
+        <result property="id"    column="id"    />
+        <result property="familyId"    column="family_id"    />
+        <result property="hostId"    column="host_id"    />
+        <result property="hostName"    column="host_name"    />
+        <result property="status"    column="status"    />
+        <result property="live0"    column="live_0"    />
+        <result property="live1"    column="live_1"    />
+        <result property="live2"    column="live_2"    />
+        <result property="live3"    column="live_3"    />
+        <result property="live4"    column="live_4"    />
+        <result property="live5"    column="live_5"    />
+        <result property="live6"    column="live_6"    />
+        <result property="live7"    column="live_7"    />
+        <result property="live8"    column="live_8"    />
+        <result property="live9"    column="live_9"    />
+        <result property="live10"    column="live_10"    />
+        <result property="live11"    column="live_11"    />
+        <result property="live12"    column="live_12"    />
+        <result property="live13"    column="live_13"    />
+        <result property="live14"    column="live_14"    />
+        <result property="live15"    column="live_15"    />
+        <result property="live16"    column="live_16"    />
+        <result property="live17"    column="live_17"    />
+        <result property="live18"    column="live_18"    />
+        <result property="live19"    column="live_19"    />
+        <result property="live20"    column="live_20"    />
+        <result property="live21"    column="live_21"    />
+        <result property="live22"    column="live_22"    />
+        <result property="live23"    column="live_23"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectLiveHostPreVo">
+        select id, family_id, host_id, host_name, status, live_0, live_1, live_2, live_3, live_4, live_5, live_6, live_7, live_8, live_9, live_10, live_11, live_12, live_13, live_14, live_15, live_16, live_17, live_18, live_19, live_20, live_21, live_22, live_23, remark, create_time from 7700_live.live_host_pre
+    </sql>
+
+    <select id="selectLiveHostPreList" parameterType="LiveHostPre" resultMap="LiveHostPreResult">
+        <include refid="selectLiveHostPreVo"/>
+        <where>
+            <if test="dateDay != null "> and id like concat(#{dateDay}, '%')</if>
+            <if test="live != null "> and live_${live} = 1</if>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="hostId != null "> and host_id = #{hostId}</if>
+            <if test="hostName != null  and hostName != ''"> and host_name like concat('%', #{hostName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveHostPreById" parameterType="String" resultMap="LiveHostPreResult">
+        <include refid="selectLiveHostPreVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveHostPre" parameterType="LiveHostPre">
+        insert into 7700_live.live_host_pre
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="familyId != null">family_id,</if>
+            <if test="hostId != null">host_id,</if>
+            <if test="hostName != null">host_name,</if>
+            <if test="status != null">status,</if>
+            <if test="live0 != null">live_0,</if>
+            <if test="live1 != null">live_1,</if>
+            <if test="live2 != null">live_2,</if>
+            <if test="live3 != null">live_3,</if>
+            <if test="live4 != null">live_4,</if>
+            <if test="live5 != null">live_5,</if>
+            <if test="live6 != null">live_6,</if>
+            <if test="live7 != null">live_7,</if>
+            <if test="live8 != null">live_8,</if>
+            <if test="live9 != null">live_9,</if>
+            <if test="live10 != null">live_10,</if>
+            <if test="live11 != null">live_11,</if>
+            <if test="live12 != null">live_12,</if>
+            <if test="live13 != null">live_13,</if>
+            <if test="live14 != null">live_14,</if>
+            <if test="live15 != null">live_15,</if>
+            <if test="live16 != null">live_16,</if>
+            <if test="live17 != null">live_17,</if>
+            <if test="live18 != null">live_18,</if>
+            <if test="live19 != null">live_19,</if>
+            <if test="live20 != null">live_20,</if>
+            <if test="live21 != null">live_21,</if>
+            <if test="live22 != null">live_22,</if>
+            <if test="live23 != null">live_23,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="familyId != null">#{familyId},</if>
+                    <if test="hostId != null">#{hostId},</if>
+                    <if test="hostName != null">#{hostName},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="live0 != null">#{live0},</if>
+                    <if test="live1 != null">#{live1},</if>
+                    <if test="live2 != null">#{live2},</if>
+                    <if test="live3 != null">#{live3},</if>
+                    <if test="live4 != null">#{live4},</if>
+                    <if test="live5 != null">#{live5},</if>
+                    <if test="live6 != null">#{live6},</if>
+                    <if test="live7 != null">#{live7},</if>
+                    <if test="live8 != null">#{live8},</if>
+                    <if test="live9 != null">#{live9},</if>
+                    <if test="live10 != null">#{live10},</if>
+                    <if test="live11 != null">#{live11},</if>
+                    <if test="live12 != null">#{live12},</if>
+                    <if test="live13 != null">#{live13},</if>
+                    <if test="live14 != null">#{live14},</if>
+                    <if test="live15 != null">#{live15},</if>
+                    <if test="live16 != null">#{live16},</if>
+                    <if test="live17 != null">#{live17},</if>
+                    <if test="live18 != null">#{live18},</if>
+                    <if test="live19 != null">#{live19},</if>
+                    <if test="live20 != null">#{live20},</if>
+                    <if test="live21 != null">#{live21},</if>
+                    <if test="live22 != null">#{live22},</if>
+                    <if test="live23 != null">#{live23},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="createTime != null">#{createTime},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLiveHostPre" parameterType="LiveHostPre">
+        update 7700_live.live_host_pre
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="familyId != null">family_id = #{familyId},</if>
+    
+            <if test="hostId != null">host_id = #{hostId},</if>
+    
+            <if test="hostName != null">host_name = #{hostName},</if>
+    
+            <if test="status != null">status = #{status},</if>
+    
+            <if test="live0 != null">live_0 = #{live0},</if>
+    
+            <if test="live1 != null">live_1 = #{live1},</if>
+    
+            <if test="live2 != null">live_2 = #{live2},</if>
+    
+            <if test="live3 != null">live_3 = #{live3},</if>
+    
+            <if test="live4 != null">live_4 = #{live4},</if>
+    
+            <if test="live5 != null">live_5 = #{live5},</if>
+    
+            <if test="live6 != null">live_6 = #{live6},</if>
+    
+            <if test="live7 != null">live_7 = #{live7},</if>
+    
+            <if test="live8 != null">live_8 = #{live8},</if>
+    
+            <if test="live9 != null">live_9 = #{live9},</if>
+    
+            <if test="live10 != null">live_10 = #{live10},</if>
+    
+            <if test="live11 != null">live_11 = #{live11},</if>
+    
+            <if test="live12 != null">live_12 = #{live12},</if>
+    
+            <if test="live13 != null">live_13 = #{live13},</if>
+    
+            <if test="live14 != null">live_14 = #{live14},</if>
+    
+            <if test="live15 != null">live_15 = #{live15},</if>
+    
+            <if test="live16 != null">live_16 = #{live16},</if>
+    
+            <if test="live17 != null">live_17 = #{live17},</if>
+    
+            <if test="live18 != null">live_18 = #{live18},</if>
+    
+            <if test="live19 != null">live_19 = #{live19},</if>
+    
+            <if test="live20 != null">live_20 = #{live20},</if>
+    
+            <if test="live21 != null">live_21 = #{live21},</if>
+    
+            <if test="live22 != null">live_22 = #{live22},</if>
+    
+            <if test="live23 != null">live_23 = #{live23},</if>
+
+            <if test="remark != null">remark = #{remark},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveHostPreById" parameterType="String">
+        delete from 7700_live.live_host_pre where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveHostPreByIds" parameterType="String">
+        delete from 7700_live.live_host_pre where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

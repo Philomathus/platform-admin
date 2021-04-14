@@ -5,6 +5,8 @@ import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Date;
+
 /**
  * SMS短信服务配置对象 server_sms
  *
@@ -69,6 +71,11 @@ public class ServerSms extends BaseEntity {
 	 * 状态
 	 */
 	private Integer isEffect;
+
+	/**
+	 * 更新时间
+	 */
+	private Date updateTime;
 
 	@Override
 	public String toString() {
