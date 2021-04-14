@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayAgentPlatformService;
 import com.qiqilm.server.admin.service.IPayAgentService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +83,27 @@ public class PayAgentPlatformController extends BaseController {
 	@Log( title = "代付平台", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayAgentPlatform payAgentPlatform ) {
+		payAgentPlatform.setMerId(payAgentPlatform.getMerId().trim());
+		payAgentPlatform.setPayOrderAddr(payAgentPlatform.getPayOrderAddr().trim());
+		if(StringUtils.isNotBlank(payAgentPlatform.getPayOrderQueryAddr())) {
+			payAgentPlatform.setPayOrderQueryAddr(payAgentPlatform.getPayOrderQueryAddr().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getHeaderKey())) {
+			payAgentPlatform.setHeaderKey(payAgentPlatform.getHeaderKey().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getSignMd5())) {
+			payAgentPlatform.setSignMd5(payAgentPlatform.getSignMd5().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getSignPublicKey())) {
+			payAgentPlatform.setSignPublicKey(payAgentPlatform.getSignPublicKey().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getSignPrivateKey())) {
+			payAgentPlatform.setSignPrivateKey(payAgentPlatform.getSignPrivateKey().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getPlatWhiteIpList())) {
+			payAgentPlatform.setPlatWhiteIpList(payAgentPlatform.getPlatWhiteIpList().
+					trim().replaceAll(" ", "").replaceAll("，", ","));
+		}
 		return toAjax( payAgentPlatformService.insertPayAgentPlatform( payAgentPlatform ) );
 	}
 
@@ -92,6 +114,27 @@ public class PayAgentPlatformController extends BaseController {
 	@Log( title = "代付平台", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayAgentPlatform payAgentPlatform ) {
+		payAgentPlatform.setMerId(payAgentPlatform.getMerId().trim());
+		payAgentPlatform.setPayOrderAddr(payAgentPlatform.getPayOrderAddr().trim());
+		if(StringUtils.isNotBlank(payAgentPlatform.getPayOrderQueryAddr())) {
+			payAgentPlatform.setPayOrderQueryAddr(payAgentPlatform.getPayOrderQueryAddr().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getHeaderKey())) {
+			payAgentPlatform.setHeaderKey(payAgentPlatform.getHeaderKey().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getSignMd5())) {
+			payAgentPlatform.setSignMd5(payAgentPlatform.getSignMd5().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getSignPublicKey())) {
+			payAgentPlatform.setSignPublicKey(payAgentPlatform.getSignPublicKey().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getSignPrivateKey())) {
+			payAgentPlatform.setSignPrivateKey(payAgentPlatform.getSignPrivateKey().trim());
+		}
+		if(StringUtils.isNotBlank(payAgentPlatform.getPlatWhiteIpList())) {
+			payAgentPlatform.setPlatWhiteIpList(payAgentPlatform.getPlatWhiteIpList().
+					trim().replaceAll(" ", "").replaceAll("，", ","));
+		}
 		return toAjax( payAgentPlatformService.updatePayAgentPlatform( payAgentPlatform ) );
 	}
 
