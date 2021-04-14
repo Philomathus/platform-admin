@@ -64,4 +64,6 @@ public interface LiveUserMapper {
     int updateLiveUserIsBanKeepByFamilyId(Integer id,String remark);
 
     List<LiveUser> selectLiveUsersByMobile(@Param("mobile") String mobile);
+
+    Integer checkMobile(@Param("newMobile") String newMobile);
 }
