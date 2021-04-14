@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
+import com.qiqilm.server.admin.cache.VideoCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveFamily;
 import com.qiqilm.server.admin.domain.LiveUser;
@@ -45,6 +46,9 @@ public class LiveUserServiceImpl implements ILiveUserService {
     private LiveVideoMapper liveVideoMapper;
     @Autowired
     private ImApi imApi;
+
+    @Autowired
+    private VideoCacheUtil videoCacheUtil;
 
     /**
      * 查询主播用户信息
@@ -265,6 +269,10 @@ public class LiveUserServiceImpl implements ILiveUserService {
                 liveVideo.setGroupId(groupId);
             }
         }
+
+        if(liveVideo.getGroupId()!=null){
+            videoCacheUtil.putHostGroupId(liveVideo.getUserId(),liveVideo.getGroupId());
+        }
     }
 
 
@@ -295,10 +303,15 @@ public class LiveUserServiceImpl implements ILiveUserService {
     public AjaxResult updateMobile(String newMobile, String oldMobile, String id) {
         //校验旧手机号
         LiveUser liveUser = liveUserMapper.selectLiveUserById(Long.parseLong(id));
-        String phone = liveUser.getMobile();
-        liveUser.setMobile(newMobile);
-        liveUserMapper.updateLiveUser(liveUser);
-        return AjaxResult.success("手机好修改成功");
+        //判断手机号是否存在
+        Integer count = liveUserMapper.checkMobile(newMobile);
+        if (count==0) {
+            liveUser.setMobile(newMobile);
+            liveUserMapper.updateLiveUser(liveUser);
+            return AjaxResult.success("手机号修改成功");
+        }else {
+            return AjaxResult.error("手机号已存在");
+        }
 
     }
 }
