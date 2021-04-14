@@ -32,10 +32,12 @@
         <result property="live21"    column="live_21"    />
         <result property="live22"    column="live_22"    />
         <result property="live23"    column="live_23"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
     </resultMap>
 
     <sql id="selectLiveHostPreVo">
-        select id, family_id, host_id, host_name, status, live_0, live_1, live_2, live_3, live_4, live_5, live_6, live_7, live_8, live_9, live_10, live_11, live_12, live_13, live_14, live_15, live_16, live_17, live_18, live_19, live_20, live_21, live_22, live_23 from 7700_live.live_host_pre
+        select id, family_id, host_id, host_name, status, live_0, live_1, live_2, live_3, live_4, live_5, live_6, live_7, live_8, live_9, live_10, live_11, live_12, live_13, live_14, live_15, live_16, live_17, live_18, live_19, live_20, live_21, live_22, live_23, remark, create_time from 7700_live.live_host_pre
     </sql>
 
     <select id="selectLiveHostPreList" parameterType="LiveHostPre" resultMap="LiveHostPreResult">
@@ -47,7 +49,6 @@
             <if test="hostId != null "> and host_id = #{hostId}</if>
             <if test="hostName != null  and hostName != ''"> and host_name like concat('%', #{hostName}, '%')</if>
             <if test="status != null "> and status = #{status}</if>
-            <if test="live0 != null "> and live_0 = #{live0}</if>
         </where>
     </select>
 
@@ -88,6 +89,8 @@
             <if test="live21 != null">live_21,</if>
             <if test="live22 != null">live_22,</if>
             <if test="live23 != null">live_23,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id},</if>
@@ -119,6 +122,8 @@
                     <if test="live21 != null">#{live21},</if>
                     <if test="live22 != null">#{live22},</if>
                     <if test="live23 != null">#{live23},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="createTime != null">#{createTime},</if>
              </trim>
     </insert>
 
@@ -180,6 +185,8 @@
             <if test="live22 != null">live_22 = #{live22},</if>
     
             <if test="live23 != null">live_23 = #{live23},</if>
+
+            <if test="remark != null">remark = #{remark},</if>
     
         </trim>
         where id = #{id}
