@@ -51,6 +51,8 @@ public class MemberInfoController extends BaseController {
     private RedisUtil redisUtil;
     @Autowired
     private MemberForbidUtil memberForbidUtil;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询用户信息列表
@@ -321,6 +323,33 @@ public class MemberInfoController extends BaseController {
             rspBase.setMsg("发送失败");
         }
         return rspBase;
+    }
+
+    /**
+     * 发送短信
+     *
+     * @return
+     */
+    @ApiOperation(value = "修改手机号", notes = "修改手机号")
+    @RequestMapping(value = "/updateMobile", method = RequestMethod.POST)
+    @Log(title = "会员发送短信", businessType = BusinessType.UPDATE)
+    public AjaxResult updateMobile(@RequestBody Map map) throws Exception {
+        String memberId = (String)map.get("memberId");
+        String newMobile = (String)map.get("newMobile");
+        String oldMobile = (String)map.get("oldMobile");
+        String googleAuthCode = (String)map.get("googleAuthCode");
+        if (!ValidatorUtil.isNumber11(newMobile)) {
+            return AjaxResult.error("新手机号格式错误: 11位数字");
+        }
+/*        if (!ValidatorUtil.isNumber11(oldMobile)) {
+            return AjaxResult.error("旧手机号格式错误: 11位数字");
+        }*/
+        //校验谷歌验证码
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = userService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+        AjaxResult x = userService.checkGoogleAuthCode(Integer.parseInt(googleAuthCode), googleAuthSecret);
+        if (x != null) return x;
+        return sysUserService.updateMobile(newMobile,oldMobile,memberId);
     }
 
 

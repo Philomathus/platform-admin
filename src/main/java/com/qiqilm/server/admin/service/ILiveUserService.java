@@ -48,4 +48,6 @@ public interface ILiveUserService {
     AjaxResult openLive(Map map) throws Exception;
 
     AjaxResult closeLive(Map map);
+
+    AjaxResult updateMobile(String newMobile, String oldMobile, String id);
 }
