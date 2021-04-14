@@ -73,11 +73,15 @@ public class PayPlatformNewController extends BaseController {
 		if(StringUtils.isNotBlank(payPlatformNew.getOrgId())) {
 			payPlatformNew.setOrgId(payPlatformNew.getOrgId().trim());
 		}
-		payPlatformNew.setPlatPayUrl(payPlatformNew.getPlatPayUrl().trim());
+		if(StringUtils.isNotBlank(payPlatformNew.getPlatPayUrl())) {
+			payPlatformNew.setPlatPayUrl(payPlatformNew.getPlatPayUrl().trim());
+		}
 		if(StringUtils.isNotBlank(payPlatformNew.getPlatQueryUrl())) {
 			payPlatformNew.setPlatQueryUrl(payPlatformNew.getPlatQueryUrl().trim());
 		}
-		payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())) {
+			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
+		}
 		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())) {
 			payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().trim());
 		}
@@ -101,11 +105,15 @@ public class PayPlatformNewController extends BaseController {
 		if(StringUtils.isNotBlank(payPlatformNew.getOrgId())) {
 			payPlatformNew.setOrgId(payPlatformNew.getOrgId().trim());
 		}
-		payPlatformNew.setPlatPayUrl(payPlatformNew.getPlatPayUrl().trim());
+		if(StringUtils.isNotBlank(payPlatformNew.getPlatPayUrl())) {
+			payPlatformNew.setPlatPayUrl(payPlatformNew.getPlatPayUrl().trim());
+		}
 		if(StringUtils.isNotBlank(payPlatformNew.getPlatQueryUrl())) {
 			payPlatformNew.setPlatQueryUrl(payPlatformNew.getPlatQueryUrl().trim());
 		}
-		payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())) {
+			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
+		}
 		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())) {
 			payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().trim());
 		}
