@@ -18,10 +18,19 @@
     </sql>
 
     <select id="selectMemberGameDatafixList" parameterType="MemberGameDatafix" resultMap="MemberGameDatafixResult">
-        <include refid="selectMemberGameDatafixVo"/>
+        select a.id, a.user_id, a.game_start_time, a.game_end_time, a.platform_id, a.status ,b.name as platformName
+        from ${dbMain}.member_game_datafix a
+        left join  ${dbMain}.game_platform b
+        on a.platform_id=b.id
         <where>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="platformId != null "> and a.platform_id = #{platformId}</if>
+            <if test="userId != null and userId != '' ">and a.user_id= #{userId}</if>
         </where>
+    </select>
+    
+    <select id="getgameDatafix" resultMap="MemberGameDatafixResult">
+        select id, user_id, game_start_time, game_end_time, platform_id, status from ${dbMain}.member_game_datafix  WHERE STATUS=0 LIMIT 1
     </select>
 
 
@@ -44,5 +53,22 @@
             <if test="status != null">#{status},</if>
         </trim>
     </insert>
+
+    <update id="updateMemberGameDatafix" parameterType="MemberGameDatafix">
+        update ${dbMain}.member_game_datafix
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+
+            <if test="gameStartTime != null">game_start_time = #{gameStartTime},</if>
+
+            <if test="gameEndTime != null">game_end_time = #{gameEndTime},</if>
+
+            <if test="platformId != null">platform_id = #{platformId},</if>
+
+            <if test="status != null">status = #{status},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
 
 </mapper>

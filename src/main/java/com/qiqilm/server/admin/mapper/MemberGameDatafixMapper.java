@@ -28,4 +28,10 @@ public interface MemberGameDatafixMapper {
 	 */
 	public int insertMemberGameDatafix(MemberGameDatafix memberGameDatafix);
 
+	MemberGameDatafix getgameDatafix();
+
+	public int updateMemberGameDatafix(MemberGameDatafix memberGameDatafix);
+
+
+
 }
