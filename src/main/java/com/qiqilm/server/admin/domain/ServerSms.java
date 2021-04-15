@@ -14,9 +14,7 @@ import java.util.Date;
  * @date 2021-01-27
  */
 @Data
-public class ServerSms extends BaseEntity {
-	private static final long serialVersionUID = 1L;
-
+public class ServerSms {
 	/**
 	 * 主键
 	 */
