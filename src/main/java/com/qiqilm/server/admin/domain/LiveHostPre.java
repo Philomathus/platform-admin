@@ -21,7 +21,9 @@ public class LiveHostPre extends BaseEntity {
 
     private String dateDay;
 
-    private String live;
+    private Integer[] live;
+
+    private String liveI;
 
     /** 家族ID */
     @Excel(name = "家族ID")

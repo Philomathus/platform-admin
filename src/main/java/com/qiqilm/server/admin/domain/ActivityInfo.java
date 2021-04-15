@@ -4,6 +4,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-25
  */
+@Data
 public class ActivityInfo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -44,55 +46,17 @@ public class ActivityInfo extends BaseEntity {
     @Excel(name = "活动详情")
     private String content;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    /** 状态 */
+    @Excel(name = "状态")
+    private String status;
 
-    public String getId() {
-        return id;
-    }
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
+    /** 0=活动详情 1=图标跳转链接 */
+    @Excel(name = "0=活动详情 1=图标跳转链接")
+    private Integer type;
 
-    public String getIcon() {
-        return icon;
-    }
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-    public void setCtime(Date ctime) {
-        this.ctime = ctime;
-    }
-
-    public Date getCtime() {
-        return ctime;
-    }
-    public void setIndexs(Long indexs) {
-        this.indexs = indexs;
-    }
-
-    public Long getIndexs() {
-        return indexs;
-    }
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
-
-    public String getTypeId() {
-        return typeId;
-    }
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
+    /** 图标跳转链接*/
+    @Excel(name = "图标跳转链接")
+    private String url;
 
     @Override
     public String toString() {
