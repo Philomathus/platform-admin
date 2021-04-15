@@ -87,6 +87,9 @@
                 and update_time >= #{startTime}
                 and update_time &lt;= #{endTime}
             </if>
+            <if test="remark != null and remark != ''">
+                and remark like concat('%', #{remark}, '%')
+            </if>
         </where>
     </select>
 
@@ -287,6 +290,9 @@
         <if test="startTime != null and startTime != ''">
             and update_time >= #{startTime}
             and update_time &lt;= #{endTime}
+        </if>
+        <if test="remark != null and remark != ''">
+            and remark like concat('%', #{remark}, '%')
         </if>
     </sql>
     <sql id="getTotalSql">
