@@ -211,6 +211,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             setIms(liveVideo, id, title);
             liveVideo.setCreateType(true);
             liveVideo.setLiveImage(liveImage);
+            liveVideo.setHeadImage(hostInfo.getHeadImage());
             liveVideo.setHostName(hostInfo.getNickName());
             liveVideo.setNewPlayFlv(flv);
             liveVideo.setPlayUrl( flv );
@@ -230,6 +231,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setTitle(title);
             liveVideo.setPaiId(new Long(-1));
             liveVideo.setLiveImage(liveImage);
+            liveVideo.setHeadImage(hostInfo.getHeadImage());
             liveVideo.setLotteryId(1002);
             liveVideo.setNewPlayFlv(flv);
             liveVideo.setLotteryName("一分快三");
