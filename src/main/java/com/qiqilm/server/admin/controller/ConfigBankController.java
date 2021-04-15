@@ -2,7 +2,11 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.ActivityType;
+import com.qiqilm.server.admin.domain.BankList;
 import com.qiqilm.server.admin.domain.PayType;
+import com.qiqilm.server.admin.service.IBankListService;
+import com.qiqilm.server.admin.service.impl.BankListServiceImpl;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +38,8 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 public class ConfigBankController extends BaseController {
 	@Autowired
 	private IConfigBankService configBankService;
+	@Autowired
+	private IBankListService bankListService;
 
 	/**
 	 * 查询【公司入款银行列表】列表
@@ -76,6 +82,18 @@ public class ConfigBankController extends BaseController {
 	public AjaxResult add( @RequestBody ConfigBank configBank) {
 		configBank.setId(UuidUtil.getRandomUuidWithoutSeparator());
 		return toAjax( configBankService.insertConfigBank(configBank) );
+	}
+
+	/**
+	 * 银行列表下拉框
+	 *
+	 * @return
+	 */
+	@GetMapping("/bankLists")
+	public AjaxResult bankLists() {
+		BankList bankList = new BankList();
+		List<BankList> bankLists = bankListService.selectBankListList(bankList);
+		return AjaxResult.success(bankLists);
 	}
 
 	/**
