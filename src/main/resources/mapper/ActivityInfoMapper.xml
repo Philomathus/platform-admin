@@ -12,10 +12,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="indexs"    column="indexs"    />
         <result property="typeId"    column="type_id"    />
         <result property="content"    column="content"    />
+        <result property="status"    column="status"    />
+        <result property="type"    column="type"    />
+        <result property="url"    column="url"    />
     </resultMap>
 
     <sql id="selectActivityInfoVo">
-        select id, icon, title, ctime, indexs, type_id, content from activity_info
+        select id, icon, title, ctime, indexs, type_id, content, status, type, url from activity_info
     </sql>
 
     <select id="selectActivityInfoList" parameterType="ActivityInfo" resultMap="ActivityInfoResult">
@@ -25,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="ctime != null "> and ctime = #{ctime}</if>
             <if test="indexs != null "> and indexs = #{indexs}</if>
+            <if test="status != null "> and status = #{status}</if>
             <if test="typeId != null  and typeId != ''"> and type_id = #{typeId}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
@@ -53,6 +57,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="indexs != null">indexs,</if>
             <if test="typeId != null">type_id,</if>
             <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+            <if test="type != null">type,</if>
+            <if test="url != null">url,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -62,6 +69,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="indexs != null">#{indexs},</if>
             <if test="typeId != null">#{typeId},</if>
             <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
+            <if test="type != null">#{type},</if>
+            <if test="url != null">#{url},</if>
          </trim>
     </insert>
 
@@ -74,6 +84,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="indexs != null">indexs = #{indexs},</if>
             <if test="typeId != null">type_id = #{typeId},</if>
             <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="url != null">url = #{url},</if>
         </trim>
         where id = #{id}
     </update>

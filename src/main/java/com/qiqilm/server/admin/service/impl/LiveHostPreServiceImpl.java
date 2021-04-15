@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LiveHostPreMapper;
@@ -37,6 +38,13 @@ public class LiveHostPreServiceImpl implements ILiveHostPreService {
      */
     @Override
     public List<LiveHostPre> selectLiveHostPreList(LiveHostPre liveHostPre) {
+        if (liveHostPre.getLive() != null && liveHostPre.getLive().length > 0) {
+            String liveI = "";
+            for (int i = 0; i < liveHostPre.getLive().length; i++) {
+                liveI = " and live_" + liveHostPre.getLive()[i] + " = 1" + liveI;
+            }
+            liveHostPre.setLiveI(liveI);
+        }
         return liveHostPreMapper.selectLiveHostPreList(liveHostPre);
     }
 

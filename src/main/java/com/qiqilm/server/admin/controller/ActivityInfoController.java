@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ActivityType;
+import com.qiqilm.server.admin.domain.ConfigBank;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.service.IActivityTypeService;
 import com.qiqilm.server.admin.utils.StringUtils;
@@ -116,6 +117,16 @@ public class ActivityInfoController extends BaseController {
     public AjaxResult findActivityType() {
         List<ActivityType> activityType = activityTypeService.selectActivityType();
         return AjaxResult.success(activityType);
+    }
+
+    /**
+     * 活动信息状态修改
+     */
+    @PreAuthorize( "@ss.hasPermi('pay:configBank:edit')" )
+    @Log( title = "活动信息状态", businessType = BusinessType.UPDATE )
+    @PutMapping( "/changeStatus" )
+    public AjaxResult changeStatus( @RequestBody ActivityInfo activityInfo ) {
+        return toAjax(activityInfoService.updateActivityInfo(activityInfo));
     }
 
 }
