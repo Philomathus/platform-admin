@@ -8,10 +8,12 @@ import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberCardService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -43,10 +45,9 @@ public class MemberCardController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:memberCard:export')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(MemberCard memberCard) {
+	public void export(MemberCard memberCard, HttpServletResponse response) {
 		List<MemberCard>      list = memberCardService.selectMemberCardList(memberCard);
-		ExcelUtil<MemberCard> util = new ExcelUtil<MemberCard>(MemberCard. class);
-		return util.exportExcel( list, "memberCard" );
+		ExportExcelUtil.exportExcel( list, "会员银行卡", "会员银行卡表", MemberCard.class, response );
 	}
 
 	/**

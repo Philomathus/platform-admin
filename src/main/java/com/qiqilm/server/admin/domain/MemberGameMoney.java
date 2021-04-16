@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -53,7 +53,7 @@ public class MemberGameMoney extends BaseEntity {
 	 * 第一次进入时间
 	 */
 	@JsonFormat( pattern = "yyyy-MM-dd" )
-	@Excel( name = "第一次进入时间", width = 30, dateFormat = "yyyy-MM-dd" )
+	@Excel( name = "第一次进入时间", width = 30, exportFormat = "yyyy-MM-dd" )
 	private Date ctime;
 
 	/**

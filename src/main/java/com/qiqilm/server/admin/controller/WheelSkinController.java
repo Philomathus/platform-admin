@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.WheelSkin;
 import com.qiqilm.server.admin.service.IWheelSkinService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 转盘皮肤列Controller
@@ -48,12 +51,11 @@ public class WheelSkinController extends BaseController {
 	 * 导出转盘皮肤列列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelSkin:export')" )
-	@Log( title = "转盘皮肤列", businessType = BusinessType.EXPORT )
+	@Log( title = "转盘皮肤", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(WheelSkin wheelSkin) {
+	public void export(WheelSkin wheelSkin, HttpServletResponse response) {
 		List<WheelSkin>      list = wheelSkinService.selectWheelSkinList(wheelSkin);
-		ExcelUtil<WheelSkin> util = new ExcelUtil<>(WheelSkin.class);
-		return util.exportExcel( list, "wheelSkin" );
+		ExportExcelUtil.exportExcel( list, "转盘皮肤", "转盘皮肤表", WheelSkin.class, response );
 	}
 
 	/**

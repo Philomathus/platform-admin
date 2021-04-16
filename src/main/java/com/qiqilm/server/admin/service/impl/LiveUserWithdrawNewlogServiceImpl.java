@@ -1,24 +1,26 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.domain.LiveHostWageDay;
-import com.qiqilm.server.admin.domain.MemberRechargeLog;
-import com.qiqilm.server.admin.domain.MemberWithdrawLog;
-import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
-import com.qiqilm.server.admin.utils.*;
+import com.qiqilm.server.admin.mapper.LiveUserWithdrawNewlogMapper;
+import com.qiqilm.server.admin.service.ILiveUserWithdrawNewlogService;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
+import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.LiveUserWithdrawNewlogMapper;
-import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
-import com.qiqilm.server.admin.service.ILiveUserWithdrawNewlogService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 主播提现管理Service业务层处理
@@ -360,5 +362,51 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(update);
         return i > 0 ? AjaxResult.success() : AjaxResult.error("重置订单状态失败");
 
+    }
+
+    @Override
+    @Transactional( rollbackFor = Exception.class )
+    public AjaxResult fixOrder(String[] ids) {
+        List<LiveUserWithdrawNewlog> lists=new ArrayList<>();
+        for (int i = 0; i < ids.length; i++){
+            String id = ids[i];
+            LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(id);
+            if (liveUserWithdrawNewlog.getWstatus()!=1){
+                return AjaxResult.error(liveUserWithdrawNewlog.getOrderNo()+"状态有误不能合并订单");
+            }
+            lists.add(liveUserWithdrawNewlog);
+        }
+        if ( !redisUtil.lock( EnumLock.Anchor, lists.get(0).getUserId().toString(), "1", 5 ) ) {
+            return AjaxResult.error( "请勿重复提交" );
+        }
+        //时间倒序
+        Collections.sort(lists, (a, b) -> b.getCreateTime().compareTo(a.getCreateTime()));
+        BigDecimal sumMoney = lists.stream()
+                // 将user对象的age取出来map为Bigdecimal
+                .map(LiveUserWithdrawNewlog::getWithdrawMoney)
+                // 使用reduce()聚合函数,实现累加器
+                .reduce(BigDecimal.ZERO,BigDecimal::add);
+        for (LiveUserWithdrawNewlog log:lists){
+            if (!lists.get(0).getBankAccount().equals(log.getBankAccount())){
+                return AjaxResult.error("不同的银行账号不能合并订单");
+            }
+            if (!lists.get(0).getUserId().equals(log.getUserId())){
+                return AjaxResult.error("不同的账号不能合并订单");
+            }
+            if (lists.get(0).getId().equals(log.getId())){
+                LiveUserWithdrawNewlog liveUserWithdrawNewlog=new LiveUserWithdrawNewlog();
+                liveUserWithdrawNewlog.setWithdrawMoney(sumMoney);
+                liveUserWithdrawNewlog.setId(log.getId());
+                liveUserWithdrawNewlog.setRemark("合并订单，请勿重置订单");
+                liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(liveUserWithdrawNewlog);
+            }else {
+                LiveUserWithdrawNewlog WithdrawNewlog=new LiveUserWithdrawNewlog();
+                WithdrawNewlog.setId(log.getId());
+                WithdrawNewlog.setWstatus(Long.valueOf(6));//订单合并已销毁
+                WithdrawNewlog.setRemark( "订单合并到：" + lists.get(0).getOrderNo());
+                liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(WithdrawNewlog);
+            }
+        }
+        return AjaxResult.success();
     }
 }

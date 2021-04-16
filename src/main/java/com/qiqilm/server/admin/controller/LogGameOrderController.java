@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.service.ILogGameOrderService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 会员上下分Controller
@@ -50,10 +53,9 @@ public class LogGameOrderController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:logGameOrder:export')" )
 	@Log( title = "会员上下分", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LogGameOrder logGameOrder) {
+	public void export(LogGameOrder logGameOrder, HttpServletResponse response) {
 		List<LogGameOrder>      list = logGameOrderService.selectLogGameOrderList(logGameOrder);
-		ExcelUtil<LogGameOrder> util = new ExcelUtil<LogGameOrder>(LogGameOrder. class);
-		return util.exportExcel( list, "logGameOrder" );
+		ExportExcelUtil.exportExcel( list, "会员上下分", "会员上下分表", LogGameOrder.class, response );
 	}
 
 	/**

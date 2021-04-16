@@ -1,6 +1,6 @@
 package com.qiqilm.server.admin.domain.rsp;
 
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 
@@ -75,7 +75,7 @@ public class RspGameInfo extends BaseEntity {
     }
 
     /** 图标类型（ 0=热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞） */
-    @Excel(name = "图标类型", readConverterExp = "0=热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞")
+    @Excel(name = "图标类型", suffix = "0=热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞")
     private Long iconType;
     private String  platformName;
 //

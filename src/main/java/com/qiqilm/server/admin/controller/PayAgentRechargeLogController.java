@@ -1,18 +1,28 @@
 package com.qiqilm.server.admin.controller;
 
+import java.util.List;
+
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.PayAgentRechargeLog;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.domain.PayAgentRechargeLog;
 import com.qiqilm.server.admin.service.IPayAgentRechargeLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 【代充信息日志】Controller
@@ -38,16 +48,14 @@ public class PayAgentRechargeLogController extends BaseController {
     }
 
     /**
-     *
      * 导出【代充信息日志】列表
      */
     @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeLog:export')")
     @Log(title = "【代充信息日志】", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(PayAgentRechargeLog payAgentRechargeLog) {
+    public void export(PayAgentRechargeLog payAgentRechargeLog, HttpServletResponse response ) {
         List<PayAgentRechargeLog> list = payAgentRechargeLogService.selectPayAgentRechargeLogList(payAgentRechargeLog);
-        ExcelUtil<PayAgentRechargeLog> util = new ExcelUtil<PayAgentRechargeLog>(PayAgentRechargeLog.class);
-        return util.exportExcel(list, "payAgentRechargeLog");
+        ExportExcelUtil.exportExcel( list, "代充日志", "代充日志表", PayAgentRechargeLog.class, response );
     }
 
     /**

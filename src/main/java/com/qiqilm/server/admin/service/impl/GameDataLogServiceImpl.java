@@ -161,7 +161,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             gameDataLog.setRevenue(og.getRevenue());
 
             if(beatRateMap.containsKey(og.getPlatformId())){
-                BigDecimal beatAdd =new BigDecimal(og.getCellScore()).multiply(beatRateMap.get(og.getPlatformId())).setScale(4);
+                BigDecimal beatAdd =new BigDecimal(og.getCellScore()).multiply(beatRateMap.get(og.getPlatformId())).setScale(4 , BigDecimal.ROUND_HALF_UP);
                 willCodeMap.putIfAbsent(og.getAccount(),BigDecimal.ZERO);
                 willCodeMap.put(og.getAccount(),willCodeMap.get(og.getAccount()).add(beatAdd));
             }
@@ -240,7 +240,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
                 memberBcodeMapper.updateMemberBcode(codeFlow);
             }
             if(codeAccountMap.containsKey(user_id)){
-                codeAccountMap.put(user_id,codeAccountMap.get(user_id).add(beatVal).setScale(4));
+                codeAccountMap.put(user_id,codeAccountMap.get(user_id).add(beatVal).setScale(4, BigDecimal.ROUND_HALF_UP));
             }else{
                 codeAccountMap.put(user_id,beatVal);
             }

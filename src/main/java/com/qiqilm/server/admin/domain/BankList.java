@@ -40,6 +40,10 @@ public class BankList extends BaseEntity {
     @Excel(name = "排序 从小到大顺序")
     private Long sort;
 
+    /** 官网地址 */
+    @Excel(name = "官网地址")
+    private String url;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -49,6 +53,7 @@ public class BankList extends BaseEntity {
             .append("bankIcon", getBankIcon())
             .append("status", getStatus())
             .append("sort", getSort())
+            .append("url", getUrl())
             .toString();
     }
 }

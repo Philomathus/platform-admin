@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import lombok.Data;
@@ -68,14 +68,14 @@ public class LogGameOrder extends BaseEntity {
 	 * 开始时间
 	 */
 	@JsonFormat( pattern = DateFormatUtils.SPLIT_PATTERN_DATETIME )
-	@Excel( name = "开始时间", width = 30, dateFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
+	@Excel( name = "开始时间", width = 30, exportFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
 	private Date bTime;
 
 	/**
 	 * 结束时间
 	 */
 	@JsonFormat( pattern = DateFormatUtils.SPLIT_PATTERN_DATETIME )
-	@Excel( name = "结束时间", width = 30, dateFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
+	@Excel( name = "结束时间", width = 30, exportFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
 	private Date     eTime;
 	/**
 	 * 选择日期

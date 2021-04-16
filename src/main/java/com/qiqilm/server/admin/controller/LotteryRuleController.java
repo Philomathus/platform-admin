@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.controller;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ActivityType;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,8 @@ import com.qiqilm.server.admin.domain.LotteryRule;
 import com.qiqilm.server.admin.service.ILotteryRuleService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 开奖规则说明Controller
@@ -51,10 +54,9 @@ public class LotteryRuleController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:export')" )
 	@Log( title = "开奖规则说明", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LotteryRule lotteryRule) {
+	public void export(LotteryRule lotteryRule, HttpServletResponse response) {
 		List<LotteryRule>      list = lotteryRuleService.selectLotteryRuleList(lotteryRule);
-		ExcelUtil<LotteryRule> util = new ExcelUtil<>(LotteryRule.class);
-		return util.exportExcel( list, "lotteryRule" );
+		ExportExcelUtil.exportExcel( list, "开奖规则说明", "开奖规则说明表", LotteryRule.class, response );
 	}
 
 	/**

@@ -2,7 +2,12 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.ActivityType;
+import com.qiqilm.server.admin.domain.BankList;
 import com.qiqilm.server.admin.domain.PayType;
+import com.qiqilm.server.admin.service.IBankListService;
+import com.qiqilm.server.admin.service.impl.BankListServiceImpl;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,8 @@ import com.qiqilm.server.admin.service.IConfigBankService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 【公司入款银行列表】Controller
  *
@@ -34,6 +41,8 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 public class ConfigBankController extends BaseController {
 	@Autowired
 	private IConfigBankService configBankService;
+	@Autowired
+	private IBankListService bankListService;
 
 	/**
 	 * 查询【公司入款银行列表】列表
@@ -52,10 +61,9 @@ public class ConfigBankController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:export')" )
 	@Log( title = "【公司入款银行列表】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(ConfigBank configBank) {
+	public void export(ConfigBank configBank, HttpServletResponse response) {
 		List<ConfigBank>      list = configBankService.selectConfigBankList(configBank);
-		ExcelUtil<ConfigBank> util = new ExcelUtil<ConfigBank>(ConfigBank. class);
-		return util.exportExcel( list, "configBank" );
+		ExportExcelUtil.exportExcel( list, "公司入款银行列表", "公司入款银行表", ConfigBank.class, response );
 	}
 
 	/**
@@ -75,7 +83,27 @@ public class ConfigBankController extends BaseController {
 	@PostMapping
 	public AjaxResult add( @RequestBody ConfigBank configBank) {
 		configBank.setId(UuidUtil.getRandomUuidWithoutSeparator());
+		BankList bankList = new BankList();
+		bankList.setBankName(configBank.getName());
+		List<BankList> bankLists = bankListService.selectBankListList(bankList);
+		if(bankList != null) {
+			configBank.setIcon(bankLists.get(0).getBankIcon());
+			configBank.setCode(bankLists.get(0).getBankCode());
+			configBank.setUrl(bankLists.get(0).getUrl());
+		}
 		return toAjax( configBankService.insertConfigBank(configBank) );
+	}
+
+	/**
+	 * 银行列表下拉框
+	 *
+	 * @return
+	 */
+	@GetMapping("/bankLists")
+	public AjaxResult bankLists() {
+		BankList bankList = new BankList();
+		List<BankList> bankLists = bankListService.selectBankListList(bankList);
+		return AjaxResult.success(bankLists);
 	}
 
 	/**

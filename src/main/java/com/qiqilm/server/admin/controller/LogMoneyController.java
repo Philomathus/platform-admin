@@ -8,12 +8,14 @@ import com.qiqilm.server.admin.domain.LogMoney;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILogMoneyService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -54,9 +56,8 @@ public class LogMoneyController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:export')" )
 	@Log( title = " 会员资金信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( LogMoney logMoney ) {
+	public void export( LogMoney logMoney, HttpServletResponse response) {
 		List<LogMoney>      list = logMoneyService.selectLogMoneyList( logMoney );
-		ExcelUtil<LogMoney> util = new ExcelUtil<>( LogMoney.class );
-		return util.exportExcel( list, "会员资金信息" );
+		ExportExcelUtil.exportExcel( list, "会员资金信息", "会员资金信息表", LogMoney.class, response );
 	}
 }

@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.LiveUserMount;
 import com.qiqilm.server.admin.service.ILiveUserMountService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 直播间会员坐骑Controller
@@ -50,10 +53,9 @@ public class LiveUserMountController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('live:liveUserMount:export')" )
 	@Log( title = "直播间会员坐骑", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LiveUserMount liveUserMount) {
+	public void export(LiveUserMount liveUserMount, HttpServletResponse response) {
 		List<LiveUserMount>      list = liveUserMountService.selectLiveUserMountList(liveUserMount);
-		ExcelUtil<LiveUserMount> util = new ExcelUtil<>(LiveUserMount.class);
-		return util.exportExcel( list, "liveUserMount" );
+		ExportExcelUtil.exportExcel( list, "直播间会员坐骑", "直播间会员坐骑表", LiveUserMount.class, response );
 	}
 
 	/**

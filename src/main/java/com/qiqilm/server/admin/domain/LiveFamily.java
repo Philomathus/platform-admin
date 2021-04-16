@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -51,7 +51,7 @@ public class LiveFamily extends BaseEntity {
 
     /** 日期字段,按日期归档 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "日期字段,按日期归档", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "日期字段,按日期归档", width = 30, exportFormat = "yyyy-MM-dd")
     private Date createDate;
 
     /** 年 */

@@ -8,12 +8,13 @@ import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
 import com.qiqilm.server.admin.service.IPayService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -48,10 +49,9 @@ public class PayPlatformNewController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:export')" )
 	@Log( title = "支付平台", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( PayPlatformNew payPlatformNew ) {
+	public void export( PayPlatformNew payPlatformNew, HttpServletResponse response) {
 		List<PayPlatformNew>      list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
-		ExcelUtil<PayPlatformNew> util = new ExcelUtil<PayPlatformNew>( PayPlatformNew.class );
-		return util.exportExcel( list, "payPlatformNew" );
+		ExportExcelUtil.exportExcel( list, "支付平台", "支付平台表", PayPlatformNew.class, response );
 	}
 
 	/**
