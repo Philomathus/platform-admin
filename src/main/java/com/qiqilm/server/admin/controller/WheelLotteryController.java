@@ -8,10 +8,12 @@ import com.qiqilm.server.admin.domain.WheelLottery;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IWheelLotteryService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -43,10 +45,9 @@ public class WheelLotteryController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:export')" )
 	@Log( title = "转盘彩票", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(WheelLottery wheelLottery) {
+	public void export(WheelLottery wheelLottery, HttpServletResponse response) {
 		List<WheelLottery>      list = wheelLotteryService.selectWheelLotteryList(wheelLottery);
-		ExcelUtil<WheelLottery> util = new ExcelUtil<>(WheelLottery.class);
-		return util.exportExcel( list, "wheelLottery" );
+		ExportExcelUtil.exportExcel( list, "转盘彩票", "转盘彩票表", WheelLottery.class, response );
 	}
 
 	/**

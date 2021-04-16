@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -33,7 +33,7 @@ public class MessageGameNotice extends BaseEntity {
 
     /** 发布时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "发布时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "发布时间", width = 30, exportFormat = "yyyy-MM-dd")
     private Date pubdatetime;
 
     /** 内容 */

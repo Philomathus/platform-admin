@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -55,17 +55,17 @@ public class LiveVideo extends BaseEntity {
 
 	/** 开始时间 */
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
-	@Excel( name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss" )
+	@Excel( name = "开始时间", width = 30, exportFormat = "yyyy-MM-dd HH:mm:ss" )
 	private Date beginTime;
 
 	/** 结束时间 */
 	@JsonFormat( pattern = "yyyy-MM-dd" )
-	@Excel( name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd" )
+	@Excel( name = "结束时间", width = 30, exportFormat = "yyyy-MM-dd" )
 	private Date endTime;
 
 	/** 结束日期 */
 	@JsonFormat( pattern = "yyyy-MM-dd" )
-	@Excel( name = "结束日期", width = 30, dateFormat = "yyyy-MM-dd" )
+	@Excel( name = "结束日期", width = 30, exportFormat = "yyyy-MM-dd" )
 	private Date endDate;
 
 	/** 群组ID,通过create_group后返回的值;直播结束后解散群 */
@@ -78,7 +78,7 @@ public class LiveVideo extends BaseEntity {
 
 	/** 最后心跳监听时间；如果超过监听时间，则说明主播已经掉线了 */
 	@JsonFormat( pattern = "yyyy-MM-dd" )
-	@Excel( name = "最后心跳监听时间；如果超过监听时间，则说明主播已经掉线了", width = 30, dateFormat = "yyyy-MM-dd" )
+	@Excel( name = "最后心跳监听时间；如果超过监听时间，则说明主播已经掉线了", width = 30, exportFormat = "yyyy-MM-dd" )
 	private Date monitorTime;
 
 	/** 聊天群中机器人数量 */

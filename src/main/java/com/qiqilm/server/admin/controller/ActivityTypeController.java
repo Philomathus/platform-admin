@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,8 @@ import com.qiqilm.server.admin.domain.ActivityType;
 import com.qiqilm.server.admin.service.IActivityTypeService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 活动类型Controller
@@ -52,15 +55,14 @@ public class ActivityTypeController extends BaseController {
 	}
     
 	/**
-	 * 导出活动类型
+	 * 活动类型
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:activityType:export')" )
-	@Log( title = "导出活动类型", businessType = BusinessType.EXPORT )
+	@Log( title = "活动类型", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(ActivityType activityType) {
+	public void export(ActivityType activityType, HttpServletResponse response) {
 		List<ActivityType>      list = activityTypeService.selectActivityTypeList(activityType);
-		ExcelUtil<ActivityType> util = new ExcelUtil<ActivityType>(ActivityType. class);
-		return util.exportExcel( list, "activityType" );
+		ExportExcelUtil.exportExcel( list, "活动类型", "活动类型表", ActivityType.class, response );
 	}
 
 	/**

@@ -175,14 +175,14 @@ public class LiveUserController extends BaseController {
 	}
 
 	@PreAuthorize( "@ss.hasPermi('live:anchorAward:export')" )
+	@Log( title = "导出家族", businessType = BusinessType.EXPORT )
 	@GetMapping( "/anchorAward/export" )
-	public AjaxResult anchorAwardExport( ReqLotteryBat req ) {
+	public void anchorAwardExport( ReqLotteryBat req , HttpServletResponse response) {
 		if ( StringUtils.isNotBlank( req.getUpdateTime() ) ) {
 			req.setStartTime( req.getUpdateTime() + " 00:00:00" );
 			req.setEndTime( req.getUpdateTime() + " 23:59:59" );
 		}
 		List<RspLotteryBet>      list = liveUserService.selectAnchorAward( req );
-		ExcelUtil<RspLotteryBet> util = new ExcelUtil<>( RspLotteryBet.class );
-		return util.exportExcel( list, "anchorAward" );
+		ExportExcelUtil.exportExcel( list, "公司入款", "公司入款信息表", RspLotteryBet.class, response );
 	}
 }

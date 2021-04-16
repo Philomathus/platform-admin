@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,8 @@ import com.qiqilm.server.admin.domain.MessageOnSite;
 import com.qiqilm.server.admin.service.IMessageOnSiteService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 站内信息Controller
@@ -55,10 +58,9 @@ public class MessageOnSiteController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:messageOnSite:export')" )
 	@Log( title = "站内信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(MessageOnSite messageOnSite) {
+	public void export(MessageOnSite messageOnSite, HttpServletResponse response) {
 		List<MessageOnSite>      list = messageOnSiteService.selectMessageOnSiteList(messageOnSite);
-		ExcelUtil<MessageOnSite> util = new ExcelUtil<MessageOnSite>(MessageOnSite. class);
-		return util.exportExcel( list, "messageOnSite" );
+		ExportExcelUtil.exportExcel( list, "站内信息", "站内信息表", MessageOnSite.class, response );
 	}
 
 	/**

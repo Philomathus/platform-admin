@@ -8,10 +8,12 @@ import com.qiqilm.server.admin.domain.LiveVideoClassified;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoClassifiedService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -43,10 +45,9 @@ public class LiveVideoClassifiedController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:export')" )
 	@Log( title = "导出分类列表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LiveVideoClassified liveVideoClassified) {
+	public void export(LiveVideoClassified liveVideoClassified, HttpServletResponse response) {
 		List<LiveVideoClassified>      list = liveVideoClassifiedService.selectLiveVideoClassifiedList(liveVideoClassified);
-		ExcelUtil<LiveVideoClassified> util = new ExcelUtil<LiveVideoClassified>(LiveVideoClassified. class);
-		return util.exportExcel( list, "liveVideoClassified" );
+		ExportExcelUtil.exportExcel( list, "导出分类列表", "分类列表", LiveVideoClassified.class, response );
 	}
 
 	/**

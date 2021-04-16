@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.domain.MemberBcode;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberBcodeService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -55,10 +57,9 @@ public class MemberBcodeController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberBcode:export')" )
 	@Log( title = "会员打码数据", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( MemberBcode memberBcode ) {
+	public void export( MemberBcode memberBcode, HttpServletResponse response) {
 		List<MemberBcode>      list = memberBcodeService.selectMemberBcodeList( memberBcode );
-		ExcelUtil<MemberBcode> util = new ExcelUtil<>( MemberBcode.class );
-		return util.exportExcel( list, "memberBcode" );
+		ExportExcelUtil.exportExcel( list, "会员打码数据", "会员打码数据表", MemberBcode.class, response );
 	}
 
 	/**

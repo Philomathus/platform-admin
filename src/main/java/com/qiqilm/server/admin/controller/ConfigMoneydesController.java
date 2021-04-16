@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.PayType;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import com.qiqilm.server.admin.domain.ConfigMoneydes;
 import com.qiqilm.server.admin.service.IConfigMoneydesService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 【请填写功能名称】Controller
@@ -53,10 +56,9 @@ public class ConfigMoneydesController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:configMoneydes:export')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(ConfigMoneydes configMoneydes) {
+	public void export(ConfigMoneydes configMoneydes, HttpServletResponse response) {
 		List<ConfigMoneydes>      list = configMoneydesService.selectConfigMoneydesList(configMoneydes);
-		ExcelUtil<ConfigMoneydes> util = new ExcelUtil<ConfigMoneydes>(ConfigMoneydes. class);
-		return util.exportExcel( list, "configMoneydes" );
+		ExportExcelUtil.exportExcel( list, "资金配置详细", "资金配置详细表", ConfigMoneydes.class, response );
 	}
 
 	/**
