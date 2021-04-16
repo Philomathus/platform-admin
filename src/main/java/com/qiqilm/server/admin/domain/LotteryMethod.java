@@ -1,6 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -25,7 +25,7 @@ public class LotteryMethod extends BaseEntity {
 
 
     /** 排序键（玩法序号） */
-    @Excel(name = "排序键", readConverterExp = "玩=法序号")
+    @Excel(name = "排序键", suffix = "玩=法序号")
     private Long order;
 
 
@@ -35,7 +35,7 @@ public class LotteryMethod extends BaseEntity {
 
 
     /** 排序键（玩法序号） */
-    @Excel(name = "排序键", readConverterExp = "玩=法序号")
+    @Excel(name = "排序键", suffix = "玩=法序号")
     private Long ind;
 
 

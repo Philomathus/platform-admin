@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -38,7 +38,7 @@ public class LiveProplog extends BaseEntity {
     private String propName;
 
     /** 钻石（from_user_id减少的钻石）合计 */
-    @Excel(name = "钻石", readConverterExp = "f=rom_user_id减少的钻石")
+    @Excel(name = "钻石", suffix = "f=rom_user_id减少的钻石")
     private BigDecimal totalDiamonds;
 
     /** 印票(to_user_id增加的印票）合计;is_red_envelope=1时,为主播获得的：钻石 数量 */

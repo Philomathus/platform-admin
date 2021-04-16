@@ -12,11 +12,13 @@ import com.qiqilm.server.admin.service.IPayChannelNewService;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
 import com.qiqilm.server.admin.service.IPayTypeService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,10 +56,9 @@ public class PayChannelNewController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payChannelNew:export')" )
 	@Log( title = "支付通道", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( PayChannelNew payChannelNew ) {
+	public void export( PayChannelNew payChannelNew , HttpServletResponse response) {
 		List<PayChannelNew>      list = payChannelNewService.selectPayChannelNewList( payChannelNew );
-		ExcelUtil<PayChannelNew> util = new ExcelUtil<>( PayChannelNew.class );
-		return util.exportExcel( list, "payChannelNew" );
+		ExportExcelUtil.exportExcel( list, "支付通道", "支付通道表", PayChannelNew.class, response );
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -51,7 +51,7 @@ public class GameType extends BaseEntity {
 	/**
 	 * 图标类型（ 0=热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票）
 	 */
-	@Excel( name = "图标类型", readConverterExp = "0==热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票" )
+	@Excel( name = "图标类型", suffix = "0==热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票" )
 	private Integer iconType;
 
 	public String getId() {

@@ -12,6 +12,7 @@ import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILiveVideoChatService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -107,10 +109,9 @@ public class LiveVideoChatController extends BaseController {
     @PreAuthorize("@ss.hasPermi('admin:liveVideoChat:export')")
     @Log(title = "会员发言", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(LiveVideoChat liveVideoChat) {
+    public void export(LiveVideoChat liveVideoChat, HttpServletResponse response) {
         List<LiveVideoChat> list = liveVideoChatService.selectLiveVideoChatList(liveVideoChat);
-        ExcelUtil<LiveVideoChat> util = new ExcelUtil<>(LiveVideoChat.class);
-        return util.exportExcel(list, "liveVideoChat");
+        ExportExcelUtil.exportExcel( list, "会员发言", "会员发言表", LiveVideoChat.class, response );
     }
 
     /**

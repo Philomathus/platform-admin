@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.controller;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.SystemIpWhite;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import com.qiqilm.server.admin.domain.ConfigWaiter;
 import com.qiqilm.server.admin.service.IConfigWaiterService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 客服管理Controller
@@ -52,10 +55,9 @@ public class ConfigWaiterController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:configWaiter:export')" )
 	@Log( title = "客服管理", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(ConfigWaiter configWaiter) {
-		List<ConfigWaiter>      list = configWaiterService.selectConfigWaiterList(configWaiter);
-		ExcelUtil<ConfigWaiter> util = new ExcelUtil<>(ConfigWaiter.class);
-		return util.exportExcel( list, "configWaiter" );
+	public void export(ConfigWaiter configWaiter, HttpServletResponse response) {
+		List<ConfigWaiter> list = configWaiterService.selectConfigWaiterList(configWaiter);
+		ExportExcelUtil.exportExcel( list, "公司入款", "公司入款信息表", ConfigWaiter.class, response );
 	}
 
 	/**

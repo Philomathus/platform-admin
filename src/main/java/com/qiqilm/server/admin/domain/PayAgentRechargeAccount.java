@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -58,13 +58,13 @@ public class PayAgentRechargeAccount extends BaseEntity {
     /** 开店时间 */
     /*@JsonFormat(pattern = "HH:mm:ss")
     */
-    @Excel(name = "开店时间", width = 30, dateFormat = "HH:mm:ss")
+    @Excel(name = "开店时间", width = 30, exportFormat = "HH:mm:ss")
     private String businessBeginTime;
 
     /** 关店时间 */
    /* @JsonFormat(pattern = "HH:mm:ss")
     */
-    @Excel(name = "关店时间", width = 30, dateFormat = "HH:mm:ss")
+    @Excel(name = "关店时间", width = 30, exportFormat = "HH:mm:ss")
     private String businessEndTime;
 
     /** 充值优惠比例 */
@@ -85,12 +85,12 @@ public class PayAgentRechargeAccount extends BaseEntity {
 
     /** 上次登录时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "上次登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "上次登录时间", width = 30, exportFormat = "yyyy-MM-dd HH:mm:ss")
     private Date beforeLoginTime;
 
     /** 本次登录时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "本次登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "本次登录时间", width = 30, exportFormat = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

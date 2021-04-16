@@ -1,6 +1,6 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -18,7 +18,7 @@ public class MemberDirtyWords extends BaseEntity {
     private Long id;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${comment}", suffix = "$column.readConverterExp()")
     private String name;
 
     public void setId(Long id) {

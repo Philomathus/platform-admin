@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -78,7 +78,7 @@ public class LotteryBet0 extends BaseEntity {
 
 	/** 下注时间 */
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
-	@Excel( name = "下注时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss" )
+	@Excel( name = "下注时间", width = 30, exportFormat = "yyyy-MM-dd HH:mm:ss" )
 	private Date betTime;
 
 	@JsonIgnore

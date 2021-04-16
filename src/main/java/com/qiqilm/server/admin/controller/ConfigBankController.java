@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.domain.BankList;
 import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.service.IBankListService;
 import com.qiqilm.server.admin.service.impl.BankListServiceImpl;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import com.qiqilm.server.admin.domain.ConfigBank;
 import com.qiqilm.server.admin.service.IConfigBankService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 【公司入款银行列表】Controller
@@ -58,10 +61,9 @@ public class ConfigBankController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:export')" )
 	@Log( title = "【公司入款银行列表】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(ConfigBank configBank) {
+	public void export(ConfigBank configBank, HttpServletResponse response) {
 		List<ConfigBank>      list = configBankService.selectConfigBankList(configBank);
-		ExcelUtil<ConfigBank> util = new ExcelUtil<ConfigBank>(ConfigBank. class);
-		return util.exportExcel( list, "configBank" );
+		ExportExcelUtil.exportExcel( list, "公司入款银行列表", "公司入款银行表", ConfigBank.class, response );
 	}
 
 	/**

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -36,7 +36,7 @@ public class PayAgentRechargeTradeLog extends BaseEntity {
     private String nickName;
 
     /** 收入（支出） */
-    @Excel(name = "收入", readConverterExp = "支=出")
+    @Excel(name = "收入", suffix = "支=出")
     private BigDecimal income;
 
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )

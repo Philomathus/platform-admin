@@ -8,11 +8,13 @@ import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,10 +57,9 @@ public class LiveVideoController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:export')" )
 	@Log( title = "直播", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( LiveVideo liveVideo ) {
+	public void export( LiveVideo liveVideo, HttpServletResponse response ) {
 		List<LiveVideo>      list = liveVideoService.selectLiveVideoList( liveVideo );
-		ExcelUtil<LiveVideo> util = new ExcelUtil<>( LiveVideo.class );
-		return util.exportExcel( list, "liveVideo" );
+		ExportExcelUtil.exportExcel( list, "直播", "直播息表", LiveVideo.class, response );
 	}
 
 	/**

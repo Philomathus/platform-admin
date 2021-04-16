@@ -10,11 +10,13 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayAgentPlatformService;
 import com.qiqilm.server.admin.service.IPayAgentService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -61,10 +63,9 @@ public class PayAgentPlatformController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentPlatform:export')" )
 	@Log( title = "代付平台", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( PayAgentPlatform payAgentPlatform ) {
+	public void export( PayAgentPlatform payAgentPlatform , HttpServletResponse response) {
 		List<PayAgentPlatform>      list = payAgentPlatformService.selectPayAgentPlatformList( payAgentPlatform );
-		ExcelUtil<PayAgentPlatform> util = new ExcelUtil<>( PayAgentPlatform.class );
-		return util.exportExcel( list, "payAgentPlatform" );
+		ExportExcelUtil.exportExcel( list, "代付平台", "代付平台表", PayAgentPlatform.class, response );
 	}
 
 	/**
