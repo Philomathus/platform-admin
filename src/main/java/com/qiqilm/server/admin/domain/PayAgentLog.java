@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -53,12 +53,14 @@ public class PayAgentLog {
 	private BigDecimal withdrawMoney;
 
 	@JsonFormat( pattern = "yyyy-MM-dd" )
-	@Excel( name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd" )
+	@Excel( name = "提交时间", width = 30, isImportField = "true", exportFormat = "yyyy-MM-dd",
+			importFormat = "yyyy-MM-dd HH:mm:ss", databaseFormat = "yyyy-MM-dd" )
 	private Date createTime;
 
 	/** 回调时间 */
 	@JsonFormat( pattern = "yyyy-MM-dd" )
-	@Excel( name = "回调时间", width = 30, dateFormat = "yyyy-MM-dd" )
+	@Excel( name = "回调时间", width = 30, isImportField = "true", exportFormat = "yyyy-MM-dd",
+			importFormat = "yyyy-MM-dd HH:mm:ss", databaseFormat = "yyyy-MM-dd" )
 	private Date callbackTime;
 
 	/** 回调状态 0 回调中 1 成功 2失败 */
