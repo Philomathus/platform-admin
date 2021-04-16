@@ -23,9 +23,9 @@ public class HostLiveTimeOut {
     @Autowired
     private ILiveVideoService liveVideoService;
 
-    @Scheduled( fixedDelay = 60000, initialDelay = 60000 )
+    @Scheduled( fixedDelay = 120000, initialDelay = 120000 )
     public void listenerMonitor() {
-        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),60)){
+        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),100)){
             return;
         }
 
@@ -34,6 +34,7 @@ public class HostLiveTimeOut {
             liveVideos.forEach( videoId -> {
                 if(!redisUtil.exists( Constants.LIVE_PREX + "lock:host:" + videoId)){
                     liveVideoService.close( Long.valueOf(videoId), "timeOut" );
+                    videoCacheUtil.delAbortVideoByMonitorTime(videoId);
                 }
 
             } );
