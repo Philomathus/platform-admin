@@ -159,6 +159,11 @@ public class VideoCacheUtil {
 		return redisUtil.zRangeByScore( REDIS_M_KEY, 0, System.currentTimeMillis() - 300000L );
 	}
 
+
+	public void delAbortVideoByMonitorTime(String videoId ) {
+		redisUtil.zRemove(REDIS_M_KEY,videoId);
+	}
+
 	/**
 	 * 获取缓存并设置直播信息
 	 *
