@@ -49,6 +49,7 @@ public class PayAgentRechargeRecord extends BaseEntity {
 
     private String depositTotal;
     private String proposedTotal;
+    private Integer googleAuthCode;
 
 
     @Override
