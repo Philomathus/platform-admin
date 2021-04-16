@@ -40,18 +40,6 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 		List<PayAgentRechargeAccountLog> list = payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogList(payAgentRechargeAccountLog);
 		return getDataTable( list );
 	}
-    
-	/**
-	 * 导出【代充人入款】列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:export')" )
-	@Log( title = "【代充人入款】", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public AjaxResult export(PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
-		List<PayAgentRechargeAccountLog>      list = payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogList(payAgentRechargeAccountLog);
-		ExcelUtil<PayAgentRechargeAccountLog> util = new ExcelUtil<PayAgentRechargeAccountLog>(PayAgentRechargeAccountLog. class);
-		return util.exportExcel( list, "payAgentRechargeAccountLog" );
-	}
 
 	/**
 	 * 导出【代充人入款】列表
