@@ -1,6 +1,6 @@
 package com.qiqilm.server.admin.domain.rsp;
 
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import lombok.Data;
 
 import java.math.BigDecimal;

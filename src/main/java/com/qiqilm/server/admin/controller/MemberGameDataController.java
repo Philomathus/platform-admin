@@ -10,10 +10,12 @@ import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -60,9 +62,8 @@ public class MemberGameDataController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:export')" )
 	@Log( title = "会员注单数据", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( ReqMemberGameData reqMemberGameData) {
+	public void export( ReqMemberGameData reqMemberGameData, HttpServletResponse response) {
 		List<RspMemberGameData>      list = memberGameDataService.selectMemberGameDataList( reqMemberGameData );
-		ExcelUtil<RspMemberGameData> util = new ExcelUtil<RspMemberGameData>( RspMemberGameData.class );
-		return util.exportExcel( list, "memberGameData" );
+		ExportExcelUtil.exportExcel( list, "会员注单数据", "会员注单数据表", RspMemberGameData.class, response );
 	}
 }

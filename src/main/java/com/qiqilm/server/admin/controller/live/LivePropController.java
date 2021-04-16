@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller.live;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.LiveProp;
 import com.qiqilm.server.admin.service.ILivePropService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 礼物列Controller
@@ -60,10 +63,9 @@ public class LivePropController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveProp:export')" )
 	@Log( title = "礼物列", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LiveProp liveProp) {
+	public void export(LiveProp liveProp, HttpServletResponse response) {
 		List<LiveProp>      list = livePropService.selectLivePropList(liveProp);
-		ExcelUtil<LiveProp> util = new ExcelUtil<LiveProp>(LiveProp. class);
-		return util.exportExcel( list, "liveProp" );
+		ExportExcelUtil.exportExcel( list, "礼物列", "礼物列表", LiveProp.class, response );
 	}
 
 	/**

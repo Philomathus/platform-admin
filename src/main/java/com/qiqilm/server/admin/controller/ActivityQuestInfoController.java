@@ -4,11 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ActivityQuestType;
-import com.qiqilm.server.admin.domain.ActivityType;
 import com.qiqilm.server.admin.domain.GameInfo;
 import com.qiqilm.server.admin.service.IActivityQuestTypeService;
-import com.qiqilm.server.admin.service.IActivityTypeService;
 import com.qiqilm.server.admin.service.IGameInfoService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,9 @@ import com.qiqilm.server.admin.domain.ActivityQuestInfo;
 import com.qiqilm.server.admin.service.IActivityQuestInfoService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 任务信息列表Controller
@@ -64,10 +66,9 @@ public class ActivityQuestInfoController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:activityQuestInfo:export')" )
 	@Log( title = "任务信息列表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(ActivityQuestInfo activityQuestInfo) {
+	public void export(ActivityQuestInfo activityQuestInfo, HttpServletResponse response) {
 		List<ActivityQuestInfo>      list = activityQuestInfoService.selectActivityQuestInfoList(activityQuestInfo);
-		ExcelUtil<ActivityQuestInfo> util = new ExcelUtil<ActivityQuestInfo>(ActivityQuestInfo. class);
-		return util.exportExcel( list, "activityQuestInfo" );
+		ExportExcelUtil.exportExcel( list, "任务信息", "任务信息表", ActivityQuestInfo.class, response );
 	}
 
 	/**

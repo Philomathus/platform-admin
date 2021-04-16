@@ -8,11 +8,13 @@ import com.qiqilm.server.admin.domain.MessageGameNotice;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMessageGameNoticeService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -44,10 +46,9 @@ public class MessageGameNoticeController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:messageGameNotice:export')" )
 	@Log( title = "游戏公告", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( MessageGameNotice messageGameNotice ) {
+	public void export( MessageGameNotice messageGameNotice, HttpServletResponse response ) {
 		List<MessageGameNotice>      list = messageGameNoticeService.selectMessageGameNoticeList( messageGameNotice );
-		ExcelUtil<MessageGameNotice> util = new ExcelUtil<MessageGameNotice>( MessageGameNotice.class );
-		return util.exportExcel( list, "messageGameNotice" );
+		ExportExcelUtil.exportExcel( list, "公司入款", "公司入款信息表", MessageGameNotice.class, response );
 	}
 
 	/**

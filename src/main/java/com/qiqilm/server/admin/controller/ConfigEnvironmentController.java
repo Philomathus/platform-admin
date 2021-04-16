@@ -8,10 +8,12 @@ import com.qiqilm.server.admin.domain.ConfigEnvironment;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IConfigEnvironmentService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,10 +46,9 @@ public class ConfigEnvironmentController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:export')" )
 	@Log( title = "导出环境参数配置列表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( ConfigEnvironment configEnvironment ) {
+	public void export( ConfigEnvironment configEnvironment, HttpServletResponse response) {
 		List<ConfigEnvironment>      list = configEnvironmentService.selectConfigEnvironmentList( configEnvironment );
-		ExcelUtil<ConfigEnvironment> util = new ExcelUtil<>( ConfigEnvironment.class );
-		return util.exportExcel( list, "configEnvironment" );
+		ExportExcelUtil.exportExcel( list, "环境参数配置", "环境参数配置表", ConfigEnvironment.class, response );
 	}
 
 	/**

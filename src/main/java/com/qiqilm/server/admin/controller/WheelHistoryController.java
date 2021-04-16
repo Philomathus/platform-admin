@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.WheelHistory;
 import com.qiqilm.server.admin.service.IWheelHistoryService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 转盘中奖历史Controller
@@ -50,10 +53,9 @@ public class WheelHistoryController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelHistory:export')" )
 	@Log( title = "转盘中奖历史", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(WheelHistory wheelHistory) {
+	public void export(WheelHistory wheelHistory, HttpServletResponse response) {
 		List<WheelHistory>      list = wheelHistoryService.selectWheelHistoryList(wheelHistory);
-		ExcelUtil<WheelHistory> util = new ExcelUtil<>(WheelHistory.class);
-		return util.exportExcel( list, "wheelHistory" );
+		ExportExcelUtil.exportExcel( list, "转盘中奖历史", "转盘中奖历史表", WheelHistory.class, response );
 	}
 
 	/**

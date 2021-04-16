@@ -26,6 +26,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -71,10 +72,9 @@ public class MemberInfoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('member:memberInfo:export')")
     @Log(title = "导出", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(MemberInfo memberInfo) {
+    public void export(MemberInfo memberInfo, HttpServletResponse response) {
         List<MemberInfo> list = memberInfoService.selectMemberInfoList(memberInfo);
-        ExcelUtil<MemberInfo> util = new ExcelUtil<MemberInfo>(MemberInfo.class);
-        return util.exportExcel(list, "memberInfo");
+        ExportExcelUtil.exportExcel( list, "用户信息", "用户信息表", MemberInfo.class, response );
     }
 
     /**

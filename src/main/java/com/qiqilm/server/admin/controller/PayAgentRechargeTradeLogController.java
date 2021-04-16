@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.PayAgentRechargeTradeLog;
 import com.qiqilm.server.admin.service.IPayAgentRechargeTradeLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 【请填写功能名称】Controller
@@ -50,10 +53,9 @@ public class PayAgentRechargeTradeLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeTradeLog:export')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(PayAgentRechargeTradeLog payAgentRechargeTradeLog) {
+	public void export(PayAgentRechargeTradeLog payAgentRechargeTradeLog, HttpServletResponse response) {
 		List<PayAgentRechargeTradeLog>      list = payAgentRechargeTradeLogService.selectPayAgentRechargeTradeLogList(payAgentRechargeTradeLog);
-		ExcelUtil<PayAgentRechargeTradeLog> util = new ExcelUtil<>(PayAgentRechargeTradeLog.class);
-		return util.exportExcel( list, "payAgentRechargeTradeLog" );
+		ExportExcelUtil.exportExcel( list, "代充存提", "代充存提表", PayAgentRechargeTradeLog.class, response );
 	}
 
 	/**

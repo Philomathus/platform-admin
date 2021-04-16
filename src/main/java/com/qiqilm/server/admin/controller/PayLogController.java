@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.PayLog;
 import com.qiqilm.server.admin.service.IPayLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 【支付日志】Controller
@@ -50,10 +53,9 @@ public class PayLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:export')" )
 	@Log( title = "【支付日志】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(PayLog payLog) {
+	public void export(PayLog payLog, HttpServletResponse response) {
 		List<PayLog>      list = payLogService.selectPayLogList(payLog);
-		ExcelUtil<PayLog> util = new ExcelUtil<PayLog>(PayLog. class);
-		return util.exportExcel( list, "payLog" );
+		ExportExcelUtil.exportExcel( list, "支付日志", "支付日志表", PayLog.class, response );
 	}
 
 	/**

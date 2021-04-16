@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.HomeBanner;
 import com.qiqilm.server.admin.service.IHomeBannerService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 首页轮播图Controller
@@ -50,10 +53,9 @@ public class HomeBannerController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('activity:homeBanner:export')" )
 	@Log( title = "首页轮播图", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(HomeBanner homeBanner) {
+	public void export(HomeBanner homeBanner, HttpServletResponse response) {
 		List<HomeBanner>      list = homeBannerService.selectHomeBannerList(homeBanner);
-		ExcelUtil<HomeBanner> util = new ExcelUtil<>(HomeBanner.class);
-		return util.exportExcel( list, "homeBanner" );
+		ExportExcelUtil.exportExcel( list, "首页轮播图", "首页轮播图表", HomeBanner.class, response );
 	}
 
 	/**

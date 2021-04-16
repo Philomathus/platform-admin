@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.controller;
 import java.util.Date;
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import com.qiqilm.server.admin.domain.LogCommission;
 import com.qiqilm.server.admin.service.ILogCommissionService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 佣金领取日志Controller
@@ -52,10 +55,9 @@ public class LogCommissionController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:logCommission:export')" )
 	@Log( title = "佣金领取日志", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LogCommission logCommission) {
+	public void export(LogCommission logCommission, HttpServletResponse response) {
 		List<LogCommission>      list = logCommissionService.selectLogCommissionList(logCommission);
-		ExcelUtil<LogCommission> util = new ExcelUtil<LogCommission>(LogCommission. class);
-		return util.exportExcel( list, "logCommission" );
+		ExportExcelUtil.exportExcel( list, "佣金领取日志", "佣金领取日志表", LogCommission.class, response );
 	}
 
 	/**

@@ -32,6 +32,8 @@ public class BaseEntity implements Serializable {
 	 * 创建时间
 	 */
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+	@Excel( name = "创建时间", isImportField = "true", exportFormat = "yyyy-MM-dd HH:mm:ss",
+			importFormat = "yyyy-MM-dd HH:mm:ss", databaseFormat = "yyyy-MM-dd HH:mm:ss" )
 	private Date createTime;
 
 	/**
@@ -43,6 +45,8 @@ public class BaseEntity implements Serializable {
 	 * 更新时间
 	 */
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+	@Excel( name = "更新时间", isImportField = "true", exportFormat = "yyyy-MM-dd HH:mm:ss",
+			importFormat = "yyyy-MM-dd HH:mm:ss", databaseFormat = "yyyy-MM-dd HH:mm:ss" )
 	private Date updateTime;
 
 	/**

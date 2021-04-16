@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.controller;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.MemberGameData;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,8 @@ import com.qiqilm.server.admin.domain.LiveProplog;
 import com.qiqilm.server.admin.service.ILiveProplogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 用户送礼日志Controller
@@ -51,10 +54,9 @@ public class LiveProplogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveProplog:export')" )
 	@Log( title = "用户送礼日志", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LiveProplog liveProplog) {
+	public void export(LiveProplog liveProplog, HttpServletResponse response) {
 		List<LiveProplog>      list = liveProplogService.selectLiveProplogList(liveProplog);
-		ExcelUtil<LiveProplog> util = new ExcelUtil<LiveProplog>(LiveProplog. class);
-		return util.exportExcel( list, "liveProplog" );
+		ExportExcelUtil.exportExcel( list, "用户送礼日志", "用户送礼日志表", LiveProplog.class, response );
 	}
 
 	/**

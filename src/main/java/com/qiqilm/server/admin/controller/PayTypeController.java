@@ -8,10 +8,12 @@ import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayTypeService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -56,10 +58,9 @@ public class PayTypeController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payType:export')" )
 	@Log( title = "支付类型", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( PayType payType ) {
+	public void export( PayType payType , HttpServletResponse response) {
 		List<PayType>      list = payTypeService.selectPayTypeList( payType );
-		ExcelUtil<PayType> util = new ExcelUtil<>( PayType.class );
-		return util.exportExcel( list, "payType" );
+		ExportExcelUtil.exportExcel( list, "支付类型", "支付类型表", PayType.class, response );
 	}
 
 	/**

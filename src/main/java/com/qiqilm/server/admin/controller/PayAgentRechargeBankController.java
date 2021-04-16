@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.controller;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,8 @@ import com.qiqilm.server.admin.domain.PayAgentRechargeBank;
 import com.qiqilm.server.admin.service.IPayAgentRechargeBankService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 【代充银行列表】Controller
@@ -51,10 +54,9 @@ public class PayAgentRechargeBankController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeBank:export')" )
 	@Log( title = "【代充银行列表】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(PayAgentRechargeBank payAgentRechargeBank) {
+	public void export(PayAgentRechargeBank payAgentRechargeBank, HttpServletResponse response) {
 		List<PayAgentRechargeBank>      list = payAgentRechargeBankService.selectPayAgentRechargeBankList(payAgentRechargeBank);
-		ExcelUtil<PayAgentRechargeBank> util = new ExcelUtil<PayAgentRechargeBank>(PayAgentRechargeBank. class);
-		return util.exportExcel( list, "payAgentRechargeBank" );
+		ExportExcelUtil.exportExcel( list, "代充银行列表", "代充银行列表表", PayAgentRechargeBank.class, response );
 	}
 
 	/**
