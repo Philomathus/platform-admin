@@ -3,7 +3,7 @@ package com.qiqilm.server.admin.domain;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -27,23 +27,23 @@ public class PayAgentRechargeLog extends BaseEntity {
     private String rechargeAcount;
 
     /** 代充昵称 */
-    @Excel(name = "代充昵称")
+    @Excel(name = "代充昵称", orderNum = "1" )
     private String rechargeNickName;
 
     /** 会员ID */
-    @Excel(name = "会员ID")
+    @Excel(name = "会员ID", orderNum = "2" )
     private String memberId;
 
     /** 会员账号 */
-    @Excel(name = "会员账号")
+    @Excel(name = "会员账号", orderNum = "3" )
     private String userName;
 
     /** 上分金额 */
-    @Excel(name = "上分金额")
+    @Excel(name = "上分金额", orderNum = "4")
     private BigDecimal money;
 
     /** 操作IP */
-    @Excel(name = "操作IP")
+    @Excel(name = "操作IP", orderNum = "5")
     private String opIp;
 
     private Integer countNumber;
