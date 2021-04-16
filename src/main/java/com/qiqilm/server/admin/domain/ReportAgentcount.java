@@ -31,12 +31,15 @@ public class ReportAgentcount implements Serializable {
 	private String agentname;
 
 	/** 统计时间 */
-	@Excel( name = "统计时间", orderNum = "12" )
 	private String agenttime;
 
 	/** 当日新注册人数 */
-	@Excel( name = "当日/总（注册人数）", orderNum = "2" )
 	private Long newmember;
+
+	/** 当日新注册人数 */
+	@Excel( name = "当日/总(注册人数)", orderNum = "2" )
+	private String regisNumber;
+
 
 	/** 总邀请人数 */
 	private Long totalmember;
@@ -46,7 +49,7 @@ public class ReportAgentcount implements Serializable {
 	private String gsRukuanjine;
 
 	/** 线上入款（首充） */
-	@Excel( name = "线上（首充）", orderNum = "4" )
+	@Excel( name = "线上入款（首充）", orderNum = "4" )
 	private String xsRukuanjine;
 
 	/** 手工入款（首充） */
@@ -58,7 +61,6 @@ public class ReportAgentcount implements Serializable {
 	private String totalfristRukuanjine;
 
 	/** 出款金额（首次） */
-	@Excel( name = "出款金额（首充）", orderNum = "7" )
 	private String chukuanjine;
 
 	/** 总入款（当日总） */
@@ -68,12 +70,15 @@ public class ReportAgentcount implements Serializable {
 	/** 总入款笔数（当日总） */
 	private String totalRukuanbishu;
 
-	@Excel( name = "人/笔/（入款日总）", orderNum = "9" )
 	private String totalRukuanjineAll;
 
 	/** 总出款（当日总） */
-	@Excel( name = "人/笔/（出款总）", orderNum = "8" )
+	@Excel( name = "人/笔/金额（出款日总）", orderNum = "7" )
 	private String totalChukuanjine;
+
+	/** 总出款（当日总） */
+	@Excel( name = "人/笔/金额（入款日总）", orderNum = "8" )
+	private String rukuanjine;
 
 	/** 进入直播间次数 */
 	private Long totalEnterlivetimes;
@@ -84,18 +89,33 @@ public class ReportAgentcount implements Serializable {
 	/** 代理线活跃的苹果用户 */
 	private Long totalActiveios;
 
-	@Excel( name = "直播间次数/安卓/苹果", orderNum = "11" )
 	private String totalEnterliveActive;
 
 	/** 代理线送礼 */
-	@Excel( name = "送礼次数/金额", orderNum = "10" )
+	@Excel( name = "送礼次数/金额", orderNum = "9" )
 	private String totalGiveprop;
+
+
+	/** 代理线送礼 */
+	@Excel( name = "直播间次数/活跃安卓/活跃苹果", orderNum = "10" )
+	private String ios;
 
 	private String code;
 
 	@JsonIgnore
 	private Map<String, Object> params = new HashMap<>();
 
+	public String getRegisNumber() {
+		return newmember + "/" + totalmember;
+	}
+
+	public String getIos() {
+		return totalEnterlivetimes + "/" + totalActiveandroid  + '/' + totalActiveios;
+	}
+
+	public String getRukuanjine() {
+		return totalRukuanrenshu + "/" + totalRukuanbishu  + '/' + totalRukuanjine;
+	}
 
 	public String getTotalRukuanjineAll() {
 		if ( totalRukuanjine != null && totalRukuanrenshu != null && totalRukuanbishu != null ) {
