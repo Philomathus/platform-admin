@@ -138,10 +138,6 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 		String    username  = loginUser.getUsername();
 		payChannelNew.setUpdator( username );
 		payChannelNew.setUpdateTime( DateUtils.getNowDate() );
-		if ( payChannelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
-				|| payChannelNew.getPayRate().compareTo( new BigDecimal( "0.02" ) ) < 0 ) {
-			throw new BusinessException( "通道费率不得大于0.4或小于0.02" );
-		}
 		int i = payChannelNewMapper.updatePayChannelNew( payChannelNew );
 		if ( i > 0 ) {
 			PayChannelNew channelNew = payChannelNewMapper.selectPayChannelNewById( payChannelNew.getId() );
@@ -151,6 +147,10 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 				}
 				if ( channelNew.getPayRate() == null ) {
 					throw new BusinessException( "通道费率不得为空" );
+				}
+				if ( channelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
+						|| channelNew.getPayRate().compareTo( new BigDecimal( "0.02" ) ) < 0 ) {
+					throw new BusinessException( "通道费率不得大于0.4或小于0.02" );
 				}
 				payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( payChannelNew.getId() ) );
 				Integer  typeCode = payTypeMapper.selectCodeById( channelNew.getPayTypeId() );
