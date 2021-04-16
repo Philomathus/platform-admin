@@ -20,11 +20,4 @@ public class PageVO {
         return vo;
     }
 
-    public Integer getParam1(){
-        return page * limit - limit;
-    }
-
-    public Integer getParam2(){
-        return limit;
-    }
 }

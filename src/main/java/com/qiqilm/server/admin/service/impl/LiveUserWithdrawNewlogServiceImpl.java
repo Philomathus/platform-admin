@@ -247,6 +247,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         update.setId(liveUserWithdrawNewlog.getId());
         update.setWstatus(Long.valueOf(3));//审核通过
         update.setOpName( "" );
+        update.setRemark("");
         update.setUpdateTime( new Date() );
         int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(update);
         return i > 0 ? AjaxResult.success() : AjaxResult.error("更新订单审核通过状态失败");

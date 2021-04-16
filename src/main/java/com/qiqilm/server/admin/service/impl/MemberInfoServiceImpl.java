@@ -58,6 +58,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     private MemberForbidUtil memberForbidUtil;
     @Autowired
     private MemberBcodeMapper memberBcodeMapper;
+    @Autowired
+    private NameUtil nameUtil;
     /**
      * 查询会员信息
      *
@@ -114,7 +116,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         member.setCodeTotal(BigDecimal.ZERO);
         member.setInviteMoney(memberInfo.getInviteMoney());
         member.setInviterCode(memberInfo.getInviterCode());
-        member.setNickName(NameUtil.nickNameRandom());
+        member.setNickName(nameUtil.nickNameRandom());
         member.setLoginNum(0);
         if (memberInfoMapper.insertMemberInfo(member) > 0) {
             return AjaxResult.success("添加成功");
