@@ -1,12 +1,14 @@
 package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 会员充值记录对象 member_recharge_log
@@ -24,6 +26,22 @@ public class MemberRechargeLog extends BaseEntity {
 	/** 会员编号 */
 	@Excel( name = "会员编号" )
 	private String memberId;
+
+	/**
+	 * 创建时间
+	 */
+	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+	@Excel( name = "创建时间", isImportField = "true", exportFormat = "yyyy-MM-dd HH:mm:ss",
+			importFormat = "yyyy-MM-dd HH:mm:ss", databaseFormat = "yyyy-MM-dd HH:mm:ss" )
+	private Date createTime;
+
+	/**
+	 * 更新时间
+	 */
+	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+	@Excel( name = "更新时间", isImportField = "true", exportFormat = "yyyy-MM-dd HH:mm:ss",
+			importFormat = "yyyy-MM-dd HH:mm:ss", databaseFormat = "yyyy-MM-dd HH:mm:ss" )
+	private Date updateTime;
 
 	/** 会员账号 */
 	@Excel( name = "会员账号", orderNum = "1" )
