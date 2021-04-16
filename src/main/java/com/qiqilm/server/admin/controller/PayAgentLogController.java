@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.service.IPayAgentLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 【代付下单日志】Controller
@@ -43,17 +46,16 @@ public class PayAgentLogController extends BaseController {
 		List<PayAgentLog> list = payAgentLogService.selectPayAgentLogList(payAgentLog);
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出【代付下单日志】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentLog:export')" )
-	@Log( title = "【代付下单日志】", businessType = BusinessType.EXPORT )
+	@Log( title = "代付下单日志", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(PayAgentLog payAgentLog) {
+	public void export( PayAgentLog payAgentLog, HttpServletResponse response ) {
 		List<PayAgentLog>      list = payAgentLogService.selectPayAgentLogList(payAgentLog);
-		ExcelUtil<PayAgentLog> util = new ExcelUtil<PayAgentLog>(PayAgentLog. class);
-		return util.exportExcel( list, "payAgentLog" );
+		ExportExcelUtil.exportExcel( list, "代付下单日志", "代付下单日志信息表", PayAgentLog.class, response );
 	}
 
 	/**
