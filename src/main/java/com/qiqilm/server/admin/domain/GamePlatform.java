@@ -21,7 +21,7 @@ public class GamePlatform extends BaseEntity {
     private Integer id;
 
     /** 代理（渠道）号 */
-    @Excel(name = "代理", readConverterExp = "渠=道")
+    @Excel(name = "代理", suffix = "渠=道")
     private String agent;
 
     /** 平台名称 */

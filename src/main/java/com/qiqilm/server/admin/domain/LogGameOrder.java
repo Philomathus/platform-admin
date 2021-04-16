@@ -68,14 +68,14 @@ public class LogGameOrder extends BaseEntity {
 	 * 开始时间
 	 */
 	@JsonFormat( pattern = DateFormatUtils.SPLIT_PATTERN_DATETIME )
-	@Excel( name = "开始时间", width = 30, dateFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
+	@Excel( name = "开始时间", width = 30, exportFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
 	private Date bTime;
 
 	/**
 	 * 结束时间
 	 */
 	@JsonFormat( pattern = DateFormatUtils.SPLIT_PATTERN_DATETIME )
-	@Excel( name = "结束时间", width = 30, dateFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
+	@Excel( name = "结束时间", width = 30, exportFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
 	private Date     eTime;
 	/**
 	 * 选择日期

@@ -36,7 +36,7 @@ public class PayAgentRechargeTradeLog extends BaseEntity {
     private String nickName;
 
     /** 收入（支出） */
-    @Excel(name = "收入", readConverterExp = "支=出")
+    @Excel(name = "收入", suffix = "支=出")
     private BigDecimal income;
 
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )

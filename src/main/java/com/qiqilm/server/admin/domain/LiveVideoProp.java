@@ -33,11 +33,11 @@ public class LiveVideoProp extends BaseEntity {
     private String propName;
 
     /** 积分（from_user_id可获得的积分）合计 */
-    @Excel(name = "积分", readConverterExp = "f=rom_user_id可获得的积分")
+    @Excel(name = "积分", suffix = "f=rom_user_id可获得的积分")
     private Long totalScore;
 
     /** 钻石（from_user_id减少的钻石）合计 */
-    @Excel(name = "钻石", readConverterExp = "f=rom_user_id减少的钻石")
+    @Excel(name = "钻石", suffix = "f=rom_user_id减少的钻石")
     private BigDecimal totalDiamonds;
 
     /** 印票(to_user_id增加的印票）合计;is_red_envelope=1时,为主播获得的：钻石 数量 */

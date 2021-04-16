@@ -25,7 +25,7 @@ public class LotteryMethod extends BaseEntity {
 
 
     /** 排序键（玩法序号） */
-    @Excel(name = "排序键", readConverterExp = "玩=法序号")
+    @Excel(name = "排序键", suffix = "玩=法序号")
     private Long order;
 
 
@@ -35,7 +35,7 @@ public class LotteryMethod extends BaseEntity {
 
 
     /** 排序键（玩法序号） */
-    @Excel(name = "排序键", readConverterExp = "玩=法序号")
+    @Excel(name = "排序键", suffix = "玩=法序号")
     private Long ind;
 
 

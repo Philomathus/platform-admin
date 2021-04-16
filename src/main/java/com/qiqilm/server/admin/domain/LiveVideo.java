@@ -38,7 +38,7 @@ public class LiveVideo extends BaseEntity {
 	private Integer liveIn;
 
 	/** 当前实时观看人数（实际,不含虚拟人数,不包含机器人) */
-	@Excel( name = "当前实时观看人数", readConverterExp = "当前实时观看人数（实际,不含虚拟人数,不包含机器人)" )
+	@Excel( name = "当前实时观看人数", suffix = "当前实时观看人数（实际,不含虚拟人数,不包含机器人)" )
 	private Long watchNumber;
 
 	/** 当前虚拟观看人数 */
@@ -50,7 +50,7 @@ public class LiveVideo extends BaseEntity {
 	private BigDecimal voteNumber;
 
 	/** 主题id（2最新3颜值4收费5游戏） */
-	@Excel( name = "主题id", readConverterExp = "2=最新3颜值4收费5游戏" )
+	@Excel( name = "主题id", suffix = "2=最新3颜值4收费5游戏" )
 	private Integer cateId;
 
 	/** 开始时间 */

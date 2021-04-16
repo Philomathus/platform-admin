@@ -18,7 +18,7 @@ public class MemberDirtyWords extends BaseEntity {
     private Long id;
 
     /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "${comment}", suffix = "$column.readConverterExp()")
     private String name;
 
     public void setId(Long id) {

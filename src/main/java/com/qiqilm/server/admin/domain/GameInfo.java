@@ -73,7 +73,7 @@ public class GameInfo extends BaseEntity {
     private String isFull;
 
     /** 图标类型（ 0=热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞） */
-    @Excel(name = "图标类型", readConverterExp = "0==热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞")
+    @Excel(name = "图标类型", suffix = "0==热门1=捕鱼2=电子3=体育4=真人5=棋牌6=彩票7=电竞")
     private Long iconType;
 
 
