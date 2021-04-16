@@ -55,42 +55,68 @@
         order_no orderNo
         from `${dbMain}`.member_withdraw_log
     </sql>
-
+    <sql id="selectMember">
+        <if test="status != null and status == -1">
+            member_id not in (select member_id
+            from `${dbMain}`.member_withdraw_log
+            WHERE `status` in (3, 6)
+            GROUP BY member_id
+            HAVING count(1) &gt; 1)
+        </if>
+        <if test="status != null and status != '' and status != -1">
+            and `status` = #{status}
+        </if>
+        <if test="status==0">
+            and status = #{status}
+        </if>
+        <if test="priceMin != null and priceMax != null  and priceMin != ''  and priceMax != ''">
+            and withdraw_money &gt;= #{priceMin}
+            and withdraw_money &lt;= #{priceMax}
+        </if>
+        <if test="opName != null and opName != ''">
+            and op_name = #{opName}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and update_time between #{startTime} and #{endTime}
+        </if>
+        <if test="remark != null and remark != ''">
+            and remark like concat('%', #{remark}, '%')
+        </if>
+    </sql>
     <select id="selectMemberWithdrawLogList" parameterType="MemberWithdrawLog" resultMap="MemberWithdrawLogResult">
         <include refid="selectMemberWithdrawLogVo"/>
         <where>
-            <if test="status != null and status == -1">
-                member_id not in (select member_id
-                from `${dbMain}`.member_withdraw_log
-                WHERE `status` in (3, 6)
-                GROUP BY member_id
-                HAVING count(1) &gt; 1)
-            </if>
-            <if test="status != null and status != '' and status != -1">
-                and `status` = #{status}
-            </if>
-            <if test="status==0">
-                and status = #{status}
-            </if>
+           <include refid="selectMember"></include>
             <if test="searchValue != null and searchValue != ''">
-                and (order_no = #{searchValue} or member_id = #{searchValue} or account = #{searchValue}
-                or bank_user_name = #{searchValue})
-            </if>
-            <if test="priceMin != null and priceMax != null  and priceMin != ''  and priceMax != ''">
-                and withdraw_money &gt;= #{priceMin}
-                and withdraw_money &lt;= #{priceMax}
-            </if>
-            <if test="opName != null and opName != ''">
-                and op_name = #{opName}
-            </if>
-            <if test="startTime != null and startTime != ''">
-                and update_time >= #{startTime}
-                and update_time &lt;= #{endTime}
-            </if>
-            <if test="remark != null and remark != ''">
-                and remark like concat('%', #{remark}, '%')
+                and order_no = #{searchValue}
             </if>
         </where>
+        <if test="searchValue != null and searchValue != ''">
+        UNION
+        <include refid="selectMemberWithdrawLogVo"/>
+        <where>
+            <include refid="selectMember"></include>
+            <if test="searchValue != null and searchValue != ''">
+                and member_id = #{searchValue}
+            </if>
+        </where>
+        UNION
+        <include refid="selectMemberWithdrawLogVo"/>
+        <where>
+            <include refid="selectMember"></include>
+            <if test="searchValue != null and searchValue != ''">
+                and account = #{searchValue}
+            </if>
+        </where>
+        UNION
+        <include refid="selectMemberWithdrawLogVo"/>
+        <where>
+            <include refid="selectMember"></include>
+            <if test="searchValue != null and searchValue != ''">
+                and bank_user_name = #{searchValue}
+            </if>
+        </where>
+        </if>
     </select>
 
     <select id="selectMemberWithdrawLogById" parameterType="String" resultMap="MemberWithdrawLogResult">
