@@ -46,18 +46,6 @@ public class PayAgentLogController extends BaseController {
 		List<PayAgentLog> list = payAgentLogService.selectPayAgentLogList(payAgentLog);
 		return getDataTable( list );
 	}
-    
-	/**
-	 * 导出【代付下单日志】列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:payAgentLog:export')" )
-	@Log( title = "【代付下单日志】", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public AjaxResult export(PayAgentLog payAgentLog) {
-		List<PayAgentLog>      list = payAgentLogService.selectPayAgentLogList(payAgentLog);
-		ExcelUtil<PayAgentLog> util = new ExcelUtil<PayAgentLog>(PayAgentLog. class);
-		return util.exportExcel( list, "payAgentLog" );
-	}
 
 	/**
 	 * 导出【代付下单日志】列表
