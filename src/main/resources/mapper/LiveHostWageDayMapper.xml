@@ -117,7 +117,7 @@
         u.weibo_money as lwrenwu,
         u.weixin_price as screnwu,
         u.coin,
-        IF(u.weixin_price > convert(d.live_time_sec/60/60,decimal(10,2)) or u.weixin_price > d.ticket ,0, convert(u.weixin_price * u.coin,decimal(10,2))) as livetimejiesuan,
+        IF(u.weixin_price > convert(d.live_time_sec/60/60,decimal(10,2)) or u.weibo_money > d.ticket ,0, convert(u.weixin_price * u.coin,decimal(10,2))) as livetimejiesuan,
         d.ticket as liwu,
         IFNULL(u.ypoint,0) as liwujiesuanbili,
         convert(IFNULL(d.ticket,0) * IFNULL(u.ypoint,0),decimal(10,2)) as ticket,

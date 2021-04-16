@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
-import com.qiqilm.server.admin.domain.ReportPlamGames;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +21,8 @@ import com.qiqilm.server.admin.domain.PayAgentRechargeLog;
 import com.qiqilm.server.admin.service.IPayAgentRechargeLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 【代充信息日志】Controller
@@ -51,10 +53,9 @@ public class PayAgentRechargeLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeLog:export')")
     @Log(title = "【代充信息日志】", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(PayAgentRechargeLog payAgentRechargeLog) {
+    public void export(PayAgentRechargeLog payAgentRechargeLog, HttpServletResponse response ) {
         List<PayAgentRechargeLog> list = payAgentRechargeLogService.selectPayAgentRechargeLogList(payAgentRechargeLog);
-        ExcelUtil<PayAgentRechargeLog> util = new ExcelUtil<PayAgentRechargeLog>(PayAgentRechargeLog.class);
-        return util.exportExcel(list, "payAgentRechargeLog");
+        ExportExcelUtil.exportExcel( list, "代充日志", "代充日志表", PayAgentRechargeLog.class, response );
     }
 
     /**

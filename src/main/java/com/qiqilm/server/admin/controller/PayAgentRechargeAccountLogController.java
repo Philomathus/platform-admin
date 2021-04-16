@@ -10,10 +10,12 @@ import com.qiqilm.server.admin.domain.req.ReqPayAgentRechargeAccountLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -38,17 +40,16 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 		List<PayAgentRechargeAccountLog> list = payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogList(payAgentRechargeAccountLog);
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出【代充人入款】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:export')" )
-	@Log( title = "【代充人入款】", businessType = BusinessType.EXPORT )
+	@Log( title = "代充人入款", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
+	public void export( PayAgentRechargeAccountLog payAgentRechargeAccountLog, HttpServletResponse response ) {
 		List<PayAgentRechargeAccountLog>      list = payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogList(payAgentRechargeAccountLog);
-		ExcelUtil<PayAgentRechargeAccountLog> util = new ExcelUtil<PayAgentRechargeAccountLog>(PayAgentRechargeAccountLog. class);
-		return util.exportExcel( list, "payAgentRechargeAccountLog" );
+		ExportExcelUtil.exportExcel( list, "代充人入款", "代充人入款信息表", PayAgentRechargeAccountLog.class, response );
 	}
 
 	/**
