@@ -136,6 +136,9 @@
             <if test="withdrawMoney != null">
                 withdraw_money,
             </if>
+            <if test="bankCode != null">
+                bank_code,
+            </if>
             <if test="bankName != null">
                 bank_name,
             </if>
@@ -188,6 +191,9 @@
             </if>
             <if test="withdrawMoney != null">
                 #{withdrawMoney},
+            </if>
+            <if test="bankCode != null">
+                #{bankCode},
             </if>
             <if test="bankName != null">
                 #{bankName},
@@ -242,6 +248,9 @@
             </if>
             <if test="withdrawMoney != null">
                 withdraw_money = #{withdrawMoney},
+            </if>
+            <if test="bankCode != null">
+                bank_code = #{bankCode},
             </if>
             <if test="bankName != null">
                 bank_name = #{bankName},
