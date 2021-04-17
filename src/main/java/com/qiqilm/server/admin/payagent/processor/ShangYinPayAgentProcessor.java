@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -16,12 +17,16 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,8 +50,8 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "payType", "0" );
 		dataMap.put( "mchId", payAgentPlatform.getMerId() );
 		dataMap.put( "mchOrderId", withdrawLog.getOrderNo() );
-		dataMap.put( "payAmt", withdrawLog.getWithdrawMoney().multiply( new BigDecimal( 100 ) ).setScale( 2,
-				BigDecimal.ROUND_HALF_EVEN ).toString() );
+		dataMap.put( "payAmt", withdrawLog.getWithdrawMoney().setScale( 2,
+				BigDecimal.ROUND_HALF_UP ).toString() );
 		dataMap.put( "accNo", withdrawLog.getBankAccount().trim() );
 		dataMap.put( "accName", withdrawLog.getBankUserName().trim() );
 		dataMap.put( "accType", "1" );
@@ -59,7 +64,13 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "clientTime", DateFormatUtils.formate( reqPayAgent.getCurrentTime(),
 				DateFormatUtils.TIGHT_PATTERN_DATETIME ) );
 		dataMap.put( "schTime", "" );
+		dataMap.put( "rmk", "" );
+		dataMap.put( "tel", "" );
+		dataMap.put( "Email", "" );
 		dataMap.put( "smsFlag", "0" );
+		dataMap.put( "bankPayPurpose", "" );
+		dataMap.put( "Leave_word", "" );
+		dataMap.put( "Ext", "" );
 		dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.SHANG_YIN );
 		dataMap.put( "userId", payAgentPlatform.getHeaderKey() );
 
@@ -78,9 +89,18 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
 
 		Map<String, Object> resultMap = null;
 		try {
-			resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
+			resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+					restTemplate.httpEntityCallback( httpEntity ), response -> {
+						InputStream bodyStream = response.getBody();
+						String      text;
+						try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+							text = CharStreams.toString( reader );
+						}
+						return JsonUtil.json2Map( text );
+					} );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
+			reqPayAgent.setFailReason( e.getMessage() );
 		}
 		if ( !CollectionUtils.isEmpty( resultMap ) ) {
 			if ( "0000".equals( resultMap.getOrDefault( "status", "" ).toString() ) ) {
