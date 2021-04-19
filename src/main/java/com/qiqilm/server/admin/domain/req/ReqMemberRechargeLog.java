@@ -14,6 +14,7 @@ public class ReqMemberRechargeLog {
 	private String bankUserName;
 	private String rechargeUserName;
 	private String opName;
+	private String bankName;
 
 	private String[] selectDate;
 	private String   selectStartDate;
