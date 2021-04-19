@@ -47,6 +47,7 @@
     <insert id="insertLiveHostWageDay" parameterType="LiveHostWageDay" useGeneratedKeys="true" keyProperty="id">
         insert into ${dbLive}.live_host_wage_day
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
             <if test="familyId != null">family_id,</if>
             <if test="hostId != null">host_id,</if>
             <if test="startTime != null and startTime != ''">start_time,</if>
@@ -56,6 +57,7 @@
             <if test="times != null">times,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
             <if test="familyId != null">#{familyId},</if>
             <if test="hostId != null">#{hostId},</if>
             <if test="startTime != null and startTime != ''">#{startTime},</if>
