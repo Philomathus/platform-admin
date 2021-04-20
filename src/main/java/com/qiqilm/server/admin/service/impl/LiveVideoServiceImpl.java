@@ -12,6 +12,7 @@ import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageType;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
+import com.qiqilm.server.admin.task.HelpNotice;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
@@ -63,6 +64,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Resource
 	private LiveHostWageDayMapper liveHostWageDayMapper;
+	@Resource
+    private HelpNotice helpNotice;
 
 	/**
 	 * 查询直播
@@ -384,6 +387,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 		if ( i > 0 ) {
 			this.processVideoSort();
+            Long sort = liveVideo.getSort();
+            if (sort!=null && sort<=20) {
+                LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById(liveVideo.getId());
+                helpNotice.sendMsg(liveVideo1.getHostName()+"主播被推为热门前二十，77小助手推送这个信息。跟优惠的时间设定同步即可！   直播间发个消息");
+            }
 			return AjaxResult.success( "更新成功" );
 		}
 		return AjaxResult.error( "更新失败" );
