@@ -36,6 +36,17 @@ public class HelpNotice {
         }
 
         String text = sysConfigCacheUtil.getConf("77_help_notice",null);
+        sendMsg(text);
+
+
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param text 文本
+     */
+    public void sendMsg(String text) {
         if(text==null){
             return;
         }
@@ -55,15 +66,11 @@ public class HelpNotice {
         MessageType messageType = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
         for(String groupId:liveVideoService.selectOnlineLiveGroups()){
             try {
-
                 imApi.sendGroupMessage( groupId, "admin", messageType );
-
             }catch (Exception e){
                 log.error("小助手发消息失败",e);
             }
 
         }
-
-
     }
 }
