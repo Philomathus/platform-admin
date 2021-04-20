@@ -53,6 +53,7 @@ public class PayServiceImpl implements IPayService {
 
 
 	@Override
+	@Transactional( rollbackFor = Exception.class )
 	public AjaxResult payPatchOrder( Map<String, Object> requestMap ) throws Exception {
 		String orderNo        = ( String ) requestMap.get( "orderNo" );
 		String subMoney       = ( String ) requestMap.get( "subMoney" );
