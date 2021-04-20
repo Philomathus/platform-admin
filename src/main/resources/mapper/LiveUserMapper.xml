@@ -206,4 +206,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select count(*)
 		from ${dbLive}.live_user where mobile = #{newMobile}
     </select>
+    <select id="selectLiveUserBankById" resultType="com.qiqilm.server.admin.domain.LiveUser">
+        select b.real_name realName,t.bank_name bankName,b.bank_account bankAccount,b.bank_address bankAddress from
+        ${dbLive}.live_user_bank b
+        left join ${dbLive}.live_bank_type t on
+        b.bank_type_id = t.id
+        where b.user_id = #{userId}
+    </select>
+
+    <select id="selectLiveUserBankOneById" resultType="com.qiqilm.server.admin.domain.LiveUser">
+        select real_name realName,bank_account bankAccount,bank_address bankAddress from
+        ${dbLive}.live_user_bank
+        where id = #{id}
+    </select>
+
+    <delete id="delLiveUserBankById">
+        delete from ${dbLive}.live_user_bank where bank_account = #{bankAccount}
+    </delete>
 </mapper>

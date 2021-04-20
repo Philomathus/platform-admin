@@ -316,4 +316,18 @@ public class LiveUserServiceImpl implements ILiveUserService {
         }
 
     }
+
+    @Override
+    public List<LiveUser> selectLiveUserBankById(Integer userId) {
+        return liveUserMapper.selectLiveUserBankById(userId);
+    }
+
+    @Override
+    public LiveUser selectLiveUserBankOneById(Integer id) {
+        return liveUserMapper.selectLiveUserBankOneById(id);
+    }
+    @Override
+    public int delLiveUserBankById(String bankAccount) {
+        return liveUserMapper.delLiveUserBankById(bankAccount);
+    }
 }
