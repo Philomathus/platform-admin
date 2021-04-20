@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -17,7 +18,7 @@ import java.util.Date;
  * @date 2021-01-26
  */
 @Data
-public class ReportPlamGames implements Serializable {
+public class ReportPlamGames extends BaseEntity implements Serializable  {
 	private static final long serialVersionUID = 1L;
 
 	/** id */
@@ -71,6 +72,7 @@ public class ReportPlamGames implements Serializable {
 	private Integer    countBetPeople;
 	private BigDecimal countBetMoney;
 	private BigDecimal memberProfit;
+	private String dateTime;
 
 	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
 	private Date updateTime;

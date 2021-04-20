@@ -14,6 +14,7 @@ import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -68,8 +69,39 @@ public class LiveUserController extends BaseController {
 	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
 		return AjaxResult.success( liveUserService.selectLiveUserById( id ) );
 	}
+
+	/**
+	 * 查询主播银行卡
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:query')" )
+	@GetMapping( value = "/liveBank/{userId}" )
+	public TableDataInfo getInfoBank( @PathVariable( "userId" ) Integer userId ) {
+		startPage();
+		List<LiveUser> list = liveUserService.selectLiveUserBankById( userId );
+		return getDataTable( list );
+	}
+
+	/**
+	 * 修改主播银行卡
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:query')" )
+	@PutMapping( value = "/updateBank" )
+	public AjaxResult updateLiveUserBank( @RequestBody LiveUser liveUser ) {
+		return AjaxResult.success(liveUserService.updateLiveUserBank( liveUser ));
+	}
+
+	/**
+	 * 删除主播银行卡
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:query')" )
+	@DeleteMapping( value = "/liveBank/{bankAccount}" )
+	public AjaxResult delInfoBank( @PathVariable( "bankAccount" ) String bankAccount ) {
+		liveUserService.delLiveUserBankById( bankAccount );
+		return AjaxResult.success();
+	}
+
     /**
-     * 新增//用户信息
+     * 新增用户信息
      */
     @PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
     @Log( title = "//用户信息", businessType = BusinessType.INSERT )
