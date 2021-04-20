@@ -3,10 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.*;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.LiveHostWageDay;
-import com.qiqilm.server.admin.domain.LiveUser;
-import com.qiqilm.server.admin.domain.LiveVideo;
-import com.qiqilm.server.admin.domain.ServerLive;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.HostPropDayVo;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageType;
@@ -65,6 +62,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	private LiveHostWageDayMapper liveHostWageDayMapper;
 	@Resource
     private HelpNoticeUtil helpNoticeUtil;
+	@Resource
+    private ConfigEnvironmentMapper configEnvironmentMapper;
 
 	/**
 	 * 查询直播
@@ -389,7 +388,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             Long sort = liveVideo.getSort();
             if (sort!=null && sort<=20) {
                 LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById(liveVideo.getId());
-                helpNoticeUtil.sendMsg(liveVideo1.getHostName()+"主播被推为热门前二十，77小助手推送这个信息。跟优惠的时间设定同步即可！   直播间发个消息");
+//                ConfigEnvironment configEnvironment = configEnvironmentMapper.selectConfigEnvironmentById("first_twenty_notice");
+                String msg = sysConfigCacheUtil.getConf( "first_twenty_notice" );
+                String groupId = liveVideo1.getGroupId();
+                if (msg!=null && groupId!=null) {
+                    helpNoticeUtil.sendMsg(liveVideo1.getHostName()+msg,groupId);
+                }
             }
 			return AjaxResult.success( "更新成功" );
 		}
