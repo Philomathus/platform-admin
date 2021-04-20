@@ -388,10 +388,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             Long sort = liveVideo.getSort();
             if (sort!=null && sort<=20) {
                 LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById(liveVideo.getId());
-                ConfigEnvironment configEnvironment = configEnvironmentMapper.selectConfigEnvironmentById("first_twenty_notice");
+//                ConfigEnvironment configEnvironment = configEnvironmentMapper.selectConfigEnvironmentById("first_twenty_notice");
+                String msg = sysConfigCacheUtil.getConf( "first_twenty_notice" );
                 String groupId = liveVideo1.getGroupId();
-                if (configEnvironment!=null&&groupId!=null) {
-                    helpNoticeUtil.sendMsg(liveVideo1.getHostName()+configEnvironment.getEnvValue(),groupId);
+                if (msg!=null && groupId!=null) {
+                    helpNoticeUtil.sendMsg(liveVideo1.getHostName()+msg,groupId);
                 }
             }
 			return AjaxResult.success( "更新成功" );
