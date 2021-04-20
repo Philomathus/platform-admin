@@ -3,10 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.*;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.LiveHostWageDay;
-import com.qiqilm.server.admin.domain.LiveUser;
-import com.qiqilm.server.admin.domain.LiveVideo;
-import com.qiqilm.server.admin.domain.ServerLive;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.HostPropDayVo;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageType;
@@ -63,6 +60,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Resource
 	private LiveHostWageDayMapper liveHostWageDayMapper;
+	@Resource
+    private HelpNoticeUtil helpNoticeUtil;
+	@Resource
+    private ConfigEnvironmentMapper configEnvironmentMapper;
 
 	/**
 	 * 查询直播
@@ -384,6 +385,16 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 		if ( i > 0 ) {
 			this.processVideoSort();
+            Long sort = liveVideo.getSort();
+            if (sort!=null && sort<=20) {
+                LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById(liveVideo.getId());
+//                ConfigEnvironment configEnvironment = configEnvironmentMapper.selectConfigEnvironmentById("first_twenty_notice");
+                String msg = sysConfigCacheUtil.getConf( "first_twenty_notice" );
+                String groupId = liveVideo1.getGroupId();
+                if (msg!=null && groupId!=null) {
+                    helpNoticeUtil.sendMsg(liveVideo1.getHostName()+msg,groupId);
+                }
+            }
 			return AjaxResult.success( "更新成功" );
 		}
 		return AjaxResult.error( "更新失败" );
