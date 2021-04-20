@@ -31,7 +31,7 @@ public class HelpNoticeUtil implements Serializable {
     private SysConfigCacheUtil sysConfigCacheUtil;
 
     /**
-     * 发送消息
+     * 所有直播间发送消息
      *
      * @param text 文本
      */
@@ -61,5 +61,37 @@ public class HelpNoticeUtil implements Serializable {
             }
 
         }
+    }
+    /**
+     * 固定直播间发送消息
+     *
+     * @param text 文本
+     */
+    public void sendMsg(String text,String groupId) {
+        if(text==null){
+            return;
+        }
+
+        HashMap<String, Object> ext = new HashMap<>();
+        ext.put( "type", 0); //普通消息
+        ext.put( "fonts_color", "" );
+        ext.put( "text", text);
+        Map<String,Object> info = new HashMap<>();
+        info.put("user_id","admin");
+        info.put("user_level","50");
+        info.put("nick_name",sysConfigCacheUtil.getConf( "77_help_nick_name" ));
+        info.put("officer","2");
+        info.put("guardType","2");
+        ext.put( "sender", info );
+
+        MessageType messageType = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
+
+            try {
+                imApi.sendGroupMessage( groupId, "admin", messageType );
+            }catch (Exception e){
+                log.error("小助手发消息失败",e);
+            }
+
+
     }
 }
