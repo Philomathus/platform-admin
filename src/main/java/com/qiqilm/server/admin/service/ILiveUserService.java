@@ -52,6 +52,6 @@ public interface ILiveUserService {
     AjaxResult updateMobile(String newMobile, String oldMobile, String id);
 
 	List<LiveUser> selectLiveUserBankById(Integer userId);
-	LiveUser selectLiveUserBankOneById(Integer id);
+	AjaxResult updateLiveUserBank(LiveUser liveUser);
 	int delLiveUserBankById(String id);
 }

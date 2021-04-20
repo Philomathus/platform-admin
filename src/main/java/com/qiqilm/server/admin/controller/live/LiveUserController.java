@@ -71,7 +71,7 @@ public class LiveUserController extends BaseController {
 	}
 
 	/**
-	 * 获取主播银行卡
+	 * 查询主播银行卡
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:query')" )
 	@GetMapping( value = "/liveBank/{userId}" )
@@ -82,12 +82,12 @@ public class LiveUserController extends BaseController {
 	}
 
 	/**
-	 * 获取主播银行卡详细
+	 * 修改主播银行卡
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:query')" )
-	@GetMapping( value = "/liveBankOne/{userId}" )
-	public AjaxResult getInfoBankOne( @PathVariable( "id" ) Integer id ) {
-		return AjaxResult.success(liveUserService.selectLiveUserBankOneById( id ));
+	@PutMapping( value = "/updateBank" )
+	public AjaxResult updateLiveUserBank( @RequestBody LiveUser liveUser ) {
+		return AjaxResult.success(liveUserService.updateLiveUserBank( liveUser ));
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class LiveUserController extends BaseController {
 	}
 
     /**
-     * 新增//用户信息
+     * 新增用户信息
      */
     @PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
     @Log( title = "//用户信息", businessType = BusinessType.INSERT )

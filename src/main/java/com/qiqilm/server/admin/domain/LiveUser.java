@@ -145,9 +145,9 @@ public class LiveUser {
     private Integer liveIn;
 
     private String realName;
+	private String bankAccount;
     private String bankName;
-    private String bankAccount;
-    private String bankAddress;
+
 
 	public String getAuthStr() {
 		if ( isAuthentication != null ) {

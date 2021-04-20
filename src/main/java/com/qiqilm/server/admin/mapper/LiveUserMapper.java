@@ -68,6 +68,6 @@ public interface LiveUserMapper {
     Integer checkMobile(@Param("newMobile") String newMobile);
 
 	List<LiveUser> selectLiveUserBankById(Integer userId);
-	LiveUser selectLiveUserBankOneById(Integer id);
+	int updateLiveUserBank(LiveUser liveUser);
 	int delLiveUserBankById(String bankAccount);
 }
