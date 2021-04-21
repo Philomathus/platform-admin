@@ -206,4 +206,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select count(*)
 		from ${dbLive}.live_user where mobile = #{newMobile}
     </select>
+    <select id="selectLiveUserBankById" resultType="com.qiqilm.server.admin.domain.LiveUser">
+        select id,real_name realName,bank_account bankAccount,bank_address bankName from
+        ${dbLive}.live_user_bank where user_id = #{userId}
+    </select>
+
+    <update id="updateLiveUserBank" parameterType="LiveUser">
+        update ${dbLive}.live_user_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="realName != null">real_name = #{realName},</if>
+
+            <if test="bankAccount != null">bank_account = #{bankAccount},</if>
+
+            <if test="bankName != null">bank_address = #{bankName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="delLiveUserBankById">
+        delete from ${dbLive}.live_user_bank where bank_account = #{bankAccount}
+    </delete>
 </mapper>

@@ -50,4 +50,8 @@ public interface ILiveUserService {
     AjaxResult closeLive(Map map);
 
     AjaxResult updateMobile(String newMobile, String oldMobile, String id);
+
+	List<LiveUser> selectLiveUserBankById(Integer userId);
+	AjaxResult updateLiveUserBank(LiveUser liveUser);
+	int delLiveUserBankById(String id);
 }
