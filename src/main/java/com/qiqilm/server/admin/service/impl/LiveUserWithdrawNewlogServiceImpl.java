@@ -397,12 +397,14 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
                 LiveUserWithdrawNewlog liveUserWithdrawNewlog=new LiveUserWithdrawNewlog();
                 liveUserWithdrawNewlog.setWithdrawMoney(sumMoney);
                 liveUserWithdrawNewlog.setId(log.getId());
+                liveUserWithdrawNewlog.setUpdateTime(new Date());
                 liveUserWithdrawNewlog.setRemark("合并订单，请勿重置订单,合并之前金额为"+lists.get(0).getWithdrawMoney());
                 liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(liveUserWithdrawNewlog);
             }else {
                 LiveUserWithdrawNewlog WithdrawNewlog=new LiveUserWithdrawNewlog();
                 WithdrawNewlog.setId(log.getId());
                 WithdrawNewlog.setWstatus(Long.valueOf(5));//订单合并已销毁
+                WithdrawNewlog.setUpdateTime(new Date());
                 WithdrawNewlog.setRemark( "订单合并到：" + lists.get(0).getOrderNo());
                 liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog(WithdrawNewlog);
             }
