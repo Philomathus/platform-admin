@@ -8,10 +8,12 @@ import com.qiqilm.server.admin.domain.LiveUserLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveUserLogService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -41,12 +43,11 @@ public class LiveUserLogController extends BaseController {
 	 * 导出//帐户资金变动日志列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUserLog:export')" )
-	@Log( title = "//帐户资金变动日志", businessType = BusinessType.EXPORT )
+	@Log( title = "帐户资金变动日志", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LiveUserLog liveUserLog) {
+	public void export(LiveUserLog liveUserLog, HttpServletResponse response) {
 		List<LiveUserLog>      list = liveUserLogService.selectLiveUserLogList(liveUserLog);
-		ExcelUtil<LiveUserLog> util = new ExcelUtil<LiveUserLog>(LiveUserLog. class);
-		return util.exportExcel( list, "liveUserLog" );
+		ExportExcelUtil.exportExcel( list, "帐户资金变动日志", "帐户资金变动日志表", LiveUserLog.class, response );
 	}
 
 	/**

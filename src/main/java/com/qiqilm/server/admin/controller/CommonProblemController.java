@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,9 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.CommonProblem;
 import com.qiqilm.server.admin.service.ICommonProblemService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 常见问题Controller
@@ -51,10 +53,9 @@ public class CommonProblemController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('activity:commonProblem:export')" )
 	@Log( title = "常见问题", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(CommonProblem commonProblem) {
+	public void export(CommonProblem commonProblem, HttpServletResponse response) {
 		List<CommonProblem>      list = commonProblemService.selectCommonProblemList(commonProblem);
-		ExcelUtil<CommonProblem> util = new ExcelUtil<>(CommonProblem.class);
-		return util.exportExcel( list, "commonProblem" );
+		ExportExcelUtil.exportExcel( list, "常见问题", "常见问题表", CommonProblem.class, response );
 	}
 
 	/**

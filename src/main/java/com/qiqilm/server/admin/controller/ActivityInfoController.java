@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.domain.ActivityType;
 import com.qiqilm.server.admin.domain.ConfigBank;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.service.IActivityTypeService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,8 @@ import com.qiqilm.server.admin.domain.ActivityInfo;
 import com.qiqilm.server.admin.service.IActivityInfoService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 活动信息Controller
@@ -61,10 +64,9 @@ public class ActivityInfoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('admin:activityInfo:export')")
     @Log(title = "活动信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ActivityInfo activityInfo) {
+    public void export(ActivityInfo activityInfo, HttpServletResponse response) {
         List<ActivityInfo> list = activityInfoService.selectActivityInfoList(activityInfo);
-        ExcelUtil<ActivityInfo> util = new ExcelUtil<ActivityInfo>(ActivityInfo.class);
-        return util.exportExcel(list, "activityInfo");
+        ExportExcelUtil.exportExcel( list, "活动信息", "活动信息表", ActivityInfo.class, response);
     }
 
     /**

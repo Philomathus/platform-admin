@@ -9,10 +9,12 @@ import com.qiqilm.server.admin.domain.dto.WheelSkinReceivedExcel;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IWheelSkinReceivedService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -53,10 +55,9 @@ public class WheelSkinReceivedController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelSkinReceived:export')" )
 	@Log( title = "转盘皮肤领取", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(WheelSkinReceived wheelSkinReceived) {
-        List<WheelSkinReceivedExcel> wheelSkinReceivedExcels = wheelSkinReceivedService.selectWheelSkinReceivedList2(wheelSkinReceived);
-        ExcelUtil<WheelSkinReceivedExcel> util = new ExcelUtil<>(WheelSkinReceivedExcel.class);
-		return util.exportExcel( wheelSkinReceivedExcels, "wheelSkinReceived" );
+	public void export(WheelSkinReceived wheelSkinReceived, HttpServletResponse response) {
+        List<WheelSkinReceivedExcel> list = wheelSkinReceivedService.selectWheelSkinReceivedList2(wheelSkinReceived);
+		ExportExcelUtil.exportExcel( list, "转盘皮肤领取", "转盘皮肤领取表", WheelSkinReceivedExcel.class, response );
 	}
 
 	/**

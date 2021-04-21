@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import com.qiqilm.server.admin.domain.ConfigRecommend;
 import com.qiqilm.server.admin.service.IConfigRecommendService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 推广设置Controller
@@ -52,10 +55,9 @@ public class ConfigRecommendController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:configRecommend:export')" )
 	@Log( title = "推广设置", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(ConfigRecommend configRecommend) {
+	public void export(ConfigRecommend configRecommend, HttpServletResponse response) {
 		List<ConfigRecommend>      list = configRecommendService.selectConfigRecommendList(configRecommend);
-		ExcelUtil<ConfigRecommend> util = new ExcelUtil<ConfigRecommend>(ConfigRecommend. class);
-		return util.exportExcel( list, "configRecommend" );
+		ExportExcelUtil.exportExcel( list, "推广设置", "推广设置表", ConfigRecommend.class, response );
 	}
 
 	/**

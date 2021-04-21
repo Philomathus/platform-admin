@@ -103,6 +103,9 @@
         <if test="agent != null and agent != ''">
             and agent = #{agent}
         </if>
+        <if test="gameId != null and gameId != ''">
+            and game_id = #{gameId}
+        </if>
     </sql>
 
     <sql id="whereCount">

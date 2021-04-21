@@ -10,12 +10,14 @@ import com.qiqilm.server.admin.domain.rsp.RspTypeGames;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IGameTypeService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -47,10 +49,9 @@ public class GameTypeController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('game:type:export')" )
 	@Log( title = "游戏类型", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export( GameType gameType ) {
-		List<GameType>      list = gameTypeService.selectGameTypeList( gameType );
-		ExcelUtil<GameType> util = new ExcelUtil<>( GameType.class );
-		return util.exportExcel( list, "type" );
+	public void export( GameType gameType, HttpServletResponse response) {
+		List<GameType> list = gameTypeService.selectGameTypeList( gameType );
+		ExportExcelUtil.exportExcel( list, "游戏类型", "游戏类型表", GameType.class, response );
 	}
 
 	/**

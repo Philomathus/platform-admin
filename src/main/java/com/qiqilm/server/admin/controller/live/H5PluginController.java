@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller.live;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,8 @@ import com.qiqilm.server.admin.domain.H5Plugin;
 import com.qiqilm.server.admin.service.IH5PluginService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * h5插件Controller
@@ -50,10 +53,9 @@ public class H5PluginController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:h5Plugin:export')" )
 	@Log( title = "h5插件", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(H5Plugin h5Plugin) {
+	public void export(H5Plugin h5Plugin, HttpServletResponse response) {
 		List<H5Plugin>      list = h5PluginService.selectH5PluginList(h5Plugin);
-		ExcelUtil<H5Plugin> util = new ExcelUtil<H5Plugin>(H5Plugin. class);
-		return util.exportExcel( list, "h5Plugin" );
+		ExportExcelUtil.exportExcel( list, "h5插件", "h5插件表", H5Plugin.class, response );
 	}
 
 	/**

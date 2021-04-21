@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,16 +33,16 @@ public class WheelLottery extends BaseEntity {
 
     /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "开始时间", width = 30,  exportFormat = "yyyy-MM-dd")
     private Date start;
 
     /** 结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "结束时间", width = 30,  exportFormat = "yyyy-MM-dd")
     private Date end;
 
     /** 派奖比例（废弃） */
-    @Excel(name = "派奖比例", readConverterExp = "废=弃")
+    @Excel(name = "派奖比例")
     private BigDecimal pRate;
 
     /** 奖金池最小生效废弃） */

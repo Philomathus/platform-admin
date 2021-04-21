@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import java.math.BigDecimal;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,7 +21,7 @@ public class GamePlatform extends BaseEntity {
     private Integer id;
 
     /** 代理（渠道）号 */
-    @Excel(name = "代理", readConverterExp = "渠=道")
+    @Excel(name = "代理", suffix = "渠=道")
     private String agent;
 
     /** 平台名称 */

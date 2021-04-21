@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.qiqilm.server.admin.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,11 +33,11 @@ public class LiveVideoProp extends BaseEntity {
     private String propName;
 
     /** 积分（from_user_id可获得的积分）合计 */
-    @Excel(name = "积分", readConverterExp = "f=rom_user_id可获得的积分")
+    @Excel(name = "积分", suffix = "f=rom_user_id可获得的积分")
     private Long totalScore;
 
     /** 钻石（from_user_id减少的钻石）合计 */
-    @Excel(name = "钻石", readConverterExp = "f=rom_user_id减少的钻石")
+    @Excel(name = "钻石", suffix = "f=rom_user_id减少的钻石")
     private BigDecimal totalDiamonds;
 
     /** 印票(to_user_id增加的印票）合计;is_red_envelope=1时,为主播获得的：钻石 数量 */
@@ -70,7 +70,7 @@ public class LiveVideoProp extends BaseEntity {
 
     /** 日期字段,按日期归档；要不然数据量太大了；不好维护 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "日期字段,按日期归档；要不然数据量太大了；不好维护", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "日期字段,按日期归档；要不然数据量太大了；不好维护", width = 30, exportFormat = "yyyy-MM-dd")
     private Date createDate;
 
     /** 年 */

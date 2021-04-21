@@ -9,10 +9,12 @@ import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoPropService;
 import com.qiqilm.server.admin.utils.ExcelUtil;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -44,10 +46,9 @@ public class LiveVideoPropController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
 	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public AjaxResult export(LiveVideoProp liveVideoProp) {
-		List<LiveVideoProp>      list = liveVideoPropService.selectLiveVideoPropList(liveVideoProp);
-		ExcelUtil<LiveVideoProp> util = new ExcelUtil<LiveVideoProp>(LiveVideoProp. class);
-		return util.exportExcel( list, "liveVideoProp" );
+	public void export(LiveVideoProp liveVideoProp, HttpServletResponse response) {
+		List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList(liveVideoProp);
+		ExportExcelUtil.exportExcel(list, "送礼物", "送礼物表", LiveVideoProp.class, response);
 	}
 
 	/**
@@ -71,13 +72,13 @@ public class LiveVideoPropController extends BaseController {
 		List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList(liveVideoProp);
 		return getDataTable( list );
 	}
+
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
 	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/exportTestAccountProplog" )
-	public AjaxResult exportTestAccountProplog(LiveVideoProp liveVideoProp) {
+	public void exportTestAccountProplog(LiveVideoProp liveVideoProp, HttpServletResponse response) {
 		List<RspTestAccountProp>      list = liveVideoPropService.testAccountPorpList(liveVideoProp);
-		ExcelUtil<RspTestAccountProp> util = new ExcelUtil<>(RspTestAccountProp. class);
-		return util.exportExcel( list, "RspTestAccountProp" );
+		ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", RspTestAccountProp.class, response );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
