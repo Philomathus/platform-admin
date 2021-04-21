@@ -37,7 +37,7 @@
     </resultMap>
 
     <sql id="selectLiveHostPreVo">
-        select id, family_id, host_id, host_name, status, live_0, live_1, live_2, live_3, live_4, live_5, live_6, live_7, live_8, live_9, live_10, live_11, live_12, live_13, live_14, live_15, live_16, live_17, live_18, live_19, live_20, live_21, live_22, live_23, remark, create_time from 7700_live.live_host_pre
+        select id, family_id, host_id, host_name, status, live_0, live_1, live_2, live_3, live_4, live_5, live_6, live_7, live_8, live_9, live_10, live_11, live_12, live_13, live_14, live_15, live_16, live_17, live_18, live_19, live_20, live_21, live_22, live_23, remark, create_time from ${dbLive}.live_host_pre
     </sql>
 
     <select id="selectLiveHostPreList" parameterType="LiveHostPre" resultMap="LiveHostPreResult">
@@ -60,7 +60,7 @@
     </select>
 
     <insert id="insertLiveHostPre" parameterType="LiveHostPre">
-        insert into 7700_live.live_host_pre
+        insert into ${dbLive}.live_host_pre
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="familyId != null">family_id,</if>
@@ -130,7 +130,7 @@
     </insert>
 
     <update id="updateLiveHostPre" parameterType="LiveHostPre">
-        update 7700_live.live_host_pre
+        update ${dbLive}.live_host_pre
         <trim prefix="SET" suffixOverrides=",">
             <if test="familyId != null">family_id = #{familyId},</if>
     
@@ -195,11 +195,11 @@
     </update>
 
     <delete id="deleteLiveHostPreById" parameterType="String">
-        delete from 7700_live.live_host_pre where id = #{id}
+        delete from ${dbLive}.live_host_pre where id = #{id}
     </delete>
 
     <delete id="deleteLiveHostPreByIds" parameterType="String">
-        delete from 7700_live.live_host_pre where id in
+        delete from ${dbLive}.live_host_pre where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
