@@ -391,8 +391,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 //                ConfigEnvironment configEnvironment = configEnvironmentMapper.selectConfigEnvironmentById("first_twenty_notice");
                 String msg = sysConfigCacheUtil.getConf( "first_twenty_notice" );
                 String groupId = liveVideo1.getGroupId();
-                if (msg!=null && groupId!=null) {
-                    helpNoticeUtil.sendMsg(liveVideo1.getHostName()+msg,groupId);
+                if (StringUtils.isNotEmpty(msg) && StringUtils.isNotEmpty(groupId)) {
+                    helpNoticeUtil.sendMsg(msg,groupId);
                 }
             }
 			return AjaxResult.success( "更新成功" );
