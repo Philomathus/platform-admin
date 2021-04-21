@@ -25,7 +25,7 @@ public class LotteryRule extends BaseEntity {
 
     /** 彩票类型id */
     @Excel(name = "彩票类型id")
-    private String kind;
+    private Integer kind;
 
     /** 排序号 */
     @Excel(name = "排序号")
