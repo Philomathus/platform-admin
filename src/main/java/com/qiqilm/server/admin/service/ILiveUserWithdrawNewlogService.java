@@ -1,11 +1,9 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
-import com.qiqilm.server.admin.domain.MemberWithdrawLog;
-import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+
+import java.util.List;
 
 /**
  * 主播提现管理Service接口
@@ -80,5 +78,10 @@ public interface ILiveUserWithdrawNewlogService {
 	AjaxResult withdrawRefused( LiveUserWithdrawNewlog req );
 
 	AjaxResult updateOrder( LiveUserWithdrawNewlog req );
+
+	//合并订单
+	AjaxResult fixOrder( String[] ids );
+
+
 
 }
