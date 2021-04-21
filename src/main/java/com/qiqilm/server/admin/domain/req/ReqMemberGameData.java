@@ -23,4 +23,6 @@ public class ReqMemberGameData {
 
     /** 子平台名称 */
     private String sonPlatformName;
+
+    private String gameId;
 }
