@@ -36,6 +36,10 @@ public class LiveVideoChat extends BaseEntity {
 	@Excel( name = "发送者id" )
 	private Long userId;
 
+    /**
+     * 用户类型
+     */
+    private Integer status;
 	/**
 	 * 消息内容
 	 */
@@ -90,6 +94,7 @@ public class LiveVideoChat extends BaseEntity {
 				.append( "group", getGroup() )
 				.append( "userId", getUserId() )
 				.append( "msg", getMsg() )
+				.append( "status", getStatus() )
 				.append( "createTime", getCreateTime() )
 				.append( "type", getType() )
 				.append( "poscatNickName", getPoscatNickName() )
