@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.domain.LiveVideoChat;
 import com.qiqilm.server.admin.domain.MemberInfo;
@@ -35,6 +36,8 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 	private MemberInfoMapper       memberInfoMapper;
 	@Autowired
 	private SpeakIpBlackListMapper speakIpBlackListMapper;
+	@Autowired
+    private MemberCacheManager memberCacheManager;
 
 	/**
 	 * 查询会员发言
@@ -133,6 +136,10 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 			memberInfoMapper.updateSpeak( pUserId, num );
 		}
 		if ( flag ) {
+            //当用户为正常号时才能封停
+            MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(pUserId);
+            if (memberInfo.getStatus()==1) {
+
 			SpeakIpBlackList speakIpBlackList = new SpeakIpBlackList();
 			speakIpBlackList.setUserId( pUserId );
 			speakIpBlackList.setUserIp( userIp );
@@ -140,12 +147,16 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 			speakIpBlackList.setMsg("操作人:"+banAccount+",发言内容:"+msg);
 			speakIpBlackListMapper.insertSpeakIpBlackList( speakIpBlackList );
 
-			// 封停账号
+
 			MemberInfo update = new MemberInfo();
 			update.setId( pUserId );
 			update.setSpeak( "1");
+            update.setStatus(0);
 			memberInfoMapper.updateMemberInfo( update );
+            // 退出登录
+            memberCacheManager.delToken(pUserId);
 			memberForbidUtil.setPlatformUserSpeak( pUserId, true );
+            }
 		} else {
 			speakIpBlackListMapper.deleteSpeakIp( userIp );
 
@@ -153,6 +164,7 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 			MemberInfo update = new MemberInfo();
 			update.setId( pUserId );
 			update.setSpeak( "0" );
+            update.setStatus(1);
 			memberInfoMapper.updateMemberInfo( update );
 			memberForbidUtil.setPlatformUserSpeak( pUserId, false );
 		}

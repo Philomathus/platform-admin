@@ -16,36 +16,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userNickName"    column="user_nick_name"    />
         <result property="fromPlatform"    column="from_platform"    />
         <result property="userIp"    column="user_ip"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectLiveVideoChatVo">
-        select id, poscat_id, `group`, user_id, msg,  create_time as createTimes,  `type`, poscat_nick_name, user_nick_name,
-        from_platform,user_ip from ${dbLive}.live_video_chat
+<!--        select id, poscat_id, `group`, user_id, msg,  create_time as createTimes,  `type`, poscat_nick_name, user_nick_name,
+        from_platform,user_ip from ${dbLive}.live_video_chat-->
+        select a.id, a.poscat_id, a.`group`, a.user_id, a.msg,  a.create_time as createTimes,  a.`type`, a.poscat_nick_name, a.user_nick_name,
+        a.from_platform,a.user_ip,b.`status`
+		from ${dbLive}.live_video_chat a
+		left join ${dbMain}.member_info b on a.from_platform=b.id
     </sql>
 
     <select id="selectLiveVideoChatList" parameterType="LiveVideoChat" resultMap="LiveVideoChatResult">
         <include refid="selectLiveVideoChatVo"/>
         <where>
-            <if test="poscatId != null "> and poscat_id = #{poscatId}</if>
-            <if test="group != null  and group != ''"> and `group` = #{group}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="msg != null  and msg != ''"> and msg = #{msg}</if>
-            <if test="type != null "> and type = #{type}</if>
-            <if test="poscatNickName != null  and poscatNickName != ''"> and poscat_nick_name like concat('%', #{poscatNickName}, '%')</if>
-            <if test="userNickName != null  and userNickName != ''"> and user_nick_name like concat('%', #{userNickName}, '%')</if>
-            <if test="fromPlatform != null  and fromPlatform != ''"> and from_platform = #{fromPlatform}</if>
-            <if test="sendStartTime != null  and sendStartTime != ''"> and create_time >= #{sendStartTime}</if>
-            <if test="sendEndTime != null  and sendEndTime != ''"> and create_time &lt;= #{sendEndTime}</if>
+            <if test="poscatId != null "> and a.poscat_id = #{poscatId}</if>
+            <if test="group != null  and group != ''"> and a.`group` = #{group}</if>
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="msg != null  and msg != ''"> and a.msg = #{msg}</if>
+            <if test="type != null "> and a.type = #{type}</if>
+            <if test="poscatNickName != null  and poscatNickName != ''"> and a.poscat_nick_name like concat('%', #{poscatNickName}, '%')</if>
+            <if test="userNickName != null  and userNickName != ''"> and a.user_nick_name like concat('%', #{userNickName}, '%')</if>
+            <if test="fromPlatform != null  and fromPlatform != ''"> and a.from_platform = #{fromPlatform}</if>
+            <if test="sendStartTime != null  and sendStartTime != ''"> and a.create_time >= #{sendStartTime}</if>
+            <if test="sendEndTime != null  and sendEndTime != ''"> and a.create_time &lt;= #{sendEndTime}</if>
         </where>
     </select>
 
     <select id="selectLiveVideoChatById" parameterType="Long" resultMap="LiveVideoChatResult">
         <include refid="selectLiveVideoChatVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
     <select id="selectLiveVideoUser" resultType="com.qiqilm.server.admin.domain.LiveVideoChat">
         <include refid="selectLiveVideoChatVo"/>
-        where from_platform = #{pUserId}
+        where a.from_platform = #{pUserId}
     </select>
 
     <insert id="insertLiveVideoChat" parameterType="LiveVideoChat" useGeneratedKeys="true" keyProperty="id">
