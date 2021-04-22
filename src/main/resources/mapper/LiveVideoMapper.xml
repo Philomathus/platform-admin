@@ -514,4 +514,11 @@
             </if>
         </where>
     </select>
+
+    <select id="selectExpiredVideo" resultType="java.lang.Long">
+        select id from ${dbLive}.live_video
+        where live_in = 0
+        and (end_time is null or end_time <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 5 HOUR))
+        order by end_time desc
+	</select>
 </mapper>
