@@ -58,14 +58,20 @@
         </where>
         GROUP BY gameplame
         UNION all
-        select '直播送礼' as liveprop ,SUM(total_giveprop) from report_moneyinfo
+        select '送礼金额' as liveprop,SUM(ticket) from ${dbLive}.live_host_wage_day
+        where id like concat(#{dateTime}, '%') and ticket is not NULL
+        UNION all
+        select '坐骑金额' as liveprop,SUM(total_diamonds) from ${dbLive}.live_video_prop  where p_user_id not in
+        (select id from member_info
         <where>
+            AND STATUS  in ('2'))
             <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
-                AND  reptime &gt;= STR_TO_DATE(#{begindate},'%Y-%m-%d')
+                AND  create_date &gt;=  STR_TO_DATE(#{begindate},'%Y-%m-%d')
             </if>
             <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
-                AND reptime &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
+                AND create_date &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
             </if>
+            AND prop_id = '-2'
         </where>
     </select>
 

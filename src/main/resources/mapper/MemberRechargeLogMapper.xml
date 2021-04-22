@@ -242,6 +242,9 @@
 		<if test="req.rechargeUserName != null  and req.rechargeUserName != ''">
 			and recharge_user_name = #{req.rechargeUserName}
 		</if>
+        <if test="req.bankName != null  and req.bankName != ''">
+			and bank_name = #{req.bankName}
+		</if>
 		<if test="req.orderNo != null  and req.orderNo != ''">
 			and order_no = #{req.orderNo}
 		</if>

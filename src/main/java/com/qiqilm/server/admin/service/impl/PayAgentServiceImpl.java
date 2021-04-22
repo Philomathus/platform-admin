@@ -207,8 +207,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			try {
 				if ( basePayAgent.orderPay( withdrawLog, payAgentPlatform, newReqPayAgent ) ) {
 					this.processOrder( payAgentPlatform, withdrawLog, newReqPayAgent.getCurrentTime(), 4, 0 );
+					sucessNum++;
+				} else {
+					failReasonList.put( withdrawLog.getOrderNo(), newReqPayAgent.getFailReason() );
 				}
-				sucessNum++;
 			} catch ( Exception e ) {
 				log.error( "代付下单失败 - 订单号：{};失败原因：{}", withdrawLog.getOrderNo(), e.getMessage(), e );
 				failReasonList.put( withdrawLog.getOrderNo(), newReqPayAgent.getFailReason() );

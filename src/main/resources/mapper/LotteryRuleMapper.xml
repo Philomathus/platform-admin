@@ -17,7 +17,7 @@
     <select id="selectLotteryRuleList" parameterType="LotteryRule" resultMap="LotteryRuleResult">
         <include refid="selectLotteryRuleVo"/>
         <where>
-            <if test="kind != null  and kind != ''">and kind = #{kind}</if>
+            <if test="kind != null ">and kind = #{kind}</if>
             <if test="name != null  and name != ''">and `name` = #{name}</if>
         </where>
     </select>
