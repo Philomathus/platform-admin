@@ -3,11 +3,11 @@
 <mapper namespace="com.qiqilm.server.admin.mapper.BankCardAddressMapper">
 
     <resultMap type="BankCardAddress" id="BankCardAddressResult">
-        <result property="id"    column="id"    />
-        <result property="province"    column="province"    />
-        <result property="city"    column="city"    />
-        <result property="status"    column="status"    />
-        <result property="createName"    column="create_name"    />
+        <result property="id" column="id"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="status" column="status"/>
+        <result property="createName" column="create_name"/>
     </resultMap>
 
     <sql id="selectBankCardAddressVo">
@@ -16,12 +16,10 @@
 
     <select id="selectBankCardAddressList" parameterType="BankCardAddress" resultMap="BankCardAddressResult">
         <include refid="selectBankCardAddressVo"/>
-        <where>
-            <if test="province != null  and province != ''"> and province = #{province}</if>
-            <if test="city != null  and city != ''"> and city = #{city}</if>
-            <if test="createName != null  and createName != ''"> and create_name like concat('%', #{createName}, '%')</if>
-        </where>
-        and status = 1
+        where status = 1
+        <if test="province != null  and province != ''">and province = #{province}</if>
+        <if test="city != null  and city != ''">and city = #{city}</if>
+        <if test="createName != null  and createName != ''">and create_name like concat('%', #{createName}, '%')</if>
     </select>
 
     <select id="selectBankCardAddressById" parameterType="String" resultMap="BankCardAddressResult">
