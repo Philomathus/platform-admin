@@ -22,6 +22,7 @@
         <result property="first" column="first"/>
         <result property="rechargeWithdrawRate" column="recharge_withdraw_rate"/>
         <result property="bankCharge" column="bank_charge"/>
+        <result property="realBankAddress" column="real_bank_address"/>
     </resultMap>
 
     <sql id="selectMemberWithdrawLogVo">
@@ -42,7 +43,8 @@
         account,
         first,
         recharge_withdraw_rate,
-        bank_charge
+        bank_charge,
+        real_bank_address
         from `${dbMain}`.member_withdraw_log
     </sql>
 
