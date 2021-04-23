@@ -16,10 +16,12 @@
 
     <select id="selectBankCardAddressList" parameterType="BankCardAddress" resultMap="BankCardAddressResult">
         <include refid="selectBankCardAddressVo"/>
-        where status = 1
+        <where>
+        <if test="status != null  and status != ''">and status = #{status}</if>
         <if test="province != null  and province != ''">and province = #{province}</if>
         <if test="city != null  and city != ''">and city = #{city}</if>
         <if test="createName != null  and createName != ''">and create_name like concat('%', #{createName}, '%')</if>
+        </where>
     </select>
 
     <select id="selectBankCardAddressById" parameterType="String" resultMap="BankCardAddressResult">
