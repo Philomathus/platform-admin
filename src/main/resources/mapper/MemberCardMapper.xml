@@ -118,4 +118,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where member_id = #{memberId}
         order by create_time desc
     </select>
+    <update id="updateMemberCardList" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            update member_card set real_bank_address=#{item.realBankAddress} where id=#{item.id}
+        </foreach>
+    </update>
 </mapper>

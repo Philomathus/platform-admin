@@ -1,12 +1,13 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
+import com.qiqilm.server.admin.domain.MemberCard;
+import com.qiqilm.server.admin.mapper.MemberCardMapper;
+import com.qiqilm.server.admin.service.IMemberCardService;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.MemberCardMapper;
-import com.qiqilm.server.admin.domain.MemberCard;
-import com.qiqilm.server.admin.service.IMemberCardService;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -89,5 +90,10 @@ public class MemberCardServiceImpl implements IMemberCardService {
     @Override
     public List<MemberCard> getBankCardInfo() {
         return memberCardMapper.getMemberCardInfo();
+    }
+
+    @Override
+    public int updateMemberCardList(List<MemberCard> listMemberCard) {
+        return memberCardMapper.updateMemberCardList(listMemberCard);
     }
 }

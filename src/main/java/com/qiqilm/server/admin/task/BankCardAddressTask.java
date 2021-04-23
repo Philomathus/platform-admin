@@ -4,15 +4,10 @@ package com.qiqilm.server.admin.task;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.LiveUserBank;
 import com.qiqilm.server.admin.domain.MemberCard;
-import com.qiqilm.server.admin.domain.MemberWithdrawLog;
-import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.ILiveUserBankService;
-import com.qiqilm.server.admin.service.IMemberBcodeService;
 import com.qiqilm.server.admin.service.IMemberCardService;
-import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +44,8 @@ public class BankCardAddressTask {
 			String bankAccount = m.getBankAccount();
 			String bankAddress= getRealBankAddress(bankAccount,apiUrl);
 			m.setRealBankAddress(bankAddress);
-			memberCardService.updateMemberCard(m);
 		}
+        memberCardService.updateMemberCardList(listMemberCard);
 
 
 	}
