@@ -1,8 +1,8 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.MemberCard;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service接口
@@ -60,4 +60,7 @@ public interface IMemberCardService{
 	public int deleteMemberCardById(String id);
 
     List<MemberCard> getBankCardInfo();
+
+    int updateMemberCardList(List<MemberCard> listMemberCard);
+
 }
