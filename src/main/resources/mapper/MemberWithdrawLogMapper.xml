@@ -22,6 +22,7 @@
         <result property="first" column="first"/>
         <result property="rechargeWithdrawRate" column="recharge_withdraw_rate"/>
         <result property="bankCharge" column="bank_charge"/>
+        <result property="realBankAddress" column="real_bank_address"/>
     </resultMap>
 
     <sql id="selectMemberWithdrawLogVo">
@@ -42,7 +43,8 @@
         account,
         first,
         recharge_withdraw_rate,
-        bank_charge
+        bank_charge,
+        real_bank_address
         from `${dbMain}`.member_withdraw_log
     </sql>
 
@@ -380,7 +382,7 @@
 
     <select id="selectPayAgentOrder" resultMap="MemberWithdrawLogResult">
         <include refid="selectMemberWithdrawLogVo" />
-        where `status` = 1 and op_name = #{userName} and withdraw_money > 0 and withdraw_money <![CDATA[ <= ]]> 2000
+        where `status` = 1 and op_name = #{userName} and withdraw_money > 0 and withdraw_money <![CDATA[ <= ]]> 5000
         and order_no in
         <foreach item="orderNo" collection="withdrawOrderNos" open="(" separator="," close=")">
             #{orderNo}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.BankCardAddressMapper">
+
+    <resultMap type="BankCardAddress" id="BankCardAddressResult">
+        <result property="id" column="id"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="status" column="status"/>
+        <result property="createName" column="create_name"/>
+    </resultMap>
+
+    <sql id="selectBankCardAddressVo">
+        select id, province, city, status, create_name from ${dbMain}.bank_card_address
+    </sql>
+
+    <select id="selectBankCardAddressList" parameterType="BankCardAddress" resultMap="BankCardAddressResult">
+        <include refid="selectBankCardAddressVo"/>
+        <where>
+        <if test="status != null  and status != ''">and status = #{status}</if>
+        <if test="province != null  and province != ''">and province = #{province}</if>
+        <if test="city != null  and city != ''">and city = #{city}</if>
+        <if test="createName != null  and createName != ''">and create_name like concat('%', #{createName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectBankCardAddressById" parameterType="String" resultMap="BankCardAddressResult">
+        <include refid="selectBankCardAddressVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectBankCardAddress" parameterType="String" resultMap="BankCardAddressResult">
+        <include refid="selectBankCardAddressVo"/>
+        where province = #{province}
+    </select>
+    <insert id="insertBankCardAddress" parameterType="BankCardAddress">
+        insert into ${dbMain}.bank_card_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="status != null">status,</if>
+            <if test="createName != null">create_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="province != null">#{province},</if>
+            <if test="city != null">#{city},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createName != null">#{createName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBankCardAddress" parameterType="BankCardAddress">
+        update ${dbMain}.bank_card_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="province != null">province = #{province},</if>
+
+            <if test="city != null">city = #{city},</if>
+
+            <if test="status != null">status = #{status},</if>
+
+            <if test="createName != null">create_name = #{createName},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBankCardAddressById" parameterType="String">
+        delete from ${dbMain}.bank_card_address where id = #{id}
+    </delete>
+
+    <delete id="deleteBankCardAddressByIds" parameterType="String">
+        delete from ${dbMain}.bank_card_address where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

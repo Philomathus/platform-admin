@@ -22,10 +22,11 @@
         <result property="livetime"    column="livetime"    />
         <result property="liveticket"    column="liveticket"    />
         <result property="livepaijiang"    column="livepaijiang"    />
+        <result property="realBankAddress" column="real_bank_address"/>
     </resultMap>
 
     <sql id="selectLiveUserWithdrawNewlogVo">
-        select id, user_id, family_id, nick_name, order_no, withdraw_money, bank_user_name, bank_account, bank_address, bank_type_id, wstatus, type, op_name, remark,   create_time ,    update_time ,  livetime, liveticket, livepaijiang from ${dbLive}.live_user_withdraw_newlog
+        select id, user_id, family_id, nick_name, order_no, withdraw_money, bank_user_name, bank_account, bank_address, bank_type_id, wstatus, type, op_name, remark, create_time, update_time, livetime, liveticket, livepaijiang, real_bank_address from ${dbLive}.live_user_withdraw_newlog
     </sql>
 
     <select id="selectLiveUserWithdrawNewlogList" parameterType="LiveUserWithdrawNewlog" resultMap="LiveUserWithdrawNewlogResult">

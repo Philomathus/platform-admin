@@ -2,46 +2,46 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
-import com.qiqilm.server.admin.domain.MemberCard;
+import com.qiqilm.server.admin.domain.BankCardAddress;
 
 /**
  * 【请填写功能名称】Service接口
  *
  * @author 77tv
- * @date 2021-01-26
+ * @date 2021-04-21
  */
-public interface IMemberCardService{
+public interface IBankCardAddressService {
 	/**
 	 * 查询【请填写功能名称】
 	 *
 	 * @param id 【请填写功能名称】ID
 	 * @return 【请填写功能名称】
 	 */
-	public MemberCard selectMemberCardById(String id);
+	public BankCardAddress selectBankCardAddressById(String id);
 
 	/**
 	 * 查询【请填写功能名称】列表
 	 *
-	 * @param memberCard 【请填写功能名称】
+	 * @param bankCardAddress 【请填写功能名称】
 	 * @return 【请填写功能名称】集合
 	 */
-	public List<MemberCard> selectMemberCardList(MemberCard memberCard);
+	public List<BankCardAddress> selectBankCardAddressList(BankCardAddress bankCardAddress);
 
 	/**
 	 * 新增【请填写功能名称】
 	 *
-	 * @param memberCard 【请填写功能名称】
+	 * @param bankCardAddress 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int insertMemberCard(MemberCard memberCard);
+	public int insertBankCardAddress(BankCardAddress bankCardAddress);
 
 	/**
 	 * 修改【请填写功能名称】
 	 *
-	 * @param memberCard 【请填写功能名称】
+	 * @param bankCardAddress 【请填写功能名称】
 	 * @return 结果
 	 */
-	public int updateMemberCard(MemberCard memberCard);
+	public int updateBankCardAddress(BankCardAddress bankCardAddress);
 
 	/**
 	 * 批量删除【请填写功能名称】
@@ -49,7 +49,7 @@ public interface IMemberCardService{
 	 * @param ids 需要删除的【请填写功能名称】ID
 	 * @return 结果
 	 */
-	public int deleteMemberCardByIds(String[] ids );
+	public int deleteBankCardAddressByIds(String[] ids );
 
 	/**
 	 * 删除【请填写功能名称】信息
@@ -57,7 +57,5 @@ public interface IMemberCardService{
 	 * @param id 【请填写功能名称】ID
 	 * @return 结果
 	 */
-	public int deleteMemberCardById(String id);
-
-    List<MemberCard> getBankCardInfo();
+	public int deleteBankCardAddressById(String id);
 }
