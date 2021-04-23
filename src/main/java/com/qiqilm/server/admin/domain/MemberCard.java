@@ -48,7 +48,8 @@ public class MemberCard extends BaseEntity {
     /** 是否默认 */
     @Excel(name = "是否默认")
     private Integer dv;
-
+    @Excel(name = "银行卡真实归属地")
+    private String realBankAddress;
     public void setId(String id) {
         this.id = id;
     }
@@ -112,7 +113,13 @@ public class MemberCard extends BaseEntity {
     public Integer getDv() {
         return dv;
     }
+    public String getRealBankAddress() {
+        return realBankAddress;
+    }
 
+    public void setRealBankAddress(String realBankAddress) {
+        this.realBankAddress = realBankAddress;
+    }
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -126,6 +133,7 @@ public class MemberCard extends BaseEntity {
             .append("createTime", getCreateTime())
             .append("type", getType())
             .append("dv", getDv())
+            .append("realBankAddress", getRealBankAddress())
             .toString();
     }
 }
