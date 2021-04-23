@@ -112,6 +112,21 @@ public class MemberWithdrawLog extends BaseEntity {
     @Excel(name = "公司入款成功次数", orderNum = "14")
     private BigDecimal bankCharge;
 
+    /**
+     * 银行卡省/市
+     */
+    @Excel(name = "银行卡省/市", orderNum = "15")
+    private String realBankAddress;
+
+    /**
+     * 银行卡黑名单1是0否
+     */
+    @Excel(name = "银行卡黑名单", orderNum = "16")
+    private Integer cardBlack;
+
+    private String SearchCardBlack;
+    private String city;
+
     @JsonIgnore
     private String bankCode;
     @JsonIgnore
