@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.BankCardAddress;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
@@ -9,6 +10,7 @@ import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
+import com.qiqilm.server.admin.service.IBankCardAddressService;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
 import com.qiqilm.server.admin.utils.RedisUtil;
@@ -21,10 +23,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 会员提现信息Service业务层处理
@@ -34,354 +33,396 @@ import java.util.List;
  */
 @Service
 public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
-	@Autowired
-	private MemberWithdrawLogMapper memberWithdrawLogMapper;
-	@Autowired
-	private MemberInfoMapper        memberInfoMapper;
-	@Autowired
-	private TokenService            tokenService;
-	@Autowired
-	private ILogService             logService;
-	@Autowired
-	private RedisUtil               redisUtil;
+    @Autowired
+    private MemberWithdrawLogMapper memberWithdrawLogMapper;
+    @Autowired
+    private MemberInfoMapper memberInfoMapper;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private ILogService logService;
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
+    private IBankCardAddressService bankCardAddressService;
 
-	/**
-	 * 查询会员提现信息
-	 *
-	 * @param id 会员提现信息ID
-	 * @return 会员提现信息
-	 */
-	@Override
-	public MemberWithdrawLog selectMemberWithdrawLogById( String id ) {
-		return memberWithdrawLogMapper.selectMemberWithdrawLogById( id );
-	}
+    /**
+     * 查询会员提现信息
+     *
+     * @param id 会员提现信息ID
+     * @return 会员提现信息
+     */
+    @Override
+    public MemberWithdrawLog selectMemberWithdrawLogById(String id) {
+        return memberWithdrawLogMapper.selectMemberWithdrawLogById(id);
+    }
 
-	/**
-	 * 查询会员提现信息列表
-	 *
-	 * @param memberWithdrawLog 会员提现信息
-	 * @return 会员提现信息
-	 */
-	@Override
-	public List<MemberWithdrawLog> selectMemberWithdrawLogList( MemberWithdrawLog memberWithdrawLog ) {
-		return memberWithdrawLogMapper.selectMemberWithdrawLogList( memberWithdrawLog );
-	}
+    /**
+     * 查询会员提现信息列表
+     *
+     * @param memberWithdrawLog 会员提现信息
+     * @return 会员提现信息
+     */
+    @Override
+    public List<MemberWithdrawLog> selectMemberWithdrawLogList(MemberWithdrawLog memberWithdrawLog) {
+        List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.selectMemberWithdrawLogList(memberWithdrawLog);
+        BankCardAddress bankCardAddress = new BankCardAddress();
+        String[] arr = null;
+        List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
+        if (memberWithdrawLogList != null && memberWithdrawLogList.size() != 0) {
+            for (MemberWithdrawLog me : memberWithdrawLogList) {
+                if (!StringUtils.isEmpty(me.getRealBankAddress())) {
+                    arr = me.getRealBankAddress().split("/");
+                    me.setProvince(arr[0]);
+                    me.setCity(arr[1]);
+                    for (BankCardAddress ba : bankCardAddresses) {
+                        if (me.getProvince().equals(ba.getProvince())) {
+                            if (ba.getCity().contains(me.getCity())) {
+                                //来到这里,是在黑名单中
+                                me.setCardBlack("1");
+                            } else {
+                                me.setCardBlack("0");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //银行卡黑名单搜索
+        if (!StringUtils.isEmpty(memberWithdrawLog.getSearchCardBlack())) {
+            Iterator<MemberWithdrawLog> it = memberWithdrawLogList.iterator();
+            if ("1".equals(memberWithdrawLog.getSearchCardBlack())) {
+                while (it.hasNext()) {
+                    if ("0".equals(it.next().getCardBlack())) {
+                        it.remove();
+                    }
+                }
+            } else {
+                while (it.hasNext()) {
+                    if ("1".equals(it.next().getCardBlack())) {
+                        it.remove();
+                    }
+                }
+            }
+        }
+        return memberWithdrawLogList;
+    }
 
-	@Override
-	public List<MemberWithdrawLogShunWei> selectMemberWithdrawLogShunWeiList(ReqMemberWithdrawLog req) {
-		return memberWithdrawLogMapper.selectMemberWithdrawLogShunWeiList( req.getIds() );
-	}
+    @Override
+    public List<MemberWithdrawLogShunWei> selectMemberWithdrawLogShunWeiList(ReqMemberWithdrawLog req) {
+        return memberWithdrawLogMapper.selectMemberWithdrawLogShunWeiList(req.getIds());
+    }
 
-	@Override
-	public AjaxResult refused( ReqMemberWithdrawLog req ) {
-		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
-		if ( memberWithdrawLog == null ) {
-			return AjaxResult.error( "订单不存在" );
-		}
-		if ( memberWithdrawLog.getStatus() == 2 ) {
-			return AjaxResult.error( "订单重复处理" );
-		}
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String    userName  = loginUser.getUser().getUserName();
+    @Override
+    public AjaxResult refused(ReqMemberWithdrawLog req) {
+        MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
+        if (memberWithdrawLog == null) {
+            return AjaxResult.error("订单不存在");
+        }
+        if (memberWithdrawLog.getStatus() == 2) {
+            return AjaxResult.error("订单重复处理");
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
 
-		String ip = UserDataUtil.getIp( ServletUtil.getHttpServletRequest() );
+        String ip = UserDataUtil.getIp(ServletUtil.getHttpServletRequest());
 
-		if ( !StringUtils.isEmpty( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
-			return AjaxResult.error( "该订单只能由" + memberWithdrawLog.getOpName() + "处理" );
-		}
-		if ( !redisUtil.lock( EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5 ) ) {
-			return AjaxResult.error( "请勿重复提交" );
-		}
+        if (!StringUtils.isEmpty(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+            return AjaxResult.error("该订单只能由" + memberWithdrawLog.getOpName() + "处理");
+        }
+        if (!redisUtil.lock(EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5)) {
+            return AjaxResult.error("请勿重复提交");
+        }
 
-		memberWithdrawLog.setRemark( req.getRemark() );
-		memberWithdrawLog.setStatus( 2 );//审核不通过
-		memberWithdrawLog.setOpName( userName );
-		memberWithdrawLog.setUpdateTime( new Date() );
+        memberWithdrawLog.setRemark(req.getRemark());
+        memberWithdrawLog.setStatus(2);//审核不通过
+        memberWithdrawLog.setOpName(userName);
+        memberWithdrawLog.setUpdateTime(new Date());
 
-		this.refusedUpdateProcess( memberWithdrawLog, userName, ip );
+        this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
 
-		redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
-		return AjaxResult.success();
-	}
+        redisUtil.unLock(EnumLock.member, memberWithdrawLog.getMemberId());
+        return AjaxResult.success();
+    }
 
-	@Transactional( rollbackFor = Exception.class )
-	void refusedUpdateProcess( MemberWithdrawLog memberWithdrawLog, String userName, String ip ) {
-		memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		BigDecimal old = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
-		//回退提现金额
-		memberInfoMapper.updateMoneySelect( memberWithdrawLog.getMemberId(), memberWithdrawLog.getWithdrawMoney(), null, null
-				, null, null );
-		BigDecimal now = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
-		logService.logmarkMoney( memberWithdrawLog.getMemberId(), memberWithdrawLog.getAccount(), EnumMoney.bohui, now, old,
-				"驳回人：" + userName + "-" + ip, memberWithdrawLog.getOrderNo() );
-	}
+    @Transactional(rollbackFor = Exception.class)
+    void refusedUpdateProcess(MemberWithdrawLog memberWithdrawLog, String userName, String ip) {
+        memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
+        BigDecimal old = memberInfoMapper.selectTotalAccountById(memberWithdrawLog.getMemberId());
+        //回退提现金额
+        memberInfoMapper.updateMoneySelect(memberWithdrawLog.getMemberId(), memberWithdrawLog.getWithdrawMoney(), null, null
+                , null, null);
+        BigDecimal now = memberInfoMapper.selectTotalAccountById(memberWithdrawLog.getMemberId());
+        logService.logmarkMoney(memberWithdrawLog.getMemberId(), memberWithdrawLog.getAccount(), EnumMoney.bohui, now, old,
+                "驳回人：" + userName + "-" + ip, memberWithdrawLog.getOrderNo());
+    }
 
-	@Override
-	public AjaxResult refuseds( ReqMemberWithdrawLog req ) {
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String    userName  = loginUser.getUser().getUserName();
+    @Override
+    public AjaxResult refuseds(ReqMemberWithdrawLog req) {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
 
-		String ip = UserDataUtil.getIp( ServletUtil.getHttpServletRequest() );
+        String ip = UserDataUtil.getIp(ServletUtil.getHttpServletRequest());
 
-		if ( !redisUtil.lock( EnumLock.adminUser, userName, "1", 5 ) ) {
-			return AjaxResult.error( "请勿重复提交" );
-		}
-		List<MemberWithdrawLog> withdrawLogList = memberWithdrawLogMapper.selectByIds( req.getIds() );
-		for ( MemberWithdrawLog memberWithdrawLog : withdrawLogList ) {
-			memberWithdrawLog.setRemark( req.getRemark() );
-			memberWithdrawLog.setStatus( 2 );//审核不通过
-			memberWithdrawLog.setOpName( userName );
-			memberWithdrawLog.setUpdateTime( new Date() );
-			this.refusedUpdateProcess( memberWithdrawLog, userName, ip );
-		}
+        if (!redisUtil.lock(EnumLock.adminUser, userName, "1", 5)) {
+            return AjaxResult.error("请勿重复提交");
+        }
+        List<MemberWithdrawLog> withdrawLogList = memberWithdrawLogMapper.selectByIds(req.getIds());
+        for (MemberWithdrawLog memberWithdrawLog : withdrawLogList) {
+            memberWithdrawLog.setRemark(req.getRemark());
+            memberWithdrawLog.setStatus(2);//审核不通过
+            memberWithdrawLog.setOpName(userName);
+            memberWithdrawLog.setUpdateTime(new Date());
+            this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+        }
 
-		redisUtil.unLock( EnumLock.adminUser, userName );
-		return AjaxResult.success();
-	}
+        redisUtil.unLock(EnumLock.adminUser, userName);
+        return AjaxResult.success();
+    }
 
-	@Override
-	public AjaxResult lock( ReqMemberWithdrawLog req ) {
-		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
-		if ( memberWithdrawLog == null ) {
-			return AjaxResult.error( "订单不存在" );
-		}
-		if ( memberWithdrawLog.getStatus() == 1 ) {
-			return AjaxResult.error( "该订单已被锁定,请刷新界面" );
-		}
-		if ( memberWithdrawLog.getStatus() == 2 ) {
-			return AjaxResult.error( "该订单已被拒绝" );
-		}
-		if ( memberWithdrawLog.getStatus() != 5 && 1 < memberWithdrawLog.getStatus() ) {
-			return AjaxResult.error( "审核流程非法" );
-		}
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String    userName  = loginUser.getUser().getUserName();
+    @Override
+    public AjaxResult lock(ReqMemberWithdrawLog req) {
+        MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
+        if (memberWithdrawLog == null) {
+            return AjaxResult.error("订单不存在");
+        }
+        if (memberWithdrawLog.getStatus() == 1) {
+            return AjaxResult.error("该订单已被锁定,请刷新界面");
+        }
+        if (memberWithdrawLog.getStatus() == 2) {
+            return AjaxResult.error("该订单已被拒绝");
+        }
+        if (memberWithdrawLog.getStatus() != 5 && 1 < memberWithdrawLog.getStatus()) {
+            return AjaxResult.error("审核流程非法");
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
 
-		if ( !StringUtils.isEmpty( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
-			return AjaxResult.error( "该订单只能由" + memberWithdrawLog.getOpName() + "处理" );
-		}
+        if (!StringUtils.isEmpty(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+            return AjaxResult.error("该订单只能由" + memberWithdrawLog.getOpName() + "处理");
+        }
 
-		memberWithdrawLog.setRemark( req.getRemark() );
-		memberWithdrawLog.setStatus( 1 );
-		memberWithdrawLog.setOpName( userName );
-		memberWithdrawLog.setUpdateTime( new Date() );
-		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		if ( i > 0 ) {
-			return AjaxResult.success();
-		}
+        memberWithdrawLog.setRemark(req.getRemark());
+        memberWithdrawLog.setStatus(1);
+        memberWithdrawLog.setOpName(userName);
+        memberWithdrawLog.setUpdateTime(new Date());
+        int i = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
+        if (i > 0) {
+            return AjaxResult.success();
+        }
 
-		return AjaxResult.error( "更新订单状态失败" );
-	}
+        return AjaxResult.error("更新订单状态失败");
+    }
 
-	@Override
-	public AjaxResult locks(ReqMemberWithdrawLog req) {
-		List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.selectLocksByIds( req.getIds() );
-		for ( MemberWithdrawLog memberWithdrawLog : memberWithdrawLogList ) {
-			if (memberWithdrawLog == null) {
-				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"订单不存在");
-			}
-			if (memberWithdrawLog.getStatus() == 1) {
-				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"订单已被锁定,请刷新界面");
-			}
-			if (memberWithdrawLog.getStatus() == 2) {
-				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"订单已被拒绝");
-			}
-			if (memberWithdrawLog.getStatus() != 5 && 1 < memberWithdrawLog.getStatus()) {
-				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"审核流程非法");
-			}
-			LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
-			String userName = loginUser.getUser().getUserName();
+    @Override
+    public AjaxResult locks(ReqMemberWithdrawLog req) {
+        List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.selectLocksByIds(req.getIds());
+        for (MemberWithdrawLog memberWithdrawLog : memberWithdrawLogList) {
+            if (memberWithdrawLog == null) {
+                return AjaxResult.error(memberWithdrawLog.getOrderNo() + "订单不存在");
+            }
+            if (memberWithdrawLog.getStatus() == 1) {
+                return AjaxResult.error(memberWithdrawLog.getOrderNo() + "订单已被锁定,请刷新界面");
+            }
+            if (memberWithdrawLog.getStatus() == 2) {
+                return AjaxResult.error(memberWithdrawLog.getOrderNo() + "订单已被拒绝");
+            }
+            if (memberWithdrawLog.getStatus() != 5 && 1 < memberWithdrawLog.getStatus()) {
+                return AjaxResult.error(memberWithdrawLog.getOrderNo() + "审核流程非法");
+            }
+            LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+            String userName = loginUser.getUser().getUserName();
 
-			if (!StringUtils.isEmpty(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
-				return AjaxResult.error(memberWithdrawLog.getOrderNo()+"订单只能由" + memberWithdrawLog.getOpName() + "处理");
-			}
+            if (!StringUtils.isEmpty(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+                return AjaxResult.error(memberWithdrawLog.getOrderNo() + "订单只能由" + memberWithdrawLog.getOpName() + "处理");
+            }
 
-			memberWithdrawLog.setRemark(req.getRemark());
-			memberWithdrawLog.setStatus(1);
-			memberWithdrawLog.setOpName(userName);
-			memberWithdrawLog.setUpdateTime(new Date());
-			int i = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
-			if (i > 0) {
-				continue;
-			}else {
-				return AjaxResult.error(memberWithdrawLog.getOrderNo() + "更新订单状态失败");
-			}
-		}
+            memberWithdrawLog.setRemark(req.getRemark());
+            memberWithdrawLog.setStatus(1);
+            memberWithdrawLog.setOpName(userName);
+            memberWithdrawLog.setUpdateTime(new Date());
+            int i = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
+            if (i > 0) {
+                continue;
+            } else {
+                return AjaxResult.error(memberWithdrawLog.getOrderNo() + "更新订单状态失败");
+            }
+        }
         return AjaxResult.success("批量锁定成功");
-	}
+    }
 
-	@Override
-	public AjaxResult unlock( ReqMemberWithdrawLog req ) {
-		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
-		if ( memberWithdrawLog == null ) {
-			return AjaxResult.error( "订单不存在" );
-		}
-		if ( memberWithdrawLog.getStatus() != 1 ) {
-			return AjaxResult.error( "该订单已被处理,请刷新界面" );
-		}
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String    userName  = loginUser.getUser().getUserName();
-		if ( !StringUtils.isEmpty( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
-			return AjaxResult.error( "该订单只能由" + memberWithdrawLog.getOpName() + "处理" );
-		}
-		if ( !redisUtil.lock( EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5 ) ) {
-			return AjaxResult.error( "请勿重复提交" );
-		}
+    @Override
+    public AjaxResult unlock(ReqMemberWithdrawLog req) {
+        MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
+        if (memberWithdrawLog == null) {
+            return AjaxResult.error("订单不存在");
+        }
+        if (memberWithdrawLog.getStatus() != 1) {
+            return AjaxResult.error("该订单已被处理,请刷新界面");
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
+        if (!StringUtils.isEmpty(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+            return AjaxResult.error("该订单只能由" + memberWithdrawLog.getOpName() + "处理");
+        }
+        if (!redisUtil.lock(EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5)) {
+            return AjaxResult.error("请勿重复提交");
+        }
 
-		memberWithdrawLog.setRemark( "取消锁定人：" + userName );
-		memberWithdrawLog.setStatus( 0 );
-		memberWithdrawLog.setOpName( "" );
-		memberWithdrawLog.setUpdateTime( new Date() );
-		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		if ( i > 0 ) {
-			return AjaxResult.success();
-		}
+        memberWithdrawLog.setRemark("取消锁定人：" + userName);
+        memberWithdrawLog.setStatus(0);
+        memberWithdrawLog.setOpName("");
+        memberWithdrawLog.setUpdateTime(new Date());
+        int i = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
+        if (i > 0) {
+            return AjaxResult.success();
+        }
 
-		return AjaxResult.error( "更新订单状态失败" );
-	}
+        return AjaxResult.error("更新订单状态失败");
+    }
 
-	@Override
-	public AjaxResult artificial( ReqMemberWithdrawLog req ) {
-		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
-		if ( memberWithdrawLog == null ) {
-			return AjaxResult.error( "订单不存在" );
-		}
-		if ( memberWithdrawLog.getStatus() == 2 ) {
-			return AjaxResult.error( "该订单已被拒绝" );
-		}
-		if ( memberWithdrawLog.getStatus() == 3 ) {
-			return AjaxResult.error( "该订单已被终审,请刷新界面" );
-		}
-		if ( memberWithdrawLog.getStatus() != 5 && 3 < memberWithdrawLog.getStatus() ) {
-			return AjaxResult.error( "审核流程非法" );
-		}
-		if ( !redisUtil.lock( EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5 ) ) {
-			return AjaxResult.error( "请勿重复提交" );
-		}
+    @Override
+    public AjaxResult artificial(ReqMemberWithdrawLog req) {
+        MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
+        if (memberWithdrawLog == null) {
+            return AjaxResult.error("订单不存在");
+        }
+        if (memberWithdrawLog.getStatus() == 2) {
+            return AjaxResult.error("该订单已被拒绝");
+        }
+        if (memberWithdrawLog.getStatus() == 3) {
+            return AjaxResult.error("该订单已被终审,请刷新界面");
+        }
+        if (memberWithdrawLog.getStatus() != 5 && 3 < memberWithdrawLog.getStatus()) {
+            return AjaxResult.error("审核流程非法");
+        }
+        if (!redisUtil.lock(EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5)) {
+            return AjaxResult.error("请勿重复提交");
+        }
 
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String    userName  = loginUser.getUser().getUserName();
-		if ( StringUtils.hasText( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
-			return AjaxResult.error( "该订单已被" + memberWithdrawLog.getOpName() + "锁定" );
-		}
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
+        if (StringUtils.hasText(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+            return AjaxResult.error("该订单已被" + memberWithdrawLog.getOpName() + "锁定");
+        }
 
-		memberWithdrawLog.setRemark( req.getRemark() );
-		memberWithdrawLog.setStatus( 3 );
-		memberWithdrawLog.setOpName( userName );
-		memberWithdrawLog.setUpdateTime( new Date() );
-		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		if ( i > 0 ) {
-			redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
-			return AjaxResult.success();
-		}
+        memberWithdrawLog.setRemark(req.getRemark());
+        memberWithdrawLog.setStatus(3);
+        memberWithdrawLog.setOpName(userName);
+        memberWithdrawLog.setUpdateTime(new Date());
+        int i = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
+        if (i > 0) {
+            redisUtil.unLock(EnumLock.member, memberWithdrawLog.getMemberId());
+            return AjaxResult.success();
+        }
 
-		return AjaxResult.error( "更新订单状态失败" );
-	}
+        return AjaxResult.error("更新订单状态失败");
+    }
 
-	@Override
-	public AjaxResult abnormalWithdrawal( ReqMemberWithdrawLog req ) {
-		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
-		if ( memberWithdrawLog == null ) {
-			return AjaxResult.error( "订单不存在" );
-		}
-		if ( memberWithdrawLog.getStatus() == 2 ) {
-			return AjaxResult.error( "该订单已被拒绝" );
-		}
-		if ( memberWithdrawLog.getStatus() == 3 ) {
-			return AjaxResult.error( "该订单已被终审,请刷新界面" );
-		}
-		if ( memberWithdrawLog.getStatus() != 5 && 3 < memberWithdrawLog.getStatus() ) {
-			return AjaxResult.error( "审核流程非法" );
-		}
-		if ( !redisUtil.lock( EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5 ) ) {
-			return AjaxResult.error( "请勿重复提交" );
-		}
+    @Override
+    public AjaxResult abnormalWithdrawal(ReqMemberWithdrawLog req) {
+        MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
+        if (memberWithdrawLog == null) {
+            return AjaxResult.error("订单不存在");
+        }
+        if (memberWithdrawLog.getStatus() == 2) {
+            return AjaxResult.error("该订单已被拒绝");
+        }
+        if (memberWithdrawLog.getStatus() == 3) {
+            return AjaxResult.error("该订单已被终审,请刷新界面");
+        }
+        if (memberWithdrawLog.getStatus() != 5 && 3 < memberWithdrawLog.getStatus()) {
+            return AjaxResult.error("审核流程非法");
+        }
+        if (!redisUtil.lock(EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5)) {
+            return AjaxResult.error("请勿重复提交");
+        }
 
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String    userName  = loginUser.getUser().getUserName();
-		if ( StringUtils.hasText( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
-			return AjaxResult.error( "该订单已被" + memberWithdrawLog.getOpName() + "锁定" );
-		}
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
+        if (StringUtils.hasText(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+            return AjaxResult.error("该订单已被" + memberWithdrawLog.getOpName() + "锁定");
+        }
 
-		memberWithdrawLog.setRemark( req.getRemark() );
-		memberWithdrawLog.setStatus( 7 );
-		memberWithdrawLog.setOpName( userName );
-		memberWithdrawLog.setUpdateTime( new Date() );
-		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		if ( i > 0 ) {
-			redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
-			return AjaxResult.success();
-		}
+        memberWithdrawLog.setRemark(req.getRemark());
+        memberWithdrawLog.setStatus(7);
+        memberWithdrawLog.setOpName(userName);
+        memberWithdrawLog.setUpdateTime(new Date());
+        int i = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
+        if (i > 0) {
+            redisUtil.unLock(EnumLock.member, memberWithdrawLog.getMemberId());
+            return AjaxResult.success();
+        }
 
-		return AjaxResult.error( "更新订单状态失败" );
-	}
+        return AjaxResult.error("更新订单状态失败");
+    }
 
-	@Override
-	public AjaxResult manualWithdrawal( ReqMemberWithdrawLog req ) {
-		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
-		if ( memberWithdrawLog == null ) {
-			return AjaxResult.error( "订单不存在" );
-		}
-		if ( memberWithdrawLog.getStatus() == 2 ) {
-			return AjaxResult.error( "该订单已被拒绝" );
-		}
-		if ( memberWithdrawLog.getStatus() == 3 ) {
-			return AjaxResult.error( "该订单已被终审,请刷新界面" );
-		}
-		if ( memberWithdrawLog.getStatus() != 5 && 3 < memberWithdrawLog.getStatus() ) {
-			return AjaxResult.error( "审核流程非法" );
-		}
-		if ( !redisUtil.lock( EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5 ) ) {
-			return AjaxResult.error( "请勿重复提交" );
-		}
+    @Override
+    public AjaxResult manualWithdrawal(ReqMemberWithdrawLog req) {
+        MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
+        if (memberWithdrawLog == null) {
+            return AjaxResult.error("订单不存在");
+        }
+        if (memberWithdrawLog.getStatus() == 2) {
+            return AjaxResult.error("该订单已被拒绝");
+        }
+        if (memberWithdrawLog.getStatus() == 3) {
+            return AjaxResult.error("该订单已被终审,请刷新界面");
+        }
+        if (memberWithdrawLog.getStatus() != 5 && 3 < memberWithdrawLog.getStatus()) {
+            return AjaxResult.error("审核流程非法");
+        }
+        if (!redisUtil.lock(EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5)) {
+            return AjaxResult.error("请勿重复提交");
+        }
 
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String    userName  = loginUser.getUser().getUserName();
-		if ( StringUtils.hasText( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
-			return AjaxResult.error( "该订单已被" + memberWithdrawLog.getOpName() + "锁定" );
-		}
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
+        if (StringUtils.hasText(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+            return AjaxResult.error("该订单已被" + memberWithdrawLog.getOpName() + "锁定");
+        }
 
-		// memberWithdrawLog.setRemark( req.getRemark() );
-		memberWithdrawLog.setStatus( 8 );
-		memberWithdrawLog.setOpName( userName );
-		memberWithdrawLog.setUpdateTime( new Date() );
-		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		if ( i > 0 ) {
-			redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
-			return AjaxResult.success();
-		}
+        // memberWithdrawLog.setRemark( req.getRemark() );
+        memberWithdrawLog.setStatus(8);
+        memberWithdrawLog.setOpName(userName);
+        memberWithdrawLog.setUpdateTime(new Date());
+        int i = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
+        if (i > 0) {
+            redisUtil.unLock(EnumLock.member, memberWithdrawLog.getMemberId());
+            return AjaxResult.success();
+        }
 
-		return AjaxResult.error( "更新订单状态失败" );
-	}
+        return AjaxResult.error("更新订单状态失败");
+    }
 
-	/**
-	 * 取报告
-	 *
-	 * @param id id
-	 * @return {@link AjaxResult}
-	 */
-	@Override
-	public AjaxResult withdrawReport( String id ) {
-		memberInfoMapper.call_pro_useranalysis( id );
-		return AjaxResult.success( memberInfoMapper.userWithdrawReportList() );
-	}
+    /**
+     * 取报告
+     *
+     * @param id id
+     * @return {@link AjaxResult}
+     */
+    @Override
+    public AjaxResult withdrawReport(String id) {
+        memberInfoMapper.call_pro_useranalysis(id);
+        return AjaxResult.success(memberInfoMapper.userWithdrawReportList());
+    }
 
-	@Override
-	public AjaxResult getTotal( MemberWithdrawLog memberWithdrawLog ) {
-		return AjaxResult.success( memberWithdrawLogMapper.getTotal( memberWithdrawLog ) );
-	}
+    @Override
+    public AjaxResult getTotal(MemberWithdrawLog memberWithdrawLog) {
+        return AjaxResult.success(memberWithdrawLogMapper.getTotal(memberWithdrawLog));
+    }
 
-	@Override
-	public List<MemberWithdrawLog> getWithdrawLogList() {
-		String date      = getTime();
-		String beginTime = date.split( " " )[ 0 ] + " 00:00:00";
-		return memberWithdrawLogMapper.getWithdrawLogList( date, beginTime );
-	}
+    @Override
+    public List<MemberWithdrawLog> getWithdrawLogList() {
+        String date = getTime();
+        String beginTime = date.split(" ")[0] + " 00:00:00";
+        return memberWithdrawLogMapper.getWithdrawLogList(date, beginTime);
+    }
 
-	public String getTime() {
-		SimpleDateFormat sdf     = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-		Calendar         nowTime = Calendar.getInstance();
-		nowTime.add( Calendar.MINUTE, -10 );
-		return sdf.format( nowTime.getTime() );
-	}
+    public String getTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar nowTime = Calendar.getInstance();
+        nowTime.add(Calendar.MINUTE, -10);
+        return sdf.format(nowTime.getTime());
+    }
 }

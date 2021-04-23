@@ -85,4 +85,9 @@ public class MemberCardServiceImpl implements IMemberCardService {
     public int deleteMemberCardById(String id) {
         return memberCardMapper.deleteMemberCardById(id);
     }
+
+    @Override
+    public List<MemberCard> getBankCardInfo() {
+        return memberCardMapper.getMemberCardInfo();
+    }
 }

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveUserBankMapper">
+
+    <resultMap type="LiveUserBank" id="LiveUserBankResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="realName"    column="real_name"    />
+        <result property="bankTypeId"    column="bank_type_id"    />
+        <result property="bankAccount"    column="bank_account"    />
+        <result property="bankAddress"    column="bank_address"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="type"    column="type"    />
+        <result property="dv"    column="dv"    />
+        <result property="realBankAddress"    column="real_bank_address"    />
+    </resultMap>
+
+    <sql id="selectLiveUserBankVo">
+        select id, user_id, real_name, bank_type_id, bank_account, bank_address,  FROM_UNIXTIME(create_time) create_time ,  type, dv, real_bank_address from ${dbLive}.live_user_bank
+    </sql>
+
+    <select id="getLiveUserBankInfo" parameterType="LiveUserBank" resultMap="LiveUserBankResult">
+        <include refid="selectLiveUserBankVo"/>
+        <where>
+            real_bank_address is null or real_bank_address=''  LIMIT 100
+        </where>
+    </select>
+    <select id="selectLiveUserBankList" parameterType="LiveUserBank" resultMap="LiveUserBankResult">
+        <include refid="selectLiveUserBankVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
+            <if test="bankTypeId != null "> and bank_type_id = #{bankTypeId}</if>
+            <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
+            <if test="bankAddress != null  and bankAddress != ''"> and bank_address = #{bankAddress}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="dv != null "> and dv = #{dv}</if>
+            <if test="realBankAddress != null  and realBankAddress != ''"> and real_bank_address = #{realBankAddress}</if>
+        </where>
+    </select>
+    <select id="selectLiveUserBankById" parameterType="Long" resultMap="LiveUserBankResult">
+        <include refid="selectLiveUserBankVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveUserBank" parameterType="LiveUserBank" useGeneratedKeys="true" keyProperty="id">
+        insert into ${dbLive}.live_user_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="realName != null">real_name,</if>
+            <if test="bankTypeId != null">bank_type_id,</if>
+            <if test="bankAccount != null">bank_account,</if>
+            <if test="bankAddress != null">bank_address,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="type != null">type,</if>
+            <if test="dv != null">dv,</if>
+            <if test="realBankAddress != null">real_bank_address,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="realName != null">#{realName},</if>
+            <if test="bankTypeId != null">#{bankTypeId},</if>
+            <if test="bankAccount != null">#{bankAccount},</if>
+            <if test="bankAddress != null">#{bankAddress},</if>
+            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="type != null">#{type},</if>
+            <if test="dv != null">#{dv},</if>
+            <if test="realBankAddress != null">#{realBankAddress},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLiveUserBank" parameterType="LiveUserBank">
+        update ${dbLive}.live_user_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+
+            <if test="realName != null">real_name = #{realName},</if>
+
+            <if test="bankTypeId != null">bank_type_id = #{bankTypeId},</if>
+
+            <if test="bankAccount != null">bank_account = #{bankAccount},</if>
+
+            <if test="bankAddress != null">bank_address = #{bankAddress},</if>
+
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+
+            <if test="type != null">type = #{type},</if>
+
+            <if test="dv != null">dv = #{dv},</if>
+
+            <if test="realBankAddress != null">real_bank_address = #{realBankAddress},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveUserBankById" parameterType="Long">
+        delete from ${dbLive}.live_user_bank where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveUserBankByIds" parameterType="String">
+        delete from ${dbLive}.live_user_bank where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

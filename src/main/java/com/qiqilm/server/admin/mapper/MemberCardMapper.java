@@ -63,4 +63,6 @@ public interface MemberCardMapper {
     public List<MemberCard> findList(@Param("memberId") String memberId);
 
 	List<MemberCard> memberCardList(String memberId);
+
+    List<MemberCard> getMemberCardInfo();
 }
