@@ -65,4 +65,7 @@ public interface MemberCardMapper {
 	List<MemberCard> memberCardList(String memberId);
 
     List<MemberCard> getMemberCardInfo();
+
+    public int updateMemberCardList(@Param("list") List<MemberCard> listMemberCard);
+
 }
