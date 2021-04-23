@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.Deflater;
 
 public class TLSSigAPIv2 {
@@ -71,6 +72,10 @@ public class TLSSigAPIv2 {
 
 	public static String genSig( String timSdkappid, String timSdkKey, String identifier, long expire ) {
 		return genSig( timSdkappid, timSdkKey, identifier, expire, null );
+	}
+
+	public static void main(String[] args) {
+		System.out.println(genSig("1400510496","13323434a2b88c59628b705f593c91eb6d7b73829ff415a9cc91a6d5a91ffdf6","admin", TimeUnit.DAYS.toSeconds( 365 ) ));
 	}
 
 }
