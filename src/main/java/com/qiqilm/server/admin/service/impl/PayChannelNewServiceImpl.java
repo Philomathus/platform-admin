@@ -157,7 +157,8 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 				String[] moneys   = channelNew.getQuickAmount().split( "," );
 				for ( String money : moneys ) {
 					PayChannelMoney payChannelMoney = new PayChannelMoney();
-					payChannelMoney.setMoney( Long.parseLong( money ) );
+
+                    payChannelMoney.setMoney( Long.parseLong( money.trim() ) );
 					payChannelMoney.setChannelId( channelNew.getId() );
 					payChannelMoney.setChannelPayRate( channelNew.getPayRate() );
 					payChannelMoney.setTypeCode( typeCode );
