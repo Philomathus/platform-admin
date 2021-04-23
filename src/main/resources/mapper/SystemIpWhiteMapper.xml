@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="ipAddress != null  and ipAddress != ''"> and ip_address = #{ipAddress}</if>
             <if test="ipStatus != null  and ipStatus != ''"> and ip_status = #{ipStatus}</if>
             <if test="ipAdmin != null  and ipAdmin != ''"> and ip_admin = #{ipAdmin}</if>
-            <if test="mark != null  and mark != ''"> and mark = #{mark}</if>
+            <if test="mark != null  and mark != ''"> and mark like concat('%', #{mark}, '%')</if>
             <if test="ipCount != null "> and ip_count = #{ipCount}</if>
         </where>
     </select>

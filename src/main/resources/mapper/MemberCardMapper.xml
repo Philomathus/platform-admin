@@ -14,10 +14,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="type"    column="type"    />
         <result property="dv"    column="dv"    />
+        <result property="realBankAddress"    column="real_bank_address"    />
     </resultMap>
 
     <sql id="selectMemberCardVo">
-        select id, real_name, bank_name, bank_account, bank_address, member_id,  FROM_UNIXTIME(create_time) create_time ,  type, dv from ${dbMain}.member_card
+        select id, real_name, bank_name, bank_account, bank_address, member_id,  FROM_UNIXTIME(create_time) create_time ,type, dv,real_bank_address from ${dbMain}.member_card
     </sql>
 
     <select id="selectMemberCardList" parameterType="MemberCard" resultMap="MemberCardResult">
@@ -38,7 +39,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
         </where>
     </select>
-
+    <select id="getMemberCardInfo" parameterType="MemberCard" resultMap="MemberCardResult">
+        <include refid="selectMemberCardVo"/>
+        <where>
+            real_bank_address is null  or real_bank_address='' LIMIT 100
+        </where>
+    </select>
     <select id="selectMemberCardById" parameterType="String" resultMap="MemberCardResult">
         <include refid="selectMemberCardVo"/>
         where id = #{id}
@@ -89,6 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null">type = #{type},</if>
 
             <if test="dv != null">dv = #{dv},</if>
+            <if test="dv != null">real_bank_address = #{realBankAddress},</if>
 
         </trim>
         where id = #{id}
