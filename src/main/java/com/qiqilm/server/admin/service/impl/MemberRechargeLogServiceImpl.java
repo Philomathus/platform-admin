@@ -247,7 +247,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 				recommendUserLog.setOrderMoney( memberRechargeLog.getRechargeMoney() );
 				recommendMapper.insertMemberRecommend( recommendUserLog );
 				if ( StringUtils.isNotBlank( rd1.getInviterCode() ) ) {
-					rd2 = memberInfoMapper.findRecommendByInviterCode( memberInfo.getInviterCode() );
+					rd2 = memberInfoMapper.findRecommendByInviterCode( rd1.getInviterCode() );
 				}
 			}
 

@@ -8,13 +8,13 @@ import com.qiqilm.server.admin.domain.PayAgentRechargeTradeLog;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.mapper.PayAgentRechargeRecordMapper;
 import com.qiqilm.server.admin.mapper.PayAgentRechargeTradeLogMapper;
+import com.qiqilm.server.admin.mapper.SysUserMapper;
 import com.qiqilm.server.admin.service.IPayAgentRechargeRecordService;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
-import com.qiqilm.server.admin.utils.DateUtils;
-import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -34,6 +34,8 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
 	private TokenService                   tokenService;
 	@Autowired
 	private MemberInfoMapper               memberInfoMapper;
+	@Autowired
+	private SysUserMapper sysUserMapper;
 	@Autowired
 	private PayAgentRechargeTradeLogMapper payAgentRechargeTradeLogMapper;
 
@@ -111,9 +113,22 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
-	public AjaxResult deposit( PayAgentRechargeRecord dto ) {
+	public AjaxResult deposit( PayAgentRechargeRecord dto ) throws Exception {
 		LoginUser  loginUser      = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String     userName       = loginUser.getUser().getUserName();
+		if ( dto.getGoogleAuthCode()==null ) {
+			return AjaxResult.error( "请输入google验证码" );
+		}
+		String googleAuthSecret = sysUserMapper.selectGoogleAuthKeyByUserName( userName );
+		if ( !StringUtils.hasText( googleAuthSecret ) ) {
+			return AjaxResult.error( "未绑定google验证秘钥，无法审核" );
+		}
+		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret, AuthUtil.getSecurityKeyStr(
+				"secretkey/googleAuthPrivateKey" ) );
+
+		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, dto.getGoogleAuthCode() ) ) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
 		String     rechargeAcount = dto.getRechargeAcount();
 		MemberInfo memberInfo     = memberInfoMapper.selectMemberInfoById( rechargeAcount );
 		if ( memberInfo == null ) {
@@ -150,9 +165,22 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
-	public AjaxResult proposed( PayAgentRechargeRecord dto ) {
+	public AjaxResult proposed( PayAgentRechargeRecord dto ) throws Exception {
 		LoginUser              loginUser              = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String                 userName               = loginUser.getUser().getUserName();
+		if ( dto.getGoogleAuthCode()==null ) {
+			return AjaxResult.error( "请输入google验证码" );
+		}
+		String googleAuthSecret = sysUserMapper.selectGoogleAuthKeyByUserName( userName );
+		if ( !StringUtils.hasText( googleAuthSecret ) ) {
+			return AjaxResult.error( "未绑定google验证秘钥，无法审核" );
+		}
+		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret, AuthUtil.getSecurityKeyStr(
+				"secretkey/googleAuthPrivateKey" ) );
+
+		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, dto.getGoogleAuthCode() ) ) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
 		PayAgentRechargeRecord payAgentRechargeRecord = new PayAgentRechargeRecord();
 		MemberInfo             memberInfo             = memberInfoMapper.selectMemberInfoById( dto.getRechargeAcount() );
 		if ( memberInfo == null ) {

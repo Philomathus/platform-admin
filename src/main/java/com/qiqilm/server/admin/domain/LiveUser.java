@@ -144,6 +144,11 @@ public class LiveUser {
     private Integer familyChieftain;
     private Integer liveIn;
 
+    private String realName;
+	private String bankAccount;
+    private String bankName;
+
+
 	public String getAuthStr() {
 		if ( isAuthentication != null ) {
 			switch ( isAuthentication ) {

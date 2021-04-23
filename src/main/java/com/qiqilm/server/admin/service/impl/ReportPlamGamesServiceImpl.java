@@ -113,45 +113,42 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 
     @Override
     public List<RspPlamGamesMonth> selectReportPlamGamesListMonth(ReportPlamGames reportPlamGames) throws ParseException {
-        String begindate=null;
-        if (reportPlamGames.getBegindate()==null){
-            Date d = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-            String dateNowStr = sdf.format(d);
-            begindate=dateNowStr+"-01";
-            reportPlamGames.setBegindate(begindate);
-        }else {
-            begindate = reportPlamGames.getBegindate();
-        }
-        String endDate=getEndDate(begindate);
-        reportPlamGames.setEndDate(endDate);
-        List<RspPlamGamesMonth> allList = reportPlamGamesMapper.selectReportPlamGamesListMonth(reportPlamGames);
+        ReportPlamGames reportPlamGames1=getTime(reportPlamGames);
+        List<RspPlamGamesMonth> allList = reportPlamGamesMapper.selectReportPlamGamesListMonth(reportPlamGames1);
         for (RspPlamGamesMonth rsplist:allList) {
-            rsplist.setDate(begindate.substring(0,7));
+            rsplist.setDate(reportPlamGames1.getBegindate().substring(0,7));
         }
         return allList;
     }
     @Override
     public RspPlamGamesMonth countBet(ReportPlamGames reportPlamGames) throws ParseException{
-        String begindate=null;
-        if (reportPlamGames.getBegindate()==null){
-            Date d = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-            String dateNowStr = sdf.format(d);
-            begindate=dateNowStr+"-01";
-            reportPlamGames.setBegindate(begindate);
-        }else {
-            begindate = reportPlamGames.getBegindate();
-        }
-        String endDate=getEndDate(begindate);
-        reportPlamGames.setEndDate(endDate);
-        RspPlamGamesMonth rspPlamGamesMonth=reportPlamGamesMapper.countBetMonth(reportPlamGames);
+        ReportPlamGames reportPlamGames1=getTime(reportPlamGames);
+        RspPlamGamesMonth rspPlamGamesMonth=reportPlamGamesMapper.countBetMonth(reportPlamGames1);
         if (Objects.isNull(rspPlamGamesMonth)){
             RspPlamGamesMonth rspPlamGamesMonth2=new RspPlamGamesMonth();
             rspPlamGamesMonth2.setCountBetMoney(BigDecimal.ZERO);
             return rspPlamGamesMonth2;
         }
         return rspPlamGamesMonth;
+    }
+
+    private ReportPlamGames getTime(ReportPlamGames reportPlamGames) throws ParseException {
+        String begindate=null;
+        if (reportPlamGames.getBegindate()==null){
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            String dateNowStr = sdf.format(d);
+            begindate=dateNowStr+"-01";
+            reportPlamGames.setDateTime(dateNowStr);
+            reportPlamGames.setBegindate(begindate);
+        }else {
+            begindate = reportPlamGames.getBegindate();
+            String dateTime = begindate.substring(0, 7);
+            reportPlamGames.setDateTime(dateTime);
+        }
+        String endDate=getEndDate(begindate);
+        reportPlamGames.setEndDate(endDate);
+        return reportPlamGames;
     }
 
     private String getEndDate(String begindate) throws ParseException {

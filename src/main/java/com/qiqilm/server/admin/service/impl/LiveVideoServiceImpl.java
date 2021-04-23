@@ -62,7 +62,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	private LiveVideoPropMapper    liveVideoPropMapper;
 
 	@Resource
-	private LiveHostWageDayMapper liveHostWageDayMapper;
+	private LiveHostWageDayMapper   liveHostWageDayMapper;
+	@Resource
+	private HelpNoticeUtil          helpNoticeUtil;
+	@Resource
+	private ConfigEnvironmentMapper configEnvironmentMapper;
 
 	/**
 	 * 查询直播
@@ -195,7 +199,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		liveVideoMapper.updateLiveVideo( updateVideo );
 
-		this.processVideoSort();
+		try {
+			this.processVideoSort();
+		} catch ( Exception e ) {
+			log.error( e.getMessage(), e );
+		}
 
 		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" + id ) );
 
@@ -384,6 +392,15 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 		if ( i > 0 ) {
 			this.processVideoSort();
+			Long sort = liveVideo.getSort();
+			if ( sort != null && sort <= 20 ) {
+				LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById( liveVideo.getId() );
+				String    msg        = sysConfigCacheUtil.getConf( "first_twenty_notice" );
+				String    groupId    = liveVideo1.getGroupId();
+				if ( StringUtils.isNotEmpty( msg ) && StringUtils.isNotEmpty( groupId ) ) {
+					helpNoticeUtil.sendMsg( msg, groupId );
+				}
+			}
 			return AjaxResult.success( "更新成功" );
 		}
 		return AjaxResult.error( "更新失败" );

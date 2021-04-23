@@ -1,9 +1,9 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayAgentRechargeRecord;
+
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service接口
@@ -62,8 +62,8 @@ public interface IPayAgentRechargeRecordService {
 
 	PayAgentRechargeRecord getCount(PayAgentRechargeRecord payAgentRechargeRecord);
 
-	AjaxResult deposit(PayAgentRechargeRecord dto);
+	AjaxResult deposit(PayAgentRechargeRecord dto) throws Exception;
 
-	AjaxResult proposed(PayAgentRechargeRecord dto);
+	AjaxResult proposed(PayAgentRechargeRecord dto) throws Exception;
 
 }

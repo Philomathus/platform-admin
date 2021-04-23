@@ -66,4 +66,8 @@ public interface LiveUserMapper {
     List<LiveUser> selectLiveUsersByMobile(@Param("mobile") String mobile);
 
     Integer checkMobile(@Param("newMobile") String newMobile);
+
+	List<LiveUser> selectLiveUserBankById(Integer userId);
+	int updateLiveUserBank(LiveUser liveUser);
+	int delLiveUserBankById(String bankAccount);
 }
