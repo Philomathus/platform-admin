@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.service.ILiveUserBankService;
 import com.qiqilm.server.admin.service.IMemberCardService;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,10 @@ public class BankCardAddressTask {
 		for ( MemberCard m : listMemberCard ) {
 			String bankAccount = m.getBankAccount();
 			String bankAddress = getRealBankAddress( bankAccount, apiUrl );
-			m.setRealBankAddress( bankAddress );
+            if (StringUtils.isEmpty(bankAddress)) {
+                bankAddress = "未知";
+            }
+            m.setRealBankAddress( bankAddress );
 		}
 		memberCardService.updateMemberCardList( listMemberCard );
 		log.warn( "开始执行银行归属地查询成功 - 成功数量：{}", listMemberCard.size() );
