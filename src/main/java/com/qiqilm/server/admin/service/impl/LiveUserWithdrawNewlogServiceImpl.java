@@ -68,23 +68,26 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         List<LiveUserWithdrawNewlog> liveUserWithdrawNewlogList = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogList(liveUserWithdrawNewlog);
         BankCardAddress bankCardAddress = new BankCardAddress();
         bankCardAddress.setStatus("1");
-        String[] arr = null;
         List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
         if (liveUserWithdrawNewlogList != null && liveUserWithdrawNewlogList.size() != 0) {
             for (LiveUserWithdrawNewlog li : liveUserWithdrawNewlogList) {
                 if (!StringUtils.isEmpty(li.getRealBankAddress())) {
-                    arr = li.getRealBankAddress().split("/");
-                    li.setProvince(arr[0]);
-                    li.setCity(arr[1]);
-                    for (BankCardAddress ba : bankCardAddresses) {
-                        if (li.getProvince().equals(ba.getProvince())) {
-                            if (ba.getCity().contains(li.getCity())) {
-                                //来到这里,是在黑名单中
-                                li.setCardBlack("1");
-                            } else {
-                                li.setCardBlack("0");
+                    String[] arr = li.getRealBankAddress().split("/");
+                    if (arr.length > 1) {
+                        li.setProvince(arr[0]);
+                        li.setCity(arr[1]);
+                        for (BankCardAddress ba : bankCardAddresses) {
+                            if (li.getProvince().equals(ba.getProvince())) {
+                                if (ba.getCity().contains(li.getCity())) {
+                                    //来到这里,是在黑名单中
+                                    li.setCardBlack("1");
+                                } else {
+                                    li.setCardBlack("0");
+                                }
                             }
                         }
+                    } else {
+                        li.setCardBlack("1");
                     }
                 }
             }

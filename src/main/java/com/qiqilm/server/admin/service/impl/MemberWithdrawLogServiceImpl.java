@@ -68,23 +68,26 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.selectMemberWithdrawLogList(memberWithdrawLog);
         BankCardAddress bankCardAddress = new BankCardAddress();
         bankCardAddress.setStatus("1");
-        String[] arr = null;
         List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
         if (memberWithdrawLogList != null && memberWithdrawLogList.size() != 0) {
             for (MemberWithdrawLog me : memberWithdrawLogList) {
                 if (!StringUtils.isEmpty(me.getRealBankAddress())) {
-                    arr = me.getRealBankAddress().split("/");
-                    me.setProvince(arr[0]);
-                    me.setCity(arr[1]);
-                    for (BankCardAddress ba : bankCardAddresses) {
-                        if (me.getProvince().equals(ba.getProvince())) {
-                            if (ba.getCity().contains(me.getCity())) {
-                                //来到这里,是在黑名单中
-                                me.setCardBlack("1");
-                            } else {
-                                me.setCardBlack("0");
+                    String[] arr = me.getRealBankAddress().split("/");
+                    if (arr.length > 1) {
+                        me.setProvince(arr[0]);
+                        me.setCity(arr[1]);
+                        for (BankCardAddress ba : bankCardAddresses) {
+                            if (me.getProvince().equals(ba.getProvince())) {
+                                if (ba.getCity().contains(me.getCity())) {
+                                    //来到这里,是在黑名单中
+                                    me.setCardBlack("1");
+                                } else {
+                                    me.setCardBlack("0");
+                                }
                             }
                         }
+                    } else {
+                        me.setCardBlack("1");
                     }
                 }
             }
