@@ -71,34 +71,35 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
         if (memberWithdrawLogList != null && memberWithdrawLogList.size() != 0) {
             for (MemberWithdrawLog me : memberWithdrawLogList) {
-                if (me.getRealBankAddress() != null)
+                if (!StringUtils.isEmpty(me.getRealBankAddress())) {
                     arr = me.getRealBankAddress().split("/");
-                me.setProvince(arr[0]);
-                me.setCity(arr[1]);
-                for (BankCardAddress ba : bankCardAddresses) {
-                    if (me.getProvince().equals(ba.getProvince())) {
-                        if (ba.getCity().contains(me.getCity())) {
-                            //来到这里,是在黑名单中
-                            me.setCardBlack(1);
-                        } else {
-                            me.setCardBlack(0);
+                    me.setProvince(arr[0]);
+                    me.setCity(arr[1]);
+                    for (BankCardAddress ba : bankCardAddresses) {
+                        if (me.getProvince().equals(ba.getProvince())) {
+                            if (ba.getCity().contains(me.getCity())) {
+                                //来到这里,是在黑名单中
+                                me.setCardBlack("1");
+                            } else {
+                                me.setCardBlack("0");
+                            }
                         }
                     }
                 }
             }
         }
         //银行卡黑名单搜索
-        if (memberWithdrawLog.getSearchCardBlack() != null) {
+        if (!StringUtils.isEmpty(memberWithdrawLog.getSearchCardBlack())) {
             Iterator<MemberWithdrawLog> it = memberWithdrawLogList.iterator();
             if ("1".equals(memberWithdrawLog.getSearchCardBlack())) {
                 while (it.hasNext()) {
-                    if (it.next().getCardBlack() == 0) {
+                    if ("0".equals(it.next().getCardBlack())) {
                         it.remove();
                     }
                 }
             } else {
                 while (it.hasNext()) {
-                    if (it.next().getCardBlack() == 1) {
+                    if ("1".equals(it.next().getCardBlack())) {
                         it.remove();
                     }
                 }

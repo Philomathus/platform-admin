@@ -19,9 +19,9 @@
         <where>
             <if test="province != null  and province != ''"> and province = #{province}</if>
             <if test="city != null  and city != ''"> and city = #{city}</if>
-            <if test="status != null "> and status = #{status}</if>
             <if test="createName != null  and createName != ''"> and create_name like concat('%', #{createName}, '%')</if>
         </where>
+        and status = 1
     </select>
 
     <select id="selectBankCardAddressById" parameterType="String" resultMap="BankCardAddressResult">

@@ -122,7 +122,7 @@ public class MemberWithdrawLog extends BaseEntity {
      * 银行卡黑名单1是0否
      */
     @Excel(name = "银行卡黑名单", orderNum = "16")
-    private Integer cardBlack;
+    private String cardBlack;
 
     private String SearchCardBlack;
     private String province;
