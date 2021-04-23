@@ -592,7 +592,7 @@
 		where id = #{id}
 	</select>
 
-	<select id="findRecommendByInviterCode" resultType="com.qiqilm.server.admin.domain.MemberInfo">
+	<select id="findRecommendByInviterCode" resultMap="MemberInfoResult">
 		select id, user_name, cx_agent, inviter_code
 		from member_info
 		where member_code = #{inviterCode}
