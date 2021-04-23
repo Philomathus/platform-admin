@@ -84,6 +84,22 @@ public class LiveUserWithdrawNewlog extends BaseEntity {
     @Excel(name = "彩票结算")
     private BigDecimal livepaijiang;
 
+    /**
+     * 银行卡省/市
+     */
+    @Excel(name = "银行卡省/市")
+    private String realBankAddress;
+
+    /**
+     * 银行卡黑名单1是0否
+     */
+    @Excel(name = "银行卡黑名单")
+    private Integer cardBlack;
+
+    private String SearchCardBlack;
+    private String province;
+    private String city;
+
     @JsonFormat( pattern = "yyyy-MM-dd" )
     private Date createTime;
 

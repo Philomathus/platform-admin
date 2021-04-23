@@ -11,7 +11,7 @@
     </resultMap>
 
     <sql id="selectBankCardAddressVo">
-        select id, province, city, status, create_name from 7700_main.bank_card_address
+        select id, province, city, status, create_name from ${dbMain}.bank_card_address
     </sql>
 
     <select id="selectBankCardAddressList" parameterType="BankCardAddress" resultMap="BankCardAddressResult">
@@ -33,7 +33,7 @@
         where province = #{province}
     </select>
     <insert id="insertBankCardAddress" parameterType="BankCardAddress">
-        insert into 7700_main.bank_card_address
+        insert into ${dbMain}.bank_card_address
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="province != null">province,</if>
@@ -51,7 +51,7 @@
     </insert>
 
     <update id="updateBankCardAddress" parameterType="BankCardAddress">
-        update 7700_main.bank_card_address
+        update ${dbMain}.bank_card_address
         <trim prefix="SET" suffixOverrides=",">
             <if test="province != null">province = #{province},</if>
 
@@ -66,11 +66,11 @@
     </update>
 
     <delete id="deleteBankCardAddressById" parameterType="String">
-        delete from 7700_main.bank_card_address where id = #{id}
+        delete from ${dbMain}.bank_card_address where id = #{id}
     </delete>
 
     <delete id="deleteBankCardAddressByIds" parameterType="String">
-        delete from 7700_main.bank_card_address where id in
+        delete from ${dbMain}.bank_card_address where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -2,10 +2,13 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.BankCardAddress;
 import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
+import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
 import com.qiqilm.server.admin.mapper.LiveUserWithdrawNewlogMapper;
+import com.qiqilm.server.admin.service.IBankCardAddressService;
 import com.qiqilm.server.admin.service.ILiveUserWithdrawNewlogService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.DateUtils;
@@ -17,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 主播提现管理Service业务层处理
@@ -38,6 +38,8 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
     private RedisUtil redisUtil;
     @Autowired
     private LiveHostWageDayMapper liveHostWageDayMapper;
+    @Autowired
+    private IBankCardAddressService bankCardAddressService;
 
     /**
      * 查询主播提现管理
@@ -63,7 +65,46 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
             liveUserWithdrawNewlog.setStartTime(searchTime[ 0 ]);
             liveUserWithdrawNewlog.setEndTime(searchTime[ 1 ]);
         }
-        return liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogList(liveUserWithdrawNewlog);
+        List<LiveUserWithdrawNewlog> liveUserWithdrawNewlogList = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogList(liveUserWithdrawNewlog);
+        BankCardAddress bankCardAddress = new BankCardAddress();
+        String[] arr = null;
+        List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
+        if (liveUserWithdrawNewlogList != null && liveUserWithdrawNewlogList.size() != 0) {
+            for (LiveUserWithdrawNewlog li : liveUserWithdrawNewlogList) {
+                if (li.getRealBankAddress() != null)
+                    arr = li.getRealBankAddress().split("/");
+                li.setProvince(arr[0]);
+                li.setCity(arr[1]);
+                for (BankCardAddress ba : bankCardAddresses) {
+                    if (li.getProvince().equals(ba.getProvince())) {
+                        if (ba.getCity().contains(li.getCity())) {
+                            //来到这里,是在黑名单中
+                            li.setCardBlack(1);
+                        } else {
+                            li.setCardBlack(0);
+                        }
+                    }
+                }
+            }
+        }
+        //银行卡黑名单搜索
+        if (liveUserWithdrawNewlog.getSearchCardBlack() != null) {
+            Iterator<LiveUserWithdrawNewlog> it = liveUserWithdrawNewlogList.iterator();
+            if ("1".equals(liveUserWithdrawNewlog.getSearchCardBlack())) {
+                while (it.hasNext()) {
+                    if (it.next().getCardBlack() == 0) {
+                        it.remove();
+                    }
+                }
+            } else {
+                while (it.hasNext()) {
+                    if (it.next().getCardBlack() == 1) {
+                        it.remove();
+                    }
+                }
+            }
+        }
+        return liveUserWithdrawNewlogList;
     }
 
     /**
