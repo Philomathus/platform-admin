@@ -67,6 +67,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     public List<MemberWithdrawLog> selectMemberWithdrawLogList(MemberWithdrawLog memberWithdrawLog) {
         List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.selectMemberWithdrawLogList(memberWithdrawLog);
         BankCardAddress bankCardAddress = new BankCardAddress();
+        bankCardAddress.setStatus("1");
         String[] arr = null;
         List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
         if (memberWithdrawLogList != null && memberWithdrawLogList.size() != 0) {

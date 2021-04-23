@@ -67,6 +67,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         }
         List<LiveUserWithdrawNewlog> liveUserWithdrawNewlogList = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogList(liveUserWithdrawNewlog);
         BankCardAddress bankCardAddress = new BankCardAddress();
+        bankCardAddress.setStatus("1");
         String[] arr = null;
         List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
         if (liveUserWithdrawNewlogList != null && liveUserWithdrawNewlogList.size() != 0) {
