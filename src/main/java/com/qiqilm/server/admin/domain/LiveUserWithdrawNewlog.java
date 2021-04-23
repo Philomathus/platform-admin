@@ -97,6 +97,7 @@ public class LiveUserWithdrawNewlog extends BaseEntity {
     private Integer cardBlack;
 
     private String SearchCardBlack;
+    private String province;
     private String city;
 
     @JsonFormat( pattern = "yyyy-MM-dd" )

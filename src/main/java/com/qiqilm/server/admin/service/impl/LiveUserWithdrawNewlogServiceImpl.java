@@ -73,10 +73,10 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
             for (LiveUserWithdrawNewlog li : liveUserWithdrawNewlogList) {
                 if (li.getRealBankAddress() != null)
                     arr = li.getRealBankAddress().split("/");
-                li.setRealBankAddress(arr[0]);
+                li.setProvince(arr[0]);
                 li.setCity(arr[1]);
                 for (BankCardAddress ba : bankCardAddresses) {
-                    if (li.getRealBankAddress().equals(ba.getProvince())) {
+                    if (li.getProvince().equals(ba.getProvince())) {
                         if (ba.getCity().contains(li.getCity())) {
                             //来到这里,是在黑名单中
                             li.setCardBlack(1);
