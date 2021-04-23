@@ -122,13 +122,13 @@ public class ServerImServiceImpl implements IServerImService {
 			this.updateEffect( id );
 			serverImCacheUtil.setServerIm( info );
 
-			// 源切换通知
-			String timSdkappid = serverImCacheUtil.getValue( "tim_sdkappid" );
-			String timSdkKey   = serverImCacheUtil.getValue( "tim_sdk_key" );
-			String identifier  = serverImCacheUtil.getValue( "tim_identifier" );
-			String singn = TLSSigAPIv2.genSig( timSdkappid, timSdkKey, identifier,
-					TimeUnit.DAYS.toSeconds( 365 ) );
-			liveCacheUtil.addAdminSign( identifier, singn );
+			// 源切换通知  需要有个主播登录，才能激活
+//			String timSdkappid = serverImCacheUtil.getValue( "tim_sdkappid" );
+//			String timSdkKey   = serverImCacheUtil.getValue( "tim_sdk_key" );
+//			String identifier  = serverImCacheUtil.getValue( "tim_identifier" );
+//			String singn = TLSSigAPIv2.genSig( timSdkappid, timSdkKey, identifier,
+//					TimeUnit.DAYS.toSeconds( 365 ) );
+//			liveCacheUtil.addAdminSign( identifier, singn );
 
 			return AjaxResult.success();
 		} catch ( Exception e ) {
