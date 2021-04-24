@@ -19,6 +19,7 @@ import com.qiqilm.server.admin.utils.UserDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -69,7 +70,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         BankCardAddress bankCardAddress = new BankCardAddress();
         bankCardAddress.setStatus("1");
         List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
-        if (memberWithdrawLogList != null && memberWithdrawLogList.size() != 0) {
+        if (!CollectionUtils.isEmpty(memberWithdrawLogList) && !CollectionUtils.isEmpty(bankCardAddresses)) {
             for (MemberWithdrawLog me : memberWithdrawLogList) {
                 if (!StringUtils.isEmpty(me.getRealBankAddress())) {
                     String[] arr = me.getRealBankAddress().split("/");
@@ -118,6 +119,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AjaxResult refused(ReqMemberWithdrawLog req) {
         MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
         if (memberWithdrawLog == null) {
@@ -162,6 +164,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AjaxResult refuseds(ReqMemberWithdrawLog req) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
         String userName = loginUser.getUser().getUserName();
@@ -219,6 +222,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AjaxResult locks(ReqMemberWithdrawLog req) {
         List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.selectLocksByIds(req.getIds());
         for (MemberWithdrawLog memberWithdrawLog : memberWithdrawLogList) {
