@@ -78,7 +78,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
                         me.setProvince(arr[0]);
                         me.setCity(arr[1]);
                         for (BankCardAddress ba : bankCardAddresses) {
-                            if (me.getProvince().equals(ba.getProvince())) {
+                            if (ba.getProvince().contains(me.getProvince())) {
                                 if (ba.getCity().contains(me.getCity())) {
                                     //来到这里,是在黑名单中
                                     me.setCardBlack("1");

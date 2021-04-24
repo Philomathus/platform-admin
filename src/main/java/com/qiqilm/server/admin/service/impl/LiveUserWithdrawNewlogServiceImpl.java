@@ -78,7 +78,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
                         li.setProvince(arr[0]);
                         li.setCity(arr[1]);
                         for (BankCardAddress ba : bankCardAddresses) {
-                            if (li.getProvince().equals(ba.getProvince())) {
+                            if (ba.getProvince().contains(li.getProvince())) {
                                 if (ba.getCity().contains(li.getCity())) {
                                     //来到这里,是在黑名单中
                                     li.setCardBlack("1");
@@ -87,8 +87,6 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
                                 }
                             }
                         }
-                    } else {
-                        li.setCardBlack("1");
                     }
                 }
             }
