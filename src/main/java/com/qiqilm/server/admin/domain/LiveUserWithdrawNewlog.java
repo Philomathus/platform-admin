@@ -94,7 +94,7 @@ public class LiveUserWithdrawNewlog extends BaseEntity {
      * 银行卡黑名单1是0否
      */
     @Excel(name = "银行卡黑名单")
-    private String cardBlack;
+    private String cardBlack = "0";
 
     private String SearchCardBlack;
     private String province;
