@@ -17,6 +17,7 @@ import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -69,7 +70,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         BankCardAddress bankCardAddress = new BankCardAddress();
         bankCardAddress.setStatus("1");
         List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
-        if (liveUserWithdrawNewlogList != null && liveUserWithdrawNewlogList.size() != 0) {
+        if (!CollectionUtils.isEmpty(liveUserWithdrawNewlogList) && !CollectionUtils.isEmpty(bankCardAddresses)){
             for (LiveUserWithdrawNewlog li : liveUserWithdrawNewlogList) {
                 if (!StringUtils.isEmpty(li.getRealBankAddress())) {
                     String[] arr = li.getRealBankAddress().split("/");
