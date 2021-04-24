@@ -119,6 +119,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AjaxResult refused(ReqMemberWithdrawLog req) {
         MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
         if (memberWithdrawLog == null) {
@@ -163,6 +164,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AjaxResult refuseds(ReqMemberWithdrawLog req) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
         String userName = loginUser.getUser().getUserName();
@@ -220,6 +222,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AjaxResult locks(ReqMemberWithdrawLog req) {
         List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.selectLocksByIds(req.getIds());
         for (MemberWithdrawLog memberWithdrawLog : memberWithdrawLogList) {
