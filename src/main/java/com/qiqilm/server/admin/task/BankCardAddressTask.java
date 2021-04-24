@@ -38,7 +38,7 @@ public class BankCardAddressTask {
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
 
-	@Scheduled( fixedDelay = 60000, initialDelay = 1 )
+	//@Scheduled( fixedDelay = 60000, initialDelay = 1 )
 	public void runTask() {
 		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 59 ) ) {
 			return;
