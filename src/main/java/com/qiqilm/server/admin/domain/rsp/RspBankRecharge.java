@@ -29,6 +29,7 @@ public class RspBankRecharge {
 	@Excel(name = "时间",  exportFormat = "yyyy-MM-dd")
 	private String updateTime;
 
+	@Excel( name = "次数", orderNum = "4" )
 	private Integer time;
 
 
