@@ -283,4 +283,34 @@
 	<select id="countRechargeDaySucess" parameterType="java.lang.String" resultType="Integer">
 		select COUNT(1) from member_recharge_log where  date(update_time) = curdate() and  member_id = #{memberId} and status = 3;
 	</select>
+    <select id="selectMemberBankRecharge" resultType="com.qiqilm.server.admin.domain.rsp.RspBankRecharge">
+		SELECT bank_user_name as bankUserName,bank_name as bankName,recharge_money as rechargeMoney,COUNT(1) as time,update_time as updateTime FROM member_recharge_log
+		WHERE  STATUS = '3'
+		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
+			and recharge_money &gt;= #{req.priceMin}
+			and recharge_money &lt;= #{req.priceMax}
+		</if>
+		<if test="req.bankUserName != null and req.bankUserName != ''">
+			and bank_user_name = #{req.bankUserName}
+		</if>
+		<if test="req.updateTime != null and req.updateTime != ''">
+			and update_time like '${req.updateTime}%'
+		</if>
+		GROUP BY bank_user_name,bank_name,recharge_money
+		ORDER BY bank_user_name,recharge_money
+	</select>
+	<select id="listCounts" resultType="java.util.Map">
+		SELECT sum(recharge_money) as rechargeMoney ,count(*) as totalcount FROM member_recharge_log
+		WHERE  STATUS = '3'
+		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
+			and recharge_money &gt;= #{req.priceMin}
+			and recharge_money &lt;= #{req.priceMax}
+		</if>
+		<if test="req.bankUserName != null and req.bankUserName != ''">
+			and bank_user_name = #{req.bankUserName}
+		</if>
+		<if test="req.updateTime != null and req.updateTime != ''">
+			and update_time like '${req.updateTime}%'
+		</if>
+	</select>
 </mapper>
