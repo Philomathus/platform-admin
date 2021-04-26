@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.LiveVideoClassified;
+import com.qiqilm.server.admin.domain.rsp.RspVideoClassified;
 
 /**
  * 分类Mapper接口
@@ -58,4 +59,6 @@ public interface LiveVideoClassifiedMapper {
 	 * @return 结果
 	 */
 	public int deleteLiveVideoClassifiedByIds(Long[] ids );
+
+	List<RspVideoClassified> getClassfyList();
 }
