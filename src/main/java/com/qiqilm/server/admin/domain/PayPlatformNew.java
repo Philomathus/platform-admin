@@ -44,15 +44,15 @@ public class PayPlatformNew extends BaseEntity {
     private String platQueryUrl;
 
     /** md5加密密钥 */
-    @Excel(name = "md5加密密钥")
+//    @Excel(name = "md5加密密钥")
     private String signMd5;
 
     /** 加密公钥 */
-    @Excel(name = "加密公钥")
+//    @Excel(name = "加密公钥")
     private String signPublicKey;
 
     /** 解密私钥 */
-    @Excel(name = "解密私钥")
+//    @Excel(name = "解密私钥")
     private String signPrivateKey;
 
     /** 平台IP白名单 */
