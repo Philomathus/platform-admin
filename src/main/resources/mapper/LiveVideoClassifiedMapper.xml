@@ -83,4 +83,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="getClassfyList" resultType="com.qiqilm.server.admin.domain.rsp.RspVideoClassified">
+        select title, classfy from ${dbLive}.live_video_classified order by sort desc
+	</select>
 </mapper>
