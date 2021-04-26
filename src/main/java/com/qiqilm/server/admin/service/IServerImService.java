@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.RspServerIm;
 import com.qiqilm.server.admin.domain.ServerIm;
 
 /**
@@ -26,7 +27,7 @@ public interface IServerImService {
 	 * @param serverIm IM即时通讯服务配置
 	 * @return IM即时通讯服务配置集合
 	 */
-	public List<ServerIm> selectServerImList(ServerIm serverIm);
+	public List<RspServerIm> selectServerImList(ServerIm serverIm);
 
 	/**
 	 * 新增IM即时通讯服务配置

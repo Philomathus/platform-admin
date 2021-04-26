@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
+import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
 import com.qiqilm.server.admin.service.IPayService;
@@ -39,7 +40,7 @@ public class PayPlatformNewController extends BaseController {
 	@GetMapping( "/list" )
 	public TableDataInfo list( PayPlatformNew payPlatformNew ) {
 		startPage();
-		List<PayPlatformNew> list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
+		List<RspPayPlatformNew> list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
 		return getDataTable( list );
 	}
 
@@ -50,8 +51,8 @@ public class PayPlatformNewController extends BaseController {
 	@Log( title = "支付平台", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public void export( PayPlatformNew payPlatformNew, HttpServletResponse response) {
-		List<PayPlatformNew>      list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
-		ExportExcelUtil.exportExcel( list, "支付平台", "支付平台表", PayPlatformNew.class, response );
+		List<RspPayPlatformNew>      list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
+		ExportExcelUtil.exportExcel( list, "支付平台", "支付平台表", RspPayPlatformNew.class, response );
 	}
 
 	/**
@@ -60,7 +61,18 @@ public class PayPlatformNewController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:query')" )
 	@GetMapping( value = "/{id}" )
 	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
-		return AjaxResult.success( payPlatformNewService.selectPayPlatformNewById( id ) );
+		PayPlatformNew payPlatformNew = payPlatformNewService.selectPayPlatformNewById( id );
+		String a = "**********";
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())){
+			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().substring(0,4) + a + payPlatformNew.getSignMd5().substring(payPlatformNew.getSignMd5().length()-4));
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())){
+			payPlatformNew.setSignPrivateKey(a);
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey())){
+			payPlatformNew.setSignPublicKey(a);
+		}
+		return AjaxResult.success(payPlatformNew);
 	}
 
 	/**
@@ -111,6 +123,20 @@ public class PayPlatformNewController extends BaseController {
 		if(StringUtils.isNotBlank(payPlatformNew.getPlatQueryUrl())) {
 			payPlatformNew.setPlatQueryUrl(payPlatformNew.getPlatQueryUrl().trim());
 		}
+
+		//如果还有*号加密的保存用原来的
+		PayPlatformNew payPlatformNewOld = payPlatformNewService.selectPayPlatformNewById(Long.valueOf(payPlatformNew.getId()));
+		String a = "*";
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5()) && payPlatformNew.getSignMd5().contains(a)){
+			payPlatformNew.setSignMd5(payPlatformNewOld.getSignMd5());
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey()) && payPlatformNew.getSignPrivateKey().contains(a)){
+			payPlatformNew.setSignPrivateKey(payPlatformNewOld.getSignPrivateKey());
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey()) && payPlatformNew.getSignPublicKey().contains(a)){
+			payPlatformNew.setSignPublicKey(payPlatformNewOld.getSignPublicKey());
+		}
+
 		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())) {
 			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
 		}

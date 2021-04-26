@@ -4,9 +4,11 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.RspServerIm;
 import com.qiqilm.server.admin.domain.ServerIm;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IServerImService;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +34,7 @@ public class ServerImController extends BaseController {
 	@GetMapping( "/list" )
 	public TableDataInfo list( ServerIm serverIm ) {
 		startPage();
-		List<ServerIm> list = serverImService.selectServerImList( serverIm );
+		List<RspServerIm> list = serverImService.selectServerImList( serverIm );
 		return getDataTable( list );
 	}
 
@@ -42,7 +44,11 @@ public class ServerImController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('server:im:query')" )
 	@GetMapping( value = "/{id}" )
 	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
-		return AjaxResult.success( serverImService.selectServerImById( id ) );
+		ServerIm serverIm = serverImService.selectServerImById( id );
+		if(StringUtils.isNotBlank(serverIm.getAppKey())){
+			serverIm.setAppKey("**********");
+		}
+		return AjaxResult.success( serverIm );
 	}
 
 	/**
@@ -62,6 +68,11 @@ public class ServerImController extends BaseController {
 	@Log( title = "IM即时通讯服务配置", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody ServerIm serverIm ) {
+		//如果还有*号加密的保存用原来的
+		ServerIm serverImOld = serverImService.selectServerImById( serverIm.getId() );
+		if(StringUtils.isNotBlank(serverIm.getAppKey()) && serverIm.getAppKey().contains("*")){
+			serverIm.setAppKey(serverImOld.getAppKey());
+		}
 		return toAjax( serverImService.updateServerIm( serverIm ) );
 	}
 

@@ -22,11 +22,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
+    <resultMap type="RspPayPlatformNew" id="PayPlatformNewResult2">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="merId"    column="mer_id"    />
+        <result property="orgId"    column="org_id"    />
+        <result property="platPayUrl"    column="plat_pay_url"    />
+        <result property="platQueryUrl"    column="plat_query_url"    />
+        <result property="platWhiteIpList"    column="plat_white_ip_list"    />
+    </resultMap>
+
     <sql id="selectPayPlatformNewVo">
         select id, name, code, mer_id, org_id, plat_pay_url, plat_query_url, sign_md5, sign_public_key, sign_private_key, plat_white_ip_list, creator, create_time, updator, update_time from pay_platform_new
     </sql>
 
-    <select id="selectPayPlatformNewList" parameterType="PayPlatformNew" resultMap="PayPlatformNewResult">
+    <select id="selectPayPlatformNewList" parameterType="PayPlatformNew" resultMap="PayPlatformNewResult2">
         <include refid="selectPayPlatformNewVo"/>
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
