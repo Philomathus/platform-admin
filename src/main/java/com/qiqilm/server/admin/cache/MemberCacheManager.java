@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -49,9 +50,9 @@ public class MemberCacheManager {
 		return profile;
 	}
 
+	@PostConstruct
 	public void init() {
 		initMemberCode();
-		//initWebSet();
 	}
 
 	public void initMemberCode() {
@@ -66,15 +67,6 @@ public class MemberCacheManager {
 			entityIdCounter.set( mysqlMaxCode + 10 );
 		}
 	}
-
-	//	public void initWebSet() {
-	//		log.info( "初始化平台设置开始" );
-	//		for ( RspWebSet set : configWebMapper.selectAll() ) {
-	//			addWebSetVal( set.getKey_id(), set.getVal() );
-	//			log.info( "{}：{}={}", set.getDes(), set.getKey_id(), set.getVal() );
-	//		}
-	//		log.info( "初始化平台设置结束" );
-	//	}
 
 	//获取登录信息
 	public Map<Object, Object> getMemberInfo( String token ) {
