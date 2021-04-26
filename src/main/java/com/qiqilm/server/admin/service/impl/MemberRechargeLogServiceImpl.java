@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
+import com.qiqilm.server.admin.domain.rsp.RspBankRecharge;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.exception.BaseException;
@@ -317,5 +318,15 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	@Override
 	public int checkRechargeLogFail() {
 		return memberRechargeLogMapper.checkRechargeLogFail();
+	}
+
+	@Override
+	public List<RspBankRecharge> selectMemberBankRecharge(ReqMemberRechargeLog req) {
+		return memberRechargeLogMapper.selectMemberBankRecharge(req);
+	}
+
+	@Override
+	public Map listCounts(ReqMemberRechargeLog req) {
+		return memberRechargeLogMapper.listCounts(req);
 	}
 }

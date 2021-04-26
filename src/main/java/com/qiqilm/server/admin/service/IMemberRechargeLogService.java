@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
 import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
+import com.qiqilm.server.admin.domain.rsp.RspBankRecharge;
 
 import java.util.List;
 import java.util.Map;
@@ -40,4 +41,8 @@ public interface IMemberRechargeLogService {
 
 	AjaxResult recoverAudit( ReqMemberRechargeLog req );
 	int checkRechargeLogFail();
+
+	 List<RspBankRecharge> selectMemberBankRecharge(ReqMemberRechargeLog req);
+
+	Map listCounts( ReqMemberRechargeLog req );
 }

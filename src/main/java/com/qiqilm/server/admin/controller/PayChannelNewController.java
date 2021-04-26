@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayChannelNew;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.domain.PayType;
+import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayChannelNewService;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
@@ -120,7 +121,7 @@ public class PayChannelNewController extends BaseController {
 	@GetMapping( "/effect-pay-platform" )
 	public AjaxResult findEffectPayPlatform() {
 		PayPlatformNew       payPlatformNew = new PayPlatformNew();
-		List<PayPlatformNew> data           = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
+		List<RspPayPlatformNew> data           = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
 		if ( StringUtils.isNull( data ) ) {
 			data = new ArrayList<>();
 		}

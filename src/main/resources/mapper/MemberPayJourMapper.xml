@@ -319,4 +319,34 @@
 		<include refid="selectMemberPayJourVo"/>
 		where order_no = #{orderNo}
 	</select>
+    <select id="selectMemberPayJourLists" resultType="com.qiqilm.server.admin.domain.rsp.RspPayJour">
+		SELECT  p.name AS platformName,c.name AS channelName, platform_id as platformId ,channel_id as channelId,SUM( money ) AS money,SUM( sub_money ) AS subMoney ,t.update_time as updateTime FROM member_pay_jour t
+		LEFT JOIN pay_channel_new c ON t.channel_id = c.id
+		LEFT JOIN pay_platform_new p ON t.platform_id = p.id
+        where t.status='1'
+		<if test="platformId != null and platformId != ''">
+			and t.platform_id = #{platformId}
+		</if>
+		<if test="updateTime != null and updateTime != ''">
+			and t.update_time like '${updateTime}%'
+		</if>
+		<if test="channelName != null and channelName != ''">
+			and t.channel_id in (SELECT id from pay_channel_new where name like concat(#{channelName}, '%'))
+		</if>
+		GROUP BY
+		t.channel_id,t.platform_id
+	</select>
+	<select id="listCounts" resultType="java.util.Map">
+		SELECT SUM( sub_money ) AS subMoney ,platform_id,channel_id,update_time,COUNT(*) AS totalcount
+		FROM member_pay_jour WHERE STATUS='1'
+		<if test="platformId != null and platformId != ''">
+			and platform_id = #{platformId}
+		</if>
+		<if test="updateTime != null and updateTime != ''">
+			and update_time like '${updateTime}%'
+		</if>
+		<if test="channelName != null and channelName != ''">
+			and channel_id in (SELECT id from pay_channel_new where name like concat(#{channelName}, '%'))
+		</if>
+	</select>
 </mapper>

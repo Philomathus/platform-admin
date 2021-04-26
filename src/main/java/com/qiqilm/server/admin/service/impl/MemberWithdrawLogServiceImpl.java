@@ -95,17 +95,19 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         }
         //银行卡黑名单搜索
         if (!StringUtils.isEmpty(memberWithdrawLog.getSearchCardBlack())) {
-            Iterator<MemberWithdrawLog> it = memberWithdrawLogList.iterator();
-            if ("1".equals(memberWithdrawLog.getSearchCardBlack())) {
-                while (it.hasNext()) {
-                    if ("0".equals(it.next().getCardBlack())) {
-                        it.remove();
+            if (!CollectionUtils.isEmpty(memberWithdrawLogList)) {
+                Iterator<MemberWithdrawLog> it = memberWithdrawLogList.iterator();
+                if ("1".equals(memberWithdrawLog.getSearchCardBlack())) {
+                    while (it.hasNext()) {
+                        if ("0".equals(it.next().getCardBlack())) {
+                            it.remove();
+                        }
                     }
-                }
-            } else {
-                while (it.hasNext()) {
-                    if ("1".equals(it.next().getCardBlack())) {
-                        it.remove();
+                } else {
+                    while (it.hasNext()) {
+                        if ("1".equals(it.next().getCardBlack())) {
+                            it.remove();
+                        }
                     }
                 }
             }

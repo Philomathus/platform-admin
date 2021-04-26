@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.PayPlatformNew;
+import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
 
 /**
  * 【请填写功能名称】Service接口
@@ -25,7 +26,7 @@ public interface IPayPlatformNewService {
 	 * @param payPlatformNew 【请填写功能名称】
 	 * @return 【请填写功能名称】集合
 	 */
-	public List<PayPlatformNew> selectPayPlatformNewList(PayPlatformNew payPlatformNew);
+	public List<RspPayPlatformNew> selectPayPlatformNewList(PayPlatformNew payPlatformNew);
 
 	/**
 	 * 新增【请填写功能名称】
