@@ -70,7 +70,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         BankCardAddress bankCardAddress = new BankCardAddress();
         bankCardAddress.setStatus("1");
         List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
-        if (!CollectionUtils.isEmpty(liveUserWithdrawNewlogList) && !CollectionUtils.isEmpty(bankCardAddresses)){
+        if (!CollectionUtils.isEmpty(liveUserWithdrawNewlogList) && !CollectionUtils.isEmpty(bankCardAddresses)) {
             for (LiveUserWithdrawNewlog li : liveUserWithdrawNewlogList) {
                 if (!StringUtils.isEmpty(li.getRealBankAddress())) {
                     String[] arr = li.getRealBankAddress().split("/");
@@ -95,17 +95,19 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
         }
         //银行卡黑名单搜索
         if (!StringUtils.isEmpty(liveUserWithdrawNewlog.getSearchCardBlack())) {
-            Iterator<LiveUserWithdrawNewlog> it = liveUserWithdrawNewlogList.iterator();
-            if ("1".equals(liveUserWithdrawNewlog.getSearchCardBlack())) {
-                while (it.hasNext()) {
-                    if ("0".equals(it.next().getCardBlack())) {
-                        it.remove();
+            if (!CollectionUtils.isEmpty(liveUserWithdrawNewlogList)) {
+                Iterator<LiveUserWithdrawNewlog> it = liveUserWithdrawNewlogList.iterator();
+                if ("1".equals(liveUserWithdrawNewlog.getSearchCardBlack())) {
+                    while (it.hasNext()) {
+                        if ("0".equals(it.next().getCardBlack())) {
+                            it.remove();
+                        }
                     }
-                }
-            } else {
-                while (it.hasNext()) {
-                    if ("1".equals(it.next().getCardBlack())) {
-                        it.remove();
+                } else {
+                    while (it.hasNext()) {
+                        if ("1".equals(it.next().getCardBlack())) {
+                            it.remove();
+                        }
                     }
                 }
             }
