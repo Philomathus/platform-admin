@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Log4j2
 @Component
@@ -78,8 +79,11 @@ public class BankCardAddressTask {
 		if ( Strings.isNotBlank( result ) ) {
 			Map    map         = JsonUtil.json2Map( result );
 			Map    dataMap     = ( Map ) map.get( "data" );
+            if (Objects.isNull(dataMap)) {
+                return null;
+            }else {
 			String bankAddress = dataMap.getOrDefault( "bankAddress", "账号非法" ).toString();
-			return bankAddress;
+			return bankAddress;}
 		}
 		return null;
 	}

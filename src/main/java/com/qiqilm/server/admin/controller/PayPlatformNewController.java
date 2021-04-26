@@ -60,7 +60,18 @@ public class PayPlatformNewController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:query')" )
 	@GetMapping( value = "/{id}" )
 	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
-		return AjaxResult.success( payPlatformNewService.selectPayPlatformNewById( id ) );
+		PayPlatformNew payPlatformNew = payPlatformNewService.selectPayPlatformNewById( id );
+		String a = "**********";
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())){
+			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().substring(0,4) + a + payPlatformNew.getSignMd5().substring(14));
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())){
+			payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().substring(0,4) + a + payPlatformNew.getSignPrivateKey().substring(14));
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey())){
+			payPlatformNew.setSignPublicKey(payPlatformNew.getSignPublicKey().substring(0,4) + a + payPlatformNew.getSignPublicKey().substring(14));
+		}
+		return AjaxResult.success(payPlatformNew);
 	}
 
 	/**
@@ -111,13 +122,14 @@ public class PayPlatformNewController extends BaseController {
 		if(StringUtils.isNotBlank(payPlatformNew.getPlatQueryUrl())) {
 			payPlatformNew.setPlatQueryUrl(payPlatformNew.getPlatQueryUrl().trim());
 		}
-		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())) {
+		String a = "**********";
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5()) && !payPlatformNew.getSignMd5().contains(a)) {
 			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
 		}
-		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())) {
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey()) && !payPlatformNew.getSignPrivateKey().contains(a)) {
 			payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().trim());
 		}
-		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey())) {
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey()) && !payPlatformNew.getSignPublicKey().contains(a)) {
 			payPlatformNew.setSignPublicKey(payPlatformNew.getSignPublicKey().trim());
 		}
 		if(StringUtils.isNotBlank(payPlatformNew.getPlatWhiteIpList())) {
