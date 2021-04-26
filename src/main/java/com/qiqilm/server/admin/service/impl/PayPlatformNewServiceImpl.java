@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.PayCacheUtil;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
+import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
 import com.qiqilm.server.admin.mapper.PayPlatformNewMapper;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
 import com.qiqilm.server.admin.utils.DateUtils;
@@ -45,7 +46,7 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
 	 * @return 支付平台
 	 */
 	@Override
-	public List<PayPlatformNew> selectPayPlatformNewList( PayPlatformNew payPlatformNew ) {
+	public List<RspPayPlatformNew> selectPayPlatformNewList(PayPlatformNew payPlatformNew ) {
 		return payPlatformNewMapper.selectPayPlatformNewList( payPlatformNew );
 	}
 
