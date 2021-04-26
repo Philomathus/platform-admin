@@ -336,4 +336,17 @@
 		GROUP BY
 		t.channel_id,t.platform_id
 	</select>
+	<select id="listCounts" resultType="java.util.Map">
+		SELECT SUM( sub_money ) AS subMoney ,platform_id,channel_id,update_time,COUNT(*) AS totalcount
+		FROM member_pay_jour WHERE STATUS='1'
+		<if test="platformId != null and platformId != ''">
+			and platform_id = #{platformId}
+		</if>
+		<if test="updateTime != null and updateTime != ''">
+			and update_time like '${updateTime}%'
+		</if>
+		<if test="channelName != null and channelName != ''">
+			and channel_id in (SELECT id from pay_channel_new where name like concat(#{channelName}, '%'))
+		</if>
+	</select>
 </mapper>

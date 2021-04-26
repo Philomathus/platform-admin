@@ -79,4 +79,9 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 	public List<RspPayJour> selectMemberPayJourLists(MemberPayJour memberPayJour) {
 		return memberPayJourMapper.selectMemberPayJourLists(memberPayJour);
 	}
+
+	@Override
+	public Map listCounts(MemberPayJour memberPayJour) {
+		return memberPayJourMapper.listCounts(memberPayJour);
+	}
 }

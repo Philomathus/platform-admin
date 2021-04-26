@@ -50,5 +50,7 @@ public interface MemberPayJourMapper {
 
 	MemberPayJour findByOrderNo( String orderNo );
 
-	 List<RspPayJour> selectMemberPayJourLists(MemberPayJour req );
+	List<RspPayJour> selectMemberPayJourLists(MemberPayJour req );
+
+	Map listCounts( MemberPayJour req );
 }

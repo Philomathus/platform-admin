@@ -39,4 +39,6 @@ public interface IMemberPayJourService {
 	public Map listCount( MemberPayJour memberPayJour );
 
 	public List<RspPayJour> selectMemberPayJourLists(MemberPayJour memberPayJour );
+
+	Map listCounts( MemberPayJour memberPayJour );
 }
