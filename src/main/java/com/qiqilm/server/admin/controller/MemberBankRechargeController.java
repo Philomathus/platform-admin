@@ -37,7 +37,7 @@ public class MemberBankRechargeController extends BaseController {
 	 * 导出线上充值信息列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberBankRecharge:export')" )
-	@Log( title = "线上充值信息", businessType = BusinessType.EXPORT )
+	@Log( title = "线下充值报表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public void export(ReqMemberRechargeLog req, HttpServletResponse response ) {
 		List<RspBankRecharge> list = memberRechargeLogService.selectMemberBankRecharge(req);
