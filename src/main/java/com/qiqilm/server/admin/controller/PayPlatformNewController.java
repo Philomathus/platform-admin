@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
+import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
 import com.qiqilm.server.admin.service.IPayService;
@@ -39,7 +40,7 @@ public class PayPlatformNewController extends BaseController {
 	@GetMapping( "/list" )
 	public TableDataInfo list( PayPlatformNew payPlatformNew ) {
 		startPage();
-		List<PayPlatformNew> list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
+		List<RspPayPlatformNew> list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
 		return getDataTable( list );
 	}
 
@@ -50,8 +51,8 @@ public class PayPlatformNewController extends BaseController {
 	@Log( title = "支付平台", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public void export( PayPlatformNew payPlatformNew, HttpServletResponse response) {
-		List<PayPlatformNew>      list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
-		ExportExcelUtil.exportExcel( list, "支付平台", "支付平台表", PayPlatformNew.class, response );
+		List<RspPayPlatformNew>      list = payPlatformNewService.selectPayPlatformNewList( payPlatformNew );
+		ExportExcelUtil.exportExcel( list, "支付平台", "支付平台表", RspPayPlatformNew.class, response );
 	}
 
 	/**
