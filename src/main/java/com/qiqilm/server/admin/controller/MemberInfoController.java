@@ -15,6 +15,7 @@ import com.qiqilm.server.admin.domain.vo.*;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.exception.BusinessException;
+import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.POST;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -54,7 +56,8 @@ public class MemberInfoController extends BaseController {
     private MemberForbidUtil memberForbidUtil;
     @Autowired
     private ISysUserService userService;
-
+    @Autowired
+    private ImApi imApi;
     /**
      * 查询用户信息列表
      */
@@ -490,4 +493,14 @@ public class MemberInfoController extends BaseController {
         AjaxResult ajaxResult = memberInfoService.changeBank(memberCard);
         return (ajaxResult);
     }
+
+    @ApiOperation(value = "删除用户IM", notes = "删除用户IM")
+    @PostMapping("/imDealBan")
+    public Object imDealBan( MemberInfo memberInfo) {
+       imApi.deleteAccount(memberInfo.getId());
+        RspBase rspBase = new RspBase();
+        rspBase.setData("成功");
+       return rspBase;
+    }
+
 }
