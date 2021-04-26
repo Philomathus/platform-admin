@@ -6,7 +6,7 @@ spring:
   redis:
     host: r-j6cu2dxo1k4ry81lzr.redis.rds.aliyuncs.com
     port: 6379
-    password: t#z*UU#b@@BubN&c
+    password: c#E80MCbasOd#f1j
 
 mybatis:
   configuration:
