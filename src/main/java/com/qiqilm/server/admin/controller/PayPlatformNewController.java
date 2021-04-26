@@ -63,13 +63,13 @@ public class PayPlatformNewController extends BaseController {
 		PayPlatformNew payPlatformNew = payPlatformNewService.selectPayPlatformNewById( id );
 		String a = "**********";
 		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())){
-			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().substring(0,4) + a + payPlatformNew.getSignMd5().substring(14));
+			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().substring(0,4) + a + payPlatformNew.getSignMd5().substring(payPlatformNew.getSignMd5().length()-4));
 		}
 		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())){
-			payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().substring(0,4) + a + payPlatformNew.getSignPrivateKey().substring(14));
+			payPlatformNew.setSignPrivateKey(a);
 		}
 		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey())){
-			payPlatformNew.setSignPublicKey(payPlatformNew.getSignPublicKey().substring(0,4) + a + payPlatformNew.getSignPublicKey().substring(14));
+			payPlatformNew.setSignPublicKey(a);
 		}
 		return AjaxResult.success(payPlatformNew);
 	}
