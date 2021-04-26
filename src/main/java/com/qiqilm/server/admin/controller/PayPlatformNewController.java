@@ -122,14 +122,27 @@ public class PayPlatformNewController extends BaseController {
 		if(StringUtils.isNotBlank(payPlatformNew.getPlatQueryUrl())) {
 			payPlatformNew.setPlatQueryUrl(payPlatformNew.getPlatQueryUrl().trim());
 		}
-		String a = "**********";
-		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5()) && !payPlatformNew.getSignMd5().contains(a)) {
+
+		//如果还有*号加密的保存用原来的
+		PayPlatformNew payPlatformNewOld = payPlatformNewService.selectPayPlatformNewById(Long.valueOf(payPlatformNew.getId()));
+		String a = "*";
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5()) && payPlatformNew.getSignMd5().contains(a)){
+			payPlatformNew.setSignMd5(payPlatformNewOld.getSignMd5());
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey()) && payPlatformNew.getSignPrivateKey().contains(a)){
+			payPlatformNew.setSignPrivateKey(payPlatformNewOld.getSignPrivateKey());
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey()) && payPlatformNew.getSignPublicKey().contains(a)){
+			payPlatformNew.setSignPublicKey(payPlatformNewOld.getSignPublicKey());
+		}
+
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())) {
 			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
 		}
-		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey()) && !payPlatformNew.getSignPrivateKey().contains(a)) {
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())) {
 			payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().trim());
 		}
-		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey()) && !payPlatformNew.getSignPublicKey().contains(a)) {
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey())) {
 			payPlatformNew.setSignPublicKey(payPlatformNew.getSignPublicKey().trim());
 		}
 		if(StringUtils.isNotBlank(payPlatformNew.getPlatWhiteIpList())) {
