@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.PayChannelNew;
+import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
 import com.qiqilm.server.admin.mapper.PayChannelNewMapper;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
@@ -72,5 +73,15 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 			memberPayJour.setSelectEndDate( selectDate[ 1 ] );
 		}
 		return memberPayJourMapper.listCount( memberPayJour );
+	}
+
+	@Override
+	public List<RspPayJour> selectMemberPayJourLists(MemberPayJour memberPayJour) {
+		return memberPayJourMapper.selectMemberPayJourLists(memberPayJour);
+	}
+
+	@Override
+	public Map listCounts(MemberPayJour memberPayJour) {
+		return memberPayJourMapper.listCounts(memberPayJour);
 	}
 }

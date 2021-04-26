@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.domain.req;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
@@ -18,5 +19,12 @@ public class ReqMemberRechargeLog {
 
 	private String[] selectDate;
 	private String   selectStartDate;
+
 	private String   selectEndDate;
+	private String updateTime;
+
+	@JsonIgnore
+	private Integer priceMin;
+	@JsonIgnore
+	private Integer priceMax;
 }

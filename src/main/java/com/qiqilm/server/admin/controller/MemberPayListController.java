@@ -5,6 +5,8 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberPayJour;
+import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
+import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
@@ -26,51 +28,41 @@ import java.util.Map;
  * @date 2021-01-26
  */
 @RestController
-@RequestMapping( "/pay/memberPayJour" )
-public class MemberPayJourController extends BaseController {
+@RequestMapping( "/pay/memberPayList" )
+public class MemberPayListController extends BaseController {
 	@Autowired
 	private IMemberPayJourService memberPayJourService;
 
 	/**
+	 * 导出线上充值信息列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:memberPayList:export')" )
+	@Log( title = "线上充值信息", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public void export( MemberPayJour memberPayJour, HttpServletResponse response ) {
+		List<RspPayJour> list = memberPayJourService.selectMemberPayJourLists( memberPayJour );
+		ExportExcelUtil.exportExcel( list, "线上充值", "线上充值表", RspPayJour.class, response );
+	}
+
+
+	/**
 	 * 查询线上充值信息列表
 	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:list')" )
-	@GetMapping( "/list" )
-	public TableDataInfo list( MemberPayJour memberPayJour ) {
+	@PreAuthorize( "@ss.hasPermi('pay:memberPayList:lists')" )
+	@GetMapping( "/lists" )
+	public TableDataInfo lists( MemberPayJour memberPayJour ) {
 		startPage();
-		List<MemberPayJour> list = memberPayJourService.selectMemberPayJourList( memberPayJour );
+		List<RspPayJour> list = memberPayJourService.selectMemberPayJourLists( memberPayJour );
 		return getDataTable( list );
 	}
 
 	/**
-	 * 查询线上充值信息统计信息列表
+	 * 列表统计
 	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:list')" )
-	@GetMapping( "/listCount" )
-	@Log( title = "线上通道报表报表", businessType = BusinessType.EXPORT )
-	public Map listCount( MemberPayJour memberPayJour ) {
-		return memberPayJourService.listCount( memberPayJour );
+	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:list')" )
+	@GetMapping( "/listCounts" )
+	public Map listCounts(MemberPayJour req ) {
+		return memberPayJourService.listCounts( req );
 	}
-
-	/**
-	 * 导出线上充值信息列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:export')" )
-	@Log( title = "线上充值信息", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public void export( MemberPayJour memberPayJour, HttpServletResponse response ) {
-		List<MemberPayJour> list = memberPayJourService.selectMemberPayJourList( memberPayJour );
-		ExportExcelUtil.exportExcel( list, "线上充值", "线上充值表", MemberPayJour.class, response );
-	}
-
-	/**
-	 * 获取线上充值信息详细信息
-	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberPayJour:query')" )
-	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
-		return AjaxResult.success( memberPayJourService.selectMemberPayJourById( id ) );
-	}
-
 
 }
