@@ -3,8 +3,8 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.RspServerIm;
 import com.qiqilm.server.admin.domain.ServerIm;
-import com.qiqilm.server.admin.im.TLSSigAPIv2;
 import com.qiqilm.server.admin.mapper.ServerImMapper;
 import com.qiqilm.server.admin.service.IServerImService;
 import lombok.extern.log4j.Log4j2;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * IM即时通讯服务配置Service业务层处理
@@ -52,7 +51,7 @@ public class ServerImServiceImpl implements IServerImService {
 	 * @return IM即时通讯服务配置
 	 */
 	@Override
-	public List<ServerIm> selectServerImList( ServerIm serverIm ) {
+	public List<RspServerIm> selectServerImList(ServerIm serverIm ) {
 		return serverImMapper.selectServerImList( serverIm );
 	}
 

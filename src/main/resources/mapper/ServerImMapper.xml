@@ -15,6 +15,17 @@
 		<result property="isEffect" column="is_effect"/>
 	</resultMap>
 
+	<resultMap type="RspServerIm" id="ServerImResult2">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="appId" column="app_id"/>
+		<result property="identify" column="identify"/>
+		<result property="fullGroup" column="full_group"/>
+		<result property="onlineGroup" column="online_group"/>
+		<result property="provider" column="provider"/>
+		<result property="isEffect" column="is_effect"/>
+	</resultMap>
+
 	<sql id="selectServerImVo">
 		select id,
 			   name,
@@ -28,7 +39,7 @@
 		from ${dbLive}.server_im
 	</sql>
 
-	<select id="selectServerImList" parameterType="ServerIm" resultMap="ServerImResult">
+	<select id="selectServerImList" parameterType="ServerIm" resultMap="ServerImResult2">
 		<include refid="selectServerImVo"/>
 		<where>
 		</where>
