@@ -63,13 +63,13 @@ public class PayPlatformNewController extends BaseController {
 		PayPlatformNew payPlatformNew = payPlatformNewService.selectPayPlatformNewById( id );
 		String a = "**********";
 		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())){
-			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().substring(0,4) + a + payPlatformNew.getSignMd5().substring(14));
+			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().substring(0,4) + a + payPlatformNew.getSignMd5().substring(payPlatformNew.getSignMd5().length()-4));
 		}
 		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())){
-			payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().substring(0,4) + a + payPlatformNew.getSignPrivateKey().substring(14));
+			payPlatformNew.setSignPrivateKey(a);
 		}
 		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey())){
-			payPlatformNew.setSignPublicKey(payPlatformNew.getSignPublicKey().substring(0,4) + a + payPlatformNew.getSignPublicKey().substring(14));
+			payPlatformNew.setSignPublicKey(a);
 		}
 		return AjaxResult.success(payPlatformNew);
 	}
@@ -122,14 +122,27 @@ public class PayPlatformNewController extends BaseController {
 		if(StringUtils.isNotBlank(payPlatformNew.getPlatQueryUrl())) {
 			payPlatformNew.setPlatQueryUrl(payPlatformNew.getPlatQueryUrl().trim());
 		}
-		String a = "**********";
-		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5()) && !payPlatformNew.getSignMd5().contains(a)) {
+
+		//如果还有*号加密的保存用原来的
+		PayPlatformNew payPlatformNewOld = payPlatformNewService.selectPayPlatformNewById(Long.valueOf(payPlatformNew.getId()));
+		String a = "*";
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5()) && payPlatformNew.getSignMd5().contains(a)){
+			payPlatformNew.setSignMd5(payPlatformNewOld.getSignMd5());
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey()) && payPlatformNew.getSignPrivateKey().contains(a)){
+			payPlatformNew.setSignPrivateKey(payPlatformNewOld.getSignPrivateKey());
+		}
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey()) && payPlatformNew.getSignPublicKey().contains(a)){
+			payPlatformNew.setSignPublicKey(payPlatformNewOld.getSignPublicKey());
+		}
+
+		if(StringUtils.isNotBlank(payPlatformNew.getSignMd5())) {
 			payPlatformNew.setSignMd5(payPlatformNew.getSignMd5().trim());
 		}
-		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey()) && !payPlatformNew.getSignPrivateKey().contains(a)) {
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPrivateKey())) {
 			payPlatformNew.setSignPrivateKey(payPlatformNew.getSignPrivateKey().trim());
 		}
-		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey()) && !payPlatformNew.getSignPublicKey().contains(a)) {
+		if(StringUtils.isNotBlank(payPlatformNew.getSignPublicKey())) {
 			payPlatformNew.setSignPublicKey(payPlatformNew.getSignPublicKey().trim());
 		}
 		if(StringUtils.isNotBlank(payPlatformNew.getPlatWhiteIpList())) {
