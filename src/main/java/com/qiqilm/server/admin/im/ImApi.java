@@ -26,7 +26,7 @@ public interface ImApi {
 
 	boolean kick( String userId );  //踢登
 
-	boolean nospeakingT( String userId,long timeSec );  //禁言
+	boolean nospeakingT( String userId,int timeSec );  //禁言
 
 	AccountStatusRsp status( boolean needDetail, String... userId );  //状态
 

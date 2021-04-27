@@ -163,7 +163,7 @@ public class ImApiImpl implements ImApi {
 	}
 
 	@Override
-	public boolean nospeakingT(String userId,long timeSec ) {
+	public boolean nospeakingT(String userId,int timeSec ) {
 		final SetNoSpeaking kick = new SetNoSpeaking();
 		kick.setIdentifier( userId );
 		kick.setTimeSec(timeSec);
