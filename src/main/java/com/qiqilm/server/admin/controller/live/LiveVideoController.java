@@ -122,8 +122,8 @@ public class LiveVideoController extends BaseController {
 			}
 			LiveVideo liveVideo1 = liveVideoService.selectLiveVideoById(liveVideo.getId());
 			if (liveVideo1.getLiveIn()==1){
-				helpNoticeUtil.sendMsg(liveVideo.getInfo(),liveVideo.getGroupId());
-				log.warn("小助手发言消息"+liveVideo.getInfo(),liveVideo.getGroupId());
+				helpNoticeUtil.sendMsg(liveVideo.getInfo(),liveVideo1.getGroupId());
+				log.warn("小助手发言消息"+liveVideo.getInfo(),liveVideo1.getGroupId());
 			}else {
 				return  AjaxResult.success("主播未在线");
 			}
