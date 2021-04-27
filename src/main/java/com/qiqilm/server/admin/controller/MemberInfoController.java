@@ -21,6 +21,7 @@ import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,6 +42,7 @@ import java.util.regex.Pattern;
  */
 @RestController
 @RequestMapping("/member/memberInfo")
+@Log4j2
 public class MemberInfoController extends BaseController {
     @Autowired
     private IMemberInfoService memberInfoService;
@@ -494,12 +496,19 @@ public class MemberInfoController extends BaseController {
         return (ajaxResult);
     }
 
-    @ApiOperation(value = "删除用户IM", notes = "删除用户IM")
+    @ApiOperation(value = "禁言用户IM", notes = "禁言用户IM")
     @PostMapping("/imDealBan")
     public Object imDealBan( MemberInfo memberInfo) {
-       imApi.deleteAccount(memberInfo.getId());
         RspBase rspBase = new RspBase();
-        rspBase.setData("成功");
+       if(imApi.nospeakingT(memberInfo.getId(),7200)){
+           log.info("禁言成功");
+           rspBase.setData("成功");
+       }else{
+           log.error("禁言失败");
+           rspBase.setData("失败");
+           rspBase.setCode(502);
+       }
+
        return rspBase;
     }
 
