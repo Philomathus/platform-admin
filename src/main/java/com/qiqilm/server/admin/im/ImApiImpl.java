@@ -163,6 +163,14 @@ public class ImApiImpl implements ImApi {
 	}
 
 	@Override
+	public boolean nospeakingT(String userId,int timeSec ) {
+		final SetNoSpeaking kick = new SetNoSpeaking();
+		kick.setIdentifier( userId );
+		kick.setTimeSec(timeSec);
+		return "OK".equals( doPost( kick ).get( "ActionStatus" ) );
+	}
+
+	@Override
 	public AccountStatusRsp status( boolean needDetail, String... userId ) {
 		if ( userId.length == 0 ) {
 			final AccountStatusRsp statusRsp = new AccountStatusRsp();

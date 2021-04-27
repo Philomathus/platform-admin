@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
+import com.qiqilm.server.admin.domain.RspServerIm;
 import com.qiqilm.server.admin.domain.ServerIm;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface ServerImMapper {
 	 * @param serverIm IM即时通讯服务配置
 	 * @return IM即时通讯服务配置集合
 	 */
-	public List<ServerIm> selectServerImList( ServerIm serverIm );
+	public List<RspServerIm> selectServerImList(ServerIm serverIm );
 
 	/**
 	 * 新增IM即时通讯服务配置

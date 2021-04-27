@@ -286,7 +286,6 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public int changeSpeak(MemberInfo memberInfo) {
         if ("0".equals(memberInfo.getSpeak())) {
-            memberInfo.setStatus(1);
             memberInfo.setSpeak("0");
             memberInfoMapper.updateMemberInfo(memberInfo);
             memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), false);
@@ -339,5 +338,18 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public void updateVip(String memberId, Integer vip, String nickName) {
         memberBcodeMapper.updateVip(memberId,vip,nickName);
+    }
+    @Override
+    public void updataStatus(MemberInfo memberInfo) {
+        if (memberInfo.getBanSpeakTime()==0){
+            memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), false );
+            memberInfo.setSpeak("0");
+            memberInfoMapper.updateMemberInfo(memberInfo);
+        }
+        if (memberInfo.getBanSpeakTime()>0){
+            memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), true );
+            memberInfo.setSpeak("1");
+            memberInfoMapper.updateMemberInfo(memberInfo);
+        }
     }
 }
