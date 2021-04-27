@@ -340,4 +340,21 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     public void updateVip(String memberId, Integer vip, String nickName) {
         memberBcodeMapper.updateVip(memberId,vip,nickName);
     }
+    @Override
+    public void updataStatus(MemberInfo memberInfo) {
+        if (memberInfo.getBanSpeakTime()==0){
+            memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), false );
+            memberForbidUtil.setPlatformUserStatus(memberInfo.getId(),1);
+            memberInfo.setStatus(1);
+            memberInfo.setSpeak("0");
+            memberInfoMapper.updateMemberInfo(memberInfo);
+        }
+        if (memberInfo.getBanSpeakTime()>0){
+            memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), true );
+            memberForbidUtil.setPlatformUserStatus(memberInfo.getId(),0);
+            memberInfo.setStatus(0);
+            memberInfo.setSpeak("1");
+            memberInfoMapper.updateMemberInfo(memberInfo);
+        }
+    }
 }

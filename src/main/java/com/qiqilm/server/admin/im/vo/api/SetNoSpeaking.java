@@ -9,7 +9,7 @@ import lombok.Data;
 public class SetNoSpeaking implements BaseFuc {
 
 	private String Identifier;
-	private Integer timeSec;
+	private long timeSec;
 
 	@Override
 	public String getApi() {
