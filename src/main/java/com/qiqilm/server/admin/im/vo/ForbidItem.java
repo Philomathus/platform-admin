@@ -17,5 +17,6 @@ public class ForbidItem {
     @JsonProperty("ShuttedUntil")
     private String shuttedUnitl; // 禁言到的时间（使用 UTC 时间，即世界协调时间）
 
-    private Integer shutTamp;
+    private String shutTamp;
+
 }
