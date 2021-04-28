@@ -47,7 +47,7 @@ public class RspPayJour  {
 	@Excel(name = "手续费",orderNum = "5")
 	private BigDecimal handlingfee;
 
-	@Excel(name = "剩余值",orderNum = "7")
+	@Excel(name = "结算金额",orderNum = "7")
 	private BigDecimal remaining;
 
 	public BigDecimal getHandlingfee() {
