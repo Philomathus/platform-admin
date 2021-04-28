@@ -96,6 +96,31 @@ public class ImApiImpl implements ImApi {
 		}
 	}
 
+	public <T extends ImRsp> T doPostNew( BaseFuc fuc, @NotNull Class<T> clazz, int retryNum ) {
+		T t = null;
+		if ( retryNum > 3 ) {
+			log.error( "url:{}访问三次失败，退出重试", getUrl( fuc.getApi() ) );
+			return t;
+		}
+		try {
+			HttpHeaders httpHeaders = new HttpHeaders();
+			httpHeaders.setContentType( MediaType.APPLICATION_JSON );
+			HttpEntity<ObjectNode> entity = new HttpEntity<>( fuc.get(), httpHeaders );
+			String                 url    = getUrl( fuc.getApi() );
+			t = restTemplate.postForObject( url, entity, clazz );
+            if (t.getErrorCode()!=0) {
+                throw new RuntimeException( t.getErrorCode() + t.getErrorInfo() );
+            }
+			return t;
+		} catch ( ResourceAccessException e ) {
+			retryNum++;
+			return doPost( fuc, clazz, retryNum );
+		} catch ( Exception e ) {
+			log.error( "url:{},im :{}访问三次失败，退出重试", getUrl( fuc.getApi() ), e.getMessage(), e );
+			return null;
+		}
+	}
+
 	private String getIMAdminSign( String tim_sdkappid, String tim_sdk_key, String identifier ) {
 
 		String singn = liveCacheUtil.getAdminSign( identifier );
@@ -267,13 +292,13 @@ public class ImApiImpl implements ImApi {
 	}
 
 	@Override
-	public String getGroupHistory( String groupId, Integer seq, int size ) {
+	public Object getGroupHistory(String groupId, Integer seq, int size ) {
 		MessageHistory history = new MessageHistory();
 		history.setGroupId( groupId );
 		history.setReqMsgNumber( size );
 		history.setReqMsgSeq( seq );
 
-		return JsonUtil.object2Json( getString( history ) );
+		return getString( history );
 		// return doPost(history,MessageHistoryRsp.class);
 	}
 
@@ -292,7 +317,14 @@ public class ImApiImpl implements ImApi {
 		return doPost( forbidList, ForbidListRsp.class, 1 );
 	}
 
-	@Override
+    @Override
+    public UserForbid getUserShutted(String userId) {
+        UserForbidList forbidList = new UserForbidList();
+        forbidList.setUserId( userId );
+        return doPostNew( forbidList, UserForbid.class, 1 );
+    }
+
+    @Override
 	public ImRsp forbidSendMsg( String groupId, int shutUpTime, String... userId ) {
 		ForbidSendMsg forbidSendMsg = new ForbidSendMsg();
 		forbidSendMsg.setGroupId( groupId );
