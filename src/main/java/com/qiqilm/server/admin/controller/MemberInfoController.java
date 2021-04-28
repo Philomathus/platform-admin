@@ -21,6 +21,7 @@ import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.POST;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -41,6 +43,7 @@ import java.util.regex.Pattern;
  */
 @RestController
 @RequestMapping("/member/memberInfo")
+@Log4j2
 public class MemberInfoController extends BaseController {
     @Autowired
     private IMemberInfoService memberInfoService;
@@ -494,13 +497,20 @@ public class MemberInfoController extends BaseController {
         return (ajaxResult);
     }
 
-    @ApiOperation(value = "删除用户IM", notes = "删除用户IM")
+    @ApiOperation(value = "禁言用户IM", notes = "禁言用户IM")
     @PostMapping("/imDealBan")
     public Object imDealBan( MemberInfo memberInfo) {
-       imApi.deleteAccount(memberInfo.getId());
-        RspBase rspBase = new RspBase();
-        rspBase.setData("成功");
-       return rspBase;
+        if (Objects.isNull(memberInfo.getBanSpeakTime())){
+            return AjaxResult.success("禁言时间不能为空");
+        }
+        memberInfoService.updataStatus(memberInfo);
+        if(imApi.nospeakingT(memberInfo.getId(),memberInfo.getBanSpeakTime())){
+            log.info("IM禁言成功");
+            return AjaxResult.success("IM禁言成功");
+        }else{
+            log.error("IM禁言失败");
+            return AjaxResult.success("IM禁言失败");
+        }
     }
 
 }

@@ -26,6 +26,8 @@ public interface ImApi {
 
 	boolean kick( String userId );  //踢登
 
+	boolean nospeakingT( String userId,int timeSec );  //禁言
+
 	AccountStatusRsp status( boolean needDetail, String... userId );  //状态
 
 	//message
@@ -46,11 +48,13 @@ public interface ImApi {
 
 	ImRsp sendGroupMessage( String groupId, String userId, MessageType... message ); //群消息
 
-	String getGroupHistory( String groupId, Integer msgSeq, int size );  //消息历史
+	Object getGroupHistory( String groupId, Integer msgSeq, int size );  //消息历史
 
 	GroupInfoRsp getGroupInfo( String... groupId ); // 获取群详细资料
 
 	ForbidListRsp getShutted( String groupId ); //获取禁言列表
+
+    UserForbid getUserShutted( String userId ); //获取用户禁言信息
 
 	ImRsp forbidSendMsg( String groupId, int shutUpTime, String... userId );
 

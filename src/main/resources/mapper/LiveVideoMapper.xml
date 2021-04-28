@@ -36,6 +36,7 @@
 		v.id,
 		v.user_id,
 		v.group_id,
+        v.live_in,
 		title,
 		watch_number,
 		cate_id,

@@ -69,4 +69,5 @@ public interface IMemberInfoService {
     void repairMemberBcode(String memberId);
 
     void updateVip(String memberId, Integer vip, String nickName);
+	void updataStatus(MemberInfo memberInfo);
 }

@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://pc-j6c1ah19tg2g51r3u.rwlb.rds.aliyuncs.com:3306/7704_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+    username: 77tv_web
+    password: 77tvweb_oradba
+  redis:
+    host: r-j6cgj3o17ain04dme0.redis.rds.aliyuncs.com
+    port: 6379
+    password: FiCJTp4gQ8DaCeqL
+
+mybatis:
+  configuration:
+    variables:
+      dbMain: 7704_main
+      dbLive: 7704_live
+      dbLottery: 7704_lottery

@@ -12,6 +12,8 @@ import lombok.Data;
 public class ForbidItem {
     @JsonProperty("Member_Account")
     private String account; // 用户 ID
+    //    @JsonProperty("Member_Account")
+    private String nickName; // 用户 ID
     @JsonProperty("ShuttedUntil")
     private String shuttedUnitl; // 禁言到的时间（使用 UTC 时间，即世界协调时间）
 }
