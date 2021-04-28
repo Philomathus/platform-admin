@@ -507,10 +507,8 @@ public class MemberInfoController extends BaseController {
         if(imApi.nospeakingT(memberInfo.getId(),memberInfo.getBanSpeakTime())){
             log.info("IM禁言成功");
             return AjaxResult.success("IM禁言成功");
-        }else{
-            log.error("IM禁言失败");
-            return AjaxResult.success("IM禁言失败");
         }
+        return AjaxResult.success("正在禁言中");
     }
 
 }
