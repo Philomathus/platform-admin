@@ -2,16 +2,10 @@ package com.qiqilm.server.admin.domain.rsp;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 
 /**
  * 线上充值信息对象 member_pay_jour
@@ -47,6 +41,34 @@ public class RspPayJour  {
 	@Excel(name = "回调时间",  exportFormat = "yyyy-MM-dd")
 	private String updateTime;
 
+	@Excel(name = "通道费率",orderNum = "5")
+	private BigDecimal channelPayRate;
 
+	@Excel(name = "手续费",orderNum = "5")
+	private BigDecimal handlingfee;
 
+	@Excel(name = "结算金额",orderNum = "7")
+	private BigDecimal remaining;
+
+	public BigDecimal getHandlingfee() {
+		if (channelPayRate==null){
+			return BigDecimal.ZERO;
+		}
+		if (channelPayRate.compareTo(BigDecimal.ZERO)> 0 ){
+			return subMoney.multiply(channelPayRate).setScale( 2,
+					RoundingMode.HALF_UP );
+		}
+		return BigDecimal.ZERO;
+	}
+
+	public BigDecimal getRemaining() {
+		if (channelPayRate==null){
+			return subMoney;
+		}
+		if (channelPayRate.compareTo(BigDecimal.ZERO)> 0 ){
+			return subMoney.subtract(subMoney.multiply(channelPayRate)).setScale( 2,
+					RoundingMode.HALF_UP );
+		}
+		return subMoney;
+	}
 }
