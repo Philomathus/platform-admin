@@ -54,6 +54,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
         String resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
+            log.info("特仑苏代付下单返回数据"+resultMap);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
