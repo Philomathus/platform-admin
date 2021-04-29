@@ -35,7 +35,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("BankNumber", withdrawLog.getBankAccount());
         dataMap.put("BankAcc", withdrawLog.getBankUserName());
         dataMap.put("orderNo", withdrawLog.getOrderNo());
-        dataMap.put("MsgUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.TE_LUN_SU);
+        dataMap.put("MsgUrl", "http://47.57.230.214:43007/pay-agent/callBack/" + ConstantsPayAgent.TE_LUN_SU);
         dataMap.put("Bank", withdrawLog.getBankName());
         dataMap.put("mch_id", payAgentPlatform.getMerId());
 
@@ -59,7 +59,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
         }
         if (Strings.isNotBlank(resultMap)) {
-            Map map1 = JsonUtil.object2Map(requestMap);
+            Map map1 = JsonUtil.json2Map(resultMap);
             if ("success".equals(map1.getOrDefault("msg", "").toString())) {
                 return true;
             }
@@ -86,7 +86,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
         log.info("牛气冲天回调待签名字符串:" + requestMap);
         String sign = (String) requestMap.get("sign");
         String signMD5 = DigestUtils.md5Hex(tempStr).toUpperCase();
-        if ((sign).equalsIgnoreCase(signMD5)) {
+        if (sign.equalsIgnoreCase(signMD5)) {
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderNo);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", orderNo);
