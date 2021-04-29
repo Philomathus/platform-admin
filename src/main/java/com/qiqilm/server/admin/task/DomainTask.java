@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.utils.DateUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,9 @@ public class DomainTask {
 		log.info( "轮询检测域名" + DateUtils.getTime() );
 		List<ConfigDomain> list = configDomainService.selectConfigDomainList( null );
 		String do_main_telegram = sysConfigCacheUtil.getConf( "do_main_telegram" );
+		if (Strings.isBlank(do_main_telegram)){
+			return;
+		}
 		for ( ConfigDomain li : list ) {
 			String url;
 			if ( li.getDgroup() == 4 ) {

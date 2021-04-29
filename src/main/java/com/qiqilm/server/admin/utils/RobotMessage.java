@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.utils;
 
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.ApiContextInitializer;
@@ -58,6 +59,9 @@ public class RobotMessage extends TelegramLongPollingBot {
 
 	public void send(String tex){
 		String withdraw_log_telegram = sysConfigCacheUtil.getConf( "withdraw_log_telegram" );
+		if (Strings.isBlank(withdraw_log_telegram)){
+			return;
+		}
 		SendMessage message = new SendMessage()
 				.setChatId( withdraw_log_telegram )
 				.setText( tex);
