@@ -58,7 +58,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        if (!Strings.isNotBlank(resultMap)) {
+        if (Strings.isNotBlank(resultMap)) {
             Map map1 = JsonUtil.object2Map(requestMap);
             if ("success".equals(map1.getOrDefault("msg", "").toString())) {
                 return true;
@@ -94,11 +94,11 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
             }
             if (withdrawLog.getStatus() == 6) {
                 log.error("已有代付记录 - merOrderNo:{}", orderNo);
-                return "ok";
+                return "success";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(orderNo);
             payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "success".equals(state));
-            return "ok";
+            return "success";
         }
         return "fail";
     }
