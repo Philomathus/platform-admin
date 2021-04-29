@@ -59,7 +59,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
         }
         if (Strings.isNotBlank(resultMap)) {
-            Map map1 = JsonUtil.object2Map(requestMap);
+            Map map1 = JsonUtil.json2Map(resultMap);
             if ("success".equals(map1.getOrDefault("msg", "").toString())) {
                 return true;
             }
