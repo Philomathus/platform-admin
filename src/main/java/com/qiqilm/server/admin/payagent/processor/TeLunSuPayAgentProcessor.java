@@ -86,7 +86,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
         log.info("牛气冲天回调待签名字符串:" + requestMap);
         String sign = (String) requestMap.get("sign");
         String signMD5 = DigestUtils.md5Hex(tempStr).toUpperCase();
-        if ((sign).equalsIgnoreCase(signMD5)) {
+        if (sign.equalsIgnoreCase(signMD5)) {
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderNo);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", orderNo);
