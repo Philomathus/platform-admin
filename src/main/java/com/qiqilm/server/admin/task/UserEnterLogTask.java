@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.service.ILiveLogService;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -48,7 +49,7 @@ public class UserEnterLogTask {
 
         String flag = sysConfigCacheUtil.getConf( "messageBot" );
         String online_user_telegram = sysConfigCacheUtil.getConf( "online_user_telegram" );
-        if ( "0".equals( flag ) ) {
+        if ( "0".equals( flag )|| Strings.isBlank(online_user_telegram) ) {
             return ;
         }
         if(!profile.startsWith("77")||profile.equals("7700")){

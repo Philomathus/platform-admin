@@ -79,14 +79,15 @@ public class ImMuteController extends BaseController {
             ForbidItem forbidItem = new ForbidItem();
         if (userShutted==null) {
             forbidItem.setShuttedUnitl("-1");
-            forbidItem.setShutTamp(-1);
+            forbidItem.setShutTamp("-1");
         }else {
             if (userShutted.getGroupmsgNospeakingTime()==0) {
                 forbidItem.setShuttedUnitl("0");
-                forbidItem.setShutTamp(0);
+                forbidItem.setShutTamp("0");
             }else {
                 forbidItem.setShuttedUnitl(System.currentTimeMillis()/1000 + userShutted.getGroupmsgNospeakingTime()+"");
-                forbidItem.setShutTamp(userShutted.getGroupmsgNospeakingTime());
+                forbidItem.setShutTamp(userShutted.getGroupmsgNospeakingTime().toString());
+
             }
         }
             forbidItem.setAccount(imMute.getUserId());

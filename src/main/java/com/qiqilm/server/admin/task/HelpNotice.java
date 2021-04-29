@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.HelpNoticeUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,9 @@ public class HelpNotice {
         }
 
         String text = sysConfigCacheUtil.getConf("77_help_notice",null);
+        if (Strings.isBlank(text)){
+            return;
+        }
         helpNoticeUtil.sendMsg(text);
 
 
