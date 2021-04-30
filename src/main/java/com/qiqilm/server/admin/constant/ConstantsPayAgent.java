@@ -33,7 +33,7 @@ public abstract class ConstantsPayAgent {
 	public static final String WULIU         = "wuliu";
 	//熊猫代付
 	public static final String XIONG_MAO         = "xiongMao";
-	
+
 	public static final String XIN_NIU_QI_CHONG_TIAN = "xinNiuQiChongTian";
 
 }
