@@ -31,4 +31,5 @@ public abstract class ConstantsPayAgent {
 	//熊猫代付
 	public static final String XIONG_MAO         = "xiongMao";
 	public static final String TE_LUN_SU         = "teLunSu";
+	public static final String XIN_NIU_QI_CHONG_TIAN = "xinNiuQiChongTian";
 }
