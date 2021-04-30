@@ -79,27 +79,27 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 	@Override
 	public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
 		String odd    = ( String ) requestMap.get( "odd" );
-		String state    = ( String ) requestMap.get( "state" );
+		String state    =  requestMap.get( "state" ).toString();
 		String sh_id    = ( String ) requestMap.get( "sh_id" );
-		String beizhu    = ( String ) requestMap.get( "beizhu" );
+		String beizhu    = ( String ) requestMap.get( "biezhu" );
 		String rspSign    = ( String ) requestMap.get( "sign" );
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"secretkey/payAgentPrivateKey" ) );
 		String tempStr = odd+state+sh_id+beizhu+signMd5;
 		log.info( "新牛气冲天回调待签名字符串:" + requestMap );
 		String sign = DigestUtils.md5Hex( tempStr);
-		if ( ( rspSign ).equalsIgnoreCase( sign ) ) {
+		if (  rspSign .equalsIgnoreCase( sign ) ) {
 
-			MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( odd );
+			MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( beizhu );
 			if ( withdrawLog == null ) {
-				log.error( "提现相关记录丢失 - merOrderNo:{}", odd );
+				log.error( "提现相关记录丢失 - merOrderNo:{}", beizhu );
 				return "fail";
 			}
 			if ( withdrawLog.getStatus() == 6 ) {
-				log.error( "已有代付记录 - merOrderNo:{}", odd );
+				log.error( "已有代付记录 - merOrderNo:{}", beizhu );
 				return "true";
 			}
-			PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( odd );
+			PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( beizhu );
 			payAgentService.processOrderPay( withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals( state ) );
 			return "true";
 		}
