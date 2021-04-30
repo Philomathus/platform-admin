@@ -503,6 +503,10 @@ public class MemberInfoController extends BaseController {
         if (Objects.isNull(memberInfo.getBanSpeakTime())){
             return AjaxResult.success("禁言时间不能为空");
         }
+        //im禁言备注
+        if(StringUtils.isNotBlank(memberInfo.getEmail())){
+            memberInfoService.updateMemberInfo(memberInfo);
+        }
         memberInfoService.updataStatus(memberInfo);
         if(imApi.nospeakingT(memberInfo.getId(),memberInfo.getBanSpeakTime())){
             log.info("IM禁言成功");
