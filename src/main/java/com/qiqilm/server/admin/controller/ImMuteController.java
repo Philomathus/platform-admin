@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +96,9 @@ public class ImMuteController extends BaseController {
             MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(imMute.getUserId());
             if (memberInfo!=null) {
                 forbidItem.setNickName(memberInfo.getNickName());
+                if(StringUtils.isNotBlank(memberInfo.getEmail())) {
+                    forbidItem.setMuteRemark(memberInfo.getEmail());
+                }
             }
         }else {
             forbidItem.setNickName(imMute.getNickName());

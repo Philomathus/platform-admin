@@ -26,9 +26,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
             <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="ctime != null "> and ctime = #{ctime}</if>
-            <if test="indexs != null "> and indexs = #{indexs}</if>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="ctime != null and ctime != ''"> and ctime = #{ctime}</if>
+            <if test="indexs != null and indexs != ''"> and indexs = #{indexs}</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
             <if test="typeId != null  and typeId != ''"> and type_id = #{typeId}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->

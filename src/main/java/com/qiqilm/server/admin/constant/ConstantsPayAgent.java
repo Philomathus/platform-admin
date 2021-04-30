@@ -28,12 +28,8 @@ public abstract class ConstantsPayAgent {
 	public static final String FEI_YUE           = "feiYue";
 	// 商银代付
 	public static final String SHANG_YIN         = "shangYin";
-	public static final String TE_LUN_SU         = "teLunSu";
-	// 五六代付
-	public static final String WULIU         = "wuliu";
 	//熊猫代付
 	public static final String XIONG_MAO         = "xiongMao";
-
+	public static final String TE_LUN_SU         = "teLunSu";
 	public static final String XIN_NIU_QI_CHONG_TIAN = "xinNiuQiChongTian";
-
 }
