@@ -40,7 +40,7 @@ public class ImMuteController extends BaseController {
     /**
      * 查询腾讯IM禁言查询列表
      */
-    @PreAuthorize("@ss.hasPermi('live-web:ImMute:list')")
+    //@PreAuthorize("@ss.hasPermi('live-web:ImMute:list')")
     @GetMapping("/list")
     public AjaxResult list(ImMute imMute) {
         if (StringUtils.isEmpty(imMute.getUserId()) || StringUtils.isNotEmpty(imMute.getNickName())) {
