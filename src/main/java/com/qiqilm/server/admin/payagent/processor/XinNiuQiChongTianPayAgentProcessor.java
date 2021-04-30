@@ -12,6 +12,8 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -35,7 +37,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 		String Bankof= withdrawLog.getBankName().trim();
 		String money=withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString();
 		String remarks=withdrawLog.getOrderNo();
-		String sh_id=withdrawLog.getMemberId();
+		String sh_id=payAgentPlatform.getMerId();
 		String notifyURL=sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.XIN_NIU_QI_CHONG_TIAN ;
 		map.put( "name", name );
 		map.put( "Card", Card );
@@ -46,8 +48,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 		map.put( "notifyURL", notifyURL);
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"secretkey/payAgentPrivateKey" ) );
-		String passWord = RSACoder.decryptByPrivateKey( payAgentPlatform.getHeaderKey(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String passWord = payAgentPlatform.getHeaderKey();
 		String passWordMd5 = DigestUtils.md5Hex(passWord);
 		String tempStr =name+Card+Bankof+money+remarks+sh_id+notifyURL+signMd5+passWordMd5;
 		String sign = DigestUtils.md5Hex( tempStr);
@@ -59,13 +60,19 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 		httpHeaders.setContentType( MediaType.APPLICATION_JSON );
 		HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>( map, httpHeaders );
 
-		Map<String, Object> resultMap = null;
+		String result= null;
 		try {
-			resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
+			result = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, String.class );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		if (Strings.isNotBlank(result )) {
+			Map resultMap = JsonUtil.json2Map(result);
+			if (StringUtils.equals( "true", String.valueOf( resultMap.get( "result" ) ) )){
+				return true;
+			}
+		}
+		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( result ) );
 		return false;
 	}
 
