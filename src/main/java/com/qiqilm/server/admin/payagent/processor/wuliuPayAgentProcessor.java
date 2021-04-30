@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 
@@ -25,7 +26,7 @@ import java.util.*;
 public class wuliuPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
-        SortedMap<String, String> bodyMap = new TreeMap<>();
+        Map<String, Object> bodyMap = new LinkedHashMap<>();
         bodyMap.put("orderNo", withdrawLog.getOrderNo());
         bodyMap.put("timestamp", System.currentTimeMillis() + "");
         bodyMap.put("name", withdrawLog.getBankUserName().trim());
@@ -35,10 +36,10 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bankName", withdrawLog.getBankName().trim());
 
         String paramJson = JsonUtil.object2Json(bodyMap);
-        // 使用非对称加密加密此bodyMap
-        String encrypt = RSACoder.encryptByPublicKey(paramJson, payAgentPlatform.getSignPublicKey());
+        // RSA 2048 PKCS8 公钥加密
+        String encrypt = RSACoder.encryptByPublicKeyHex(paramJson, payAgentPlatform.getSignPublicKey());
 
-        Map<String, String> params = null;
+        Map<String, String> params = new HashMap<>();
         params.put("merchantNo", payAgentPlatform.getMerId());
         params.put("encrypt", encrypt);
 
@@ -80,11 +81,10 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
         String sign = requestMap.remove("sign").toString();
 
         SortedMap<String, Object> signMap = new TreeMap<>(requestMap);
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signData = JsonUtil.object2Json(signMap);
 
-        log.info(signMd5);
-        if (sign.equalsIgnoreCase(signMd5)) {
+        //RSA 2048 SHA256 公钥验签
+        if (RSACoder.verifySha256Rsa(signData,payAgentPlatform.getSignPublicKey(),sign)) {
             String state = signMap.getOrDefault("state", "").toString();
             String orderNo = signMap.getOrDefault("orderNo", "").toString();
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderNo);
@@ -114,15 +114,15 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
     public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
-        SortedMap<String, String> bodyMap = new TreeMap<>();
+        Map<String, Object> bodyMap = new LinkedHashMap<>();
         bodyMap.put("orderNo", withdrawLog.getOrderNo());
         bodyMap.put("timestamp", System.currentTimeMillis() + "");
 
         String paramJson = JsonUtil.object2Json(bodyMap);
-        // 使用非对称加密加密此bodyMap
-        String encrypt = RSACoder.encryptByPublicKey(paramJson, payAgentPlatform.getSignPublicKey());
+        // RSA 2048 PKCS8 公钥加密
+        String encrypt = RSACoder.encryptByPublicKeyHex(paramJson, payAgentPlatform.getSignPublicKey());
 
-        Map<String, String> params = null;
+        Map<String, String> params = new HashMap<>();
         params.put("merchantNo", payAgentPlatform.getMerId());
         params.put("encrypt", encrypt);
 
@@ -161,5 +161,45 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
             }
         }
         log.warn("代付订单查询失败 - result:{}", res);
+    }
+
+    public static void main(String[] args) {
+        Map<String, Object> bodyMap = new LinkedHashMap<>();
+        bodyMap.put("orderNo", "TX2021041718060950325");
+        bodyMap.put("timestamp", System.currentTimeMillis() + "");
+        bodyMap.put("name", "哈哈");
+        bodyMap.put("money", 100.00f);
+        bodyMap.put("bankNumber", "420516354686126448");
+        bodyMap.put("bankName", "建设银行");
+
+        String paramJson = JsonUtil.object2Json(bodyMap);
+        // 使用非对称加密加密此bodyMap
+        String encrypt = null;
+        try {
+            encrypt = RSACoder.encryptByPublicKeyHex(paramJson, "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAukQXwIckf6IBvXhdDr+BRwuANluQvJHYFzBfbY8PT0EwI3l6rt3Tq/kV0En/MHBjlUg8p2YHqFGD+OHV0TWsS837W6a0ITVaaVZrJNdW/HIl8W9WLY1FRCZnYLer5jW8uvYi1D3o3SrPZGTdH11hA/HGV+Bpu8KUHTsb3lxbz+zKVI2n0fhW3jmiMMY8eGqcnkPdzjiqexqHaJji/3fwtu9sAm9JYEbWOqPpn6G9s3zLQLgXXMiDN2CzE579A7LpQkmQREvezURNq/H7ffi7Qq2tecNQXhBf7O7HVOj3AxR7owr862rXuzRrPIknGFbXlqtsw4d7faBlwa9wG5mgyQIDAQAB");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("merchantNo", "SN20210428220244");
+        params.put("encrypt", encrypt);
+
+        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(params);
+        log.warn(JsonUtil.object2Json(requestMap));
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+
+        String res = null;
+        Map<String, String> resultMap = null;
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            res = restTemplate.postForObject("https://liufupay8.com/order/betWithoutCheck", httpEntity, String.class);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        log.warn("五六代付下单结果:" + JsonUtil.object2Json(resultMap));
     }
 }
