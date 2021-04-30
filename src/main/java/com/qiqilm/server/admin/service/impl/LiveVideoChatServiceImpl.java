@@ -151,7 +151,6 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 			MemberInfo update = new MemberInfo();
 			update.setId( pUserId );
 			update.setSpeak( "1");
-            update.setStatus(0);
 			memberInfoMapper.updateMemberInfo( update );
             // 退出登录
             memberCacheManager.delToken(pUserId);
@@ -164,7 +163,6 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 			MemberInfo update = new MemberInfo();
 			update.setId( pUserId );
 			update.setSpeak( "0" );
-            update.setStatus(1);
 			memberInfoMapper.updateMemberInfo( update );
 			memberForbidUtil.setPlatformUserSpeak( pUserId, false );
 		}

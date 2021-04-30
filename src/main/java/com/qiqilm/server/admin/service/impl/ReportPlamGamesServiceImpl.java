@@ -123,12 +123,25 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
     @Override
     public RspPlamGamesMonth countBet(ReportPlamGames reportPlamGames) throws ParseException{
         ReportPlamGames reportPlamGames1=getTime(reportPlamGames);
-        RspPlamGamesMonth rspPlamGamesMonth=reportPlamGamesMapper.countBetMonth(reportPlamGames1);
-        if (Objects.isNull(rspPlamGamesMonth)){
-            RspPlamGamesMonth rspPlamGamesMonth2=new RspPlamGamesMonth();
-            rspPlamGamesMonth2.setCountBetMoney(BigDecimal.ZERO);
-            return rspPlamGamesMonth2;
+        List<RspPlamGamesMonth> allList = reportPlamGamesMapper.selectReportPlamGamesListMonth(reportPlamGames1);
+        BigDecimal countBetMoney = BigDecimal.ZERO;
+        BigDecimal countPaiCai = BigDecimal.ZERO;
+        BigDecimal countGameProfit = BigDecimal.ZERO;
+        for (RspPlamGamesMonth rsplist:allList) {
+            if (rsplist.getGamecell()!=null) {
+                countBetMoney = countBetMoney.add(rsplist.getGamecell());
+            }
+            if (rsplist.getPaicai()!=null){
+                countPaiCai= countPaiCai.add(rsplist.getPaicai());
+            }
+           if (rsplist.getGameprofit()!=null){
+               countGameProfit=  countGameProfit.add(rsplist.getGameprofit());
+           }
         }
+        RspPlamGamesMonth rspPlamGamesMonth=new RspPlamGamesMonth();
+        rspPlamGamesMonth.setCountBetMoney(countBetMoney);
+        rspPlamGamesMonth.setCountPaiCai(countPaiCai);
+        rspPlamGamesMonth.setCountGameProfit(countGameProfit);
         return rspPlamGamesMonth;
     }
 
