@@ -195,7 +195,7 @@ public class MemberInfo extends BaseEntity {
     @Excel(name = "设备ID")
     private String deviceId;
     @Excel(name = "im禁言时间")
-    private int banSpeakTime;
+    private Long banSpeakTime;
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

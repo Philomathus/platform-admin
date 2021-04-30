@@ -46,6 +46,9 @@ public class BankCardAddressTask {
 		log.warn( "开始执行银行归属地查询" );
 		List<MemberCard> listMemberCard = memberCardService.getBankCardInfo();
 		String           apiUrl         = sysConfigCacheUtil.getConf( "bank_address_ip_url" );
+		if (Strings.isBlank(apiUrl)){
+			return;
+		}
 		for ( MemberCard m : listMemberCard ) {
 			String bankAccount = m.getBankAccount();
 			String bankAddress = getRealBankAddress( bankAccount, apiUrl );
