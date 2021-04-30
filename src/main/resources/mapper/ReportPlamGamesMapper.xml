@@ -46,7 +46,11 @@
     </select>
 
     <select id="selectReportPlamGamesListMonth"  resultType="com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth">
-        select gameplame,SUM(plampfit)  as yingli  from report_plam_games
+        select gameplame,
+        SUM(gamecell) as gamecell,
+        SUM(gamecell) - SUM(plampfit)  as paicai,
+        SUM(plampfit) as gameprofit
+        from report_plam_games
         <where>
             <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
             <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
@@ -58,10 +62,13 @@
         </where>
         GROUP BY gameplame
         UNION all
-        select '送礼金额' as liveprop,SUM(ticket) from ${dbLive}.live_host_wage_day
+        select '送礼金额' as liveprop,
+        '0'  as gamecell,
+        '0' as paicai,
+        SUM(ticket) from ${dbLive}.live_host_wage_day
         where id like concat(#{dateTime}, '%') and ticket is not NULL
         UNION all
-        select '坐骑金额' as liveprop,SUM(total_diamonds) from ${dbLive}.live_video_prop  where p_user_id not in
+        select '坐骑金额' as liveprop,'0'  as gamecell,'0' as paicai,SUM(total_diamonds)from ${dbLive}.live_video_prop  where p_user_id not in
         (select id from member_info
         <where>
             AND STATUS  in ('2'))

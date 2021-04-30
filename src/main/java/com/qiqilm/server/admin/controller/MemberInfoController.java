@@ -164,7 +164,7 @@ public class MemberInfoController extends BaseController {
     @PutMapping("/changeSpeak")
     public AjaxResult changeSpeak(@RequestBody MemberInfo memberInfo) {
         //备注禁言原因
-        if (StringUtils.isNotBlank(memberInfo.getRemark())) {
+        if (memberInfo.getRemark() != null) {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
             String username = loginUser.getUser().getUserName();
             memberInfo.setEmail("禁言操作人" + username + ";禁言原因:" + memberInfo.getRemark());
@@ -201,7 +201,7 @@ public class MemberInfoController extends BaseController {
         newMemberInfo.setStatus(req.getStatus());
         memberForbidUtil.setPlatformUserStatus(memberInfo.getId(),req.getStatus());
         //备注禁用原因
-        if (StringUtils.isNotBlank(req.getRemark())) {
+        if (req.getRemark() != null) {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
             String username = loginUser.getUser().getUserName();
             newMemberInfo.setEmail("禁用操作人" + username + ";禁用原因:" + req.getRemark());
