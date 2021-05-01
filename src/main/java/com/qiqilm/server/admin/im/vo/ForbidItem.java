@@ -19,4 +19,6 @@ public class ForbidItem {
 
     private String shutTamp;
 
+    private String muteRemark;
+
 }

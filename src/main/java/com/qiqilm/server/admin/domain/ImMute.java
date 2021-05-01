@@ -18,6 +18,7 @@ public class ImMute{
     private String userId;
     private String nickName;
     private String hostNickName;
+    private String muteRemark;
 
     @Override
     public String toString() {
