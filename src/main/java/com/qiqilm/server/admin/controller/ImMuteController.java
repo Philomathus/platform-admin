@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class ImMuteController extends BaseController {
     /**
      * 查询腾讯IM禁言查询列表
      */
-    @PreAuthorize("@ss.hasPermi('live-web:ImMute:list')")
+    //@PreAuthorize("@ss.hasPermi('live-web:ImMute:list')")
     @GetMapping("/list")
     public AjaxResult list(ImMute imMute) {
         if (StringUtils.isEmpty(imMute.getUserId()) || StringUtils.isNotEmpty(imMute.getNickName())) {
@@ -79,11 +80,15 @@ public class ImMuteController extends BaseController {
             ForbidItem forbidItem = new ForbidItem();
         if (userShutted==null) {
             forbidItem.setShuttedUnitl("-1");
+            forbidItem.setShutTamp("-1");
         }else {
             if (userShutted.getGroupmsgNospeakingTime()==0) {
                 forbidItem.setShuttedUnitl("0");
+                forbidItem.setShutTamp("0");
             }else {
                 forbidItem.setShuttedUnitl(System.currentTimeMillis()/1000 + userShutted.getGroupmsgNospeakingTime()+"");
+                forbidItem.setShutTamp(userShutted.getGroupmsgNospeakingTime().toString());
+
             }
         }
             forbidItem.setAccount(imMute.getUserId());
@@ -91,6 +96,9 @@ public class ImMuteController extends BaseController {
             MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(imMute.getUserId());
             if (memberInfo!=null) {
                 forbidItem.setNickName(memberInfo.getNickName());
+                if(StringUtils.isNotBlank(memberInfo.getEmail())) {
+                    forbidItem.setMuteRemark(memberInfo.getEmail());
+                }
             }
         }else {
             forbidItem.setNickName(imMute.getNickName());

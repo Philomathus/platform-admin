@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import java.util.List;
 import java.util.Objects;
 
+import com.qiqilm.server.admin.cache.GameCacheManager;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.mapper.ConfigVipMapper;
@@ -26,6 +27,9 @@ public class ConfigVipServiceImpl implements IConfigVipService {
     private ConfigVipMapper configVipMapper;
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private GameCacheManager gameCacheManager;
     /**
      * 查询【请填写功能名称】
      *
@@ -84,6 +88,7 @@ public class ConfigVipServiceImpl implements IConfigVipService {
         configVip.setUpdateTime(DateUtils.getNowDate());
         configVip.setOpName(userName);
         configVipMapper.updateConfigVip(configVip);
+        gameCacheManager.initVip();
         return AjaxResult.success("编辑成功");
     }
 
