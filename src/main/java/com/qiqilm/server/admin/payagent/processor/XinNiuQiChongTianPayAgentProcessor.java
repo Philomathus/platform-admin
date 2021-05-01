@@ -126,7 +126,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"secretkey/payAgentPrivateKey" ) );
 		String tempStr = payAgentLog.getPayAgentOrderNo() + payAgentPlatform.getMerId() + signMd5;
-		String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
+		String sign    = DigestUtils.md5Hex( tempStr );
 		dataMap.put( "sign", sign );
 
 		HttpHeaders httpHeaders = new HttpHeaders();
