@@ -7,29 +7,33 @@ package com.qiqilm.server.admin.constant;
  */
 public abstract class ConstantsPayAgent {
 	// 亨鑫代付
-	public static final String HENG_XIN          = "hengXin";
+	public static final String HENG_XIN              = "hengXin";
 	// 顺为代付
-	public static final String SHUN_WEI          = "shunWei";
+	public static final String SHUN_WEI              = "shunWei";
 	// 顺为代付
-	public static final String SHUN_WEI2         = "shunWei2";
+	public static final String SHUN_WEI2             = "shunWei2";
 	// 天天代付
-	public static final String TIAN_TIAN         = "tianTian";
+	public static final String TIAN_TIAN             = "tianTian";
 	// 咪咪代付
-	public static final String MIMI              = "mimi";
+	public static final String MIMI                  = "mimi";
 	// 小飞代付
-	public static final String XIAO_FEI          = "xiaoFei";
+	public static final String XIAO_FEI              = "xiaoFei";
 	// 联付宝
-	public static final String LIAN_FU_BAO       = "lianFuBao";
+	public static final String LIAN_FU_BAO           = "lianFuBao";
 	// 牛气冲天
-	public static final String NIU_QI_CHONG_TIAN = "niuQiChongTian";
+	public static final String NIU_QI_CHONG_TIAN     = "niuQiChongTian";
 	// 华子代付
-	public static final String HUA_ZI            = "huaZi";
+	public static final String HUA_ZI                = "huaZi";
 	// 飞越代付
-	public static final String FEI_YUE           = "feiYue";
+	public static final String FEI_YUE               = "feiYue";
 	// 商银代付
-	public static final String SHANG_YIN         = "shangYin";
-	//熊猫代付
-	public static final String XIONG_MAO         = "xiongMao";
-	public static final String TE_LUN_SU         = "teLunSu";
+	public static final String SHANG_YIN             = "shangYin";
+	// 熊猫代付
+	public static final String XIONG_MAO             = "xiongMao";
+	// 特仑苏代付
+	public static final String TE_LUN_SU             = "teLunSu";
+	// 新牛气冲天
 	public static final String XIN_NIU_QI_CHONG_TIAN = "xinNiuQiChongTian";
+	// 五六代付
+	public static final String WULIU                 = "wuliu";
 }
