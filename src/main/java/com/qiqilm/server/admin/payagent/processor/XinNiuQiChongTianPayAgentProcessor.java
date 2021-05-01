@@ -69,8 +69,10 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		if ( Strings.isNotBlank( result ) ) {
 			Map resultMap = JsonUtil.json2Map( result );
 			if ( StringUtils.equals( "true", String.valueOf( resultMap.get( "result" ) ) ) ) {
+				withdrawLog.setPayAgentOrderNo( resultMap.getOrDefault( "odd", "" ).toString() );
 				return true;
 			}
+			reqPayAgent.setFailReason( resultMap.getOrDefault( "ims", "" ).toString() );
 		}
 		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( result ) );
 		return false;
@@ -115,12 +117,12 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 
 	@Override
 	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-		MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-		PayAgentPlatform    payAgentPlatform =
+		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+		PayAgentPlatform payAgentPlatform =
 				payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-		Map<String, Object> dataMap          = new TreeMap<>();
+		Map<String, Object> dataMap = new TreeMap<>();
 		dataMap.put( "mchid", payAgentPlatform.getMerId() );
-		dataMap.put( "odd", withdrawLog.getOrderNo() );
+		dataMap.put( "odd", payAgentLog.getPayAgentOrderNo() );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"secretkey/payAgentPrivateKey" ) );
