@@ -23,7 +23,6 @@ import org.springframework.util.CollectionUtils;
 import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 @Repository( value = ConstantsPayAgent.XIN_NIU_QI_CHONG_TIAN + "PayAgentProcessor" )
 @Log4j2
@@ -120,19 +119,19 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
 		PayAgentPlatform payAgentPlatform =
 				payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-		Map<String, Object> dataMap = new TreeMap<>();
-		dataMap.put( "mchid", payAgentPlatform.getMerId() );
+		Map<String, String> dataMap = new LinkedHashMap<>();
 		dataMap.put( "odd", payAgentLog.getPayAgentOrderNo() );
+		dataMap.put( "mchid", payAgentPlatform.getMerId() );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"secretkey/payAgentPrivateKey" ) );
-		String tempStr = withdrawLog.getOrderNo() + withdrawLog.getOrderNo() + signMd5;
+		String tempStr = payAgentLog.getPayAgentOrderNo() + payAgentPlatform.getMerId() + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
 		dataMap.put( "sign", sign );
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType( MediaType.APPLICATION_JSON );
-		HttpEntity<Map<String, String>> httpEntity = new HttpEntity( dataMap, httpHeaders );
+		HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>( dataMap, httpHeaders );
 
 		String result = null;
 		try {
