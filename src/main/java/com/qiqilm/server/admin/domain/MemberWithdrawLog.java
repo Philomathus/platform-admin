@@ -141,6 +141,9 @@ public class MemberWithdrawLog extends BaseEntity {
     @JsonIgnore
     private String endTime;
 
+    @JsonIgnore
+    private String payAgentOrderNo;
+
     public String getStatusDes() {
         if (status != null) {
             switch (status) {
