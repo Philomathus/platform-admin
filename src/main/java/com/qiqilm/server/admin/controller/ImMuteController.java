@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class ImMuteController extends BaseController {
     /**
      * 查询腾讯IM禁言查询列表
      */
-    @PreAuthorize("@ss.hasPermi('live-web:ImMute:list')")
+    //@PreAuthorize("@ss.hasPermi('live-web:ImMute:list')")
     @GetMapping("/list")
     public AjaxResult list(ImMute imMute) {
         if (StringUtils.isEmpty(imMute.getUserId()) || StringUtils.isNotEmpty(imMute.getNickName())) {
@@ -95,6 +96,9 @@ public class ImMuteController extends BaseController {
             MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(imMute.getUserId());
             if (memberInfo!=null) {
                 forbidItem.setNickName(memberInfo.getNickName());
+                if(StringUtils.isNotBlank(memberInfo.getEmail())) {
+                    forbidItem.setMuteRemark(memberInfo.getEmail());
+                }
             }
         }else {
             forbidItem.setNickName(imMute.getNickName());
