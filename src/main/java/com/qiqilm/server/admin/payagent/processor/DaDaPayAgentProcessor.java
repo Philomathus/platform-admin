@@ -93,11 +93,11 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
             }
             if (withdrawLog.getStatus() == 6) {
                 log.error("已有代付记录 - merOrderNo:{}", order_num);
-                return "ok";
+                return "SUCCESS";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(order_num);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "3".equals(remit_result));
-            return "ok";
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(remit_result));
+            return "SUCCESS";
         }
         return "fail";
     }
