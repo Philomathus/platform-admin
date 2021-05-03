@@ -33,8 +33,6 @@ public interface LogMoneyMapper {
 	 */
 	public int insertLogMoney( @Param( "req" ) LogMoney reqLogMoney, @Param( "dbNodes" ) String dbNodes );
 
-	public int insertLogMoney( @Param( "req" ) LogMoney reqLogMoney );
-
 	public int insertLogMoneyPop( @Param( "req" ) LogMoneyLive reqLogMoney, @Param( "dbNodes" ) String dbNodes );
 
 	Integer findExist( @Param( "dbNodes" ) String dbNodes, @Param( "keyId" ) String id );
