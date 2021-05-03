@@ -277,6 +277,12 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		if ( memberRechargeLog == null ) {
 			return AjaxResult.error( "订单不存在" );
 		}
+		if ( !redisUtil.lock( EnumLock.member, memberRechargeLog.getMemberId(), "1", 5 ) ) {
+			return AjaxResult.error( "请勿重复提交" );
+		}
+		if(memberRechargeLog.getStatus()==3){
+			return AjaxResult.error( "该订单已审核通过,请刷新页面" );
+		}
 
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
