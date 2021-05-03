@@ -70,4 +70,6 @@ public interface IMemberInfoService {
 
     void updateVip(String memberId, Integer vip, String nickName);
 	void updataStatus(MemberInfo memberInfo);
+
+    AjaxResult updateInviterCode(String inviterCode,  String memberId);
 }

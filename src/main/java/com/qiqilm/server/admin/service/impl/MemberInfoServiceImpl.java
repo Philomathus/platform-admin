@@ -339,6 +339,12 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     public void updateVip(String memberId, Integer vip, String nickName) {
         memberBcodeMapper.updateVip(memberId,vip,nickName);
     }
+
+    @Override
+    public AjaxResult updateInviterCode(String inviterCode, String memberId) {
+        memberInfoMapper.updateInviterCode(memberId,inviterCode);
+        return AjaxResult.success("修改成功");
+    }
     @Override
     public void updataStatus(MemberInfo memberInfo) {
         if (memberInfo.getBanSpeakTime()==0){
