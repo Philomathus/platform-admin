@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.domain.ServerLive;
 import com.qiqilm.server.admin.domain.vo.HostPropDayVo;
 import com.qiqilm.server.admin.im.ImApi;
+import com.qiqilm.server.admin.im.MessageEnum;
 import com.qiqilm.server.admin.im.MessageType;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
@@ -125,7 +126,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			ext.put( "type", 17 );
 			ext.put( "room_id", id );
 			ext.put( "desc", "违规直播，立即关闭直播" );
-			MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
+			MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
 			try {
 				imApi.sendMessage( serverImCacheUtil.getValue( "tim_identifier" ), video.getUserId().toString(), message );
 			} catch ( Exception e ) {
@@ -139,7 +140,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			ext.put( "type", 17 );
 			ext.put( "room_id", id );
 			ext.put( "desc", "违规直播，立即关闭直播" );
-			MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
+			MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
 			try {
 				imApi.sendMessage( serverImCacheUtil.getValue( "tim_identifier" ), video.getUserId().toString(), message );
 			} catch ( Exception e ) {
@@ -154,7 +155,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			ext.put( "type", 17 );
 			ext.put( "room_id", id );
 			ext.put( "desc", "直播源切换，立即关闭直播" );
-			MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
+			MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
 			try {
 				imApi.sendMessage( serverImCacheUtil.getValue( "tim_identifier" ), video.getUserId().toString(), message );
 			} catch ( Exception e ) {
@@ -263,7 +264,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				ext.put( "fonts_color", "" ); //字体颜色
 				ext.put( "desc", why );  //弹幕消息;
 				ext.put( "desc2", "直播结束" );  //弹幕消息;
-				MessageType message = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
+				MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
 
 				ext = new HashMap<>();
 				ext.put( "type", 18 ); //18：直播结 束（全体推送的，用于更新用户列表状态）
@@ -332,8 +333,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			ext.put( "type", live_pay_type == 0 ? 32 : 40 );
 			ext.put( "room_id", room_id );
 			ext.put( "live_fee", live_fee );
+			MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
 			imApi.sendGroupMessage( video.getGroupId(), room_id.toString(),
-					MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) ) );
+					message);
 			return msg;
 		}
 		throw new RuntimeException( "切换失败" );
