@@ -54,7 +54,7 @@ public class LogServiceImpl implements ILogService {
 		logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
 		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
 				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
-			logMoneyMapper.insertLogMoney( log );
+			logMoneyMapper.insertLogMoney( log, "" );
 		}
 	}
 
@@ -90,7 +90,7 @@ public class LogServiceImpl implements ILogService {
 		logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
 		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
 				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
-			logMoneyMapper.insertLogMoney( log );
+			logMoneyMapper.insertLogMoney( log, "" );
 		}
 	}
 
@@ -117,7 +117,7 @@ public class LogServiceImpl implements ILogService {
 		logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
 		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
 				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
-			logMoneyMapper.insertLogMoney( log );
+			logMoneyMapper.insertLogMoney( log, "" );
 		}
 	}
 
