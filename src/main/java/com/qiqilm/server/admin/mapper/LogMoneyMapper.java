@@ -28,19 +28,21 @@ public interface LogMoneyMapper {
 
 	/**
 	 * 新增会员资金信息
+	 *
 	 * @return 结果
 	 */
-	public int insertLogMoney( @Param("req") LogMoney reqLogMoney, @Param( "dbNodes" ) String dbNodes);
+	public int insertLogMoney( @Param( "req" ) LogMoney reqLogMoney, @Param( "dbNodes" ) String dbNodes );
 
+	public int insertLogMoney( @Param( "req" ) LogMoney reqLogMoney );
 
-	public int insertLogMoneyPop(@Param("req") LogMoneyLive reqLogMoney, @Param( "dbNodes" ) String dbNodes);
+	public int insertLogMoneyPop( @Param( "req" ) LogMoneyLive reqLogMoney, @Param( "dbNodes" ) String dbNodes );
 
-	Integer findExist(@Param( "dbNodes" ) String dbNodes,@Param("keyId") String id);
+	Integer findExist( @Param( "dbNodes" ) String dbNodes, @Param( "keyId" ) String id );
 
 	List<LogMoney> findMark( @Param( "userId" ) String userId, @Param( "mark" ) String mark,
 							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay,
 							 @Param( "dbNodes" ) String dbNodes );
 
-    Map totalCount(LogMoney logMoney);
+	Map totalCount( LogMoney logMoney );
 
 }

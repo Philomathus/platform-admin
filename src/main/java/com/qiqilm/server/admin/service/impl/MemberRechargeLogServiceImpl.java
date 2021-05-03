@@ -123,6 +123,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	}
 
 	@Override
+	@Transactional( rollbackFor = Exception.class )
 	public AjaxResult finalAudit( ReqMemberRechargeLog req ) {
 		MemberRechargeLog memberRechargeLog = this.selectMemberRechargeLogById( req.getId() );
 		if ( memberRechargeLog == null ) {
@@ -147,7 +148,6 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 			redisUtil.unLock( EnumLock.member, memberRechargeLog.getMemberId() );
 		}
 	}
-
 
 	@Transactional( rollbackFor = Exception.class )
 	public boolean finalAudit( ReqMemberRechargeLog req, String userName, String mark ) {
@@ -203,8 +203,6 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		}catch (Exception e){
 			log.error("首充报错",e);
 		}
-
-
 
 		//更新用户账户余额
 		return this.updateMemberCharge( memberInfo.getId(), add, "线下存款" );
