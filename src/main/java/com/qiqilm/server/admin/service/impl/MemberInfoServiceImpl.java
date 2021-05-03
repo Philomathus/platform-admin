@@ -316,13 +316,22 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public AjaxResult changeBank(MemberCard member) {
         String id = member.getId();
-        MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
-        memberCard.setRealName(member.getRealName());
-        memberCard.setBankName(member.getBankName());
-        memberCard.setBankAddress(member.getBankAddress());
-        memberCard.setBankAccount(member.getBankAccount());
-        memberCardMapper.updateMemberCard(memberCard);
-        return AjaxResult.success("修改银行卡信息成功");
+        //判断用户是否已经绑定该银行卡
+        MemberCard memberCard1 = new MemberCard();
+        memberCard1.setBankAccount(member.getBankAccount());
+        memberCard1.setMemberId(member.getMemberId());
+        List<MemberCard> memberCards = memberCardMapper.selectMemberCardList(memberCard1);
+        if (memberCards.isEmpty()) {
+            MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
+            memberCard.setRealName(member.getRealName());
+            memberCard.setBankName(member.getBankName());
+            memberCard.setBankAddress(member.getBankAddress());
+            memberCard.setBankAccount(member.getBankAccount());
+            memberCardMapper.updateMemberCard(memberCard);
+            return AjaxResult.success("修改银行卡信息成功");
+        }else {
+            return AjaxResult.error("用户已绑定该银行卡");
+        }
     }
 
     @Override
@@ -338,6 +347,12 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public void updateVip(String memberId, Integer vip, String nickName) {
         memberBcodeMapper.updateVip(memberId,vip,nickName);
+    }
+
+    @Override
+    public AjaxResult updateInviterCode(String inviterCode, String memberId) {
+        memberInfoMapper.updateInviterCode(memberId,inviterCode);
+        return AjaxResult.success("修改成功");
     }
     @Override
     public void updataStatus(MemberInfo memberInfo) {
