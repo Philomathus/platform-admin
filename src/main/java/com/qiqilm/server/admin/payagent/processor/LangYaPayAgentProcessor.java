@@ -38,8 +38,8 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
 		List list=new ArrayList();
 		Map mapList=new LinkedHashMap();
 		mapList.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
-		mapList.put( "accountname ", withdrawLog.getBankUserName().trim() );
-		mapList.put( "bankname ",withdrawLog.getBankName().trim());
+		mapList.put( "accountname", withdrawLog.getBankUserName().trim() );
+		mapList.put( "bankname",withdrawLog.getBankName().trim());
 		mapList.put( "cardnumber", withdrawLog.getBankAccount().trim() );
 		mapList.put( "subbranch","" );
 		mapList.put( "province", "");

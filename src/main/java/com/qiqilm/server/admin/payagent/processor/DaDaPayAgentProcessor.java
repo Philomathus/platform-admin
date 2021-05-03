@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.math.RoundingMode;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -32,13 +33,13 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> dataMap = new TreeMap<>();
         dataMap.put("store_id", payAgentPlatform.getMerId());
         dataMap.put("order_no", withdrawLog.getOrderNo());
-        dataMap.put("money", withdrawLog.getWithdrawMoney());
+        dataMap.put("money", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
         dataMap.put("pay_type", "MANUAL_BANK");
         dataMap.put("secret_type", "md5_secret");
         dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DA_DA);
-        dataMap.put("bank_name ", withdrawLog.getBankName());
+        dataMap.put("bank_name", withdrawLog.getBankName());
         dataMap.put("bank_no", withdrawLog.getBankAccount().trim());
-        dataMap.put("bank_user_name ", withdrawLog.getBankUserName().trim());
+        dataMap.put("bank_user_name", withdrawLog.getBankUserName().trim());
 
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
