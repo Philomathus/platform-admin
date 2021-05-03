@@ -88,6 +88,7 @@ public class HelpNoticeUtil implements Serializable {
 
             try {
                 imApi.sendGroupMessage( groupId, "admin", messageType );
+                log.warn("小助手消息发送成功"+groupId, JsonUtil.object2Json( ext ));
             }catch (Exception e){
                 log.error("小助手发消息失败",e);
             }

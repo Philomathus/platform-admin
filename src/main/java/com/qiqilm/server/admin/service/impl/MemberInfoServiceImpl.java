@@ -358,4 +358,17 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         memberInfoMapper.updateInviterCode(memberId,inviterCode);
         return AjaxResult.success("修改成功");
     }
+    @Override
+    public void updataStatus(MemberInfo memberInfo) {
+        if (memberInfo.getBanSpeakTime()==0){
+            memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), false );
+            memberInfo.setSpeak("0");
+            memberInfoMapper.updateMemberInfo(memberInfo);
+        }
+        if (memberInfo.getBanSpeakTime()>0){
+            memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), true );
+            memberInfo.setSpeak("1");
+            memberInfoMapper.updateMemberInfo(memberInfo);
+        }
+    }
 }

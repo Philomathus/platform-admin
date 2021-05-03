@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -498,17 +499,17 @@ public class MemberInfoController extends BaseController {
     @ApiOperation(value = "禁言用户IM", notes = "禁言用户IM")
     @PostMapping("/imDealBan")
     public Object imDealBan( MemberInfo memberInfo) {
-        RspBase rspBase = new RspBase();
-       if(imApi.nospeakingT(memberInfo.getId(),7200)){
-           log.info("禁言成功");
-           rspBase.setData("成功");
-       }else{
-           log.error("禁言失败");
-           rspBase.setData("失败");
-           rspBase.setCode(502);
-       }
-
-       return rspBase;
+        if (Objects.isNull(memberInfo.getBanSpeakTime())){
+            return AjaxResult.success("禁言时间不能为空");
+        }
+        memberInfoService.updataStatus(memberInfo);
+        if(imApi.nospeakingT(memberInfo.getId(),memberInfo.getBanSpeakTime())){
+            log.info("IM禁言成功");
+            return AjaxResult.success("IM禁言成功");
+        }else{
+            log.error("IM禁言失败");
+            return AjaxResult.success("IM禁言失败");
+        }
     }
 
 }
