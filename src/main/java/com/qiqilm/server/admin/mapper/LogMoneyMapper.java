@@ -24,6 +24,8 @@ public interface LogMoneyMapper {
 	 */
 	public List<LogMoney> selectLogMoneyList( LogMoney logMoney );
 
+	public List<LogMoney> selectLogMoneyFirstList( LogMoney logMoney );
+
 	public List<LogMoney> selectLogMoneySingleList( LogMoney logMoney );
 
 	/**
@@ -42,5 +44,4 @@ public interface LogMoneyMapper {
 							 @Param( "dbNodes" ) String dbNodes );
 
 	Map totalCount( LogMoney logMoney );
-
 }

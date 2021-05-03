@@ -56,6 +56,25 @@
 		</where>
 	</select>
 
+	<select id="selectLogMoneyFirstList" parameterType="LogMoney" resultMap="LogMoneyResult">
+		select id,
+		user_id,
+		user_name,
+		type,
+		des,
+		income,
+		pay,
+		total,
+		create_time,
+		total_before,
+		mark,
+		markorder
+		from ${dbMain}.log_money a
+		<where>
+			<include refid="whereSelect" />
+		</where>
+	</select>
+
 	<select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
 		select * from (
 			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money0
