@@ -610,4 +610,9 @@
     <select id="countByPhone" resultType="int">
         select count(0) from member_info where phone = #{pone}
     </select>
+    <update id="updateInviterCode">
+        		update member_info
+		set inviter_code = #{inviterCode}
+		where id = #{memberId}
+    </update>
 </mapper>
