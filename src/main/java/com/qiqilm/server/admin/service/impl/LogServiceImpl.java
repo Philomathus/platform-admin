@@ -7,10 +7,8 @@ import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.LogMoneyMapper;
 import com.qiqilm.server.admin.mapper.MemberActionLogsMapper;
 import com.qiqilm.server.admin.service.ILogService;
-import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UserDataUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -53,7 +51,11 @@ public class LogServiceImpl implements ILogService {
 		log.setDes( enumTrans.getDes() );
 		log.setMark( mark );
 		log.setMarkorder( markorder );
-		logMoneyMapper.insertLogMoney( log ,log.getUserId().substring(log.getUserId().length()-1));
+		logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
+				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
+			logMoneyMapper.insertLogMoney( log );
+		}
 	}
 
 	//备注行为enumTrans 现在金额totalNow   变动金额change  游戏agent  订单备注 name    变动订单号orderId
@@ -85,7 +87,11 @@ public class LogServiceImpl implements ILogService {
 		log.setDes( enumTrans.getDes() );
 		log.setMark( name );
 		log.setMarkorder( orderId );
-		logMoneyMapper.insertLogMoney( log ,log.getUserId().substring(log.getUserId().length()-1));
+		logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
+				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
+			logMoneyMapper.insertLogMoney( log );
+		}
 	}
 
 	@Override
@@ -108,11 +114,16 @@ public class LogServiceImpl implements ILogService {
 		log.setTotalBefore( old );
 		log.setMark( mark );
 		log.setMarkorder( markorder );
-		logMoneyMapper.insertLogMoney( log ,log.getUserId().substring(log.getUserId().length()-1));
+		logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
+				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
+			logMoneyMapper.insertLogMoney( log );
+		}
 	}
 
 	@Override
-	public void logMemberAction( HttpServletRequest request, String userid, String username, EnumAction enumAction, String params1, String params2,
+	public void logMemberAction( HttpServletRequest request, String userid, String username, EnumAction enumAction,
+								 String params1, String params2,
 								 String params3, String params4 ) {
 		MemberActionLogs log = new MemberActionLogs();
 		log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
