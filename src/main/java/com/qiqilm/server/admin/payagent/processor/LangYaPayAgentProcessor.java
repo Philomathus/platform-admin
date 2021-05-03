@@ -37,17 +37,17 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
 //		}
 		List list=new ArrayList();
 		Map mapList=new LinkedHashMap();
-		mapList.put("out_trade_no", withdrawLog.getOrderNo() );
-		mapList.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
+		mapList.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
 		mapList.put( "accountname ", withdrawLog.getBankUserName().trim() );
-		mapList.put( "bankname ",withdrawLog.getBankName());
+		mapList.put( "bankname ",withdrawLog.getBankName().trim());
 		mapList.put( "cardnumber", withdrawLog.getBankAccount().trim() );
 		mapList.put( "subbranch","" );
 		mapList.put( "province", "");
 		mapList.put( "city", "");
 		mapList.put( "mobile", "" );
+		mapList.put("out_trade_no", withdrawLog.getOrderNo() );
 		mapList.put( "attach","fc" );
-		mapList.put( "extends","ff" );
+		mapList.put( "extends","fc" );
 		list.add(mapList);
 		Map<String, Object> dataMap = new TreeMap<>();
 		dataMap.put( "mchid", payAgentPlatform.getMerId() );
@@ -70,7 +70,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity( requestMap, httpHeaders );
 		Map<String, Object> resultMap = null;
 		try {
-			resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
+				resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
