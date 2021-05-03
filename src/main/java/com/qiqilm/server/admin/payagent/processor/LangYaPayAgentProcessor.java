@@ -5,6 +5,8 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
+import com.qiqilm.server.admin.enums.BankCodeLangYaType;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -28,19 +30,24 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
 	@Override
 	public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
 		withdrawLog.setBankCode( "unionpay" );
+//		BankCodeLangYaType bankCodeType = BankCodeLangYaType.getCodeByDesc( withdrawLog.getBankName() );
+//		if ( bankCodeType == null ) {
+//			log.warn( "此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
+//			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
+//		}
 		List list=new ArrayList();
 		Map mapList=new LinkedHashMap();
-		mapList.put("out_trade_no", withdrawLog.getOrderNo() );
-		mapList.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
+		mapList.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
 		mapList.put( "accountname ", withdrawLog.getBankUserName().trim() );
-		mapList.put( "bankname ", withdrawLog.getBankName() );
+		mapList.put( "bankname ",withdrawLog.getBankName().trim());
 		mapList.put( "cardnumber", withdrawLog.getBankAccount().trim() );
 		mapList.put( "subbranch","" );
 		mapList.put( "province", "");
 		mapList.put( "city", "");
 		mapList.put( "mobile", "" );
-		mapList.put( "attach","" );
-		mapList.put( "extends","rrr" );
+		mapList.put("out_trade_no", withdrawLog.getOrderNo() );
+		mapList.put( "attach","fc" );
+		mapList.put( "extends","fc" );
 		list.add(mapList);
 		Map<String, Object> dataMap = new TreeMap<>();
 		dataMap.put( "mchid", payAgentPlatform.getMerId() );
@@ -53,6 +60,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
 		String tempStr = this.assemblyUrl( dataMap ) +"&key="+signMd5;
 		String sign = DigestUtils.md5Hex( tempStr).toUpperCase();
 		dataMap.put( "sign", sign );
+		System.out.println("请求参数:"+dataMap);
 
 		MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
 		requestMap.setAll( dataMap );
@@ -62,7 +70,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity( requestMap, httpHeaders );
 		Map<String, Object> resultMap = null;
 		try {
-			resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
+				resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
