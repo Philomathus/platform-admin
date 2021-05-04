@@ -213,7 +213,7 @@ public class ImApiImpl implements ImApi {
 		final SendOne sendOne = new SendOne();
 		sendOne.setFrom_Account( sendId );
 		sendOne.setTo_Account( receiverId );
-		final List<ObjectNode> list = Stream.of( msg ).map( MessageType.TIMTextElem::ofNode ).collect( Collectors.toList() );
+		final List<ObjectNode> list = Stream.of( msg ).map( MessageType.setMsgEnmu(MessageEnum.TIMCustomElem)::ofNode ).collect( Collectors.toList() );
 		sendOne.setMsgBody( list );
 		return doPost( sendOne, MessageRsp.class, 1 );
 	}

@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.utils;
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.im.ImApi;
+import com.qiqilm.server.admin.im.MessageEnum;
 import com.qiqilm.server.admin.im.MessageType;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import lombok.extern.log4j.Log4j2;
@@ -52,7 +53,8 @@ public class HelpNoticeUtil implements Serializable {
         info.put("guardType","2");
         ext.put( "sender", info );
 
-        MessageType messageType = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
+        MessageType messageType = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
+
         for(String groupId:liveVideoService.selectOnlineLiveGroups()){
             try {
                 imApi.sendGroupMessage( groupId, "admin", messageType );
@@ -84,9 +86,10 @@ public class HelpNoticeUtil implements Serializable {
         info.put("guardType","2");
         ext.put( "sender", info );
 
-        MessageType messageType = MessageType.TIMCustomElem.setData( JsonUtil.object2Json( ext ) );
+        MessageType messageType = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
 
-            try {
+
+        try {
                 imApi.sendGroupMessage( groupId, "admin", messageType );
                 log.warn("小助手消息发送成功"+groupId, JsonUtil.object2Json( ext ));
             }catch (Exception e){

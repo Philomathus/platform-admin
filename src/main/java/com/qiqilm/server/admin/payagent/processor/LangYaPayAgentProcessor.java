@@ -30,24 +30,20 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
 	@Override
 	public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
 		withdrawLog.setBankCode( "unionpay" );
-//		BankCodeLangYaType bankCodeType = BankCodeLangYaType.getCodeByDesc( withdrawLog.getBankName() );
-//		if ( bankCodeType == null ) {
-//			log.warn( "此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
-//			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
-//		}
+
 		List list=new ArrayList();
 		Map mapList=new LinkedHashMap();
 		mapList.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
-		mapList.put( "accountname ", withdrawLog.getBankUserName().trim() );
-		mapList.put( "bankname ",withdrawLog.getBankName().trim());
+		mapList.put( "accountname", withdrawLog.getBankUserName().trim() );
+		mapList.put( "bankname",withdrawLog.getBankName().trim());
 		mapList.put( "cardnumber", withdrawLog.getBankAccount().trim() );
-		mapList.put( "subbranch","" );
+		mapList.put( "subbranch", withdrawLog.getBankUserName().trim() );
 		mapList.put( "province", "");
 		mapList.put( "city", "");
 		mapList.put( "mobile", "" );
 		mapList.put("out_trade_no", withdrawLog.getOrderNo() );
 		mapList.put( "attach","fc" );
-		mapList.put( "extends","fc" );
+		mapList.put( "extends","ff" );
 		list.add(mapList);
 		Map<String, Object> dataMap = new TreeMap<>();
 		dataMap.put( "mchid", payAgentPlatform.getMerId() );
