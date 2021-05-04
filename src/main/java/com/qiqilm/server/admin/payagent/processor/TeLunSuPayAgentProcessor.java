@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -133,7 +134,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
         try {
             result = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
             Map map = JsonUtil.object2Map(result);
-            if (Strings.isNotBlank(result)&&"success".equals(map.getOrDefault("code", "").toString())) {
+            if (StringUtils.isNotBlank(result)&&"success".equals(map.getOrDefault("code", "").toString())) {
                 Map dataMapRsp= (Map) map.get("data");
 
                 String orderNo = dataMapRsp.getOrDefault("orderNo", "").toString();
