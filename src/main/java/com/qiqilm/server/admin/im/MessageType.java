@@ -6,89 +6,86 @@ import com.qiqilm.server.admin.exception.BaseException;
 
 import java.util.Objects;
 
-public enum MessageType {
-	//
-	TIMTextElem( "TIMTextElem" ),  //文本
-	TIMLocationElem( "TIMLocationElem" ),  //位置
-	TIMFaceElem( "TIMFaceElem" ), //表情
-	TIMCustomElem( "TIMCustomElem" ),//自定义
-	TIMSoundElem( "TIMSoundElem" ), //语言
-	TIMImageElem( "TIMImageElem" ),//图像
-	TIMFileElem( "TIMFileElem" ),//文件
-	TIMVideoFileElem( "TIMVideoFileElem" ) //视频
-	;
 
-	private String   val;
-	private Object[] data;
+public class MessageType {
+
+    private String groupId ;
+    private MessageEnum msgEnmu;
+    private Object[] data;
 
 
-	MessageType( String str ) {
-		val = str;
-	}
+    public static MessageType setMsgEnmu(MessageEnum msgEnmu) {
+        MessageType type  = new MessageType();
+        type.msgEnmu = msgEnmu;
+        return type;
+    }
 
-	@Override
-	public String toString() {
-		return val;
-	}
+    public MessageType setData( Object ... args){
+        if(args.length<4){
+            data = new Object[4];
+            for (int i = 0; i < args.length; i++) {
+                data[i] = args[i];
+            }
+            for (int i = args.length; i < 4; i++) {
+                data[i] = "";
+            }
+        }else {
+            data = args;
+        }
+        return this;
+    }
 
-	public MessageType setData( Object... args ) {
-		if ( args.length < 4 ) {
-			data = new Object[ 4 ];
-			System.arraycopy( args, 0, data, 0, args.length );
-			for ( int i = args.length; i < 4; i++ ) {
-				data[ i ] = "";
-			}
-		} else {
-			data = args;
-		}
-		return this;
-	}
+    public ObjectNode getNode(){
+        if(Objects.isNull(data))
+            throw new BaseException( "获取节点失败" );
+        return ofNode(data);
+    }
 
-	public ObjectNode getNode() {
-		if ( Objects.isNull( data ) ) {
-			throw new BaseException( "获取节点失败" );
-		}
-		return ofNode( data );
-	}
+   public ObjectNode ofNode(Object ... args){
+        if(Objects.isNull(data))
+            setData(args);
+       final ObjectMapper mapper = new ObjectMapper();
+       final ObjectNode node = mapper.createObjectNode();
+       node.put("MsgType",msgEnmu.getVal());
+       final ObjectNode content = mapper.createObjectNode();
 
-	public ObjectNode ofNode( Object... args ) {
-		if ( Objects.isNull( data ) ) {
-			setData( args );
-		}
-		final ObjectMapper mapper = new ObjectMapper();
-		final ObjectNode   node   = mapper.createObjectNode();
-		node.put( "MsgType", val );
-		final ObjectNode content = mapper.createObjectNode();
+       try {
+           switch (msgEnmu.getVal()){
+                case "TIMTextElem":
+                    content.put("Text",data[0].toString());
+                    break;
+               case "TIMLocationElem":
+                    content.put("Desc",data[0].toString());
+                    content.put("Latitude",Double.valueOf(data[1].toString()));
+                    content.put("Longitude",Double.valueOf(data[2].toString()));
+                    break;
+               case "TIMFaceElem":
+                   content.put("Index",Integer.valueOf(data[0].toString()));
+                   content.put("Data",data[1].toString());
+                   break;
+               case "TIMCustomElem":
+                   content.put("Data",data[0].toString());
+                   content.put("Desc",data[1].toString());
+                   content.put("Ext",data[2].toString());
+                   content.put("Sound",data[3].toString());
+                   break;
+               default:
+                   return null;
+            }
+       }catch (Exception e){
+           e.printStackTrace();
+           throw new BaseException( "未初始化消息体" );
+       }
 
-		try {
-			switch ( val ) {
-			case "TIMTextElem":
-				content.put( "Text", data[ 0 ].toString() );
-				break;
-			case "TIMLocationElem":
-				content.put( "Desc", data[ 0 ].toString() );
-				content.put( "Latitude", Double.valueOf( data[ 1 ].toString() ) );
-				content.put( "Longitude", Double.valueOf( data[ 2 ].toString() ) );
-				break;
-			case "TIMFaceElem":
-				content.put( "Index", Integer.valueOf( data[ 0 ].toString() ) );
-				content.put( "Data", data[ 1 ].toString() );
-				break;
-			case "TIMCustomElem":
-				content.put( "Data", data[ 0 ].toString() );
-				content.put( "Desc", data[ 1 ].toString() );
-				content.put( "Ext", data[ 2 ].toString() );
-				content.put( "Sound", data[ 3 ].toString() );
-				break;
-			default:
-				return null;
-			}
-		} catch ( Exception e ) {
-			e.printStackTrace();
-			throw new BaseException( e.getMessage() );
-		}
+       node.put("MsgContent",content);
+       return node;
+   }
 
-		node.put( "MsgContent", content );
-		return node;
-	}
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
 }
