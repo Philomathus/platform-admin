@@ -161,7 +161,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 					log.warn( "特仑苏验签通过 - orderNo:{}", orderNo );
 					int status     = 4;
 					int orderState = 0;
-					if ( "1".equals( state ) ) {
+					if ( "success".equals( state ) ) {
 						status = 6;
 						orderState = 1;
 					} else {
