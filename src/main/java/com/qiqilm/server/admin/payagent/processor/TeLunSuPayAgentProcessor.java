@@ -140,7 +140,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 		}
 		log.warn( "特仑苏查询结果:" + result );
 		if ( Strings.isNotBlank( result ) ) {
-			Map map = JsonUtil.object2Map( result );
+			Map map = JsonUtil.json2Map( result );
 			if ( "success".equals( map.getOrDefault( "code", "" ).toString() ) ) {
 
 				Map    dataMapRsp = ( Map ) map.get( "data" );
