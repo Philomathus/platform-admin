@@ -82,6 +82,9 @@ public class PayPlatformNewController extends BaseController {
 	@Log( title = "支付平台", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayPlatformNew payPlatformNew ) {
+		if(StringUtils.isNotBlank(payPlatformNew.getMerId())) {
+			payPlatformNew.setMerId(payPlatformNew.getMerId().trim());
+		}
 		if(StringUtils.isNotBlank(payPlatformNew.getOrgId())) {
 			payPlatformNew.setOrgId(payPlatformNew.getOrgId().trim());
 		}
