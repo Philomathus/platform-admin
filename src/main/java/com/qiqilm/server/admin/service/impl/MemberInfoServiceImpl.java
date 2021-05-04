@@ -17,6 +17,7 @@ import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.NameUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import com.qiqilm.server.admin.utils.ValidatorUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ import java.util.Objects;
  * @author 77tv
  * @date 2021-01-25
  */
+@Slf4j
 @Service
 public class MemberInfoServiceImpl implements IMemberInfoService {
     @Autowired
@@ -324,7 +326,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         if (!memberCards.isEmpty()) {
             MemberCard memberCard2 = memberCards.get(0);
             //判断绑定的与修改成的是不是同一个,如果不是就不能修改
-            if (memberCard2.getId() != member.getId()) {
+            if (!memberCard2.getId().equals(member.getId())) {
+                log.error("修改的id: {},上传的id: {}",memberCard2.getId(),member.getId());
                 return AjaxResult.error("用户已绑定该银行卡");
             }
         }
