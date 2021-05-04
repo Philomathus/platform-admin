@@ -47,29 +47,18 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
         }
         if (StringUtils.isNotBlank(reqMemberGameData.getAccount())) {
             String tableLast = reqMemberGameData.getAccount().substring(reqMemberGameData.getAccount().length() - 1);
-            //判断是否为数字,避免服务器报错
+            //判断是否为数字
             Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
             if (pattern.matcher(tableLast).matches()) {
                 reqMemberGameData.setTableLast(tableLast);
-                return memberGameDataMapper.selectMemberGameDataList(reqMemberGameData);
             } else {
                 reqMemberGameData.setTableLast("0");
-                return memberGameDataMapper.selectMemberGameDataList(reqMemberGameData);
             }
+            return memberGameDataMapper.selectMemberGameDataList(reqMemberGameData);
         } else {
             reqMemberGameData.setTableLast("0");
             return memberGameDataMapper.selectMemberGameDataList(reqMemberGameData);
         }
-    }
-
-    public static void main(String[] args) {
-        String a = "12313";
-        String b = a.substring(a.length() - 1);
-        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
-        if (pattern.matcher(b).matches()) {
-            System.out.println("123");
-        }
-        System.out.println("12");
     }
 
     @Override
