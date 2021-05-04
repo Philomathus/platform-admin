@@ -316,6 +316,18 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public AjaxResult changeBank(MemberCard member) {
         String id = member.getId();
+        //判断用户是否已经绑定该银行卡
+        MemberCard memberCard1 = new MemberCard();
+        memberCard1.setBankAccount(member.getBankAccount());
+        memberCard1.setMemberId(member.getMemberId());
+        List<MemberCard> memberCards = memberCardMapper.selectMemberCardList(memberCard1);
+        if (!memberCards.isEmpty()) {
+            MemberCard memberCard2 = memberCards.get(0);
+            //判断绑定的与修改成的是不是同一个,如果不是就不能修改
+            if (memberCard2.getId() != member.getId()) {
+                return AjaxResult.error("用户已绑定该银行卡");
+            }
+        }
         MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
         memberCard.setRealName(member.getRealName());
         memberCard.setBankName(member.getBankName());
@@ -338,6 +350,12 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public void updateVip(String memberId, Integer vip, String nickName) {
         memberBcodeMapper.updateVip(memberId,vip,nickName);
+    }
+
+    @Override
+    public AjaxResult updateInviterCode(String inviterCode, String memberId) {
+        memberInfoMapper.updateInviterCode(memberId,inviterCode);
+        return AjaxResult.success("修改成功");
     }
     @Override
     public void updataStatus(MemberInfo memberInfo) {

@@ -78,4 +78,6 @@ public interface MemberInfoMapper {
     int countByPhone(String phone);
 
     String findBanRemark(@Param("memberid") String memberid);
+
+    void updateInviterCode(@Param("memberId") String memberId,@Param("inviterCode") String inviterCode);
 }

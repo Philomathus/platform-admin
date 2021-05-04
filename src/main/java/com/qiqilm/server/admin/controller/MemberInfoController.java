@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.POST;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -330,6 +329,50 @@ public class MemberInfoController extends BaseController {
         }
         return rspBase;
     }
+
+    /**
+     * 修改邀请码
+     *
+     * @return
+     */
+    @ApiOperation(value = "会员修改邀请码", notes = "会员修改邀请码")
+    @RequestMapping(value = "/updateInviterCode", method = RequestMethod.POST)
+    @Log(title = "会员修改邀请码", businessType = BusinessType.UPDATE)
+    public AjaxResult updateInviterCode(@RequestBody Map map) throws Exception {
+        String memberId = (String)map.getOrDefault("memberId", "");
+        String inviterCode = (String)map.getOrDefault("inviterCode", "");
+        String googleAuthCode = (String)map.getOrDefault("googleAuthCode", "");
+        if (StringUtils.isEmpty(inviterCode)) {
+            return AjaxResult.error("邀请不能为空");
+        }
+        if (StringUtils.isEmpty(googleAuthCode)) {
+            return AjaxResult.error("谷歌验证码不能为空");
+        }
+
+        AjaxResult x = checkGoogle(googleAuthCode);
+        if (x != null) return x;
+        return memberInfoService.updateInviterCode(inviterCode,memberId);
+    }
+
+    private AjaxResult checkGoogle(String googleAuthCode) throws Exception {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+        if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+            return AjaxResult.error("未绑定google验证秘钥，无法审核");
+        }
+        if (googleAuthSecret.length() == 32) {
+            return AjaxResult.error("google验证秘钥未加密，请重新登录");
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+                "/googleAuthPrivateKey"));
+
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, Integer.parseInt(googleAuthCode))) {
+            return AjaxResult.error("google验证码不正确，请检查");
+        }
+        return null;
+    }
+
 
     /**
      * 发送短信

@@ -36,6 +36,8 @@ public abstract class ConstantsPayAgent {
 	public static final String XIN_NIU_QI_CHONG_TIAN = "xinNiuQiChongTian";
 	// 五六代付
 	public static final String WULIU                 = "wuliu";
+	public static final String LANG_YA                 = "LangYa";
+	public static final String DA_DA                 = "daDa";
 	// 钱宝代付
 	public static final String QIANBAO                 = "qianBao";
 }
