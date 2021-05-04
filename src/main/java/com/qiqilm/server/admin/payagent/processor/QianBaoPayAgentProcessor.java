@@ -30,29 +30,27 @@ public class QianBaoPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put("mchNo", payAgentPlatform.getMerId());
         bodyMap.put("mchOrderNo", withdrawLog.getOrderNo());
-        bodyMap.put("orderAmount", withdrawLog.getWithdrawMoney().setScale(2,
-                BigDecimal.ROUND_HALF_UP).toString());
+        bodyMap.put("orderAmount", withdrawLog.getWithdrawMoney().setScale(0,
+                BigDecimal.ROUND_HALF_UP));
         bodyMap.put("cardName", withdrawLog.getBankUserName().trim());
         bodyMap.put("cardNo", withdrawLog.getBankAccount().trim());
         bodyMap.put("cardType", withdrawLog.getBankName().trim());
         bodyMap.put("cbUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.QIANBAO);
-
-        StringBuilder sb = new StringBuilder();
-        bodyMap.forEach((k, v) -> sb.append(k).append("=").append(v).append("&"));
-        String signStr = sb.substring(0, sb.length() - 1);
-
+        String tempStr = this.assemblyUrl(bodyMap);
+        System.out.println("待加密字符串"+tempStr);
         //RSA2证书为2048位，使用算法SHA256withRSA。
-        String sign = RSAUtils.encryptByPublicKey(signStr, payAgentPlatform.getSignPublicKey());
+        String sign = RsaUtil.sign(tempStr, payAgentPlatform.getSignPrivateKey(),"RSA2");
+        System.out.println("加密后"+sign);
 
         bodyMap.put("sign", sign);
         bodyMap.put("authCode", "");
 
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(bodyMap);
-        log.warn(JsonUtil.object2Json(requestMap));
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(requestMap, httpHeaders);
+        httpHeaders.setContentType( MediaType.APPLICATION_JSON );
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity( bodyMap, httpHeaders );
+
+        System.out.println("请求参数:"+httpEntity);
+
 
         Map<String, Object> resultMap = null;
         try {
@@ -84,12 +82,12 @@ public class QianBaoPayAgentProcessor extends AbstractPayAgent {
         String sign = requestMap.remove("sign").toString();
 
         SortedMap<String, Object> signMap = new TreeMap<>(requestMap);
-        String signData = JsonUtil.object2Json(signMap);
+        String tempStr = this.assemblyUrl(requestMap);
 
         //RSA 2048 SHA256 公钥验签
-        if (RSACoder.verifySha256Rsa(signData, payAgentPlatform.getSignPublicKey(), sign)) {
+        if (RSACoder.verifySha256Rsa(tempStr, payAgentPlatform.getSignPublicKey(), sign)) {
             String state = signMap.getOrDefault("state", "").toString();
-            String orderNo = signMap.getOrDefault("orderNo", "").toString();
+            String orderNo = signMap.getOrDefault("mchOrderNo", "").toString();
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderNo);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", orderNo);
