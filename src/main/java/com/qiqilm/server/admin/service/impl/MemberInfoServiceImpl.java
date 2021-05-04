@@ -321,17 +321,20 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         memberCard1.setBankAccount(member.getBankAccount());
         memberCard1.setMemberId(member.getMemberId());
         List<MemberCard> memberCards = memberCardMapper.selectMemberCardList(memberCard1);
-        if (memberCards.isEmpty()) {
-            MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
-            memberCard.setRealName(member.getRealName());
-            memberCard.setBankName(member.getBankName());
-            memberCard.setBankAddress(member.getBankAddress());
-            memberCard.setBankAccount(member.getBankAccount());
-            memberCardMapper.updateMemberCard(memberCard);
-            return AjaxResult.success("修改银行卡信息成功");
-        }else {
-            return AjaxResult.error("用户已绑定该银行卡");
+        if (!memberCards.isEmpty()) {
+            MemberCard memberCard2 = memberCards.get(0);
+            //判断绑定的与修改成的是不是同一个,如果不是就不能修改
+            if (memberCard2.getId() != member.getId()) {
+                return AjaxResult.error("用户已绑定该银行卡");
+            }
         }
+        MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
+        memberCard.setRealName(member.getRealName());
+        memberCard.setBankName(member.getBankName());
+        memberCard.setBankAddress(member.getBankAddress());
+        memberCard.setBankAccount(member.getBankAccount());
+        memberCardMapper.updateMemberCard(memberCard);
+        return AjaxResult.success("修改银行卡信息成功");
     }
 
     @Override
