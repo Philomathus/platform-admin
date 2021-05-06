@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository(value = ConstantsPayAgent.NewPayAgent + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.NewDADA + "PayAgentProcessor")
 @Log4j2
 public class XinPayAgentProcessor extends AbstractPayAgent {
     @Override
@@ -38,7 +38,7 @@ public class XinPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("money", withdrawLog.getWithdrawMoney());
         dataMap.put("pay_type", "MANUAL_BANK");
         dataMap.put("secret_type", "md5_secret");
-        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.NewPayAgent);
+        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.NewDADA);
         dataMap.put("bank_name ", withdrawLog.getBankName());
         dataMap.put("bank_no", withdrawLog.getBankAccount().trim());
         dataMap.put("bank_user_name ", withdrawLog.getBankUserName().trim());
