@@ -267,7 +267,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         if (memberWithdrawLog == null) {
             return AjaxResult.error("订单不存在");
         }
-        if (memberWithdrawLog.getStatus() != 1) {
+        if (memberWithdrawLog.getStatus() != 1 && memberWithdrawLog.getStatus() != 5) {
             return AjaxResult.error("该订单已被处理,请刷新界面");
         }
         LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());

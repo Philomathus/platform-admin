@@ -23,7 +23,6 @@ import org.springframework.util.MultiValueMap;
 import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 @Repository( value = ConstantsPayAgent.TE_LUN_SU + "PayAgentProcessor" )
 @Log4j2
@@ -157,7 +156,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 				rspMap.put( "mch_id", mch_id );
 				String md5Str  = this.assemblyUrl( rspMap ) + "&key=" + signMd5;
 				String rspSign = DigestUtils.md5Hex( md5Str ).toUpperCase();
-				if ( sign1.equals( rspSign ) ) {
+				if ( sign1.equals( rspSign ) && !"wait".equals( state ) ) {
 					log.warn( "特仑苏验签通过 - orderNo:{}", orderNo );
 					int status     = 4;
 					int orderState = 0;
