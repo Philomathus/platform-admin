@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -59,6 +60,9 @@ public class LotteryDataTask {
             return;
         }
         String lottery_telegram = sysConfigCacheUtil.getConf( "lottery_telegram" );
+        if (Strings.isBlank(lottery_telegram)){
+            return;
+        }
         Date endDay  = new Date();
         Date starDay = DateFormatUtils.addMin( endDay, -5);
         String start = DateFormatUtils.formate( starDay );
