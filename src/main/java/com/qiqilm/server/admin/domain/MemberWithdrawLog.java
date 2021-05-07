@@ -65,6 +65,11 @@ public class MemberWithdrawLog extends BaseEntity {
      */
     private Integer status;
 
+    /**
+     * 会员状态是否为套利号
+     */
+    private Integer memberStatus;
+
     @Excel(name = "状态", orderNum = "7")
     private String statusDes;
 
