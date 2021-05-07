@@ -388,4 +388,12 @@
             #{orderNo}
         </foreach>
     </select>
+
+    <select id="selectMemberIdStatus" resultMap="MemberWithdrawLogResult">
+        select id member_id,status memberStatus from `${dbMain}`.member_info
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>
