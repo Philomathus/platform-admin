@@ -436,11 +436,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			}
 		} );
 
-		List<Long> resultList = new ArrayList<>( liveVideos.size() );
+		List<Long> resultList = new ArrayList<>();
 		for ( int i = 1; i <= liveVideos.size(); i++ ) {
 			Long sortHostId = sortHostMap.get( i );
 			if ( sortHostId != null ) {
-				resultList.add( i - 1, sortHostId );
+				resultList.add( sortHostId );
 				sortHostMap.remove( i );
 			} else if ( !CollectionUtils.isEmpty( recommendHostList ) ) {
 				resultList.add( recommendHostList.get( 0 ) );
