@@ -67,6 +67,23 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     @Override
     public List<MemberWithdrawLog> selectMemberWithdrawLogList(MemberWithdrawLog memberWithdrawLog) {
         List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.selectMemberWithdrawLogList(memberWithdrawLog);
+
+        //查出会员状态是否为套利号
+        if (!CollectionUtils.isEmpty(memberWithdrawLogList)) {
+           List<String> memberIds  = new ArrayList<>();
+            for (MemberWithdrawLog me : memberWithdrawLogList) {
+                memberIds.add(me.getMemberId());
+            }
+            List<MemberWithdrawLog> Statuss = memberWithdrawLogMapper.selectMemberIdStatus(memberIds);
+            for(MemberWithdrawLog me : memberWithdrawLogList){
+                for(MemberWithdrawLog st:Statuss){
+                    if(me.getMemberId().equals(st.getMemberId())){
+                        me.setMemberStatus(st.getMemberStatus());
+                    }
+                }
+            }
+        }
+
         BankCardAddress bankCardAddress = new BankCardAddress();
         bankCardAddress.setStatus("1");
         List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList(bankCardAddress);
