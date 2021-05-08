@@ -40,8 +40,8 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("reverseUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.NINESEVEN);
         bodyMap.put("shOrderId", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
@@ -80,8 +80,8 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         String state = requestMap.getOrDefault("state", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         log.info("97代付回调待签名字符串:" + requestMap);
@@ -119,8 +119,8 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         paramsMap.put("shOrderId", withdrawLog.getOrderNo());
         paramsMap.put("account", payAgentPlatform.getMerId());
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
@@ -140,9 +140,9 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 String statusTrue = resultMap.getOrDefault("status", "").toString();
-                Map<String,Object> dataMap = (Map<String, Object>) resultMap.get("data");
-                int state = Integer.parseInt(dataMap.getOrDefault("state", "").toString());
                 if ("100".equals(code) && "true".equals(statusTrue)) {
+                    Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("data");
+                    int state = Integer.parseInt(dataMap.getOrDefault("state", "").toString());
                     // status 4代付中 5代付失败 6代付成功
                     // state提款状态（0待处理，1处理中，2关闭，3待确认，4失败，5成功）
                     int status = 4;
