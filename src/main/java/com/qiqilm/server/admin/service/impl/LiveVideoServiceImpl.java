@@ -17,6 +17,7 @@ import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -63,11 +64,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	private LiveVideoPropMapper    liveVideoPropMapper;
 
 	@Resource
-	private LiveHostWageDayMapper   liveHostWageDayMapper;
+	private LiveHostWageDayMapper liveHostWageDayMapper;
 	@Resource
-	private HelpNoticeUtil          helpNoticeUtil;
-	@Resource
-	private ConfigEnvironmentMapper configEnvironmentMapper;
+	private HelpNoticeUtil        helpNoticeUtil;
+
+	@Value( "${live.encrypt.privateKey}" )
+	private String liveRsaPrivateKey;
 
 	/**
 	 * 查询直播
@@ -118,50 +120,19 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	@Override
 	public boolean close( Long id, String cause ) {
-		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
-		String    why   = "主播下播";
-		if ( "admin".equals( cause ) ) {
-			//通知主播退出
-			HashMap<String, Object> ext = new HashMap<>();
-			ext.put( "type", 17 );
-			ext.put( "room_id", id );
-			ext.put( "desc", "违规直播，立即关闭直播" );
-			MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
-			try {
-				imApi.sendMessage( serverImCacheUtil.getValue( "tim_identifier" ), video.getUserId().toString(), message );
-			} catch ( Exception e ) {
-				//log.error( this.toString() + "(m)close", e );
-			}
+		String why = "主播下播";
+		switch ( cause ) {
+		case "admin":
 			why = "管理员关播";
-		} else if ( "timeOut".equals( cause ) ) {
-			//log.error( "直播心跳超时====>room_id" + id );
-			//通知主播退出
-			HashMap<String, Object> ext = new HashMap<>();
-			ext.put( "type", 17 );
-			ext.put( "room_id", id );
-			ext.put( "desc", "违规直播，立即关闭直播" );
-			MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
-			try {
-				imApi.sendMessage( serverImCacheUtil.getValue( "tim_identifier" ), video.getUserId().toString(), message );
-			} catch ( Exception e ) {
-				//log.error( this.toString() + "(m)close", e );
-			}
-			log.error( "异常下播主播：id:{}", id );
+			break;
+		case "timeOut":
 			why = "异常下播";
-		} else if ( "origin".equals( cause ) ) {
-			//log.info( "直播源切换,关闭所有直播。当前正在关闭====>room_id" + id );
-			//通知主播退出
-			HashMap<String, Object> ext = new HashMap<>();
-			ext.put( "type", 17 );
-			ext.put( "room_id", id );
-			ext.put( "desc", "直播源切换，立即关闭直播" );
-			MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
-			try {
-				imApi.sendMessage( serverImCacheUtil.getValue( "tim_identifier" ), video.getUserId().toString(), message );
-			} catch ( Exception e ) {
-				//log.error( this.toString() + "(m)close", e );
-			}
+			break;
+		case "origin":
+			break;
+		default:
 			why = "直播源切换";
+			break;
 		}
 		return close( id, false, why );
 	}
@@ -264,12 +235,16 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				ext.put( "fonts_color", "" ); //字体颜色
 				ext.put( "desc", why );  //弹幕消息;
 				ext.put( "desc2", "直播结束" );  //弹幕消息;
-				MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
 
-				ext = new HashMap<>();
-				ext.put( "type", 18 ); //18：直播结 束（全体推送的，用于更新用户列表状态）
-				ext.put( "room_id", video.getId() );//直播ID 也是room_id;
 				try {
+					long time = System.currentTimeMillis();
+					ext.put( "systemtime", time );
+					String signData = ext.get( "room_id" ).toString() + ext.get( "show_num" ).toString()
+							+ ext.get( "desc" ).toString() + time;
+					ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
+
+					MessageType message = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem )
+							.setData( JsonUtil.object2Json( ext ) );
 					imApi.sendGroupMessage( video.getGroupId(), video.getUserId().toString(), message );
 				} catch ( Exception e ) {
 					//log.error( "房间号不存在或无法发送直播结束通知 - videoId:{};groupId:{}", video.getId(), video.getGroupId(), e );
@@ -333,9 +308,19 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			ext.put( "type", live_pay_type == 0 ? 32 : 40 );
 			ext.put( "room_id", room_id );
 			ext.put( "live_fee", live_fee );
-			MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData( JsonUtil.object2Json( ext ) );
+
+			try {
+				long time = System.currentTimeMillis();
+				ext.put( "systemtime", time );
+				String signData = room_id.toString() + live_fee + time;
+				ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
+			} catch ( Exception e ) {
+				e.printStackTrace();
+			}
+
+			MessageType message = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem ).setData( JsonUtil.object2Json( ext ) );
 			imApi.sendGroupMessage( video.getGroupId(), room_id.toString(),
-					message);
+					message );
 			return msg;
 		}
 		throw new RuntimeException( "切换失败" );
