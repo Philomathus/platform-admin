@@ -44,4 +44,6 @@ public abstract class ConstantsPayAgent {
 	public static final String NEWDADA                 = "xinDaDa";
 	// 新世纪代付
 	public static final String NEWSHIJI                 = "xinShiJi";
+	// 97代付
+	public static final String NINESEVEN                = "nineSeven";
 }
