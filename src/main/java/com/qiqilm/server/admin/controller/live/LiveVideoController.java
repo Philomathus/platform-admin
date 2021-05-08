@@ -9,7 +9,6 @@ import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.service.ILiveVideoService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.HelpNoticeUtil;
 import io.swagger.annotations.ApiOperation;
@@ -36,9 +35,10 @@ public class LiveVideoController extends BaseController {
 	@Autowired
 	private ILiveVideoService liveVideoService;
 	@Autowired
-	private HelpNoticeUtil helpNoticeUtil;
+	private HelpNoticeUtil    helpNoticeUtil;
 	@Autowired
-	private ILiveUserService liveUserService;
+	private ILiveUserService  liveUserService;
+
 	/**
 	 * 查询直播列表
 	 */
@@ -66,7 +66,7 @@ public class LiveVideoController extends BaseController {
 	@Log( title = "直播", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public void export( LiveVideo liveVideo, HttpServletResponse response ) {
-		List<LiveVideo>      list = liveVideoService.selectLiveVideoList( liveVideo );
+		List<LiveVideo> list = liveVideoService.selectLiveVideoList( liveVideo );
 		ExportExcelUtil.exportExcel( list, "直播", "直播息表", LiveVideo.class, response );
 	}
 
@@ -106,29 +106,30 @@ public class LiveVideoController extends BaseController {
 	public AjaxResult updateVideoSort( @RequestBody LiveVideo liveVideo ) {
 		return liveVideoService.updateVideoSort( liveVideo );
 	}
+
 	@ApiOperation( "直播间小助手" )
 	@Log( title = "直播间小助手", businessType = BusinessType.UPDATE )
 	@PostMapping( "/sendLiveMsg" )
-	public AjaxResult sendLiveMsg(@RequestBody LiveVideo liveVideo ) {
-		if (Strings.isBlank(liveVideo.getInfo())){
-			return AjaxResult.success("小助手消息不能为空");
+	public AjaxResult sendLiveMsg( @RequestBody LiveVideo liveVideo ) {
+		if ( Strings.isBlank( liveVideo.getInfo() ) ) {
+			return AjaxResult.success( "小助手消息不能为空" );
 		}
-		if(Objects.isNull(liveVideo.getId())){
-			helpNoticeUtil.sendMsg(liveVideo.getInfo());
-		}else {
-			LiveUser liveUser = liveUserService.selectLiveUserById(liveVideo.getId());
-			if (Objects.isNull(liveUser)){
-				return AjaxResult.success("主播id有误");
+		if ( Objects.isNull( liveVideo.getId() ) ) {
+			helpNoticeUtil.sendMsg( liveVideo.getInfo() );
+		} else {
+			LiveUser liveUser = liveUserService.selectLiveUserById( liveVideo.getId() );
+			if ( Objects.isNull( liveUser ) ) {
+				return AjaxResult.success( "主播id有误" );
 			}
-			LiveVideo liveVideo1 = liveVideoService.selectLiveVideoById(liveVideo.getId());
-			if (liveVideo1.getLiveIn()==1){
-				helpNoticeUtil.sendMsg(liveVideo.getInfo(),liveVideo1.getGroupId());
-				log.warn("小助手发言消息"+liveVideo.getInfo(),liveVideo1.getGroupId());
-			}else {
-				return  AjaxResult.success("主播未在线");
+			LiveVideo liveVideo1 = liveVideoService.selectLiveVideoById( liveVideo.getId() );
+			if ( liveVideo1.getLiveIn() == 1 ) {
+				helpNoticeUtil.sendMsg( liveVideo.getInfo(), liveVideo1.getGroupId() );
+				log.warn( "小助手发言消息" + liveVideo.getInfo(), liveVideo1.getGroupId() );
+			} else {
+				return AjaxResult.success( "主播未在线" );
 			}
 		}
-		return AjaxResult.success("正在发送中");
+		return AjaxResult.success( "正在发送中" );
 	}
 
 }
