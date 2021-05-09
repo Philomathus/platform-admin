@@ -37,7 +37,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("accno", withdrawLog.getBankAccount().trim());
         bodyMap.put("accnm", withdrawLog.getBankUserName().trim());
         bodyMap.put("banknm", withdrawLog.getBankName().trim());
-        bodyMap.put("acctype", "alipay");
+        bodyMap.put("acctype", "unionpay");
         bodyMap.put("notice_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.SHUNTONG);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -124,7 +124,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+        String sign = DigestUtils.md5Hex(tempStr);
         paramsMap.put("sign", sign);
 
         String url = "?" + "mchno=" + paramsMap.get("mchno") + "&obid=" + paramsMap.get("obid") + "&sign=" + paramsMap.get("sign");
@@ -143,7 +143,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                         statusType = 0;
                     } else if (statusType == 10) {
                         status = 5;
-                        statusType = 4;
+                        statusType = 10;
                     } else {
                         statusType = 1;
                     }
