@@ -19,6 +19,7 @@ import com.qiqilm.server.admin.service.IPayAgentService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -46,6 +47,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
 	@Autowired
 	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
+
+	@Value( "${payAgentLimit:5000}" )
+	private Integer payAgentLimit;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -128,8 +132,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 2000 ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持2000元以上出款" );
 		}
-		if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 5000 ) ) > 0 ) {
-			return AjaxResult.error( "代付暂不支持5000元以上出款" );
+		if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0 ) {
+			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
 		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
