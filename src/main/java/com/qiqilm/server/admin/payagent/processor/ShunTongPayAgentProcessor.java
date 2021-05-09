@@ -143,7 +143,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                         statusType = 0;
                     } else if (statusType == 10) {
                         status = 5;
-                        statusType = 4;
+                        statusType = 10;
                     } else {
                         statusType = 1;
                     }
