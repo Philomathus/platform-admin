@@ -243,6 +243,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 							+ ext.get( "desc" ).toString() + time;
 					ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
 
+					log.warn( "关播通知：{}", JsonUtil.object2Json( ext ) );
+
 					MessageType message = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem )
 							.setData( JsonUtil.object2Json( ext ) );
 					imApi.sendGroupMessage( video.getGroupId(), video.getUserId().toString(), message );
