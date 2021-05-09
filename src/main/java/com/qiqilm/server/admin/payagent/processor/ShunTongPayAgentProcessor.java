@@ -37,7 +37,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("accno", withdrawLog.getBankAccount().trim());
         bodyMap.put("accnm", withdrawLog.getBankUserName().trim());
         bodyMap.put("banknm", withdrawLog.getBankName().trim());
-        bodyMap.put("acctype", "alipay");
+        bodyMap.put("acctype", "unionpay");
         bodyMap.put("notice_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.SHUNTONG);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
