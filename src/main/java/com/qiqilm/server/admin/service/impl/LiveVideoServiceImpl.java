@@ -227,31 +227,31 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 	private void closeVideoIMNotify( LiveVideo video, boolean isAborted, String why ) {
 		if ( Strings.isNotBlank( video.getGroupId() ) && !isAborted ) {
-			threadPoolTaskExecutor.execute( () -> {
-				HashMap<String, Object> ext = new HashMap<>();
-				ext.put( "type", 7 ); //0:普通消息;1:礼物;2:弹幕消息;3:主播退出;4:禁言;5:观众进入房间；6：观众退出房间；7:直播结束
-				ext.put( "room_id", video.getId() ); //直播ID 也是room_id;只有与当前房间相同时，收到消息才响应
-				ext.put( "show_num", video.getMaxWatchNumber() );  //观看人数
-				ext.put( "fonts_color", "" ); //字体颜色
-				ext.put( "desc", why );  //弹幕消息;
-				ext.put( "desc2", "直播结束" );  //弹幕消息;
+			HashMap<String, Object> ext = new HashMap<>();
+			ext.put( "type", 7 ); //0:普通消息;1:礼物;2:弹幕消息;3:主播退出;4:禁言;5:观众进入房间；6：观众退出房间；7:直播结束
+			ext.put( "room_id", video.getId() ); //直播ID 也是room_id;只有与当前房间相同时，收到消息才响应
+			if ( video.getMaxWatchNumber() == null ) {
+				video.setMaxWatchNumber( 0L );
+			}
+			ext.put( "show_num", video.getMaxWatchNumber() );  //观看人数
+			ext.put( "fonts_color", "" ); //字体颜色
+			ext.put( "desc", why );  //弹幕消息;
+			ext.put( "desc2", "直播结束" );  //弹幕消息;
 
-				try {
-					long time = System.currentTimeMillis();
-					ext.put( "systemtime", time );
-					String signData = ext.get( "room_id" ).toString() + ext.get( "show_num" ).toString()
-							+ ext.get( "desc" ).toString() + time;
-					ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
+			try {
+				long time = System.currentTimeMillis();
+				ext.put( "systemtime", time );
+				String signData = video.getId() + video.getMaxWatchNumber() + why + time;
+				ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
 
-					log.warn( "关播通知：{}", JsonUtil.object2Json( ext ) );
+				log.warn( "关播通知：{}", JsonUtil.object2Json( ext ) );
 
-					MessageType message = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem )
-							.setData( JsonUtil.object2Json( ext ) );
-					imApi.sendGroupMessage( video.getGroupId(), video.getUserId().toString(), message );
-				} catch ( Exception e ) {
-					//log.error( "房间号不存在或无法发送直播结束通知 - videoId:{};groupId:{}", video.getId(), video.getGroupId(), e );
-				}
-			} );
+				MessageType message = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem )
+						.setData( JsonUtil.object2Json( ext ) );
+				imApi.sendGroupMessage( video.getGroupId(), video.getUserId().toString(), message );
+			} catch ( Exception e ) {
+				log.error( "房间号不存在或无法发送直播结束通知 - videoId:{};groupId:{}", video.getId(), video.getGroupId(), e );
+			}
 		}
 	}
 
