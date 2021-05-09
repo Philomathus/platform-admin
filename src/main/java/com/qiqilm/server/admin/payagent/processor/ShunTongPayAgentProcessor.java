@@ -124,7 +124,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+        String sign = DigestUtils.md5Hex(tempStr);
         paramsMap.put("sign", sign);
 
         String url = "?" + "mchno=" + paramsMap.get("mchno") + "&obid=" + paramsMap.get("obid") + "&sign=" + paramsMap.get("sign");
