@@ -135,20 +135,20 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             if (!CollectionUtils.isEmpty(resultMap)) {
                 int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
+                if(statusType == 10 || statusType == 0) {
                     // status 4代付中 5代付失败 6代付成功
                     // statusType 1申请受理中，2代付下发中，10交易失败，0下发成功
                     int status = 4;
                     if (statusType == 0) {
                         status = 6;
                         statusType = 0;
-                    } else if (statusType == 10) {
+                    } else {
                         status = 5;
                         statusType = 10;
-                    } else {
-                        statusType = 1;
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                     return;
+                }
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -143,20 +143,20 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
                 if ("100".equals(code) && "true".equals(statusTrue)) {
                     Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("data");
                     int state = Integer.parseInt(dataMap.getOrDefault("state", "").toString());
-                    // status 4代付中 5代付失败 6代付成功
-                    // state提款状态（0待处理，1处理中，2关闭，3待确认，4失败，5成功）
-                    int status = 4;
-                    if (state == 5) {
-                        status = 6;
-                        state = 5;
-                    } else if (state == 2 || state == 4) {
-                        status = 5;
-                        state = 4;
-                    } else {
-                        state = 1;
-                    }
+                    if(state == 4 || state == 5) {
+                        // status 4代付中 5代付失败 6代付成功
+                        // state提款状态（0待处理，1处理中，2关闭，3待确认，4失败，5成功）
+                        int status = 4;
+                        if (state == 5) {
+                            status = 6;
+                            state = 5;
+                        } else {
+                            status = 5;
+                            state = 4;
+                        }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
                     return;
+                    }
                 }
             }
         } catch (Exception e) {
