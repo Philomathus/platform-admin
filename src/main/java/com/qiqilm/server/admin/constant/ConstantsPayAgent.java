@@ -48,4 +48,6 @@ public abstract class ConstantsPayAgent {
 	public static final String NINESEVEN                = "nineSeven";
 	// 顺通代付
 	public static final String SHUNTONG                = "shunTong";
+	// 宾利代付
+	public static final String BINLI                = "binLi";
 }
