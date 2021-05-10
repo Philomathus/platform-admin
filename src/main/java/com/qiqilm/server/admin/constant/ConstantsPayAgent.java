@@ -50,4 +50,6 @@ public abstract class ConstantsPayAgent {
 	public static final String SHUNTONG                = "shunTong";
 	// 宾利代付
 	public static final String BINLI                = "binLi";
+	// 亿信代付
+	public static final String YIXIN                = "yiXin";
 }
