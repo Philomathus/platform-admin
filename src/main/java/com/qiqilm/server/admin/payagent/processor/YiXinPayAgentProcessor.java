@@ -93,11 +93,12 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        log.info("亿信代付回调待签名字符串:" + tempStr);
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+
+        log.info("亿信代付回调签名:" + sign + "_" + rspSign);
         if (rspSign.equalsIgnoreCase(sign)) {
-            String order_no = requestMap.getOrDefault("order_no","").toString();
-            int status = Integer.parseInt(requestMap.getOrDefault("status","").toString());
+            String order_no = requestMap.getOrDefault("order_no", "").toString();
+            int status = Integer.parseInt(requestMap.getOrDefault("status", "").toString());
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_no);
             if (withdrawLog == null) {
