@@ -93,7 +93,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				if ( payAgentLog.getPayAgentPlatId().toString().equals( payAgentPlatform.getId().toString() ) ) {
 					BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 					try {
-						log.warn( "开始批量查询代付订单 - 订单号：{}", payAgentLog.getWithdrawOrderNo() );
+						log.warn( "开始批量查询代付订单 - 订单号：{}，PayAgentPlatId：{},PayAgentPlatCode:{}", payAgentLog.getWithdrawOrderNo(),
+								payAgentLog.getPayAgentPlatId(), payAgentPlatform.getCode() );
 						basePayAgent.queryOrderPay( payAgentLog );
 					} catch ( Exception e ) {
 						log.error( e.getMessage(), e );
