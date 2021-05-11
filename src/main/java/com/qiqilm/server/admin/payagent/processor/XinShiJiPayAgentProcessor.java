@@ -79,6 +79,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String pay_md5sign = requestMap.remove("pay_md5sign").toString();
+        String status = requestMap.getOrDefault("status", "").toString();
         if(!StringUtils.hasText(requestMap.getOrDefault("msg","").toString())) {
             requestMap.remove("msg");
         }
@@ -103,7 +104,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
                 return "ok";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(out_trade_no);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, true);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "success".equals(status));
             return "ok";
         }
         return "fail";
