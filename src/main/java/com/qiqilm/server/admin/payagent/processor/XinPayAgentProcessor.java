@@ -85,8 +85,8 @@ public class XinPayAgentProcessor extends AbstractPayAgent {
         log.info("新代付回调待签名字符串:" + requestMap);
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         if (rspSign.equalsIgnoreCase(sign)) {
-            String order_num = (String) requestMap.get("order_no");
-            String remit_result = (String) requestMap.get("status");
+            String order_num = requestMap.getOrDefault("order_no","").toString();
+            String remit_result = requestMap.getOrDefault("status","").toString();
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_num);
             if (withdrawLog == null) {

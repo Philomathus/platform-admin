@@ -87,7 +87,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         log.info("97代付回调待签名字符串:" + requestMap);
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
-        if (sign.equalsIgnoreCase(signStr) && "5".equals(state)) {
+        if (sign.equalsIgnoreCase(signStr)) {
             String shOrderId = (String) requestMap.get("shOrderId");
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
@@ -100,7 +100,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
                 return "success";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(shOrderId);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, true);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "5".equals(state));
             return "success";
         }
         return "fail";

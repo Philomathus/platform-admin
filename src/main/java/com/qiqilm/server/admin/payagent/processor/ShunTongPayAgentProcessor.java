@@ -87,7 +87,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
         log.info("顺通代付回调签名:" + tempStr + "_" + sign);
-        if (sign.equalsIgnoreCase(signStr) && "0".equals(status)) {
+        if (sign.equalsIgnoreCase(signStr)) {
             String shOrderId = (String) requestMap.get("shOrderId");
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
@@ -100,7 +100,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                 return "success";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(shOrderId);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, true);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "0".equals(status));
             return "success";
         }
         return "fail";
