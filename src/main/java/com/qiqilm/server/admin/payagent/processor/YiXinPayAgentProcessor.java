@@ -78,9 +78,8 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
                 if ("0".equals(status) || "1".equals(status)) {
                     log.info("亿信代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                     return true;
-                } else {
-                    reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
                 }
+                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
             }
         }
         log.warn("亿信代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
