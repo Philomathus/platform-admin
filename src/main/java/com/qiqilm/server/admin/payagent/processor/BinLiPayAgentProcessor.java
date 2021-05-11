@@ -35,7 +35,7 @@ public class BinLiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("code", "1");
         bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.BINLI);
         bodyMap.put("attach", "attach");
-        bodyMap.put("timestamp", System.currentTimeMillis()/1000);
+        bodyMap.put("timestamp", System.currentTimeMillis() / 1000);
         bodyMap.put("name", withdrawLog.getBankUserName().trim());
         bodyMap.put("account", withdrawLog.getBankAccount().trim());
         bodyMap.put("bank", withdrawLog.getBankName().trim());
@@ -86,7 +86,7 @@ public class BinLiPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
         log.info("宾利代付回调签名:" + tempStr + "_" + sign);
-        if (sign.equalsIgnoreCase(signStr) && "2".equals(status)) {
+        if (sign.equalsIgnoreCase(signStr)) {
             String shOrderId = (String) requestMap.get("shOrderId");
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
@@ -99,7 +99,7 @@ public class BinLiPayAgentProcessor extends AbstractPayAgent {
                 return "success";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(shOrderId);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, true);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
             return "success";
         }
         return "fail";
