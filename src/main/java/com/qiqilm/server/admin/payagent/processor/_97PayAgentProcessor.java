@@ -154,8 +154,8 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
                             status = 5;
                             state = 4;
                         }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
-                    return;
+                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
+                        return;
                     }
                 }
             }
