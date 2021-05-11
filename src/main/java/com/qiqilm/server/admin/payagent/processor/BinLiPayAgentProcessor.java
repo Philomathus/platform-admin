@@ -19,6 +19,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.RoundingMode;
 import java.util.*;
@@ -136,26 +137,30 @@ public class BinLiPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
+            log.info("宾利代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
-                int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
-                // status 4代付中 5代付失败 6代付成功
-                // statusType 0：待处理， 1：处理中， 2：已打款， 3：已拒绝 ， 4：已退单
-                int status = 4;
-                if (statusType == 2) {
-                    status = 6;
-                    statusType = 2;
-                } else if (statusType == 3 || statusType == 4) {
-                    status = 5;
-                    statusType = 3;
-                } else {
-                    statusType = 0;
+                int code = Integer.parseInt(resultMap.getOrDefault("code", 0).toString());
+                if (code == 1) {
+                    Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("data");
+                    int statusType = Integer.parseInt(dataMap.getOrDefault("status", 0).toString());
+                    // status 4代付中 5代付失败 6代付成功
+                    // statusType 0：待处理， 1：处理中， 2：已打款， 3：已拒绝 ， 4：已退单
+                    int status = 4;
+                    if (statusType == 2) {
+                        status = 6;
+                        statusType = 2;
+                    } else if (statusType == 3 || statusType == 4) {
+                        status = 5;
+                        statusType = 3;
+                    } else {
+                        statusType = 0;
+                    }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
+                    return;
                 }
-                payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                return;
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
     }
 }
