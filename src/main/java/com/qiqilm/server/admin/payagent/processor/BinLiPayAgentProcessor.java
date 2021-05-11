@@ -87,7 +87,7 @@ public class BinLiPayAgentProcessor extends AbstractPayAgent {
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
         log.info("宾利代付回调签名:" + tempStr + "_" + sign);
         if (sign.equalsIgnoreCase(signStr)) {
-            String shOrderId = (String) requestMap.get("shOrderId");
+            String shOrderId = (String) requestMap.get("merchant_order_sn");
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
             if (withdrawLog == null) {
