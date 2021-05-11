@@ -265,11 +265,20 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		if ( StringUtils.hasText( memberWithdrawLog.getPayAgentOrderNo() ) ) {
 			newPayAgentLog.setPayAgentOrderNo( memberWithdrawLog.getPayAgentOrderNo() );
 		}
-		if ( status != 4 ) {
-			newPayAgentLog.setCallbackTime( now );
-			newPayAgentLog.setCallbackStatus( orderState );
-		} else {
+		switch ( status ) {
+		case 4:
 			newPayAgentLog.setCallbackStatus( 0 );
+			break;
+		case 5:
+			newPayAgentLog.setCallbackTime( now );
+			newPayAgentLog.setCallbackStatus( 2 );
+			break;
+		case 6:
+			newPayAgentLog.setCallbackTime( now );
+			newPayAgentLog.setCallbackStatus( 1 );
+			break;
+		default:
+			break;
 		}
 		if ( payAgentLog == null ) {
 			newPayAgentLog.setCreateTime( now );
