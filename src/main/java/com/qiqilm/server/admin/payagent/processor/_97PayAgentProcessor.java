@@ -61,6 +61,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        log.info("97代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             String status = resultMap.getOrDefault("status", "").toString();
@@ -85,8 +86,9 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        log.info("97代付回调待签名字符串:" + requestMap);
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
+
+        log.info("97代付回调待签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String shOrderId = (String) requestMap.get("shOrderId");
 
@@ -137,6 +139,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
+            log.info("97代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 String statusTrue = resultMap.getOrDefault("status", "").toString();
