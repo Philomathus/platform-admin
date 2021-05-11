@@ -14,3 +14,5 @@ mybatis:
       dbMain: db_cx001
       dbLive: cx_live
       dbLottery: 7701_lottery
+
+payAgentLimit: 10000
