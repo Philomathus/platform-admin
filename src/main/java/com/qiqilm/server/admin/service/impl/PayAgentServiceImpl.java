@@ -132,9 +132,13 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 2000 ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持2000元以上出款" );
-		}
-		if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0 ) {
-			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 10000 ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持10000元以上出款" );
+		} else {
+			if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0 ) {
+				return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
+			}
 		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
