@@ -86,6 +86,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
+
         log.info("顺通代付回调签名:" + tempStr + "_" + sign);
         if (sign.equalsIgnoreCase(signStr)) {
             String shOrderId = (String) requestMap.get("shOrderId");
@@ -132,7 +133,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         String res = null;
         try {
             res = restTemplate.getForObject(payAgentPlatform.getPayOrderQueryAddr()+url, String.class);
-            log.warn( res );
+            log.warn("顺通代付查询结果:" + res );
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             if (!CollectionUtils.isEmpty(resultMap)) {
                 int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());

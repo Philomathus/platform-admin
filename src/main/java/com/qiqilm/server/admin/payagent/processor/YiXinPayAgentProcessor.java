@@ -71,6 +71,7 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        log.info("亿信代付下单结果 - listResult:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("200".equals(resultMap.getOrDefault("ret", "").toString())) {
                 String status = resultMap.getOrDefault("status", "").toString();
@@ -145,6 +146,7 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
+            log.info("亿信代付查询结果 - listResult:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap) && "200".equals(resultMap.getOrDefault("ret", "").toString())) {
                 int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
                 // status 4代付中 5代付失败 6代付成功

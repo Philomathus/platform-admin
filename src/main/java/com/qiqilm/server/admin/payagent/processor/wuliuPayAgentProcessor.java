@@ -143,7 +143,6 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
         if (StringUtils.isNoneBlank(res)) {
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
-                log.info("代付订单查询成功");
                 Map<String, Object> dataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());
                 int state = Integer.parseInt(dataMap.getOrDefault("state", -1).toString());
 

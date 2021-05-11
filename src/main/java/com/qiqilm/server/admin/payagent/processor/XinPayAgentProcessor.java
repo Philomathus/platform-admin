@@ -62,15 +62,16 @@ public class XinPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        log.info("新达达代付下单结果 - listResult:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
-                log.info("代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
+                log.info("新达达代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
             }
         }
-        log.warn("新代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("新达达代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
         return false;
     }
 
@@ -82,11 +83,12 @@ public class XinPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        log.info("新代付回调待签名字符串:" + requestMap);
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+
+        log.info("新达达代付回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
-            String order_num = requestMap.getOrDefault("order_no","").toString();
-            String remit_result = requestMap.getOrDefault("status","").toString();
+            String order_num = requestMap.getOrDefault("order_no", "").toString();
+            String remit_result = requestMap.getOrDefault("status", "").toString();
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_num);
             if (withdrawLog == null) {
@@ -133,8 +135,9 @@ public class XinPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
+            log.info("新达达代付查询结果 - listResult:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap) && "0".equals(resultMap.getOrDefault("code", "").toString())) {
-                Map resDataMap=(Map) resultMap.get("data");
+                Map resDataMap = (Map) resultMap.get("data");
                 String statusCode = String.valueOf(resDataMap.getOrDefault("status", "").toString());
                 int status = 4;
                 int orderState = 0;
