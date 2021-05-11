@@ -132,6 +132,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         String res = null;
         try {
             res = restTemplate.getForObject(payAgentPlatform.getPayOrderQueryAddr()+url, String.class);
+            log.warn( res );
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             if (!CollectionUtils.isEmpty(resultMap)) {
                 int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
