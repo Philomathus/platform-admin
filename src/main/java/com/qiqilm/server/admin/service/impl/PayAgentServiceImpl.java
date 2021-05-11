@@ -134,8 +134,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 2000 ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持2000元以上出款" );
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
-				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 10000 ) ) > 0 ) {
-			return AjaxResult.error( "此代付暂不支持10000元以上出款" );
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 50000 ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持50000元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI ) ) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
