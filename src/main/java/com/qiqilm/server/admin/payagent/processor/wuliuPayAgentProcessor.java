@@ -51,15 +51,16 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(e.getMessage());
         }
         log.warn("五六代付下单结果:" + res);
         if (StringUtils.isNoneBlank(res)) {
-            Map<String, Object> resultMap = JsonUtil.json2Map(res);
+//            Map<String, Object> resultMap = JsonUtil.json2Map(res);
             if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
                 log.info("五六代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
@@ -145,7 +146,6 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
             if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
                 Map<String, Object> dataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());
                 int state = Integer.parseInt(dataMap.getOrDefault("state", -1).toString());
-
                 // status 4代付中 5代付失败 6代付成功
                 // state 1处理中 2支付成功 3支付失败
                 int status = 4;
