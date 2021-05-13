@@ -19,10 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 支付通道Service业务层处理
@@ -64,12 +63,17 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 	 */
 	@Override
 	public List<PayChannelNew> selectPayChannelNewList( PayChannelNew payChannelNew ) {
-		List<PayChannelNew>   list          = payChannelNewMapper.findList( payChannelNew );
+		List<PayChannelNew> list = payChannelNewMapper.findList( payChannelNew );
 		for ( PayChannelNew me : list ) {
 			if ( "1".equals( me.getStatus() ) ) {
 				String successRate = payCacheUtil.getPayChannelSuccessRate( me.getId() );
 				if ( successRate == null ) {
-					threadPoolTaskExecutor.execute( ()-> payCacheUtil.setPayChannelSuccessRate( me.getId(), payChannelNewMapper.successRate( me.getId() ) ));
+					threadPoolTaskExecutor.execute( () -> {
+						if ( payCacheUtil.setPayChannelSuccessRateLock( me.getId() ) ) {
+							payCacheUtil.setPayChannelSuccessRate( me.getId(), payChannelNewMapper.successRate( me.getId() ) );
+							payCacheUtil.delPayChannelSuccessRateLock( me.getId() );
+						}
+					} );
 					me.setSuccessRate( "计算中..." );
 				} else {
 					me.setSuccessRate( successRate );

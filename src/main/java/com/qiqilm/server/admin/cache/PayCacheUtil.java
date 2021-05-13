@@ -28,6 +28,7 @@ public class PayCacheUtil {
 	public static final String PLATFORM  = "pay:platform:";
 	public static final String CHANNEL   = "pay:channel:";
 	public static final String CHANNELSUCCESSRATE   = "pay:channelSuccessRate:";
+	public static final String CHANNELSUCCESSRATE_LOCK   = "pay:channelSuccessRateLock:";
 
 	@Autowired
 	private RedisUtil            redisUtil;
@@ -136,6 +137,14 @@ public class PayCacheUtil {
 		for ( Long payChannelId : payChannelIds ) {
 			redisUtil.unlink( CHANNEL + payChannelId );
 		}
+	}
+
+	public boolean setPayChannelSuccessRateLock(Long id) {
+		return redisUtil.strSetIfAbsent( CHANNELSUCCESSRATE_LOCK + id, "0", Duration.ofMinutes( 5 ));
+	}
+
+	public boolean delPayChannelSuccessRateLock(Long id) {
+		return redisUtil.unlink( CHANNELSUCCESSRATE_LOCK + id);
 	}
 
     public void setPayChannelSuccessRate(Long id,String successRate) {
