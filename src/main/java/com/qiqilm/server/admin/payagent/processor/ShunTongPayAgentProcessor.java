@@ -89,7 +89,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
 
         log.info("顺通代付回调签名:" + tempStr + "_" + sign);
         if (sign.equalsIgnoreCase(signStr)) {
-            String shOrderId = (String) requestMap.get("shOrderId");
+            String shOrderId = (String) requestMap.get("obid");
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
             if (withdrawLog == null) {

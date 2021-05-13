@@ -38,22 +38,24 @@ public abstract class ConstantsPayAgent {
 	public static final String XIN_NIU_QI_CHONG_TIAN = "xinNiuQiChongTian";
 	// 五六代付
 	public static final String WULIU                 = "wuliu";
-	public static final String LANG_YA                 = "LangYa";
+	public static final String LANG_YA               = "LangYa";
 	public static final String DA_DA                 = "daDa";
 	// 钱宝代付
-	public static final String QIANBAO                 = "qianBao";
+	public static final String QIANBAO               = "qianBao";
 	// 新达达代付
-	public static final String NEWDADA                 = "xinDaDa";
+	public static final String NEWDADA               = "xinDaDa";
 	// 新世纪代付
-	public static final String NEWSHIJI                 = "xinShiJi";
+	public static final String NEWSHIJI              = "xinShiJi";
 	// 97代付
-	public static final String NINESEVEN                = "nineSeven";
+	public static final String NINESEVEN             = "nineSeven";
 	// 顺通代付
-	public static final String SHUNTONG                = "shunTong";
+	public static final String SHUNTONG              = "shunTong";
 	// 宾利代付
-	public static final String BINLI                = "binLi";
+	public static final String BINLI                 = "binLi";
+	// 宾利代付
+	public static final String BINLI2                = "binLi2";
 	// 亿信代付
-	public static final String YIXIN                = "yiXin";
+	public static final String YIXIN                 = "yiXin";
 	// 南开代付
 	public static final String NANKAI                = "nanKai";
 }

@@ -15,6 +15,11 @@ mybatis:
       dbLive: cx_live
       dbLottery: 7701_lottery
 
+# 代付额度
 payAgentLimit: 5000
+# 宾利代付额度
 payAgentLimitBinLi: 50000
+# 特仑苏代付额度
+payAgentLimitTels: 50000
+# 联付宝代付额度
 payAgentLimitLianFuBao: 2000
