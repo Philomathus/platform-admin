@@ -46,8 +46,8 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("tranTime", df.format(new Date()));
         bodyMap.put("tranAmt", withdrawLog.getWithdrawMoney().multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_UP));//精确到分
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
 
         String httpOrgCreateTestRtn = null;
         try {
@@ -83,25 +83,27 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
             return "fail";
         }
 
-        String request = requestMap.getOrDefault("transData","").toString();
-        String res = SecurityUtils.decrypt(request, payAgentPlatform.getSignPrivateKey());
-        Map<String, Object> resultMap = JsonUtil.json2Map(res);
-        String bsSerial = resultMap.getOrDefault("bsSerial", "").toString();
-        String resultFlag = resultMap.getOrDefault("resultFlag", "").toString();
-
-        if ("0".equals(resultFlag)) {
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(bsSerial);
+        String request = requestMap.getOrDefault("transData", "").toString();
+        try {
+            String res = SecurityUtils.decrypt(request, payAgentPlatform.getSignPrivateKey());
+            Map<String, Object> resultMap = JsonUtil.json2Map(res);
+            String orderNo = resultMap.getOrDefault("orderNo", "").toString();
+            String resultFlag = resultMap.getOrDefault("resultFlag", "").toString();
+            log.info("南开代付回调,resultFlag的值为: {}" , resultFlag );
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderNo);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", bsSerial);
+                log.error("提现相关记录丢失 - merOrderNo:{}", orderNo);
                 return "fail";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", bsSerial);
+                log.error("已有代付记录 - merOrderNo:{}", orderNo);
                 return "0";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(bsSerial);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, bsSerial, payAgentPlatform, "0".equals(resultFlag));
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(orderNo);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, orderNo, payAgentPlatform, "0".equals(resultFlag));
             return "0";
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return "fail";
     }
@@ -121,8 +123,8 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("payKey", payAgentPlatform.getHeaderKey());
         bodyMap.put("orderNo", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
 
         String httpOrgCreateTestRtn = null;
         try {
