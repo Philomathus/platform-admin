@@ -32,6 +32,8 @@ public abstract class ConstantsPayAgent {
 	public static final String XIONG_MAO             = "xiongMao";
 	// 特仑苏代付
 	public static final String TE_LUN_SU             = "teLunSu";
+	// 特仑苏代付
+	public static final String TE_LUN_SU2            = "teLunSu2";
 	// 新牛气冲天
 	public static final String XIN_NIU_QI_CHONG_TIAN = "xinNiuQiChongTian";
 	// 五六代付

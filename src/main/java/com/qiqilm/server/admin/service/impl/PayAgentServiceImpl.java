@@ -50,6 +50,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
 	@Value( "${payAgentLimit:5000}" )
 	private Integer payAgentLimit;
+	@Value( "${payAgentLimitBinLi:5000}" )
+	private Integer payAgentLimitBinLi;
+	@Value( "${payAgentLimitLianFuBao:5000}" )
+	private Integer payAgentLimitLianFuBao;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -131,13 +135,14 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		}
 
 		if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
-				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 2000 ) ) > 0 ) {
-			return AjaxResult.error( "此代付暂不支持2000元以上出款" );
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitLianFuBao ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitLianFuBao + "元以上出款" );
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
-				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 10000 ) ) > 0 ) {
-			return AjaxResult.error( "此代付暂不支持10000元以上出款" );
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitBinLi ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitBinLi + "元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
-				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI ) ) {
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO ) ) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
 		}
 
