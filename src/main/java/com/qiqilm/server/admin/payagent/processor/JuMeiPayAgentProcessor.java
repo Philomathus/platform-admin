@@ -75,9 +75,17 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-        String encryption = requestMap.remove("encryption").toString();
+        String sn = requestMap.getOrDefault("sn","").toString();
+        String out_sn = requestMap.getOrDefault("out_sn","").toString();
+        String money = requestMap.getOrDefault("money","").toString();
         String trade_status = requestMap.getOrDefault("trade_status", "").toString();
-        Map<String, String> bodyMap = new HashMap(requestMap);
+        String encryption = requestMap.remove("encryption").toString();
+
+        Map<String, String> bodyMap = new HashMap(4);
+        bodyMap.put("sn", sn);
+        bodyMap.put("out_sn", out_sn);
+        bodyMap.put("money", money);
+        bodyMap.put("trade_status", trade_status);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -86,8 +94,6 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
 
         log.info("聚美代付回调签名字符串:" + encryption + "_" + sign);
         if (encryption.equalsIgnoreCase(sign)) {
-            String out_sn = (String) requestMap.get("out_sn");
-
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_sn);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", out_sn);
