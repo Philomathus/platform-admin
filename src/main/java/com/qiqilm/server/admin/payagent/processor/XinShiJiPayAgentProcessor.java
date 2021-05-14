@@ -92,7 +92,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
 
-        log.info("新世纪代付回调待签名字符串:" + pay_md5sign + "_" +sign);
+        log.info("新世纪代付回调签名字符串:" + pay_md5sign + "_" +sign);
         if (pay_md5sign.equalsIgnoreCase(sign)) {
             String out_trade_no = (String) requestMap.get("out_trade_no");
 

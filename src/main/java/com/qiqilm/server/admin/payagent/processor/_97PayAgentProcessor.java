@@ -88,7 +88,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
 
-        log.info("97代付回调待签名字符串:" + sign + "_" + signStr);
+        log.info("97代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String shOrderId = (String) requestMap.get("shOrderId");
 
