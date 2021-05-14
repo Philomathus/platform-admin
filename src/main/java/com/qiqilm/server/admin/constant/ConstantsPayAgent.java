@@ -60,4 +60,6 @@ public abstract class ConstantsPayAgent {
 	public static final String NANKAI                = "nanKai";
 	// 聚美代付
 	public static final String JUMEI                = "juMei";
+	// newmax代付
+	public static final String NEWMAX                = "newmax";
 }
