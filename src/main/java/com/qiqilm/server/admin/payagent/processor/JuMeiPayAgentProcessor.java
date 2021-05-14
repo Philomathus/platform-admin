@@ -120,7 +120,7 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
     public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
-        Map<String, String> paramsMap = new TreeMap<>();
+        Map<String, String> paramsMap = new HashMap<>(2);
         paramsMap.put("pid", payAgentPlatform.getMerId());
         paramsMap.put("sn", withdrawLog.getOrderNo());
 
