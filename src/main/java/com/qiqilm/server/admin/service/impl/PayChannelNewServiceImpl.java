@@ -13,16 +13,15 @@ import com.qiqilm.server.admin.utils.DateUtils;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 支付通道Service业务层处理
@@ -33,17 +32,17 @@ import java.util.concurrent.Future;
 @Service
 public class PayChannelNewServiceImpl implements IPayChannelNewService {
 	@Autowired
-	private PayChannelNewMapper   payChannelNewMapper;
+	private PayChannelNewMapper    payChannelNewMapper;
 	@Autowired
-	private PayChannelMoneyMapper payChannelMoneyMapper;
+	private PayChannelMoneyMapper  payChannelMoneyMapper;
 	@Autowired
-	private PayTypeMapper         payTypeMapper;
+	private PayTypeMapper          payTypeMapper;
 	@Autowired
-	private TokenService          tokenService;
+	private TokenService           tokenService;
 	@Autowired
-	private PayCacheUtil          payCacheUtil;
+	private PayCacheUtil           payCacheUtil;
 	@Resource
-	private ForkJoinPool          forkJoinPool;
+	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	/**
 	 * 查询支付通道
@@ -64,36 +63,24 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 	 */
 	@Override
 	public List<PayChannelNew> selectPayChannelNewList( PayChannelNew payChannelNew ) {
-		List<PayChannelNew>   list          = payChannelNewMapper.findList( payChannelNew );
-		Set<Callable<String>> forkJoinTasks = new HashSet<>();
+		List<PayChannelNew> list = payChannelNewMapper.findList( payChannelNew );
 		for ( PayChannelNew me : list ) {
 			if ( "1".equals( me.getStatus() ) ) {
 				String successRate = payCacheUtil.getPayChannelSuccessRate( me.getId() );
 				if ( successRate == null ) {
-					forkJoinTasks.add( () -> {
-						payCacheUtil.setPayChannelSuccessRate( me.getId(), payChannelNewMapper.successRate( me.getId() ) );
-						return "success";
+					threadPoolTaskExecutor.execute( () -> {
+						if ( payCacheUtil.setPayChannelSuccessRateLock( me.getId() ) ) {
+							payCacheUtil.setPayChannelSuccessRate( me.getId(), payChannelNewMapper.successRate( me.getId() ) );
+							payCacheUtil.delPayChannelSuccessRateLock( me.getId() );
+						}
 					} );
+					me.setSuccessRate( "计算中..." );
 				} else {
 					me.setSuccessRate( successRate );
 				}
 			}
 			if ( "0".equals( me.getStatus() ) ) {
 				me.setSuccessRate( "已停用" );
-			}
-		}
-		List<Future<String>> futureList = forkJoinPool.invokeAll( forkJoinTasks );
-		futureList.stream().map( t -> {
-			try {
-				return t.get();
-			} catch ( InterruptedException | ExecutionException e ) {
-				throw new IllegalStateException( e );
-			}
-		} );
-		for ( PayChannelNew me : list ) {
-			if ( "1".equals( me.getStatus() ) && StringUtils.isBlank( me.getSuccessRate() ) ) {
-				String successRate = payCacheUtil.getPayChannelSuccessRate( me.getId() );
-				me.setSuccessRate( successRate );
 			}
 		}
 		return list;
@@ -158,7 +145,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 				for ( String money : moneys ) {
 					PayChannelMoney payChannelMoney = new PayChannelMoney();
 
-                    payChannelMoney.setMoney( Long.parseLong( money.trim() ) );
+					payChannelMoney.setMoney( Long.parseLong( money.trim() ) );
 					payChannelMoney.setChannelId( channelNew.getId() );
 					payChannelMoney.setChannelPayRate( channelNew.getPayRate() );
 					payChannelMoney.setTypeCode( typeCode );

@@ -50,6 +50,12 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
 	@Value( "${payAgentLimit:5000}" )
 	private Integer payAgentLimit;
+	@Value( "${payAgentLimitBinLi:5000}" )
+	private Integer payAgentLimitBinLi;
+	@Value( "${payAgentLimitTels:5000}" )
+	private Integer payAgentLimitTels;
+	@Value( "${payAgentLimitLianFuBao:5000}" )
+	private Integer payAgentLimitLianFuBao;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -93,7 +99,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				if ( payAgentLog.getPayAgentPlatId().toString().equals( payAgentPlatform.getId().toString() ) ) {
 					BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 					try {
-						log.warn( "开始批量查询代付订单 - 订单号：{}", payAgentLog.getWithdrawOrderNo() );
+						log.warn( "开始批量查询代付订单 - 订单号：{}，PayAgentPlatId：{},PayAgentPlatCode:{}", payAgentLog.getWithdrawOrderNo(),
+								payAgentLog.getPayAgentPlatId(), payAgentPlatform.getCode() );
 						basePayAgent.queryOrderPay( payAgentLog );
 					} catch ( Exception e ) {
 						log.error( e.getMessage(), e );
@@ -128,13 +135,27 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		if ( withdrawLog.getStatus() != 1 ) {
 			return AjaxResult.error( "审核流程非法" );
 		}
+
 		if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
-				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( 2000 ) ) > 0 ) {
-			return AjaxResult.error( "此代付暂不支持2000元以上出款" );
-		}
-		if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0 ) {
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitLianFuBao ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitLianFuBao + "元以上出款" );
+		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 ) )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitTels ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitTels + "元以上出款" );
+		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 ) )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitBinLi ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitBinLi + "元以上出款" );
+		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 ) ) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
 		}
+
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
 		if ( StringUtils.hasText( withdrawLog.getOpName() ) && !userName.equals( withdrawLog.getOpName() ) ) {
@@ -264,11 +285,20 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		if ( StringUtils.hasText( memberWithdrawLog.getPayAgentOrderNo() ) ) {
 			newPayAgentLog.setPayAgentOrderNo( memberWithdrawLog.getPayAgentOrderNo() );
 		}
-		if ( status != 4 ) {
-			newPayAgentLog.setCallbackTime( now );
-			newPayAgentLog.setCallbackStatus( orderState );
-		} else {
+		switch ( status ) {
+		case 4:
 			newPayAgentLog.setCallbackStatus( 0 );
+			break;
+		case 5:
+			newPayAgentLog.setCallbackTime( now );
+			newPayAgentLog.setCallbackStatus( 2 );
+			break;
+		case 6:
+			newPayAgentLog.setCallbackTime( now );
+			newPayAgentLog.setCallbackStatus( 1 );
+			break;
+		default:
+			break;
 		}
 		if ( payAgentLog == null ) {
 			newPayAgentLog.setCreateTime( now );

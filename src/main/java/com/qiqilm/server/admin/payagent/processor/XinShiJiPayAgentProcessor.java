@@ -64,6 +64,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        log.info("新世纪代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("success".equals(resultMap.getOrDefault("status", "").toString())) {
                 log.info("新世纪代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
@@ -79,6 +80,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String pay_md5sign = requestMap.remove("pay_md5sign").toString();
+        String status = requestMap.getOrDefault("status", "").toString();
         if(!StringUtils.hasText(requestMap.getOrDefault("msg","").toString())) {
             requestMap.remove("msg");
         }
@@ -88,8 +90,9 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey" ) );
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        log.info("新世纪代付回调待签名字符串:" + requestMap);
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+
+        log.info("新世纪代付回调签名字符串:" + pay_md5sign + "_" +sign);
         if (pay_md5sign.equalsIgnoreCase(sign)) {
             String out_trade_no = (String) requestMap.get("out_trade_no");
 
@@ -103,7 +106,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
                 return "ok";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(out_trade_no);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, true);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "success".equals(status));
             return "ok";
         }
         return "fail";
@@ -140,6 +143,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
         String res = null;
         try {
             res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
+            log.info("新世纪代付下单结果 - result:{}", res);
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String success = resultMap.getOrDefault("status", "").toString();

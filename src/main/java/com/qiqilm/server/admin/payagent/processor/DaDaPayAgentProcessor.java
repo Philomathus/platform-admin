@@ -62,7 +62,7 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
         }
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
-                log.info("代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
+                log.info("达达代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());

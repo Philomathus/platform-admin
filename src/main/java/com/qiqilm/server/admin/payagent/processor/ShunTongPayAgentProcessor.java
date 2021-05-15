@@ -86,9 +86,10 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
+
         log.info("顺通代付回调签名:" + tempStr + "_" + sign);
-        if (sign.equalsIgnoreCase(signStr) && "0".equals(status)) {
-            String shOrderId = (String) requestMap.get("shOrderId");
+        if (sign.equalsIgnoreCase(signStr)) {
+            String shOrderId = (String) requestMap.get("obid");
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
             if (withdrawLog == null) {
@@ -100,7 +101,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                 return "success";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(shOrderId);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, true);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "0".equals(status));
             return "success";
         }
         return "fail";
@@ -132,23 +133,24 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         String res = null;
         try {
             res = restTemplate.getForObject(payAgentPlatform.getPayOrderQueryAddr()+url, String.class);
+            log.warn("顺通代付查询结果:" + res );
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             if (!CollectionUtils.isEmpty(resultMap)) {
                 int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
+                if(statusType == 10 || statusType == 0) {
                     // status 4代付中 5代付失败 6代付成功
                     // statusType 1申请受理中，2代付下发中，10交易失败，0下发成功
                     int status = 4;
                     if (statusType == 0) {
                         status = 6;
                         statusType = 0;
-                    } else if (statusType == 10) {
+                    } else {
                         status = 5;
                         statusType = 10;
-                    } else {
-                        statusType = 1;
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                     return;
+                }
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
