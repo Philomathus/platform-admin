@@ -46,7 +46,6 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey" ) );
         String signStr = this.assemblyUrl( bodyMap ) + signMd5;
-        System.out.println("待签名字符串"+signStr);
         String sign = DigestUtils.md5Hex( signStr );
         bodyMap.put( "sign", sign );
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -65,8 +64,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
                 log.info("钱宝代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 Map dataMap =(Map) resultMap.getOrDefault("data", "");
                 String status = dataMap.getOrDefault("state", "").toString();
-                if ("3".equals(status)){
-                    System.out.println("下单成功");
+                if ("1".equals(status)){
                     return true;
                 }
             } else {
@@ -89,7 +87,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         log.info("顺风代付回调待签名字符串:" + requestMap);
-        String sign = DigestUtils.md5Hex(tempStr);
+        String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         String out_trade_no = requestMap.getOrDefault( "out_trade_no", "" ).toString();
         String state = requestMap.getOrDefault( "state", "" ).toString();
 
