@@ -44,6 +44,14 @@ public class BankList extends BaseEntity {
     @Excel(name = "官网地址")
     private String url;
 
+    /** 结束颜色 */
+    @Excel(name = "结束颜色")
+    private String colorEnd;
+
+    /** 开始颜色 */
+    @Excel(name = "开始颜色")
+    private String colorStart;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -54,6 +62,8 @@ public class BankList extends BaseEntity {
             .append("status", getStatus())
             .append("sort", getSort())
             .append("url", getUrl())
+            .append("colorEnd", getColorEnd())
+            .append("colorStart", getColorStart())
             .toString();
     }
 }
