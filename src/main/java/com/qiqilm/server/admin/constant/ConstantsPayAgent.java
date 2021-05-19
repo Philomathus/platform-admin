@@ -65,5 +65,7 @@ public abstract class ConstantsPayAgent {
 	// newmax代付
 	public static final String NEWMAX                = "newmax";
 	//顺风
-	public static final String SHUN_FENG                = "shunFeng";
+	public static final String SHUN_FENG             = "shunFeng";
+	//马云代付
+	public static final String Ma_Yun                = "maYun";
 }
