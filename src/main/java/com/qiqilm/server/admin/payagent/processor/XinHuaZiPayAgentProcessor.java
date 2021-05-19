@@ -75,15 +75,18 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
             log.warn("请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json(requestMap));
             return "fail";
         }
-        String sign = requestMap.remove("sign").toString();
-
+        String state = requestMap.getOrDefault("code", "").toString();
+        String signres = requestMap.remove("sign").toString();
+        requestMap.remove("code").toString();
+        requestMap.remove("msg").toString();
+        requestMap.remove("order_id").toString();
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey" ) );
         SortedMap<String, Object> signMap = new TreeMap<>(requestMap);
-        String tempStr = this.assemblyUrl(requestMap);
-
-        //RSA 2048 SHA256 公钥验签
-        if (RSACoder.verifySha256Rsa(tempStr, payAgentPlatform.getSignPublicKey(), sign)) {
-            String state = signMap.getOrDefault("state", "").toString();
-            String orderNo = signMap.getOrDefault("mchOrderNo", "").toString();
+        String tempStr = this.assemblyUrl(requestMap)+"&api_key="+signMd5;
+        String sign = DigestUtils.md5Hex( tempStr).toUpperCase();
+        if (signres.equals(sign)) {
+            String orderNo = signMap.getOrDefault("out_trade_no", "").toString();
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderNo);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", orderNo);
@@ -95,7 +98,7 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(orderNo);
             payAgentService.processOrderPay(withdrawLog, payAgentLog, orderNo, payAgentPlatform,
-                    "2".equals(state));
+                    "0000".equals(state));
             return "SUCCESS";
         }
         return "fail";
