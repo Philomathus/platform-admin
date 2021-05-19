@@ -19,6 +19,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Repository(value = ConstantsPayAgent.XIN_HUA_ZI + "PayAgentProcessor")
@@ -28,8 +29,8 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         Map<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put("mch_id", payAgentPlatform.getMerId());
-        bodyMap.put( "pay_date", DateFormatUtils.formate( reqPayAgent.getCurrentTime(),
-                DateFormatUtils.SPLIT_PATTERN_DATETIME ) );
+        String pay_date=getOrderAgentTime();
+        bodyMap.put( "pay_date", pay_date);
         bodyMap.put( "out_trade_no", withdrawLog.getOrderNo() );
         bodyMap.put("total_fee", withdrawLog.getWithdrawMoney().setScale(0,
                 BigDecimal.ROUND_HALF_UP));
@@ -116,8 +117,8 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, String> dataMap = new LinkedHashMap<>();
         dataMap.put( "merid", payAgentPlatform.getMerId());
-        dataMap.put( "pay_date", DateFormatUtils.formate( payAgentLog.getCreateTime(),
-                DateFormatUtils.SPLIT_PATTERN_DATETIME ) );
+        String pay_date=getOrderAgentTime();
+        dataMap.put( "pay_date", pay_date );
         dataMap.put("out_trade_no", withdrawLog.getOrderNo());
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -155,5 +156,14 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
             }
         }
         log.warn("代付订单查询失败 - result:{}", resultMap);
+    }
+    private String getOrderAgentTime() {
+        //我要获取当前的日期
+        Date date = new Date();
+        //设置要获取到什么样的时间
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //获取String类型的时间
+        String createdate = sdf.format(date);
+        return createdate;
     }
 }
