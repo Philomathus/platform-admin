@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * 会员注单数据Service业务层处理
@@ -44,13 +45,19 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             reqMemberGameData.setStartTime(reqMemberGameData.getSelectDate()[0] + " 00:00:00");
             reqMemberGameData.setEndTime(reqMemberGameData.getSelectDate()[1] + " 23:59:59");
         }
-        if ( StringUtils.isNotBlank( reqMemberGameData.getAccount() ) ) {
-            String tableLast =  reqMemberGameData.getAccount().substring( reqMemberGameData.getAccount().length() - 1 );
-            reqMemberGameData.setTableLast( tableLast );
-            return memberGameDataMapper.selectMemberGameDataList( reqMemberGameData );
+        if (StringUtils.isNotBlank(reqMemberGameData.getAccount())) {
+            String tableLast = reqMemberGameData.getAccount().substring(reqMemberGameData.getAccount().length() - 1);
+            //判断是否为数字
+            Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+            if (pattern.matcher(tableLast).matches()) {
+                reqMemberGameData.setTableLast(tableLast);
+            } else {
+                reqMemberGameData.setTableLast("0");
+            }
+            return memberGameDataMapper.selectMemberGameDataList(reqMemberGameData);
         } else {
-            reqMemberGameData.setTableLast( "0" );
-            return memberGameDataMapper.selectMemberGameDataList( reqMemberGameData );
+            reqMemberGameData.setTableLast("0");
+            return memberGameDataMapper.selectMemberGameDataList(reqMemberGameData);
         }
     }
 
@@ -60,9 +67,9 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             reqMemberGameData.setStartTime(reqMemberGameData.getSelectDate()[0] + " 00:00:00");
             reqMemberGameData.setEndTime(reqMemberGameData.getSelectDate()[1] + " 23:59:59");
         }
-        String tableLast =  reqMemberGameData.getAccount().substring( reqMemberGameData.getAccount().length() - 1 );
-        reqMemberGameData.setTableLast( tableLast );
-        return memberGameDataMapper.getCountMemberGameDataList( reqMemberGameData );
+        String tableLast = reqMemberGameData.getAccount().substring(reqMemberGameData.getAccount().length() - 1);
+        reqMemberGameData.setTableLast(tableLast);
+        return memberGameDataMapper.getCountMemberGameDataList(reqMemberGameData);
     }
 
     @Override
@@ -70,12 +77,12 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
         String agent = memberGameData.getAgent();
         String gameId = memberGameData.getGameId();
         RspLotteryBetLog rspLotteryBetLog = new RspLotteryBetLog();
-        if (Strings.isNotBlank(agent)&&agent.equals("10000")){
-            rspLotteryBetLog = memberGameDataMapper.findBetList( gameId );
+        if (Strings.isNotBlank(agent) && agent.equals("10000")) {
+            rspLotteryBetLog = memberGameDataMapper.findBetList(gameId);
 
         }
-        if (Strings.isNotBlank(agent)&&agent.equals("80000")){
-            rspLotteryBetLog=   memberGameDataMapper.findBetLists( gameId );
+        if (Strings.isNotBlank(agent) && agent.equals("80000")) {
+            rspLotteryBetLog = memberGameDataMapper.findBetLists(gameId);
         }
         return AjaxResult.success(rspLotteryBetLog);
     }

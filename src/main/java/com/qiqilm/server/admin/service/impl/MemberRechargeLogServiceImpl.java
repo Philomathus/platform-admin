@@ -123,6 +123,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	}
 
 	@Override
+	@Transactional( rollbackFor = Exception.class )
 	public AjaxResult finalAudit( ReqMemberRechargeLog req ) {
 		MemberRechargeLog memberRechargeLog = this.selectMemberRechargeLogById( req.getId() );
 		if ( memberRechargeLog == null ) {
@@ -147,7 +148,6 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 			redisUtil.unLock( EnumLock.member, memberRechargeLog.getMemberId() );
 		}
 	}
-
 
 	@Transactional( rollbackFor = Exception.class )
 	public boolean finalAudit( ReqMemberRechargeLog req, String userName, String mark ) {
@@ -203,8 +203,6 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		}catch (Exception e){
 			log.error("首充报错",e);
 		}
-
-
 
 		//更新用户账户余额
 		return this.updateMemberCharge( memberInfo.getId(), add, "线下存款" );
@@ -276,6 +274,12 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		MemberRechargeLog memberRechargeLog = this.selectMemberRechargeLogById( req.getId() );
 		if ( memberRechargeLog == null ) {
 			return AjaxResult.error( "订单不存在" );
+		}
+		if ( !redisUtil.lock( EnumLock.member, memberRechargeLog.getMemberId(), "1", 5 ) ) {
+			return AjaxResult.error( "请勿重复提交" );
+		}
+		if(memberRechargeLog.getStatus()==3){
+			return AjaxResult.error( "该订单已审核通过,请刷新页面" );
 		}
 
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
