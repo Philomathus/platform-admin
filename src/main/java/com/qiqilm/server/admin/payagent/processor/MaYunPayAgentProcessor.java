@@ -95,12 +95,12 @@ public class MaYunPayAgentProcessor extends AbstractPayAgent {
 			}
 			if ( withdrawLog.getStatus() == 6 ) {
 				log.error( "已有代付记录 - merOrderNo:{}", merchantOrderSn );
-				return "SUCCESS";
+				return "success";
 			}
 			PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( merchantOrderSn );
 			payAgentService.processOrderPay( withdrawLog, payAgentLog, merchantOrderSn, payAgentPlatform,
 					"2".equals( status ) );
-			return "SUCCESS";
+			return "success";
 
 		}
 		return "fail";
