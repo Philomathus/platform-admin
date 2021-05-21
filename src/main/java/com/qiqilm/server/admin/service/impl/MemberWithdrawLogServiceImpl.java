@@ -446,8 +446,13 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
      */
     @Override
     public AjaxResult withdrawReport(String id) {
+        if (!redisUtil.lock(EnumLock.member, id, "1", 5)) {
+            return AjaxResult.error("请勿连续点击");
+        }
         memberInfoMapper.call_pro_useranalysis(id);
-        return AjaxResult.success(memberInfoMapper.userWithdrawReportList());
+        memberInfoMapper.userWithdrawReportList();
+        redisUtil.unLock( EnumLock.member, id );
+        return AjaxResult.success();
     }
 
     @Override
