@@ -12,6 +12,7 @@ public abstract class ConstantsPayAgent {
 	public static final String SHUN_WEI              = "shunWei";
 	// 顺为代付
 	public static final String SHUN_WEI2             = "shunWei2";
+	public static final String SHUN_WEI3             = "shunWei3";
 	// 天天代付
 	public static final String TIAN_TIAN             = "tianTian";
 	// 咪咪代付
