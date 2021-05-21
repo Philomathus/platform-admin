@@ -195,11 +195,24 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         }
         List<MemberWithdrawLog> withdrawLogList = memberWithdrawLogMapper.selectByIds(req.getIds());
         for (MemberWithdrawLog memberWithdrawLog : withdrawLogList) {
-            memberWithdrawLog.setRemark(req.getRemark());
-            memberWithdrawLog.setStatus(2);//审核不通过
-            memberWithdrawLog.setOpName(userName);
-            memberWithdrawLog.setUpdateTime(new Date());
-            this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+            if (memberWithdrawLog == null) {
+                return AjaxResult.error("订单不存在");
+            }
+            if (!StringUtils.isEmpty(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+                return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单只能由" + memberWithdrawLog.getOpName() + "处理");
+            }
+            if (memberWithdrawLog.getStatus() == 2) {
+                return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单重复处理");
+            }
+            if (memberWithdrawLog.getStatus()<2 || memberWithdrawLog.getStatus()==5 || memberWithdrawLog.getStatus()==7 || memberWithdrawLog.getStatus()==8 ){
+                memberWithdrawLog.setRemark(req.getRemark());
+                memberWithdrawLog.setStatus(2);//审核不通过
+                memberWithdrawLog.setOpName(userName);
+                memberWithdrawLog.setUpdateTime(new Date());
+                this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+            }else {
+                return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单状态"+memberWithdrawLog.getStatus()+"该状态下订单不能拒绝");
+            }
         }
 
         redisUtil.unLock(EnumLock.adminUser, userName);
