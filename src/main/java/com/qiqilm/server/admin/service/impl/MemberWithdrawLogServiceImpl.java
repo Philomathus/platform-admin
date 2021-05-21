@@ -194,6 +194,9 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             return AjaxResult.error("请勿重复提交");
         }
         List<MemberWithdrawLog> withdrawLogList = memberWithdrawLogMapper.selectByIds(req.getIds());
+        if (withdrawLogList==null){
+            return AjaxResult.error("该订单已被处理,请刷新界面");
+        }
         for (MemberWithdrawLog memberWithdrawLog : withdrawLogList) {
             if (memberWithdrawLog == null) {
                 return AjaxResult.error("订单不存在");
