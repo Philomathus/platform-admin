@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.domain.BankCardAddress;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
@@ -194,7 +195,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             return AjaxResult.error("请勿重复提交");
         }
         List<MemberWithdrawLog> withdrawLogList = memberWithdrawLogMapper.selectByIds(req.getIds());
-        if (withdrawLogList==null){
+        if (withdrawLogList==null || withdrawLogList.size()==0){
             return AjaxResult.error("该订单已被处理,请刷新界面");
         }
         for (MemberWithdrawLog memberWithdrawLog : withdrawLogList) {
@@ -446,13 +447,13 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
      */
     @Override
     public AjaxResult withdrawReport(String id) {
-        if (!redisUtil.lock(EnumLock.member, id, "1", 5)) {
+        if (!redisUtil.lock(EnumLock.member, id, "1", 10)) {
             return AjaxResult.error("请勿连续点击");
         }
         memberInfoMapper.call_pro_useranalysis(id);
-        memberInfoMapper.userWithdrawReportList();
+        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
         redisUtil.unLock( EnumLock.member, id );
-        return AjaxResult.success();
+        return AjaxResult.success(withdrawReports);
     }
 
     @Override
