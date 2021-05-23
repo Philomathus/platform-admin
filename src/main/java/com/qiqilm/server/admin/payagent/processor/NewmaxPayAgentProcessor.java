@@ -13,6 +13,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.support.ManagedArray;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -143,7 +144,8 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
 
             if (!CollectionUtils.isEmpty(resultMap)) {
-                String statusCode = String.valueOf( resultMap.getOrDefault( "status", "" ).toString());
+                Map dataMap = (Map)resultMap.getOrDefault("data","");
+                String statusCode = String.valueOf( dataMap.getOrDefault( "status", "" ).toString());
                 int    status     = 4;
                 int    orderState = 0;
                 log.info("newmax代付查询结果- result:{}", JsonUtil.object2Map(resultMap)+"状态"+statusCode);
