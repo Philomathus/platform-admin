@@ -143,19 +143,18 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             log.info("newmax代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
-                int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
-                if (statusType == -1 || statusType == 2) {
-                    // status 4代付中 5代付失败 6代付成功
-                    // state-1：被拒绝；1：未支付；2支付成功
-                    int status = 4;
-                    if (statusType == -1) {
-                        status = 5;
-                    } else if (statusType == 2) {
-                        status = 6;
-                    }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                    return;
+                String statusCode = String.valueOf( resultMap.getOrDefault( "status", "" ).toString());
+                int    status     = 4;
+                int    orderState = 0;
+                if ( "2".equals( statusCode ) ) {
+                    status = 6;
+                    orderState = 1;
+                } else {
+                    status = 5;
+                    orderState = 2;
                 }
+                payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
+                return;
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
