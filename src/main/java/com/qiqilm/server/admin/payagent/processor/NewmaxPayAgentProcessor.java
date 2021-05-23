@@ -137,9 +137,10 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        Map<String, Object> resultMap = null;
+        String res  = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
+            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
+            Map<String, Object> resultMap = JsonUtil.json2Map(res);
             log.info("newmax代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
