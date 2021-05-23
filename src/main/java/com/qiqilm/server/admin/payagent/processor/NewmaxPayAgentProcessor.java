@@ -141,11 +141,12 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         try {
             res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
-            log.info("newmax代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String statusCode = String.valueOf( resultMap.getOrDefault( "status", "" ).toString());
                 int    status     = 4;
                 int    orderState = 0;
+                log.info("newmax代付查询结果- result:{}", JsonUtil.object2Map(resultMap)+"状态"+statusCode);
                 if ( "2".equals( statusCode ) ) {
                     status = 6;
                     orderState = 1;
