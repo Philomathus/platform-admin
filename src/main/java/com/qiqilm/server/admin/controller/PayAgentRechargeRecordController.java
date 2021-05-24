@@ -6,8 +6,10 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayAgentRechargeRecord;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IPayAgentRechargeRecordService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,8 @@ import java.util.List;
 public class PayAgentRechargeRecordController extends BaseController {
 	@Autowired
 	private IPayAgentRechargeRecordService payAgentRechargeRecordService;
+	@Autowired
+	private RedisUtil redisUtil;
 
 	/**
 	 * 查询【代充存提】列表
@@ -106,6 +110,9 @@ public class PayAgentRechargeRecordController extends BaseController {
 	@Log( title = "【人工存入】", businessType = BusinessType.OTHER )
 	@PutMapping( "/deposit" )
 	public AjaxResult deposit(PayAgentRechargeRecord payAgentRechargeRecord) throws Exception {
+		if (!redisUtil.lock(EnumLock.member, payAgentRechargeRecord.getOrderNo(), "1", 10)) {
+			return AjaxResult.error("请勿重复提交");
+		}
 		return payAgentRechargeRecordService.deposit(payAgentRechargeRecord) ;
 	}
 
@@ -116,6 +123,9 @@ public class PayAgentRechargeRecordController extends BaseController {
 	@Log( title = "【人工提出】", businessType = BusinessType.OTHER )
 	@PutMapping( "/proposed" )
 	public AjaxResult proposed( PayAgentRechargeRecord payAgentRechargeRecord) throws Exception {
+		if (!redisUtil.lock(EnumLock.member, payAgentRechargeRecord.getOrderNo(), "1", 10)) {
+			return AjaxResult.error("请勿重复提交");
+		}
 		return  payAgentRechargeRecordService.proposed(payAgentRechargeRecord) ;
 	}
 }

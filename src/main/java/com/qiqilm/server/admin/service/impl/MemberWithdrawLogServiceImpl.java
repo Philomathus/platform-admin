@@ -159,13 +159,16 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         if (!redisUtil.lock(EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5)) {
             return AjaxResult.error("请勿重复提交");
         }
+        if (memberWithdrawLog.getStatus()<2 || memberWithdrawLog.getStatus()==5 || memberWithdrawLog.getStatus()==7 || memberWithdrawLog.getStatus()==8 ){
+            memberWithdrawLog.setRemark(req.getRemark());
+            memberWithdrawLog.setStatus(2);//审核不通过
+            memberWithdrawLog.setOpName(userName);
+            memberWithdrawLog.setUpdateTime(new Date());
+            this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+        }else {
+            return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单状态"+memberWithdrawLog.getStatus()+"该状态下订单不能拒绝");
+        }
 
-        memberWithdrawLog.setRemark(req.getRemark());
-        memberWithdrawLog.setStatus(2);//审核不通过
-        memberWithdrawLog.setOpName(userName);
-        memberWithdrawLog.setUpdateTime(new Date());
-
-        this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
 
         redisUtil.unLock(EnumLock.member, memberWithdrawLog.getMemberId());
         return AjaxResult.success();
