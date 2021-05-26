@@ -50,6 +50,8 @@ public abstract class ConstantsPayAgent {
 	public static final String NINESEVEN             = "nineSeven";
 	// 顺通代付
 	public static final String SHUNTONG              = "shunTong";
+	// 福财运2代付
+	public static final String SHUNTONG2             = "shunTong2";
 	// 宾利代付
 	public static final String BINLI                 = "binLi";
 	// 宾利代付
@@ -59,7 +61,7 @@ public abstract class ConstantsPayAgent {
 	// 南开代付
 	public static final String NANKAI                = "nanKai";
 	// 聚美代付
-	public static final String JUMEI                = "juMei";
+	public static final String JUMEI                 = "juMei";
 	// newmax代付
 	public static final String NEWMAX                = "newmax";
 }

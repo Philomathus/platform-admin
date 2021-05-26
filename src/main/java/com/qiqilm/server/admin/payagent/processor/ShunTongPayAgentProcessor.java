@@ -68,7 +68,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                 log.info("顺通代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
             }
         }
         log.warn("顺通代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
