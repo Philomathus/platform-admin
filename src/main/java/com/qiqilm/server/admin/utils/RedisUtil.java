@@ -1005,6 +1005,7 @@ public class RedisUtil {
 				, Duration.ofSeconds( timeOut ) );
 	}
 
+
 	public void unLock( EnumLock mode, String userId ) {
 		this.unlink( Constants.SESSION_CLICK_LOCK.concat( mode.getKey() ).concat( userId ) );
 	}

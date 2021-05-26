@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class ReqMemberRechargeLog {
+    private String[] downLoadDate = new String[2];
 	private String id;
 	private String remark;
 
