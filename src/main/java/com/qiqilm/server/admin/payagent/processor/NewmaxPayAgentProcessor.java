@@ -13,6 +13,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.support.ManagedArray;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -137,25 +138,26 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        String res = null;
+        String res  = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
-            log.info("newmax代付查询结果- result:{}", res);
+            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
+
             if (!CollectionUtils.isEmpty(resultMap)) {
-                int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
-                if (statusType == -1 || statusType == 2) {
-                    // status 4代付中 5代付失败 6代付成功
-                    // state-1：被拒绝；1：未支付；2支付成功
-                    int status = 4;
-                    if (statusType == -1) {
-                        status = 5;
-                    } else if (statusType == 2) {
-                        status = 6;
-                    }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                    return;
+                Map dataMap = (Map)resultMap.getOrDefault("data","");
+                String statusCode = String.valueOf( dataMap.getOrDefault( "status", "" ).toString());
+                int    status     = 4;
+                int    orderState = 0;
+                log.info("newmax代付查询结果- result:{}", JsonUtil.object2Map(resultMap)+"状态"+statusCode);
+                if ( "2".equals( statusCode ) ) {
+                    status = 6;
+                    orderState = 1;
+                } else {
+                    status = 5;
+                    orderState = 2;
                 }
+                payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
+                return;
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
