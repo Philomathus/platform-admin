@@ -71,4 +71,7 @@ public abstract class ConstantsPayAgent {
 	public static final String XIN_HUA_ZI                = "xinHuaZi";
 	//马云代付
 	public static final String Ma_Yun                = "maYun";
+	//群支付代付
+	public static final String QUN_ZHI_FU            = "qunZhiFu";
+
 }
