@@ -123,7 +123,7 @@ public class PayAgentRechargeRecordController extends BaseController {
 	@Log( title = "【人工提出】", businessType = BusinessType.OTHER )
 	@PutMapping( "/proposed" )
 	public AjaxResult proposed( PayAgentRechargeRecord payAgentRechargeRecord) throws Exception {
-		if (!redisUtil.lock(EnumLock.member, payAgentRechargeRecord.getOrderNo(), "1", 10)) {
+		if (!redisUtil.lock(EnumLock.member, payAgentRechargeRecord.getRechargeAcount(), "1", 10)) {
 			return AjaxResult.error("请勿重复提交");
 		}
 		return  payAgentRechargeRecordService.proposed(payAgentRechargeRecord) ;
