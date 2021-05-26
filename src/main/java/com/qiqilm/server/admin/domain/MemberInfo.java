@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -17,7 +18,7 @@ import java.util.Date;
  * @date 2021-01-25
  */
 @Data
-public class MemberInfo extends BaseEntity {
+public class MemberInfo extends DownLoadTime {
     private static final long serialVersionUID = 1L;
 
     /** 系统编号 */
