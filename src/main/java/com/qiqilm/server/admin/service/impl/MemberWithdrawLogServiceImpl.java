@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.domain.BankCardAddress;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
@@ -158,13 +159,16 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         if (!redisUtil.lock(EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5)) {
             return AjaxResult.error("请勿重复提交");
         }
+        if (memberWithdrawLog.getStatus()<2 || memberWithdrawLog.getStatus()==5 || memberWithdrawLog.getStatus()==7 || memberWithdrawLog.getStatus()==8 ){
+            memberWithdrawLog.setRemark(req.getRemark());
+            memberWithdrawLog.setStatus(2);//审核不通过
+            memberWithdrawLog.setOpName(userName);
+            memberWithdrawLog.setUpdateTime(new Date());
+            this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+        }else {
+            return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单状态"+memberWithdrawLog.getStatus()+"该状态下订单不能拒绝");
+        }
 
-        memberWithdrawLog.setRemark(req.getRemark());
-        memberWithdrawLog.setStatus(2);//审核不通过
-        memberWithdrawLog.setOpName(userName);
-        memberWithdrawLog.setUpdateTime(new Date());
-
-        this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
 
         redisUtil.unLock(EnumLock.member, memberWithdrawLog.getMemberId());
         return AjaxResult.success();
@@ -194,12 +198,28 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             return AjaxResult.error("请勿重复提交");
         }
         List<MemberWithdrawLog> withdrawLogList = memberWithdrawLogMapper.selectByIds(req.getIds());
+        if (withdrawLogList==null || withdrawLogList.size()==0){
+            return AjaxResult.error("该订单已被处理,请刷新界面");
+        }
         for (MemberWithdrawLog memberWithdrawLog : withdrawLogList) {
-            memberWithdrawLog.setRemark(req.getRemark());
-            memberWithdrawLog.setStatus(2);//审核不通过
-            memberWithdrawLog.setOpName(userName);
-            memberWithdrawLog.setUpdateTime(new Date());
-            this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+            if (memberWithdrawLog == null) {
+                return AjaxResult.error("订单不存在");
+            }
+            if (!StringUtils.isEmpty(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+                return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单只能由" + memberWithdrawLog.getOpName() + "处理");
+            }
+            if (memberWithdrawLog.getStatus() == 2) {
+                return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单重复处理");
+            }
+            if (memberWithdrawLog.getStatus()<2 || memberWithdrawLog.getStatus()==5 || memberWithdrawLog.getStatus()==7 || memberWithdrawLog.getStatus()==8 ){
+                memberWithdrawLog.setRemark(req.getRemark());
+                memberWithdrawLog.setStatus(2);//审核不通过
+                memberWithdrawLog.setOpName(userName);
+                memberWithdrawLog.setUpdateTime(new Date());
+                this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+            }else {
+                return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单状态"+memberWithdrawLog.getStatus()+"该状态下订单不能拒绝");
+            }
         }
 
         redisUtil.unLock(EnumLock.adminUser, userName);
@@ -430,8 +450,13 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
      */
     @Override
     public AjaxResult withdrawReport(String id) {
+        if (!redisUtil.lock(EnumLock.member, id, "1", 10)) {
+            return AjaxResult.error("请勿连续点击");
+        }
         memberInfoMapper.call_pro_useranalysis(id);
-        return AjaxResult.success(memberInfoMapper.userWithdrawReportList());
+        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
+        redisUtil.unLock( EnumLock.member, id );
+        return AjaxResult.success(withdrawReports);
     }
 
     @Override
