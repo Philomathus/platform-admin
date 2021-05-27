@@ -163,8 +163,6 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 
 		BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "recharge_day_first_rate");
 
-		//每日公司入款第二次优惠比例
-		BigDecimal ticketCattyRatioSnd = sysConfigCacheUtil.getConfBd( "recharge_day_second_rate");
 		int daySucess = memberRechargeLogMapper.countRechargeDaySucess(memberInfo.getId());
 
 		if(daySucess==0){
@@ -173,6 +171,8 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		}
 		// 单日第二次彩金
 		if (daySucess==1){
+			//每日公司入款第二次优惠比例
+			BigDecimal ticketCattyRatioSnd = sysConfigCacheUtil.getConfBd( "recharge_day_second_rate");
 			chargeGive = chargeGive.add(memberRechargeLog.getRechargeMoney().multiply( ticketCattyRatioSnd )
 					.setScale( 2, BigDecimal.ROUND_HALF_UP ));
 		}
