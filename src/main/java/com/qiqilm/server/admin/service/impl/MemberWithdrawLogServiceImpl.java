@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.domain.BankCardAddress;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
@@ -449,14 +450,40 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
      * @return {@link AjaxResult}
      */
     @Override
-    public AjaxResult withdrawReport(String id) {
-        if (!redisUtil.lock(EnumLock.member, id, "1", 10)) {
-            return AjaxResult.error("请勿连续点击");
-        }
-        memberInfoMapper.call_pro_useranalysis(id);
-        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
-        redisUtil.unLock( EnumLock.member, id );
-        return AjaxResult.success(withdrawReports);
+    public RspMemberInfo withdrawReport(String id) {
+//        if (!redisUtil.lock(EnumLock.member, id, "1", 10)) {
+//            return AjaxResult.error("请勿连续点击");
+//        }
+//        memberInfoMapper.call_pro_useranalysis(id);
+//        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
+//        redisUtil.unLock( EnumLock.member, id );
+
+        //取会员id最后一个字符
+        String tableLast = id.substring(id.length() - 1);
+
+        RspMemberInfo rspMemberInfo1 = memberInfoMapper.selectMemberInfoWithdrawByIda(id,tableLast);
+        RspMemberInfo rspMemberInfo2 = memberInfoMapper.selectMemberInfoWithdrawByIdb(id,tableLast);
+        RspMemberInfo rspMemberInfo3 = memberInfoMapper.selectMemberInfoWithdrawByIdc(id,tableLast);
+        RspMemberInfo rspMemberInfo4 = memberInfoMapper.selectMemberInfoWithdrawByIdd(id,tableLast);
+        RspMemberInfo rspMemberInfo5 = memberInfoMapper.selectMemberInfoWithdrawByIde(id,tableLast);
+        RspMemberInfo rspMemberInfo6 = memberInfoMapper.selectMemberInfoWithdrawByIdf(id,tableLast);
+        RspMemberInfo rspMemberInfo7 = memberInfoMapper.selectMemberInfoWithdrawByIdg(id,tableLast);
+        RspMemberInfo rspMemberInfo8 = memberInfoMapper.selectMemberInfoWithdrawByIdh(id,tableLast);
+        RspMemberInfo rspMemberInfo9 = memberInfoMapper.selectMemberInfoWithdrawByIdi(id,tableLast);
+        RspMemberInfo rspMemberInfo10 = memberInfoMapper.selectMemberInfoWithdrawByIdj(id,tableLast);
+        RspMemberInfo rspMemberInfo11 = memberInfoMapper.selectMemberInfoWithdrawByIdk(id,tableLast);
+        rspMemberInfo1.setRechargemoney(rspMemberInfo2.getRechargemoney());
+        rspMemberInfo1.setSubmoney(rspMemberInfo3.getSubmoney());
+        rspMemberInfo1.setP_money(rspMemberInfo4.getP_money());
+        rspMemberInfo1.setRg_income(rspMemberInfo5.getRg_income());
+        rspMemberInfo1.setZs_income(rspMemberInfo6.getZs_income());
+        rspMemberInfo1.setTotalincom(rspMemberInfo7.getTotalincom());
+        rspMemberInfo1.setW_count(rspMemberInfo8.getW_count());
+        rspMemberInfo1.setW_sum(rspMemberInfo9.getW_sum());
+        rspMemberInfo1.setGcount(rspMemberInfo10.getGcount());
+        rspMemberInfo1.setGtcount(rspMemberInfo11.getGtcount());
+
+        return rspMemberInfo1;
     }
 
     @Override

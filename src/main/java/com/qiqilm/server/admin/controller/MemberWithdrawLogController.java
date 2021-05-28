@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
@@ -65,8 +66,8 @@ public class MemberWithdrawLogController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
 	@GetMapping( value = "/report/{id}" )
-	public AjaxResult getReport( @PathVariable( "id" ) String id ) {
-		return memberWithdrawLogService.withdrawReport( id );
+	public AjaxResult getReport(@PathVariable( "id" ) String id ) {
+		return AjaxResult.success(memberWithdrawLogService.withdrawReport( id ));
 	}
 
 	/**
