@@ -23,3 +23,5 @@ payAgentLimitBinLi: 50000
 payAgentLimitTels: 50000
 # 联付宝代付额度
 payAgentLimitLianFuBao: 2000
+# 马云代付额度
+payAgentListMaYun: 50000
