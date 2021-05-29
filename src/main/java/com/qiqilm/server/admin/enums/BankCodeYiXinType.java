@@ -14,7 +14,7 @@ public enum BankCodeYiXinType {
     ABC(Arrays.asList( "中国农业银行", "农业银行" ) ),
     BOC(Arrays.asList( "中国银行" ) ),
     CCB(Arrays.asList( "中国建设银行", "建设银行") ),
-    PSBS( Arrays.asList( "邮政储蓄银行", "中国邮政储蓄银行", "中国邮政银行", "中国邮政储蓄", "中国邮政", "邮政银行" ) ),
+    PSBC( Arrays.asList( "邮政储蓄银行", "中国邮政储蓄银行", "中国邮政银行", "中国邮政储蓄", "中国邮政", "邮政银行" ) ),
     COMM(Arrays.asList( "交通银行" ) ),
     CMB(Arrays.asList( "招商银行" ) ),
     SPDB(Arrays.asList( "上海浦东发展银行" ) ),
