@@ -241,7 +241,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			try {
 				long time = System.currentTimeMillis();
 				ext.put( "systemtime", time );
-				String signData = video.getId() + video.getMaxWatchNumber() + why + time;
+				String signData = video.getId().toString() + video.getMaxWatchNumber().toString() + why + time;
 				log.warn(signData);
 				ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
 
