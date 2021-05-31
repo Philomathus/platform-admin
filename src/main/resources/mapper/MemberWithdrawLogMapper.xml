@@ -92,6 +92,8 @@
             <if test="searchValue != null and searchValue != ''">
                 and order_no = #{searchValue}
             </if>
+            <if test="downLoadDate[0] != null "> and create_time >= '${downLoadDate[0]}'</if>
+            <if test="downLoadDate[1] != null "> and create_time &lt;= '${downLoadDate[1]}'</if>
         </where>
         <if test="searchValue != null and searchValue != ''">
         UNION

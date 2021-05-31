@@ -257,6 +257,8 @@
 		<if test="req.selectStartDate != null and req.selectStartDate != ''">
 			and update_time <![CDATA[ >= ]]> #{req.selectStartDate} and update_time <![CDATA[ <= ]]> #{req.selectEndDate}
 		</if>
+        <if test="req.downLoadDate[0] != null "> and update_time >= '${req.downLoadDate[0]}'</if>
+        <if test="req.downLoadDate[1] != null "> and update_time &lt;= '${req.downLoadDate[1]}'</if>
 	</sql>
 
 	<sql id="totalCount">

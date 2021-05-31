@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Data
 public class MemberWithdrawLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
-
+    private String[] downLoadDate = new String[2];
     /**
      * 系统编号
      */

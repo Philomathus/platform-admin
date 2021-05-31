@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
+import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.enums.BusinessType;
@@ -78,7 +79,9 @@ public class MemberWithdrawLogController extends BaseController {
 	@GetMapping( "/export" )
 	public void export( MemberWithdrawLog memberWithdrawLog, HttpServletResponse response ) {
 		List<MemberWithdrawLog> list = memberWithdrawLogService.selectMemberWithdrawLogList( memberWithdrawLog );
-		ExportExcelUtil.exportExcel( list, "会员提现", "会员提现信息表", MemberWithdrawLog.class, response );
+        if (list.size() <= DownLoadTime.downLoadLimit) {
+            ExportExcelUtil.exportExcel(list, "会员提现", "会员提现信息表", MemberWithdrawLog.class, response);
+        }
 	}
 
 	/**

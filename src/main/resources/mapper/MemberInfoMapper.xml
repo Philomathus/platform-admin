@@ -125,6 +125,8 @@
 			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
 				and date_format(reg_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
 			</if>
+            <if test="downLoadDate[0] != null "> and reg_time >= '${downLoadDate[0]}'</if>
+            <if test="downLoadDate[1] != null "> and reg_time &lt;= '${downLoadDate[1]}'</if>
 		</where>
 		order by reg_time desc
 	</select>
