@@ -68,7 +68,7 @@ public class MemberWithdrawLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
 	@GetMapping( value = "/report/{id}" )
 	public AjaxResult getReport(@PathVariable( "id" ) String id ) {
-		return AjaxResult.success(memberWithdrawLogService.withdrawReport( id ));
+		return memberWithdrawLogService.withdrawReport( id );
 	}
 
 	/**

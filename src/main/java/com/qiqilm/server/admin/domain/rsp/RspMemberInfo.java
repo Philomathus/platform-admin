@@ -7,7 +7,10 @@ public class RspMemberInfo {
 
     private String email;
     private String id;
+
+    private String user_name;
     private String phone;
+
     private String vip;
     private String reg_time;
     private String total_account;
@@ -35,4 +38,11 @@ public class RspMemberInfo {
     private String gcount;
     //彩票总投注笔数
     private String gtcount;
+
+    //游戏名称
+    private String class_twoname;
+    //游戏投注
+    private String touZhu;
+    //游戏投注盈利
+    private String yingLi;
 }

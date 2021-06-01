@@ -49,7 +49,7 @@ public interface IMemberWithdrawLogService {
 
 	AjaxResult manualWithdrawal( ReqMemberWithdrawLog req );
 
-	RspMemberInfo withdrawReport(String id );
+	AjaxResult withdrawReport(String id );
 
 	AjaxResult getTotal( MemberWithdrawLog memberWithdrawLog );
 
