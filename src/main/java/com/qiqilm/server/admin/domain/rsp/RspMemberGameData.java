@@ -11,7 +11,7 @@ public class RspMemberGameData {
     @Excel(name = "账号")
     private String account;
 
-    private String kind_id;
+    private String kindId;
     private String gameId;
 
     @Excel(name = "有效下注")
@@ -32,7 +32,7 @@ public class RspMemberGameData {
     @Excel(name = "游戏结束时间")
     private String game_end_time;
 
-    private Integer platform_id;
+    private Integer platformId;
 
     @Excel(name = "平台ID")
     private String agent;
