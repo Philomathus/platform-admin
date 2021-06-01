@@ -494,6 +494,11 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         withdrawReportd.setT_value(rspMemberInfo1.getVip());
         withdrawReports.add(withdrawReportd);
 
+        WithdrawReport withdrawReportv = new WithdrawReport();
+        withdrawReportv.setClass_twoname("登录时间");
+        withdrawReportv.setT_value(rspMemberInfo1.getLogin_time());
+        withdrawReports.add(withdrawReportv);
+
         WithdrawReport withdrawReporte = new WithdrawReport();
         withdrawReporte.setClass_twoname("会员注册时间");
         withdrawReporte.setT_value(rspMemberInfo1.getReg_time());
@@ -506,12 +511,12 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
         WithdrawReport withdrawReportg = new WithdrawReport();
         withdrawReportg.setClass_twoname("会员注单");
-        withdrawReportg.setT_value(rspMemberInfo1.getCode_account());
+        withdrawReportg.setT_value(rspMemberInfo1.getCode_total());
         withdrawReports.add(withdrawReportg);
 
         WithdrawReport withdrawReporth = new WithdrawReport();
         withdrawReporth.setClass_twoname("会员打码");
-        withdrawReporth.setT_value(rspMemberInfo1.getCode_total());
+        withdrawReporth.setT_value(rspMemberInfo1.getCode_account());
         withdrawReports.add(withdrawReporth);
 
         WithdrawReport withdrawReporti = new WithdrawReport();
@@ -530,7 +535,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         withdrawReports.add(withdrawReportk);
 
         WithdrawReport withdrawReportl = new WithdrawReport();
-        withdrawReportl.setClass_twoname("线上金额(一月)");
+        withdrawReportl.setClass_twoname("线上金额");
         withdrawReportl.setT_value(rspMemberInfo3.getSubmoney());
         withdrawReports.add(withdrawReportl);
 

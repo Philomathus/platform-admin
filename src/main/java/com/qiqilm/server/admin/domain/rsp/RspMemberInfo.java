@@ -12,6 +12,7 @@ public class RspMemberInfo {
     private String phone;
 
     private String vip;
+    private String login_time;
     private String reg_time;
     private String total_account;
     private String code_account;
