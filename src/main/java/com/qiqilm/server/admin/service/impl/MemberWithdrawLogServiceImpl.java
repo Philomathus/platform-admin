@@ -15,10 +15,10 @@ import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
 import com.qiqilm.server.admin.service.IBankCardAddressService;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
+import com.qiqilm.server.admin.utils.PhoneUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UserDataUtil;
-import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -486,8 +486,11 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
         WithdrawReport withdrawReportc = new WithdrawReport();
         withdrawReportc.setClass_twoname("会员名称");
-        withdrawReportc.setT_value("用户名:"+rspMemberInfo1.getUser_name()+",电话后四位:"+rspMemberInfo1.getPhone());
-        withdrawReports.add(withdrawReportc);
+        String phone = rspMemberInfo1.getPhone();
+        if (!StringUtils.isEmpty(phone)) {
+            withdrawReportc.setT_value(PhoneUtil.getEncPhone(phone));
+            withdrawReports.add(withdrawReportc);
+        }
 
         WithdrawReport withdrawReportd = new WithdrawReport();
         withdrawReportd.setClass_twoname("会员VIP");
@@ -530,7 +533,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         withdrawReports.add(withdrawReportk);
 
         WithdrawReport withdrawReportl = new WithdrawReport();
-        withdrawReportl.setClass_twoname("线上金额(一月)");
+        withdrawReportl.setClass_twoname("线上金额");
         withdrawReportl.setT_value(rspMemberInfo3.getSubmoney());
         withdrawReports.add(withdrawReportl);
 
