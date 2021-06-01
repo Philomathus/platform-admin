@@ -294,9 +294,8 @@ public class PostData {
 		String params = "s=19&kindID="+kindID+"&recordID="+recordID+"&account=" + account;
 		String param  = Encrypt.AESEncrypt( params, DESKey );
 		String key    = DigestUtils.md5Hex( agent + time + md5 );
-		String url=apiUrl+"getRecordHandle";
 		String postUrl =
-				url.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" ).concat( param ).concat( "&key=" ).concat( key );
+				apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" ).concat( param ).concat( "&key=" ).concat( key );
 		log.info( "请求URL：" + postUrl );
 		return get( postUrl );
 	}

@@ -99,11 +99,12 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
         String       resAll;
         try {
             resAll = PostData.getKYBalance( memberGameData.getAgent(), memberGameData.getAccount(),memberGameData.getKindId(), memberGameData.getGameId(),gamePlatform.getDes(), gamePlatform.getMd5(),
-                    gamePlatform.getApiUrl() );
+                    gamePlatform.getRecordUrl() );
         } catch ( Exception e ) {
             log.error( "查询游戏局号日志失败，memId=" + memberGameData.getAccount() );
             return AjaxResult.error("查询游戏局号日志失败，memId=" + memberGameData.getAccount());
         }
+        log.info("查询游戏局号日志"+resAll);
         GameKYRes gameApiResAll = JsonUtil.json2Object( resAll, GameKYRes.class );
         if ( gameApiResAll.getD().getCode() != 0 ) {
             log.error( "查询游戏局号日志失败code：" + gameApiResAll.getD().getCode() );
