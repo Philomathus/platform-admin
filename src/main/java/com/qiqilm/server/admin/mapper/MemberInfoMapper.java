@@ -93,4 +93,5 @@ public interface MemberInfoMapper {
     RspMemberInfo selectMemberInfoWithdrawByIdi(@Param("userid") String id, @Param("tableLast") String tableLast);
     RspMemberInfo selectMemberInfoWithdrawByIdj(@Param("userid") String id, @Param("tableLast") String tableLast);
     RspMemberInfo selectMemberInfoWithdrawByIdk(@Param("userid") String id, @Param("tableLast") String tableLast);
+    List<RspMemberInfo> selectMemberInfoWithdrawByIdl(@Param("userid") String id, @Param("tableLast") String tableLast);
 }

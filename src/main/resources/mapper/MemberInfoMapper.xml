@@ -619,7 +619,7 @@
     </update>
 
 	<select id="selectMemberInfoWithdrawByIda" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
-		SELECT email,id,phone,vip,reg_time,total_account,code_account,code_total,login_ip,fun_getaddress(login_ip) ipaddress
+		SELECT email,id,user_name,phone phone,vip,reg_time,total_account,code_account,code_total,login_ip,fun_getaddress(login_ip) ipaddress
 		from member_info where id = #{userid}
 	</select>
 
@@ -671,5 +671,12 @@
 
 	<select id="selectMemberInfoWithdrawByIdk" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
 		select count(1) gtcount FROM member_game_data${tableLast} WHERE agent in ('10000','80000') and account = #{userid}
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdl" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		select p.name as class_twoname,convert(sum(g.cell_score),decimal(10,2)) touZhu,convert(sum(g.profit),decimal(10,2)) yingLi
+		FROM member_game_data${tableLast} g
+		LEFT JOIN game_platform p on g.platform_id = p.id
+		WHERE account = #{userid} GROUP BY g.platform_id
 	</select>
 </mapper>
