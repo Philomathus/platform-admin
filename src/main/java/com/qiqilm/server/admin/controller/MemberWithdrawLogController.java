@@ -64,7 +64,7 @@ public class MemberWithdrawLogController extends BaseController {
 	/**
 	 * 获取会员提现信息详细信息
 	 */
-//	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
 	@GetMapping( value = "/report/{id}" )
 	public AjaxResult getReport(@PathVariable( "id" ) String id ) {
 		return memberWithdrawLogService.withdrawReport( id );
