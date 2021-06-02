@@ -8,7 +8,6 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
-import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
@@ -65,7 +64,7 @@ public class MemberWithdrawLogController extends BaseController {
 	/**
 	 * 获取会员提现信息详细信息
 	 */
-	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
+//	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
 	@GetMapping( value = "/report/{id}" )
 	public AjaxResult getReport(@PathVariable( "id" ) String id ) {
 		return memberWithdrawLogService.withdrawReport( id );
