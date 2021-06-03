@@ -35,22 +35,20 @@ public abstract class ControllerExceptionHandler {
 	@ResponseStatus( HttpStatus.OK )
 	public RspBase resolveException( Exception e ) {
 		HttpServletRequest request = ServletUtil.getHttpServletRequest();
-		if ( e instanceof BusinessException ) {
+		if ( e instanceof BusinessException || e instanceof AccessDeniedException || e instanceof NumberFormatException) {
 			return RspBase.businessError( e.getMessage() );
 		} else if ( e instanceof SessionExpireException ) {
 			RspBase rspError = new RspBase();
 			rspError.setCode( ErrCode.SESSION_EXPIRE_FAIL );
 			rspError.setMsg( e.getMessage() );
 			return rspError;
-		} else if ( e instanceof AccessDeniedException ) {
-			return RspBase.businessError(e.getMessage());
 		} else if (e instanceof BindException){
 			BindException exec = (BindException) e;
 			if(exec.hasErrors()){
 				RspBase rspError = new RspBase();
 				rspError.setCode(1);
 				String message = exec.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-				rspError.setMsg("数据校验失败，请检查!");
+				rspError.setMsg("数据格式校验失败-["+message+"]");
 				log.error( "异常请求url:{},IP:{},msg:{}", request.getRequestURL().toString(), UserDataUtil.getIp( request ),message);
 				return rspError;
 			}
