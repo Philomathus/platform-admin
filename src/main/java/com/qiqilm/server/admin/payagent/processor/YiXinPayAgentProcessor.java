@@ -155,7 +155,15 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(dataMap, httpHeaders);
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
             log.info("亿信代付查询结果 - listResult:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap) && "200".equals(resultMap.getOrDefault("ret", "").toString())) {
                 int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
