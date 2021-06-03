@@ -1,8 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -11,17 +9,8 @@ import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.*;
 import com.qiqilm.server.admin.utils.nanKaiPayAgentUtils.HttpClientUtils;
-import com.qiqilm.server.admin.utils.nanKaiPayAgentUtils.SecurityUtils;
-import com.qiqilm.server.admin.utils.nanKaiPayAgentUtils.SignUtils;
 import lombok.extern.log4j.Log4j2;
-import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 
@@ -85,7 +74,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
 
         String request = requestMap.getOrDefault("transData", "").toString();
         try {
-            String res = SecurityUtils.decrypt(request, payAgentPlatform.getSignPrivateKey());
+            String res = HttpClientUtils.decrypt(request, payAgentPlatform.getSignPrivateKey());
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             String orderNo = resultMap.getOrDefault("orderNo", "").toString();
             String resultFlag = resultMap.getOrDefault("resultFlag", "").toString();
