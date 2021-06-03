@@ -1,12 +1,16 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.cache.ActivityCacheUtil;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.ActivityQuestTypeMapper;
 import com.qiqilm.server.admin.domain.ActivityQuestType;
 import com.qiqilm.server.admin.service.IActivityQuestTypeService;
+
+import javax.annotation.Resource;
 
 /**
  * 任务类型Service业务层处理
@@ -16,9 +20,10 @@ import com.qiqilm.server.admin.service.IActivityQuestTypeService;
  */
 @Service
 public class ActivityQuestTypeServiceImpl implements IActivityQuestTypeService {
-    @Autowired
+    @Resource
     private ActivityQuestTypeMapper activityQuestTypeMapper;
-
+    @Resource
+    private ActivityCacheUtil activityCacheUtil;
     /**
      * 查询任务类型
      *
@@ -61,7 +66,9 @@ public class ActivityQuestTypeServiceImpl implements IActivityQuestTypeService {
      */
     @Override
     public int updateActivityQuestType(ActivityQuestType activityQuestType) {
-        return activityQuestTypeMapper.updateActivityQuestType(activityQuestType);
+        int i = activityQuestTypeMapper.updateActivityQuestType(activityQuestType);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_QUEST_TYPE_KEY);
+        return i;
     }
 
     /**
@@ -72,7 +79,9 @@ public class ActivityQuestTypeServiceImpl implements IActivityQuestTypeService {
      */
     @Override
     public int deleteActivityQuestTypeByIds(String[] ids) {
-        return activityQuestTypeMapper.deleteActivityQuestTypeByIds(ids);
+        int i = activityQuestTypeMapper.deleteActivityQuestTypeByIds(ids);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_QUEST_TYPE_KEY);
+        return i;
     }
 
     /**
@@ -83,7 +92,9 @@ public class ActivityQuestTypeServiceImpl implements IActivityQuestTypeService {
      */
     @Override
     public int deleteActivityQuestTypeById(String id) {
-        return activityQuestTypeMapper.deleteActivityQuestTypeById(id);
+        int i = activityQuestTypeMapper.deleteActivityQuestTypeById(id);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_QUEST_TYPE_KEY);
+        return i;
     }
 
     @Override
