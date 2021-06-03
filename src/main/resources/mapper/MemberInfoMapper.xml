@@ -648,7 +648,7 @@
 		(SELECT sum(n) totalincom from (
 		SELECT IFNULL(SUM(recharge_money),0) n from member_recharge_log where type = '1' and status = '3' and member_id = #{userid}
 		UNION ALL
-		SELECT IFNULL(SUM(sub_money),0) n from member_pay_jour where status='1' and member_id = #{userid} and pay_time >= DATE_SUB(NOW(),INTERVAL 30 DAY)
+		SELECT IFNULL(SUM(sub_money),0) n from member_pay_jour where status='1' and member_id = #{userid}
 		UNION ALL
 		select IFNULL(SUM(money),0) n from pay_agent_recharge_log where member_id = #{userid}
 		) as t)
