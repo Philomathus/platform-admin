@@ -40,10 +40,10 @@ public class UserEnterLogTask {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Scheduled( fixedDelay = 600000, initialDelay = 60000 )
+    @Scheduled( fixedDelay = 1800000, initialDelay = 600000 )
     public void runTask() {
 
-        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 500 ) ) {
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 1000 ) ) {
             return;
         }
 
@@ -65,9 +65,9 @@ public class UserEnterLogTask {
         }
 
         try {
-            String paytext="10分钟直播间活跃人数:"+count;
+            String paytext="30分钟进直播间人数:"+count;
             if(count<0){
-                paytext="10分钟直播间活跃人数异常";
+                paytext="30分钟进直播间人数异常";
             }
             robotMessage.sendByChatId(paytext, online_user_telegram);
 
