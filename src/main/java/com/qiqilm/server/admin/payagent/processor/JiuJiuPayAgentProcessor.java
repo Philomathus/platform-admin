@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -16,6 +17,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.support.ManagedArray;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +26,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -130,11 +135,18 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
 
-        String res = null;
         try {
-            res = restTemplate.getForObject(payAgentPlatform.getPayOrderQueryAddr() + "?order_id=" + withdrawLog.getOrderNo(), String.class);
-            Map<String, Object> resultMap = JsonUtil.json2Map(res);
-            log.info("久久代付查询结果- result:{}", res);
+            Map<String, Object> resultMap = null;
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderQueryAddr() + "?order_id=" + withdrawLog.getOrderNo(), HttpMethod.GET,
+                    restTemplate.httpEntityCallback(null), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
+                        }
+                        return JsonUtil.json2Map(text);
+                    });
+            log.info("久久代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = String.valueOf(resultMap.getOrDefault("code", "").toString());
                 int data = Integer.parseInt((resultMap.getOrDefault("data", "").toString()));
