@@ -65,11 +65,9 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
 
-
-        System.out.println(JsonUtil.object2Json(dataMap));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(dataMap, httpHeaders);
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity(dataMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
@@ -152,7 +150,8 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(dataMap, httpHeaders);
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity(dataMap, httpHeaders);
+
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
