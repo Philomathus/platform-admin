@@ -53,6 +53,8 @@ public abstract class ConstantsPayAgent {
 	public static final String SHUNTONG              = "shunTong";
 	// 福财运2代付
 	public static final String SHUNTONG2             = "shunTong2";
+	// 福财运3代付
+	public static final String SHUNTONG3             = "shunTong3";
 	// 宾利代付
 	public static final String BINLI                 = "binLi";
 	// 宾利代付
