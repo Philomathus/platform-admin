@@ -49,7 +49,17 @@ public class ActivityCacheUtil {
      */
     public void addActivityInfo(ActivityInfo activityInfo) {
         String key = ACTIVITY_INFO_KEY;
-        redisUtil.lRightPushAll(key, JsonUtil.object2Json(activityInfo));
+        Boolean exists = redisUtil.exists(ACTIVITY_INFO_KEY);
+        if (exists == null || !exists) {
+            ActivityInfo activity = new ActivityInfo();
+            List<ActivityInfo> activityInfos = activityInfoMapper.selectActivityInfoList(activity);
+            if (activityInfos.size()>0 && activityInfos!=null){
+                redisUtil.lRightPushAll(ACTIVITY_INFO_KEY,
+                        activityInfos.stream().map(JsonUtil::object2Json).collect(Collectors.toList()));
+            }
+        }else {
+            redisUtil.lRightPushAll(key, JsonUtil.object2Json(activityInfo));
+        }
     }
 
     /**
@@ -57,7 +67,17 @@ public class ActivityCacheUtil {
      */
     public void addActivityType(ActivityType activityType) {
         String key = ACTIVITY_TYPE_KEY;
-        redisUtil.lRightPushAll(key, JsonUtil.object2Json(activityType));
+        Boolean exists = redisUtil.exists(ACTIVITY_TYPE_KEY);
+        if (exists == null || !exists) {
+            ActivityType type = new ActivityType();
+            List<ActivityType> activityInfos = activityTypeMapper.selectActivityTypeList(type);
+            if (activityInfos.size()>0 && activityInfos!=null){
+                redisUtil.lRightPushAll(ACTIVITY_TYPE_KEY,
+                        activityInfos.stream().map(JsonUtil::object2Json).collect(Collectors.toList()));
+            }
+        }else {
+            redisUtil.lRightPushAll(key, JsonUtil.object2Json(activityType));
+        }
     }
 
     /**
@@ -65,7 +85,20 @@ public class ActivityCacheUtil {
      */
     public void activityQuestInfo(ActivityQuestInfo activityQuestInfo) {
         String key = ACTIVITY_QUEST_INFO_KEY;
-        redisUtil.lRightPushAll(key, JsonUtil.object2Json(activityQuestInfo));
+        //判断是否有缓存
+        Boolean exists = redisUtil.exists(ACTIVITY_QUEST_INFO_KEY);
+        if (exists == null || !exists) {
+            ActivityQuestInfo activityQuest=new ActivityQuestInfo();
+            List<ActivityQuestInfo> activityQuestInfos = activityQuestInfoMapper.selectActivityQuestInfoList(activityQuest);
+            if (activityQuestInfos.size()>0 && activityQuestInfos!=null){
+                redisUtil.lRightPushAll(ACTIVITY_QUEST_INFO_KEY,
+                        activityQuestInfos.stream().map(JsonUtil::object2Json).collect(Collectors.toList()));
+            }
+
+        }else{
+            redisUtil.lRightPushAll(key, JsonUtil.object2Json(activityQuestInfo));
+        }
+
     }
 
     /**
@@ -73,7 +106,18 @@ public class ActivityCacheUtil {
      */
     public void activityQuestType(ActivityQuestType activityQuestType) {
         String key = ACTIVITY_QUEST_TYPE_KEY;
-        redisUtil.lRightPushAll(key, JsonUtil.object2Json(activityQuestType));
+        Boolean exists = redisUtil.exists(ACTIVITY_QUEST_TYPE_KEY);
+        if (exists == null || !exists) {
+            ActivityQuestType questType=new ActivityQuestType();
+            List<ActivityQuestType> activityQuestTypes = activityQuestTypeMapper.selectActivityQuestTypeList(questType);
+            if (activityQuestTypes.size()>0 && activityQuestTypes!=null){
+                redisUtil.lRightPushAll(ACTIVITY_QUEST_TYPE_KEY,
+                        activityQuestTypes.stream().map(JsonUtil::object2Json).collect(Collectors.toList()));
+            }
+        }else {
+            redisUtil.lRightPushAll(key, JsonUtil.object2Json(activityQuestType));
+        }
+
     }
 
     /**
@@ -137,7 +181,7 @@ public class ActivityCacheUtil {
             ActivityQuestInfo activityQuestInfo=new ActivityQuestInfo();
             List<ActivityQuestInfo> activityQuestInfos = activityQuestInfoMapper.selectActivityQuestInfoList(activityQuestInfo);
             if (activityQuestInfos.size()>0 && activityQuestInfos!=null){
-                redisUtil.lRightPushAll(ACTIVITY_TYPE_KEY,
+                redisUtil.lRightPushAll(ACTIVITY_QUEST_INFO_KEY,
                         activityQuestInfos.stream().map(JsonUtil::object2Json).collect(Collectors.toList()));
             }
             return activityQuestInfos;
@@ -159,7 +203,7 @@ public class ActivityCacheUtil {
             ActivityQuestType activityQuestType=new ActivityQuestType();
             List<ActivityQuestType> activityQuestTypes = activityQuestTypeMapper.selectActivityQuestTypeList(activityQuestType);
             if (activityQuestTypes.size()>0 && activityQuestTypes!=null){
-                redisUtil.lRightPushAll(ACTIVITY_TYPE_KEY,
+                redisUtil.lRightPushAll(ACTIVITY_QUEST_TYPE_KEY,
                         activityQuestTypes.stream().map(JsonUtil::object2Json).collect(Collectors.toList()));
             }
             return activityQuestTypes;
