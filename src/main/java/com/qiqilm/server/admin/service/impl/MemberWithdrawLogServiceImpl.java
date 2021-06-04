@@ -6,6 +6,8 @@ import com.qiqilm.server.admin.domain.BankCardAddress;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
+import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
@@ -13,6 +15,7 @@ import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
 import com.qiqilm.server.admin.service.IBankCardAddressService;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
+import com.qiqilm.server.admin.utils.PhoneUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UserDataUtil;
@@ -158,13 +161,16 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         if (!redisUtil.lock(EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5)) {
             return AjaxResult.error("请勿重复提交");
         }
+        if (memberWithdrawLog.getStatus()<2 || memberWithdrawLog.getStatus()==5 || memberWithdrawLog.getStatus()==7 || memberWithdrawLog.getStatus()==8 ){
+            memberWithdrawLog.setRemark(req.getRemark());
+            memberWithdrawLog.setStatus(2);//审核不通过
+            memberWithdrawLog.setOpName(userName);
+            memberWithdrawLog.setUpdateTime(new Date());
+            this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+        }else {
+            return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单状态"+memberWithdrawLog.getStatus()+"该状态下订单不能拒绝");
+        }
 
-        memberWithdrawLog.setRemark(req.getRemark());
-        memberWithdrawLog.setStatus(2);//审核不通过
-        memberWithdrawLog.setOpName(userName);
-        memberWithdrawLog.setUpdateTime(new Date());
-
-        this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
 
         redisUtil.unLock(EnumLock.member, memberWithdrawLog.getMemberId());
         return AjaxResult.success();
@@ -194,12 +200,28 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             return AjaxResult.error("请勿重复提交");
         }
         List<MemberWithdrawLog> withdrawLogList = memberWithdrawLogMapper.selectByIds(req.getIds());
+        if (withdrawLogList==null || withdrawLogList.size()==0){
+            return AjaxResult.error("该订单已被处理,请刷新界面");
+        }
         for (MemberWithdrawLog memberWithdrawLog : withdrawLogList) {
-            memberWithdrawLog.setRemark(req.getRemark());
-            memberWithdrawLog.setStatus(2);//审核不通过
-            memberWithdrawLog.setOpName(userName);
-            memberWithdrawLog.setUpdateTime(new Date());
-            this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+            if (memberWithdrawLog == null) {
+                return AjaxResult.error("订单不存在");
+            }
+            if (!StringUtils.isEmpty(memberWithdrawLog.getOpName()) && !userName.equals(memberWithdrawLog.getOpName())) {
+                return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单只能由" + memberWithdrawLog.getOpName() + "处理");
+            }
+            if (memberWithdrawLog.getStatus() == 2) {
+                return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单重复处理");
+            }
+            if (memberWithdrawLog.getStatus()<2 || memberWithdrawLog.getStatus()==5 || memberWithdrawLog.getStatus()==7 || memberWithdrawLog.getStatus()==8 ){
+                memberWithdrawLog.setRemark(req.getRemark());
+                memberWithdrawLog.setStatus(2);//审核不通过
+                memberWithdrawLog.setOpName(userName);
+                memberWithdrawLog.setUpdateTime(new Date());
+                this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+            }else {
+                return AjaxResult.error("会员账号"+memberWithdrawLog.getAccount()+"该笔订单状态"+memberWithdrawLog.getStatus()+"该状态下订单不能拒绝");
+            }
         }
 
         redisUtil.unLock(EnumLock.adminUser, userName);
@@ -430,8 +452,147 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
      */
     @Override
     public AjaxResult withdrawReport(String id) {
-        memberInfoMapper.call_pro_useranalysis(id);
-        return AjaxResult.success(memberInfoMapper.userWithdrawReportList());
+
+//        memberInfoMapper.call_pro_useranalysis(id);
+//        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
+
+        //取会员id最后一个字符
+        String tableLast = id.substring(id.length() - 1);
+
+        RspMemberInfo rspMemberInfo1 = memberInfoMapper.selectMemberInfoWithdrawByIda(id,tableLast);
+        RspMemberInfo rspMemberInfo2 = memberInfoMapper.selectMemberInfoWithdrawByIdb(id,tableLast);
+        RspMemberInfo rspMemberInfo3 = memberInfoMapper.selectMemberInfoWithdrawByIdc(id,tableLast);
+        RspMemberInfo rspMemberInfo4 = memberInfoMapper.selectMemberInfoWithdrawByIdd(id,tableLast);
+        RspMemberInfo rspMemberInfo5 = memberInfoMapper.selectMemberInfoWithdrawByIde(id,tableLast);
+        RspMemberInfo rspMemberInfo6 = memberInfoMapper.selectMemberInfoWithdrawByIdf(id,tableLast);
+        RspMemberInfo rspMemberInfo7 = memberInfoMapper.selectMemberInfoWithdrawByIdg(id,tableLast);
+        RspMemberInfo rspMemberInfo8 = memberInfoMapper.selectMemberInfoWithdrawByIdh(id,tableLast);
+        RspMemberInfo rspMemberInfo9 = memberInfoMapper.selectMemberInfoWithdrawByIdi(id,tableLast);
+        RspMemberInfo rspMemberInfo10 = memberInfoMapper.selectMemberInfoWithdrawByIdj(id,tableLast);
+        RspMemberInfo rspMemberInfo11 = memberInfoMapper.selectMemberInfoWithdrawByIdk(id,tableLast);
+        //游戏投注详细
+        List<RspMemberInfo> rspMemberInfo12 = memberInfoMapper.selectMemberInfoWithdrawByIdl(id,tableLast);
+
+        List<WithdrawReport> withdrawReports = new LinkedList<>();
+        WithdrawReport withdrawReporta = new WithdrawReport();
+        withdrawReporta.setClass_twoname("禁言原因");
+        withdrawReporta.setT_value(rspMemberInfo1.getEmail());
+        withdrawReports.add(withdrawReporta);
+
+        WithdrawReport withdrawReportb = new WithdrawReport();
+        withdrawReportb.setClass_twoname("会员编号");
+        withdrawReportb.setT_value(rspMemberInfo1.getId());
+        withdrawReports.add(withdrawReportb);
+
+        WithdrawReport withdrawReportc = new WithdrawReport();
+        withdrawReportc.setClass_twoname("会员名称");
+        String phone = rspMemberInfo1.getPhone();
+        if (!StringUtils.isEmpty(phone)) {
+            withdrawReportc.setT_value(PhoneUtil.getEncPhone(phone));
+            withdrawReports.add(withdrawReportc);
+        }
+
+        WithdrawReport withdrawReportd = new WithdrawReport();
+        withdrawReportd.setClass_twoname("会员VIP");
+        withdrawReportd.setT_value(rspMemberInfo1.getVip());
+        withdrawReports.add(withdrawReportd);
+
+        WithdrawReport withdrawReportv = new WithdrawReport();
+        withdrawReportv.setClass_twoname("登录时间");
+        withdrawReportv.setT_value(rspMemberInfo1.getLogin_time());
+        withdrawReports.add(withdrawReportv);
+
+        WithdrawReport withdrawReporte = new WithdrawReport();
+        withdrawReporte.setClass_twoname("会员注册时间");
+        withdrawReporte.setT_value(rspMemberInfo1.getReg_time());
+        withdrawReports.add(withdrawReporte);
+
+        WithdrawReport withdrawReportf = new WithdrawReport();
+        withdrawReportf.setClass_twoname("会员积分");
+        withdrawReportf.setT_value(rspMemberInfo1.getTotal_account());
+        withdrawReports.add(withdrawReportf);
+
+        WithdrawReport withdrawReportg = new WithdrawReport();
+        withdrawReportg.setClass_twoname("会员注单");
+        withdrawReportg.setT_value(rspMemberInfo1.getCode_total());
+        withdrawReports.add(withdrawReportg);
+
+        WithdrawReport withdrawReporth = new WithdrawReport();
+        withdrawReporth.setClass_twoname("会员打码");
+        withdrawReporth.setT_value(rspMemberInfo1.getCode_account());
+        withdrawReports.add(withdrawReporth);
+
+        WithdrawReport withdrawReporti = new WithdrawReport();
+        withdrawReporti.setClass_twoname("登陆IP");
+        withdrawReporti.setT_value(rspMemberInfo1.getLogin_ip());
+        withdrawReports.add(withdrawReporti);
+
+        WithdrawReport withdrawReportj = new WithdrawReport();
+        withdrawReportj.setClass_twoname("登陆地址");
+        withdrawReportj.setT_value(rspMemberInfo1.getIpaddress());
+        withdrawReports.add(withdrawReportj);
+
+        WithdrawReport withdrawReportk = new WithdrawReport();
+        withdrawReportk.setClass_twoname("线下充值金额");
+        withdrawReportk.setT_value(rspMemberInfo2.getRechargemoney());
+        withdrawReports.add(withdrawReportk);
+
+        WithdrawReport withdrawReportl = new WithdrawReport();
+        withdrawReportl.setClass_twoname("线上金额");
+        withdrawReportl.setT_value(rspMemberInfo3.getSubmoney());
+        withdrawReports.add(withdrawReportl);
+
+        WithdrawReport withdrawReportm = new WithdrawReport();
+        withdrawReportm.setClass_twoname("人工代充金额");
+        withdrawReportm.setT_value(rspMemberInfo4.getP_money());
+        withdrawReports.add(withdrawReportm);
+
+        WithdrawReport withdrawReportn = new WithdrawReport();
+        withdrawReportn.setClass_twoname("手动增加金额");
+        withdrawReportn.setT_value(rspMemberInfo5.getRg_income());
+        withdrawReports.add(withdrawReportn);
+
+        WithdrawReport withdrawReporto = new WithdrawReport();
+        withdrawReporto.setClass_twoname("平台赠送金额");
+        withdrawReporto.setT_value(rspMemberInfo6.getZs_income());
+        withdrawReports.add(withdrawReporto);
+
+        WithdrawReport withdrawReportp = new WithdrawReport();
+        withdrawReportp.setClass_twoname("充值总的金额");
+        withdrawReportp.setT_value(rspMemberInfo7.getTotalincom());
+        withdrawReports.add(withdrawReportp);
+
+        WithdrawReport withdrawReportq = new WithdrawReport();
+        withdrawReportq.setClass_twoname("会员提现次数");
+        withdrawReportq.setT_value(rspMemberInfo8.getW_count());
+        withdrawReports.add(withdrawReportq);
+
+        WithdrawReport withdrawReportr = new WithdrawReport();
+        withdrawReportr.setClass_twoname("会员提现金额");
+        withdrawReportr.setT_value(rspMemberInfo9.getW_sum());
+        withdrawReports.add(withdrawReportr);
+
+        WithdrawReport withdrawReportu = new WithdrawReport();
+        withdrawReportu.setClass_twoname("彩票异常投注次数");
+        withdrawReportu.setT_value(rspMemberInfo10.getGcount());
+        withdrawReports.add(withdrawReportu);
+
+        WithdrawReport withdrawReportt = new WithdrawReport();
+        withdrawReportt.setClass_twoname("彩票总投注笔数");
+        withdrawReportt.setT_value(rspMemberInfo11.getGtcount());
+        withdrawReports.add(withdrawReportt);
+
+        //游戏
+        if(rspMemberInfo12 != null && rspMemberInfo12.size() != 0) {
+            for (RspMemberInfo rs : rspMemberInfo12) {
+                WithdrawReport withdrawReportTwo = new WithdrawReport();
+                withdrawReportTwo.setClass_twoname(rs.getClass_twoname());
+                withdrawReportTwo.setT_value("投注:"+rs.getTouZhu() + "盈利:"+rs.getYingLi());
+                withdrawReports.add(withdrawReportTwo);
+            }
+        }
+
+        return AjaxResult.success(withdrawReports);
     }
 
     @Override

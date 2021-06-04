@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
+import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public interface IMemberWithdrawLogService {
 
 	AjaxResult manualWithdrawal( ReqMemberWithdrawLog req );
 
-	AjaxResult withdrawReport( String id );
+	AjaxResult withdrawReport(String id );
 
 	AjaxResult getTotal( MemberWithdrawLog memberWithdrawLog );
 

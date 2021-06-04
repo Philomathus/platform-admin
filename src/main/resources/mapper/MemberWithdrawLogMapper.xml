@@ -79,7 +79,7 @@
             and op_name = #{opName}
         </if>
         <if test="startTime != null and startTime != ''">
-            and update_time between #{startTime} and #{endTime}
+            and create_time between #{startTime} and #{endTime}
         </if>
         <if test="remark != null and remark != ''">
             and remark like concat('%', #{remark}, '%')
@@ -92,6 +92,8 @@
             <if test="searchValue != null and searchValue != ''">
                 and order_no = #{searchValue}
             </if>
+            <if test="downLoadDate[0] != null "> and create_time >= '${downLoadDate[0]}'</if>
+            <if test="downLoadDate[1] != null "> and create_time &lt;= '${downLoadDate[1]}'</if>
         </where>
         <if test="searchValue != null and searchValue != ''">
         UNION
@@ -325,8 +327,8 @@
             and withdraw_money &lt;= #{priceMax}
         </if>
         <if test="startTime != null and startTime != ''">
-            and update_time >= #{startTime}
-            and update_time &lt;= #{endTime}
+            and create_time >= #{startTime}
+            and create_time &lt;= #{endTime}
         </if>
         <if test="remark != null and remark != ''">
             and remark like concat('%', #{remark}, '%')

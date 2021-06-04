@@ -76,6 +76,8 @@ token:
   secret: abcdefghijklmxopqrstuvwxyz
   # 令牌有效期（默认30分钟）
   expireTime: 120
+#excel下载条数限制
+downLoadLimit: 200000
 
 live:
   encrypt:

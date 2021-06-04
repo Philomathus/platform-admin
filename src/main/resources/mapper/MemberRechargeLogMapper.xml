@@ -251,12 +251,18 @@
 		<if test="req.status != null and req.status != ''">
 			and status = #{req.status}
 		</if>
+		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
+			and recharge_money &gt;= #{req.priceMin}
+			and recharge_money &lt;= #{req.priceMax}
+		</if>
 		<if test="req.searchValue != null and req.searchValue != ''">
 			and (member_id = #{req.searchValue} or user_name = #{req.searchValue})
 		</if>
 		<if test="req.selectStartDate != null and req.selectStartDate != ''">
 			and update_time <![CDATA[ >= ]]> #{req.selectStartDate} and update_time <![CDATA[ <= ]]> #{req.selectEndDate}
 		</if>
+        <if test="req.downLoadDate[0] != null "> and update_time >= '${req.downLoadDate[0]}'</if>
+        <if test="req.downLoadDate[1] != null "> and update_time &lt;= '${req.downLoadDate[1]}'</if>
 	</sql>
 
 	<sql id="totalCount">
