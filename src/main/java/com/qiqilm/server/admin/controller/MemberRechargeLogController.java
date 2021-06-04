@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
+import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberRechargeLogService;
@@ -57,7 +58,9 @@ public class MemberRechargeLogController extends BaseController {
 	@GetMapping( "/export" )
 	public void export( ReqMemberRechargeLog req, HttpServletResponse response ) {
 		List<MemberRechargeLog> list = memberRechargeLogService.selectMemberRechargeLogList( req );
-		ExportExcelUtil.exportExcel( list, "公司入款", "公司入款信息表", MemberRechargeLog.class, response );
+        if (list.size() <= DownLoadTime.downLoadLimit) {
+            ExportExcelUtil.exportExcel(list, "公司入款", "公司入款信息表", MemberRechargeLog.class, response);
+        }
 	}
 
 	/**

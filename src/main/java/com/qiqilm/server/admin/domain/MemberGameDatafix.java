@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-29
  */
+@Data
 public class MemberGameDatafix extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -37,48 +39,11 @@ public class MemberGameDatafix extends BaseEntity {
     @Excel(name = "0:未处理1已处理")
     private Integer status;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String  platformName;
 
-    public String getId() {
-        return id;
-    }
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
-    public String getUserId() {
-        return userId;
-    }
-    public void setGameStartTime(String gameStartTime) {
-        this.gameStartTime = gameStartTime;
-    }
 
-    public String getGameStartTime() {
-        return gameStartTime;
-    }
-    public void setGameEndTime(String gameEndTime) {
-        this.gameEndTime = gameEndTime;
-    }
 
-    public String getGameEndTime() {
-        return gameEndTime;
-    }
-    public void setPlatformId(Long platformId) {
-        this.platformId = platformId;
-    }
-
-    public Long getPlatformId() {
-        return platformId;
-    }
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
 
     @Override
     public String toString() {

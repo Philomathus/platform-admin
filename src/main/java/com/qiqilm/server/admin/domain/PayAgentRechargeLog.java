@@ -1,13 +1,13 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
 
 /**
  * 【请填写功能名称】对象 pay_agent_recharge_log
@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Data
 public class PayAgentRechargeLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
-
+    private String[] downLoadDate = new String[2];
     /** 订单号主键 */
     private String orderNo;
 

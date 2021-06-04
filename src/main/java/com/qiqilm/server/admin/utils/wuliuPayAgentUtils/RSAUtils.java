@@ -1,6 +1,6 @@
 package com.qiqilm.server.admin.utils.wuliuPayAgentUtils;
 
-import com.qiqilm.server.admin.utils.nanKaiPayAgentUtils.Base64Utils;
+import com.qiqilm.server.admin.utils.nanKaiPayAgentUtils.HttpClientUtils;
 
 import javax.crypto.Cipher;
 import java.io.BufferedReader;
@@ -54,7 +54,7 @@ public class RSAUtils {
     public static String sign(byte[] data, String pkey) throws Exception {
         byte[] digest = sha1(data);
         byte[] encryptData = encryptByPrivateKey(digest, pkey);
-        return Base64Utils.encode(encryptData);
+        return HttpClientUtils.encode(encryptData);
     }
 
     /**
@@ -67,7 +67,7 @@ public class RSAUtils {
      */
     public static boolean verify(String source, String sign, String XYRC_PUBLIC_KEY_STR) throws Exception {
         byte[] digest = sha1(source.getBytes("GBK"));
-        byte[] encryptData = decryptByPublicKey(Base64Utils.decode(sign), XYRC_PUBLIC_KEY_STR);
+        byte[] encryptData = decryptByPublicKey(HttpClientUtils.decode(sign), XYRC_PUBLIC_KEY_STR);
         if (Arrays.equals(digest, encryptData)) {
             return true;
         } else {
@@ -100,7 +100,7 @@ public class RSAUtils {
         try {
             byte[] cipherData = RSAUtils.encryptByPublicKey(paramstr.getBytes("UTF-8"),
                     publickKey);
-            String result = Base64Utils.encode(cipherData);
+            String result = HttpClientUtils.encode(cipherData);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,7 +139,7 @@ public class RSAUtils {
      */
     public static String decrypt(String cipherData, String pkey) {
         try {
-            byte[] cipher = RSAUtils.decryptByPrivateKey(Base64Utils.decode(cipherData), pkey);
+            byte[] cipher = RSAUtils.decryptByPrivateKey(HttpClientUtils.decode(cipherData), pkey);
             String result = new String(cipher, "UTF-8");
             return result;
         } catch (Exception e) {
@@ -159,7 +159,7 @@ public class RSAUtils {
      * @throws Exception
      */
     public static byte[] decryptByPrivateKey(byte[] data, String privateKey) throws Exception {
-        byte[] keyBytes = Base64Utils.decode(privateKey);
+        byte[] keyBytes = HttpClientUtils.decode(privateKey);
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key privateK = keyFactory.generatePrivate(pkcs8KeySpec);
@@ -197,7 +197,7 @@ public class RSAUtils {
      * @throws Exception
      */
     public static byte[] decryptByPublicKey(byte[] data, String publicKey) throws Exception {
-        byte[] keyBytes = Base64Utils.decode(publicKey);
+        byte[] keyBytes = HttpClientUtils.decode(publicKey);
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key publicK = keyFactory.generatePublic(x509KeySpec);
@@ -235,7 +235,7 @@ public class RSAUtils {
      * @throws Exception
      */
     public static byte[] encryptByPublicKey(byte[] data, String publicKey) throws Exception {
-        byte[] keyBytes = Base64Utils.decode(publicKey);
+        byte[] keyBytes = HttpClientUtils.decode(publicKey);
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key publicK = keyFactory.generatePublic(x509KeySpec);
@@ -274,7 +274,7 @@ public class RSAUtils {
      * @throws Exception
      */
     public static byte[] encryptByPrivateKey(byte[] data, String privateKey) throws Exception {
-        byte[] keyBytes = Base64Utils.decode(privateKey);
+        byte[] keyBytes = HttpClientUtils.decode(privateKey);
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key privateK = keyFactory.generatePrivate(pkcs8KeySpec);
@@ -323,11 +323,11 @@ public class RSAUtils {
                     sb.append('\r');
                 }
             }
-            byte[] buffer = Base64Utils.decode(sb.toString());
+            byte[] buffer = HttpClientUtils.decode(sb.toString());
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(buffer);
             RSAPublicKey rsaPublicKey = (RSAPublicKey) keyFactory.generatePublic(keySpec);
-            String publickey = Base64Utils.encode(rsaPublicKey.getEncoded());
+            String publickey = HttpClientUtils.encode(rsaPublicKey.getEncoded());
             return publickey;
         } catch (Exception e) {
             e.printStackTrace();
@@ -361,11 +361,11 @@ public class RSAUtils {
                     sb.append('\r');
                 }
             }
-            byte[] buffer = Base64Utils.decode(sb.toString());
+            byte[] buffer = HttpClientUtils.decode(sb.toString());
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(buffer);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             byte[] binaryData = ((RSAPrivateKey) keyFactory.generatePrivate(keySpec)).getEncoded();
-            return Base64Utils.encode(binaryData);
+            return HttpClientUtils.encode(binaryData);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

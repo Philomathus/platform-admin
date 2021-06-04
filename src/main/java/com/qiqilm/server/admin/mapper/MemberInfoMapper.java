@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import org.apache.ibatis.annotations.Param;
 
@@ -80,4 +81,17 @@ public interface MemberInfoMapper {
     String findBanRemark(@Param("memberid") String memberid);
 
     void updateInviterCode(@Param("memberId") String memberId,@Param("inviterCode") String inviterCode);
+
+    RspMemberInfo selectMemberInfoWithdrawByIda(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdb(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdc(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdd(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIde(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdf(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdg(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdh(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdi(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdj(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdk(@Param("userid") String id, @Param("tableLast") String tableLast);
+    List<RspMemberInfo> selectMemberInfoWithdrawByIdl(@Param("userid") String id, @Param("tableLast") String tableLast);
 }

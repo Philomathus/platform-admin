@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 public class MemberGameDatafixController extends BaseController {
 	@Autowired
 	private IMemberGameDatafixService memberGameDatafixService;
+	@Autowired
+	private IMemberInfoService memberInfoService;
 
 	/**
 	 * 查询游戏补单列表
@@ -55,6 +59,10 @@ public class MemberGameDatafixController extends BaseController {
 	public AjaxResult add( @RequestBody MemberGameDatafix memberGameDatafix) {
 		memberGameDatafix.setId(UuidUtil.getRandomUuidWithoutSeparator());
 		memberGameDatafix.setStatus(0);
+		if (memberGameDatafix.getUserId()!=null){
+			MemberInfo memberInfo = memberInfoService.selectMemberInfoById(memberGameDatafix.getUserId());
+			if (memberInfo==null)return AjaxResult.error( "用户不存在" );
+		}
 		return toAjax( memberGameDatafixService.insertMemberGameDatafix(memberGameDatafix) );
 	}
 

@@ -5,15 +5,10 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
-import com.qiqilm.server.admin.enums.BankCodeLangYaType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
-import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.factory.support.ManagedArray;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,33 +16,32 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-@Repository(value = ConstantsPayAgent.NEWMAX + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.SHUNTONG3 + "PayAgentProcessor")
 @Log4j2
-public class NewmaxPayAgentProcessor extends AbstractPayAgent {
+public class ShunTong3PayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
+        bodyMap.put("mchno", payAgentPlatform.getMerId());
+        bodyMap.put("obid", withdrawLog.getOrderNo());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
-        bodyMap.put("out_trade_id", withdrawLog.getOrderNo());
-        bodyMap.put("bank_name", withdrawLog.getBankName().trim());
-        bodyMap.put("account", withdrawLog.getBankAccount().trim());
-        bodyMap.put("holder_name", withdrawLog.getBankUserName().trim());
-        bodyMap.put("province", "广东省");
-        bodyMap.put("city", "广州市");
-        bodyMap.put("merchant_id", payAgentPlatform.getMerId());
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.NEWMAX);
+        bodyMap.put("accno", withdrawLog.getBankAccount().trim());
+        bodyMap.put("accnm", withdrawLog.getBankUserName().trim());
+        bodyMap.put("banknm", withdrawLog.getBankName().trim());
+        bodyMap.put("acctype", "unionpay");
+        bodyMap.put("notice_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.SHUNTONG3);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr).toLowerCase();
+        String sign = DigestUtils.md5Hex(tempStr);
         bodyMap.put("sign", sign);
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
@@ -63,18 +57,18 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("newmax代付下单结果 - result:{}", res);
+        log.info("福财运3代付下单结果- result:{}", res);
         Map<String, Object> resultMap = JsonUtil.json2Map(res);
         if (!CollectionUtils.isEmpty(resultMap)) {
-            String code = resultMap.getOrDefault("code", "").toString();
-            if ("1".equals(code)) {
-                log.info("newmax代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+            String status = resultMap.getOrDefault("status", "").toString();
+            if ("1".equals(status)) {
+                log.info("福财运3代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
             }
         }
-        log.warn("newmax代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("福财运3代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
         return false;
     }
 
@@ -88,23 +82,23 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        String signStr = DigestUtils.md5Hex(tempStr).toLowerCase();
+        String signStr = DigestUtils.md5Hex(tempStr);
 
-        log.info("newmax代付回调签名字符串:" + sign + "_" + signStr);
+        log.info("福财运3代付回调签名:" + tempStr + "_" + sign);
         if (sign.equalsIgnoreCase(signStr)) {
-            String out_trade_id = requestMap.getOrDefault("out_trade_id", "").toString();
+            String shOrderId = (String) requestMap.get("obid");
 
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_id);
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", out_trade_id);
+                log.error("提现相关记录丢失 - merOrderNo:{}", shOrderId);
                 return "fail";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", out_trade_id);
+                log.error("已有代付记录 - merOrderNo:{}", shOrderId);
                 return "success";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(out_trade_id);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(shOrderId);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "0".equals(status));
             return "success";
         }
         return "fail";
@@ -121,46 +115,44 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> paramsMap = new TreeMap<>();
-        paramsMap.put("merchant_id", payAgentPlatform.getMerId());
-        paramsMap.put("out_trade_id", withdrawLog.getOrderNo());
+        paramsMap.put("obid", withdrawLog.getOrderNo());
+        paramsMap.put("mchno", payAgentPlatform.getMerId());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr).toLowerCase();
+        String sign = DigestUtils.md5Hex(tempStr);
         paramsMap.put("sign", sign);
 
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(paramsMap);
-        log.warn(JsonUtil.object2Json(requestMap));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+        String url = "?mchno=" + paramsMap.get("mchno") + "&obid=" + paramsMap.get("obid") + "&sign=" + paramsMap.get("sign");
 
-        String res  = null;
+        String res = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
+            res = restTemplate.getForObject(payAgentPlatform.getPayOrderQueryAddr() + url, String.class);
+            log.warn("福财运3代付订单查询结果 - result:{}", res);
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
-
             if (!CollectionUtils.isEmpty(resultMap)) {
-                Map dataMap = (Map)resultMap.getOrDefault("data","");
-                String statusCode = String.valueOf( dataMap.getOrDefault( "status", "" ).toString());
-                int    status     = 4;
-                int    orderState = 0;
-                log.info("newmax代付查询结果- result:{}", JsonUtil.object2Map(resultMap)+"状态"+statusCode);
-                if ( "2".equals( statusCode ) ) {
-                    status = 6;
-                    orderState = 1;
-                } else {
-                    status = 5;
-                    orderState = 2;
+                int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
+                if (statusType == 0 || statusType == 10) {
+                    // status 4代付中 5代付失败 6代付成功
+                    // statusType 1申请受理中，2代付下发中，10交易失败，0下发成功
+                    int status = 4;
+                    if (statusType == 0) {
+                        status = 6;
+                        statusType = 0;
+                    } else if (statusType == 10) {
+                        status = 5;
+                        statusType = 10;
+                    }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
+                    return;
                 }
-                payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
-                return;
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+
     }
 }
+
