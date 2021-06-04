@@ -5,6 +5,8 @@ import com.qiqilm.server.admin.domain.rsp.RspMemberAgent;
 import com.qiqilm.server.admin.domain.vo.ReportPlamHome;
 import com.qiqilm.server.admin.mapper.ReportAgentcountMapper;
 import com.qiqilm.server.admin.service.IReportAgentcountService;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.*;
  * @date 2021-01-26
  */
 @Service
+@Log4j2
 public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 	@Autowired
 	private ReportAgentcountMapper reportAgentcountMapper;
@@ -50,8 +53,12 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 
 		//if ( (reportAgentcount.getAgentcode() != null && allList.size() == 0) ||  (reportAgentcount.getAgentcode() != null && dateNowStr().equals(agenttime))) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
 		if (reportAgentcount.getAgentcode() != null) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
+			log.warn("reportAgent执行存储过程前："+System.currentTimeMillis());
 			reportAgentcountMapper.calldataProrepPlamcom( agenttime, agenttime, reportAgentcount.getAgentcode() );//调用存储过程
+			log.warn("reportAgent执行存储过程后："+System.currentTimeMillis());
+			log.warn("reportAgent查询数据库前："+System.currentTimeMillis());
 			List<ReportAgentcount> allList1 = reportAgentcountMapper.selectReportAgentcountList( reportAgentcount );
+			log.warn("reportAgent查询数据库后："+System.currentTimeMillis());
 			resultMap.put( "rows", allList1 );
 			return resultMap;
 		}
