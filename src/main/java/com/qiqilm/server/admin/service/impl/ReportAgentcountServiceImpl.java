@@ -34,6 +34,7 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 	 */
 	@Override
 	public Object selectReportAgentcountList( ReportAgentcount reportAgentcount ) throws ParseException {
+		log.warn("reportAgent进入Service1："+System.currentTimeMillis());
 		List<ReportAgentcount> allList   = new ArrayList<>();
 		String                 agenttime = null;
 		if ( reportAgentcount.getAgenttime() == null ) {
