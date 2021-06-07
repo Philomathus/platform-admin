@@ -36,4 +36,7 @@
     <update id="cutTableOnline" parameterType="String">
         create table if not EXISTS ${tableNode} like member_online
     </update>
+    <update id="dropTableOnline" parameterType="String">
+        DROP TABLE  if EXISTS ${tableNode}
+    </update>
 </mapper>
