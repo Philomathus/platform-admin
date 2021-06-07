@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Log4j2
@@ -57,6 +58,7 @@ public class MessageSendCountTask {
 		ReqMemberOnline dto = new ReqMemberOnline();
 		dto.setNow_time( now_time );
 
+		dto.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
 		RspMemberOnline memberOnline = memberOnlineMapper.sumCount( dto );
 
 
