@@ -10,6 +10,8 @@ import com.qiqilm.server.admin.mapper.MemberOnlineMapper;
 import com.qiqilm.server.admin.domain.MemberOnline;
 import com.qiqilm.server.admin.service.IMemberOnlineService;
 
+import javax.annotation.Resource;
+
 /**
  * 在线会员列表Service业务层处理
  *
@@ -18,7 +20,7 @@ import com.qiqilm.server.admin.service.IMemberOnlineService;
  */
 @Service
 public class MemberOnlineServiceImpl implements IMemberOnlineService {
-    @Autowired
+    @Resource
     private MemberOnlineMapper memberOnlineMapper;
 
     /**
@@ -44,6 +46,12 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
         for(int i=0;i<num;i++){
             day = l.plusDays(i).toString().replace("-","");
             memberOnlineMapper.cutTableOnline("member_online".concat(day));
+        }
+
+
+        for(int i=2;i<num+4;i++){
+            day = l.plusDays(-i).toString().replace("-","");
+            memberOnlineMapper.dropTableOnline("member_online".concat(day));
         }
     }
 }
