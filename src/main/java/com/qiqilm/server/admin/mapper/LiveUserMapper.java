@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -53,6 +54,8 @@ public interface LiveUserMapper {
 
     @Update( "update ${dbLive}.live_user set family_id = ${familyID} where id= ${userId}" )
     int updateFamilyID( @Param( "familyID" ) Long familyID, @Param( "userId" ) Long userId );
+
+    int updateTicket(@Param( "ticket" ) BigDecimal ticket, @Param( "userId" ) Long userId );
 
     @Select( "SELECT count(id) as num FROM ${dbLive}.live_user where family_id = ${family_id}" )
     int getNumFamily(@Param( "family_id" ) Integer family_id);

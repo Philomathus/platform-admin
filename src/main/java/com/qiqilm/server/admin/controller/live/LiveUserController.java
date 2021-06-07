@@ -194,6 +194,13 @@ public class LiveUserController extends BaseController {
 		return liveUserService.updateFamilyID( user.getFamilyId(), user.getId() );
 	}
 
+	@ApiOperation( "修改印票" )
+	@Log( title = "修改印票", businessType = BusinessType.UPDATE )
+	@PostMapping( "/updateTicket" )
+	public AjaxResult updateTicket( LiveUser user ) {
+		return liveUserService.updateTicket( user.getTicket(), user.getId() );
+	}
+
 	@PreAuthorize( "@ss.hasPermi('live:anchorAward:list')" )
 	@GetMapping( "/anchorAward" )
 	public TableDataInfo anchorAward( ReqLotteryBat req ) throws ParseException {
