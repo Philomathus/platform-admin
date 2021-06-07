@@ -32,4 +32,8 @@
             and online_time <![CDATA[ >= ]]> #{req.now_time}
         </if>
     </select>
+
+    <update id="cutTableOnline" parameterType="String">
+        create table if not EXISTS ${tableNode} like member_online
+    </update>
 </mapper>
