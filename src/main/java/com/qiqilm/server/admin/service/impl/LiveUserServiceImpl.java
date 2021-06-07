@@ -106,7 +106,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	@Override
 	public int updateLiveUser( LiveUser liveUser ) {
 		liveUser.setUpdateTime( DateUtils.getNowDate() );
-		return liveUserMapper.updateLiveUser( liveUser );
+		int i = liveUserMapper.updateLiveUser( liveUser );
+		if ( i > 0 ) {
+			RedisCacheUtil.me.clear( liveUser.getId(), LiveUser.class );
+		}
+		return i;
 	}
 
 	@Override
@@ -171,8 +175,10 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			if ( regOk ) {//更新注册IM标识
 				LiveUser update = new LiveUser();
 				update.setId( hostInfo.getId() );
-				update.setExpiryAfter( 1l );
+				update.setExpiryAfter( 1L );
 				liveUserMapper.updateLiveUser( update );
+
+				RedisCacheUtil.me.clear( hostInfo.getId(), LiveUser.class );
 			}
 		}
 	}
@@ -239,6 +245,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
 			liveVideoMapper.insertLiveVideo( liveVideo );
 		}
+		RedisCacheUtil.me.clear( id, LiveVideo.class );
 		return null;
 	}
 
@@ -252,7 +259,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	private void setIms( LiveVideo liveVideo, Object id, String title ) {
 		if ( !org.springframework.util.StringUtils.hasText( liveVideo.getGroupId() ) ) {
 			//创建 im 聊天群
-			String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM, String.valueOf(liveVideo.getUserId()) );
+			String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM,
+					String.valueOf( liveVideo.getUserId() ) );
 			if ( groupId == null ) {
 				throw new BusinessException( "创建直播失败,请联系客服" );
 			}
@@ -265,7 +273,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			} catch ( Exception e ) {
 				log.error( "主播调用开播接口 - 测试群组失败 - userId:{};groupId:{}", id, liveVideo.getGroupId(), e );
 				//创建 im 聊天群
-				String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM, String.valueOf(liveVideo.getUserId()) );
+				String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM,
+						String.valueOf( liveVideo.getUserId() ) );
 				log.info( "主播调用开播接口 - 开始创建群组 - userId:{};groupId:{}", id, groupId );
 				liveVideo.setGroupId( groupId );
 			}
@@ -294,6 +303,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			liveVideo.setEndTime( new Date() );
 			liveVideo.setLiveIn( 0 );
 			liveVideoMapper.updateLiveVideo( liveVideo );
+
+			RedisCacheUtil.me.clear( liveVideo.getId(), LiveVideo.class );
 			return AjaxResult.success( "关播成功" );
 		} else {
 			return AjaxResult.error( "直播不存在" );
@@ -309,6 +320,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		if ( count == 0 ) {
 			liveUser.setMobile( newMobile );
 			liveUserMapper.updateLiveUser( liveUser );
+
+			RedisCacheUtil.me.clear( id, LiveUser.class );
 			return AjaxResult.success( "手机号修改成功" );
 		} else {
 			return AjaxResult.error( "手机号已存在" );
@@ -324,6 +337,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	@Override
 	public AjaxResult updateLiveUserBank( LiveUser liveUser ) {
 		liveUserMapper.updateLiveUserBank( liveUser );
+		RedisCacheUtil.me.clear( liveUser.getId(), LiveUser.class );
 		return AjaxResult.success();
 	}
 
