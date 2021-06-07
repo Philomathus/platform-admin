@@ -42,7 +42,7 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
         LocalDate l = LocalDate.now();
         String day  ;
         for(int i=0;i<num;i++){
-            day = l.plusDays(i).toString();
+            day = l.plusDays(i).toString().replace("-","");
             memberOnlineMapper.cutTableOnline("member_online".concat(day));
         }
     }
