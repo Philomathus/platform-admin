@@ -156,7 +156,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
                 int status = 4;
                 if ("0".equals(code) && data == 1) {
                     status = 6;
-                } else if ("1".equals(code) && data != 1) {
+                } else if ("1".equals(code) && data != 1 && data != 0) {
                     status = 5;
                 }
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, data);
