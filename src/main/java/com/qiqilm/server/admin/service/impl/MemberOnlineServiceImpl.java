@@ -49,7 +49,7 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
         }
 
 
-        for(int i=10;i<num+15;i++){
+        for(int i=5;i<num+5;i++){
             day = l.plusDays(-i).toString().replace("-","");
             memberOnlineMapper.dropTableOnline("member_online".concat(day));
         }
