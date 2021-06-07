@@ -1,5 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -28,11 +30,13 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
      */
     @Override
     public List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline) {
+        memberOnline.setTableLast(new SimpleDateFormat("ddMMyyyy").format(new Date()));
         return memberOnlineMapper.selectMemberOnlineList(memberOnline);
     }
 
     @Override
     public MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline) {
+        memberOnline.setTableLast(new SimpleDateFormat("ddMMyyyy").format(new Date()));
         return memberOnlineMapper.selectMemberOnlineListCountTotal(memberOnline);
     }
 }
