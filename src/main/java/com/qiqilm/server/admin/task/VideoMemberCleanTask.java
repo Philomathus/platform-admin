@@ -37,7 +37,9 @@ public class VideoMemberCleanTask {
 			List<Long> videoIds = liveVideoMapper.selectExpiredVideo();
 			for ( Long videoId : videoIds ) {
 				long num = videoMemberUtil.removeRoom( videoId );
-				log.warn( "直播间人数统计清理 - 直播间ID：{},直播间人数数量：{}", videoId, num );
+				if ( num > 1 ) {
+					log.warn( "直播间人数统计清理 - 直播间ID：{},直播间人数数量：{}", videoId, num );
+				}
 			}
 		}
 	}
