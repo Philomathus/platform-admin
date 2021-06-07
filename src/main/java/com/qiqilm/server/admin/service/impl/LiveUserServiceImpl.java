@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -129,6 +130,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			liveFamilyMapper.updateFamilyID( newnum, familyID.intValue() );
 		}
 		RedisCacheUtil.me.clear( userId, LiveUser.class );
+		return AjaxResult.success();
+	}
+	@Override
+	public AjaxResult updateTicket( BigDecimal ticket, Long userId ) {
+		liveUserMapper.updateTicket(ticket,userId);
 		return AjaxResult.success();
 	}
 
