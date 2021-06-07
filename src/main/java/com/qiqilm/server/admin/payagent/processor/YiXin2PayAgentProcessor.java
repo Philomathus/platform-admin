@@ -42,7 +42,6 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("app_id", payAgentPlatform.getMerId());
         dataMap.put("out_trade_no", withdrawLog.getOrderNo());
         dataMap.put("money", withdrawLog.getWithdrawMoney().toString());
-        dataMap.put("channel", "SK1");
         dataMap.put("card_number", withdrawLog.getBankAccount().trim());
         dataMap.put("card_name", withdrawLog.getBankUserName().trim());
         dataMap.put("bank_name", withdrawLog.getBankName());
@@ -53,6 +52,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("sign", sign);
         dataMap.put("bank_code", withdrawLog.getBankCode());
         dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.YIXIN2);
+        dataMap.put("channel", "SK1");
 
         MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(dataMap);
