@@ -30,13 +30,13 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
      */
     @Override
     public List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline) {
-        memberOnline.setTableLast(new SimpleDateFormat("ddMMyyyy").format(new Date()));
+        memberOnline.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         return memberOnlineMapper.selectMemberOnlineList(memberOnline);
     }
 
     @Override
     public MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline) {
-        memberOnline.setTableLast(new SimpleDateFormat("ddMMyyyy").format(new Date()));
+        memberOnline.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         return memberOnlineMapper.selectMemberOnlineListCountTotal(memberOnline);
     }
 }
