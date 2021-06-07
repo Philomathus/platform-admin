@@ -22,4 +22,6 @@ public interface IMemberOnlineService {
 
 	MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline);
 
+	void cutTableOnline(int num);
+
 }
