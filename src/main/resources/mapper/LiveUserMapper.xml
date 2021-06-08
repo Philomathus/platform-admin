@@ -230,4 +230,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="delLiveUserBankById">
         delete from ${dbLive}.live_user_bank where bank_account = #{bankAccount}
     </delete>
+
+    <select id="liveInStatus" resultType="java.lang.Integer">
+        select live_in from ${dbLive}.live_video where user_id = #{userId}
+    </select>
 </mapper>

@@ -70,7 +70,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         headerMap.put("accToken", resultDataJsonObj.getString("accToken"));
 
         JSONObject params = new JSONObject();
-        params.put("merchNo", withdrawLog.getOrderNo());
+        params.put("merchNo", payAgentPlatform.getMerId());
         params.put("method", "cmd.transfer.order");//请求接口名称
         params.put("ipaddress", "192.168.0.1");
         params.put("timestamp", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
@@ -78,7 +78,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         params.put("format", "JSON");
         params.put("charset", "utf-8");
         params.put("signType", "MD5");
-        params.put("outTradeNo", yyyyMMddHHmmss.format(new Date()) + Math.random());
+        params.put("outTradeNo", withdrawLog.getOrderNo());
         params.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
         params.put("idCardNo", "431111111111111111");
         params.put("accountName", withdrawLog.getBankUserName().trim());
@@ -89,6 +89,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         params.put("city", "深圳市");
         params.put("bankLinked", "305584018192");
         params.put("mobile", "15114741145");
+        params.put("notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LVJIAN);
         String sign = null;
         try {
             sign = HttpClientTools.md5ascii(params, md5key);

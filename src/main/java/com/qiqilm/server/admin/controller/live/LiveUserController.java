@@ -198,6 +198,11 @@ public class LiveUserController extends BaseController {
 	@Log( title = "修改印票", businessType = BusinessType.UPDATE )
 	@PostMapping( "/updateTicket" )
 	public AjaxResult updateTicket( LiveUser user ) {
+		//判断主播当前是否在关播状态
+		int a = liveUserService.liveInStatus(user.getId());
+		if(a != 0){
+			return AjaxResult.error(100,"该主播不在关播状态,修改印票失败");
+		}
 		return liveUserService.updateTicket( user.getTicket(), user.getId() );
 	}
 
