@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.task;
 
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.MemberBcode;
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
 import com.qiqilm.server.admin.mapper.ActivityCashBackMapper;
@@ -8,6 +9,7 @@ import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.IMemberRechargeLogService;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -27,9 +29,15 @@ public class MemberCashBackTask {
 	private MemberBcodeMapper memberBcodeMapper;
 	@Resource
 	private MemberInfoMapper memberInfoMapper;
+	@Resource
+	private SysConfigCacheUtil sysConfigCacheUtil;
 
 	@Scheduled(cron="0 0 16 * * ?")// 每天16:00点执行一次
 	public void cashBackTask() {
+		String cash_back_switch = sysConfigCacheUtil.getConf("cash_back_switch");
+		if(cash_back_switch.equals("0")){
+			return;
+		}
 		try {
 			//查询昨天公司入款金额
 			List<MemberRechargeLog> memberRechargeLogs = memberRechargeLogService.memberRechargeLogLists();
