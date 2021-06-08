@@ -360,6 +360,13 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         memberInfoMapper.updateInviterCode(memberId,inviterCode);
         return AjaxResult.success("修改成功");
     }
+
+    @Override
+    public AjaxResult changeEmail(MemberInfo memberInfo) {
+        memberInfoMapper.changeEmail(memberInfo);
+        return AjaxResult.success("修改成功");
+    }
+
     @Override
     public void updataStatus(MemberInfo memberInfo) {
         if (memberInfo.getBanSpeakTime()==0){

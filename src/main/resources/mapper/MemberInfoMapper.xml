@@ -679,4 +679,10 @@
 		LEFT JOIN game_platform p on g.platform_id = p.id
 		WHERE account = #{userid} GROUP BY g.platform_id
 	</select>
+    <update id="changeEmail">
+        UPDATE member_info set email = #{email}
+        <where>
+            id = #{id}
+        </where>
+    </update>
 </mapper>
