@@ -51,7 +51,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         //1 授权token获取
-        JSONObject paramsToGetToken = new JSONObject();
+        Map<String, String> paramsToGetToken = null;
         paramsToGetToken.put("merchantId", payAgentPlatform.getMerId());
         String toReqTokenSign = HttpClientTools.md5ascii(paramsToGetToken, md5key);
         paramsToGetToken.put("sign", toReqTokenSign);
@@ -79,7 +79,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
             return false;
         }
 
-        JSONObject params = new JSONObject();
+        Map<String,String> params = null;
         params.put("merchNo", payAgentPlatform.getMerId());
         params.put("method", "cmd.transfer.order");//请求接口名称
         params.put("ipaddress", "192.168.0.1");
@@ -89,7 +89,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         params.put("charset", "utf-8");
         params.put("signType", "MD5");
         params.put("outTradeNo", withdrawLog.getOrderNo());
-        params.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
+        params.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP).toString());
         params.put("idCardNo", "431111111111111111");
         params.put("accountName", withdrawLog.getBankUserName().trim());
         params.put("bankCard", withdrawLog.getBankAccount().trim());
@@ -177,7 +177,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        JSONObject prams = new JSONObject();
+        Map<String,String> prams = null;
         prams.put("merchNo", payAgentPlatform.getMerId());
         prams.put("method", "cmd.query.transfer");//请求接口名称
         prams.put("ipaddress", "192.168.0.1");

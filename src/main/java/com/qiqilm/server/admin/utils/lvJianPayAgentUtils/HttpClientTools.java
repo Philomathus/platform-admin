@@ -234,7 +234,7 @@ public class HttpClientTools {
      * @描述:模拟form发送POST方法的请求
      * @描述:请求参数应该是 name1=value1&name2=value2 的形式
      */
-    public static String httpSendPostForm(String url, JSONObject params,Map<String, String> header) throws IOException {
+    public static String httpSendPostForm(String url, Map<String, String> params,Map<String, String> header) throws IOException {
         HttpURLConnection conn = null;
         StringBuilder result = new StringBuilder();
         try {
@@ -242,9 +242,9 @@ public class HttpClientTools {
             int num = 0;
             for (String key : params.keySet()) {
                 if (num == 0) {
-                    param.append(key).append("=").append(params.getString(key));
+                    param.append(key).append("=").append(params.get(key));
                 } else {
-                    param.append("&").append(key).append("=").append(params.getString(key));
+                    param.append("&").append(key).append("=").append(params.get(key));
                 }
                 num++;
             }
@@ -366,7 +366,7 @@ public class HttpClientTools {
         return baseHttpSendPost(url,reqParam.toString(),charset);
     }
 
-    public static String httpSendPostForm(String url,JSONObject params) throws IOException {
+    public static String httpSendPostForm(String url,Map<String,String> params) throws IOException {
         Map<String, String> header = new HashMap<>();
         header.put("Content-Type","application/x-www-form-urlencoded");
         header.put("Content-Type","application/json;charset=utf-8");
@@ -944,7 +944,7 @@ public class HttpClientTools {
     /**
      * @描述：按照ascii码排序根据MD5加密
      */
-    public static String md5ascii(JSONObject sourceObj,String md5Key) {
+    public static String md5ascii(Map<String,String> sourceObj,String md5Key) {
         try {
             String text = getSignStr(sourceObj,md5Key);
             String sign = md5(text);
@@ -957,7 +957,7 @@ public class HttpClientTools {
         }
     }
 
-    public static String getSignStr(JSONObject sourceObj,String md5Key) {
+    public static String getSignStr(Map<String,String> sourceObj,String md5Key) {
         try {
             return getSignStr(sourceObj) + "&key=" + md5Key;
         } catch (Exception e) {
