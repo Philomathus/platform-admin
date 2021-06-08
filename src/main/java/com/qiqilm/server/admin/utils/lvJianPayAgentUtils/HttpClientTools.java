@@ -14,7 +14,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
-import com.qiqilm.server.admin.utils.nanKaiPayAgentUtils.HttpClientUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
 import com.alibaba.fastjson.JSONObject;
@@ -61,7 +60,7 @@ import com.alibaba.fastjson.JSON;
  */
 public class HttpClientTools {
 
-    public static final Logger logger = LoggerFactory.getLogger(HttpClientUtils.class);
+    public static final Logger logger = LoggerFactory.getLogger(HttpClientTools.class);
 
     //0的ASCII�?
     private static final int ASCII_0=48;
