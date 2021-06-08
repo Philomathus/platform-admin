@@ -183,9 +183,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret,
 				AuthUtil.getSecurityKeyStr( "secretkey/googleAuthPrivateKey" ) );
 
-//		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, reqPayAgent.getGoogleAuthCode() ) ) {
-//			return AjaxResult.error( "google验证码不正确，请检查" );
-//		}
+		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, reqPayAgent.getGoogleAuthCode() ) ) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
 
 		reqPayAgent.setCurrentTime( new Date() );
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
