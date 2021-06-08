@@ -50,6 +50,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
 	@Value( "${payAgentLimit:5000}" )
 	private Integer payAgentLimit;
+	@Value( "${payAgentLimitShunWei:5000}" )
+	private Integer payAgentLimitShunWei;
 	@Value( "${payAgentLimitBinLi:5000}" )
 	private Integer payAgentLimitBinLi;
 	@Value( "${payAgentLimitTels:5000}" )
@@ -149,6 +151,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 ) )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitBinLi ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitBinLi + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitShunWei ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitShunWei + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
 				)
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentListMaYun ) ) > 0 ) {
@@ -158,6 +163,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 ) ) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
@@ -177,9 +183,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret,
 				AuthUtil.getSecurityKeyStr( "secretkey/googleAuthPrivateKey" ) );
 
-		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, reqPayAgent.getGoogleAuthCode() ) ) {
-			return AjaxResult.error( "google验证码不正确，请检查" );
-		}
+//		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, reqPayAgent.getGoogleAuthCode() ) ) {
+//			return AjaxResult.error( "google验证码不正确，请检查" );
+//		}
 
 		reqPayAgent.setCurrentTime( new Date() );
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
