@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.MemberOnlineMapper;
 import com.qiqilm.server.admin.domain.MemberOnline;
 import com.qiqilm.server.admin.service.IMemberOnlineService;
-
-import javax.annotation.Resource;
 
 /**
  * 在线会员列表Service业务层处理
@@ -31,11 +28,13 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
      */
     @Override
     public List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline) {
+        memberOnline.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         return memberOnlineMapper.selectMemberOnlineList(memberOnline);
     }
 
     @Override
     public MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline) {
+        memberOnline.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         return memberOnlineMapper.selectMemberOnlineListCountTotal(memberOnline);
     }
 

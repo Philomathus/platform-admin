@@ -514,4 +514,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		log.info( "结束执行主播礼物计算,执行时间：{}ms", System.currentTimeMillis() - s );
 
 	}
+
+	 @Override
+	 public LiveVideo liveInStatus( Long userId ) {
+		return liveVideoMapper.liveInStatus( userId );
+	}
 }
