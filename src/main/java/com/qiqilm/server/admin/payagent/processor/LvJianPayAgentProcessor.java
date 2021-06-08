@@ -64,10 +64,20 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
         }
 
-        JSONObject resultDataJsonObj = new JSONObject().parseObject(resultData);
-        Map<String, String> headerMap = new HashMap<String, String>();
-        headerMap.put("Content-Type", "application/json;charset=utf-8");
-        headerMap.put("accToken", resultDataJsonObj.getString("accToken"));
+        Map<String, Object> resultDataMap = JsonUtil.json2Map(resultData);
+        Map<String, String> headerMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(resultDataMap)) {
+            if ("10000".equals(resultDataMap.getOrDefault("code", "").toString())) {
+                headerMap.put("Content-Type", "application/json;charset=utf-8");
+                headerMap.put("accToken", resultDataMap.getOrDefault("accToken","").toString());
+            } else {
+                reqPayAgent.setFailReason(resultDataMap.getOrDefault("message", "").toString());
+                return false;
+            }
+        } else {
+            log.info("绿箭代付下单失败,原因是获取授权token错误:{}", withdrawLog.getOrderNo());
+            return false;
+        }
 
         JSONObject params = new JSONObject();
         params.put("merchNo", payAgentPlatform.getMerId());
@@ -89,7 +99,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         params.put("city", "深圳市");
         params.put("bankLinked", "305584018192");
         params.put("mobile", "15114741145");
-        params.put("notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LVJIAN);
+        params.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.LVJIAN);
         String sign = null;
         try {
             sign = HttpClientTools.md5ascii(params, md5key);
@@ -134,18 +144,18 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
 
         log.info("绿箭代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr) && "10000".equals(code)) {
-            String orderid = requestMap.getOrDefault("orderid", "").toString();
+            String outTradeNo = requestMap.getOrDefault("outTradeNo", "").toString();
 
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderid);
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(outTradeNo);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", orderid);
+                log.error("提现相关记录丢失 - merOrderNo:{}", outTradeNo);
                 return "ERROR";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", orderid);
+                log.error("已有代付记录 - merOrderNo:{}", outTradeNo);
                 return "SUCCESS";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(orderid);
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(outTradeNo);
             String orderNo = requestMap.getOrDefault("orderNo", "").toString();
             payAgentService.processOrderPay(withdrawLog, payAgentLog, orderNo, payAgentPlatform, "1".equals(status));
             return "SUCCESS";
