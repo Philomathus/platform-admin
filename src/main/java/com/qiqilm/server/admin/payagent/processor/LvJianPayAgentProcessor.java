@@ -51,7 +51,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         //1 授权token获取
-        JSONObject paramsToGetToken = new JSONObject();
+        Map<String, String> paramsToGetToken = null;
         paramsToGetToken.put("merchantId", payAgentPlatform.getMerId());
         String toReqTokenSign = HttpClientTools.md5ascii(paramsToGetToken, md5key);
         paramsToGetToken.put("sign", toReqTokenSign);
@@ -64,13 +64,23 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
         }
 
-        JSONObject resultDataJsonObj = new JSONObject().parseObject(resultData);
-        Map<String, String> headerMap = new HashMap<String, String>();
-        headerMap.put("Content-Type", "application/json;charset=utf-8");
-        headerMap.put("accToken", resultDataJsonObj.getString("accToken"));
+        Map<String, Object> resultDataMap = JsonUtil.json2Map(resultData);
+        Map<String, String> headerMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(resultDataMap)) {
+            if ("10000".equals(resultDataMap.getOrDefault("code", "").toString())) {
+                headerMap.put("Content-Type", "application/json;charset=utf-8");
+                headerMap.put("accToken", resultDataMap.getOrDefault("accToken","").toString());
+            } else {
+                reqPayAgent.setFailReason(resultDataMap.getOrDefault("message", "").toString());
+                return false;
+            }
+        } else {
+            log.info("绿箭代付下单失败,原因是获取授权token错误:{}", withdrawLog.getOrderNo());
+            return false;
+        }
 
-        JSONObject params = new JSONObject();
-        params.put("merchNo", withdrawLog.getOrderNo());
+        Map<String,String> params = new HashMap<>();
+        params.put("merchNo", payAgentPlatform.getMerId());
         params.put("method", "cmd.transfer.order");//请求接口名称
         params.put("ipaddress", "192.168.0.1");
         params.put("timestamp", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
@@ -78,8 +88,8 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         params.put("format", "JSON");
         params.put("charset", "utf-8");
         params.put("signType", "MD5");
-        params.put("outTradeNo", yyyyMMddHHmmss.format(new Date()) + Math.random());
-        params.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
+        params.put("outTradeNo", withdrawLog.getOrderNo());
+        params.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP).toString());
         params.put("idCardNo", "431111111111111111");
         params.put("accountName", withdrawLog.getBankUserName().trim());
         params.put("bankCard", withdrawLog.getBankAccount().trim());
@@ -89,6 +99,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         params.put("city", "深圳市");
         params.put("bankLinked", "305584018192");
         params.put("mobile", "15114741145");
+        params.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.LVJIAN);
         String sign = null;
         try {
             sign = HttpClientTools.md5ascii(params, md5key);
@@ -133,18 +144,18 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
 
         log.info("绿箭代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr) && "10000".equals(code)) {
-            String orderid = requestMap.getOrDefault("orderid", "").toString();
+            String outTradeNo = requestMap.getOrDefault("outTradeNo", "").toString();
 
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderid);
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(outTradeNo);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", orderid);
+                log.error("提现相关记录丢失 - merOrderNo:{}", outTradeNo);
                 return "ERROR";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", orderid);
+                log.error("已有代付记录 - merOrderNo:{}", outTradeNo);
                 return "SUCCESS";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(orderid);
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(outTradeNo);
             String orderNo = requestMap.getOrDefault("orderNo", "").toString();
             payAgentService.processOrderPay(withdrawLog, payAgentLog, orderNo, payAgentPlatform, "1".equals(status));
             return "SUCCESS";
@@ -166,7 +177,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        JSONObject prams = new JSONObject();
+        Map<String,String> prams = new HashMap<>();
         prams.put("merchNo", payAgentPlatform.getMerId());
         prams.put("method", "cmd.query.transfer");//请求接口名称
         prams.put("ipaddress", "192.168.0.1");
