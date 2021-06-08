@@ -90,6 +90,11 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	}
 
 	@Override
+	public List<MemberRechargeLog> memberRechargeLogLists() {
+		return memberRechargeLogMapper.MemberRechargeLogLists();
+	}
+
+	@Override
 	public Map listCount( ReqMemberRechargeLog req ) {
 		String[] selectDate = req.getSelectDate();
 		if ( selectDate != null && selectDate.length > 0 ) {

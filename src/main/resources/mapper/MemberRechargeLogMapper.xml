@@ -52,6 +52,14 @@
 		<include refid="listWhere"/>
 	</select>
 
+	<select id="MemberRechargeLogLists"  resultMap="MemberRechargeLogResult">
+		select member_id,
+        ifnull(sum(recharge_money),0) as recharge_money from member_recharge_log
+        where date_format(create_time,'%y%m%d') =  DATE_ADD(CURDATE(), INTERVAL -1 DAY)
+        GROUP BY member_id
+     </select>
+
+
 	<select id="selectMemberRechargeLogById" parameterType="String" resultMap="MemberRechargeLogResult">
 		<include refid="selectMemberRechargeLogVo"/>
 		where id = #{id}
