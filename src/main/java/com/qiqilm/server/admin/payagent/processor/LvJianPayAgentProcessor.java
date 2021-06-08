@@ -79,7 +79,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
             return false;
         }
 
-        Map<String,String> params = null;
+        Map<String,String> params = new HashMap<>();
         params.put("merchNo", payAgentPlatform.getMerId());
         params.put("method", "cmd.transfer.order");//请求接口名称
         params.put("ipaddress", "192.168.0.1");
@@ -177,7 +177,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        Map<String,String> prams = null;
+        Map<String,String> prams = new HashMap<>();
         prams.put("merchNo", payAgentPlatform.getMerId());
         prams.put("method", "cmd.query.transfer");//请求接口名称
         prams.put("ipaddress", "192.168.0.1");
