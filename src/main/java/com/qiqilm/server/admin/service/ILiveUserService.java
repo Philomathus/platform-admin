@@ -57,5 +57,4 @@ public interface ILiveUserService {
 	List<LiveUser> selectLiveUserBankById(Integer userId);
 	AjaxResult updateLiveUserBank(LiveUser liveUser);
 	int delLiveUserBankById(String id);
-	int liveInStatus(Long id);
 }

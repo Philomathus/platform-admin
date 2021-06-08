@@ -338,9 +338,4 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		return liveUserMapper.delLiveUserBankById( bankAccount );
 	}
 
-
-	@Override
-	public int liveInStatus( Long userId ) {
-		return liveUserMapper.liveInStatus( userId );
-	}
 }
