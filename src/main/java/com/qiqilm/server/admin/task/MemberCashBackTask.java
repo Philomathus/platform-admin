@@ -2,14 +2,16 @@ package com.qiqilm.server.admin.task;
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.MemberBcode;
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
+import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.ActivityCashBackMapper;
 import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberRechargeLogService;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,8 @@ public class MemberCashBackTask {
 	private MemberInfoMapper memberInfoMapper;
 	@Resource
 	private SysConfigCacheUtil sysConfigCacheUtil;
+	@Resource
+	private ILogService logService;
 
 	@Scheduled(cron="0 0 16 * * ?")// 每天16:00点执行一次
 	public void cashBackTask() {
@@ -47,6 +51,10 @@ public class MemberCashBackTask {
 				if (bycash!=null){
 					//会员返现
 					this.updateMemberCharge(log.getMemberId(),new BigDecimal(bycash),"充值返现");
+					MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( log.getMemberId() );
+					//日志
+					logService.logMoneyAdd( null, log.getMemberId(), log.getUserName(), EnumMoney.activity, new BigDecimal(bycash)
+							,memberInfo.getTotalAccount() , "充值返现活动", log.getOrderNo() );
 				}
 			}
 

@@ -33,7 +33,7 @@ public class ActivityCashBack extends BaseEntity {
 
     /** 状态(1 启用 0 停用 ) */
     @Excel(name = "状态(1 启用 0 停用 )")
-    private Long status;
+    private String status;
 
     @Override
     public String toString() {
