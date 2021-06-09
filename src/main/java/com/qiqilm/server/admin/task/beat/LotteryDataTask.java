@@ -56,7 +56,7 @@ public class LotteryDataTask {
             return;
         }
 
-        if(!profile.startsWith("77")||profile.equals("7700")){
+        if(!profile.startsWith("77")){
             return;
         }
         String lottery_telegram = sysConfigCacheUtil.getConf( "lottery_telegram" );
