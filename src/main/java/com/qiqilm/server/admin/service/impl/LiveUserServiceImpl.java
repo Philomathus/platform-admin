@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.VideoCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveFamily;
+import com.qiqilm.server.admin.domain.LiveFamilyJoin;
 import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
@@ -14,6 +15,7 @@ import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.im.GroupType;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.vo.api.ImInfo;
+import com.qiqilm.server.admin.mapper.LiveFamilyJoinMapper;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
 import com.qiqilm.server.admin.mapper.LiveVideoMapper;
@@ -22,7 +24,9 @@ import com.qiqilm.server.admin.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +50,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	private LiveVideoMapper       liveVideoMapper;
 	@Autowired
 	private ImApi                 imApi;
-
+	@Autowired
+	private LiveFamilyJoinMapper liveFamilyJoinMapper;
 	@Autowired
 	private VideoCacheUtil videoCacheUtil;
 
@@ -106,7 +111,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	@Override
 	public int updateLiveUser( LiveUser liveUser ) {
 		liveUser.setUpdateTime( DateUtils.getNowDate() );
-		return liveUserMapper.updateLiveUser( liveUser );
+		int i = liveUserMapper.updateLiveUser( liveUser );
+		if ( i > 0 ) {
+			RedisCacheUtil.me.clear( liveUser.getId(), LiveUser.class );
+		}
+		return i;
 	}
 
 	@Override
@@ -171,8 +180,10 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			if ( regOk ) {//更新注册IM标识
 				LiveUser update = new LiveUser();
 				update.setId( hostInfo.getId() );
-				update.setExpiryAfter( 1l );
+				update.setExpiryAfter( 1L );
 				liveUserMapper.updateLiveUser( update );
+
+				RedisCacheUtil.me.clear( hostInfo.getId(), LiveUser.class );
 			}
 		}
 	}
@@ -239,6 +250,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
 			liveVideoMapper.insertLiveVideo( liveVideo );
 		}
+		RedisCacheUtil.me.clear( id, LiveVideo.class );
 		return null;
 	}
 
@@ -252,7 +264,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	private void setIms( LiveVideo liveVideo, Object id, String title ) {
 		if ( !org.springframework.util.StringUtils.hasText( liveVideo.getGroupId() ) ) {
 			//创建 im 聊天群
-			String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM, String.valueOf(liveVideo.getUserId()) );
+			String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM,
+					String.valueOf( liveVideo.getUserId() ) );
 			if ( groupId == null ) {
 				throw new BusinessException( "创建直播失败,请联系客服" );
 			}
@@ -265,7 +278,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			} catch ( Exception e ) {
 				log.error( "主播调用开播接口 - 测试群组失败 - userId:{};groupId:{}", id, liveVideo.getGroupId(), e );
 				//创建 im 聊天群
-				String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM, String.valueOf(liveVideo.getUserId()) );
+				String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM,
+						String.valueOf( liveVideo.getUserId() ) );
 				log.info( "主播调用开播接口 - 开始创建群组 - userId:{};groupId:{}", id, groupId );
 				liveVideo.setGroupId( groupId );
 			}
@@ -294,6 +308,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			liveVideo.setEndTime( new Date() );
 			liveVideo.setLiveIn( 0 );
 			liveVideoMapper.updateLiveVideo( liveVideo );
+
+			RedisCacheUtil.me.clear( liveVideo.getId(), LiveVideo.class );
 			return AjaxResult.success( "关播成功" );
 		} else {
 			return AjaxResult.error( "直播不存在" );
@@ -309,6 +325,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		if ( count == 0 ) {
 			liveUser.setMobile( newMobile );
 			liveUserMapper.updateLiveUser( liveUser );
+
+			RedisCacheUtil.me.clear( id, LiveUser.class );
 			return AjaxResult.success( "手机号修改成功" );
 		} else {
 			return AjaxResult.error( "手机号已存在" );
@@ -324,11 +342,59 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	@Override
 	public AjaxResult updateLiveUserBank( LiveUser liveUser ) {
 		liveUserMapper.updateLiveUserBank( liveUser );
+		RedisCacheUtil.me.clear( liveUser.getId(), LiveUser.class );
 		return AjaxResult.success();
 	}
 
 	@Override
 	public int delLiveUserBankById( String bankAccount ) {
 		return liveUserMapper.delLiveUserBankById( bankAccount );
+	}
+
+	/**
+	 * 踢出主播
+	 * @param id
+	 * @deprecated
+	 * 1：要判断主播是否在直播 live_video live_in字段
+	 * 2：要更新live_user 家族id清空 。。。
+	 * 3：家族成员要减少
+	 * 4: 家族成员配置表要删除改主播的信息
+	 * 5：要判断是否是家族长，家族长不能被剔除家族
+	 * @return success
+	 */
+	@Override
+	@Transactional
+	public AjaxResult kickOutLiveById( Long id ) {
+		LiveVideo liveVideo = liveVideoMapper.selectLiveVideoById( id );
+		if(liveVideo != null && liveVideo.getLiveIn() == 1){
+			return AjaxResult.error(100,"该主播在直播中,踢出家族主播失败！");
+		}
+		LiveUser liveUser = liveUserMapper.selectLiveUserById( id );
+		if (liveUser.getFamilyChieftain() != null && liveUser.getFamilyChieftain() == 1){
+			return AjaxResult.error(100,"家族长不能被剔除家族,剔除家族主播失败！");
+		}
+		if (liveUser.getIsAuthentication() == null || liveUser.getIsAuthentication() == 0){
+			return AjaxResult.error(100,"主播未认证通过,无法剔除家族主播！");
+		}
+		LiveFamily family = liveFamilyMapper.selectLiveFamilyById(liveUser.getFamilyId());
+		if (family == null){
+			return AjaxResult.error(100,"主播未加入家族,剔除家族主播失败！");
+		}
+		int count = Integer.valueOf(family.getUserCount()+"");
+		int familyId = Integer.valueOf(liveUser.getFamilyId()+"");
+		LiveFamilyJoin liveFamilyJoin = new LiveFamilyJoin();
+		liveFamilyJoin.setFamilyId(liveUser.getFamilyId());
+		liveFamilyJoin.setUserId(id);
+		liveFamilyJoin.setStatus(3L);
+		//修改申请表状态
+		liveFamilyJoinMapper.updateLiveFamilyJoin(liveFamilyJoin);
+		//修改家族成员
+		count --;
+		liveFamilyMapper.updateFamilyID(count,familyId);
+		liveUser.setFamilyId(0L);
+		liveUser.setFamilyChieftain(0);
+		//修改主播状态
+		liveUserMapper.updateLiveUser(liveUser);
+		return AjaxResult.success();
 	}
 }
