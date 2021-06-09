@@ -378,9 +378,6 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		if (liveUser.getFamilyChieftain() != null && liveUser.getFamilyChieftain() == 1){
 			return AjaxResult.error(100,"家族长不能被剔除家族,剔除家族主播失败！");
 		}
-		if (liveUser.getIsAuthentication() == null || liveUser.getIsAuthentication() == 0){
-			return AjaxResult.error(100,"主播未认证通过,无法剔除家族主播！");
-		}
 		LiveFamily family = liveFamilyMapper.selectLiveFamilyById(liveUser.getFamilyId());
 		if (family == null){
 			return AjaxResult.error(100,"主播未加入家族,剔除家族主播失败！");
