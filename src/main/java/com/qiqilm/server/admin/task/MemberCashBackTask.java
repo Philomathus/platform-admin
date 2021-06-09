@@ -35,7 +35,7 @@ public class MemberCashBackTask {
 	@Scheduled(cron="0 0 16 * * ?")// 每天16:00点执行一次
 	public void cashBackTask() {
 		String cash_back_switch = sysConfigCacheUtil.getConf("cash_back_switch");
-		if(cash_back_switch.equals("0")){
+		if(!("1").equals(cash_back_switch)){
 			return;
 		}
 		try {

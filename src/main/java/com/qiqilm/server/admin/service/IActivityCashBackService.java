@@ -1,19 +1,16 @@
-package com.qiqilm.server.admin.mapper;
+package com.qiqilm.server.admin.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ActivityCashBack;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
- * 【返现活动】Mapper接口
+ * 【返现活动】Service接口
  *
  * @author 77tv
  * @date 2021-06-07
  */
-public interface ActivityCashBackMapper {
+public interface IActivityCashBackService {
 	/**
 	 * 查询【返现活动】
 	 *
@@ -47,20 +44,18 @@ public interface ActivityCashBackMapper {
 	public int updateActivityCashBack(ActivityCashBack activityCashBack);
 
 	/**
-	 * 删除【返现活动】
+	 * 批量删除【返现活动】
+	 *
+	 * @param ids 需要删除的【返现活动】ID
+	 * @return 结果
+	 */
+	public int deleteActivityCashBackByIds(Long[] ids );
+
+	/**
+	 * 删除【返现活动】信息
 	 *
 	 * @param id 【返现活动】ID
 	 * @return 结果
 	 */
 	public int deleteActivityCashBackById(Long id);
-
-	Integer selectActivityCashBackBycash(@Param("cash") BigDecimal cash);
-
-	/**
-	 * 批量删除【返现活动】
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deleteActivityCashBackByIds(Long[] ids );
 }
