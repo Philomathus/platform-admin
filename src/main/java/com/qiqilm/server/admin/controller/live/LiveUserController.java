@@ -233,4 +233,14 @@ public class LiveUserController extends BaseController {
 		List<RspLotteryBet>      list = liveUserService.selectAnchorAward( req );
 		ExportExcelUtil.exportExcel( list, "公司入款", "公司入款信息表", RspLotteryBet.class, response );
 	}
+
+	/**
+	 * 踢出家族
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
+	@PutMapping( value = "/kickOutLive/{id}" )
+	public AjaxResult kickOutLive( @PathVariable( "id" ) Long id ) {
+		return liveUserService.kickOutLiveById( id );
+	}
+
 }
