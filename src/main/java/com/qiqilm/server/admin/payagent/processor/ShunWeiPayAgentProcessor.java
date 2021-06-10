@@ -35,7 +35,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 	public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
 		BankCodeShunWeiType bankCodeType = BankCodeShunWeiType.getCodeByDesc( withdrawLog.getBankName() );
 		if ( bankCodeType == null ) {
-			log.warn( "此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
+			log.warn( "顺为代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
 			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
 		}
 		withdrawLog.setBankCode( bankCodeType.name() );
@@ -86,13 +86,13 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 			if ( !org.apache.commons.lang3.StringUtils.equalsIgnoreCase( resultSign, reSign ) ) {
 				return false;
 			}
-			log.info( "代付订单提交成功" );
+			log.info( "顺为代付订单提交成功" );
 			return true;
 		}
 		if ( !CollectionUtils.isEmpty( resultMap ) && resultMap.get( "message" ) != null ) {
 			reqPayAgent.setFailReason( resultMap.get( "message" ) );
 		}
-		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		log.warn( "顺为代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
 		return false;
 	}
 
@@ -297,6 +297,6 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 				return;
 			}
 		}
-		log.warn( "代付订单查询失败 - result:{}", result );
+		log.warn( "顺为代付订单查询失败 - result:{}", result );
 	}
 }
