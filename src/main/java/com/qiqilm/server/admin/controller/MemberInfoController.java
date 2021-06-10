@@ -546,6 +546,13 @@ public class MemberInfoController extends BaseController {
         return (ajaxResult);
     }
 
+    @Log(title = "修改用户备注", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateEmail")
+    public Object updateEmail(@RequestBody MemberInfo memberInfo) {
+        AjaxResult ajaxResult = memberInfoService.changeEmail(memberInfo);
+        return (ajaxResult);
+    }
+
     @ApiOperation(value = "禁言用户IM", notes = "禁言用户IM")
     @PostMapping("/imDealBan")
     public Object imDealBan( MemberInfo memberInfo) {

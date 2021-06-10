@@ -522,4 +522,8 @@
         and (end_time is null or end_time <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 5 HOUR))
         order by end_time desc
 	</select>
+
+    <select id="liveInStatus" resultMap="LiveVideoResult">
+        select live_in from ${dbLive}.live_video where user_id = #{userId}
+    </select>
 </mapper>

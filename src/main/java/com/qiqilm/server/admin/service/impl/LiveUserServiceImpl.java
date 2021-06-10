@@ -140,6 +140,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		RedisCacheUtil.me.clear( userId, LiveUser.class );
 		return AjaxResult.success();
 	}
+	@Override
+	public AjaxResult updateTicket( BigDecimal ticket, Long userId ) {
+		liveUserMapper.updateTicket(ticket,userId);
+		return AjaxResult.success();
+	}
 
 	@Override
 	public List<RspLotteryBet> selectAnchorAward( ReqLotteryBat req ) {

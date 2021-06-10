@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.ActivityCacheUtil;
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.domain.ActivityInfo;
 import com.qiqilm.server.admin.domain.ActivityQuestInfo;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,10 +22,12 @@ import java.util.List;
  */
 @Service
 public class ActivityQuestInfoServiceImpl implements IActivityQuestInfoService {
-	@Autowired
+	@Resource
 	private ActivityQuestInfoMapper activityQuestInfoMapper;
 	@Autowired
 	private ConfigDomainCacheUtil   configDomainCacheUtil;
+	@Resource
+	private ActivityCacheUtil activityCacheUtil;
 
 	/**
 	 * 查询任务信息列表
@@ -64,7 +68,9 @@ public class ActivityQuestInfoServiceImpl implements IActivityQuestInfoService {
 	 */
 	@Override
 	public int insertActivityQuestInfo( ActivityQuestInfo activityQuestInfo ) {
-		return activityQuestInfoMapper.insertActivityQuestInfo( activityQuestInfo );
+		int i = activityQuestInfoMapper.insertActivityQuestInfo(activityQuestInfo);
+		activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_QUEST_INFO_KEY);
+		return i;
 	}
 
 	/**
@@ -75,7 +81,9 @@ public class ActivityQuestInfoServiceImpl implements IActivityQuestInfoService {
 	 */
 	@Override
 	public int updateActivityQuestInfo( ActivityQuestInfo activityQuestInfo ) {
-		return activityQuestInfoMapper.updateActivityQuestInfo( activityQuestInfo );
+		int i = activityQuestInfoMapper.updateActivityQuestInfo(activityQuestInfo);
+		activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_QUEST_INFO_KEY);
+		return i;
 	}
 
 	/**
@@ -86,7 +94,9 @@ public class ActivityQuestInfoServiceImpl implements IActivityQuestInfoService {
 	 */
 	@Override
 	public int deleteActivityQuestInfoByIds( String[] ids ) {
-		return activityQuestInfoMapper.deleteActivityQuestInfoByIds( ids );
+		int i = activityQuestInfoMapper.deleteActivityQuestInfoByIds(ids);
+		activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_QUEST_INFO_KEY);
+		return i;
 	}
 
 	/**
@@ -97,6 +107,8 @@ public class ActivityQuestInfoServiceImpl implements IActivityQuestInfoService {
 	 */
 	@Override
 	public int deleteActivityQuestInfoById( String id ) {
-		return activityQuestInfoMapper.deleteActivityQuestInfoById( id );
+		int i = activityQuestInfoMapper.deleteActivityQuestInfoById(id);
+		activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_QUEST_INFO_KEY);
+		return i;
 	}
 }

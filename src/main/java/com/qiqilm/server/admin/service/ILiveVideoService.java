@@ -41,4 +41,6 @@ public interface ILiveVideoService {
 	void updateNowLine();
 
 	void countHostGift();
+
+	LiveVideo liveInStatus(Long userId);
 }

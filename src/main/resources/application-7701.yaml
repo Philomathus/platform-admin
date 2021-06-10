@@ -17,6 +17,8 @@ mybatis:
 
 # 代付额度
 payAgentLimit: 5000
+# 顺为代付额度
+payAgentLimitShunWei: 50000
 # 宾利代付额度
 payAgentLimitBinLi: 50000
 # 特仑苏代付额度

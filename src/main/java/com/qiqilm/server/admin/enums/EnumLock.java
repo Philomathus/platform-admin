@@ -10,7 +10,7 @@ public enum EnumLock {
     member("member:"),
     adminUser("adminUser:"),
     Anchor("Anchor"),
-
+    payAgent("payAgent:"),
 
     adminTask("adminTask:");
 

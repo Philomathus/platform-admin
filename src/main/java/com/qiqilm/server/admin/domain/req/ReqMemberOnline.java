@@ -22,6 +22,8 @@ public class ReqMemberOnline  {
 
     private String password;
 
+    private String tableLast;
+
     private String user_name;
 
     private long now_time;
