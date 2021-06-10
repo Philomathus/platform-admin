@@ -53,8 +53,8 @@ public class GameDataTask {
         }
 
         Date endDay  = new Date();
-
-        Date starDay = DateFormatUtils.addMin( endDay, -10);
+        endDay = DateFormatUtils.addMin(endDay, -5);
+        Date starDay = DateFormatUtils.addMin( endDay, -5);
         String begin = DateFormatUtils.formate( starDay );
         if(! DateUtils.isSameDay(starDay,starDay)){
             Date bDay = DateFormatUtils.getTomorrowMorning(starDay);
