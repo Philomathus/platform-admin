@@ -55,7 +55,9 @@ public class ActivityQuestTypeServiceImpl implements IActivityQuestTypeService {
     @Override
     public int insertActivityQuestType(ActivityQuestType activityQuestType) {
         activityQuestType.setCreateTime(DateUtils.getNowDate());
-        return activityQuestTypeMapper.insertActivityQuestType(activityQuestType);
+        int i = activityQuestTypeMapper.insertActivityQuestType(activityQuestType);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_QUEST_TYPE_KEY);
+        return i;
     }
 
     /**

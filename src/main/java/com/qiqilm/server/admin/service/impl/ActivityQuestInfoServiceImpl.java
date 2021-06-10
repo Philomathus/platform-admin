@@ -69,7 +69,7 @@ public class ActivityQuestInfoServiceImpl implements IActivityQuestInfoService {
 	@Override
 	public int insertActivityQuestInfo( ActivityQuestInfo activityQuestInfo ) {
 		int i = activityQuestInfoMapper.insertActivityQuestInfo(activityQuestInfo);
-		//activityCacheUtil.activityQuestInfo(activityQuestInfo);
+		activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_QUEST_INFO_KEY);
 		return i;
 	}
 

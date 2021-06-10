@@ -55,7 +55,7 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
     public int insertActivityType(ActivityType activityType) {
         activityType.setCreateTime(DateUtils.getNowDate());
         int i = activityTypeMapper.insertActivityType(activityType);
-        activityCacheUtil.addActivityType(activityType);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_TYPE_KEY);
         return i;
     }
 
