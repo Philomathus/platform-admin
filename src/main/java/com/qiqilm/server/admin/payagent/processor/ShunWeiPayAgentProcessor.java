@@ -71,9 +71,13 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 
 		String paramsRequest = this.assemblyUrl( params );
 
-		// 发起请求
-		String result = request( payAgentPlatform.getPayOrderAddr(), paramsRequest, payAgentPlatform.getHeaderKey() );
-		log.info( result );
+		String result = null;
+		try {
+			result = request(payAgentPlatform.getPayOrderAddr(), paramsRequest, payAgentPlatform.getHeaderKey());
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		log.info( "顺为代付下单结果{}",result );
 		Map<String, String> resultMap = JsonUtil.json2Map( result );
 		if ( !CollectionUtils.isEmpty( resultMap ) && "200".equals( resultMap.get( "state_code" ) ) ) {
 			resultMap.remove( "state_code" );
@@ -86,13 +90,13 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 			if ( !org.apache.commons.lang3.StringUtils.equalsIgnoreCase( resultSign, reSign ) ) {
 				return false;
 			}
-			log.info( "顺为代付订单提交成功" );
+			log.info("顺为代付订单提交成功，orderNo：{}", withdrawLog.getOrderNo());
 			return true;
 		}
 		if ( !CollectionUtils.isEmpty( resultMap ) && resultMap.get( "message" ) != null ) {
 			reqPayAgent.setFailReason( resultMap.get( "message" ) );
 		}
-		log.warn( "顺为代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		log.warn( "顺为代付订单提交失败 - orderNo:{},result:{}", withdrawLog.getOrderNo(),JsonUtil.object2Json( resultMap ) );
 		return false;
 	}
 
@@ -265,11 +269,15 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		Map<String, String> params = new HashMap<>();
 		params.put( "request_body", URLEncoder.encode( encryptData, "utf-8" ) );
 		params.put( "interface_version", DigestUtils.md5Hex( "1.0.0".concat( payAgentPlatform.getHeaderKey() ) ) );
-
 		String paramsRequest = this.assemblyUrl( params );
-		// 发起请求
-		String result = request( payAgentPlatform.getPayOrderQueryAddr(), paramsRequest, payAgentPlatform.getHeaderKey() );
 
+		String result = null;
+		try {
+			result = request(payAgentPlatform.getPayOrderQueryAddr(), paramsRequest, payAgentPlatform.getHeaderKey());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		log.warn("顺为代付订单查询结果 - result:{}", result);
 		Map<String, String> jsonObject = JsonUtil.json2Map( result );
 		String              stateCode  = jsonObject.remove( "state_code" );
 		if ( org.apache.commons.lang3.StringUtils.equals( "200", stateCode ) ) {
