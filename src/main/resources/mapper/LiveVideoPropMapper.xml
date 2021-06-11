@@ -16,6 +16,7 @@
 		<result property="pUserId" column="p_user_id"/>
 		<result property="pUserName" column="p_user_name"/>
 		<result property="toUserId" column="to_user_id"/>
+		<result property="nickName" column="nick_name"/>
 		<result property="createTime" column="create_time"/>
 		<result property="createDate" column="create_date"/>
 		<result property="createY" column="create_y"/>
@@ -44,17 +45,20 @@
 	</sql>
 
 	<select id="selectLiveVideoPropList" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
-		<include refid="selectLiveVideoPropVo"/>
+		select lvp.id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id,
+		lvp.p_user_id, p_user_name, to_user_id, lu.nick_name, FROM_UNIXTIME(lvp.create_time) create_time , create_date, create_y, create_m, create_d,
+		create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private,
+		from_ip, is_coin from ${dbLive}.live_video_prop lvp left join ${dbLive}.live_user lu on lvp.to_user_id = lu.id
 		<where>
 			<if test="pUserId != null and pUserId != ''">
-				and p_user_id = #{pUserId}
+				and lvp.p_user_id = #{pUserId}
 			</if>
 			<if test="toUserId != null">
 				and to_user_id =#{toUserId}
 			</if>
 			<if test="startTime != null">
-				and FROM_UNIXTIME(create_time) &gt;= #{startTime}
-				and FROM_UNIXTIME(create_time) &lt;= #{endTime}
+				and FROM_UNIXTIME(lvp.create_time) &gt;= #{startTime}
+				and FROM_UNIXTIME(lvp.create_time) &lt;= #{endTime}
 			</if>
 		</where>
 	</select>
