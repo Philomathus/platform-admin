@@ -68,6 +68,10 @@
         where id = #{id}
     </update>
 
+    <select id="getgameDatafix" resultMap="MemberGameDatafixResult">
+        select id, user_id, game_start_time, game_end_time, platform_id, status from ${dbMain}.member_game_datafix  WHERE STATUS=0 LIMIT 1
+    </select>
+
     <delete id="deleteMemberGameDatafixById" parameterType="String">
         delete from ${dbMain}.member_game_datafix where id = #{id}
     </delete>
