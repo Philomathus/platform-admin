@@ -47,26 +47,27 @@
 	</select>
 
 	<select id="selectLotteryBetTenTableList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
-			select * from ${dbLottery}.lottery_bet0
+		    select <include refid="Base_Column_List"/> from (
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet0
 			<where><include refid="whereSelect"/></where> UNION ALL
-			select * from ${dbLottery}.lottery_bet1
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet1
 			<where><include refid="whereSelect"/></where> UNION ALL
-			select * from ${dbLottery}.lottery_bet2
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet2
 			<where><include refid="whereSelect"/></where> UNION ALL
-			select * from ${dbLottery}.lottery_bet3
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet3
 			<where><include refid="whereSelect"/></where> UNION ALL
-			select * from ${dbLottery}.lottery_bet4
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet4
 			<where><include refid="whereSelect"/></where> UNION ALL
-			select * from ${dbLottery}.lottery_bet5
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet5
 			<where><include refid="whereSelect"/></where> UNION ALL
-			select * from ${dbLottery}.lottery_bet6
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet6
 			<where><include refid="whereSelect"/></where> UNION ALL
-			select * from ${dbLottery}.lottery_bet7
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet7
 			<where><include refid="whereSelect"/></where> UNION ALL
-			select * from ${dbLottery}.lottery_bet8
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet8
 			<where><include refid="whereSelect"/></where> UNION ALL
-			select * from ${dbLottery}.lottery_bet9
-			<where><include refid="whereSelect"/></where>
+			select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet9
+			<where><include refid="whereSelect"/></where>) a
 	</select>
 
 	<sql id="Base_Column_List">
@@ -75,10 +76,10 @@
 	</sql>
 
 	<sql id="whereSelect">
-		<if test="issue != null  and issue != ''">
+		<if test="issue != null and issue != ''">
 			and issue = #{issue}
 		</if>
-		<if test="startTime != null">
+		<if test="startTime != null and startTime != ''">
 			and bet_time &gt;= #{startTime} and bet_time &lt;= #{endTime}
 		</if>
 	</sql>
