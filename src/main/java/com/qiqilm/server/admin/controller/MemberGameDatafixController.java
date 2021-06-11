@@ -1,28 +1,22 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.domain.MemberInfo;
-import com.qiqilm.server.admin.service.IMemberInfoService;
-import com.qiqilm.server.admin.utils.UuidUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.MemberGameDatafix;
-import com.qiqilm.server.admin.service.IMemberGameDatafixService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.MemberGameDatafix;
+import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.IMemberGameDatafixService;
+import com.qiqilm.server.admin.service.IMemberInfoService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.UuidUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 游戏补单Controller
@@ -51,6 +45,17 @@ public class MemberGameDatafixController extends BaseController {
 
 
 	/**
+	 * 导出游戏注单修复列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('game:memberGameDatafix:export')" )
+	@Log( title = "游戏注单修复", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public void export(MemberGameDatafix memberGameDatafix, HttpServletResponse response) {
+		List<MemberGameDatafix>      list = memberGameDatafixService.selectMemberGameDatafixList(memberGameDatafix);
+		ExportExcelUtil.exportExcel( list, "游戏注单修复", "游戏注单修复表", MemberGameDatafix.class, response );
+	}
+
+	/**
 	 * 新增游戏补单
 	 */
 	@PreAuthorize( "@ss.hasPermi('game:memberGameDatafix:add')" )
@@ -67,4 +72,14 @@ public class MemberGameDatafixController extends BaseController {
 	}
 
 
+
+	/**
+	 * 删除游戏注单修复
+	 */
+	@PreAuthorize( "@ss.hasPermi('game:memberGameDatafix:remove')" )
+	@Log( title = "游戏注单修复", businessType = BusinessType.DELETE )
+	@DeleteMapping( "/{ids}" )
+	public AjaxResult remove( @PathVariable String[] ids ) {
+		return toAjax( memberGameDatafixService.deleteMemberGameDatafixByIds( ids ) );
+	}
 }
