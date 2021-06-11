@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 import java.math.RoundingMode;
 import java.util.*;
@@ -64,11 +64,15 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = JsonUtil.json2Map(res);
         if (!CollectionUtils.isEmpty(resultMap)) {
             String status = resultMap.getOrDefault("status", "").toString();
-                if ("1".equals(status)) {
+            if ("1".equals(status)) {
                 log.info("顺通代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+                if (StringUtils.isNotBlank(resultMap.getOrDefault("message", "").toString())) {
+                    reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+                } else {
+                    reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+                }
             }
         }
         log.warn("顺通代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -132,12 +136,12 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
 
         String res = null;
         try {
-            res = restTemplate.getForObject(payAgentPlatform.getPayOrderQueryAddr()+url, String.class);
-            log.warn("顺通代付查询结果:" + res );
+            res = restTemplate.getForObject(payAgentPlatform.getPayOrderQueryAddr() + url, String.class);
+            log.warn("顺通代付查询结果:" + res);
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             if (!CollectionUtils.isEmpty(resultMap)) {
                 int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
-                if(statusType == 10 || statusType == 0) {
+                if (statusType == 10 || statusType == 0) {
                     // status 4代付中 5代付失败 6代付成功
                     // statusType 1申请受理中，2代付下发中，10交易失败，0下发成功
                     int status = 4;
