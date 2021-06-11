@@ -23,10 +23,14 @@ public interface LotteryBet0Mapper {
 
 	public List<LotteryBet0> selectLotteryBet0AbnormalList( LotteryBet0 lotteryBet0 );
 
+	public List<LotteryBet0> selectLotteryBetTenTableList( LotteryBet0 lotteryBet0 );
+
 
 	LotteryBet0 getCountLotteryBet0List(LotteryBet0 lotteryBet0);
 
 	LotteryBet0 getCountLotteryBet0SingleList( LotteryBet0 lotteryBet0 );
 
 	LotteryBet0 getCountLotteryBet0AbnormalList( LotteryBet0 lotteryBet0 );
+
+	LotteryBet0 getCountLotteryBet0TenTableList( LotteryBet0 lotteryBet0 );
 }
