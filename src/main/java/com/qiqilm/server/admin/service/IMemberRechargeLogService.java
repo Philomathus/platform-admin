@@ -31,6 +31,8 @@ public interface IMemberRechargeLogService {
 	 */
 	public List<MemberRechargeLog> selectMemberRechargeLogList( ReqMemberRechargeLog req );
 
+	List<MemberRechargeLog> memberRechargeLogLists( );
+
 	public Map listCount( ReqMemberRechargeLog req );
 
 	AjaxResult firstAudit( ReqMemberRechargeLog req );
