@@ -68,7 +68,7 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
     @Override
     public int insertActivityInfo(ActivityInfo activityInfo) {
         int i = activityInfoMapper.insertActivityInfo(activityInfo);
-        //activityCacheUtil.addActivityInfo(activityInfo);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_INFO_KEY);
         return i;
     }
 
