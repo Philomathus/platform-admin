@@ -56,5 +56,4 @@ public class MemberGameDatafixServiceImpl implements IMemberGameDatafixService {
     public MemberGameDatafix selectMemberGameDatafixById(String id) {
         return memberGameDatafixMapper.selectMemberGameDatafixById(id);
     }
-
 }
