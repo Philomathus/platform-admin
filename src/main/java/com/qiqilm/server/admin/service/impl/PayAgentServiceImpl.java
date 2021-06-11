@@ -61,8 +61,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentLimitTels;
 	@Value( "${payAgentLimitLianFuBao:5000}" )
 	private Integer payAgentLimitLianFuBao;
-	@Value( "${payAgentListMaYun:5000}" )
-	private Integer payAgentListMaYun;
+	@Value( "${payAgentLimitMaYun:5000}" )
+	private Integer payAgentLimitMaYun;
+	@Value( "${payAgentLimitHeZhong:5000}" )
+	private Integer payAgentLimitHeZhong;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -157,12 +159,15 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitShunWei ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitShunWei + "元以上出款" );
-		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
-		)
-				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentListMaYun ) ) > 0 ) {
-			return AjaxResult.error( "此代付暂不支持" + payAgentListMaYun + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitMaYun ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitMaYun + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitHeZhong ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitHeZhong + "元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
