@@ -399,5 +399,4 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		liveUserMapper.updateLiveUser(liveUser);
 		return AjaxResult.success();
 	}
-
 }

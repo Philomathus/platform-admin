@@ -51,4 +51,5 @@ public interface IMemberGameDatafixService {
 	 * @return 游戏注单修复
 	 */
 	public MemberGameDatafix selectMemberGameDatafixById(String id);
+
 }

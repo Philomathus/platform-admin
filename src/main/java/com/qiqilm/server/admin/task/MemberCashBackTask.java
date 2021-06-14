@@ -14,7 +14,6 @@ import com.qiqilm.server.admin.service.IMemberRechargeLogService;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -50,20 +49,22 @@ public class MemberCashBackTask {
 		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 ) ) {
 			return;
 		}
-		    //查询昨天公司入款金额
-			List<MemberRechargeLog> memberRechargeLogs = memberRechargeLogService.memberRechargeLogLists();
-			for (MemberRechargeLog memberRechargeLog:memberRechargeLogs){
-				//要返现金额
-				Integer bycash = activityCashBackMapper.selectActivityCashBackBycash(memberRechargeLog.getRechargeMoney());
-				if (bycash!=null){
-					//会员返现
-					try {
-						this.updateMemberCharge(memberRechargeLog.getMemberId(),new BigDecimal(bycash),"充值返现",memberRechargeLog.getOrderNo());
-					} catch (Exception e) {
-						log.error( e.getMessage(), e );
-					}
+		//查询昨天公司入款金额
+		List<MemberRechargeLog> memberRechargeLogs = memberRechargeLogService.memberRechargeLogLists();
+		long now = System.currentTimeMillis();
+		for (MemberRechargeLog memberRechargeLog:memberRechargeLogs){
+			//要返现金额
+			Integer bycash = activityCashBackMapper.selectActivityCashBackBycash(memberRechargeLog.getRechargeMoney());
+			if (bycash!=null){
+				//会员返现
+				try {
+					this.updateMemberCharge(memberRechargeLog.getMemberId(),new BigDecimal(bycash),EnumMoney.activity.getDes(),memberRechargeLog.getOrderNo());
+				} catch (Exception e) {
+					log.error( e.getMessage(), e );
 				}
 			}
+		}
+		log.info("充值返现活动任务执行时间:{}ms", System.currentTimeMillis() - now);
 	}
 
 	private boolean updateMemberCharge( String userId, BigDecimal money, String chargeType ,String orderNo ) {
@@ -76,6 +77,9 @@ public class MemberCashBackTask {
 		codeFlow.setUserId( userId );
 		codeFlow.setDes( chargeType );
 		MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( userId );
+		if (memberInfo==null){
+			return true;
+		}
 		//日志
 		logService.logMoneyAdd( null, userId, memberInfo.getUserName(), EnumMoney.activity, money
 				,memberInfo.getTotalAccount() , "充值返现活动", orderNo );
