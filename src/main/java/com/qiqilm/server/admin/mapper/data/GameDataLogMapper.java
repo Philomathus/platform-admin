@@ -1,9 +1,9 @@
-package com.qiqilm.server.admin.mapper;
-
-import java.util.List;
+package com.qiqilm.server.admin.mapper.data;
 
 import com.qiqilm.server.admin.domain.GameDataLog;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 总代理游戏注单Mapper接口

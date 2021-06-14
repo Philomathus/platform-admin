@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +18,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @ServletComponentScan
 @EnableAspectJAutoProxy( exposeProxy = true )
-@MapperScan( { "com.qiqilm.server.admin.mapper" } )
 @EnableAsync
 @EnableScheduling
 public class PlatformAdminApplication implements ApplicationContextAware {

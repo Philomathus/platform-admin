@@ -1,8 +1,13 @@
 spring:
   datasource:
-    url: jdbc:mysql://47.57.3.228:3306/7700_main?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-    username: root
-    password: 77lm@20210107
+    primary:
+      jdbc-url: jdbc:mysql://47.57.3.228:3306/7700_main?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      username: root
+      password: 77lm@20210107
+    secondary:
+      jdbc-url: jdbc:mysql://seventry.rwlb.rds.aliyuncs.com:3306/7700_main?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      username: 77tv_webcs
+      password: 77tvwebcs_oradba
   redis:
     host: 47.57.3.228
     port: 6379
