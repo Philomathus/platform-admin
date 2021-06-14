@@ -14,7 +14,6 @@ spring:
     name: platform-admin
   datasource:
     primary:
-      type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
         ## 最小空闲连接数量
@@ -35,7 +34,6 @@ spring:
         validation-timeout: 3000
         login-timeout: 5
     secondary:
-      type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
         ## 最小空闲连接数量
@@ -47,7 +45,7 @@ spring:
         ## 此属性控制从池返回的连接的默认自动提交行为,默认值：true
         auto-commit: true
         ## 连接池名称
-        pool-name: HikariPool
+        pool-name: HikariPool-data
         ## 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
         max-lifetime: 30000
         ## 数据库连接超时时间,默认30秒，即30000
@@ -84,6 +82,9 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+
+pagehelper:
+  autoRuntimeDialect: true
 
 # token配置
 token:
