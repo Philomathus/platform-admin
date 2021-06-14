@@ -1,5 +1,8 @@
 package com.qiqilm.server.admin.config;
 
+import com.github.pagehelper.PageInterceptor;
+import com.github.pagehelper.autoconfigure.PageHelperProperties;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -34,12 +37,19 @@ public class SecondaryDataSourceConfig {
 
 	@Bean( name = "SecondarySqlSessionFactory" )
 	public SqlSessionFactory secondarySqlSessionFactory( @Qualifier( "SecondaryDataSource" ) DataSource datasource,
-														 MybatisProperties mybatisProperties ) throws Exception {
+														 MybatisProperties mybatisProperties,
+														 PageHelperProperties pageHelperProperties ) throws Exception {
 		SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
 		bean.setDataSource( datasource );
 		bean.setMapperLocations( new PathMatchingResourcePatternResolver().getResources( "classpath*:mapper/data/*.xml" ) );
 		bean.setTypeAliasesPackage( "com.qiqilm.server.admin.domain" );
 		bean.setConfiguration( mybatisProperties.getConfiguration() );
+
+		//分页插件
+		Interceptor interceptor = new PageInterceptor();
+		interceptor.setProperties( pageHelperProperties.getProperties() );
+		bean.setPlugins( interceptor );
+
 		return bean.getObject();
 	}
 
