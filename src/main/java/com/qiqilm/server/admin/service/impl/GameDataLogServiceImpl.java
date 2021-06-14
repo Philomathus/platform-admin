@@ -3,7 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import com.qiqilm.server.admin.mapper.*;
-import com.qiqilm.server.admin.mapper.data.GameDataLogMapper;
+import com.qiqilm.server.admin.mapper.GameDataLogMapper;
 import com.qiqilm.server.admin.service.IGameDataLogService;
 import com.qiqilm.server.admin.task.beat.GameDataTableHelp;
 import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
