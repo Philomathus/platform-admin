@@ -71,4 +71,15 @@
         where id = #{id}
     </update>
 
+    <delete id="deleteMemberGameDatafixById" parameterType="String">
+        delete from ${dbMain}.member_game_datafix where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberGameDatafixByIds" parameterType="String">
+        delete from ${dbMain}.member_game_datafix where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>

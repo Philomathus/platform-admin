@@ -32,6 +32,20 @@ public interface MemberGameDatafixMapper {
 
 	public int updateMemberGameDatafix(MemberGameDatafix memberGameDatafix);
 
+	/**
+	 * 删除游戏注单修复
+	 *
+	 * @param id 游戏注单修复ID
+	 * @return 结果
+	 */
+	public int deleteMemberGameDatafixById(String id);
 
+	/**
+	 * 批量删除游戏注单修复
+	 *
+	 * @param ids 需要删除的数据ID
+	 * @return 结果
+	 */
+	public int deleteMemberGameDatafixByIds(String[] ids );
 
 }

@@ -1,11 +1,12 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.MemberGameDatafixMapper;
 import com.qiqilm.server.admin.domain.MemberGameDatafix;
+import com.qiqilm.server.admin.mapper.MemberGameDatafixMapper;
 import com.qiqilm.server.admin.service.IMemberGameDatafixService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -15,7 +16,7 @@ import com.qiqilm.server.admin.service.IMemberGameDatafixService;
  */
 @Service
 public class MemberGameDatafixServiceImpl implements IMemberGameDatafixService {
-    @Autowired
+    @Resource
     private MemberGameDatafixMapper memberGameDatafixMapper;
 
 
@@ -40,5 +41,16 @@ public class MemberGameDatafixServiceImpl implements IMemberGameDatafixService {
     public int insertMemberGameDatafix(MemberGameDatafix memberGameDatafix) {
         return memberGameDatafixMapper.insertMemberGameDatafix(memberGameDatafix);
     }
+
+    @Override
+    public int deleteMemberGameDatafixByIds(String[] ids) {
+        return memberGameDatafixMapper.deleteMemberGameDatafixByIds(ids);
+    }
+
+    @Override
+    public int deleteMemberGameDatafixById(String id) {
+        return memberGameDatafixMapper.deleteMemberGameDatafixById(id);
+    }
+
 
 }
