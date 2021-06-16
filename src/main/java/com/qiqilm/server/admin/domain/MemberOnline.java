@@ -38,6 +38,8 @@ public class MemberOnline extends BaseEntity {
 
     private Integer total;
 
+    private String tableLast;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

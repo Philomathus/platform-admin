@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,8 @@ public interface ILiveUserService {
 
 	public AjaxResult updateFamilyID( Long familyId, Long id );
 
+	public AjaxResult updateTicket(BigDecimal ticket, Long id);
+
 	List<RspLotteryBet> selectAnchorAward( ReqLotteryBat req );
 
     public AjaxResult insertLiveUser(LiveUser liveUser);
@@ -54,4 +57,5 @@ public interface ILiveUserService {
 	List<LiveUser> selectLiveUserBankById(Integer userId);
 	AjaxResult updateLiveUserBank(LiveUser liveUser);
 	int delLiveUserBankById(String id);
+	AjaxResult kickOutLiveById( Long id );
 }

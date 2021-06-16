@@ -41,6 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="familyChieftain"    column="family_chieftain"    />
         <result property="liveIn"    column="live_in"    />
         <result property="expiryAfter"  column="expiry_after"    />
+        <result property="weixinAccount"  column="weixin_account"    />
     </resultMap>
 
     <sql id="selectLiveUserVo">
@@ -48,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		is_authentication,login_ip,focus_count,mobile,authentication_type,authentication_name,identify_hold_image,
 		identify_positive_image,identify_nagative_image, u.fans_count, ticket, refund_ticket,is_ban,v_explain,family_id,
 		coin,ticket_catty_ratio,open_pay,ban_remark,identify_number,login_time,logout_time,f.name family_name,
-        f.user_id family_user_id,f.nick_name family_nick_name,u.xpoint,u.ypoint
+        f.user_id family_user_id,f.nick_name family_nick_name,u.xpoint,u.ypoint,u.weixin_account
 		from ${dbLive}.live_user u left join ${dbLive}.live_family f on (f.id = u.family_id)
 		left join ${dbLive}.live_video g on (u.id = g.user_id)
     </sql>
@@ -188,6 +189,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    <update id="updateLiveUserByFamilyId" parameterType="integer">
        UPDATE ${dbLive}.live_user SET family_id = 0 where family_id = #{familyId}
    </update>
+
+    <update id="updateTicket">
+        UPDATE ${dbLive}.live_user SET ticket = #{ticket} where id = #{userId}
+    </update>
 
     <update id="updateLiveUserIsBanStopByFamilyId">
         UPDATE ${dbLive}.live_user SET is_ban = 1, ban_remark = #{remark} where family_id = #{familyId}

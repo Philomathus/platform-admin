@@ -6,10 +6,12 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveUserService;
+import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
@@ -39,6 +41,8 @@ public class LiveUserController extends BaseController {
     private TokenService tokenService;
     @Autowired
     private ISysUserService userService;
+	@Autowired
+	private ILiveVideoService liveVideoService;
 	/**
 	 * 查询主播用户信息列表
 	 */
@@ -194,6 +198,18 @@ public class LiveUserController extends BaseController {
 		return liveUserService.updateFamilyID( user.getFamilyId(), user.getId() );
 	}
 
+	@ApiOperation( "修改印票" )
+	@Log( title = "修改印票", businessType = BusinessType.UPDATE )
+	@PostMapping( "/updateTicket" )
+	public AjaxResult updateTicket( LiveUser user ) {
+		//判断主播当前是否在关播状态
+		LiveVideo liveVideo = liveVideoService.liveInStatus(user.getId());
+		if(liveVideo != null && liveVideo.getLiveIn() != 0){
+			return AjaxResult.error(100,"该主播不在关播状态,修改印票失败");
+		}
+		return liveUserService.updateTicket( user.getTicket(), user.getId() );
+	}
+
 	@PreAuthorize( "@ss.hasPermi('live:anchorAward:list')" )
 	@GetMapping( "/anchorAward" )
 	public TableDataInfo anchorAward( ReqLotteryBat req ) throws ParseException {
@@ -217,4 +233,14 @@ public class LiveUserController extends BaseController {
 		List<RspLotteryBet>      list = liveUserService.selectAnchorAward( req );
 		ExportExcelUtil.exportExcel( list, "公司入款", "公司入款信息表", RspLotteryBet.class, response );
 	}
+
+	/**
+	 * 踢出家族
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
+	@PutMapping( value = "/kickOutLive/{id}" )
+	public AjaxResult kickOutLive( @PathVariable( "id" ) Long id ) {
+		return liveUserService.kickOutLiveById( id );
+	}
+
 }

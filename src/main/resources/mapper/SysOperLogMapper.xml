@@ -59,6 +59,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
 				and date_format(oper_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
 			</if>
+			<if test="operParam != null and operParam != ''">
+				AND (oper_param like concat ('%"id":"',#{operParam},'"%') OR oper_param like concat ('%"id":"%_',#{operParam},'"%'))
+			</if>
 		</where>
 		order by oper_id desc
 	</select>

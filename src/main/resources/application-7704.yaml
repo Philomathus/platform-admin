@@ -15,6 +15,17 @@ mybatis:
       dbLive: 7704_live
       dbLottery: 7704_lottery
 
-payAgentLimit: 30000
+# 代付额度
+payAgentLimit: 50000
+# 顺为代付额度
+payAgentLimitShunWei: 50000
+# 宾利代付额度
 payAgentLimitBinLi: 50000
-payAgentLimitLianFuBao: 30000
+# 特仑苏代付额度
+payAgentLimitTels: 50000
+# 联付宝代付额度
+payAgentLimitLianFuBao: 50000
+# 马云代付额度
+payAgentLimitMaYun: 50000
+# 合众代付额度
+payAgentLimitHeZhong: 50000
