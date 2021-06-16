@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.cache;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.qiqilm.server.admin.domain.PayChannelNew;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.domain.PayType;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.List;
 
 /**
  * @author qicheng
@@ -140,7 +138,7 @@ public class PayCacheUtil {
 	}
 
 	public boolean setPayChannelSuccessRateLock(Long id) {
-		return redisUtil.strSetIfAbsent( CHANNELSUCCESSRATE_LOCK + id, "0", Duration.ofMinutes( 5 ));
+		return redisUtil.strSetIfAbsent( CHANNELSUCCESSRATE_LOCK + id, "0", Duration.ofMinutes( 10 ));
 	}
 
 	public boolean delPayChannelSuccessRateLock(Long id) {
@@ -148,7 +146,7 @@ public class PayCacheUtil {
 	}
 
     public void setPayChannelSuccessRate(Long id,String successRate) {
-		redisUtil.strSet( CHANNELSUCCESSRATE + id, successRate, Duration.ofMinutes( 2 ));
+		redisUtil.strSet( CHANNELSUCCESSRATE + id, successRate, Duration.ofMinutes( 10 ));
     }
 
 	public String getPayChannelSuccessRate(Long id) {
