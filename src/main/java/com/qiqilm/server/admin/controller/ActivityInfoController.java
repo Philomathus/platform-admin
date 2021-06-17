@@ -97,6 +97,7 @@ public class ActivityInfoController extends BaseController {
     @Log(title = "活动信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ActivityInfo activityInfo) {
+        activityInfo.setCtime(new Date());
         return toAjax(activityInfoService.updateActivityInfo(activityInfo));
     }
 
