@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ActivityCashBack;
+import com.qiqilm.server.admin.domain.rsp.RspActivityCashBack;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -29,6 +30,8 @@ public interface ActivityCashBackMapper {
 	 * @return 【返现活动】集合
 	 */
 	public List<ActivityCashBack> selectActivityCashBackList(ActivityCashBack activityCashBack);
+
+	public List<RspActivityCashBack> selectActivityCashBackLists(ActivityCashBack activityCashBack);
 
 	/**
 	 * 新增【返现活动】

@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.ActivityCashBack;
+import com.qiqilm.server.admin.domain.rsp.RspActivityCashBack;
 
 /**
  * 【返现活动】Service接口
@@ -26,6 +27,10 @@ public interface IActivityCashBackService {
 	 * @return 【返现活动】集合
 	 */
 	public List<ActivityCashBack> selectActivityCashBackList(ActivityCashBack activityCashBack);
+
+
+	 public List<RspActivityCashBack> selectActivityCashBackLists(ActivityCashBack activityCashBack);
+
 
 	/**
 	 * 新增【返现活动】

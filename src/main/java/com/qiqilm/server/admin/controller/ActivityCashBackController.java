@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ActivityCashBack;
+import com.qiqilm.server.admin.domain.rsp.RspActivityCashBack;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IActivityCashBackService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
@@ -42,11 +43,11 @@ public class ActivityCashBackController extends BaseController {
 	 * 导出【返现活动】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:activityCashBack:export')" )
-	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
+	@Log( title = "【返现活动】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public void export(ActivityCashBack activityCashBack, HttpServletResponse response) {
-		List<ActivityCashBack>      list = activityCashBackService.selectActivityCashBackList(activityCashBack);
-		ExportExcelUtil.exportExcel( list, "【请填写功能名称】", "【请填写功能名称】表", ActivityCashBack.class, response );
+		List<RspActivityCashBack>      list = activityCashBackService.selectActivityCashBackLists(activityCashBack);
+		ExportExcelUtil.exportExcel( list, "【返现活动】", "【返现活动】表", RspActivityCashBack.class, response );
 	}
 
 	/**
