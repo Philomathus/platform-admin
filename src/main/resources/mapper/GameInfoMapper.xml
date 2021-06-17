@@ -172,16 +172,16 @@
         (select t2.*
         from
         (select distinct game_id
-        from game_type_with
+        from ${dbMain}.game_type_with
         where type_id = #{typeId}) t1 inner join
         (select name,icon,kind_id game_kind,id,indexs,platform_id,screen,is_wh , high_wide
-        from game_info
+        from ${dbMain}.game_info
         where status = 1) t2
         on t1.game_id = t2.id) t3 order by t3.indexs asc
     </select>
     <select id="findTypeList" resultType="com.qiqilm.server.admin.domain.rsp.RspGameInfo">
         select id, name,icon,edition_icon as editionIcon,indexs,is_full as isFull,is_wh as isWh,status,high_wide as highWide,platform_id as platformId,kind_id as kindId
-        from game_info
+        from ${dbMain}.game_info
         where status = 1
     </select>
 </mapper>

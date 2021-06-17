@@ -98,6 +98,15 @@ public class MemberInfoController extends BaseController {
     }
 
     /**
+     * 获取用户登录地址
+     */
+    @PreAuthorize("@ss.hasPermi('member:memberInfo:query')")
+    @GetMapping(value = "/getMemberLoginAddress/{id}")
+    public AjaxResult getMemberLoginAddress(@PathVariable("id") String id) {
+        return AjaxResult.success(memberInfoService.getMemberLoginAddress(id));
+    }
+
+    /**
      * 新增用户信息
      */
     @PreAuthorize("@ss.hasPermi('member:memberInfo:add')")
