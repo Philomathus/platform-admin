@@ -31,6 +31,8 @@ public interface MemberRechargeLogMapper {
 	 */
 	public List<MemberRechargeLog> selectMemberRechargeLogList( @Param( "req" ) ReqMemberRechargeLog req );
 
+
+	public List<MemberRechargeLog> MemberRechargeLogLists( );
 	/**
 	 * 新增公司入款信息
 	 *
