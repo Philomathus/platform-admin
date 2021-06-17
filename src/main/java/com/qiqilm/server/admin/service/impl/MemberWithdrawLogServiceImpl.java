@@ -532,10 +532,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         withdrawReporti.setT_value(rspMemberInfo1.getLogin_ip());
         withdrawReports.add(withdrawReporti);
 
-        WithdrawReport withdrawReportj = new WithdrawReport();
-        withdrawReportj.setClass_twoname("登陆地址");
-        withdrawReportj.setT_value(rspMemberInfo1.getIpaddress());
-        withdrawReports.add(withdrawReportj);
+//        WithdrawReport withdrawReportj = new WithdrawReport();
+//        withdrawReportj.setClass_twoname("登陆地址");
+//        withdrawReportj.setT_value(rspMemberInfo1.getIpaddress());
+//        withdrawReports.add(withdrawReportj);
 
         WithdrawReport withdrawReportk = new WithdrawReport();
         withdrawReportk.setClass_twoname("线下充值金额");
