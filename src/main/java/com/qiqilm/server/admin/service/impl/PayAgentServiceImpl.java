@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
 import com.qiqilm.server.admin.mapper.PayAgentLogMapper;
@@ -47,9 +48,13 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
 	@Autowired
 	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
+	@Autowired
+	private RedisUtil                    redisUtil;
 
 	@Value( "${payAgentLimit:5000}" )
 	private Integer payAgentLimit;
+	@Value( "${payAgentLimitShunWei:5000}" )
+	private Integer payAgentLimitShunWei;
 	@Value( "${payAgentLimitBinLi:5000}" )
 	private Integer payAgentLimitBinLi;
 	@Value( "${payAgentLimitTels:5000}" )
@@ -149,8 +154,11 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 ) )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitBinLi ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitBinLi + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitShunWei ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitShunWei + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
-				)
+		)
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentListMaYun ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentListMaYun + "元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
@@ -158,6 +166,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 ) ) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
@@ -181,12 +190,18 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
 
+		if ( !redisUtil.lock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo(), "1", 360 ) ) {
+			return AjaxResult.error( "请勿重复提交代付订单:" + reqPayAgent.getWithdrawOrderNo() );
+		}
+
 		reqPayAgent.setCurrentTime( new Date() );
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 		if ( basePayAgent.orderPay( withdrawLog, payAgentPlatform, reqPayAgent ) ) {
 			this.processOrder( payAgentPlatform, withdrawLog, reqPayAgent.getCurrentTime(), 4, 0 );
 			return AjaxResult.success( "代付订单提交成功" );
 		}
+
+		redisUtil.unLock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo() );
 		return AjaxResult.error( StringUtils.hasText( reqPayAgent.getFailReason() ) ? reqPayAgent.getFailReason() : "代付失败" );
 	}
 

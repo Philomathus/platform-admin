@@ -69,4 +69,6 @@ public interface LiveVideoMapper {
     List<LiveVideo> selectLiveVideoList2(LiveVideo liveVideo);
 
 	List<Long> selectExpiredVideo();
+
+	LiveVideo liveInStatus(Long userId);
 }

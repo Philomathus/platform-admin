@@ -22,9 +22,13 @@ public interface MemberOnlineMapper {
 	 * @param memberOnline 在线会员列表
 	 * @return 在线会员列表集合
 	 */
-	public List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline);
+	List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline);
 
 	MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline);
 	RspMemberOnline sumCount(@Param("req") ReqMemberOnline reqMemberOnline);
+
+	void cutTableOnline(@Param("tableNode") String tableNode);
+
+	void dropTableOnline(@Param("tableNode") String tableNode);
 
 }

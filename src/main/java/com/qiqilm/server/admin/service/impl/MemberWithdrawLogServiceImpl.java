@@ -479,6 +479,11 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         withdrawReporta.setT_value(rspMemberInfo1.getEmail());
         withdrawReports.add(withdrawReporta);
 
+        WithdrawReport withdrawEmail = new WithdrawReport();
+        withdrawEmail.setClass_twoname("会员备注");
+        withdrawEmail.setT_value(rspMemberInfo1.getEmail());
+        withdrawReports.add(withdrawEmail);
+
         WithdrawReport withdrawReportb = new WithdrawReport();
         withdrawReportb.setClass_twoname("会员编号");
         withdrawReportb.setT_value(rspMemberInfo1.getId());

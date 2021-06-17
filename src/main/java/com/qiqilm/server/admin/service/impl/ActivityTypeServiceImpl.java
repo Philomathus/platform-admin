@@ -1,12 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
-import com.qiqilm.server.admin.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.ActivityTypeMapper;
+import com.qiqilm.server.admin.cache.ActivityCacheUtil;
 import com.qiqilm.server.admin.domain.ActivityType;
+import com.qiqilm.server.admin.mapper.ActivityTypeMapper;
 import com.qiqilm.server.admin.service.IActivityTypeService;
+import com.qiqilm.server.admin.utils.DateUtils;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 活动类型Service
@@ -16,8 +18,10 @@ import com.qiqilm.server.admin.service.IActivityTypeService;
  */
 @Service
 public class ActivityTypeServiceImpl implements IActivityTypeService {
-    @Autowired
+    @Resource
     private ActivityTypeMapper activityTypeMapper;
+    @Resource
+    private ActivityCacheUtil activityCacheUtil;
 
     /**
      * ѯ活动类型
@@ -50,7 +54,9 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
     @Override
     public int insertActivityType(ActivityType activityType) {
         activityType.setCreateTime(DateUtils.getNowDate());
-        return activityTypeMapper.insertActivityType(activityType);
+        int i = activityTypeMapper.insertActivityType(activityType);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_TYPE_KEY);
+        return i;
     }
 
     /**
@@ -61,7 +67,9 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
      */
     @Override
     public int updateActivityType(ActivityType activityType) {
-        return activityTypeMapper.updateActivityType(activityType);
+        int i = activityTypeMapper.updateActivityType(activityType);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_TYPE_KEY);
+        return i;
     }
 
     /**
@@ -72,7 +80,9 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
      */
     @Override
     public int deleteActivityTypeByIds(String[] ids) {
-        return activityTypeMapper.deleteActivityTypeByIds(ids);
+        int i = activityTypeMapper.deleteActivityTypeByIds(ids);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_TYPE_KEY);
+        return i ;
     }
 
     /**
@@ -83,7 +93,9 @@ public class ActivityTypeServiceImpl implements IActivityTypeService {
      */
     @Override
     public int deleteActivityTypeById(String id) {
-        return activityTypeMapper.deleteActivityTypeById(id);
+        int i = activityTypeMapper.deleteActivityTypeById(id);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_TYPE_KEY);
+        return i;
     }
 
     @Override
