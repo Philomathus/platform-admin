@@ -14,7 +14,7 @@
     </resultMap>
 
     <sql id="selectLiveFamilyJoinVo">
-        select id, family_id, user_id,  FROM_UNIXTIME(create_time) create_time ,  status, memo, nick_name, head_image from 7700_live.live_family_join
+        select id, family_id, user_id,  FROM_UNIXTIME(create_time) create_time ,  status, memo, nick_name, head_image from ${dbLive}.live_family_join
     </sql>
 
     <select id="selectLiveFamilyJoinList" parameterType="LiveFamilyJoin" resultMap="LiveFamilyJoinResult">
@@ -35,7 +35,7 @@
     </select>
 
     <insert id="insertLiveFamilyJoin" parameterType="LiveFamilyJoin">
-        insert into 7700_live.live_family_join
+        insert into ${dbLive}.live_family_join
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="familyId != null">family_id,</if>
@@ -59,7 +59,7 @@
     </insert>
 
     <update id="updateLiveFamilyJoin" parameterType="LiveFamilyJoin">
-        update 7700_live.live_family_join
+        update ${dbLive}.live_family_join
         <trim prefix="SET" suffixOverrides=",">
             <if test="familyId != null">family_id = #{familyId},</if>
     
@@ -80,11 +80,11 @@
     </update>
 
     <delete id="deleteLiveFamilyJoinById" parameterType="String">
-        delete from 7700_live.live_family_join where id = #{id}
+        delete from ${dbLive}.live_family_join where id = #{id}
     </delete>
 
     <delete id="deleteLiveFamilyJoinByIds" parameterType="String">
-        delete from 7700_live.live_family_join where id in
+        delete from ${dbLive}.live_family_join where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
