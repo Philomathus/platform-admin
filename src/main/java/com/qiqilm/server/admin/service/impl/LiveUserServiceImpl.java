@@ -128,7 +128,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		} else {
 			LiveFamily liveFamily = liveFamilyMapper.selectLiveFamilyById( familyID );
 			if ( liveFamily == null ) {
-				return AjaxResult.error( "家族不存在，请检查" );
+				return AjaxResult.error( "家族不存在，请检查家族ID" );
+			}
+			LiveUser liveUser = liveUserMapper.selectLiveUserById( userId );
+			if(liveUser.getFamilyChieftain() != null && liveUser.getFamilyChieftain() == 1){
+				return AjaxResult.error( "该主播是家族长,无法加入其它家族" );
 			}
 			int oldFamilyId = liveUserMapper.getFamilyId( userId );
 			int i           = liveUserMapper.updateFamilyID( familyID, userId );

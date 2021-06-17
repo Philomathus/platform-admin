@@ -61,7 +61,7 @@ public class LotteryDataTask {
         }
 
         Date endDay  = new Date();
-        Date starDay = DateFormatUtils.addMin( endDay, -5);
+        Date starDay = DateFormatUtils.addMin( endDay, -3);
         String start = DateFormatUtils.formate( starDay );
         String end = DateFormatUtils.formate( endDay );
         try {
