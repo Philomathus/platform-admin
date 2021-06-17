@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="selectSmsFailLogVo">
-        select id, code, message, phone, sms_name,  FROM_UNIXTIME(create_time) create_time ,  sms_subname from 7700_live.sms_fail_log
+        select id, code, message, phone, sms_name,  FROM_UNIXTIME(create_time) create_time ,  sms_subname from ${dbLive}.sms_fail_log
     </sql>
 
     <select id="selectSmsFailLogList" parameterType="SmsFailLog" resultMap="SmsFailLogResult">
@@ -33,7 +33,7 @@
     </select>
 
     <insert id="insertSmsFailLog" parameterType="SmsFailLog" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.sms_fail_log
+        insert into ${dbLive}.sms_fail_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="code != null">code,</if>
             <if test="message != null">message,</if>
@@ -53,7 +53,7 @@
     </insert>
 
     <update id="updateSmsFailLog" parameterType="SmsFailLog">
-        update 7700_live.sms_fail_log
+        update ${dbLive}.sms_fail_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="code != null">code = #{code},</if>
 
@@ -72,11 +72,11 @@
     </update>
 
     <delete id="deleteSmsFailLogById" parameterType="Long">
-        delete from 7700_live.sms_fail_log where id = #{id}
+        delete from ${dbLive}.sms_fail_log where id = #{id}
     </delete>
 
     <delete id="deleteSmsFailLogByIds" parameterType="String">
-        delete from 7700_live.sms_fail_log where id in
+        delete from ${dbLive}.sms_fail_log where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

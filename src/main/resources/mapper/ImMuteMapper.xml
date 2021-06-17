@@ -16,7 +16,7 @@
     </resultMap>
 
     <sql id="selectImMuteVo">
-        select id, user_id, real_name, bank_type_id, bank_account, bank_address,  FROM_UNIXTIME(create_time) create_time ,  type, dv, real_bank_address from 7700_live.live_user_bank
+        select id, user_id, real_name, bank_type_id, bank_account, bank_address,  FROM_UNIXTIME(create_time) create_time ,  type, dv, real_bank_address from ${dbLive}.live_user_bank
     </sql>
 
     <select id="selectImMuteList" parameterType="ImMute" resultMap="ImMuteResult">
@@ -39,7 +39,7 @@
     </select>
 
     <insert id="insertImMute" parameterType="ImMute" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.live_user_bank
+        insert into ${dbLive}.live_user_bank
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
             <if test="realName != null">real_name,</if>
@@ -65,7 +65,7 @@
     </insert>
 
     <update id="updateImMute" parameterType="ImMute">
-        update 7700_live.live_user_bank
+        update ${dbLive}.live_user_bank
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
     
@@ -90,11 +90,11 @@
     </update>
 
     <delete id="deleteImMuteById" parameterType="Long">
-        delete from 7700_live.live_user_bank where id = #{id}
+        delete from ${dbLive}.live_user_bank where id = #{id}
     </delete>
 
     <delete id="deleteImMuteByIds" parameterType="String">
-        delete from 7700_live.live_user_bank where id in
+        delete from ${dbLive}.live_user_bank where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
