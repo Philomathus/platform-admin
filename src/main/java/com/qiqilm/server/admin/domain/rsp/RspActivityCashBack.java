@@ -18,9 +18,12 @@ public class RspActivityCashBack {
 	@Excel( name = "会员编号", orderNum = "1" )
 	private String user_id;
 
-	@Excel( name = "备注信息", orderNum = "2" )
+	@Excel( name = "备注信息", orderNum = "4" )
 	private String mark;
 
-	@Excel( name = "金额", orderNum = "3" )
+	@Excel( name = "金额", orderNum = "2" )
 	private BigDecimal income;
+
+	@Excel( name = "返现时间", orderNum = "3" )
+	private String create_time;
 }
