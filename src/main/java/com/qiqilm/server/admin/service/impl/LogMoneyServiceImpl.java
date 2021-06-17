@@ -36,13 +36,11 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
 			return logMoneyMapper.selectLogMoneySingleList( logMoney );
 		} else if ( logMoney.getTypes() != null && StringUtils.isBlank( logMoney.getSearchValue() ) ) {
 			return logMoneyMapper.selectLogMoneyFirstList( logMoney );
-		} else if ( StringUtils.isBlank( logMoney.getMark() ) && logMoney.getTypes() == null ) {
-			if ( logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0 ) {
-				logMoney.setTableLast( "0" );
-				return logMoneyMapper.selectLogMoneySingleList( logMoney );
-			}
+		} else {
+			logMoney.setTableLast( "0" );
+			return logMoneyMapper.selectLogMoneySingleList( logMoney );
 		}
-		return logMoneyMapper.selectLogMoneyList( logMoney );
+		//return logMoneyMapper.selectLogMoneyList( logMoney );
 	}
 
 	@Override
