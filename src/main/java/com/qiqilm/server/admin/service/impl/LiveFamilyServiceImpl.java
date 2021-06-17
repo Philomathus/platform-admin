@@ -74,10 +74,8 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
 			if ( liveUser.getFamilyId() != 0 ) {
 				return AjaxResult.error( 0, "该主播已有家族,无法创建家族" );
 			}
-			if ( liveUser.getFamilyChieftain() != null ) {
-				if ( liveUser.getFamilyChieftain() == 1 ) {
+			if ( liveUser.getFamilyChieftain() != null && liveUser.getFamilyChieftain() == 1) {
 					return AjaxResult.error( 0, "该主播已是家族长,无法再创建家族" );
-				}
 			}
 		}
 		liveFamily.setCreateTimes( System.currentTimeMillis() / 1000 );
