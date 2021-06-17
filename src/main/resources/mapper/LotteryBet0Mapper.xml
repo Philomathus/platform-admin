@@ -21,7 +21,47 @@
 	</resultMap>
 
 	<select id="selectLotteryBet0List" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
-		SELECT a.* FROM ${dbLottery}.lottery_bet_view a <where><include refid="whereSelect"/></where>
+        SELECT a.* FROM (
+        SELECT * FROM ${dbLottery}.lottery_bet0 <where>
+        <include refid="whereSelect"/>
+    </where>
+        union
+        SELECT * FROM ${dbLottery}.lottery_bet1 <where>
+        <include refid="whereSelect"/>
+    </where>
+        union
+        SELECT * FROM ${dbLottery}.lottery_bet2 <where>
+        <include refid="whereSelect"/>
+    </where>
+        union
+        SELECT * FROM ${dbLottery}.lottery_bet3 <where>
+        <include refid="whereSelect"/>
+    </where>
+        union
+        SELECT * FROM ${dbLottery}.lottery_bet4 <where>
+        <include refid="whereSelect"/>
+    </where>
+        union
+        SELECT * FROM ${dbLottery}.lottery_bet5 <where>
+        <include refid="whereSelect"/>
+    </where>
+        union
+        SELECT * FROM ${dbLottery}.lottery_bet6 <where>
+        <include refid="whereSelect"/>
+    </where>
+        union
+        SELECT * FROM ${dbLottery}.lottery_bet7 <where>
+        <include refid="whereSelect"/>
+    </where>
+        union
+        SELECT * FROM ${dbLottery}.lottery_bet8 <where>
+        <include refid="whereSelect"/>
+    </where>
+        union
+        SELECT * FROM ${dbLottery}.lottery_bet9 <where>
+        <include refid="whereSelect"/>
+    </where>
+        ) a
 	</select>
 
 	<select id="selectLotteryBet0SingleList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
