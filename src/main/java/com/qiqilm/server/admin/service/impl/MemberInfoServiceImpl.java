@@ -368,6 +368,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
+    public String getMemberLoginAddress(String id) {
+        return memberInfoMapper.selectMemberInfoAddressById(id);
+    }
+
+    @Override
     public void updataStatus(MemberInfo memberInfo) {
         if (memberInfo.getBanSpeakTime()==0){
             memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), false );
