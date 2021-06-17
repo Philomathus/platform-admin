@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -34,6 +35,12 @@ public class ActivityCashBack extends BaseEntity {
     /** 状态(1 启用 0 停用 ) */
     @Excel(name = "状态(1 启用 0 停用 )")
     private String status;
+
+    @JsonIgnore
+    private String[] selectDate;
+
+    private String   startTime;
+    private String   endTime;
 
     @Override
     public String toString() {

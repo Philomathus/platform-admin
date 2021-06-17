@@ -1,11 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.ActivityCashBack;
+import com.qiqilm.server.admin.domain.rsp.RspActivityCashBack;
 import com.qiqilm.server.admin.mapper.ActivityCashBackMapper;
 import com.qiqilm.server.admin.service.IActivityCashBackService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +42,24 @@ public class ActivityCashBackServiceImpl implements IActivityCashBackService {
     @Override
     public List<ActivityCashBack> selectActivityCashBackList(ActivityCashBack activityCashBack) {
         return activityCashBackMapper.selectActivityCashBackList(activityCashBack);
+    }
+
+    @Override
+    public List<RspActivityCashBack> selectActivityCashBackLists(ActivityCashBack activityCashBack) {
+        String[] selectDate = activityCashBack.getSelectDate();
+        if ( selectDate == null  ) {
+            Date d          = new Date();
+            SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
+            String           dateNowStr = sdf.format( d );
+            activityCashBack.getSelectDate()[ 0 ] = dateNowStr;
+            activityCashBack.getSelectDate()[ 1 ] = dateNowStr;
+            activityCashBack.setStartTime(activityCashBack.getSelectDate()[ 0 ] + " 00:00:00");
+            activityCashBack.setEndTime(activityCashBack.getSelectDate()[ 1 ] + " 23:59:59");
+        }else {
+            activityCashBack.setStartTime( selectDate[ 0 ] );
+            activityCashBack.setEndTime( selectDate[ 1 ] );
+        }
+        return activityCashBackMapper.selectActivityCashBackLists(activityCashBack);
     }
 
     /**

@@ -619,7 +619,13 @@
     </update>
 
 	<select id="selectMemberInfoWithdrawByIda" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
-		SELECT email,id,user_name,phone phone,login_time,vip,reg_time,total_account,code_account,code_total,login_ip,fun_getaddress(login_ip) ipaddress
+		SELECT email,id,user_name,phone phone,login_time,vip,reg_time,total_account,code_account,code_total,login_ip
+		from member_info where id = #{userid}
+	</select>
+
+
+    <select id="selectMemberInfoAddressById" parameterType="String" resultType="String">
+		SELECT fun_getaddress(login_ip) ipaddress
 		from member_info where id = #{userid}
 	</select>
 

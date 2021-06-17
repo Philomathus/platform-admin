@@ -96,4 +96,6 @@ public interface MemberInfoMapper {
     List<RspMemberInfo> selectMemberInfoWithdrawByIdl(@Param("userid") String id, @Param("tableLast") String tableLast);
 
     void changeEmail(MemberInfo memberInfo);
+
+    String selectMemberInfoAddressById(@Param("userid") String id);
 }
