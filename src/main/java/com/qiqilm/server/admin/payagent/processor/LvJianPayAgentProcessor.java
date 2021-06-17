@@ -50,34 +50,35 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        //1 授权token获取
-        Map<String, String> paramsToGetToken = null;
-        paramsToGetToken.put("merchantId", payAgentPlatform.getMerId());
-        String toReqTokenSign = HttpClientTools.md5ascii(paramsToGetToken, md5key);
-        paramsToGetToken.put("sign", toReqTokenSign);
-        //授权token的url写在header_key里
-        String resultData = null;
-        try {
-            resultData = HttpClientTools.baseHttpSendPost(payAgentPlatform.getHeaderKey(), paramsToGetToken);
-        } catch (Exception e) {
-            log.info("绿箭代付获取授权token错误:{}", withdrawLog.getOrderNo());
-            log.error(e.getMessage(), e);
-        }
-
-        Map<String, Object> resultDataMap = JsonUtil.json2Map(resultData);
-        Map<String, String> headerMap = new HashMap<>();
-        if (!CollectionUtils.isEmpty(resultDataMap)) {
-            if ("10000".equals(resultDataMap.getOrDefault("code", "").toString())) {
-                headerMap.put("Content-Type", "application/json;charset=utf-8");
-                headerMap.put("accToken", resultDataMap.getOrDefault("accToken","").toString());
-            } else {
-                reqPayAgent.setFailReason(resultDataMap.getOrDefault("message", "").toString());
-                return false;
-            }
-        } else {
-            log.info("绿箭代付下单失败,原因是获取授权token错误:{}", withdrawLog.getOrderNo());
-            return false;
-        }
+        //如果需要授权token解开此段注释
+//        //1 授权token获取
+//        Map<String, String> paramsToGetToken = new HashMap<>();
+//        paramsToGetToken.put("merchantId", payAgentPlatform.getMerId());
+//        String toReqTokenSign = HttpClientTools.md5ascii(paramsToGetToken, md5key);
+//        paramsToGetToken.put("sign", toReqTokenSign);
+//        //授权token的url写在header_key里
+//        String resultData = null;
+//        try {
+//            resultData = HttpClientTools.baseHttpSendPost(payAgentPlatform.getHeaderKey(), paramsToGetToken);
+//        } catch (Exception e) {
+//            log.info("绿箭代付获取授权token错误:{}", withdrawLog.getOrderNo());
+//            log.error(e.getMessage(), e);
+//        }
+//
+//        Map<String, Object> resultDataMap = JsonUtil.json2Map(resultData);
+//        Map<String, String> headerMap = new HashMap<>();
+//        if (!CollectionUtils.isEmpty(resultDataMap)) {
+//            if ("10000".equals(resultDataMap.getOrDefault("code", "").toString())) {
+//                headerMap.put("Content-Type", "application/json;charset=utf-8");
+//                headerMap.put("accToken", resultDataMap.getOrDefault("accToken","").toString());
+//            } else {
+//                reqPayAgent.setFailReason(resultDataMap.getOrDefault("message", "").toString());
+//                return false;
+//            }
+//        } else {
+//            log.info("绿箭代付下单失败,原因是获取授权token错误:{}", withdrawLog.getOrderNo());
+//            return false;
+//        }
 
         Map<String,String> params = new HashMap<>();
         params.put("merchNo", payAgentPlatform.getMerId());
@@ -110,7 +111,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         params.put("sign", sign);
         String responseData = null;
         try {
-            responseData = HttpClientTools.httpSendPostForm(payAgentPlatform.getPayOrderAddr(), params, headerMap);
+            responseData = HttpClientTools.httpSendPostForm(payAgentPlatform.getPayOrderAddr(), params);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
