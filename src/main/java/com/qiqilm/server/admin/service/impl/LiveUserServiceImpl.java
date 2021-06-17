@@ -128,7 +128,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		} else {
 			LiveFamily liveFamily = liveFamilyMapper.selectLiveFamilyById( familyID );
 			if ( liveFamily == null ) {
-				return AjaxResult.error( "家族不存在，请检查" );
+				return AjaxResult.error( "家族不存在，请检查家族ID" );
+			}
+			LiveUser liveUser = liveUserMapper.selectLiveUserById( userId );
+			if ( liveUser.getFamilyId() != 0 ) {
+				return AjaxResult.error( "该主播已有家族,无法加入家族" );
 			}
 			int oldFamilyId = liveUserMapper.getFamilyId( userId );
 			int i           = liveUserMapper.updateFamilyID( familyID, userId );
@@ -364,7 +368,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	 * 2：要更新live_user 家族id清空 。。。
 	 * 3：家族成员要减少
 	 * 4: 家族成员配置表要删除改主播的信息
-	 * 5：要判断是否是家族长，家族长不能被剔除家族
+	 * 5：要判断是否是家族长，家族长不能被踢出家族
 	 * @return success
 	 */
 	@Override
@@ -376,11 +380,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		}
 		LiveUser liveUser = liveUserMapper.selectLiveUserById( id );
 		if (liveUser.getFamilyChieftain() != null && liveUser.getFamilyChieftain() == 1){
-			return AjaxResult.error(100,"家族长不能被剔除家族,剔除家族主播失败！");
+			return AjaxResult.error(100,"家族长不能被踢出家族,踢出家族主播失败！");
 		}
 		LiveFamily family = liveFamilyMapper.selectLiveFamilyById(liveUser.getFamilyId());
 		if (family == null){
-			return AjaxResult.error(100,"主播未加入家族,剔除家族主播失败！");
+			return AjaxResult.error(100,"主播未加入家族,踢出家族主播失败！");
 		}
 		int count = Integer.valueOf(family.getUserCount()+"");
 		int familyId = Integer.valueOf(liveUser.getFamilyId()+"");
@@ -399,4 +403,5 @@ public class LiveUserServiceImpl implements ILiveUserService {
 		liveUserMapper.updateLiveUser(liveUser);
 		return AjaxResult.success();
 	}
+
 }
