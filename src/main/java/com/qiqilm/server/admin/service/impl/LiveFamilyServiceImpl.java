@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
 import com.qiqilm.server.admin.service.ILiveFamilyService;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,8 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
 	private LiveFamilyMapper liveFamilyMapper;
 	@Autowired
 	private LiveUserMapper   liveUserMapper;
+	@Autowired
+	private RedisUtil   redisUtil;
 
 	/**
 	 * 查询家族
@@ -161,9 +164,12 @@ public class LiveFamilyServiceImpl implements ILiveFamilyService {
 			liveUserMapper.updateLiveUser( liveUser1 );
 		}
 		liveFamilyMapper.updateLiveFamily( liveFamily );
-
-		RedisCacheUtil.me.clear( getliveFamily.getUserId(), LiveUser.class );
-		RedisCacheUtil.me.clear( liveFamily.getUserId(), LiveUser.class );
+        if(getliveFamily != null ) {
+			RedisCacheUtil.me.clear(getliveFamily.getUserId(), LiveUser.class);
+		}
+        if(liveFamily != null) {
+			RedisCacheUtil.me.clear(liveFamily.getUserId(), LiveUser.class);
+		}
 		return AjaxResult.success( "修改" + liveFamily.getName() + "家族成功" );
 	}
 
