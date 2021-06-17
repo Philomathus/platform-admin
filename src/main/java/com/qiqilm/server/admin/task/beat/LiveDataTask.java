@@ -43,13 +43,13 @@ public class LiveDataTask {
 
     }
 
-    @Scheduled( fixedDelay = 45000, initialDelay=2000  )
+    @Scheduled( fixedDelay = 50000, initialDelay=2000  )
     public void runPropTask() throws Exception {
         if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName())){
             return;
         }
         Date endDay  = new Date();
-        Date starDay = DateFormatUtils.addMin( endDay, -5);
+        Date starDay = DateFormatUtils.addMin( endDay, -3);
 
         try {
             gameDataLogService.beatLiveProp(platformTypeId,beatRate,starDay.getTime()/1000,endDay.getTime()/1000);
