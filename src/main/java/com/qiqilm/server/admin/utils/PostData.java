@@ -289,6 +289,17 @@ public class PostData {
 		return get( postUrl );
 	}
 
+	public static String getKYBalance(String agent,String account,String kindID,String recordID,String DESKey,String md5, String apiUrl) throws Exception {
+		String time   = System.currentTimeMillis() + "";
+		String params = "s=19&kindID="+kindID+"&recordID="+recordID+"&account=" + account;
+		String param  = Encrypt.AESEncrypt( params, DESKey );
+		String key    = DigestUtils.md5Hex( agent + time + md5 );
+		String postUrl =
+				apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" ).concat( param ).concat( "&key=" ).concat( key );
+		log.info( "请求URL：" + postUrl );
+		return get( postUrl );
+	}
+
 
 	/**
 	 * 踢玩家下线

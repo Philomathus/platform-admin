@@ -1,16 +1,17 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
-
+import com.qiqilm.server.admin.cache.ActivityCacheUtil;
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
-import com.qiqilm.server.admin.domain.GameType;
+import com.qiqilm.server.admin.domain.ActivityInfo;
 import com.qiqilm.server.admin.mapper.ActivityInfoMapper;
+import com.qiqilm.server.admin.service.IActivityInfoService;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.domain.ActivityInfo;
-import com.qiqilm.server.admin.service.IActivityInfoService;
 import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 活动信息Service业务层处理
@@ -20,10 +21,12 @@ import org.springframework.util.CollectionUtils;
  */
 @Service
 public class ActivityInfoServiceImpl implements IActivityInfoService {
-    @Autowired
+    @Resource
     private ActivityInfoMapper    activityInfoMapper;
     @Autowired
     private ConfigDomainCacheUtil configDomainCacheUtil;
+    @Resource
+    private ActivityCacheUtil activityCacheUtil;
 
     /**
      * 查询活动信息
@@ -64,7 +67,9 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
      */
     @Override
     public int insertActivityInfo(ActivityInfo activityInfo) {
-        return activityInfoMapper.insertActivityInfo(activityInfo);
+        int i = activityInfoMapper.insertActivityInfo(activityInfo);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_INFO_KEY);
+        return i;
     }
 
     /**
@@ -75,7 +80,9 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
      */
     @Override
     public int updateActivityInfo(ActivityInfo activityInfo) {
-        return activityInfoMapper.updateActivityInfo(activityInfo);
+        int i = activityInfoMapper.updateActivityInfo(activityInfo);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_INFO_KEY);
+        return i;
     }
 
     /**
@@ -86,7 +93,9 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
      */
     @Override
     public int deleteActivityInfoByIds(String[] ids) {
-        return activityInfoMapper.deleteActivityInfoByIds(ids);
+        int i = activityInfoMapper.deleteActivityInfoByIds(ids);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_INFO_KEY);
+        return i ;
     }
 
     /**
@@ -97,6 +106,8 @@ public class ActivityInfoServiceImpl implements IActivityInfoService {
      */
     @Override
     public int deleteActivityInfoById(String id) {
-        return activityInfoMapper.deleteActivityInfoById(id);
+        int i = activityInfoMapper.deleteActivityInfoById(id);
+        activityCacheUtil.delActiveCache(ActivityCacheUtil.ACTIVITY_INFO_KEY);
+        return i;
     }
 }

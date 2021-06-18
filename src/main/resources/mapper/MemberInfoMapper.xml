@@ -125,6 +125,8 @@
 			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
 				and date_format(reg_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
 			</if>
+            <if test="downLoadDate[0] != null "> and reg_time >= '${downLoadDate[0]}'</if>
+            <if test="downLoadDate[1] != null "> and reg_time &lt;= '${downLoadDate[1]}'</if>
 		</where>
 		order by reg_time desc
 	</select>
@@ -614,5 +616,79 @@
         		update member_info
 		set inviter_code = #{inviterCode}
 		where id = #{memberId}
+    </update>
+
+	<select id="selectMemberInfoWithdrawByIda" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT email,id,user_name,phone phone,login_time,vip,reg_time,total_account,code_account,code_total,login_ip
+		from member_info where id = #{userid}
+	</select>
+
+
+    <select id="selectMemberInfoAddressById" parameterType="String" resultType="String">
+		SELECT fun_getaddress(login_ip) ipaddress
+		from member_info where id = #{userid}
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdb" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT IFNULL(SUM(recharge_money),0) rechargemoney from member_recharge_log where type = '1' and status = '3' and member_id = #{userid}
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdc" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT IFNULL(SUM(sub_money),0) submoney from member_pay_jour where status='1' and member_id = #{userid} and pay_time >= DATE_SUB(NOW(),INTERVAL 30 DAY)
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdd" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT IFNULL(SUM(money),0) p_money from pay_agent_recharge_log where member_id = #{userid}
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIde" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT IFNULL(SUM(income),0) rg_income FROM log_money${tableLast} where type='-1' and user_id = #{userid}
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdf" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT IFNULL(SUM(income),0) zs_income FROM log_money${tableLast} where type in ('5','7','8','9','12','13','14') and user_id = #{userid}
+	</select>
+
+	<!--充值总的金额-->
+	<select id="selectMemberInfoWithdrawByIdg" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		(SELECT sum(n) totalincom from (
+		SELECT IFNULL(SUM(recharge_money),0) n from member_recharge_log where type = '1' and status = '3' and member_id = #{userid}
+		UNION ALL
+		SELECT IFNULL(SUM(sub_money),0) n from member_pay_jour where status='1' and member_id = #{userid}
+		UNION ALL
+		select IFNULL(SUM(money),0) n from pay_agent_recharge_log where member_id = #{userid}
+		) as t)
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdh" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		select COUNT(1) w_count from member_withdraw_log where status in ('3','6') and member_id = #{userid}
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdi" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		select IFNULL(SUM(withdraw_money),0) w_sum from member_withdraw_log where STATUS in ('0','1','3','4','6') and member_id = #{userid}
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdj" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		(select count(1) gcount FROM member_game_data${tableLast} WHERE agent in ('10000','80000')
+		and (cell_score - profit)/cell_score > 1
+		and 1.04 > (cell_score - profit)/cell_score
+		and account = #{userid})
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdk" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		select count(1) gtcount FROM member_game_data${tableLast} WHERE agent in ('10000','80000') and account = #{userid}
+	</select>
+
+	<select id="selectMemberInfoWithdrawByIdl" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		select p.name as class_twoname,convert(sum(g.cell_score),decimal(10,2)) touZhu,convert(sum(g.profit),decimal(10,2)) yingLi
+		FROM member_game_data${tableLast} g
+		LEFT JOIN game_platform p on g.platform_id = p.id
+		WHERE account = #{userid} GROUP BY g.platform_id
+	</select>
+    <update id="changeEmail">
+        UPDATE member_info set email = #{email}
+        <where>
+            id = #{id}
+        </where>
     </update>
 </mapper>

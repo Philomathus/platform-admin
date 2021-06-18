@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -67,7 +68,11 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 				log.info( "福财运2代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
 				return true;
 			} else {
-				reqPayAgent.setFailReason( resultMap.getOrDefault( "msg", "" ).toString() );
+				if (StringUtils.isNotBlank(resultMap.getOrDefault("message", "").toString())) {
+					reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+				} else {
+					reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+				}
 			}
 		}
 		log.warn( "福财运2代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );

@@ -90,6 +90,11 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	}
 
 	@Override
+	public List<MemberRechargeLog> memberRechargeLogLists() {
+		return memberRechargeLogMapper.MemberRechargeLogLists();
+	}
+
+	@Override
 	public Map listCount( ReqMemberRechargeLog req ) {
 		String[] selectDate = req.getSelectDate();
 		if ( selectDate != null && selectDate.length > 0 ) {
@@ -163,8 +168,17 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 
 		BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "recharge_day_first_rate");
 
-		if(memberRechargeLogMapper.countRechargeDaySucess(memberInfo.getId())==0){
+		int daySucess = memberRechargeLogMapper.countRechargeDaySucess(memberInfo.getId());
+
+		if(daySucess==0){
 			chargeGive = chargeGive.add(memberRechargeLog.getRechargeMoney().multiply( ticketCattyRatio )// 单日首次彩金
+					.setScale( 2, BigDecimal.ROUND_HALF_UP ));
+		}
+		// 单日第二次彩金
+		if (daySucess==1){
+			//每日公司入款第二次优惠比例
+			BigDecimal ticketCattyRatioSnd = sysConfigCacheUtil.getConfBd( "recharge_day_second_rate");
+			chargeGive = chargeGive.add(memberRechargeLog.getRechargeMoney().multiply( ticketCattyRatioSnd )
 					.setScale( 2, BigDecimal.ROUND_HALF_UP ));
 		}
 		//套利号无优惠

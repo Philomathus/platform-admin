@@ -72,4 +72,8 @@ public interface IMemberInfoService {
 	void updataStatus(MemberInfo memberInfo);
 
     AjaxResult updateInviterCode(String inviterCode,  String memberId);
+
+    AjaxResult changeEmail(MemberInfo memberInfo);
+
+    String getMemberLoginAddress(String id);
 }

@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ import java.util.Date;
  * @date 2021-01-26
  */
 @Data
-public class LiveUser {
+public class LiveUser extends DownLoadTime {
 	private static final long serialVersionUID = 1L;
 
 	/** ID */
@@ -147,6 +148,7 @@ public class LiveUser {
     private String realName;
 	private String bankAccount;
     private String bankName;
+    private String weixinAccount;
 
 
 	public String getAuthStr() {

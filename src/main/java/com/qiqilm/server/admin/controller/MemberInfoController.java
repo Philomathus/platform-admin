@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.domain.vo.*;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
@@ -77,9 +78,14 @@ public class MemberInfoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('member:memberInfo:export')")
     @Log(title = "导出", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public void export(MemberInfo memberInfo, HttpServletResponse response) {
+    public AjaxResult export(MemberInfo memberInfo, HttpServletResponse response) {
         List<MemberInfo> list = memberInfoService.selectMemberInfoList(memberInfo);
-        ExportExcelUtil.exportExcel( list, "用户信息", "用户信息表", MemberInfo.class, response );
+        if (list.size()<= DownLoadTime.downLoadLimit) {
+            ExportExcelUtil.exportExcel( list, "用户信息", "用户信息表", MemberInfo.class, response );
+            return AjaxResult.success("下载成功");
+        }else {
+            return AjaxResult.error("导出条数超过20万条");
+        }
     }
 
     /**
@@ -89,6 +95,15 @@ public class MemberInfoController extends BaseController {
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(memberInfoService.selectMemberInfoById(id));
+    }
+
+    /**
+     * 获取用户登录地址
+     */
+    @PreAuthorize("@ss.hasPermi('member:memberInfo:query')")
+    @GetMapping(value = "/getMemberLoginAddress/{id}")
+    public AjaxResult getMemberLoginAddress(@PathVariable("id") String id) {
+        return AjaxResult.success(memberInfoService.getMemberLoginAddress(id));
     }
 
     /**
@@ -537,6 +552,13 @@ public class MemberInfoController extends BaseController {
     @PutMapping("/changeBank")
     public Object changeBank(@RequestBody MemberCard memberCard) {
         AjaxResult ajaxResult = memberInfoService.changeBank(memberCard);
+        return (ajaxResult);
+    }
+
+    @Log(title = "修改用户备注", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateEmail")
+    public Object updateEmail(@RequestBody MemberInfo memberInfo) {
+        AjaxResult ajaxResult = memberInfoService.changeEmail(memberInfo);
         return (ajaxResult);
     }
 

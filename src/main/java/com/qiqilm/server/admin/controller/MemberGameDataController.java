@@ -66,4 +66,9 @@ public class MemberGameDataController extends BaseController {
 		List<RspMemberGameData>      list = memberGameDataService.selectMemberGameDataList( reqMemberGameData );
 		ExportExcelUtil.exportExcel( list, "会员注单数据", "会员注单数据表", RspMemberGameData.class, response );
 	}
+
+	@PutMapping( value = "/getKYgameResReport" )
+	public AjaxResult getKYgameResReport( MemberGameData memberGameData ) {
+		return memberGameDataService.GameKYResult( memberGameData );
+	}
 }

@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    primary:
+      jdbc-url: jdbc:mysql://pc-j6c1ah19tg2g51r3u.rwlb.rds.aliyuncs.com:3306/7707_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: 77tv_web
+      password: 77tvweb_oradba
+    secondary:
+      jdbc-url: jdbc:mysql://pc-j6cj935598h4lz6r5.rwlb.rds.aliyuncs.com:3306/db_data?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      username: 77tv_web
+      password: 77tvweb_oradba
+  redis:
+    host: r-j6cfcyxp5j3o2kd4nk.redis.rds.aliyuncs.com
+    port: 6379
+    password: jQlPoH#%B8n3Qpr6
+
+mybatis:
+  configuration:
+    variables:
+      dbMain: 7707_main
+      dbLive: 7707_live
+      dbLottery: 7707_lottery
+
+payAgentLimit: 30000
+payAgentLimitBinLi: 50000
+payAgentLimitLianFuBao: 30000

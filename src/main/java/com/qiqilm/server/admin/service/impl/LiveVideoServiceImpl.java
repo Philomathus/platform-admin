@@ -1,6 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.qiqilm.server.admin.cache.*;
+import com.qiqilm.server.admin.cache.RedisCacheUtil;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.cache.VideoCacheUtil;
+import com.qiqilm.server.admin.cache.VideoPayCacheUtil;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
@@ -18,7 +21,6 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -48,20 +50,16 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Autowired
-	private ServerImCacheUtil  serverImCacheUtil;
-	@Autowired
 	private VideoPayCacheUtil  videoPayCacheUtil;
 
-	@Autowired
-	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 	@Resource
-	private ServerLiveMapper       serverLiveMapper;
+	private ServerLiveMapper    serverLiveMapper;
 	@Resource
-	private LiveUserMapper         liveUserMapper;
+	private LiveUserMapper      liveUserMapper;
 	@Resource
-	private LiveVideoMapper        liveVideoMapper;
+	private LiveVideoMapper     liveVideoMapper;
 	@Resource
-	private LiveVideoPropMapper    liveVideoPropMapper;
+	private LiveVideoPropMapper liveVideoPropMapper;
 
 	@Resource
 	private LiveHostWageDayMapper liveHostWageDayMapper;
@@ -183,7 +181,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		LiveUser liveUser = liveUserMapper.selectLiveUserById( id );
 
-		this.saveHostWageNote( liveUser, video, isAborted );
+		this.saveHostWageNote( liveUser, video );
 
 		if ( !isAborted && video.getIsLivePay() ) {
 			videoPayCacheUtil.unlink( id );
@@ -198,11 +196,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		this.closeVideoIMNotify( video, isAborted, why );
 
-		RedisCacheUtil.me.clear( id, this.getClass() );
+		RedisCacheUtil.me.clear( id, LiveVideo.class );
 		return false;
 	}
 
-	private void saveHostWageNote( LiveUser liveUser, LiveVideo video, boolean isAborted ) {
+	private void saveHostWageNote( LiveUser liveUser, LiveVideo video ) {
 
 		String          dayTime       = LocalDate.now().toString();
 		String          hostLiveDayId = dayTime.concat( "-" ).concat( String.valueOf( liveUser.getId() ) );
@@ -241,7 +239,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			try {
 				long time = System.currentTimeMillis();
 				ext.put( "systemtime", time );
-				String signData = video.getId() + video.getMaxWatchNumber() + why + time;
+				String signData = video.getId().toString() + video.getMaxWatchNumber().toString() + why + time;
+				log.warn( signData );
 				ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
 
 				log.warn( "关播通知：{}", JsonUtil.object2Json( ext ) );
@@ -301,6 +300,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			updateVideo.setCateId( 4 );// 设置主题ID为收费直播
 			updateVideo.setIsLivePay( true );
 			liveVideoMapper.updateLiveVideo( updateVideo );
+
+			RedisCacheUtil.me.clear( video.getId(), LiveVideo.class );
 
 			// 初始化收费房缓存以及有效期
 			videoPayCacheUtil.initVideoPay( video.getId() );
@@ -512,5 +513,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		}
 		log.info( "结束执行主播礼物计算,执行时间：{}ms", System.currentTimeMillis() - s );
 
+	}
+
+	 @Override
+	 public LiveVideo liveInStatus( Long userId ) {
+		return liveVideoMapper.liveInStatus( userId );
 	}
 }

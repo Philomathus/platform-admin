@@ -21,7 +21,7 @@ import java.util.List;
 @Data
 public class MemberPayJour implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+    private String[] downLoadDate = new String[2];
 	/**
 	 * 系统编号
 	 */

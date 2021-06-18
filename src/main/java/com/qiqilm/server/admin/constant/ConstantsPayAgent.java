@@ -12,6 +12,7 @@ public abstract class ConstantsPayAgent {
 	public static final String SHUN_WEI              = "shunWei";
 	// 顺为代付
 	public static final String SHUN_WEI2             = "shunWei2";
+	public static final String SHUN_WEI3             = "shunWei3";
 	// 天天代付
 	public static final String TIAN_TIAN             = "tianTian";
 	// 咪咪代付
@@ -52,6 +53,10 @@ public abstract class ConstantsPayAgent {
 	public static final String SHUNTONG              = "shunTong";
 	// 福财运2代付
 	public static final String SHUNTONG2             = "shunTong2";
+	// 福财运3代付
+	public static final String SHUNTONG3             = "shunTong3";
+	// 福财运4代付
+	public static final String SHUNTONG4             = "shunTong4";
 	// 宾利代付
 	public static final String BINLI                 = "binLi";
 	// 宾利代付
@@ -65,7 +70,23 @@ public abstract class ConstantsPayAgent {
 	// newmax代付
 	public static final String NEWMAX                = "newmax";
 	//顺风
-	public static final String SHUN_FENG             = "shunFeng";
+	public static final String SHUN_FENG                = "shunFeng";
+	//路飞代付
+	public static final String LU_FEI        = "luFei";
+	//新华子代付
+	public static final String XIN_HUA_ZI                = "xinHuaZi";
 	//马云代付
 	public static final String Ma_Yun                = "maYun";
+	//群支付代付
+	public static final String QUN_ZHI_FU            = "qunZhiFu";
+	//久久代付
+	public static final String JIUJIU            = "jiuJiu";
+	// 亿信代付2
+	public static final String YIXIN2                 = "yiXin2";
+	//绿箭代付
+	public static final String LVJIAN            = "lvJian";
+	//合众代付
+	public static final String HEZHONG            = "heZhong";
+	//利发代付
+	public static final String LIFA            = "liFa";
 }
