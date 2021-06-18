@@ -26,7 +26,7 @@ public class ShabaService {
 	private final String CHECK_TRANSFER = "/CheckFundTransfer/";
 	private final String LOGIN          = "/Login/";
 	private final String BALANCE        = "/CheckUserBalance/";
-	private final int    CURRERCY       = 20;
+	private final int    CURRERCY       = 13;
 	private final int    ODDSTYPE       = 2;
 	private final int    TOSHABA        = 1;
 	private final int    TOQIQI         = 0;
