@@ -1,12 +1,11 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberOnline;
 import com.qiqilm.server.admin.domain.req.ReqMemberOnline;
 import com.qiqilm.server.admin.domain.rsp.RspMemberOnline;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 在线会员列表Mapper接口

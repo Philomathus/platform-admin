@@ -59,7 +59,7 @@
     </select>
 
     <insert id="insertActivityCashBack" parameterType="ActivityCashBack" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_main.activity_cash_back
+        insert into ${dbMain}.activity_cash_back
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="depositTotalMin != null">deposit_total_min,</if>
             <if test="depositTotalMax != null">deposit_total_max,</if>
@@ -75,7 +75,7 @@
     </insert>
 
     <update id="updateActivityCashBack" parameterType="ActivityCashBack">
-        update 7700_main.activity_cash_back
+        update ${dbMain}.activity_cash_back
         <trim prefix="SET" suffixOverrides=",">
             <if test="depositTotalMin != null">deposit_total_min = #{depositTotalMin},</if>
     
@@ -90,11 +90,11 @@
     </update>
 
     <delete id="deleteActivityCashBackById" parameterType="Long">
-        delete from 7700_main.activity_cash_back where id = #{id}
+        delete from ${dbMain}.activity_cash_back where id = #{id}
     </delete>
 
     <delete id="deleteActivityCashBackByIds" parameterType="String">
-        delete from 7700_main.activity_cash_back where id in
+        delete from ${dbMain}.activity_cash_back where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
