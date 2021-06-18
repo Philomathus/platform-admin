@@ -5,7 +5,6 @@ import com.qiqilm.server.admin.domain.SysLogininfor;
 import com.qiqilm.server.admin.domain.SysOperLog;
 import com.qiqilm.server.admin.service.ISysLogininforService;
 import com.qiqilm.server.admin.service.ISysOperLogService;
-import com.qiqilm.server.admin.utils.AddressUtils;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.SpringUtils;
 import com.qiqilm.server.admin.utils.UserDataUtil;
@@ -41,7 +40,7 @@ public class AsyncFactory {
 		return new TimerTask() {
 			@Override
 			public void run() {
-				String address = "";//AddressUtils.getRealAddressByIP( ip );
+				String address = "";
 				// 打印信息到日志
 				String s = AsyncFactory.getBlock( ip ) +
 						address +

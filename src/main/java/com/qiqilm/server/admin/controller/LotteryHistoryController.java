@@ -1,28 +1,17 @@
 package com.qiqilm.server.admin.controller;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
+import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.LotteryHistory;
 import com.qiqilm.server.admin.service.ILotteryHistoryService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * 开奖历史Controller
@@ -41,9 +30,9 @@ public class LotteryHistoryController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryHistory:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LotteryHistory lotteryHistory) {
+	public TableDataInfo list( LotteryHistory lotteryHistory ) {
 		startPage();
-		List<LotteryHistory> list = lotteryHistoryService.selectLotteryHistoryList(lotteryHistory);
+		List<LotteryHistory> list = lotteryHistoryService.selectLotteryHistoryList( lotteryHistory );
 		return getDataTable( list );
 	}
 
@@ -62,17 +51,17 @@ public class LotteryHistoryController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryHistory:list')" )
 	@PostMapping( "/{id}" )
-	public AjaxResult changeStatus(@PathVariable String id) {
-		String ktime = lotteryHistoryService.selectKtimeById(id);
-		LocalDateTime now       = LocalDateTime.now();
-		now = now.minusMinutes(2);
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String localTime = df.format(now);
-		Integer i=ktime.compareTo(localTime);
-		if(i>0) {
-			return AjaxResult.error(0, "超开奖时间2分钟后,方可人工派奖");
+	public AjaxResult changeStatus( @PathVariable String id ) {
+		String        ktime = lotteryHistoryService.selectKtimeById( id );
+		LocalDateTime now   = LocalDateTime.now();
+		now = now.minusMinutes( 2 );
+		DateTimeFormatter df        = DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm:ss" );
+		String            localTime = df.format( now );
+		Integer           i         = ktime.compareTo( localTime );
+		if ( i > 0 ) {
+			return AjaxResult.error( 0, "超开奖时间2分钟后,方可人工派奖" );
 		}
-		lotteryHistoryService.changeStatus(id);
+		lotteryHistoryService.changeStatus( id );
 		return AjaxResult.success();
 	}
 

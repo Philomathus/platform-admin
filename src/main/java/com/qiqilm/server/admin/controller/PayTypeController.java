@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayTypeService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,10 +43,10 @@ public class PayTypeController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payType:add')" )
 	@GetMapping( "/existCode/{code}" )
-	public AjaxResult existCode( @PathVariable( "code" ) Integer code  ) {
+	public AjaxResult existCode( @PathVariable( "code" ) Integer code ) {
 		int i = payTypeService.existCode( code );
-		if(i>0){
-			return AjaxResult.error(0,"此支付编码已存在");
+		if ( i > 0 ) {
+			return AjaxResult.error( 0, "此支付编码已存在" );
 		}
 		return AjaxResult.success();
 	}
@@ -58,8 +57,8 @@ public class PayTypeController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payType:export')" )
 	@Log( title = "支付类型", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export( PayType payType , HttpServletResponse response) {
-		List<PayType>      list = payTypeService.selectPayTypeList( payType );
+	public void export( PayType payType, HttpServletResponse response ) {
+		List<PayType> list = payTypeService.selectPayTypeList( payType );
 		ExportExcelUtil.exportExcel( list, "支付类型", "支付类型表", PayType.class, response );
 	}
 
@@ -99,7 +98,7 @@ public class PayTypeController extends BaseController {
 	@Log( title = "支付类型", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{id}" )
 	public AjaxResult remove( @PathVariable String id ) {
-		return toAjax( payTypeService.deletePayTypeById( id) );
+		return toAjax( payTypeService.deletePayTypeById( id ) );
 	}
 
 	/**

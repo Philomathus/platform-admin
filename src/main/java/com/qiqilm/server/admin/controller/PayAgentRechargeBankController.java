@@ -1,29 +1,19 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.PayAgentRechargeBank;
-import com.qiqilm.server.admin.service.IPayAgentRechargeBankService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.PayAgentRechargeBank;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.IPayAgentRechargeBankService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 【代充银行列表】Controller
@@ -42,20 +32,20 @@ public class PayAgentRechargeBankController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeBank:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(PayAgentRechargeBank payAgentRechargeBank) {
+	public TableDataInfo list( PayAgentRechargeBank payAgentRechargeBank ) {
 		startPage();
-		List<PayAgentRechargeBank> list = payAgentRechargeBankService.selectPayAgentRechargeBankList(payAgentRechargeBank);
+		List<PayAgentRechargeBank> list = payAgentRechargeBankService.selectPayAgentRechargeBankList( payAgentRechargeBank );
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出【代充银行列表】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeBank:export')" )
 	@Log( title = "【代充银行列表】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(PayAgentRechargeBank payAgentRechargeBank, HttpServletResponse response) {
-		List<PayAgentRechargeBank>      list = payAgentRechargeBankService.selectPayAgentRechargeBankList(payAgentRechargeBank);
+	public void export( PayAgentRechargeBank payAgentRechargeBank, HttpServletResponse response ) {
+		List<PayAgentRechargeBank> list = payAgentRechargeBankService.selectPayAgentRechargeBankList( payAgentRechargeBank );
 		ExportExcelUtil.exportExcel( list, "代充银行列表", "代充银行列表表", PayAgentRechargeBank.class, response );
 	}
 
@@ -64,8 +54,8 @@ public class PayAgentRechargeBankController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeBank:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( payAgentRechargeBankService.selectPayAgentRechargeBankById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( payAgentRechargeBankService.selectPayAgentRechargeBankById( id ) );
 	}
 
 	/**
@@ -74,8 +64,8 @@ public class PayAgentRechargeBankController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeBank:add')" )
 	@Log( title = "【代充银行列表】", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody PayAgentRechargeBank payAgentRechargeBank) {
-		return toAjax( payAgentRechargeBankService.insertPayAgentRechargeBank(payAgentRechargeBank) );
+	public AjaxResult add( @RequestBody PayAgentRechargeBank payAgentRechargeBank ) {
+		return toAjax( payAgentRechargeBankService.insertPayAgentRechargeBank( payAgentRechargeBank ) );
 	}
 
 	/**
@@ -84,8 +74,8 @@ public class PayAgentRechargeBankController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeBank:edit')" )
 	@Log( title = "【代充银行列表】", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody PayAgentRechargeBank payAgentRechargeBank) {
-		return toAjax( payAgentRechargeBankService.updatePayAgentRechargeBank(payAgentRechargeBank) );
+	public AjaxResult edit( @RequestBody PayAgentRechargeBank payAgentRechargeBank ) {
+		return toAjax( payAgentRechargeBankService.updatePayAgentRechargeBank( payAgentRechargeBank ) );
 	}
 
 	/**
@@ -105,6 +95,6 @@ public class PayAgentRechargeBankController extends BaseController {
 	@Log( title = "代充人", businessType = BusinessType.UPDATE )
 	@PutMapping( "/changeStatus" )
 	public AjaxResult changeStatus( @RequestBody PayAgentRechargeBank payAgentRechargeBank ) {
-		return toAjax( payAgentRechargeBankService.changeStatus(payAgentRechargeBank));
+		return toAjax( payAgentRechargeBankService.changeStatus( payAgentRechargeBank ) );
 	}
 }
