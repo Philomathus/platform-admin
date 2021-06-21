@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.WheelLottery;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IWheelLotteryService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,9 +32,9 @@ public class WheelLotteryController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(WheelLottery wheelLottery) {
+	public TableDataInfo list( WheelLottery wheelLottery ) {
 		startPage();
-		List<WheelLottery> list = wheelLotteryService.selectWheelLotteryList(wheelLottery);
+		List<WheelLottery> list = wheelLotteryService.selectWheelLotteryList( wheelLottery );
 		return getDataTable( list );
 	}
 
@@ -45,8 +44,8 @@ public class WheelLotteryController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:export')" )
 	@Log( title = "转盘彩票", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(WheelLottery wheelLottery, HttpServletResponse response) {
-		List<WheelLottery>      list = wheelLotteryService.selectWheelLotteryList(wheelLottery);
+	public void export( WheelLottery wheelLottery, HttpServletResponse response ) {
+		List<WheelLottery> list = wheelLotteryService.selectWheelLotteryList( wheelLottery );
 		ExportExcelUtil.exportExcel( list, "转盘彩票", "转盘彩票表", WheelLottery.class, response );
 	}
 
@@ -55,8 +54,8 @@ public class WheelLotteryController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( wheelLotteryService.selectWheelLotteryById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( wheelLotteryService.selectWheelLotteryById( id ) );
 	}
 
 	/**
@@ -65,8 +64,8 @@ public class WheelLotteryController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:add')" )
 	@Log( title = "转盘彩票", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody WheelLottery wheelLottery) {
-		return  wheelLotteryService.insertWheelLottery(wheelLottery)  > 0 ? AjaxResult.success() : AjaxResult.error("所加彩票已存在");
+	public AjaxResult add( @RequestBody WheelLottery wheelLottery ) {
+		return wheelLotteryService.insertWheelLottery( wheelLottery ) > 0 ? AjaxResult.success() : AjaxResult.error( "所加彩票已存在" );
 	}
 
 	/**
@@ -75,8 +74,8 @@ public class WheelLotteryController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelLottery:edit')" )
 	@Log( title = "转盘彩票", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody WheelLottery wheelLottery) {
-		return toAjax( wheelLotteryService.updateWheelLottery(wheelLottery) );
+	public AjaxResult edit( @RequestBody WheelLottery wheelLottery ) {
+		return toAjax( wheelLotteryService.updateWheelLottery( wheelLottery ) );
 	}
 
 	/**

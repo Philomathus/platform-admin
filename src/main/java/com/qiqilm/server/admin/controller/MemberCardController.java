@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberCardService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,9 +32,9 @@ public class MemberCardController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:memberCard:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(MemberCard memberCard) {
+	public TableDataInfo list( MemberCard memberCard ) {
 		startPage();
-		List<MemberCard> list = memberCardService.selectMemberCardList(memberCard);
+		List<MemberCard> list = memberCardService.selectMemberCardList( memberCard );
 		return getDataTable( list );
 	}
 
@@ -45,8 +44,8 @@ public class MemberCardController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:memberCard:export')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(MemberCard memberCard, HttpServletResponse response) {
-		List<MemberCard>      list = memberCardService.selectMemberCardList(memberCard);
+	public void export( MemberCard memberCard, HttpServletResponse response ) {
+		List<MemberCard> list = memberCardService.selectMemberCardList( memberCard );
 		ExportExcelUtil.exportExcel( list, "会员银行卡", "会员银行卡表", MemberCard.class, response );
 	}
 
@@ -55,8 +54,8 @@ public class MemberCardController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:memberCard:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( memberCardService.selectMemberCardById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( memberCardService.selectMemberCardById( id ) );
 	}
 
 	/**
@@ -65,8 +64,8 @@ public class MemberCardController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:memberCard:add')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody MemberCard memberCard) {
-		return toAjax( memberCardService.insertMemberCard(memberCard) );
+	public AjaxResult add( @RequestBody MemberCard memberCard ) {
+		return toAjax( memberCardService.insertMemberCard( memberCard ) );
 	}
 
 	/**
@@ -75,8 +74,8 @@ public class MemberCardController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:memberCard:edit')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody MemberCard memberCard) {
-		return toAjax( memberCardService.updateMemberCard(memberCard) );
+	public AjaxResult edit( @RequestBody MemberCard memberCard ) {
+		return toAjax( memberCardService.updateMemberCard( memberCard ) );
 	}
 
 	/**

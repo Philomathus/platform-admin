@@ -1,29 +1,19 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.domain.ActivityType;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.LotteryRule;
-import com.qiqilm.server.admin.service.ILotteryRuleService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LotteryRule;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.ILotteryRuleService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 开奖规则说明Controller
@@ -42,20 +32,20 @@ public class LotteryRuleController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LotteryRule lotteryRule) {
+	public TableDataInfo list( LotteryRule lotteryRule ) {
 		startPage();
-		List<LotteryRule> list = lotteryRuleService.selectLotteryRuleList(lotteryRule);
+		List<LotteryRule> list = lotteryRuleService.selectLotteryRuleList( lotteryRule );
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出开奖规则说明列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:export')" )
 	@Log( title = "开奖规则说明", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(LotteryRule lotteryRule, HttpServletResponse response) {
-		List<LotteryRule>      list = lotteryRuleService.selectLotteryRuleList(lotteryRule);
+	public void export( LotteryRule lotteryRule, HttpServletResponse response ) {
+		List<LotteryRule> list = lotteryRuleService.selectLotteryRuleList( lotteryRule );
 		ExportExcelUtil.exportExcel( list, "开奖规则说明", "开奖规则说明表", LotteryRule.class, response );
 	}
 
@@ -64,8 +54,8 @@ public class LotteryRuleController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( lotteryRuleService.selectLotteryRuleById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( lotteryRuleService.selectLotteryRuleById( id ) );
 	}
 
 	/**
@@ -74,8 +64,8 @@ public class LotteryRuleController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:add')" )
 	@Log( title = "开奖规则说明", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LotteryRule lotteryRule) {
-		return toAjax( lotteryRuleService.insertLotteryRule(lotteryRule) );
+	public AjaxResult add( @RequestBody LotteryRule lotteryRule ) {
+		return toAjax( lotteryRuleService.insertLotteryRule( lotteryRule ) );
 	}
 
 	/**
@@ -84,8 +74,8 @@ public class LotteryRuleController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryRule:edit')" )
 	@Log( title = "开奖规则说明", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LotteryRule lotteryRule) {
-		return toAjax( lotteryRuleService.updateLotteryRule(lotteryRule) );
+	public AjaxResult edit( @RequestBody LotteryRule lotteryRule ) {
+		return toAjax( lotteryRuleService.updateLotteryRule( lotteryRule ) );
 	}
 
 	/**

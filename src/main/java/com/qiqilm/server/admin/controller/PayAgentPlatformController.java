@@ -9,7 +9,6 @@ import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayAgentPlatformService;
 import com.qiqilm.server.admin.service.IPayAgentService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,7 @@ public class PayAgentPlatformController extends BaseController {
 	@GetMapping( "/effect-pay-agents" )
 	public AjaxResult findAgents() {
 		PayAgentPlatform payAgentPlatform = new PayAgentPlatform();
-		payAgentPlatform.setStatus("1");
+		payAgentPlatform.setStatus( "1" );
 		return AjaxResult.success( payAgentPlatformService.selectPayAgentPlatformList( payAgentPlatform ) );
 	}
 
@@ -63,8 +62,8 @@ public class PayAgentPlatformController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentPlatform:export')" )
 	@Log( title = "代付平台", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export( PayAgentPlatform payAgentPlatform , HttpServletResponse response) {
-		List<PayAgentPlatform>      list = payAgentPlatformService.selectPayAgentPlatformList( payAgentPlatform );
+	public void export( PayAgentPlatform payAgentPlatform, HttpServletResponse response ) {
+		List<PayAgentPlatform> list = payAgentPlatformService.selectPayAgentPlatformList( payAgentPlatform );
 		ExportExcelUtil.exportExcel( list, "代付平台", "代付平台表", PayAgentPlatform.class, response );
 	}
 
@@ -84,26 +83,26 @@ public class PayAgentPlatformController extends BaseController {
 	@Log( title = "代付平台", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody PayAgentPlatform payAgentPlatform ) {
-		payAgentPlatform.setMerId(payAgentPlatform.getMerId().trim());
-		payAgentPlatform.setPayOrderAddr(payAgentPlatform.getPayOrderAddr().trim());
-		if(StringUtils.isNotBlank(payAgentPlatform.getPayOrderQueryAddr())) {
-			payAgentPlatform.setPayOrderQueryAddr(payAgentPlatform.getPayOrderQueryAddr().trim());
+		payAgentPlatform.setMerId( payAgentPlatform.getMerId().trim() );
+		payAgentPlatform.setPayOrderAddr( payAgentPlatform.getPayOrderAddr().trim() );
+		if ( StringUtils.isNotBlank( payAgentPlatform.getPayOrderQueryAddr() ) ) {
+			payAgentPlatform.setPayOrderQueryAddr( payAgentPlatform.getPayOrderQueryAddr().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getHeaderKey())) {
-			payAgentPlatform.setHeaderKey(payAgentPlatform.getHeaderKey().trim());
+		if ( StringUtils.isNotBlank( payAgentPlatform.getHeaderKey() ) ) {
+			payAgentPlatform.setHeaderKey( payAgentPlatform.getHeaderKey().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getSignMd5())) {
-			payAgentPlatform.setSignMd5(payAgentPlatform.getSignMd5().trim());
+		if ( StringUtils.isNotBlank( payAgentPlatform.getSignMd5() ) ) {
+			payAgentPlatform.setSignMd5( payAgentPlatform.getSignMd5().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getSignPublicKey())) {
-			payAgentPlatform.setSignPublicKey(payAgentPlatform.getSignPublicKey().trim());
+		if ( StringUtils.isNotBlank( payAgentPlatform.getSignPublicKey() ) ) {
+			payAgentPlatform.setSignPublicKey( payAgentPlatform.getSignPublicKey().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getSignPrivateKey())) {
-			payAgentPlatform.setSignPrivateKey(payAgentPlatform.getSignPrivateKey().trim());
+		if ( StringUtils.isNotBlank( payAgentPlatform.getSignPrivateKey() ) ) {
+			payAgentPlatform.setSignPrivateKey( payAgentPlatform.getSignPrivateKey().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getPlatWhiteIpList())) {
-			payAgentPlatform.setPlatWhiteIpList(payAgentPlatform.getPlatWhiteIpList().
-					trim().replaceAll(" ", "").replaceAll("，", ","));
+		if ( StringUtils.isNotBlank( payAgentPlatform.getPlatWhiteIpList() ) ) {
+			payAgentPlatform.setPlatWhiteIpList( payAgentPlatform.getPlatWhiteIpList().
+					trim().replaceAll( " ", "" ).replaceAll( "，", "," ) );
 		}
 		return toAjax( payAgentPlatformService.insertPayAgentPlatform( payAgentPlatform ) );
 	}
@@ -115,26 +114,26 @@ public class PayAgentPlatformController extends BaseController {
 	@Log( title = "代付平台", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayAgentPlatform payAgentPlatform ) {
-		payAgentPlatform.setMerId(payAgentPlatform.getMerId().trim());
-		payAgentPlatform.setPayOrderAddr(payAgentPlatform.getPayOrderAddr().trim());
-		if(StringUtils.isNotBlank(payAgentPlatform.getPayOrderQueryAddr())) {
-			payAgentPlatform.setPayOrderQueryAddr(payAgentPlatform.getPayOrderQueryAddr().trim());
+		payAgentPlatform.setMerId( payAgentPlatform.getMerId().trim() );
+		payAgentPlatform.setPayOrderAddr( payAgentPlatform.getPayOrderAddr().trim() );
+		if ( StringUtils.isNotBlank( payAgentPlatform.getPayOrderQueryAddr() ) ) {
+			payAgentPlatform.setPayOrderQueryAddr( payAgentPlatform.getPayOrderQueryAddr().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getHeaderKey())) {
-			payAgentPlatform.setHeaderKey(payAgentPlatform.getHeaderKey().trim());
+		if ( StringUtils.isNotBlank( payAgentPlatform.getHeaderKey() ) ) {
+			payAgentPlatform.setHeaderKey( payAgentPlatform.getHeaderKey().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getSignMd5())) {
-			payAgentPlatform.setSignMd5(payAgentPlatform.getSignMd5().trim());
+		if ( StringUtils.isNotBlank( payAgentPlatform.getSignMd5() ) ) {
+			payAgentPlatform.setSignMd5( payAgentPlatform.getSignMd5().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getSignPublicKey())) {
-			payAgentPlatform.setSignPublicKey(payAgentPlatform.getSignPublicKey().trim());
+		if ( StringUtils.isNotBlank( payAgentPlatform.getSignPublicKey() ) ) {
+			payAgentPlatform.setSignPublicKey( payAgentPlatform.getSignPublicKey().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getSignPrivateKey())) {
-			payAgentPlatform.setSignPrivateKey(payAgentPlatform.getSignPrivateKey().trim());
+		if ( StringUtils.isNotBlank( payAgentPlatform.getSignPrivateKey() ) ) {
+			payAgentPlatform.setSignPrivateKey( payAgentPlatform.getSignPrivateKey().trim() );
 		}
-		if(StringUtils.isNotBlank(payAgentPlatform.getPlatWhiteIpList())) {
-			payAgentPlatform.setPlatWhiteIpList(payAgentPlatform.getPlatWhiteIpList().
-					trim().replaceAll(" ", "").replaceAll("，", ","));
+		if ( StringUtils.isNotBlank( payAgentPlatform.getPlatWhiteIpList() ) ) {
+			payAgentPlatform.setPlatWhiteIpList( payAgentPlatform.getPlatWhiteIpList().
+					trim().replaceAll( " ", "" ).replaceAll( "，", "," ) );
 		}
 		return toAjax( payAgentPlatformService.updatePayAgentPlatform( payAgentPlatform ) );
 	}

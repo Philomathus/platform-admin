@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LogMoney;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILogMoneyService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +46,7 @@ public class LogMoneyController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:list')" )
 	@GetMapping( "/totalCount" )
 	public AjaxResult totalCount( LogMoney logMoney ) {
-        return logMoneyService.totalCount( logMoney );
+		return logMoneyService.totalCount( logMoney );
 	}
 
 	/**
@@ -56,8 +55,8 @@ public class LogMoneyController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:export')" )
 	@Log( title = " 会员资金信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export( LogMoney logMoney, HttpServletResponse response) {
-		List<LogMoney>      list = logMoneyService.selectLogMoneyList( logMoney );
+	public void export( LogMoney logMoney, HttpServletResponse response ) {
+		List<LogMoney> list = logMoneyService.selectLogMoneyList( logMoney );
 		ExportExcelUtil.exportExcel( list, "会员资金信息", "会员资金信息表", LogMoney.class, response );
 	}
 }
