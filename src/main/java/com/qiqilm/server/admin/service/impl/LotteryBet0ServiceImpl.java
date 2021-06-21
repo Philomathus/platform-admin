@@ -3,7 +3,6 @@ package com.qiqilm.server.admin.service.impl;
 import com.google.common.collect.ImmutableMap;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LotteryBet0;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LotteryBet0Mapper;
 import com.qiqilm.server.admin.service.ILotteryBet0Service;
 import com.qiqilm.server.admin.utils.StringUtils;
@@ -45,11 +44,6 @@ public class LotteryBet0ServiceImpl implements ILotteryBet0Service {
         }else {
             return lotteryBet0Mapper.selectLotteryBetViewlList(lotteryBet0);
         }
-//		return lotteryBet0Mapper.selectLotteryBet0List( lotteryBet0 );
-		} else if(StringUtils.isNotBlank(lotteryBet0.getIssue() ) ){
-			return lotteryBet0Mapper.selectLotteryBetTenTableList( lotteryBet0 );
-		}
-		return lotteryBet0Mapper.selectLotteryBet0List( lotteryBet0 );
 	}
 
 	@Override
