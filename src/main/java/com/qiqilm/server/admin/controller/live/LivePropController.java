@@ -1,28 +1,19 @@
 package com.qiqilm.server.admin.controller.live;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.LiveProp;
-import com.qiqilm.server.admin.service.ILivePropService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LiveProp;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.ILivePropService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 礼物列Controller
@@ -41,9 +32,9 @@ public class LivePropController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveProp:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LiveProp liveProp) {
+	public TableDataInfo list( LiveProp liveProp ) {
 		startPage();
-		List<LiveProp> list = livePropService.selectLivePropList(liveProp);
+		List<LiveProp> list = livePropService.selectLivePropList( liveProp );
 		return getDataTable( list );
 	}
 
@@ -63,8 +54,8 @@ public class LivePropController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveProp:export')" )
 	@Log( title = "礼物列", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(LiveProp liveProp, HttpServletResponse response) {
-		List<LiveProp>      list = livePropService.selectLivePropList(liveProp);
+	public void export( LiveProp liveProp, HttpServletResponse response ) {
+		List<LiveProp> list = livePropService.selectLivePropList( liveProp );
 		ExportExcelUtil.exportExcel( list, "礼物列", "礼物列表", LiveProp.class, response );
 	}
 
@@ -73,8 +64,8 @@ public class LivePropController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveProp:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( livePropService.selectLivePropById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( livePropService.selectLivePropById( id ) );
 	}
 
 	/**
@@ -83,8 +74,8 @@ public class LivePropController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveProp:add')" )
 	@Log( title = "礼物列", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LiveProp liveProp) {
-		return toAjax( livePropService.insertLiveProp(liveProp) );
+	public AjaxResult add( @RequestBody LiveProp liveProp ) {
+		return toAjax( livePropService.insertLiveProp( liveProp ) );
 	}
 
 	/**
@@ -93,8 +84,8 @@ public class LivePropController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveProp:edit')" )
 	@Log( title = "礼物列", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LiveProp liveProp) {
-		return toAjax( livePropService.updateLiveProp(liveProp) );
+	public AjaxResult edit( @RequestBody LiveProp liveProp ) {
+		return toAjax( livePropService.updateLiveProp( liveProp ) );
 	}
 
 	/**
