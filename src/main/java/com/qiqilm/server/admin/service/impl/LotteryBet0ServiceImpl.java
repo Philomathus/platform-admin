@@ -23,6 +23,7 @@ public class LotteryBet0ServiceImpl implements ILotteryBet0Service {
 	private LotteryBet0Mapper lotteryBet0Mapper;
 
 
+
 	/**
 	 * 查询用户投资行为列表
 	 *
