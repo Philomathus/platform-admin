@@ -63,4 +63,6 @@ public interface PayAgentRechargeAccountMapper {
 	int memberIdSearchRepeat(@Param("account") String account);
 
     void updateGoogle(PayAgentRechargeAccount payAgentRechargeAccount);
+
+    PayAgentRechargeAccount selectPayAgentRechargeAccount(@Param("account") String account);
 }
