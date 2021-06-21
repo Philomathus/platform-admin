@@ -18,6 +18,8 @@
             <if test="searchValue != null and searchValue != ''"> and (m.user_name = #{searchValue} or o.id = #{searchValue})</if>
             <if test="nickName != null and nickName != ''"> and m.nick_name = #{nickName}</if>
         order by o.online_time desc
+        union all
+
     </select>
 
     <select id="selectMemberOnlineListCountTotal" parameterType="MemberOnline" resultMap="MemberOnlineResult">
@@ -27,6 +29,14 @@
 
     <select id="sumCount" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberOnline">
         select count(online_time) count from ${dbMain}.member_online${req.tableLast}
+        where 1=1
+        <if test="req.now_time != null and req.now_time != ''">
+            and online_time <![CDATA[ >= ]]> #{req.now_time}
+        </if>
+    </select>
+
+    <select id="sumCountTwo" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberOnline">
+        select count(online_time) count from ${dbMain}.member_online${req.tableLastTwo}
         where 1=1
         <if test="req.now_time != null and req.now_time != ''">
             and online_time <![CDATA[ >= ]]> #{req.now_time}

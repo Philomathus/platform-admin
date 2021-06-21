@@ -24,7 +24,9 @@ public interface MemberOnlineMapper {
 	List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline);
 
 	MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline);
+
 	RspMemberOnline sumCount(@Param("req") ReqMemberOnline reqMemberOnline);
+	RspMemberOnline sumCountTwo(@Param("req") ReqMemberOnline reqMemberOnline);
 
 	void cutTableOnline(@Param("tableNode") String tableNode);
 

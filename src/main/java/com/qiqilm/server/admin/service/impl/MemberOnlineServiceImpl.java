@@ -2,8 +2,10 @@ package com.qiqilm.server.admin.service.impl;
 
 import java.time.LocalDate;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +35,28 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
      */
     @Override
     public List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline) {
+        long now_time=System.currentTimeMillis()/1000 - 300;
+        memberOnline.setOnlineTime(now_time);
         memberOnline.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
+        //判斷是否在零點後5分鐘
+//        long zero=System.currentTimeMillis()/(1000*3600*24)*(1000*3600*24)- TimeZone.getDefault().getRawOffset();
+//        long nowTime = System.currentTimeMillis();
+//        if(nowTime - zero < 300000){
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.add(Calendar.DATE, -1);
+//            String systemNowDate = sdf.format(calendar.getTime());
+//            String tableLastTwo = systemNowDate.replaceAll("-","");
+//            memberOnline.setTableLastTwo(tableLastTwo);
+//        }
         return memberOnlineMapper.selectMemberOnlineList(memberOnline);
     }
 
     @Override
-    public MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline) {
+    public MemberOnline selectMemberOnlineListCountTotal() {
+        MemberOnline memberOnline =new MemberOnline();
+        long now_time=System.currentTimeMillis()/1000 - 300;
+        memberOnline.setOnlineTime(now_time);
         memberOnline.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         return memberOnlineMapper.selectMemberOnlineListCountTotal(memberOnline);
     }
@@ -57,5 +75,14 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
             day = l.plusDays(-i).toString().replace("-","");
             memberOnlineMapper.dropTableOnline("member_online".concat(day));
         }
+    }
+
+    public static void main(String[] args) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
+        String systemNowDate = sdf.format(calendar.getTime());
+        String tableLastTwo = systemNowDate.replaceAll("-","");
+        System.out.println(tableLastTwo);
     }
 }
