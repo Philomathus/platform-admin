@@ -179,13 +179,17 @@ public class LiveUserController extends BaseController {
 		newLiveUser.setInvestorSendInfo( liveUser.getInvestorSendInfo() );
 		newLiveUser.setOpenPay( liveUser.getOpenPay() );
 		newLiveUser.setCoin( liveUser.getCoin() );
-		BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio");
-		BigDecimal gifCattyRatio = sysConfigCacheUtil.getConfBd( "gif_tcatty_ratio");
-		if(liveUser.getXpoint().compareTo(ticketCattyRatio) == 1 ||  liveUser.getXpoint().compareTo(BigDecimal.ZERO)==-1){
-			return AjaxResult.error( "彩票抽成比例不能大于上限"+ ticketCattyRatio);
+		if (liveUser.getXpoint()!=null){
+			BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio");
+			if(liveUser.getXpoint().compareTo(ticketCattyRatio) == 1 ||  liveUser.getXpoint().compareTo(BigDecimal.ZERO)==-1){
+				return AjaxResult.error( "彩票抽成比例不能大于上限"+ ticketCattyRatio);
+			}
 		}
-		if(liveUser.getYpoint().compareTo(gifCattyRatio) == 1 ||  liveUser.getYpoint().compareTo(BigDecimal.ZERO)==-1){
-			return AjaxResult.error( "礼物抽成比例不能大于上限" +gifCattyRatio);
+		if (liveUser.getYpoint()!=null){
+			BigDecimal gifCattyRatio = sysConfigCacheUtil.getConfBd( "gif_tcatty_ratio");
+			if(liveUser.getYpoint().compareTo(gifCattyRatio) == 1 ||  liveUser.getYpoint().compareTo(BigDecimal.ZERO)==-1){
+				return AjaxResult.error( "礼物抽成比例不能大于上限" +gifCattyRatio);
+			}
 		}
 		newLiveUser.setXpoint( liveUser.getXpoint() );
 		newLiveUser.setYpoint( liveUser.getYpoint() );
