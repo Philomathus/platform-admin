@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
 import org.apache.ibatis.annotations.Param;
 

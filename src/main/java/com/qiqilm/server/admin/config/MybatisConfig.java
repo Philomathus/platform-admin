@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 @Configuration
 @MapperScan( basePackages = { "com.qiqilm.server.admin.mapper" } ) // 扫描Mapper
+@EnableTransactionManagement
 public class MybatisConfig {
 
 	@Bean( "PrimaryDataSource" )
@@ -61,8 +63,8 @@ public class MybatisConfig {
 	}
 
 	@Bean
-	public PlatformTransactionManager transactionManager() {
+	public DataSourceTransactionManager transactionManager(DynamicDataSource dynamicDataSource) {
 		// 配置事务管理, 使用事务时在方法头部添加@Transactional注解即可
-		return new DataSourceTransactionManager( dynamicDataSource() );
+		return new DataSourceTransactionManager( dynamicDataSource );
 	}
 }
