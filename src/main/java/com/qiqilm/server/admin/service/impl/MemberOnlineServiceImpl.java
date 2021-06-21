@@ -39,16 +39,17 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
         memberOnline.setOnlineTime(now_time);
         memberOnline.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         //判斷是否在零點後5分鐘
-//        long zero=System.currentTimeMillis()/(1000*3600*24)*(1000*3600*24)- TimeZone.getDefault().getRawOffset();
-//        long nowTime = System.currentTimeMillis();
-//        if(nowTime - zero < 300000){
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.add(Calendar.DATE, -1);
-//            String systemNowDate = sdf.format(calendar.getTime());
-//            String tableLastTwo = systemNowDate.replaceAll("-","");
-//            memberOnline.setTableLastTwo(tableLastTwo);
-//        }
+        long zero=System.currentTimeMillis()/(1000*3600*24)*(1000*3600*24)- TimeZone.getDefault().getRawOffset();
+        long nowTime = System.currentTimeMillis();
+        if(nowTime - zero < 300000){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DATE, -1);
+            String systemNowDate = sdf.format(calendar.getTime());
+            String tableLastTwo = systemNowDate.replaceAll("-","");
+            memberOnline.setTableLastTwo(tableLastTwo);
+            memberOnlineMapper.selectMemberOnlineListTwo(memberOnline);
+        }
         return memberOnlineMapper.selectMemberOnlineList(memberOnline);
     }
 
@@ -58,7 +59,23 @@ public class MemberOnlineServiceImpl implements IMemberOnlineService {
         long now_time=System.currentTimeMillis()/1000 - 300;
         memberOnline.setOnlineTime(now_time);
         memberOnline.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-        return memberOnlineMapper.selectMemberOnlineListCountTotal(memberOnline);
+        MemberOnline memberOnline1 = memberOnlineMapper.selectMemberOnlineListCountTotal(memberOnline);
+
+        //判斷是否在零點後5分鐘
+        long zero=System.currentTimeMillis()/(1000*3600*24)*(1000*3600*24)- TimeZone.getDefault().getRawOffset();
+        long nowTime = System.currentTimeMillis();
+        if(nowTime - zero < 300000){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DATE, -1);
+            String systemNowDate = sdf.format(calendar.getTime());
+            String tableLastTwo = systemNowDate.replaceAll("-","");
+            memberOnline.setTableLastTwo(tableLastTwo);
+            MemberOnline memberOnline2 = memberOnlineMapper.selectMemberOnlineListCountTotalTwo(memberOnline);
+            memberOnline1.setTotal(memberOnline1.getTotal() + memberOnline2.getTotal());
+        }
+
+        return memberOnline1;
     }
 
     @Override

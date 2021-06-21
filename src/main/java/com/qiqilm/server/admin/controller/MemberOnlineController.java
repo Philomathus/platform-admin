@@ -48,8 +48,8 @@ public class MemberOnlineController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:memberOnline:list')" )
 	@GetMapping( "/countTotal" )
 	public AjaxResult count() {
-		MemberOnline memberOnline1 = memberOnlineService.selectMemberOnlineListCountTotal();
-		return AjaxResult.success(memberOnline1);
+		MemberOnline memberOnline = memberOnlineService.selectMemberOnlineListCountTotal();
+		return AjaxResult.success(memberOnline);
 	}
     
 	/**
