@@ -49,10 +49,10 @@ public class LotteryBet0ServiceImpl implements ILotteryBet0Service {
 			lotteryBet0.setTableLast( tableLast );
 			return lotteryBet0Mapper.selectLotteryBet0SingleList( lotteryBet0 );
 		}else if (StringUtils.isNotBlank( lotteryBet0.getIssue() )){
-            return lotteryBet0Mapper.selectLotteryBet0List( lotteryBet0 );
-        }else {
-            return lotteryBet0Mapper.selectLotteryBetViewlList(lotteryBet0);
-        }
+			return lotteryBet0Mapper.selectLotteryBet0List( lotteryBet0 );
+		}else {
+			return lotteryBet0Mapper.selectLotteryBetViewlList(lotteryBet0);
+		}
 //		return lotteryBet0Mapper.selectLotteryBet0List( lotteryBet0 );
 	}
 
