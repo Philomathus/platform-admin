@@ -48,8 +48,12 @@ public class LotteryBet0ServiceImpl implements ILotteryBet0Service {
 			String tableLast = lotteryBet0.getPuserId().substring( lotteryBet0.getPuserId().length() - 1 );
 			lotteryBet0.setTableLast( tableLast );
 			return lotteryBet0Mapper.selectLotteryBet0SingleList( lotteryBet0 );
-		}
-		return lotteryBet0Mapper.selectLotteryBet0List( lotteryBet0 );
+		}else if (StringUtils.isNotBlank( lotteryBet0.getIssue() )){
+            return lotteryBet0Mapper.selectLotteryBet0List( lotteryBet0 );
+        }else {
+            return lotteryBet0Mapper.selectLotteryBetViewlList(lotteryBet0);
+        }
+//		return lotteryBet0Mapper.selectLotteryBet0List( lotteryBet0 );
 	}
 
 	@Override

@@ -63,7 +63,9 @@
     </where>
         ) a
 	</select>
-
+    <select id="selectLotteryBetViewlList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
+    SELECT a.* FROM ${dbLottery}.lottery_bet_view a <where><include refid="whereSelect"/></where>
+    </select>
 	<select id="selectLotteryBet0SingleList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
 		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet${tableLast} a
 		<where>
