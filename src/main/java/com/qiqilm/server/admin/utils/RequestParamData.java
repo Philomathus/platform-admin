@@ -26,7 +26,7 @@ public class RequestParamData {
         String s2 = String.format(RE_KY_DETAIL_RECORD_S2,"9",startTime,endTime);
         String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
         String param = s1.replace("{0}",s3);
-        String apiUrl = gamePlatform.getApiUrl();
+        String apiUrl = gamePlatform.getRecordUrl();
         String getURL = apiUrl.concat( "?" ).concat(param);
         log.info( "开元棋牌-对局详情-请求参数：{}",getURL );
         return PostData.get(getURL);
@@ -42,7 +42,7 @@ public class RequestParamData {
         String s2 = String.format(RE_KY_DETAIL_RECORD_S3,"10",memberGameData.getKindId(),memberGameData.getRecordId(),memberGameData.getAccount());
         String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
         String param = s1.replace("{0}",s3);
-        String apiUrl = gamePlatform.getApiUrl();
+        String apiUrl = gamePlatform.getRecordUrl();
         String getURL = apiUrl.concat( "?" ).concat(param);
         log.info( "开元棋牌-对局详情-请求参数：{}",getURL );
         return PostData.get(getURL);
