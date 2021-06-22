@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.config;
 
 import com.qiqilm.server.admin.constant.AdminConstants;
+import com.qiqilm.server.admin.interceptor.AccessLimitInterceptor;
 import com.qiqilm.server.admin.interceptor.RepeatSubmitInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CORSConfiguration implements WebMvcConfigurer {
 	@Autowired
 	private RepeatSubmitInterceptor repeatSubmitInterceptor;
+	@Autowired
+	private AccessLimitInterceptor accessLimitInterceptor;
 
 	@Override
 	public void addResourceHandlers( ResourceHandlerRegistry registry ) {
@@ -36,6 +39,7 @@ public class CORSConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors( InterceptorRegistry registry ) {
 		registry.addInterceptor( repeatSubmitInterceptor ).addPathPatterns( "/**" );
+		registry.addInterceptor( accessLimitInterceptor ).addPathPatterns("/member/memberGameData/**");
 	}
 
 	/**

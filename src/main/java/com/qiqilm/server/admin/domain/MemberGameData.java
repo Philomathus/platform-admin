@@ -73,6 +73,9 @@ public class MemberGameData extends BaseEntity {
     @Excel(name = "游戏开始时间")
     private String gameStartTime;
 
+    /** 局记录id **/
+    private String recordId;
+
 
     @Override
     public String toString() {
