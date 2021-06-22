@@ -9,15 +9,11 @@ import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.domain.req.ReqMemberGameData;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog;
 import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
-import com.qiqilm.server.admin.domain.vo.GameKYRes;
-import com.qiqilm.server.admin.domain.vo.GameKYdata;
 import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.mapper.GamePlatformMapper;
 import com.qiqilm.server.admin.mapper.MemberGameDataMapper;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
-import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.PostData;
-import com.qiqilm.server.admin.utils.RequestParam;
+import com.qiqilm.server.admin.utils.RequestParamData;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
@@ -113,7 +109,7 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( memberGameData.getPlatformId() );
             if (gamePlatform != null){
                 if (EnumGamePlatform.KY_CHESS.getType() == memberGameData.getPlatformId()){
-                    String result = RequestParam.requestKYBetRecord(memberGameData,gamePlatform);
+                    String result = RequestParamData.requestKYBetRecord(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KY_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
                     JSONObject object = JSON.parseObject(result);
                     JSONObject d = object.getJSONObject("d");
@@ -190,7 +186,7 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( memberGameData.getPlatformId() );
             if (gamePlatform != null){
                 if (EnumGamePlatform.KY_CHESS.getType() == memberGameData.getPlatformId()){
-                    String result = RequestParam.requestKYBetDetail(memberGameData,gamePlatform);
+                    String result = RequestParamData.requestKYBetDetail(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KY_CHESS.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
                     JSONObject object = JSON.parseObject(result);
                     JSONObject d = object.getJSONObject("d");
