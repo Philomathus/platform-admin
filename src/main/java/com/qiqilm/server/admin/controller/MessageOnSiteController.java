@@ -1,32 +1,21 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.Date;
-import java.util.List;
-
-import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import com.qiqilm.server.admin.utils.ServletUtil;
-import com.qiqilm.server.admin.utils.UuidUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.MessageOnSite;
-import com.qiqilm.server.admin.service.IMessageOnSiteService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.MessageOnSite;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.IMessageOnSiteService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.UuidUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 站内信息Controller
@@ -46,20 +35,20 @@ public class MessageOnSiteController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:messageOnSite:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(MessageOnSite messageOnSite) {
+	public TableDataInfo list( MessageOnSite messageOnSite ) {
 		startPage();
-		List<MessageOnSite> list = messageOnSiteService.selectMessageOnSiteList(messageOnSite);
+		List<MessageOnSite> list = messageOnSiteService.selectMessageOnSiteList( messageOnSite );
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出站内信息列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:messageOnSite:export')" )
 	@Log( title = "站内信息", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(MessageOnSite messageOnSite, HttpServletResponse response) {
-		List<MessageOnSite>      list = messageOnSiteService.selectMessageOnSiteList(messageOnSite);
+	public void export( MessageOnSite messageOnSite, HttpServletResponse response ) {
+		List<MessageOnSite> list = messageOnSiteService.selectMessageOnSiteList( messageOnSite );
 		ExportExcelUtil.exportExcel( list, "站内信息", "站内信息表", MessageOnSite.class, response );
 	}
 
@@ -68,8 +57,8 @@ public class MessageOnSiteController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:messageOnSite:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( messageOnSiteService.selectMessageOnSiteById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( messageOnSiteService.selectMessageOnSiteById( id ) );
 	}
 
 	/**
@@ -78,12 +67,12 @@ public class MessageOnSiteController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:messageOnSite:add')" )
 	@Log( title = "站内信息", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody MessageOnSite messageOnSite) {
-		messageOnSite.setId(UuidUtil.getRandomUuidWithoutSeparator());
-		messageOnSite.setPubdatetime(new Date());
-		messageOnSite.setReceiverType("ALL_MEMBER");
-		messageOnSite.setAction("DIALOG");
-		return toAjax( messageOnSiteService.insertMessageOnSite(messageOnSite) );
+	public AjaxResult add( @RequestBody MessageOnSite messageOnSite ) {
+		messageOnSite.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+		messageOnSite.setPubdatetime( new Date() );
+		messageOnSite.setReceiverType( "ALL_MEMBER" );
+		messageOnSite.setAction( "DIALOG" );
+		return toAjax( messageOnSiteService.insertMessageOnSite( messageOnSite ) );
 	}
 
 	/**
@@ -92,8 +81,8 @@ public class MessageOnSiteController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:messageOnSite:edit')" )
 	@Log( title = "站内信息", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody MessageOnSite messageOnSite) {
-		return toAjax( messageOnSiteService.updateMessageOnSite(messageOnSite) );
+	public AjaxResult edit( @RequestBody MessageOnSite messageOnSite ) {
+		return toAjax( messageOnSiteService.updateMessageOnSite( messageOnSite ) );
 	}
 
 	/**

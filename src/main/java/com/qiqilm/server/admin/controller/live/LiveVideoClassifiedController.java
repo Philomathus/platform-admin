@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveVideoClassified;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoClassifiedService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,14 +27,14 @@ public class LiveVideoClassifiedController extends BaseController {
 	@Autowired
 	private ILiveVideoClassifiedService liveVideoClassifiedService;
 
-/**
- * 查询分类列表
- */
-@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:list')" )
-@GetMapping( "/list" )
-    	public TableDataInfo list(LiveVideoClassified liveVideoClassified) {
+	/**
+	 * 查询分类列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:list')" )
+	@GetMapping( "/list" )
+	public TableDataInfo list( LiveVideoClassified liveVideoClassified ) {
 		startPage();
-		List<LiveVideoClassified> list = liveVideoClassifiedService.selectLiveVideoClassifiedList(liveVideoClassified);
+		List<LiveVideoClassified> list = liveVideoClassifiedService.selectLiveVideoClassifiedList( liveVideoClassified );
 		return getDataTable( list );
 	}
 
@@ -45,8 +44,8 @@ public class LiveVideoClassifiedController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:export')" )
 	@Log( title = "导出分类列表", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(LiveVideoClassified liveVideoClassified, HttpServletResponse response) {
-		List<LiveVideoClassified>      list = liveVideoClassifiedService.selectLiveVideoClassifiedList(liveVideoClassified);
+	public void export( LiveVideoClassified liveVideoClassified, HttpServletResponse response ) {
+		List<LiveVideoClassified> list = liveVideoClassifiedService.selectLiveVideoClassifiedList( liveVideoClassified );
 		ExportExcelUtil.exportExcel( list, "导出分类列表", "分类列表", LiveVideoClassified.class, response );
 	}
 
@@ -55,8 +54,8 @@ public class LiveVideoClassifiedController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( liveVideoClassifiedService.selectLiveVideoClassifiedById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( liveVideoClassifiedService.selectLiveVideoClassifiedById( id ) );
 	}
 
 	/**
@@ -65,8 +64,8 @@ public class LiveVideoClassifiedController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:add')" )
 	@Log( title = "新增分类", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LiveVideoClassified liveVideoClassified) {
-		return toAjax( liveVideoClassifiedService.insertLiveVideoClassified(liveVideoClassified) );
+	public AjaxResult add( @RequestBody LiveVideoClassified liveVideoClassified ) {
+		return toAjax( liveVideoClassifiedService.insertLiveVideoClassified( liveVideoClassified ) );
 	}
 
 	/**
@@ -75,8 +74,8 @@ public class LiveVideoClassifiedController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoClassified:edit')" )
 	@Log( title = "修改分类", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LiveVideoClassified liveVideoClassified) {
-		return toAjax( liveVideoClassifiedService.updateLiveVideoClassified(liveVideoClassified) );
+	public AjaxResult edit( @RequestBody LiveVideoClassified liveVideoClassified ) {
+		return toAjax( liveVideoClassifiedService.updateLiveVideoClassified( liveVideoClassified ) );
 	}
 
 	/**

@@ -1,28 +1,19 @@
 package com.qiqilm.server.admin.controller.live;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.LiveGuardConfig;
-import com.qiqilm.server.admin.service.ILiveGuardConfigService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LiveGuardConfig;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.ILiveGuardConfigService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 【请填写功能名称】Controller
@@ -41,20 +32,20 @@ public class LiveGuardConfigController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveGuardConfig:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LiveGuardConfig liveGuardConfig) {
+	public TableDataInfo list( LiveGuardConfig liveGuardConfig ) {
 		startPage();
-		List<LiveGuardConfig> list = liveGuardConfigService.selectLiveGuardConfigList(liveGuardConfig);
+		List<LiveGuardConfig> list = liveGuardConfigService.selectLiveGuardConfigList( liveGuardConfig );
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出【请填写功能名称】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveGuardConfig:export')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(LiveGuardConfig liveGuardConfig, HttpServletResponse response) {
-		List<LiveGuardConfig>      list = liveGuardConfigService.selectLiveGuardConfigList(liveGuardConfig);
+	public void export( LiveGuardConfig liveGuardConfig, HttpServletResponse response ) {
+		List<LiveGuardConfig> list = liveGuardConfigService.selectLiveGuardConfigList( liveGuardConfig );
 		ExportExcelUtil.exportExcel( list, "直播", "信息表", LiveGuardConfig.class, response );
 	}
 
@@ -63,8 +54,8 @@ public class LiveGuardConfigController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveGuardConfig:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( liveGuardConfigService.selectLiveGuardConfigById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( liveGuardConfigService.selectLiveGuardConfigById( id ) );
 	}
 
 	/**
@@ -73,8 +64,8 @@ public class LiveGuardConfigController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveGuardConfig:add')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LiveGuardConfig liveGuardConfig) {
-		return toAjax( liveGuardConfigService.insertLiveGuardConfig(liveGuardConfig) );
+	public AjaxResult add( @RequestBody LiveGuardConfig liveGuardConfig ) {
+		return toAjax( liveGuardConfigService.insertLiveGuardConfig( liveGuardConfig ) );
 	}
 
 	/**
@@ -83,8 +74,8 @@ public class LiveGuardConfigController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveGuardConfig:edit')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LiveGuardConfig liveGuardConfig) {
-		return toAjax( liveGuardConfigService.updateLiveGuardConfig(liveGuardConfig) );
+	public AjaxResult edit( @RequestBody LiveGuardConfig liveGuardConfig ) {
+		return toAjax( liveGuardConfigService.updateLiveGuardConfig( liveGuardConfig ) );
 	}
 
 	/**

@@ -133,4 +133,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateGoogle">
         update pay_agent_recharge_account set google_auth_secret = #{googleAuthSecret} where id=#{id}
     </update>
+    <select id="selectPayAgentRechargeAccount" parameterType="String"  resultMap="PayAgentRechargeAccountResult">
+        <include refid="selectPayAgentRechargeAccountVo"/>
+        where account = #{account}
+    </select>
 </mapper>

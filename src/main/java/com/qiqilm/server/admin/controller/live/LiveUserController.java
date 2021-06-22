@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.controller.live;
 
 import com.qiqilm.server.admin.annotation.Log;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -14,14 +15,17 @@ import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
-import com.qiqilm.server.admin.utils.*;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
+import com.qiqilm.server.admin.utils.ValidatorUtil;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +47,8 @@ public class LiveUserController extends BaseController {
     private ISysUserService userService;
 	@Autowired
 	private ILiveVideoService liveVideoService;
+	@Autowired
+	private SysConfigCacheUtil sysConfigCacheUtil;
 	/**
 	 * 查询主播用户信息列表
 	 */
@@ -173,6 +179,14 @@ public class LiveUserController extends BaseController {
 		newLiveUser.setInvestorSendInfo( liveUser.getInvestorSendInfo() );
 		newLiveUser.setOpenPay( liveUser.getOpenPay() );
 		newLiveUser.setCoin( liveUser.getCoin() );
+		BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio");
+		BigDecimal gifCattyRatio = sysConfigCacheUtil.getConfBd( "gif_tcatty_ratio");
+		if(liveUser.getXpoint().compareTo(ticketCattyRatio) == 1 ||  liveUser.getXpoint().compareTo(BigDecimal.ZERO)==-1){
+			return AjaxResult.error( "彩票抽成比例不能大于上限"+ ticketCattyRatio);
+		}
+		if(liveUser.getYpoint().compareTo(gifCattyRatio) == 1 ||  liveUser.getYpoint().compareTo(BigDecimal.ZERO)==-1){
+			return AjaxResult.error( "礼物抽成比例不能大于上限" +gifCattyRatio);
+		}
 		newLiveUser.setXpoint( liveUser.getXpoint() );
 		newLiveUser.setYpoint( liveUser.getYpoint() );
 		newLiveUser.setWeiboMoney(liveUser.getWeiboMoney());

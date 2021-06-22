@@ -8,7 +8,6 @@ import com.qiqilm.server.admin.domain.WheelSkinReceived;
 import com.qiqilm.server.admin.domain.dto.WheelSkinReceivedExcel;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IWheelSkinReceivedService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,9 +33,9 @@ public class WheelSkinReceivedController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelSkinReceived:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(WheelSkinReceived wheelSkinReceived) {
+	public TableDataInfo list( WheelSkinReceived wheelSkinReceived ) {
 		startPage();
-		List<WheelSkinReceived> list = wheelSkinReceivedService.selectWheelSkinReceivedList(wheelSkinReceived);
+		List<WheelSkinReceived> list = wheelSkinReceivedService.selectWheelSkinReceivedList( wheelSkinReceived );
 		return getDataTable( list );
 	}
 
@@ -45,8 +44,8 @@ public class WheelSkinReceivedController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelSkinReceived:list')" )
 	@GetMapping( "/getTotal" )
-    	public AjaxResult getTotal(WheelSkinReceived wheelSkinReceived) {
-        return AjaxResult.success(wheelSkinReceivedService.getTotal(wheelSkinReceived));
+	public AjaxResult getTotal( WheelSkinReceived wheelSkinReceived ) {
+		return AjaxResult.success( wheelSkinReceivedService.getTotal( wheelSkinReceived ) );
 	}
 
 	/**
@@ -55,8 +54,8 @@ public class WheelSkinReceivedController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelSkinReceived:export')" )
 	@Log( title = "转盘皮肤领取", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(WheelSkinReceived wheelSkinReceived, HttpServletResponse response) {
-        List<WheelSkinReceivedExcel> list = wheelSkinReceivedService.selectWheelSkinReceivedList2(wheelSkinReceived);
+	public void export( WheelSkinReceived wheelSkinReceived, HttpServletResponse response ) {
+		List<WheelSkinReceivedExcel> list = wheelSkinReceivedService.selectWheelSkinReceivedList2( wheelSkinReceived );
 		ExportExcelUtil.exportExcel( list, "转盘皮肤领取", "转盘皮肤领取表", WheelSkinReceivedExcel.class, response );
 	}
 
@@ -65,8 +64,8 @@ public class WheelSkinReceivedController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelSkinReceived:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( wheelSkinReceivedService.selectWheelSkinReceivedById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( wheelSkinReceivedService.selectWheelSkinReceivedById( id ) );
 	}
 
 	/**
@@ -75,8 +74,8 @@ public class WheelSkinReceivedController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelSkinReceived:add')" )
 	@Log( title = "转盘皮肤领取", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody WheelSkinReceived wheelSkinReceived) {
-		return toAjax( wheelSkinReceivedService.insertWheelSkinReceived(wheelSkinReceived) );
+	public AjaxResult add( @RequestBody WheelSkinReceived wheelSkinReceived ) {
+		return toAjax( wheelSkinReceivedService.insertWheelSkinReceived( wheelSkinReceived ) );
 	}
 
 	/**
@@ -85,8 +84,8 @@ public class WheelSkinReceivedController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('lottery:wheelSkinReceived:edit')" )
 	@Log( title = "转盘皮肤领取", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody WheelSkinReceived wheelSkinReceived) {
-		return toAjax( wheelSkinReceivedService.updateWheelSkinReceived(wheelSkinReceived) );
+	public AjaxResult edit( @RequestBody WheelSkinReceived wheelSkinReceived ) {
+		return toAjax( wheelSkinReceivedService.updateWheelSkinReceived( wheelSkinReceived ) );
 	}
 
 	/**
