@@ -5,6 +5,8 @@ import com.qiqilm.server.admin.domain.MemberGameData;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.util.Date;
+
 @Log4j2
 public class RequestParamData {
 
@@ -15,11 +17,11 @@ public class RequestParamData {
     //开元棋牌 - 对局详情 返回参数
     public static String requestKYBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = memberGameData.getAgent();
-        String nowTime = System.currentTimeMillis()+"";
+        Long nowTime = new Date().getTime();
         String startTime = memberGameData.getGameStartTime();
         String endTime = memberGameData.getGameEndTime();
         String md5 = gamePlatform.getMd5();
-        String key = DigestUtils.md5Hex(agent + startTime + md5);
+        String key = DigestUtils.md5Hex(agent + nowTime + md5);
         String s1 = String.format(RE_KY_DETAIL_RECORD_S1,agent,nowTime,"{0}",key);
         String s2 = String.format(RE_KY_DETAIL_RECORD_S2,"9",startTime,endTime);
         String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
