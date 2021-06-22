@@ -91,7 +91,7 @@ public class PostData {
 			//log.info(method.getStatusCode());
 			//log.info(obj);
 		} catch ( Exception e ) {
-			throw new BaseException( e );
+			e.printStackTrace();
 		}
 		return obj;
 	}
