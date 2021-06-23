@@ -19,10 +19,11 @@ public class RequestParamData {
         String agent = memberGameData.getAgent();
         String startTime = memberGameData.getGameStartTime();
         String endTime = memberGameData.getGameEndTime();
-        Date timestamp = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,endTime);
+        Date nowTime = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,endTime);
+        long timestamp = (nowTime.getTime() - 30000L);
         String md5 = gamePlatform.getMd5();
-        String key = DigestUtils.md5Hex(agent + timestamp.getTime() + md5);
-        String s1 = String.format(RE_KY_DETAIL_RECORD_S1,agent,timestamp.getTime(),"{0}",key);
+        String key = DigestUtils.md5Hex(agent + timestamp + md5);
+        String s1 = String.format(RE_KY_DETAIL_RECORD_S1,agent,timestamp,"{0}",key);
         String s2 = String.format(RE_KY_DETAIL_RECORD_S2,"9",startTime,endTime);
         String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
         String param = s1.replace("{0}",s3);
@@ -36,10 +37,11 @@ public class RequestParamData {
     public static String requestKYBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = gamePlatform.getAgent();
         String endTime = memberGameData.getGameEndTime();
-        Date timestamp = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,endTime);
+        Date nowTime = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,endTime);
+        long timestamp = (nowTime.getTime() - 30000L);
         String md5 = gamePlatform.getMd5();
-        String key = DigestUtils.md5Hex(agent + timestamp.getTime() + md5);
-        String s1 = String.format(RE_KY_DETAIL_RECORD_S1,agent,timestamp.getTime(),"{0}",key);
+        String key = DigestUtils.md5Hex(agent + timestamp + md5);
+        String s1 = String.format(RE_KY_DETAIL_RECORD_S1,agent,timestamp,"{0}",key);
         String s2 = String.format(RE_KY_DETAIL_RECORD_S3,"10",memberGameData.getKindId(),memberGameData.getRecordId(),memberGameData.getAccount());
         String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
         String param = s1.replace("{0}",s3);
