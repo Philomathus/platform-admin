@@ -56,7 +56,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
                 Long count = System.currentTimeMillis() - accessCache.getFirstVisitTimestamp();
                 if (count <= seconds * 1000) {
                     //如果还在设定时间内，则为不合法请求，返回错误信息
-                    throw new AccessDeniedException("访问太频繁,距上次访问"+count/1000+"秒,只允许"+seconds+"秒访问"+maxCount+1+"次,请稍后再试!");
+                    throw new AccessDeniedException("访问太频繁,距上次访问"+(count/1000)+"秒,只允许"+seconds+"秒访问"+(maxCount+1)+"次,请稍后再试!");
                 } else {
                     //如果超出设定时间，则为合理的请求，将之前的请求清空，重新计数
                     accessCache.setFirstVisitTimestamp(System.currentTimeMillis());
