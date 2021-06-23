@@ -4,10 +4,7 @@ import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.VideoCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.LiveFamily;
-import com.qiqilm.server.admin.domain.LiveFamilyJoin;
-import com.qiqilm.server.admin.domain.LiveUser;
-import com.qiqilm.server.admin.domain.LiveVideo;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import com.qiqilm.server.admin.domain.vo.PageVO;
@@ -15,10 +12,7 @@ import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.im.GroupType;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.vo.api.ImInfo;
-import com.qiqilm.server.admin.mapper.LiveFamilyJoinMapper;
-import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
-import com.qiqilm.server.admin.mapper.LiveUserMapper;
-import com.qiqilm.server.admin.mapper.LiveVideoMapper;
+import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -54,6 +49,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	private LiveFamilyJoinMapper liveFamilyJoinMapper;
 	@Autowired
 	private VideoCacheUtil videoCacheUtil;
+	@Resource
+	private BankListMapper  bankListMapper;
 
 	/**
 	 * 查询主播用户信息
@@ -350,6 +347,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
 
 	@Override
 	public AjaxResult updateLiveUserBank( LiveUser liveUser ) {
+		BankList bankList = bankListMapper.selectBankListByName(liveUser.getBankName());
+		if (bankList==null){
+			return AjaxResult.error(100,"银行卡名称错误！");
+		}
+		liveUser.setBankTypeId(bankList.getId());
 		liveUserMapper.updateLiveUserBank( liveUser );
 		RedisCacheUtil.me.clear( liveUser.getId(), LiveUser.class );
 		return AjaxResult.success();
