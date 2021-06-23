@@ -18,7 +18,9 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 @Log4j2
 @Component
@@ -53,7 +55,7 @@ public class MessageSendCountTask {
 		if(!profile.startsWith("77")||profile.equals("7700")){
 			return;
 		}
-		long now_time = System.currentTimeMillis() / 1000 - 360;
+		long now_time = System.currentTimeMillis() / 1000 - 300;
 
 		ReqMemberOnline dto = new ReqMemberOnline();
 		dto.setNow_time( now_time );
@@ -61,6 +63,20 @@ public class MessageSendCountTask {
 		dto.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
 		RspMemberOnline memberOnline = memberOnlineMapper.sumCount( dto );
 
+		//判斷是否在零點後5分鐘
+		long zero=System.currentTimeMillis()/(1000*3600*24)*(1000*3600*24)- TimeZone.getDefault().getRawOffset();
+		long nowTime = System.currentTimeMillis();
+		if((nowTime - zero) < 300000){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.DATE, -1);
+			String systemNowDate = sdf.format(calendar.getTime());
+			String tableLastTwo = systemNowDate.replaceAll("-","");
+			dto.setTableLastTwo(tableLastTwo);
+			//查昨日的表
+			RspMemberOnline memberOnlineTwo = memberOnlineMapper.sumCountTwo( dto );
+			memberOnline.setCount(memberOnline.getCount() + memberOnlineTwo.getCount());
+		}
 
 		Integer count = messageSendMapper.getLiveCount();
 		String  text  = "当前在线主播数:" + count + "\n5分钟活跃会员数:" + memberOnline.getCount();

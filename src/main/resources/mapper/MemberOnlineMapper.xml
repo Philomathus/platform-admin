@@ -20,13 +20,42 @@
         order by o.online_time desc
     </select>
 
+    <select id="selectMemberOnlineListTwo" parameterType="MemberOnline" resultMap="MemberOnlineResult">
+        select FROM_UNIXTIME(o.online_time) online,o.id,m.user_name userName,m.vip,m.nick_name nickName,m.login_ip loginIp from
+        ${dbMain}.member_online${tableLast} o left join ${dbMain}.member_info m on m.id = o.id
+        where o.online_time >= #{onlineTime}
+        <if test="searchValue != null and searchValue != ''"> and (m.user_name = #{searchValue} or o.id = #{searchValue})</if>
+        <if test="nickName != null and nickName != ''"> and m.nick_name = #{nickName}</if>
+        order by o.online_time desc
+        union all
+        select FROM_UNIXTIME(t.online_time) online,t.id,iuser_name userName,i.vip,i.nick_name nickName,i.login_ip loginIp from
+        ${dbMain}.member_online${tableLastTwo} t left join ${dbMain}.member_info i on i.id = t.id
+        where t.online_time >= #{onlineTime}
+        <if test="searchValue != null and searchValue != ''"> and (i.user_name = #{searchValue} or t.id = #{searchValue})</if>
+        <if test="nickName != null and nickName != ''"> and i.nick_name = #{nickName}</if>
+        order by t.online_time desc
+    </select>
+
     <select id="selectMemberOnlineListCountTotal" parameterType="MemberOnline" resultMap="MemberOnlineResult">
         select count(0) total from ${dbMain}.member_online${tableLast}
         where online_time >= #{onlineTime}
     </select>
 
+    <select id="selectMemberOnlineListCountTotalTwo" parameterType="MemberOnline" resultMap="MemberOnlineResult">
+        select count(0) total from ${dbMain}.member_online${tableLastTwo}
+        where online_time >= #{onlineTime}
+    </select>
+
     <select id="sumCount" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberOnline">
         select count(online_time) count from ${dbMain}.member_online${req.tableLast}
+        where 1=1
+        <if test="req.now_time != null and req.now_time != ''">
+            and online_time <![CDATA[ >= ]]> #{req.now_time}
+        </if>
+    </select>
+
+    <select id="sumCountTwo" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberOnline">
+        select count(online_time) count from ${dbMain}.member_online${req.tableLastTwo}
         where 1=1
         <if test="req.now_time != null and req.now_time != ''">
             and online_time <![CDATA[ >= ]]> #{req.now_time}
