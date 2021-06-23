@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.controller;
 
+import com.qiqilm.server.admin.annotation.AccessLimit;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
@@ -69,8 +70,17 @@ public class MemberGameDataController extends BaseController {
 		ExportExcelUtil.exportExcel( list, "会员注单数据", "会员注单数据表", RspMemberGameData.class, response );
 	}
 
-	@PutMapping( value = "/getKYgameResReport" )
-	public AjaxResult getKYgameResReport( MemberGameData memberGameData ) {
-		return memberGameDataService.GameKYResult( memberGameData );
+	@AccessLimit(seconds = 5, maxCount = 1)
+	@PreAuthorize( "@ss.hasPermi('member:memberGameData:recordList')" )
+	@GetMapping( value = "/recordList" )
+	public AjaxResult getGameRecordList( MemberGameData memberGameData ) {
+		return memberGameDataService.getGameBetRecordData( memberGameData );
+	}
+
+	@AccessLimit(seconds = 5, maxCount = 1)
+	@PreAuthorize( "@ss.hasPermi('member:memberGameData:detailList')" )
+	@GetMapping( value = "/detailList" )
+	public AjaxResult getGameDetailList( MemberGameData memberGameData ) {
+		return memberGameDataService.getGameBetDetailData( memberGameData );
 	}
 }
