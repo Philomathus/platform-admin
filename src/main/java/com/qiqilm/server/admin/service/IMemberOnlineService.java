@@ -20,7 +20,7 @@ public interface IMemberOnlineService {
 	 */
 	public List<MemberOnline> selectMemberOnlineList(MemberOnline memberOnline);
 
-	MemberOnline selectMemberOnlineListCountTotal(MemberOnline memberOnline);
+	MemberOnline selectMemberOnlineListCountTotal();
 
 	void cutTableOnline(int num);
 
