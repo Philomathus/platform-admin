@@ -19,6 +19,8 @@ public interface BankListMapper {
 	 */
 	public BankList selectBankListById(Long id);
 
+	public BankList selectBankListByName(String bankName);
+
 	/**
 	 * 查询出款银行列表列表
 	 *
