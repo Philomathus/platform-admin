@@ -19,7 +19,7 @@ public class RequestParamData {
         String agent = memberGameData.getAgent();
         String startTime = memberGameData.getGameStartTime();
         String endTime = memberGameData.getGameEndTime();
-        Date timestamp = DateUtils.dateTime(endTime,DateUtils.YYYY_MM_DD_HH_MM_SS);
+        Date timestamp = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,endTime);
         String md5 = gamePlatform.getMd5();
         String key = DigestUtils.md5Hex(agent + timestamp.getTime() + md5);
         String s1 = String.format(RE_KY_DETAIL_RECORD_S1,agent,timestamp.getTime(),"{0}",key);
@@ -36,7 +36,7 @@ public class RequestParamData {
     public static String requestKYBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = gamePlatform.getAgent();
         String endTime = memberGameData.getGameEndTime();
-        Date timestamp = DateUtils.dateTime(endTime,DateUtils.YYYY_MM_DD_HH_MM_SS);
+        Date timestamp = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,endTime);
         String md5 = gamePlatform.getMd5();
         String key = DigestUtils.md5Hex(agent + timestamp.getTime() + md5);
         String s1 = String.format(RE_KY_DETAIL_RECORD_S1,agent,timestamp.getTime(),"{0}",key);
