@@ -124,6 +124,9 @@
         <if test="status != null">
             and status = #{status}
         </if>
+        <if test="cost != null">
+            and cost = #{cost}
+        </if>
         <if test="lotteryName != null  and lotteryName != ''">
             and lottery_name like concat('%', #{lotteryName}, '%')
         </if>
