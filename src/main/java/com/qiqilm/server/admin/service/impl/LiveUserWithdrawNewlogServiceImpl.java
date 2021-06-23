@@ -15,12 +15,12 @@ import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.DateUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -32,17 +32,17 @@ import java.util.*;
  */
 @Service
 public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlogService {
-	@Autowired
+	@Resource
 	private LiveUserWithdrawNewlogMapper liveUserWithdrawNewlogMapper;
-	@Autowired
+	@Resource
 	private TokenService                 tokenService;
-	@Autowired
+	@Resource
 	private RedisUtil                    redisUtil;
-	@Autowired
+	@Resource
 	private LiveHostWageDayMapper        liveHostWageDayMapper;
-	@Autowired
+	@Resource
 	private LiveFamilyMapper             liveFamilyMapper;
-	@Autowired
+	@Resource
 	private IBankCardAddressService      bankCardAddressService;
 
 	/**
@@ -451,6 +451,8 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 			if ( !lists.get( 0 ).getUserId().equals( log.getUserId() ) ) {
 				return AjaxResult.error( "不同的账号不能合并订单" );
 			}
+		}
+		for ( LiveUserWithdrawNewlog log : lists){
 			if ( lists.get( 0 ).getId().equals( log.getId() ) ) {
 				LiveUserWithdrawNewlog liveUserWithdrawNewlog = new LiveUserWithdrawNewlog();
 				liveUserWithdrawNewlog.setWithdrawMoney( sumMoney );
