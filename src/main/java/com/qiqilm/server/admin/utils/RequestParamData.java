@@ -17,13 +17,12 @@ public class RequestParamData {
     //开元棋牌 - 对局详情 返回参数
     public static String requestKYBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = memberGameData.getAgent();
-        Date startTime = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,memberGameData.getGameStartTime());
         Date endTime = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,memberGameData.getGameEndTime());
         Date nowTime = new Date();
         String md5 = gamePlatform.getMd5();
         String key = DigestUtils.md5Hex(agent + nowTime.getTime() + md5);
         String s1 = String.format(RE_KY_DETAIL_RECORD_S1,agent,nowTime.getTime(),"{0}",key);
-        String s2 = String.format(RE_KY_DETAIL_RECORD_S2,"9",startTime.getTime(),endTime.getTime());
+        String s2 = String.format(RE_KY_DETAIL_RECORD_S2,"9",endTime.getTime(),endTime.getTime());
         String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
         String param = s1.replace("{0}",s3);
         String apiUrl = gamePlatform.getRecordUrl();
