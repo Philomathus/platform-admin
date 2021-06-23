@@ -117,7 +117,21 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                         Integer code = d.getInteger("code");
                         if (code != 0){
                             log.error( "查询游戏局号日志失败:{}",JSON.toJSONString(object));
-                            return AjaxResult.error( "查询游戏局号日志失败code：" + code);
+                            String message = "异常";
+                            switch (code){
+                                case 2:
+                                    message = "渠道不存在(请检查渠道 ID 是否正确)";break;
+                                case 5:
+                                    message = "渠道白名单错误(请联系客服添加服务器白名单)";break;
+                                case 16:
+                                    message = "数据不存在(当前没有注单)";break;
+                                case 43:
+                                    message = "拉单过于频繁(两次拉单时间间隔必须大于5秒)";break;
+                                default:
+                                    message = "未知错误code:"+code;
+
+                            }
+                            return AjaxResult.error( "查询游戏局号日志失败["+message+"]");
                         }
                         JSONObject objects = d.getJSONObject("list");
                         JSONArray gameID = objects.getJSONArray("GameID");
