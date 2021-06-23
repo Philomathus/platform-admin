@@ -113,11 +113,11 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
             }
             if (withdrawLog.getStatus() == 6) {
                 log.error("已有代付记录 - merOrderNo:{}", orderNo);
-                return "success";
+                return "ok";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(orderNo);
             payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "1".equals(status));
-            return "success";
+            return "ok";
         }
         return "fail";
     }
