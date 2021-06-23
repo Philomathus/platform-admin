@@ -5,7 +5,6 @@ import com.qiqilm.server.admin.annotation.AccessLimit;
 import com.qiqilm.server.admin.cache.AccessCache;
 import com.qiqilm.server.admin.constant.AdminConstants;
 import com.qiqilm.server.admin.constant.Constants;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
