@@ -33,11 +33,6 @@ public class RequestParamData {
         return PostData.get(getURL);
     }
 
-    public static void main(String[] args) {
-
-    }
-
-
     //开元棋牌 - 对局明细 返回参数
     public static String requestKYBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = gamePlatform.getAgent();
