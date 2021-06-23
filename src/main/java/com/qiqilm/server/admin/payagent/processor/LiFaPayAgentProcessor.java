@@ -44,15 +44,13 @@ public class LiFaPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_UP));
         bodyMap.put("currency", "CNY");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
         //账户信息（”账户名|账户|开户行|开户网点”字符串转16进制的AES加密）
         String content = withdrawLog.getBankUserName().trim() + "|" + withdrawLog.getBankAccount().trim() + "|" + withdrawLog.getBankName().trim() + "|" + "深圳市北京路支行";
-        String clearUserInfo = encrypt(content,signMd5);
+        String clearUserInfo = encrypt(content,payAgentPlatform.getSignPublicKey());
         bodyMap.put("clearUserInfo", clearUserInfo);
         bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.LIFA);
 
-        String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
+        String tempStr = this.assemblyUrl(bodyMap) + "&key=" + payAgentPlatform.getSignPublicKey();
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         bodyMap.put("sign", sign);
         bodyMap.put("params", JsonUtil.object2Json(bodyMap));

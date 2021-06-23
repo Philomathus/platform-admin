@@ -1,30 +1,21 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.Date;
-import java.util.List;
-
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import com.qiqilm.server.admin.utils.UuidUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.LogCommission;
-import com.qiqilm.server.admin.service.ILogCommissionService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LogCommission;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.ILogCommissionService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.UuidUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 佣金领取日志Controller
@@ -43,20 +34,20 @@ public class LogCommissionController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:logCommission:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LogCommission logCommission) {
+	public TableDataInfo list( LogCommission logCommission ) {
 		startPage();
-		List<LogCommission> list = logCommissionService.selectLogCommissionList(logCommission);
+		List<LogCommission> list = logCommissionService.selectLogCommissionList( logCommission );
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出佣金领取日志列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:logCommission:export')" )
 	@Log( title = "佣金领取日志", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(LogCommission logCommission, HttpServletResponse response) {
-		List<LogCommission>      list = logCommissionService.selectLogCommissionList(logCommission);
+	public void export( LogCommission logCommission, HttpServletResponse response ) {
+		List<LogCommission> list = logCommissionService.selectLogCommissionList( logCommission );
 		ExportExcelUtil.exportExcel( list, "佣金领取日志", "佣金领取日志表", LogCommission.class, response );
 	}
 
@@ -65,8 +56,8 @@ public class LogCommissionController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:logCommission:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( logCommissionService.selectLogCommissionById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( logCommissionService.selectLogCommissionById( id ) );
 	}
 
 	/**
@@ -75,10 +66,10 @@ public class LogCommissionController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:logCommission:add')" )
 	@Log( title = "佣金领取日志", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LogCommission logCommission) {
-		logCommission.setCreateTime(new Date());
-		logCommission.setId(UuidUtil.getRandomUuidWithoutSeparator());
-		return toAjax( logCommissionService.insertLogCommission(logCommission) );
+	public AjaxResult add( @RequestBody LogCommission logCommission ) {
+		logCommission.setCreateTime( new Date() );
+		logCommission.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+		return toAjax( logCommissionService.insertLogCommission( logCommission ) );
 	}
 
 	/**
@@ -87,8 +78,8 @@ public class LogCommissionController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:logCommission:edit')" )
 	@Log( title = "佣金领取日志", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LogCommission logCommission) {
-		return toAjax( logCommissionService.updateLogCommission(logCommission) );
+	public AjaxResult edit( @RequestBody LogCommission logCommission ) {
+		return toAjax( logCommissionService.updateLogCommission( logCommission ) );
 	}
 
 	/**

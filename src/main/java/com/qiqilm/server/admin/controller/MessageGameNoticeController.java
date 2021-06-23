@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MessageGameNotice;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMessageGameNoticeService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,7 @@ public class MessageGameNoticeController extends BaseController {
 	@Log( title = "游戏公告", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public void export( MessageGameNotice messageGameNotice, HttpServletResponse response ) {
-		List<MessageGameNotice>      list = messageGameNoticeService.selectMessageGameNoticeList( messageGameNotice );
+		List<MessageGameNotice> list = messageGameNoticeService.selectMessageGameNoticeList( messageGameNotice );
 		ExportExcelUtil.exportExcel( list, "公司入款", "公司入款信息表", MessageGameNotice.class, response );
 	}
 

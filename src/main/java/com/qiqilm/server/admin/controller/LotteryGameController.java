@@ -1,25 +1,17 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.LotteryGame;
-import com.qiqilm.server.admin.service.ILotteryGameService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LotteryGame;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.ILotteryGameService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 下注Controller
@@ -38,9 +30,9 @@ public class LotteryGameController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryGame:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LotteryGame lotteryGame) {
+	public TableDataInfo list( LotteryGame lotteryGame ) {
 		startPage();
-		List<LotteryGame> list = lotteryGameService.selectLotteryGameList(lotteryGame);
+		List<LotteryGame> list = lotteryGameService.selectLotteryGameList( lotteryGame );
 		return getDataTable( list );
 	}
 
@@ -50,8 +42,8 @@ public class LotteryGameController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryGame:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( lotteryGameService.selectLotteryGameById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( lotteryGameService.selectLotteryGameById( id ) );
 	}
 
 
@@ -61,8 +53,8 @@ public class LotteryGameController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:lotteryGame:edit')" )
 	@Log( title = "下注", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LotteryGame lotteryGame) {
-		return toAjax( lotteryGameService.updateLotteryGame(lotteryGame) );
+	public AjaxResult edit( @RequestBody LotteryGame lotteryGame ) {
+		return toAjax( lotteryGameService.updateLotteryGame( lotteryGame ) );
 	}
 
 }

@@ -23,7 +23,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.ActivityQuestType;
 import com.qiqilm.server.admin.service.IActivityQuestTypeService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 import javax.servlet.http.HttpServletResponse;

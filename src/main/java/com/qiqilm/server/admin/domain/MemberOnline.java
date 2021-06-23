@@ -39,6 +39,7 @@ public class MemberOnline extends BaseEntity {
     private Integer total;
 
     private String tableLast;
+    private String tableLastTwo;
 
     @Override
     public String toString() {

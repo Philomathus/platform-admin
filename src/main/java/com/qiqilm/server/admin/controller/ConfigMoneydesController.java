@@ -1,31 +1,21 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.qiqilm.server.admin.domain.PayType;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import com.qiqilm.server.admin.utils.StringUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.ConfigMoneydes;
-import com.qiqilm.server.admin.service.IConfigMoneydesService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.ConfigMoneydes;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.IConfigMoneydesService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 【请填写功能名称】Controller
@@ -44,20 +34,20 @@ public class ConfigMoneydesController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configMoneydes:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(ConfigMoneydes configMoneydes) {
+	public TableDataInfo list( ConfigMoneydes configMoneydes ) {
 		startPage();
-		List<ConfigMoneydes> list = configMoneydesService.selectConfigMoneydesList(configMoneydes);
+		List<ConfigMoneydes> list = configMoneydesService.selectConfigMoneydesList( configMoneydes );
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出【请填写功能名称】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configMoneydes:export')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(ConfigMoneydes configMoneydes, HttpServletResponse response) {
-		List<ConfigMoneydes>      list = configMoneydesService.selectConfigMoneydesList(configMoneydes);
+	public void export( ConfigMoneydes configMoneydes, HttpServletResponse response ) {
+		List<ConfigMoneydes> list = configMoneydesService.selectConfigMoneydesList( configMoneydes );
 		ExportExcelUtil.exportExcel( list, "资金配置详细", "资金配置详细表", ConfigMoneydes.class, response );
 	}
 
@@ -66,8 +56,8 @@ public class ConfigMoneydesController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configMoneydes:query')" )
 	@GetMapping( value = "/{mdId}" )
-	public AjaxResult getInfo( @PathVariable( "mdId" ) Long mdId) {
-		return AjaxResult.success( configMoneydesService.selectConfigMoneydesById(mdId) );
+	public AjaxResult getInfo( @PathVariable( "mdId" ) Long mdId ) {
+		return AjaxResult.success( configMoneydesService.selectConfigMoneydesById( mdId ) );
 	}
 
 	/**
@@ -76,8 +66,8 @@ public class ConfigMoneydesController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:configMoneydes:add')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody ConfigMoneydes configMoneydes) {
-		return toAjax( configMoneydesService.insertConfigMoneydes(configMoneydes) );
+	public AjaxResult add( @RequestBody ConfigMoneydes configMoneydes ) {
+		return toAjax( configMoneydesService.insertConfigMoneydes( configMoneydes ) );
 	}
 
 	/**
@@ -86,8 +76,8 @@ public class ConfigMoneydesController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:configMoneydes:edit')" )
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody ConfigMoneydes configMoneydes) {
-		return toAjax( configMoneydesService.updateConfigMoneydes(configMoneydes) );
+	public AjaxResult edit( @RequestBody ConfigMoneydes configMoneydes ) {
+		return toAjax( configMoneydesService.updateConfigMoneydes( configMoneydes ) );
 	}
 
 	/**
@@ -105,14 +95,13 @@ public class ConfigMoneydesController extends BaseController {
 	 *
 	 * @return
 	 */
-	@GetMapping("/moneydes")
-	public AjaxResult findEffectPayType()
-	{
-		ConfigMoneydes configMoneydes=new ConfigMoneydes();
-		List<ConfigMoneydes> data = configMoneydesService.selectConfigMoneydesList(configMoneydes);
+	@GetMapping( "/moneydes" )
+	public AjaxResult findEffectPayType() {
+		ConfigMoneydes       configMoneydes = new ConfigMoneydes();
+		List<ConfigMoneydes> data           = configMoneydesService.selectConfigMoneydesList( configMoneydes );
 		if ( StringUtils.isNull( data ) ) {
 			data = new ArrayList<>();
 		}
-		return AjaxResult.success(data);
+		return AjaxResult.success( data );
 	}
 }

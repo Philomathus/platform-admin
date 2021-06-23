@@ -63,7 +63,9 @@
     </where>
         ) a
 	</select>
-
+    <select id="selectLotteryBetViewlList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
+    SELECT a.* FROM ${dbLottery}.lottery_bet_view a <where><include refid="whereSelect"/></where>
+    </select>
 	<select id="selectLotteryBet0SingleList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
 		select <include refid="Base_Column_List"/> from ${dbLottery}.lottery_bet${tableLast} a
 		<where>
@@ -116,12 +118,21 @@
 	</sql>
 
 	<sql id="whereSelect">
-		<if test="issue != null and issue != ''">
-			and issue = #{issue}
-		</if>
-		<if test="startTime != null and startTime != ''">
-			and bet_time &gt;= #{startTime} and bet_time &lt;= #{endTime}
-		</if>
+        <if test="issue != null  and issue != ''">
+            and issue = #{issue}
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="cost != null">
+            and cost = #{cost}
+        </if>
+        <if test="lotteryName != null  and lotteryName != ''">
+            and lottery_name like concat('%', #{lotteryName}, '%')
+        </if>
+        <if test="startTime != null">
+            and bet_time &gt;= #{startTime} and bet_time &lt;= #{endTime}
+        </if>
 	</sql>
 
 	<select id="getCountLotteryBet0List" parameterType="LotteryBet0" resultMap="LotteryBet0Result">

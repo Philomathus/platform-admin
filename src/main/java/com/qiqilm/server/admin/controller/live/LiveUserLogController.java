@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUserLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveUserLogService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,11 +30,11 @@ public class LiveUserLogController extends BaseController {
 	/**
 	 * 查询//帐户资金变动日志列表
 	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveUserLog:list')" )
+	//	@PreAuthorize( "@ss.hasPermi('admin:liveUserLog:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LiveUserLog liveUserLog) {
+	public TableDataInfo list( LiveUserLog liveUserLog ) {
 		startPage();
-		List<LiveUserLog> list = liveUserLogService.selectLiveUserLogList(liveUserLog);
+		List<LiveUserLog> list = liveUserLogService.selectLiveUserLogList( liveUserLog );
 		return getDataTable( list );
 	}
 
@@ -45,8 +44,8 @@ public class LiveUserLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveUserLog:export')" )
 	@Log( title = "帐户资金变动日志", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(LiveUserLog liveUserLog, HttpServletResponse response) {
-		List<LiveUserLog>      list = liveUserLogService.selectLiveUserLogList(liveUserLog);
+	public void export( LiveUserLog liveUserLog, HttpServletResponse response ) {
+		List<LiveUserLog> list = liveUserLogService.selectLiveUserLogList( liveUserLog );
 		ExportExcelUtil.exportExcel( list, "帐户资金变动日志", "帐户资金变动日志表", LiveUserLog.class, response );
 	}
 
@@ -55,8 +54,8 @@ public class LiveUserLogController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveUserLog:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( liveUserLogService.selectLiveUserLogById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( liveUserLogService.selectLiveUserLogById( id ) );
 	}
 
 	/**
@@ -65,8 +64,8 @@ public class LiveUserLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveUserLog:add')" )
 	@Log( title = "//帐户资金变动日志", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LiveUserLog liveUserLog) {
-		return toAjax( liveUserLogService.insertLiveUserLog(liveUserLog) );
+	public AjaxResult add( @RequestBody LiveUserLog liveUserLog ) {
+		return toAjax( liveUserLogService.insertLiveUserLog( liveUserLog ) );
 	}
 
 	/**
@@ -75,8 +74,8 @@ public class LiveUserLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveUserLog:edit')" )
 	@Log( title = "//帐户资金变动日志", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LiveUserLog liveUserLog) {
-		return toAjax( liveUserLogService.updateLiveUserLog(liveUserLog) );
+	public AjaxResult edit( @RequestBody LiveUserLog liveUserLog ) {
+		return toAjax( liveUserLogService.updateLiveUserLog( liveUserLog ) );
 	}
 
 	/**

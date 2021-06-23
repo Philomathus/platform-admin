@@ -1,28 +1,19 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.PayLog;
-import com.qiqilm.server.admin.service.IPayLogService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.PayLog;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.IPayLogService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 【支付日志】Controller
@@ -41,9 +32,9 @@ public class PayLogController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(PayLog payLog) {
+	public TableDataInfo list( PayLog payLog ) {
 		startPage();
-		List<PayLog> list = payLogService.selectPayLogList(payLog);
+		List<PayLog> list = payLogService.selectPayLogList( payLog );
 		return getDataTable( list );
 	}
 
@@ -53,8 +44,8 @@ public class PayLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:export')" )
 	@Log( title = "【支付日志】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(PayLog payLog, HttpServletResponse response) {
-		List<PayLog>      list = payLogService.selectPayLogList(payLog);
+	public void export( PayLog payLog, HttpServletResponse response ) {
+		List<PayLog> list = payLogService.selectPayLogList( payLog );
 		ExportExcelUtil.exportExcel( list, "支付日志", "支付日志表", PayLog.class, response );
 	}
 
@@ -63,8 +54,8 @@ public class PayLogController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( payLogService.selectPayLogById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( payLogService.selectPayLogById( id ) );
 	}
 
 	/**
@@ -73,8 +64,8 @@ public class PayLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:add')" )
 	@Log( title = "【支付日志】", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody PayLog payLog) {
-		return toAjax( payLogService.insertPayLog(payLog) );
+	public AjaxResult add( @RequestBody PayLog payLog ) {
+		return toAjax( payLogService.insertPayLog( payLog ) );
 	}
 
 	/**
@@ -83,8 +74,8 @@ public class PayLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payLog:edit')" )
 	@Log( title = "【支付日志】", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody PayLog payLog) {
-		return toAjax( payLogService.updatePayLog(payLog) );
+	public AjaxResult edit( @RequestBody PayLog payLog ) {
+		return toAjax( payLogService.updatePayLog( payLog ) );
 	}
 
 	/**
