@@ -123,7 +123,7 @@ public class RequestParamData {
                 map.put("cardValue", cardValue.get(i));
                 map.put("channelID", channelID.get(i));
                 map.put("lineCode", lineCode.get(i));
-                map.put("recordID", recordID.get(0));
+                map.put("recordID", recordID.get(i));
                 list.add(map);
             }
             d.put("list", list);
