@@ -76,32 +76,14 @@ public class RequestParamData {
     }
 
     //封装数据
-    public static AjaxResult gameDataWrapper(String result,String account){
+    public static AjaxResult gameBetDataWrapper(String result,String account){
         JSONObject object = JSON.parseObject(result);
         JSONObject d = object.getJSONObject("d");
         if (d != null) {
             Integer code = d.getInteger("code");
             if (code != 0) {
-                log.error("查询游戏局号日志失败:{}", JSON.toJSONString(object));
-                String message = "未知错误";
-                switch (code) {
-                    case 2:
-                        message = "渠道不存在(请检查渠道 ID 是否正确)";
-                        break;
-                    case 5:
-                        message = "渠道白名单错误(请联系客服添加服务器白名单)";
-                        break;
-                    case 16:
-                        message = "数据不存在(当前没有注单)";
-                        break;
-                    case 43:
-                        message = "拉单过于频繁(两次拉单时间间隔必须大于5秒)";
-                        break;
-                    default:
-                        message = "其它错误";
-
-                }
-                return AjaxResult.error(code, "查询游戏局号日志失败[" + message + "]");
+                code = code + 10000;
+                return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
             }
             JSONObject objects = d.getJSONObject("list");
             JSONArray gameID = objects.getJSONArray("GameID");
@@ -150,6 +132,20 @@ public class RequestParamData {
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
 
+    public static AjaxResult gameDetailDataWrapper(String result){
+        JSONObject object = JSON.parseObject(result);
+        JSONObject d = object.getJSONObject("d");
+        if (d != null) {
+            Integer code = d.getInteger("code");
+            if (code != 0) {
+                code = code + 10000;
+                log.error("查询游戏局号日志失败:{}", JSON.toJSONString(object));
+                return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
+            }
+            return AjaxResult.success(d.get("data"));
+        }
+        return AjaxResult.error("999", "查询游戏局号,数据不存在");
+    }
     //测试数据
     private static final String test = "{\n" +
             "\t\"m\": \"/getRecordHandle\",\n" +

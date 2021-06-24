@@ -111,11 +111,11 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 if (EnumGamePlatform.KY_CHESS.getType() == memberGameData.getPlatformId()){
                     String result = RequestParamData.requestKYBetRecord(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KY_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
-                    return RequestParamData.gameDataWrapper(result,memberGameData.getAccount());
+                    return RequestParamData.gameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
                 }else if (EnumGamePlatform.KAIXUAN_CHESS.getType() == memberGameData.getPlatformId()){
                     String result = RequestParamData.requestKXBetRecord(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KAIXUAN_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
-                    return RequestParamData.gameDataWrapper(result,memberGameData.getAccount());
+                    return RequestParamData.gameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
                 }
             }
         }catch (Exception e) {
@@ -142,16 +142,11 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 if (EnumGamePlatform.KY_CHESS.getType() == memberGameData.getPlatformId()){
                     String result = RequestParamData.requestKYBetDetail(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KY_CHESS.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
-                    JSONObject object = JSON.parseObject(result);
-                    JSONObject d = object.getJSONObject("d");
-                    if (d != null) {
-                        Integer code = d.getInteger("code");
-                        if (code != 0) {
-                            log.error("查询游戏局号日志失败:{}", JSON.toJSONString(object));
-                            return AjaxResult.error("查询游戏局号日志失败code：" + code);
-                        }
-                        return AjaxResult.success(d.get("data"));
-                    }
+                    return RequestParamData.gameDetailDataWrapper(result);
+                }else if (EnumGamePlatform.KAIXUAN_CHESS.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.requestKXBetDetail(memberGameData,gamePlatform);
+                    log.info(EnumGamePlatform.KAIXUAN_CHESS.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
+                    return RequestParamData.gameDetailDataWrapper(result);
                 }
             }
         }catch (Exception e) {
