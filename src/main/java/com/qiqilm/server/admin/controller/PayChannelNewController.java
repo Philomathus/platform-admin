@@ -19,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +80,8 @@ public class PayChannelNewController extends BaseController {
 	public Object add( @RequestBody PayChannelNew payChannelNew ) {
 		payChannelNew.setQuickAmount( payChannelNew.getQuickAmount().
 				trim().replaceAll( " ", "" ).replaceAll( "，", "," ) );
+		payChannelNew.setRechargeMin(new BigDecimal(10));
+		payChannelNew.setRechargeMax(new BigDecimal(50000));
 		return toAjax( payChannelNewService.insertPayChannelNew( payChannelNew ) );
 	}
 
@@ -89,6 +92,8 @@ public class PayChannelNewController extends BaseController {
 	@Log( title = "支付通道", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayChannelNew payChannelNew ) {
+		payChannelNew.setRechargeMin(new BigDecimal(10));
+		payChannelNew.setRechargeMax(new BigDecimal(50000));
 		return toAjax( payChannelNewService.updatePayChannelNew( payChannelNew ) );
 	}
 
