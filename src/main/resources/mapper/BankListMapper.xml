@@ -33,6 +33,10 @@
         <include refid="selectBankListVo"/>
         where id = #{id}
     </select>
+    <select id="selectBankListByName" resultType="com.qiqilm.server.admin.domain.BankList">
+        <include refid="selectBankListVo"/>
+        where bank_name = #{bankName}
+    </select>
 
     <insert id="insertBankList" parameterType="BankList" useGeneratedKeys="true" keyProperty="id">
         insert into ${dbMain}.bank_list
