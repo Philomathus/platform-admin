@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
 import com.qiqilm.server.admin.service.IBankCardAddressService;
@@ -179,15 +180,17 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
 	@Transactional( rollbackFor = Exception.class )
 	void refusedUpdateProcess( MemberWithdrawLog memberWithdrawLog, String userName, String ip ) {
-		memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		// BigDecimal old = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
+		int updateW = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
 		//回退提现金额
-		memberInfoMapper.updateMoneySelect( memberWithdrawLog.getMemberId(), memberWithdrawLog.getWithdrawMoney(), null, null
-				, null, null );
+		int updateM = memberInfoMapper.updateMoneySelect( memberWithdrawLog.getMemberId(), memberWithdrawLog.getWithdrawMoney(),
+				null, null, null, null );
+		if ( updateW <= 0 || updateM <= 0 ) {
+			throw new BusinessException( "订单拒绝失败" );
+		}
 		BigDecimal now = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
 		logService.logMoneyAll( memberWithdrawLog.getMemberId(), memberWithdrawLog.getAccount(), EnumMoney.bohui, now,
-				memberWithdrawLog.getWithdrawMoney(), null, "驳回人：" + userName + "-" + ip, memberWithdrawLog.getOrderNo() +
-						"bohui" );
+				memberWithdrawLog.getWithdrawMoney(), null, "驳回人：" + userName + "-" + ip,
+				memberWithdrawLog.getOrderNo() + "bohui" );
 	}
 
 	@Override

@@ -278,7 +278,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 							  Date now, int status, int orderState ) {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectMemberWithdrawLogById( memberWithdrawLog.getId() );
 		PayAgentLog       payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
-		if ( withdrawLog.getStatus() != 1 && withdrawLog.getStatus() != 4 ) {
+		if ( withdrawLog.getStatus() != 1 || withdrawLog.getStatus() != 4 ) {
 			throw new BaseException( "审核流程非法" );
 		}
 		// 更改withdrawLog状态
