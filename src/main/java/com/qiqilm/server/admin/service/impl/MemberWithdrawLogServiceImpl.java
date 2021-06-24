@@ -180,13 +180,14 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	@Transactional( rollbackFor = Exception.class )
 	void refusedUpdateProcess( MemberWithdrawLog memberWithdrawLog, String userName, String ip ) {
 		memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		BigDecimal old = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
+		// BigDecimal old = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
 		//回退提现金额
 		memberInfoMapper.updateMoneySelect( memberWithdrawLog.getMemberId(), memberWithdrawLog.getWithdrawMoney(), null, null
 				, null, null );
 		BigDecimal now = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
-		logService.logMoneyAll( memberWithdrawLog.getMemberId(), memberWithdrawLog.getAccount(), EnumMoney.bohui, now, old,null,
-				"驳回人：" + userName + "-" + ip, memberWithdrawLog.getOrderNo() + "bohui" );
+		logService.logMoneyAll( memberWithdrawLog.getMemberId(), memberWithdrawLog.getAccount(), EnumMoney.bohui, now,
+				memberWithdrawLog.getWithdrawMoney(), null, "驳回人：" + userName + "-" + ip, memberWithdrawLog.getOrderNo() +
+						"bohui" );
 	}
 
 	@Override
