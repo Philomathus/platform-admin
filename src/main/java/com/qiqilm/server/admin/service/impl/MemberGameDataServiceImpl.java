@@ -111,71 +111,11 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 if (EnumGamePlatform.KY_CHESS.getType() == memberGameData.getPlatformId()){
                     String result = RequestParamData.requestKYBetRecord(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KY_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
-                    JSONObject object = JSON.parseObject(result);
-                    JSONObject d = object.getJSONObject("d");
-                    if (d != null){
-                        Integer code = d.getInteger("code");
-                        if (code != 0){
-                            log.error( "查询游戏局号日志失败:{}",JSON.toJSONString(object));
-                            String message = "异常";
-                            switch (code){
-                                case 2:
-                                    message = "渠道不存在(请检查渠道 ID 是否正确)";break;
-                                case 5:
-                                    message = "渠道白名单错误(请联系客服添加服务器白名单)";break;
-                                case 16:
-                                    message = "数据不存在(当前没有注单)";break;
-                                case 43:
-                                    message = "拉单过于频繁(两次拉单时间间隔必须大于5秒)";break;
-                                default:
-                                    message = "未知错误code:"+code;
-
-                            }
-                            return AjaxResult.error( "查询游戏局号日志失败["+message+"]");
-                        }
-                        JSONObject objects = d.getJSONObject("list");
-                        JSONArray gameID = objects.getJSONArray("GameID");
-                        JSONArray accounts = objects.getJSONArray("Accounts");
-                        JSONArray serverID = objects.getJSONArray("ServerID");
-                        JSONArray kindID = objects.getJSONArray("KindID");
-                        JSONArray tableID = objects.getJSONArray("TableID");
-                        JSONArray chairID = objects.getJSONArray("ChairID");
-                        JSONArray userCount = objects.getJSONArray("UserCount");
-                        JSONArray cellScore = objects.getJSONArray("CellScore");
-                        JSONArray allBet = objects.getJSONArray("AllBet");
-                        JSONArray profit = objects.getJSONArray("Profit");
-                        JSONArray revenue = objects.getJSONArray("Revenue");
-                        JSONArray gameStartTime = objects.getJSONArray("GameStartTime");
-                        JSONArray gameEndTime = objects.getJSONArray("GameEndTime");
-                        JSONArray cardValue = objects.getJSONArray("CardValue");
-                        JSONArray channelID = objects.getJSONArray("ChannelID");
-                        JSONArray lineCode = objects.getJSONArray("LineCode");
-                        JSONArray recordID = objects.getJSONArray("RecordID");
-                        List list = new ArrayList();
-                        for (int i = 0; i < gameID.size(); i++) {
-                            Map map = new HashMap();
-                            map.put("gameID",gameID.get(i));
-                            map.put("accounts",accounts.get(i));
-                            map.put("serverID",serverID.get(i));
-                            map.put("kindID",kindID.get(i));
-                            map.put("tableID",tableID.get(i));
-                            map.put("chairID",chairID.get(i));
-                            map.put("userCount",userCount.get(i));
-                            map.put("cellScore",cellScore.get(i));
-                            map.put("allBet",allBet.get(i));
-                            map.put("profit",profit.get(i));
-                            map.put("revenue",revenue.get(i));
-                            map.put("gameStartTime",gameStartTime.get(i));
-                            map.put("gameEndTime",gameEndTime.get(i));
-                            map.put("cardValue",cardValue.get(i));
-                            map.put("channelID",channelID.get(i));
-                            map.put("lineCode",lineCode.get(i));
-                            map.put("recordID",recordID.get(0));
-                            list.add(map);
-                        }
-                        d.put("list",list);
-                        return AjaxResult.success(d);
-                    }
+                    return RequestParamData.gameDataWrapper(result,memberGameData.getAccount());
+                }else if (EnumGamePlatform.KAIXUAN_CHESS.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.requestKXBetRecord(memberGameData,gamePlatform);
+                    log.info(EnumGamePlatform.KAIXUAN_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    return RequestParamData.gameDataWrapper(result,memberGameData.getAccount());
                 }
             }
         }catch (Exception e) {
