@@ -191,9 +191,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret,
 				AuthUtil.getSecurityKeyStr( "secretkey/googleAuthPrivateKey" ) );
 
-//		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, reqPayAgent.getGoogleAuthCode() ) ) {
-//			return AjaxResult.error( "google验证码不正确，请检查" );
-//		}
+		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, reqPayAgent.getGoogleAuthCode() ) ) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
 
 		if ( !redisUtil.lock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo(), "1", 360 ) ) {
 			return AjaxResult.error( "请勿重复提交代付订单:" + reqPayAgent.getWithdrawOrderNo() );
@@ -278,7 +278,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 							  Date now, int status, int orderState ) {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectMemberWithdrawLogById( memberWithdrawLog.getId() );
 		PayAgentLog       payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
-		if ( withdrawLog.getStatus() != 1 || withdrawLog.getStatus() != 4 ) {
+		if ( !(withdrawLog.getStatus() == 1 || withdrawLog.getStatus() == 4) ) {
 			throw new BaseException( "审核流程非法" );
 		}
 		// 更改withdrawLog状态
