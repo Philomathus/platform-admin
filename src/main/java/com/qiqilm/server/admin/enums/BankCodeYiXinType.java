@@ -23,7 +23,7 @@ public enum BankCodeYiXinType {
     GDB(Arrays.asList( "广东发展银行" ) ),
     CMBC(Arrays.asList( "中国民生银行" ) ),
     CITIC(Arrays.asList( "中信银行" ) ),
-    CEB(Arrays.asList( "中国光大银行" ) ),
+    CEB(Arrays.asList( "光大银行" ) ),
     SPABANK(Arrays.asList( "平安银行" ) ),
     BJBANK(Arrays.asList( "北京银行" ) ),
     SHBANK(Arrays.asList( "上海银行" ) ),
