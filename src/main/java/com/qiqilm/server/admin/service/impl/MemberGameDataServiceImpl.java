@@ -116,6 +116,10 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                     String result = RequestParamData.requestKXBetRecord(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KAIXUAN_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
                     return RequestParamData.gameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
+                }else if (EnumGamePlatform.MEITIAN_CHESS.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.requestMTBetRecord(memberGameData,gamePlatform);
+                    log.info(EnumGamePlatform.MEITIAN_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    return RequestParamData.meiTianGameBetDataWrapper(result);
                 }
             }
         }catch (Exception e) {

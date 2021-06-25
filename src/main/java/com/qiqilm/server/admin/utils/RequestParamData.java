@@ -17,6 +17,7 @@ public class RequestParamData {
     private static final String RE_KY_DETAIL_RECORD_S1 = "agent=%s&timestamp=%s&param=%s&key=%s";
     private static final String RE_KY_DETAIL_RECORD_S2 = "s=%s&startTime=%s&endTime=%s";
     private static final String RE_KY_DETAIL_RECORD_S3 = "s=%s&kindID=%s&recordID=%s&account=%s";
+    private static final String RE_MT_DETAIL_RECORD_S1 = "/%s/%s/%s";
 
     //开元棋牌 - 对局详情 返回参数
     public static String requestKYBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
@@ -43,6 +44,19 @@ public class RequestParamData {
         String getURL = getBetDetailURLByKXOrKY(memberGameData, gamePlatform);
         log.info( "凯旋棋牌-对局详情-请求参数：{}",getURL );
         return PostData.get(getURL);
+    }
+    //美天棋牌 - 投注详情 返回参数
+    public static String requestMTBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
+        Map<String,String> data = new LinkedHashMap<>();
+        data.put("rowID",memberGameData.getGameId());
+        data.put("lang","ZH-CN");
+        String merchantId = gamePlatform.getAgent();
+        String code = DigestUtils.md5Hex(gamePlatform.getMd5()+JSON.toJSONString(data));
+        String s1 = String.format(RE_MT_DETAIL_RECORD_S1,merchantId,code,Base64.getEncoder().encodeToString(JsonUtil.object2Json(data).getBytes()));
+        String apiUrl = gamePlatform.getRecordUrl();
+        String getURL = apiUrl+s1;
+        log.info( "美天棋牌-对局详情-请求参数：{}",getURL);
+        return PostData.post(getURL);
     }
 
     //凯旋棋牌|开元棋牌 对局列表 暂时共享
@@ -127,6 +141,21 @@ public class RequestParamData {
                 list.add(map);
             }
             d.put("list", list);
+            return AjaxResult.success(d);
+        }
+        return AjaxResult.error("999", "查询游戏局号,数据不存在");
+    }
+
+    //封装数据
+    public static AjaxResult meiTianGameBetDataWrapper(String result){
+        JSONObject object = JSON.parseObject(result);
+        JSONObject d = object.getJSONObject("d");
+        if (d != null) {
+            Integer code = Integer.valueOf(d.getString("resultCode"));
+            if (code != 1) {
+                code = code + 20000;
+                return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
+            }
             return AjaxResult.success(d);
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
