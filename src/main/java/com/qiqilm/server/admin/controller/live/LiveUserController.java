@@ -6,11 +6,15 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.BankList;
 import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.LiveVideo;
+import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
+import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.IBankListService;
 import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.service.ISysUserService;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +60,8 @@ public class LiveUserController extends BaseController {
 	private ILiveVideoService liveVideoService;
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
+	@Autowired
+	private IBankListService bankListService;
 	/**
 	 * 查询主播用户信息列表
 	 */
@@ -95,6 +102,21 @@ public class LiveUserController extends BaseController {
 		startPage();
 		List<LiveUser> list = liveUserService.selectLiveUserBankById( userId );
 		return getDataTable( list );
+	}
+
+
+	/**
+	 * 银行卡列表
+	 *
+	 * @return
+	 */
+	@GetMapping( "/banks" )
+	public AjaxResult banks() {
+		List<BankList> data = bankListService.selectBankListLists();
+		if ( data.size()==0 || data==null) {
+			data = new ArrayList<>();
+		}
+		return AjaxResult.success( data );
 	}
 
 	/**

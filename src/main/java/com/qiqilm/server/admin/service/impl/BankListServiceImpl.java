@@ -1,16 +1,15 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
-import com.qiqilm.server.admin.domain.ConfigBank;
-import com.qiqilm.server.admin.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.BankListMapper;
 import com.qiqilm.server.admin.domain.BankList;
+import com.qiqilm.server.admin.mapper.BankListMapper;
 import com.qiqilm.server.admin.service.IBankListService;
+import com.qiqilm.server.admin.utils.StringUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 出款银行列表Service业务层处理
@@ -20,10 +19,10 @@ import org.springframework.util.CollectionUtils;
  */
 @Service
 public class BankListServiceImpl implements IBankListService {
-    @Autowired
+    @Resource
     private BankListMapper bankListMapper;
 
-    @Autowired
+    @Resource
     private ConfigDomainCacheUtil configDomainCacheUtil;
 
     /**
@@ -55,6 +54,12 @@ public class BankListServiceImpl implements IBankListService {
             }
         }
         return bankLists;
+    }
+
+    @Override
+    public List<BankList> selectBankListLists() {
+        BankList bankList=new BankList();
+        return bankListMapper.selectBankListList(bankList);
     }
 
     /**
