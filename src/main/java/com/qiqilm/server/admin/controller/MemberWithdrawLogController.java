@@ -115,6 +115,13 @@ public class MemberWithdrawLogController extends BaseController {
 		return memberWithdrawLogService.locks( req );
 	}
 
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:back')" )
+	@Log( title = "会员提现回退", businessType = BusinessType.AUDIT )
+	@PutMapping( "/back" )
+	public AjaxResult back( @RequestBody ReqMemberWithdrawLog req ) {
+		return memberWithdrawLogService.back( req );
+	}
+
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:lock')" )
 	@Log( title = "会员提现锁定", businessType = BusinessType.AUDIT )
 	@PutMapping( "/lock" )

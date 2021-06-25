@@ -19,7 +19,10 @@ import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import com.qiqilm.server.admin.utils.ValidatorUtil;
+import com.qiqilm.server.admin.utils.lvJianPayAgentUtils.HttpClientTools;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +42,9 @@ import java.util.Map;
 @RestController
 @RequestMapping( "/admin/liveUser" )
 public class LiveUserController extends BaseController {
+
+	public static final Logger logger = LoggerFactory.getLogger(HttpClientTools.class);
+
 	@Autowired
 	private ILiveUserService liveUserService;
     @Autowired
@@ -97,6 +103,9 @@ public class LiveUserController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:query')" )
 	@PutMapping( value = "/updateBank" )
 	public AjaxResult updateLiveUserBank( @RequestBody LiveUser liveUser ) {
+		LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+		String userName = loginUser.getUser().getUserName();
+		logger.info("修改主播银行卡操作人:" + userName);
 		return AjaxResult.success(liveUserService.updateLiveUserBank( liveUser ));
 	}
 
