@@ -123,7 +123,7 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 }
             }
         }catch (Exception e) {
-            log.error( "查询游戏局号明细失败，参数:{},错误信息:{}",JSON.toJSONString(memberGameData),e);
+            log.error( "查询游戏局号明细失败，参数:{},错误信息:",JSON.toJSONString(memberGameData),e);
             return AjaxResult.error("查询游戏局号明细失败Account:" + memberGameData.getAccount());
         }
         return AjaxResult.error("游戏未配置，请选择其他游戏!");
