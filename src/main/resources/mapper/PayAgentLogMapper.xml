@@ -109,11 +109,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectByWithdrawOrderNo" resultMap="PayAgentLogResult">
         <include refid="selectPayAgentLogVo"/>
         where withdraw_order_no = #{merOrderNo}
+        and (callback_status = 0 or callback_status is null)
 	</select>
 
     <select id="findNoCallback" resultMap="PayAgentLogResult">
         <include refid="selectPayAgentLogVo"/>
         where (callback_status = 0 or callback_status is null)
-          and create_time <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+        and create_time <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+    </select>
+
+    <select id="countNoFail" resultType="int">
+        select count(1) from pay_agent_log
+        where withdraw_order_no = #{merOrderNo} and callback_status != 2
+    </select>
+
+    <select id="countPlatOrderNo" resultType="int">
+        select count(1) from pay_agent_log
+        where withdraw_order_no = #{orderNo} and pay_agent_plat_id = #{payAgentPlatId}
     </select>
 </mapper>
