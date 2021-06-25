@@ -44,6 +44,9 @@ public interface IConfigEnvironmentService {
 	 */
 	public int updateConfigEnvironment(ConfigEnvironment configEnvironment);
 
+
+	int changeStatus(ConfigEnvironment configEnvironment);
+
 	/**
 	 * 批量删除【请填写功能名称】
 	 *
