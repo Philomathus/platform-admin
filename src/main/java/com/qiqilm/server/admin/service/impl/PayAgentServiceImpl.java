@@ -195,7 +195,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
 
-		if ( !redisUtil.lock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo(), "1", 360 ) ) {
+		if ( !redisUtil.lock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo(), "1", 10 ) ) {
 			return AjaxResult.error( "请勿重复提交代付订单:" + reqPayAgent.getWithdrawOrderNo() );
 		}
 
