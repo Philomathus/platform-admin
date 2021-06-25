@@ -229,6 +229,30 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
+    public AjaxResult back(ReqMemberWithdrawLog req) {
+        MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
+        if (memberWithdrawLog == null) {
+            return AjaxResult.error("订单不存在");
+        }
+        if (memberWithdrawLog.getStatus() == 2) {
+            return AjaxResult.error("该订单已被拒绝");
+        }
+        if (memberWithdrawLog.getStatus() != 4) {
+            return AjaxResult.error("该订单状态不是代付中");
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
+        memberWithdrawLog.setRemark("由" + userName + "操作回退");
+        memberWithdrawLog.setStatus(1);
+        memberWithdrawLog.setOpName(userName);
+        int i = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
+        if (i > 0) {
+            return AjaxResult.success();
+        }
+        return AjaxResult.error("回退订单状态失败");
+    }
+
+    @Override
     public AjaxResult lock(ReqMemberWithdrawLog req) {
         MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
         if (memberWithdrawLog == null) {
@@ -259,7 +283,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             return AjaxResult.success();
         }
 
-        return AjaxResult.error("更新订单状态失败");
+        return AjaxResult.error("锁定订单状态失败");
     }
 
     @Override
