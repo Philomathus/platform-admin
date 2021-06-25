@@ -56,7 +56,7 @@ public class RequestParamData {
         String apiUrl = gamePlatform.getRecordUrl();
         String getURL = apiUrl+s1;
         log.info( "美天棋牌-对局详情-请求参数：{}",getURL);
-        return test;//PostData.post(getURL);
+        return PostData.post(getURL);
     }
 
     //凯旋棋牌|开元棋牌 对局列表 暂时共享
