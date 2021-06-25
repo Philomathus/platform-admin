@@ -119,4 +119,9 @@ public class AdminConstants {
 	 * 资源映射路径 前缀
 	 */
 	public static final String RESOURCE_PREFIX = "/profile";
+
+	/**
+	 * 频繁访问,限流
+	 */
+	public static final String ACCESS_TIMES = "access_limit:";
 }
