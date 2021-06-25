@@ -126,6 +126,20 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
 		return i;
 	}
 
+	@Override
+	public int changeStatus( ConfigEnvironment configEnvironment ) {
+		int i = configEnvironmentMapper.updateConfigEnvironment( configEnvironment );
+		if ( i > 0 ) {
+			if (configEnvironment.getEnvStatus() == 1) {
+				ConfigEnvironment saveConf = configEnvironmentMapper.selectConfigEnvironmentById(configEnvironment.getEnvCode());
+				sysConfigCacheUtil.setConfCache(saveConf);
+			} else if(configEnvironment.getEnvStatus() == 0){
+				sysConfigCacheUtil.deleteCache( configEnvironment.getEnvCode() );
+			}
+		}
+		return i;
+	}
+
 	/**
 	 * 批量删除环境参数配置
 	 *

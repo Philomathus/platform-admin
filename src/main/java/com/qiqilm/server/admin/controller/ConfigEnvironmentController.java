@@ -80,6 +80,17 @@ public class ConfigEnvironmentController extends BaseController {
 	}
 
 	/**
+	 * 修改环境参数状态
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:edit')" )
+	@Log( title = "修改环境参数状态", businessType = BusinessType.UPDATE )
+	@PutMapping("/changeStatus")
+	public AjaxResult changeStatus( @RequestBody ConfigEnvironment configEnvironment ) {
+		return toAjax( configEnvironmentService.changeStatus( configEnvironment ) );
+	}
+
+
+	/**
 	 * 修改环境参数配置
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:configEnvironment:edit')" )
