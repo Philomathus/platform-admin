@@ -1,28 +1,19 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.LiveUserMount;
-import com.qiqilm.server.admin.service.ILiveUserMountService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LiveUserMount;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.ILiveUserMountService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 直播间会员坐骑Controller
@@ -41,20 +32,20 @@ public class LiveUserMountController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('live:liveUserMount:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(LiveUserMount liveUserMount) {
+	public TableDataInfo list( LiveUserMount liveUserMount ) {
 		startPage();
-		List<LiveUserMount> list = liveUserMountService.selectLiveUserMountList(liveUserMount);
+		List<LiveUserMount> list = liveUserMountService.selectLiveUserMountList( liveUserMount );
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出直播间会员坐骑列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('live:liveUserMount:export')" )
 	@Log( title = "直播间会员坐骑", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(LiveUserMount liveUserMount, HttpServletResponse response) {
-		List<LiveUserMount>      list = liveUserMountService.selectLiveUserMountList(liveUserMount);
+	public void export( LiveUserMount liveUserMount, HttpServletResponse response ) {
+		List<LiveUserMount> list = liveUserMountService.selectLiveUserMountList( liveUserMount );
 		ExportExcelUtil.exportExcel( list, "直播间会员坐骑", "直播间会员坐骑表", LiveUserMount.class, response );
 	}
 
@@ -63,8 +54,8 @@ public class LiveUserMountController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('live:liveUserMount:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-		return AjaxResult.success( liveUserMountService.selectLiveUserMountById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
+		return AjaxResult.success( liveUserMountService.selectLiveUserMountById( id ) );
 	}
 
 	/**
@@ -73,8 +64,8 @@ public class LiveUserMountController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('live:liveUserMount:add')" )
 	@Log( title = "直播间会员坐骑", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody LiveUserMount liveUserMount) {
-		return toAjax( liveUserMountService.insertLiveUserMount(liveUserMount) );
+	public AjaxResult add( @RequestBody LiveUserMount liveUserMount ) {
+		return toAjax( liveUserMountService.insertLiveUserMount( liveUserMount ) );
 	}
 
 	/**
@@ -83,8 +74,8 @@ public class LiveUserMountController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('live:liveUserMount:edit')" )
 	@Log( title = "直播间会员坐骑", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody LiveUserMount liveUserMount) {
-		return toAjax( liveUserMountService.updateLiveUserMount(liveUserMount) );
+	public AjaxResult edit( @RequestBody LiveUserMount liveUserMount ) {
+		return toAjax( liveUserMountService.updateLiveUserMount( liveUserMount ) );
 	}
 
 	/**

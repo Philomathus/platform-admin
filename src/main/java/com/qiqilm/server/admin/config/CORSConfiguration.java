@@ -22,10 +22,6 @@ public class CORSConfiguration implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers( ResourceHandlerRegistry registry ) {
-		/** 本地文件上传路径 */
-		registry.addResourceHandler( AdminConstants.RESOURCE_PREFIX + "/**" )
-				.addResourceLocations( "file:" + Tv77Config.getProfile() + "/" );
-
 		/** swagger配置 */
 		registry.addResourceHandler( "swagger-ui.html" )
 				.addResourceLocations( "classpath:/META-INF/resources/" );

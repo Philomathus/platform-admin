@@ -5,16 +5,18 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.domain.req.ReqMemberGameData;
 import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
-import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -54,7 +56,7 @@ public class MemberGameDataController extends BaseController {
 	@GetMapping( "/getCount" )
 	public AjaxResult getCount( ReqMemberGameData reqMemberGameData ) {
 		RspMemberGameData rspMemberGameData = memberGameDataService.getCount( reqMemberGameData );
-		return AjaxResult.success(rspMemberGameData);
+		return AjaxResult.success( rspMemberGameData );
 	}
 
 	/**
@@ -63,8 +65,8 @@ public class MemberGameDataController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberGameData:export')" )
 	@Log( title = "会员注单数据", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export( ReqMemberGameData reqMemberGameData, HttpServletResponse response) {
-		List<RspMemberGameData>      list = memberGameDataService.selectMemberGameDataList( reqMemberGameData );
+	public void export( ReqMemberGameData reqMemberGameData, HttpServletResponse response ) {
+		List<RspMemberGameData> list = memberGameDataService.selectMemberGameDataList( reqMemberGameData );
 		ExportExcelUtil.exportExcel( list, "会员注单数据", "会员注单数据表", RspMemberGameData.class, response );
 	}
 

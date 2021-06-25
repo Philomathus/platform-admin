@@ -5,11 +5,9 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccountLog;
-import com.qiqilm.server.admin.domain.PayAgentRechargeLog;
 import com.qiqilm.server.admin.domain.req.ReqPayAgentRechargeAccountLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountLogService;
-import com.qiqilm.server.admin.utils.ExcelUtil;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,9 +33,10 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
+	public TableDataInfo list( PayAgentRechargeAccountLog payAgentRechargeAccountLog ) {
 		startPage();
-		List<PayAgentRechargeAccountLog> list = payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogList(payAgentRechargeAccountLog);
+		List<PayAgentRechargeAccountLog> list =
+				payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogList( payAgentRechargeAccountLog );
 		return getDataTable( list );
 	}
 
@@ -48,7 +47,8 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	@Log( title = "代充人入款", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public void export( PayAgentRechargeAccountLog payAgentRechargeAccountLog, HttpServletResponse response ) {
-		List<PayAgentRechargeAccountLog>      list = payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogList(payAgentRechargeAccountLog);
+		List<PayAgentRechargeAccountLog> list =
+				payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogList( payAgentRechargeAccountLog );
 		ExportExcelUtil.exportExcel( list, "代充人入款", "代充人入款信息表", PayAgentRechargeAccountLog.class, response );
 	}
 
@@ -57,8 +57,8 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:query')" )
 	@GetMapping( value = "/{orderNo}" )
-	public AjaxResult getInfo( @PathVariable( "orderNo" ) String orderNo) {
-		return AjaxResult.success( payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogById(orderNo) );
+	public AjaxResult getInfo( @PathVariable( "orderNo" ) String orderNo ) {
+		return AjaxResult.success( payAgentRechargeAccountLogService.selectPayAgentRechargeAccountLogById( orderNo ) );
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:add')" )
 	@Log( title = "【代充人入款】", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
-		return toAjax( payAgentRechargeAccountLogService.insertPayAgentRechargeAccountLog(payAgentRechargeAccountLog) );
+	public AjaxResult add( @RequestBody PayAgentRechargeAccountLog payAgentRechargeAccountLog ) {
+		return toAjax( payAgentRechargeAccountLogService.insertPayAgentRechargeAccountLog( payAgentRechargeAccountLog ) );
 	}
 
 	/**
@@ -77,8 +77,8 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:edit')" )
 	@Log( title = "【代充人入款】", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
-		return toAjax( payAgentRechargeAccountLogService.updatePayAgentRechargeAccountLog(payAgentRechargeAccountLog) );
+	public AjaxResult edit( @RequestBody PayAgentRechargeAccountLog payAgentRechargeAccountLog ) {
+		return toAjax( payAgentRechargeAccountLogService.updatePayAgentRechargeAccountLog( payAgentRechargeAccountLog ) );
 	}
 
 	/**
@@ -111,6 +111,7 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	public AjaxResult unlock( @RequestBody ReqPayAgentRechargeAccountLog req ) {
 		return payAgentRechargeAccountLogService.unlock( req );
 	}
+
 	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:artificial')" )
 	@Log( title = "代充人入款存入", businessType = BusinessType.AUDIT )
 	@PutMapping( "/artificial" )
@@ -121,10 +122,10 @@ public class PayAgentRechargeAccountLogController extends BaseController {
 	/**
 	 * 统计按钮【代充人入款】
 	 */
-	@PreAuthorize("@ss.hasPermi('pay:payAgentRechargeAccountLog:list')")
-	@GetMapping("/statistic")
-	public AjaxResult count(PayAgentRechargeAccountLog payAgentRechargeAccountLog) {
-		return payAgentRechargeAccountLogService.statistic(payAgentRechargeAccountLog);
+	@PreAuthorize( "@ss.hasPermi('pay:payAgentRechargeAccountLog:list')" )
+	@GetMapping( "/statistic" )
+	public AjaxResult count( PayAgentRechargeAccountLog payAgentRechargeAccountLog ) {
+		return payAgentRechargeAccountLogService.statistic( payAgentRechargeAccountLog );
 	}
 
 }
