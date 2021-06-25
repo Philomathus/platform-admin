@@ -56,7 +56,7 @@ public class RequestParamData {
         String apiUrl = gamePlatform.getRecordUrl();
         String getURL = apiUrl+s1;
         log.info( "美天棋牌-对局详情-请求参数：{}",getURL);
-        return PostData.post(getURL);
+        return test;//PostData.post(getURL);
     }
 
     //凯旋棋牌|开元棋牌 对局列表 暂时共享
@@ -149,14 +149,13 @@ public class RequestParamData {
     //封装数据
     public static AjaxResult meiTianGameBetDataWrapper(String result){
         JSONObject object = JSON.parseObject(result);
-        JSONObject d = object.getJSONObject("d");
-        if (d != null) {
-            Integer code = Integer.valueOf(d.getString("resultCode"));
+        if (object != null) {
+            Integer code = Integer.valueOf(object.getString("resultCode"));
             if (code != 1) {
                 code = code + 20000;
                 return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
             }
-            return AjaxResult.success(d);
+            return AjaxResult.success(object);
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
@@ -175,84 +174,11 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
-    //测试数据
-    private static final String test = "{\n" +
-            "\t\"m\": \"/getRecordHandle\",\n" +
-            "\t\"s\": 106,\n" +
-            "\t\"d\": {\n" +
-            "\t\t\"code\": 0,\n" +
-            "\t\t\"start\": 1624279815000,\n" +
-            "\t\t\"end\": 1624280115983,\n" +
-            "\t\t\"count\": 2,\n" +
-            "\t\t\"list\": {\n" +
-            "\t\t\t\"GameID\": [\"50-1624280072-5381238-4\", \"50-1624279854-5380812-1\"],\n" +
-            "\t\t\t\"Accounts\": [\"71916_7700_50318\", \"71916_7700_50322\"],\n" +
-            "\t\t\t\"ServerID\": [2201, 9301],\n" +
-            "\t\t\t\"KindID\": [220, 930],\n" +
-            "\t\t\t\"TableID\": [44020003, 186020001],\n" +
-            "\t\t\t\"ChairID\": [4, 0],\n" +
-            "\t\t\t\"UserCount\": [3, 1],\n" +
-            "\t\t\t\"CellScore\": [\"2.00\", \"60.00\"],\n" +
-            "\t\t\t\"AllBet\": [\"5.00\", \"60.00\"],\n" +
-            "\t\t\t\"Profit\": [\"1.90\", \"-60.00\"],\n" +
-            "\t\t\t\"Revenue\": [\"0.10\", \"0.00\"],\n" +
-            "\t\t\t\"GameStartTime\": [\"2021-06-21 20:54:32\", \"2021-06-21 20:50:54\"],\n" +
-            "\t\t\t\"GameEndTime\": [\"2021-06-21 20:54:46\", \"2021-06-21 20:51:30\"],\n" +
-            "\t\t\t\"CardValue\": [\"32022c3d08270000000109170000004\", \"13c1b0b37242012d2b35223141d063d03408163626155072a232119\"],\n" +
-            "\t\t\t\"ChannelID\": [71916, 71916],\n" +
-            "\t\t\t\"LineCode\": [\"71916_无\", \"71916_无\"],\n" +
-            "\t\t\t\"RecordID\": [1]\n" +
-            "\t\t}\n" +
-            "\t}\n" +
-            "}";
-    private static final String test1 ="{\n" +
-            "\t\"m\": \"/getRecordHandle\",\n" +
-            "\t\"s\": 110,\n" +
-            "\t\"d\": {\n" +
-            "\t\t\"code\": 0,\n" +
-            "\t\t\"data\": [{\n" +
-            "\t\t\t\t\"bet\": 0,\n" +
-            "\t\t\t\t\"ty\": 2,\n" +
-            "\t\t\t\t\"time\": 6,\n" +
-            "\t\t\t\t\"pos\": 1\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"bet\": 45,\n" +
-            "\t\t\t\t\"ty\": 2,\n" +
-            "\t\t\t\t\"time\": 6,\n" +
-            "\t\t\t\t\"pos\": 3\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"bet\": 0,\n" +
-            "\t\t\t\t\"ty\": 2,\n" +
-            "\t\t\t\t\"time\": 6,\n" +
-            "\t\t\t\t\"pos\": 4\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"bet\": 50,\n" +
-            "\t\t\t\t\"ty\": 2,\n" +
-            "\t\t\t\t\"time\": 7,\n" +
-            "\t\t\t\t\"pos\": 2\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"bet\": 32000,\n" +
-            "\t\t\t\t\"ty\": 4,\n" +
-            "\t\t\t\t\"time\": 14,\n" +
-            "\t\t\t\t\"pos\": 4\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"bet\": 24000,\n" +
-            "\t\t\t\t\"ty\": 4,\n" +
-            "\t\t\t\t\"time\": 15,\n" +
-            "\t\t\t\t\"pos\": 3\n" +
-            "\t\t\t},\n" +
-            "\t\t\t{\n" +
-            "\t\t\t\t\"bet\": 16000,\n" +
-            "\t\t\t\t\"ty\": 4,\n" +
-            "\t\t\t\t\"time\": 15,\n" +
-            "\t\t\t\t\"pos\": 1\n" +
-            "\t\t\t}\n" +
-            "\t\t]\n" +
-            "\t}\n" +
+    public static String test ="{\n" +
+            "\t\"resultCode\": \"1\",\n" +
+            "\t\"url\": \"https://admin.zpsunkaisuo.com/static/CG/html/playCheck.html?EnStr=eyJkYXRhU3RyIjoie1wicm93SURcIjpcIjE0MTk1MjQzOTFcIixcImxhbmdcIjpcIlpILUNOXCJ9IiwiY29kZSI6ImE3MWMzZTFjZjFhNTQ1YTU3YjgxOGY1MTQ0NWUzZWNkIiwibWVyY2hhbnRJZCI6IjIwMTcxNDAwIiwiY3VycmVuY3kiOiJDTlkifQ==&lang=ZH_CN\",\n" +
+            "\t\"date\": \"2021-06-25 20:35:02\",\n" +
+            "\t\"timeZone\": \"GMT+8\",\n" +
+            "\t\"currency\": \"CNY\"\n" +
             "}";
 }
