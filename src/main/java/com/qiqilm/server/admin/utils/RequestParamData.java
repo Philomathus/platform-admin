@@ -40,7 +40,7 @@ public class RequestParamData {
 
     //凯旋棋牌 - 对局明细 返回参数
     public static String requestKXBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
-        String getURL = getBetURLByKXOrKY(memberGameData, gamePlatform);
+        String getURL = getBetDetailURLByKXOrKY(memberGameData, gamePlatform);
         log.info( "凯旋棋牌-对局详情-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
