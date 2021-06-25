@@ -184,14 +184,17 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
 	@Transactional( rollbackFor = Exception.class )
 	void refusedUpdateProcess( MemberWithdrawLog memberWithdrawLog, String userName, String ip ) {
-		memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		BigDecimal old = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
+		int updateW = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
 		//回退提现金额
-		memberInfoMapper.updateMoneySelect( memberWithdrawLog.getMemberId(), memberWithdrawLog.getWithdrawMoney(), null, null
-				, null, null );
+		int updateM = memberInfoMapper.updateMoneySelect( memberWithdrawLog.getMemberId(), memberWithdrawLog.getWithdrawMoney(),
+				null, null, null, null );
+		if ( updateW <= 0 || updateM <= 0 ) {
+			throw new BusinessException( "订单拒绝失败" );
+		}
 		BigDecimal now = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
-		logService.logmarkMoney( memberWithdrawLog.getMemberId(), memberWithdrawLog.getAccount(), EnumMoney.bohui, now, old,
-				"驳回人：" + userName + "-" + ip, memberWithdrawLog.getOrderNo() );
+		logService.logMoneyAll( memberWithdrawLog.getMemberId(), memberWithdrawLog.getAccount(), EnumMoney.bohui, now,
+				memberWithdrawLog.getWithdrawMoney(), null, "驳回人：" + userName + "-" + ip,
+				memberWithdrawLog.getOrderNo() + "bohui" );
 	}
 
 	@Override
@@ -304,7 +307,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			return AjaxResult.success();
 		}
 
-		return AjaxResult.error( "锁定订单状态失败" );
+		return AjaxResult.error( "更新订单状态失败" );
 	}
 
 	@Override

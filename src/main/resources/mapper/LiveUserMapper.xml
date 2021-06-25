@@ -224,6 +224,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bankAccount != null">bank_account = #{bankAccount},</if>
 
             <if test="bankName != null">bank_address = #{bankName},</if>
+            <if test="bankTypeId != null">bank_type_id = #{bankTypeId},</if>
         </trim>
         where id = #{id}
     </update>
