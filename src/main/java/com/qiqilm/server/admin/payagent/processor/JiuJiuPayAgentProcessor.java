@@ -150,7 +150,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
             log.info("久久代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = String.valueOf(resultMap.getOrDefault("code", "").toString());
-                int data = Integer.parseInt((resultMap.getOrDefault("data", "").toString()));
+                int data = Integer.parseInt((resultMap.getOrDefault("data", -1).toString()));
                 //status 4代付中 5代付失败 6代付成功
                 //code: 0成功(已支付)   1失败(订单未找到,未支付,已驳回,冲正驳回)
                 //data: 订单状态(-1:订单未找到 0:未支付 1:已支付 2:已驳回 3:冲正驳回)

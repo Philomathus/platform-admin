@@ -124,7 +124,7 @@ public class MemberWithdrawLogController extends BaseController {
 
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:queryStatus')" )
 	@Log( title = "会员提现查询状态", businessType = BusinessType.AUDIT )
-	@GetMapping( "/queryStatus" )
+	@PutMapping( "/queryStatus" )
 	public AjaxResult queryStatus( @RequestBody ReqMemberWithdrawLog req ) {
 		return memberWithdrawLogService.queryStatus( req );
 	}
