@@ -113,7 +113,7 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 
 
 	@Override
-	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
+	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
 		PayAgentPlatform payAgentPlatform =
 				payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
@@ -144,7 +144,6 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 		if ( Strings.isNotBlank( result ) ) {
 			Map map = JsonUtil.json2Map( result );
 			if ( "success".equals( map.getOrDefault( "code", "" ).toString() ) ) {
-
 				Map    dataMapRsp = ( Map ) map.get( "data" );
 				String orderNo    = dataMapRsp.getOrDefault( "orderNo", "" ).toString();
 				String state      = dataMapRsp.getOrDefault( "state", "" ).toString();
@@ -172,9 +171,10 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 					}
 					payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
 							orderState );
-					return;
 				}
 			}
+			return result;
 		}
+		return "特仑苏2代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}
 }

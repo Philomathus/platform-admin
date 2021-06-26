@@ -110,7 +110,7 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> bodyMap = new LinkedHashMap<>();
@@ -154,10 +154,10 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
                     }
                     log.warn("state:{}", state);
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
-                    return;
                 }
             }
+            return JsonUtil.object2Json(resultMap);
         }
-        log.warn("代付订单查询失败 - result:{}", JsonUtil.object2Map(resultMap));
+        return "五六代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

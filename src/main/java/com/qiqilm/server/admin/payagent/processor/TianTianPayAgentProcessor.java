@@ -118,7 +118,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
-
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+        return "天天代付无查询";
     }
 }
