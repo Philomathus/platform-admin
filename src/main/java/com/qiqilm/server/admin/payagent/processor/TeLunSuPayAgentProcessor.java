@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -50,20 +51,22 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity( requestMap, httpHeaders );
-		String                                    resultMap  = null;
+		String                                    res  = null;
 		try {
-			resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, String.class );
-			log.info( "特仑苏代付下单返回数据" + resultMap );
+			res = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, String.class );
+			log.info( "特仑苏2代付下单结果" + res );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		if ( Strings.isNotBlank( resultMap ) ) {
-			Map map1 = JsonUtil.json2Map( resultMap );
-			if ( "success".equals( map1.getOrDefault( "msg", "" ).toString() ) ) {
+		if ( StringUtils.isNotBlank( res ) ) {
+			Map map = JsonUtil.json2Map( res );
+			if ( "success".equals( map.getOrDefault( "msg", "" ).toString() ) ) {
 				return true;
+			} else {
+				reqPayAgent.setFailReason( map.get( "msg" ).toString() );
 			}
 		}
-		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( res ) );
 		return false;
 	}
 
