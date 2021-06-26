@@ -12,6 +12,7 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -86,6 +87,12 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 						}
 
 					}
+				}
+			} else {
+				if(StringUtils.isNotBlank(resultMap.get("message").toString())){
+					reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+				} else{
+					reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
 				}
 			}
 		}
