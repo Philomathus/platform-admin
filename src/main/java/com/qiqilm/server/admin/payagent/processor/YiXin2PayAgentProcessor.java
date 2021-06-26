@@ -34,6 +34,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         BankCodeYiXinType bankCodeType = BankCodeYiXinType.getCodeByDesc(withdrawLog.getBankName());
         if (bankCodeType == null) {
+            payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             log.warn("此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
             throw new BusinessException("此代付无法支持的银行类型：" + withdrawLog.getBankName());
         }
