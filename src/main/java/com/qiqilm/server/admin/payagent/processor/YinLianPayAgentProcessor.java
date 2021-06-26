@@ -83,6 +83,8 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+
+                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
         log.warn("银联代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));

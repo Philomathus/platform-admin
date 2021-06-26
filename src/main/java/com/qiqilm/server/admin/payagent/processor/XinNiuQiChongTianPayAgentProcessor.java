@@ -74,6 +74,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 				return true;
 			}
 			reqPayAgent.setFailReason( resultMap.getOrDefault( "ims", "" ).toString() );
+			payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 		}
 		log.warn( "新牛气冲天代付订单提交失败,订单号:{}", withdrawLog.getOrderNo() );
 		return false;

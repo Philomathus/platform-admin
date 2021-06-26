@@ -66,6 +66,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
                     reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
                 } else {
                     reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+					payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
                 }
             }
         }

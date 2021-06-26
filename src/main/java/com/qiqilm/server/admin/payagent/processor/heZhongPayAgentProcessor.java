@@ -5,8 +5,6 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
-import com.qiqilm.server.admin.enums.BankCodeLangYaType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -20,11 +18,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Repository(value = ConstantsPayAgent.HEZHONG + "PayAgentProcessor")
 @Log4j2
@@ -79,6 +77,8 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                 log.info("合众代付返回验签失败 - orderNo:{}", withdrawLog.getOrderNo());
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+
+                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
         return false;

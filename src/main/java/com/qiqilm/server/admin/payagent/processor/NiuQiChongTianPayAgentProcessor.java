@@ -6,8 +6,6 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
-import com.qiqilm.server.admin.enums.BankCodeShunWeiType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -94,6 +92,8 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent  {
 				} else{
 					reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
 				}
+
+				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
 		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );

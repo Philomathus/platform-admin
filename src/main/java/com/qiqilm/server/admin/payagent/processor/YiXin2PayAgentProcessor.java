@@ -74,6 +74,8 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
                         }
                     } else {
                         reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+
+                        payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
                     }
                     log.error("亿信代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
                 }

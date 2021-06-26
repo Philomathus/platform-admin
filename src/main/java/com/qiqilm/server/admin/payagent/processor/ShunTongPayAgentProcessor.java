@@ -5,8 +5,6 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
-import com.qiqilm.server.admin.enums.BankCodeLangYaType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -23,7 +21,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Repository(value = ConstantsPayAgent.SHUNTONG + "PayAgentProcessor")
 @Log4j2
@@ -73,6 +73,8 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                 } else {
                     reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
                 }
+
+                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
         log.warn("顺通代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));

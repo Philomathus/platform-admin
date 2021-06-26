@@ -78,22 +78,24 @@ public class ShunWei3PayAgentProcessor extends AbstractPayAgent {
 		}
 		log.info( "顺为代付下单结果{}",result );
 		Map<String, String> resultMap = JsonUtil.json2Map( result );
-		if ( !CollectionUtils.isEmpty( resultMap ) && "200".equals( resultMap.get( "state_code" ) ) ) {
-			resultMap.remove( "state_code" );
-			resultMap.remove( "message" );
-			String              resultSign = resultMap.remove( "sign" );
-			String              randNum    = resultMap.get( "random_str" );
-			Map<String, String> param      = paramSort( resultMap, randNum );
-			String              temp       = JsonUtil.object2Json( param );
-			String              reSign     = DigestUtils.md5Hex( temp.concat( signMd5 ) );
-			if ( !org.apache.commons.lang3.StringUtils.equalsIgnoreCase( resultSign, reSign ) ) {
-				return false;
+		if (!CollectionUtils.isEmpty(resultMap)) {
+			if ("200".equals(resultMap.get("state_code"))) {
+				resultMap.remove("state_code");
+				resultMap.remove("message");
+				String resultSign = resultMap.remove("sign");
+				String randNum = resultMap.get("random_str");
+				Map<String, String> param = paramSort(resultMap, randNum);
+				String temp = JsonUtil.object2Json(param);
+				String reSign = DigestUtils.md5Hex(temp.concat(signMd5));
+				if (!org.apache.commons.lang3.StringUtils.equalsIgnoreCase(resultSign, reSign)) {
+					return false;
+				}
+				log.info("顺为代付订单提交成功，orderNo：{}", withdrawLog.getOrderNo());
+				return true;
+			}else{
+				reqPayAgent.setFailReason(resultMap.getOrDefault("message",""));
+				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
-			log.info("顺为代付订单提交成功，orderNo：{}", withdrawLog.getOrderNo());
-			return true;
-		}
-		if ( !CollectionUtils.isEmpty( resultMap ) && resultMap.get( "message" ) != null ) {
-			reqPayAgent.setFailReason( resultMap.get( "message" ) );
 		}
 		log.warn( "顺为代付订单提交失败 - orderNo:{},result:{}", withdrawLog.getOrderNo(),JsonUtil.object2Json( resultMap ) );
 		return false;

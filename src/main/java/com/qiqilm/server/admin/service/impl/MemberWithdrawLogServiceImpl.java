@@ -251,12 +251,9 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
 		if ( payAgentLog != null ) {
-			PayAgentLog newPayAgentLog = new PayAgentLog();
-			newPayAgentLog.setId( payAgentLog.getId() );
-			newPayAgentLog.setCallbackStatus( 2 );
-			int i = payAgentLogMapper.updatePayAgentLog( newPayAgentLog );
+			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
 			if ( i <= 0 ) {
-				return AjaxResult.error( "代付记录更新失败，请重试！" );
+				return AjaxResult.error( "代付记录删除失败，请重试！" );
 			}
 		}
 

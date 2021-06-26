@@ -108,6 +108,8 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
 				return true;
 			} else {
 				reqPayAgent.setFailReason( resultMap.getOrDefault( "msg", "" ).toString() );
+
+				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
 		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );

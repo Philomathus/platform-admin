@@ -90,6 +90,8 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
 				}
 			} else {
 				reqPayAgent.setFailReason( resultMap.getOrDefault( "msg", "" ).toString() );
+
+				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
 		log.warn( "狼牙代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );

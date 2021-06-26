@@ -66,6 +66,8 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+
+                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
         log.warn("达达代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));

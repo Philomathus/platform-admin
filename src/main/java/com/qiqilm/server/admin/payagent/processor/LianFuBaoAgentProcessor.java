@@ -21,7 +21,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Timestamp;
 import java.util.*;
 
 @Repository( value = ConstantsPayAgent.LIAN_FU_BAO + "PayAgentProcessor" )
@@ -79,6 +78,8 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 				return true;
 			} else {
 				reqPayAgent.setFailReason( resultMap.getOrDefault( "message", "" ).toString() );
+
+				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
 		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );

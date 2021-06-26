@@ -58,6 +58,8 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+
+                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
         log.warn("南开代付订单提交失败 - result:{}", httpOrgCreateTestRtn);
