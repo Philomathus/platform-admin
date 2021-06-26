@@ -20,4 +20,6 @@ public interface IPayAgentService {
 
 	void processOrder( PayAgentPlatform payAgentPlatform, MemberWithdrawLog memberWithdrawLog,
 					   Date now, int status, int orderState );
+
+	void callBackOrder( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform );
 }

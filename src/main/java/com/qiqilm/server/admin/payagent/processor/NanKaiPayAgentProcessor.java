@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.utils.*;
 import com.qiqilm.server.admin.utils.nanKaiPayAgentUtils.HttpClientUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 
@@ -58,6 +59,8 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.warn("南开代付订单提交失败 - result:{}", httpOrgCreateTestRtn);
@@ -78,7 +81,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             String orderNo = resultMap.getOrDefault("orderNo", "").toString();
             String resultFlag = resultMap.getOrDefault("resultFlag", "").toString();
-            log.info("南开代付回调,resultFlag的值为: {}" , resultFlag );
+            log.info("南开代付回调,resultFlag的值为: {}", resultFlag);
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderNo);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", orderNo);
@@ -104,7 +107,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         //南开代付:header_key = paykey, MD5_key = paySecret
@@ -125,23 +128,25 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
         log.warn("南开代付查询结果:" + httpOrgCreateTestRtn);
         if (StringUtils.isNoneBlank(httpOrgCreateTestRtn)) {
             Map<String, Object> resultMap = JsonUtil.json2Map(httpOrgCreateTestRtn);
-            if ("0000".equals(resultMap.getOrDefault("respCode", "").toString())) {
-                int resultFlag = Integer.parseInt(resultMap.getOrDefault("resultFlag", "").toString());
-                // status 4代付中 5代付失败 6代付成功
-                // resultFlag 0-成功 1-失败 2-处理中
-                if (resultFlag == 0 || resultFlag == 1) {
-                    int status = 4;
-                    if (resultFlag == 0) {
-                        resultFlag = 6;
-                    } else {
-                        resultFlag = 5;
+            if (!CollectionUtils.isEmpty(resultMap)) {
+                if ("0000".equals(resultMap.getOrDefault("respCode", "").toString())) {
+                    int resultFlag = Integer.parseInt(resultMap.getOrDefault("resultFlag", "").toString());
+                    // status 4代付中 5代付失败 6代付成功
+                    // resultFlag 0-成功 1-失败 2-处理中
+                    if (resultFlag == 0 || resultFlag == 1) {
+                        int status = 4;
+                        if (resultFlag == 0) {
+                            resultFlag = 6;
+                        } else {
+                            resultFlag = 5;
+                        }
+                        log.warn("state:{}", resultFlag);
+                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, resultFlag);
                     }
-                    log.warn("state:{}", resultFlag);
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, resultFlag);
-                    return;
                 }
             }
+            return httpOrgCreateTestRtn;
         }
-        log.warn("南开订单查询失败 - result:{}", httpOrgCreateTestRtn);
+        return "南开代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }

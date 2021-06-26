@@ -21,6 +21,13 @@ public interface PayAgentLogMapper {
 	public PayAgentLog selectPayAgentLogById( Long id );
 
 	/**
+	 *  根据订单号代付平台
+	 *
+	 * @return 代付信息日志
+	 */
+	public PayAgentLog selectPayAgentLogByWithdrawOrderNo( String withdrawOrderNo );
+
+	/**
 	 * 查询代付信息日志列表
 	 *
 	 * @param payAgentLog 代付信息日志

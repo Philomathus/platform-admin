@@ -5,15 +5,13 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
-import com.qiqilm.server.admin.enums.BankCodeLangYaType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.factory.support.ManagedArray;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,11 +19,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Repository(value = ConstantsPayAgent.NEWMAX + "PayAgentProcessor")
 @Log4j2
@@ -72,6 +70,8 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.warn("newmax代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -117,7 +117,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> paramsMap = new TreeMap<>();
@@ -138,29 +138,31 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        String res  = null;
+        String res = null;
         try {
             res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
-            Map<String, Object> resultMap = JsonUtil.json2Map(res);
-
-            if (!CollectionUtils.isEmpty(resultMap)) {
-                Map dataMap = (Map)resultMap.getOrDefault("data","");
-                String statusCode = String.valueOf( dataMap.getOrDefault( "status", "" ).toString());
-                int    status     = 4;
-                int    orderState = 0;
-                log.info("newmax代付查询结果- result:{}", JsonUtil.object2Map(resultMap)+"状态"+statusCode);
-                if ( "2".equals( statusCode ) ) {
-                    status = 6;
-                    orderState = 1;
-                } else {
-                    status = 5;
-                    orderState = 2;
+            log.info("newmax代付查询结果:{}", res);
+            if (StringUtils.isNotBlank(res)) {
+                Map<String, Object> resultMap = JsonUtil.json2Map(res);
+                if (!CollectionUtils.isEmpty(resultMap)) {
+                    Map dataMap = (Map) resultMap.getOrDefault("data", "");
+                    String statusCode = String.valueOf(dataMap.getOrDefault("status", "").toString());
+                    int status = 4;
+                    int orderState = 0;
+                    if ("2".equals(statusCode)) {
+                        status = 6;
+                        orderState = 1;
+                    } else {
+                        status = 5;
+                        orderState = 2;
+                    }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
                 }
-                payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
-                return;
+                return res;
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return "newmax代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }

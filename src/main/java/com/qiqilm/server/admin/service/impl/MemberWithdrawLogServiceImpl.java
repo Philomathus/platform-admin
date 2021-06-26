@@ -2,20 +2,16 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.domain.BankCardAddress;
-import com.qiqilm.server.admin.domain.MemberWithdrawLog;
-import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
-import com.qiqilm.server.admin.domain.PayAgentLog;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.exception.BusinessException;
-import com.qiqilm.server.admin.mapper.BankCardAddressMapper;
-import com.qiqilm.server.admin.mapper.MemberInfoMapper;
-import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
-import com.qiqilm.server.admin.mapper.PayAgentLogMapper;
+import com.qiqilm.server.admin.mapper.*;
+import com.qiqilm.server.admin.payagent.BasePayAgent;
+import com.qiqilm.server.admin.payagent.PayAgentProcessorFactoryUtil;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
 import com.qiqilm.server.admin.utils.PhoneUtil;
@@ -47,6 +43,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	@Autowired
 	private PayAgentLogMapper       payAgentLogMapper;
 	@Autowired
+	private PayAgentPlatformMapper       payAgentPlatformMapper;
+	@Autowired
 	private BankCardAddressMapper   bankCardAddressMapper;
 	@Autowired
 	private TokenService            tokenService;
@@ -54,6 +52,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	private ILogService             logService;
 	@Autowired
 	private RedisUtil               redisUtil;
+	@Autowired
+	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
 
 	/**
 	 * 查询会员提现信息
@@ -251,12 +251,9 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
 		if ( payAgentLog != null ) {
-			PayAgentLog newPayAgentLog = new PayAgentLog();
-			newPayAgentLog.setId( payAgentLog.getId() );
-			newPayAgentLog.setCallbackStatus( 2 );
-			int i = payAgentLogMapper.updatePayAgentLog( newPayAgentLog );
+			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
 			if ( i <= 0 ) {
-				return AjaxResult.error( "代付记录更新失败，请重试！" );
+				return AjaxResult.error( "代付记录删除失败，请重试！" );
 			}
 		}
 
@@ -274,6 +271,24 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			return AjaxResult.success();
 		}
 		throw new BusinessException( "回退订单状态失败" );
+	}
+
+	@Override
+	public AjaxResult queryStatus( ReqMemberWithdrawLog req ) {
+		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
+		if ( memberWithdrawLog == null ) {
+			return AjaxResult.error( "订单不存在" );
+		}
+		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo(memberWithdrawLog.getOrderNo());
+		PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getId());
+		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
+		String msg = null;
+		try {
+			msg = basePayAgent.queryOrderPay( payAgentLog );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return AjaxResult.success(msg);
 	}
 
 	@Override
