@@ -149,9 +149,9 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
                 // status 4代付中 5代付失败 6代付成功
                 // state 1处理中 2支付成功 3支付失败
                 int status = 4;
-                if (state == 3) {
+                if (state == 2) {
                     status = 6;
-                } else if (status == 3) {
+                } else if (state == 3) {
                     status = 5;
                 }
                 log.warn("state:{}", state);
