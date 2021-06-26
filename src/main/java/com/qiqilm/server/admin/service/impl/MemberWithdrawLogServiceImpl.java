@@ -280,7 +280,13 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			return AjaxResult.error( "订单不存在" );
 		}
 		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo(memberWithdrawLog.getOrderNo());
+		if ( payAgentLog == null ) {
+			return AjaxResult.error( "代付订单不存在" );
+		}
 		PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
+		if ( payAgentPlatform == null ) {
+			return AjaxResult.error( "此代付平台不存在" );
+		}
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 		String msg = null;
 		try {
