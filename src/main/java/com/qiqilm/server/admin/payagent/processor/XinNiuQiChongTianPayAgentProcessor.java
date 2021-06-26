@@ -65,15 +65,17 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
+		log.warn( "新牛气冲天代付下单结果 - result:{}",  result  );
 		if ( Strings.isNotBlank( result ) ) {
 			Map resultMap = JsonUtil.json2Map( result );
 			if ( StringUtils.equals( "true", String.valueOf( resultMap.get( "result" ) ) ) ) {
 				withdrawLog.setPayAgentOrderNo( resultMap.getOrDefault( "odd", "" ).toString() );
+				log.warn( "新牛气冲天代付下单成功 - result:{}",  result  );
 				return true;
 			}
 			reqPayAgent.setFailReason( resultMap.getOrDefault( "ims", "" ).toString() );
 		}
-		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( result ) );
+		log.warn( "新牛气冲天代付订单提交失败,订单号:{}", withdrawLog.getOrderNo() );
 		return false;
 	}
 
@@ -136,7 +138,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		String result = null;
 		try {
 			result = restTemplate.postForObject( payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class );
-			log.warn( "查询结果" + result );
+			log.warn( "新牛气冲天代付查询结果" + result );
 			Map resultMap = JsonUtil.json2Map( result );
 			if ( !CollectionUtils.isEmpty( resultMap ) && "true".equals( resultMap.getOrDefault( "result", "" ).toString() ) ) {
 				Integer statusCode = Integer.parseInt( ( String ) resultMap.get( "zt" ) );
