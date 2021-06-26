@@ -119,7 +119,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> bodyMap = new TreeMap<>();
@@ -140,14 +140,12 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
             resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class );
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
-
         }
+        log.info("顺风代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
-                log.info("代付订单查询成功");
                 Map<String, Object> dataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());
                 int state = Integer.parseInt(dataMap.getOrDefault("state", -1).toString());
-
                 // status 4代付中 5代付失败 6代付成功
                 // state 1处理中 2支付成功 3支付失败
                 int status = 4;
@@ -158,11 +156,9 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
                 }
                 log.warn("state:{}", state);
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
-                return;
             }
+            return JsonUtil.object2Json(resultMap);
         }
-        log.warn("代付订单查询失败 - result:{}", resultMap);
+        return "顺风代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
-
-
 }
