@@ -137,7 +137,7 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( "小飞查询:{}", JsonUtil.object2Json( result ) );
+		log.warn( "小飞代付查询结果:{}", JsonUtil.object2Json( result ) );
 		if ( StringUtils.equals( "200", String.valueOf( result.get( "code" ) ) ) ) {
 			result = ( Map<String, Object> ) result.get( "attrData" );
 			String statusCode = String.valueOf( result.get( "status" ) );
