@@ -17,6 +17,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -56,18 +57,30 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
 		httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>( map, httpHeaders );
 
-		Map<String, Object> resultStr = null;
+		Map<String, Object> resultMap = null;
 		try {
-			resultStr = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
+			resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( JsonUtil.object2Json( resultStr ) );
-		if ( StringUtils.equals( "200", String.valueOf( resultStr.get( "code" ) ) ) ) {
-			resultStr = ( Map<String, Object> ) resultStr.get( "attrData" );
-			return StringUtils.equals( "wait", String.valueOf( resultStr.get( "status" ) ) ) ||
-					StringUtils.equals( "assign", String.valueOf( resultStr.get( "status" ) ) );
+		log.warn("小飞代付下单结果:" + JsonUtil.object2Json(resultMap));
+		if (!CollectionUtils.isEmpty(resultMap)) {
+			if (StringUtils.equals("200", String.valueOf(resultMap.get("code")))) {
+				Map<String, Object> attrDataMap = (Map<String, Object>) resultMap.get("attrData");
+				if (StringUtils.equals("wait", String.valueOf(attrDataMap.get("status"))) ||
+						StringUtils.equals("assign", String.valueOf(attrDataMap.get("status")))) {
+					log.warn("小飞代付下单成功:" + JsonUtil.object2Json(resultMap));
+					return true;
+				}
+			} else{
+				if (com.qiqilm.server.admin.utils.StringUtils.isNotBlank(resultMap.get("message").toString())) {
+					reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+				} else {
+					reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+				}
+			}
 		}
+		log.warn("小飞代付下单失败,订单号{}", withdrawLog.getOrderNo());
 		return false;
 	}
 
