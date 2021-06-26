@@ -120,7 +120,7 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 	}
 
 	@Override
-	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
+	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
 		MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
 		PayAgentPlatform    payAgentPlatform =
                 payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
@@ -142,28 +142,31 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 		try {
 			res = restTemplate.getForObject( payAgentPlatform.getPayOrderQueryAddr() + url, String.class );
 			log.warn( "福财运2代付查询结果:" + res );
-			Map<String, Object> resultMap = JsonUtil.json2Map( res );
-			if ( !CollectionUtils.isEmpty( resultMap ) ) {
-				int statusType = Integer.parseInt( resultMap.getOrDefault( "status", "" ).toString() );
-				if ( statusType == 10 || statusType == 0 ) {
-					// status 4代付中 5代付失败 6代付成功
-					// statusType 1申请受理中，2代付下发中，10交易失败，0下发成功
-					int status = 4;
-					if ( statusType == 0 ) {
-						status = 6;
-						statusType = 0;
-					} else {
-						status = 5;
-						statusType = 10;
+			if(StringUtils.isNotBlank(res)) {
+				Map<String, Object> resultMap = JsonUtil.json2Map(res);
+				if (!CollectionUtils.isEmpty(resultMap)) {
+					int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
+					if (statusType == 10 || statusType == 0) {
+						// status 4代付中 5代付失败 6代付成功
+						// statusType 1申请受理中，2代付下发中，10交易失败，0下发成功
+						int status = 4;
+						if (statusType == 0) {
+							status = 6;
+							statusType = 0;
+						} else {
+							status = 5;
+							statusType = 10;
+						}
+						payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
+								statusType);
 					}
-					payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
-                            statusType );
-					return;
 				}
+				return res;
 			}
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-
+		return "福财运2代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}
 }
+
