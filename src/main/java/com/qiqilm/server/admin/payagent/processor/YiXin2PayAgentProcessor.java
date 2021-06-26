@@ -124,7 +124,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> dataMap = new TreeMap<>();
@@ -159,13 +159,13 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
                             status = 6;
                         }
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                        return;
                     }
-                    log.error("亿信代付订单查询失败 - result:{}", JsonUtil.object2Json(resultMap));
                 }
+                return result;
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return "亿信代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

@@ -113,7 +113,7 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, String> dataMap = new LinkedHashMap<>();
@@ -137,12 +137,10 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.warn("华子代付查询结果:" + resultMap);
+        log.warn("华子代付查询结果:" + JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
-
             if ("交易成功".equals(resultMap.getOrDefault("pay_result", "").toString())) {
                 String state = resultMap.getOrDefault("code", "").toString();
-
                 // status 4代付中 5代付失败 6代付成功
                 // state 1处理中 2支付成功 3支付失败
                 int status = 4;
@@ -151,12 +149,11 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
                 } else if (status == 3) {
                     status = 5;
                 }
-                log.warn("state:{}", resultMap);
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 0);
-                return;
             }
+            return JsonUtil.object2Json(resultMap);
         }
-        log.warn("代付订单查询失败 - result:{}", resultMap);
+        return "97代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
     private String getOrderAgentTime() {
         //我要获取当前的日期
