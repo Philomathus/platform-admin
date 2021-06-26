@@ -26,7 +26,7 @@ public interface IMemberGameDataService {
 
 	AjaxResult getBetData(MemberGameData memberGameData);
 
-	AjaxResult GameKYResult(MemberGameData memberGameData);
+	AjaxResult getGameBetDetailData(MemberGameData memberGameData);
 
-
+	AjaxResult getGameBetRecordData(MemberGameData memberGameData);
 }
