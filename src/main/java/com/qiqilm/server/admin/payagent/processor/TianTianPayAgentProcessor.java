@@ -58,7 +58,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
                 Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("Data");
                 code = (int) dataMap.get("Status");
                 if (code != 8 && code != 16) {
-                    log.warn("天天代付订单提交失败，订单号{}", withdrawLog.getOrderNo());
+                    log.warn("天天代付订单提交成功，订单号{}", withdrawLog.getOrderNo());
                     return true;
                 }
             } else {
