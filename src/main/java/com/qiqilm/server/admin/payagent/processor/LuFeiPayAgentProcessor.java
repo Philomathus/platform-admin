@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -117,7 +118,7 @@ public class LuFeiPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> paramsMap = new TreeMap<>();
@@ -144,12 +145,10 @@ public class LuFeiPayAgentProcessor extends AbstractPayAgent {
             log.info(ConstantsPayAgent.LU_FEI+"代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
-
                 if ("100".equals(code)) {
                     int orderState = Integer.parseInt( resultMap.getOrDefault( "pay_status", 0 ).toString() );
                     // status 4代付中5代付失败6代付成功
                     // orderState 1-待付款 2-付款成功 3-付款失败
-
                     int status = 4;
                     switch ( orderState ) {
                         case 2:
@@ -161,15 +160,13 @@ public class LuFeiPayAgentProcessor extends AbstractPayAgent {
                         default:
                             break;
                     }
-
-                    log.warn( "orderState:{}", orderState );
-
                     payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState );
-                    return;
                 }
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return "路飞代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

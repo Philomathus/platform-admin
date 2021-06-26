@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -70,7 +71,7 @@ public class BinLiPayAgentProcessor extends AbstractPayAgent {
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
 
-                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.warn("宾利代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -115,7 +116,7 @@ public class BinLiPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> paramsMap = new TreeMap<>();
@@ -158,11 +159,12 @@ public class BinLiPayAgentProcessor extends AbstractPayAgent {
                         statusType = 0;
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                    return;
                 }
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return "宾利代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

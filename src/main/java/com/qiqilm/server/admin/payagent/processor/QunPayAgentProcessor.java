@@ -134,7 +134,7 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
 	}
 
 	@Override
-	public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+	public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
 		PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
 		Map<String, String> bodyMap = new LinkedHashMap<>();
@@ -167,7 +167,6 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
 			if ("1000".equals(resultMap.getOrDefault("code", "").toString())) {
 				Map<String, Object> dataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());
 				int state = Integer.parseInt(dataMap.getOrDefault("status", -1).toString());
-
 				// status 4代付中 5代付失败 6代付成功
 				// state 1处理中 2支付成功 3支付失败
 				int status = 4;
@@ -178,9 +177,9 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
 				}
 				log.warn("state:{}", state);
 				payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
-				return;
 			}
+			return res;
 		}
-		log.warn("群支付代付订单查询失败 - result:{}", res);
+		return "群支付代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}
 }

@@ -111,7 +111,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 					try {
 						log.warn( "开始批量查询代付订单 - 订单号：{}，PayAgentPlatId：{},PayAgentPlatCode:{}", payAgentLog.getWithdrawOrderNo(),
 								payAgentLog.getPayAgentPlatId(), payAgentPlatform.getCode() );
-						basePayAgent.queryOrderPay( payAgentLog );
+						String a = basePayAgent.queryOrderPay( payAgentLog );
 					} catch ( Exception e ) {
 						log.error( e.getMessage(), e );
 					}

@@ -12,6 +12,7 @@ import com.qiqilm.server.admin.utils.RSACoder;
 import com.qiqilm.server.admin.utils.lvJianPayAgentUtils.HttpClientTools;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
@@ -60,7 +61,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
 //            return false;
 //        }
 
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("merchNo", payAgentPlatform.getMerId());
         params.put("method", "cmd.transfer.order");//请求接口名称
         params.put("ipaddress", "192.168.0.1");
@@ -104,7 +105,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
-                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.warn("绿箭代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -152,14 +153,14 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
 
         String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        Map<String,String> prams = new HashMap<>();
+        Map<String, String> prams = new HashMap<>();
         prams.put("merchNo", payAgentPlatform.getMerId());
         prams.put("method", "cmd.query.transfer");//请求接口名称
         prams.put("ipaddress", "192.168.0.1");
@@ -180,24 +181,27 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
         }
         log.info("绿箭代付查询结果- result:{}", responseData);
-        Map<String, Object> resultMap = JsonUtil.json2Map(responseData);
-        if (!CollectionUtils.isEmpty(resultMap)) {
-            String code = resultMap.getOrDefault("code", "").toString();
-            if ("10000".equals(code)) {
-                int statusType = Integer.parseInt((resultMap.getOrDefault("status", "").toString()));
-                //status 4代付中 5代付失败 6代付成功
-                //statusType:1代付成功  2代付中  3代付失败   6状态未知   9代付退汇,出款处理退回
-                if (statusType == 1 || statusType == 3 || statusType == 9) {
-                    int status = 4;
-                    if (statusType == 1) {
-                        status = 6;
-                    } else {
-                        status = 5;
+        if (StringUtils.isNotBlank(responseData)) {
+            Map<String, Object> resultMap = JsonUtil.json2Map(responseData);
+            if (!CollectionUtils.isEmpty(resultMap)) {
+                String code = resultMap.getOrDefault("code", "").toString();
+                if ("10000".equals(code)) {
+                    int statusType = Integer.parseInt((resultMap.getOrDefault("status", "").toString()));
+                    //status 4代付中 5代付失败 6代付成功
+                    //statusType:1代付成功  2代付中  3代付失败   6状态未知   9代付退汇,出款处理退回
+                    if (statusType == 1 || statusType == 3 || statusType == 9) {
+                        int status = 4;
+                        if (statusType == 1) {
+                            status = 6;
+                        } else {
+                            status = 5;
+                        }
+                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                    return;
                 }
             }
+            return responseData;
         }
+        return "绿箭代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }

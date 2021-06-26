@@ -50,6 +50,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <select id="selectPayAgentLogByWithdrawOrderNo" parameterType="java.lang.String" resultMap="PayAgentLogResult">
+        <include refid="selectPayAgentLogVo"/>
+        where withdraw_order_no = #{withdrawOrderNo}
+    </select>
+
     <insert id="insertPayAgentLog" parameterType="PayAgentLog" useGeneratedKeys="true" keyProperty="id">
         insert into pay_agent_log
         <trim prefix="(" suffix=")" suffixOverrides=",">

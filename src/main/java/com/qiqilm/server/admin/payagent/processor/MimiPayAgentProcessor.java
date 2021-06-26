@@ -124,7 +124,7 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 	}
 
 	@Override
-	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-
+	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
+       return "咪咪代付无查询";
 	}
 }

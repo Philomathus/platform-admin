@@ -12,6 +12,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,7 +34,7 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> dataMap = new TreeMap<>();
         dataMap.put("store_id", payAgentPlatform.getMerId());
         dataMap.put("order_no", withdrawLog.getOrderNo());
-        dataMap.put("money", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
+        dataMap.put("money", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
         dataMap.put("pay_type", "MANUAL_BANK");
         dataMap.put("secret_type", "md5_secret");
         dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DA_DA);
@@ -67,7 +68,7 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
 
-                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.warn("达达代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -111,7 +112,7 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> dataMap = new TreeMap<>();
@@ -133,24 +134,27 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            if (!CollectionUtils.isEmpty(resultMap) && "0".equals(resultMap.getOrDefault("code", "").toString())) {
-                Map resDataMap=(Map) resultMap.get("data");
-                String statusCode = String.valueOf(resDataMap.getOrDefault("status", "").toString());
-                int status = 4;
-                int orderState = 0;
-                if ("2".equals(statusCode)) {
-                    status = 6;
-                    orderState = 1;
-                } else {
-                    status = 5;
-                    orderState = 2;
+            log.info("达达代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            if (!CollectionUtils.isEmpty(resultMap)) {
+                if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
+                    Map resDataMap = (Map) resultMap.get("data");
+                    String statusCode = String.valueOf(resDataMap.getOrDefault("status", "").toString());
+                    int status = 4;
+                    int orderState = 0;
+                    if ("2".equals(statusCode)) {
+                        status = 6;
+                        orderState = 1;
+                    } else {
+                        status = 5;
+                        orderState = 2;
+                    }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
                 }
-                payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
-                return;
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
+        return "达达代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

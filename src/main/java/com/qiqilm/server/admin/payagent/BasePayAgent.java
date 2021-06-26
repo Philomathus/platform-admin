@@ -39,5 +39,5 @@ public interface BasePayAgent {
 	/**
 	 * 代付查询
 	 */
-	void queryOrderPay( PayAgentLog payAgentLog ) throws Exception;
+	String queryOrderPay( PayAgentLog payAgentLog ) throws Exception;
 }

@@ -13,6 +13,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -124,7 +125,7 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 	}
 
 	@Override
-	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
+	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
 		PayAgentPlatform payAgentPlatform =
 				payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
@@ -150,34 +151,28 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( JsonUtil.object2Json( resultMap ) );
-		if ( !CollectionUtils.isEmpty( resultMap )
-				&& "0".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
-			log.info( "代付订单查询成功" );
-			Map<String, Object> resultDataMap = ( Map<String, Object> ) resultMap.getOrDefault( "data", new HashMap<>() );
-
-			int orderState = Integer.parseInt( resultDataMap.getOrDefault( "orderStatus", -1 ).toString() );
-
-			// status 4代付中5代付失败6代付成功
-			// orderState (0待处理 1处理中 2处理失败 3处理成功)
-
-			int status = 4;
-			switch ( orderState ) {
-			case 3:
-				status = 6;
-				break;
-			case 2:
-				status = 5;
-				break;
-			default:
-				break;
+		log.warn("飞跃代付订单查询结果" + JsonUtil.object2Json( resultMap ));
+		if ( !CollectionUtils.isEmpty( resultMap )) {
+			if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
+				Map<String, Object> resultDataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());
+				int orderState = Integer.parseInt(resultDataMap.getOrDefault("orderStatus", -1).toString());
+				// status 4代付中5代付失败6代付成功
+				// orderState (0待处理 1处理中 2处理失败 3处理成功)
+				int status = 4;
+				switch (orderState) {
+					case 3:
+						status = 6;
+						break;
+					case 2:
+						status = 5;
+						break;
+					default:
+						break;
+				}
+				payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
 			}
-
-			log.warn( "orderState:{}", orderState );
-
-			payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState );
-			return;
+			return JsonUtil.object2Json(resultMap);
 		}
-		log.warn( "代付订单查询失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		return "飞跃代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}
 }
