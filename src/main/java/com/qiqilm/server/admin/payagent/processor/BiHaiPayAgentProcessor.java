@@ -113,7 +113,7 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 	}
 
 	@Override
-	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
+	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
 		PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
 		Map<String, Object> paramsMap = new TreeMap<>();
@@ -156,12 +156,13 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 						statusType = 0;
 					}
 					payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-					return;
 				}
+				return JsonUtil.object2Json(resultMap);
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
+		return "宾利2代付查询失败,订单号:" + withdrawLog.getOrderNo();
 	}
 
 	/*public static void main(String[] args) {
