@@ -1,7 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -9,6 +11,7 @@ import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.PayAgentRechargeAccountMapper;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
@@ -26,7 +29,8 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
     private PayAgentRechargeAccountMapper payAgentRechargeAccountMapper;
     @Autowired
     private MemberInfoMapper memberInfoMapper;
-
+    @Value("${agentCode}")
+    private String agentCode;
     /**
      * 查询【代充人】
      *
@@ -41,12 +45,16 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
     /**
      * 查询【代充人】列表
      *
-     * @param payAgentRechargeAccount 【代充人】
+     * @param map 【代充人】
      * @return 【代充人】
      */
     @Override
-    public List<PayAgentRechargeAccount> selectPayAgentRechargeAccountList(PayAgentRechargeAccount payAgentRechargeAccount) {
-        return payAgentRechargeAccountMapper.selectPayAgentRechargeAccountList(payAgentRechargeAccount);
+    public List<PayAgentRechargeAccount> selectPayAgentRechargeAccountList(PayAgentRechargeAccount payAcc) {
+        String imagentCode =  "im_"+agentCode+"_2_";
+        Map<String,Object> map = new HashMap<>();
+        map.put("payAcc",payAcc);
+        map.put("imagentCode",imagentCode);
+        return payAgentRechargeAccountMapper.selectPayAgentRechargeAccountList(map);
     }
 
     /**
