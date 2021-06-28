@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
-import com.qiqilm.server.admin.enums.BankCodeShangYinType;
 import com.qiqilm.server.admin.enums.BankCodeYiXinType;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
@@ -22,15 +21,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -42,6 +37,7 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         BankCodeYiXinType bankCodeType = BankCodeYiXinType.getCodeByDesc(withdrawLog.getBankName());
         if (bankCodeType == null) {
+            payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             log.warn("此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
             throw new BusinessException("此代付无法支持的银行类型：" + withdrawLog.getBankName());
         }
@@ -92,6 +88,8 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
                     return true;
                 }
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+
+                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
         log.warn("亿信代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -135,7 +133,7 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> dataMap = new TreeMap<>();
@@ -164,23 +162,26 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
                         return JsonUtil.json2Map( text );
                     } );
             log.info("亿信代付查询结果 - listResult:{}", JsonUtil.object2Json(resultMap));
-            if (!CollectionUtils.isEmpty(resultMap) && "200".equals(resultMap.getOrDefault("ret", "").toString())) {
-                int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
-                // status 4代付中 5代付失败 6代付成功
-                // statusType 订单状态: 0.代付中 1.代付中 2.代付成功 3.代付失败 4.审核失败
-                if (statusType == 3 || statusType == 4 || statusType == 2) {
-                    int status = 4;
-                    if (statusType == 2) {
-                        status = 6;
-                    } else {
-                        status = 5;
+            if (!CollectionUtils.isEmpty(resultMap)){
+                if("200".equals(resultMap.getOrDefault("ret", "").toString())) {
+                    int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
+                    // status 4代付中 5代付失败 6代付成功
+                    // statusType 订单状态: 0.代付中 1.代付中 2.代付成功 3.代付失败 4.审核失败
+                    if (statusType == 3 || statusType == 4 || statusType == 2) {
+                        int status = 4;
+                        if (statusType == 2) {
+                            status = 6;
+                        } else {
+                            status = 5;
+                        }
+                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                    return;
                 }
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return "亿信代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

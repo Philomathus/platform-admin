@@ -5,14 +5,13 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
-import com.qiqilm.server.admin.enums.BankCodeLangYaType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,11 +19,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Repository(value = ConstantsPayAgent.HEZHONG + "PayAgentProcessor")
 @Log4j2
@@ -70,7 +69,7 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                 //大写(md5(app_key=值&money=值&out_trade_sn=值&status=值&商户token))
                 String resultSign = dataMap.remove("sign").toString();
                 SortedMap<String, Object> signMap = new TreeMap<>(dataMap);
-                String tempTwo= this.assemblyUrl(signMap) + "&" + signMd5;
+                String tempTwo = this.assemblyUrl(signMap) + "&" + signMd5;
                 String signTwo = DigestUtils.md5Hex(tempTwo).toUpperCase();
                 if (resultSign.equals(signTwo) && "3".equals(status)) {
                     log.info("合众代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
@@ -79,6 +78,8 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                 log.info("合众代付返回验签失败 - orderNo:{}", withdrawLog.getOrderNo());
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         return false;
@@ -124,7 +125,7 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> paramsMap = new TreeMap<>();
@@ -169,13 +170,14 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                                 status = 5;
                             }
                             payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                            return;
                         }
                     }
                 }
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return "合众代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

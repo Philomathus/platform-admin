@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
 import com.qiqilm.server.admin.mapper.PayAgentLogMapper;
 import com.qiqilm.server.admin.mapper.PayAgentPlatformMapper;
@@ -110,7 +111,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 					try {
 						log.warn( "开始批量查询代付订单 - 订单号：{}，PayAgentPlatId：{},PayAgentPlatCode:{}", payAgentLog.getWithdrawOrderNo(),
 								payAgentLog.getPayAgentPlatId(), payAgentPlatform.getCode() );
-						basePayAgent.queryOrderPay( payAgentLog );
+						String a = basePayAgent.queryOrderPay( payAgentLog );
 					} catch ( Exception e ) {
 						log.error( e.getMessage(), e );
 					}
@@ -364,5 +365,23 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			payAgentLogMapper.updatePayAgentLog( newPayAgentLog );
 		}
 		log.warn( JsonUtil.object2Json( newPayAgentLog ) );
+	}
+
+	@Override
+	@Transactional( rollbackFor = Exception.class )
+	public void callBackOrder( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform ) {
+		// 更改withdrawLog状态
+		MemberWithdrawLog newWithdrawLog = new MemberWithdrawLog();
+		newWithdrawLog.setId( withdrawLog.getId() );
+		newWithdrawLog.setStatus( 1 );
+		newWithdrawLog.setUpdateTime( new Date() );
+		newWithdrawLog.setRemark( String.format( "请求代付[%s]不成功",payAgentPlatform.getName() ) );
+		int updateW = withdrawLogMapper.updateMemberWithdrawLog( newWithdrawLog );
+
+		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( withdrawLog.getOrderNo() );
+		int         deleteP     = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
+		if ( updateW <= 0 || deleteP <= 0 ){
+			throw new BusinessException( "代付状态回退失败" );
+		}
 	}
 }
