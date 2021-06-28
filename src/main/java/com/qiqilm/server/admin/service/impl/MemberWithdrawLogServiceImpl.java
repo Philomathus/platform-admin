@@ -275,7 +275,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
 	@Override
 	public AjaxResult queryStatus( ReqMemberWithdrawLog req ) {
-		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo(req.getId());
+		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo(req.getOrderNo());
 		if ( payAgentLog == null ) {
 			return AjaxResult.error( "代付订单不存在" );
 		}
