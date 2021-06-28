@@ -9,4 +9,5 @@ public class ReqMemberWithdrawLog {
 	private String       id;
 	private List<String> ids;
 	private String       remark;
+	private String       orderNo;
 }
