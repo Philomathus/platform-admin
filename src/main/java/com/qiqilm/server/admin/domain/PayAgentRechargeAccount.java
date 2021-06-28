@@ -39,6 +39,10 @@ public class PayAgentRechargeAccount extends BaseEntity {
     @Excel(name = "代充次数")
     private Integer rechargeNum;
 
+    /** IM账号 */
+    @Excel(name = "IM账号")
+    private String imAccount;
+
     /** QQ号 */
     @Excel(name = "QQ号")
     private String qqAccount;
