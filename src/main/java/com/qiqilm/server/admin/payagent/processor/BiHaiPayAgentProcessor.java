@@ -162,7 +162,7 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-		return "宾利2代付查询失败,订单号:" + withdrawLog.getOrderNo();
+		return "碧海代付查询失败,订单号:" + withdrawLog.getOrderNo();
 	}
 
 	/*public static void main(String[] args) {
