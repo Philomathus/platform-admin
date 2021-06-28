@@ -294,7 +294,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return AjaxResult.success(msg);
+		return AjaxResult.success(payAgentPlatform.getName()+":"+msg);
 	}
 
 	@Override
