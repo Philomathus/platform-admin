@@ -1,10 +1,10 @@
 package com.qiqilm.server.admin.mapper;
 
-import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -24,10 +24,10 @@ public interface PayAgentRechargeAccountMapper {
 	/**
 	 * 查询【请填写功能名称】列表
 	 *
-	 * @param payAgentRechargeAccount 【请填写功能名称】
+	 * @param map 【请填写功能名称】
 	 * @return 【请填写功能名称】集合
 	 */
-	public List<PayAgentRechargeAccount> selectPayAgentRechargeAccountList(PayAgentRechargeAccount payAgentRechargeAccount);
+	public List<PayAgentRechargeAccount> selectPayAgentRechargeAccountList(Map<String,Object> map);
 
 	/**
 	 * 新增【请填写功能名称】
@@ -65,5 +65,8 @@ public interface PayAgentRechargeAccountMapper {
 
     void updateGoogle(PayAgentRechargeAccount payAgentRechargeAccount);
 
-    PayAgentRechargeAccount selectPayAgentRechargeAccount(@Param("account") String account);
+	void updatePassword(@Param("id") String id,@Param("password") String password);
+
+	PayAgentRechargeAccount selectPayAgentRechargeAccount(@Param("account") String account);
+
 }
