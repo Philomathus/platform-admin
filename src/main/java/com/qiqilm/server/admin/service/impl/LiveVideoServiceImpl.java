@@ -69,6 +69,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	@Value( "${live.encrypt.privateKey}" )
 	private String liveRsaPrivateKey;
 
+	@Value( "${spring.profiles.active}" )
+	private String profile;
+
 	/**
 	 * 查询直播
 	 *
@@ -197,6 +200,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		this.closeVideoIMNotify( video, isAborted, why );
 
 		RedisCacheUtil.me.clear( id, LiveVideo.class );
+		if(profile.equals("7701")){
+			liveVideoMapper.updateLive7706Video( updateVideo );
+		}
+
 		return false;
 	}
 
