@@ -52,5 +52,9 @@ public class MemberGameDatafixServiceImpl implements IMemberGameDatafixService {
         return memberGameDatafixMapper.deleteMemberGameDatafixById(id);
     }
 
+    @Override
+    public MemberGameDatafix selectMemberGameDatafixById(String id) {
+        return memberGameDatafixMapper.selectMemberGameDatafixById(id);
+    }
 
 }

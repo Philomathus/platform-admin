@@ -56,19 +56,16 @@ public class LotteryDataTask {
             return;
         }
 
-        if(!profile.startsWith("77")||profile.equals("7700")){
+        if(!profile.startsWith("77")){
             return;
         }
-        String lottery_telegram = sysConfigCacheUtil.getConf( "lottery_telegram" );
-        if (Strings.isBlank(lottery_telegram)){
-            return;
-        }
+
         Date endDay  = new Date();
         Date starDay = DateFormatUtils.addMin( endDay, -3);
         String start = DateFormatUtils.formate( starDay );
         String end = DateFormatUtils.formate( endDay );
         try {
-            gameDataLogService.beatLotteryCode(lottery_telegram,platformTypeId,beatRate,start,end);
+            gameDataLogService.beatLotteryCode(null,platformTypeId,beatRate,start,end);
         }catch (Exception e){
             log.error("彩票拉取注单异常,",e);
         }

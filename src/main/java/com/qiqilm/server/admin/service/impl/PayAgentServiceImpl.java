@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
 import com.qiqilm.server.admin.mapper.PayAgentLogMapper;
 import com.qiqilm.server.admin.mapper.PayAgentPlatformMapper;
@@ -110,7 +111,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 					try {
 						log.warn( "开始批量查询代付订单 - 订单号：{}，PayAgentPlatId：{},PayAgentPlatCode:{}", payAgentLog.getWithdrawOrderNo(),
 								payAgentLog.getPayAgentPlatId(), payAgentPlatform.getCode() );
-						basePayAgent.queryOrderPay( payAgentLog );
+						String a = basePayAgent.queryOrderPay( payAgentLog );
 					} catch ( Exception e ) {
 						log.error( e.getMessage(), e );
 					}
@@ -195,14 +196,24 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
 
-		if ( !redisUtil.lock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo(), "1", 360 ) ) {
+		if ( !redisUtil.lock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo(), "1", 10 ) ) {
 			return AjaxResult.error( "请勿重复提交代付订单:" + reqPayAgent.getWithdrawOrderNo() );
 		}
 
+		int noFailCount = payAgentLogMapper.countNoFail( withdrawLog.getOrderNo() );
+		if ( noFailCount > 0 ) {
+			return AjaxResult.error( "此订单已被代付，请在三方后台跟踪订单状态" );
+		}
+		int platOrderCount = payAgentLogMapper.countPlatOrderNo( withdrawLog.getOrderNo(), reqPayAgent.getPayAgentPlatId() );
+		if ( platOrderCount > 0 ) {
+			return AjaxResult.error( String.format( "此订单已被 %s 处理过，请更换代付商后重试", payAgentPlatform.getName() ) );
+		}
+
 		reqPayAgent.setCurrentTime( new Date() );
+		this.processOrder( payAgentPlatform, withdrawLog, reqPayAgent.getCurrentTime(), 4, 0 );
+
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 		if ( basePayAgent.orderPay( withdrawLog, payAgentPlatform, reqPayAgent ) ) {
-			this.processOrder( payAgentPlatform, withdrawLog, reqPayAgent.getCurrentTime(), 4, 0 );
 			return AjaxResult.success( "代付订单提交成功" );
 		}
 
@@ -254,12 +265,25 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		Map<String, String> failReasonList = new TreeMap<>();
 		int                 sucessNum      = 0;
 		for ( MemberWithdrawLog withdrawLog : withdrawLogs ) {
+			int noFailCount = payAgentLogMapper.countNoFail( withdrawLog.getOrderNo() );
+			if ( noFailCount > 0 ) {
+				failReasonList.put( withdrawLog.getOrderNo(), "此订单已被代付，请在三方后台跟踪订单状态" );
+				continue;
+			}
+			int platOrderCount = payAgentLogMapper.countPlatOrderNo( withdrawLog.getOrderNo(), reqPayAgent.getPayAgentPlatId() );
+			if ( platOrderCount > 0 ) {
+				failReasonList.put( withdrawLog.getOrderNo(), String.format( "此订单已被 %s 处理过，请更换代付商后重试",
+						payAgentPlatform.getName() ) );
+				continue;
+			}
+
 			ReqPayAgent newReqPayAgent = new ReqPayAgent();
 			newReqPayAgent.setCurrentTime( new Date() );
 			newReqPayAgent.setWithdrawOrderNo( withdrawLog.getOrderNo() );
 			try {
+				this.processOrder( payAgentPlatform, withdrawLog, newReqPayAgent.getCurrentTime(), 4, 0 );
+
 				if ( basePayAgent.orderPay( withdrawLog, payAgentPlatform, newReqPayAgent ) ) {
-					this.processOrder( payAgentPlatform, withdrawLog, newReqPayAgent.getCurrentTime(), 4, 0 );
 					sucessNum++;
 				} else {
 					failReasonList.put( withdrawLog.getOrderNo(), newReqPayAgent.getFailReason() );
@@ -278,7 +302,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 							  Date now, int status, int orderState ) {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectMemberWithdrawLogById( memberWithdrawLog.getId() );
 		PayAgentLog       payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
-		if ( !(withdrawLog.getStatus() == 1 || withdrawLog.getStatus() == 4) ) {
+		if ( !( withdrawLog.getStatus() == 1 || withdrawLog.getStatus() == 4 ) ) {
 			throw new BaseException( "审核流程非法" );
 		}
 		// 更改withdrawLog状态
@@ -341,5 +365,23 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			payAgentLogMapper.updatePayAgentLog( newPayAgentLog );
 		}
 		log.warn( JsonUtil.object2Json( newPayAgentLog ) );
+	}
+
+	@Override
+	@Transactional( rollbackFor = Exception.class )
+	public void callBackOrder( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform ) {
+		// 更改withdrawLog状态
+		MemberWithdrawLog newWithdrawLog = new MemberWithdrawLog();
+		newWithdrawLog.setId( withdrawLog.getId() );
+		newWithdrawLog.setStatus( 1 );
+		newWithdrawLog.setUpdateTime( new Date() );
+		newWithdrawLog.setRemark( String.format( "请求代付[%s]不成功",payAgentPlatform.getName() ) );
+		int updateW = withdrawLogMapper.updateMemberWithdrawLog( newWithdrawLog );
+
+		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( withdrawLog.getOrderNo() );
+		int         deleteP     = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
+		if ( updateW <= 0 || deleteP <= 0 ){
+			throw new BusinessException( "代付状态回退失败" );
+		}
 	}
 }

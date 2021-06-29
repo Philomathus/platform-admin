@@ -2,18 +2,16 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.domain.BankCardAddress;
-import com.qiqilm.server.admin.domain.MemberWithdrawLog;
-import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.exception.BusinessException;
-import com.qiqilm.server.admin.mapper.MemberInfoMapper;
-import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
-import com.qiqilm.server.admin.service.IBankCardAddressService;
+import com.qiqilm.server.admin.mapper.*;
+import com.qiqilm.server.admin.payagent.BasePayAgent;
+import com.qiqilm.server.admin.payagent.PayAgentProcessorFactoryUtil;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
 import com.qiqilm.server.admin.utils.PhoneUtil;
@@ -43,13 +41,19 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	@Autowired
 	private MemberInfoMapper        memberInfoMapper;
 	@Autowired
+	private PayAgentLogMapper       payAgentLogMapper;
+	@Autowired
+	private PayAgentPlatformMapper       payAgentPlatformMapper;
+	@Autowired
+	private BankCardAddressMapper   bankCardAddressMapper;
+	@Autowired
 	private TokenService            tokenService;
 	@Autowired
 	private ILogService             logService;
 	@Autowired
 	private RedisUtil               redisUtil;
 	@Autowired
-	private IBankCardAddressService bankCardAddressService;
+	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
 
 	/**
 	 * 查询会员提现信息
@@ -90,7 +94,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
 		BankCardAddress bankCardAddress = new BankCardAddress();
 		bankCardAddress.setStatus( "1" );
-		List<BankCardAddress> bankCardAddresses = bankCardAddressService.selectBankCardAddressList( bankCardAddress );
+		List<BankCardAddress> bankCardAddresses = bankCardAddressMapper.selectBankCardAddressList( bankCardAddress );
 		if ( !CollectionUtils.isEmpty( memberWithdrawLogList ) && !CollectionUtils.isEmpty( bankCardAddresses ) ) {
 			for ( MemberWithdrawLog me : memberWithdrawLogList ) {
 				if ( !StringUtils.isEmpty( me.getRealBankAddress() ) ) {
@@ -233,6 +237,60 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
 		redisUtil.unLock( EnumLock.adminUser, userName );
 		return AjaxResult.success();
+	}
+
+	@Override
+	@Transactional( rollbackFor = Exception.class )
+	public AjaxResult back( ReqMemberWithdrawLog req ) {
+		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
+		if ( memberWithdrawLog == null ) {
+			return AjaxResult.error( "订单不存在" );
+		}
+		if ( memberWithdrawLog.getStatus() != 4 ) {
+			return AjaxResult.error( "该订单状态不是代付中" );
+		}
+		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
+		if ( payAgentLog != null ) {
+			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
+			if ( i <= 0 ) {
+				return AjaxResult.error( "代付记录删除失败，请重试！" );
+			}
+		}
+
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String    userName  = loginUser.getUser().getUserName();
+
+		MemberWithdrawLog newMemberWithdrawLog = new MemberWithdrawLog();
+		newMemberWithdrawLog.setId( memberWithdrawLog.getId() );
+		newMemberWithdrawLog.setRemark( "由" + userName + "操作回退" );
+		newMemberWithdrawLog.setStatus( 1 );
+		newMemberWithdrawLog.setOpName( userName );
+
+		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( newMemberWithdrawLog );
+		if ( i > 0 ) {
+			return AjaxResult.success();
+		}
+		throw new BusinessException( "回退订单状态失败" );
+	}
+
+	@Override
+	public AjaxResult queryStatus( ReqMemberWithdrawLog req ) {
+		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo(req.getOrderNo());
+		if ( payAgentLog == null ) {
+			return AjaxResult.error( "代付订单不存在" );
+		}
+		PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
+		if ( payAgentPlatform == null ) {
+			return AjaxResult.error( "此代付平台不存在" );
+		}
+		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
+		String msg = null;
+		try {
+			msg = basePayAgent.queryOrderPay( payAgentLog );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return AjaxResult.success(msg);
 	}
 
 	@Override

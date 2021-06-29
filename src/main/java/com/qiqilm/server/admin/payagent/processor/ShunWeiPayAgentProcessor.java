@@ -6,13 +6,9 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeShunWeiType;
-import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
-import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Repository;
@@ -35,6 +31,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 	public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
 		BankCodeShunWeiType bankCodeType = BankCodeShunWeiType.getCodeByDesc( withdrawLog.getBankName() );
 		if ( bankCodeType == null ) {
+			payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			log.warn( "顺为代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
 			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
 		}
@@ -79,22 +76,24 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		}
 		log.info( "顺为代付下单结果{}",result );
 		Map<String, String> resultMap = JsonUtil.json2Map( result );
-		if ( !CollectionUtils.isEmpty( resultMap ) && "200".equals( resultMap.get( "state_code" ) ) ) {
-			resultMap.remove( "state_code" );
-			resultMap.remove( "message" );
-			String              resultSign = resultMap.remove( "sign" );
-			String              randNum    = resultMap.get( "random_str" );
-			Map<String, String> param      = paramSort( resultMap, randNum );
-			String              temp       = JsonUtil.object2Json( param );
-			String              reSign     = DigestUtils.md5Hex( temp.concat( signMd5 ) );
-			if ( !org.apache.commons.lang3.StringUtils.equalsIgnoreCase( resultSign, reSign ) ) {
-				return false;
+		if (!CollectionUtils.isEmpty(resultMap)) {
+			if ("200".equals(resultMap.get("state_code"))) {
+				resultMap.remove("state_code");
+				resultMap.remove("message");
+				String resultSign = resultMap.remove("sign");
+				String randNum = resultMap.get("random_str");
+				Map<String, String> param = paramSort(resultMap, randNum);
+				String temp = JsonUtil.object2Json(param);
+				String reSign = DigestUtils.md5Hex(temp.concat(signMd5));
+				if (!org.apache.commons.lang3.StringUtils.equalsIgnoreCase(resultSign, reSign)) {
+					return false;
+				}
+				log.info("顺为代付订单提交成功，orderNo：{}", withdrawLog.getOrderNo());
+				return true;
+			}else{
+				reqPayAgent.setFailReason(resultMap.getOrDefault("message",""));
+				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
-			log.info("顺为代付订单提交成功，orderNo：{}", withdrawLog.getOrderNo());
-			return true;
-		}
-		if ( !CollectionUtils.isEmpty( resultMap ) && resultMap.get( "message" ) != null ) {
-			reqPayAgent.setFailReason( resultMap.get( "message" ) );
 		}
 		log.warn( "顺为代付订单提交失败 - orderNo:{},result:{}", withdrawLog.getOrderNo(),JsonUtil.object2Json( resultMap ) );
 		return false;
@@ -245,7 +244,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 	}
 
 	@Override
-	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
+	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
 		MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
 		PayAgentPlatform    payAgentPlatform =
 				payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
@@ -278,33 +277,37 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 			e.printStackTrace();
 		}
 		log.warn("顺为代付订单查询结果 - result:{}", result);
-		Map<String, String> jsonObject = JsonUtil.json2Map( result );
-		String              stateCode  = jsonObject.remove( "state_code" );
-		if ( org.apache.commons.lang3.StringUtils.equals( "200", stateCode ) ) {
-			String              resultSign = jsonObject.remove( "sign" );
-			Map<String, String> signMap    = new TreeMap<>( jsonObject );
-			String              randNum    = signMap.getOrDefault( "random_str", "" );
-			Map<String, String> param      = paramSort( signMap, randNum );
-			String              signStr    = JsonUtil.object2Json( param );
-			String              reSign     = DigestUtils.md5Hex( signStr.concat( signMd5 ) );
-			if ( org.apache.commons.lang3.StringUtils.equals( resultSign, reSign ) ) {
-				String remit_state_code = jsonObject.getOrDefault( "remit_state_code", "" );
-				// status 4代付中5代付失败6代付成功
-				// orderState (0=处理中，1=成功，2=失败)
-				int status     = 4;
-				int orderState = 0;
-				if ( "SUCCESS".equals( remit_state_code ) ) {
-					status = 6;
-					orderState = 1;
+		if (StringUtils.isNotBlank(result)) {
+			Map<String, String> jsonObject = JsonUtil.json2Map(result);
+			if (!CollectionUtils.isEmpty(jsonObject)) {
+				String stateCode = jsonObject.remove("state_code");
+				if (org.apache.commons.lang3.StringUtils.equals("200", stateCode)) {
+					String resultSign = jsonObject.remove("sign");
+					Map<String, String> signMap = new TreeMap<>(jsonObject);
+					String randNum = signMap.getOrDefault("random_str", "");
+					Map<String, String> param = paramSort(signMap, randNum);
+					String signStr = JsonUtil.object2Json(param);
+					String reSign = DigestUtils.md5Hex(signStr.concat(signMd5));
+					if (org.apache.commons.lang3.StringUtils.equals(resultSign, reSign)) {
+						String remit_state_code = jsonObject.getOrDefault("remit_state_code", "");
+						// status 4代付中5代付失败6代付成功
+						// orderState (0=处理中，1=成功，2=失败)
+						int status = 4;
+						int orderState = 0;
+						if ("SUCCESS".equals(remit_state_code)) {
+							status = 6;
+							orderState = 1;
+						}
+						if ("FAILED".equals(remit_state_code)) {
+							status = 5;
+							orderState = 2;
+						}
+						payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
+					}
 				}
-				if ( "FAILED".equals( remit_state_code ) ) {
-					status = 5;
-					orderState = 2;
-				}
-				payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState );
-				return;
+				return result;
 			}
 		}
-		log.warn( "顺为代付订单查询失败 - result:{}", result );
+		return "顺为代付查询失败,订单号:" + withdrawLog.getOrderNo();
 	}
 }

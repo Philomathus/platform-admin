@@ -14,6 +14,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.support.ManagedArray;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
@@ -86,6 +86,8 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+
+                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
         log.warn("久久代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -131,10 +133,9 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
-
         try {
             Map<String, Object> resultMap = null;
             resultMap = restTemplate.execute(payAgentPlatform.getPayOrderQueryAddr() + "?order_id=" + withdrawLog.getOrderNo(), HttpMethod.GET,
@@ -149,7 +150,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
             log.info("久久代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = String.valueOf(resultMap.getOrDefault("code", "").toString());
-                int data = Integer.parseInt((resultMap.getOrDefault("data", "").toString()));
+                int data = Integer.parseInt((resultMap.getOrDefault("data", -1).toString()));
                 //status 4代付中 5代付失败 6代付成功
                 //code: 0成功(已支付)   1失败(订单未找到,未支付,已驳回,冲正驳回)
                 //data: 订单状态(-1:订单未找到 0:未支付 1:已支付 2:已驳回 3:冲正驳回)
@@ -160,10 +161,11 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
                     status = 5;
                 }
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, data);
-                return;
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return "久久代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

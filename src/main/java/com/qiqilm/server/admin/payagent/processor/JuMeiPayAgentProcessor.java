@@ -43,7 +43,7 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        String sign = createSign(bodyMap,signMd5);
+        String sign = createSign(bodyMap, signMd5);
         bodyMap.put("sign", sign);
         bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JUMEI);
 
@@ -67,6 +67,8 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.warn("聚美代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -75,9 +77,9 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-        String sn = requestMap.getOrDefault("sn","").toString();
-        String out_sn = requestMap.getOrDefault("out_sn","").toString();
-        String money = requestMap.getOrDefault("money","").toString();
+        String sn = requestMap.getOrDefault("sn", "").toString();
+        String out_sn = requestMap.getOrDefault("out_sn", "").toString();
+        String money = requestMap.getOrDefault("money", "").toString();
         String trade_status = requestMap.getOrDefault("trade_status", "").toString();
         String encryption = requestMap.remove("encryption").toString();
 
@@ -90,7 +92,7 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        String sign = createSign(bodyMap,signMd5);
+        String sign = createSign(bodyMap, signMd5);
 
         log.info("聚美代付回调签名字符串:" + encryption + "_" + sign);
         if (encryption.equalsIgnoreCase(sign)) {
@@ -117,7 +119,7 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, String> paramsMap = new HashMap<>(2);
@@ -127,7 +129,7 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        String sign = createSign(paramsMap,signMd5);
+        String sign = createSign(paramsMap, signMd5);
         paramsMap.put("sign", sign);
 
         MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
@@ -156,13 +158,14 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
                             status = 5;
                         }
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                        return;
                     }
                 }
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return "聚美代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 
     public static String createSign(Map<String, String> paramsMap, String signPrivate) {

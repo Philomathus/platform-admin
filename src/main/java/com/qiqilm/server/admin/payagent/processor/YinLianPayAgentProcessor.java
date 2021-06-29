@@ -35,6 +35,7 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         BankCodeYinLianType bankCodeType = BankCodeYinLianType.getCodeByDesc(withdrawLog.getBankName());
         if (bankCodeType == null) {
+            payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             log.warn("此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
             throw new BusinessException("此代付无法支持的银行类型：" + withdrawLog.getBankName());
         }
@@ -83,6 +84,8 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.warn("银联代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -92,7 +95,7 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
-        Map<String, Object> dataMap = (Map<String, Object>)requestMap.get("data");
+        Map<String, Object> dataMap = (Map<String, Object>) requestMap.get("data");
         String status = dataMap.getOrDefault("status", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(dataMap);
 
@@ -129,7 +132,7 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> paramsMap = new TreeMap<>();
@@ -170,12 +173,13 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
                             status = 5;
                         }
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
-                        return;
                     }
                 }
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return "银联代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }

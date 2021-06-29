@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -66,14 +67,16 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( JsonUtil.json2Map( resultStr ) );
+		log.warn( "咪咪代付下单结果:" + JsonUtil.json2Map( resultStr ) );
 		dataMap.clear();
 		dataMap = JsonUtil.json2Map( resultStr );
-		if ( org.apache.commons.lang3.StringUtils.equals( "0", dataMap.get( "status" ) ) &&
-				org.apache.commons.lang3.StringUtils.equals( "成功", dataMap.get( "msg" ) ) ) {
+		if ( StringUtils.equals( "0", dataMap.get( "status" ) ) ) {
+			log.warn( "咪咪代付订单提交失败" );
 			return true;
+		}else{
+			reqPayAgent.setFailReason(dataMap.getOrDefault("msg", "").toString());
 		}
-		log.warn( "代付订单提交失败" );
+		log.warn( "咪咪代付订单提交失败" );
 		return false;
 	}
 
@@ -94,6 +97,8 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 
 		String sb = "orderid=" + orderId + "&opstate=" + requestMap.get( "opstate" ) + "&ovalue=" + requestMap.get( "ovalue" ) +
 				signMd5;
+
+		log.warn( "咪咪代付回调签名字符串:{}",sign + "_" + sb );
 		if ( org.apache.commons.lang3.StringUtils.equals( sign, DigestUtils.md5Hex( sb ) ) ) {
 			int status = Integer.parseInt( requestMap.get( "opstate" ).toString() );
 			MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( orderId );
@@ -119,7 +124,7 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 	}
 
 	@Override
-	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-
+	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
+       return "咪咪代付无查询";
 	}
 }

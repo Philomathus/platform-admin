@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="nickName"    column="nick_name"    />
         <result property="balanceAmount"    column="balance_amount"    />
         <result property="rechargeNum"    column="recharge_num"    />
+        <result property="imAccount"    column="im_account"    />
         <result property="qqAccount"    column="qq_account"    />
         <result property="wechatAccount"    column="wechat_account"    />
         <result property="alipayAccount"    column="alipay_account"    />
@@ -25,26 +26,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPayAgentRechargeAccountVo">
-        select id, account, nick_name, balance_amount, recharge_num, qq_account, wechat_account, alipay_account, mobile, business_begin_time, business_end_time, recharge_discount_rate, status, show_status, create_time, before_login_time, login_time from pay_agent_recharge_account
+        select id, account, nick_name, balance_amount, recharge_num, im_id im_account, qq_account, wechat_account, alipay_account, mobile, business_begin_time, business_end_time, recharge_discount_rate, status, show_status, create_time, before_login_time, login_time from pay_agent_recharge_account
     </sql>
 
-    <select id="selectPayAgentRechargeAccountList" parameterType="PayAgentRechargeAccount" resultMap="PayAgentRechargeAccountResult">
-        <include refid="selectPayAgentRechargeAccountVo"/>
+    <select id="selectPayAgentRechargeAccountList" parameterType="java.util.Map" resultMap="PayAgentRechargeAccountResult">
+        select id,CONCAT(#{imagentCode},id) im_account, account, nick_name, balance_amount, recharge_num,
+        qq_account, wechat_account, alipay_account, mobile, business_begin_time, business_end_time,
+        recharge_discount_rate, status, show_status, create_time, before_login_time, login_time
+        from pay_agent_recharge_account
         <where>
-            <if test="account != null  and account != ''"> and account = #{account}</if>
-            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="balanceAmount != null "> and balance_amount = #{balanceAmount}</if>
-            <if test="rechargeNum != null "> and recharge_num = #{rechargeNum}</if>
-            <if test="qqAccount != null  and qqAccount != ''"> and qq_account = #{qqAccount}</if>
-            <if test="wechatAccount != null  and wechatAccount != ''"> and wechat_account = #{wechatAccount}</if>
-            <if test="alipayAccount != null  and alipayAccount != ''"> and alipay_account = #{alipayAccount}</if>
-            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
-            <if test="businessBeginTime != null "> and business_begin_time = #{businessBeginTime}</if>
-            <if test="businessEndTime != null "> and business_end_time = #{businessEndTime}</if>
-            <if test="rechargeDiscountRate != null "> and recharge_discount_rate = #{rechargeDiscountRate}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="beforeLoginTime != null "> and before_login_time = #{beforeLoginTime}</if>
-            <if test="loginTime != null "> and login_time = #{loginTime}</if>
+            <if test="payAcc.account != null  and payAcc.account != ''"> and account = #{payAcc.account}</if>
+            <if test="payAcc.nickName != null  and payAcc.nickName != ''"> and nick_name like concat('%', #{payAcc.nickName}, '%')</if>
+            <if test="payAcc.balanceAmount != null "> and balance_amount = #{payAcc.balanceAmount}</if>
+            <if test="payAcc.rechargeNum != null "> and recharge_num = #{payAcc.rechargeNum}</if>
+            <if test="payAcc.imAccount != null  and payAcc.imAccount != ''"> and im_account = #{payAcc.imAccount}</if>
+            <if test="payAcc.qqAccount != null  and payAcc.qqAccount != ''"> and qq_account = #{payAcc.qqAccount}</if>
+            <if test="payAcc.wechatAccount != null  and payAcc.wechatAccount != ''"> and wechat_account = #{payAcc.wechatAccount}</if>
+            <if test="payAcc.alipayAccount != null  and payAcc.alipayAccount != ''"> and alipay_account = #{payAcc.alipayAccount}</if>
+            <if test="payAcc.mobile != null  and payAcc.mobile != ''"> and mobile = #{payAcc.mobile}</if>
+            <if test="payAcc.businessBeginTime != null "> and business_begin_time = #{payAcc.businessBeginTime}</if>
+            <if test="payAcc.businessEndTime != null "> and business_end_time = #{payAcc.businessEndTime}</if>
+            <if test="payAcc.rechargeDiscountRate != null "> and recharge_discount_rate = #{payAcc.rechargeDiscountRate}</if>
+            <if test="payAcc.status != null "> and status = #{payAcc.status}</if>
+            <if test="payAcc.beforeLoginTime != null "> and before_login_time = #{payAcc.beforeLoginTime}</if>
+            <if test="payAcc.loginTime != null "> and login_time = #{payAcc.loginTime}</if>
         </where>
     </select>
 
@@ -133,4 +138,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateGoogle">
         update pay_agent_recharge_account set google_auth_secret = #{googleAuthSecret} where id=#{id}
     </update>
+    <update id="updatePassword">
+        update ${dbOim}.w_user set password = #{password} where id=#{id}
+    </update>
+    <select id="selectPayAgentRechargeAccount" parameterType="String"  resultMap="PayAgentRechargeAccountResult">
+        <include refid="selectPayAgentRechargeAccountVo"/>
+        where account = #{account}
+    </select>
 </mapper>

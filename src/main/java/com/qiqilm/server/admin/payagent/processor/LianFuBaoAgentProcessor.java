@@ -21,7 +21,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Timestamp;
 import java.util.*;
 
 @Repository( value = ConstantsPayAgent.LIAN_FU_BAO + "PayAgentProcessor" )
@@ -31,6 +30,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 	public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
 		BankCodeLianFuBaoType bankCodeType = BankCodeLianFuBaoType.getCodeByDesc( withdrawLog.getBankName() );
 		if ( bankCodeType == null ) {
+			payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			log.warn( "此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
 			throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
 		}
@@ -73,15 +73,18 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
+		log.info( "联付宝代付下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
 		if ( !CollectionUtils.isEmpty( resultMap ) ) {
 			if ( "200".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
-				log.info( "代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
+				log.info( "联付宝代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
 				return true;
 			} else {
 				reqPayAgent.setFailReason( resultMap.getOrDefault( "message", "" ).toString() );
+
+				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
-		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		log.warn( "联付宝代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
 		return false;
 	}
 
@@ -189,7 +192,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 	}
 
 	@Override
-	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
+	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
 		PayAgentPlatform payAgentPlatform =
 				payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
@@ -224,34 +227,30 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( JsonUtil.object2Json( resultMap ) );
-		if ( !CollectionUtils.isEmpty( resultMap )
-				&& "200".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
-			log.info( "代付订单查询成功" );
-			Map<String, Object> resultDataMap = ( Map<String, Object> ) resultMap.getOrDefault( "data", new HashMap<>() );
-
-			int orderState = Integer.parseInt( resultDataMap.getOrDefault( "orderState", 0 ).toString() );
-
-			// status 4代付中5代付失败6代付成功
-			// orderState (0=处理中，1=成功，2=失败)
-
-			int status = 4;
-			switch ( orderState ) {
-			case 1:
-				status = 6;
-				break;
-			case 2:
-				status = 5;
-				break;
-			default:
-				break;
-			}
-
-			log.warn( "orderState:{}", orderState );
-
-			payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState );
-			return;
+		log.info( "联付宝代付查询结果 - result:{}", JsonUtil.object2Json( resultMap ) );
+		if (!CollectionUtils.isEmpty( resultMap )){
+				if("200".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
+					log.info("联付宝代付订单查询成功");
+					Map<String, Object> resultDataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());
+					int orderState = Integer.parseInt(resultDataMap.getOrDefault("orderState", 0).toString());
+					// status 4代付中5代付失败6代付成功
+					// orderState (0=处理中，1=成功，2=失败)
+					int status = 4;
+					switch (orderState) {
+						case 1:
+							status = 6;
+							break;
+						case 2:
+							status = 5;
+							break;
+						default:
+							break;
+					}
+					log.warn("orderState:{}", orderState);
+					payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
+				}
+			return JsonUtil.object2Json(resultMap);
 		}
-		log.warn( "代付订单查询失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		return "联付宝代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}
 }

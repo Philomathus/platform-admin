@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.domain.LogMoney;
 import com.qiqilm.server.admin.domain.MemberActionLogs;
 import com.qiqilm.server.admin.enums.EnumAction;
 import com.qiqilm.server.admin.enums.EnumMoney;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LogMoneyMapper;
 import com.qiqilm.server.admin.mapper.MemberActionLogsMapper;
 import com.qiqilm.server.admin.service.ILogService;
@@ -51,10 +52,16 @@ public class LogServiceImpl implements ILogService {
 		log.setDes( enumTrans.getDes() );
 		log.setMark( mark );
 		log.setMarkorder( markorder );
-		logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		int insertM = logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		if ( insertM <= 0 ) {
+			throw new BusinessException( "资金日志插入失败" );
+		}
 		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
 				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
-			logMoneyMapper.insertLogMoney( log, "" );
+			int insertM2 = logMoneyMapper.insertLogMoney( log, "" );
+			if ( insertM2 <= 0 ) {
+				throw new BusinessException( "资金日志插入失败" );
+			}
 		}
 	}
 
@@ -87,10 +94,16 @@ public class LogServiceImpl implements ILogService {
 		log.setDes( enumTrans.getDes() );
 		log.setMark( name );
 		log.setMarkorder( orderId );
-		logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		int insertM = logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		if ( insertM <= 0 ) {
+			throw new BusinessException( "资金日志插入失败" );
+		}
 		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
 				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
-			logMoneyMapper.insertLogMoney( log, "" );
+			int insertM2 = logMoneyMapper.insertLogMoney( log, "" );
+			if ( insertM2 <= 0 ) {
+				throw new BusinessException( "资金日志插入失败" );
+			}
 		}
 	}
 
@@ -114,10 +127,16 @@ public class LogServiceImpl implements ILogService {
 		log.setTotalBefore( old );
 		log.setMark( mark );
 		log.setMarkorder( markorder );
-		logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		int insertM = logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		if ( insertM <= 0 ) {
+			throw new BusinessException( "资金日志插入失败" );
+		}
 		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
 				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
-			logMoneyMapper.insertLogMoney( log, "" );
+			int insertM2 = logMoneyMapper.insertLogMoney( log, "" );
+			if ( insertM2 <= 0 ) {
+				throw new BusinessException( "资金日志插入失败" );
+			}
 		}
 	}
 
@@ -137,6 +156,9 @@ public class LogServiceImpl implements ILogService {
 		log.setParam4( params4 );
 		log.setParamIp( UserDataUtil.getIp( request ) );
 		log.setcTime( new Date() );
-		actionLogsMapper.insertMemberActionLogs( log );
+		int insertM = actionLogsMapper.insertMemberActionLogs( log );
+		if ( insertM <= 0 ) {
+			throw new BusinessException( "会员行为日志插入失败" );
+		}
 	}
 }

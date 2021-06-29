@@ -61,6 +61,9 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 			Map map1 = JsonUtil.json2Map( resultMap );
 			if ( "success".equals( map1.getOrDefault( "msg", "" ).toString() ) ) {
 				return true;
+			}else{
+				reqPayAgent.setFailReason(map1.getOrDefault("Chinese","").toString());
+				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
 		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
@@ -110,7 +113,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 
 
 	@Override
-	public void queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
+	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
 		PayAgentPlatform payAgentPlatform =
 				payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
@@ -141,7 +144,6 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 		if ( Strings.isNotBlank( result ) ) {
 			Map map = JsonUtil.json2Map( result );
 			if ( "success".equals( map.getOrDefault( "code", "" ).toString() ) ) {
-
 				Map    dataMapRsp = ( Map ) map.get( "data" );
 				String orderNo    = dataMapRsp.getOrDefault( "orderNo", "" ).toString();
 				String state      = dataMapRsp.getOrDefault( "state", "" ).toString();
@@ -169,9 +171,10 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 					}
 					payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
 							orderState );
-					return;
 				}
 			}
+			return result;
 		}
+		return "特仑苏代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}
 }

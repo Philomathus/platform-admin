@@ -7,7 +7,8 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.*;
+import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.wuliuPayAgentUtils.RSAUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,11 +17,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import com.qiqilm.server.admin.utils.wuliuPayAgentUtils.RSAUtils;
 
 import java.math.BigDecimal;
-
 import java.util.*;
 
 @Repository(value = ConstantsPayAgent.WULIU + "PayAgentProcessor")
@@ -65,6 +63,8 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+
+                payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
         log.warn("五六代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
@@ -110,7 +110,7 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public void queryOrderPay(PayAgentLog payAgentLog) throws Exception {
+    public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> bodyMap = new LinkedHashMap<>();
@@ -154,10 +154,10 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
                     }
                     log.warn("state:{}", state);
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
-                    return;
                 }
             }
+            return JsonUtil.object2Json(resultMap);
         }
-        log.warn("代付订单查询失败 - result:{}", JsonUtil.object2Map(resultMap));
+        return "五六代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }
