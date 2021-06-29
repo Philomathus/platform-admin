@@ -76,5 +76,5 @@ public interface SystemIpWhiteMapper {
 	 */
 	public int exists( @Param( "ip" ) String IpAddress );
 
-	String selectEffectIp( String ip );
+	List<String> selectEffectIp( String ip );
 }
