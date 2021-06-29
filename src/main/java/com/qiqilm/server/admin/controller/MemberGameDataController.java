@@ -91,7 +91,6 @@ public class MemberGameDataController extends BaseController {
 	public AjaxResult getGameDetailList( MemberGameData memberGameData ) {
 		return memberGameDataService.getGameBetDetailData( memberGameData );
 	}
-
 	@GetMapping( value = "/platformList" )
 	public AjaxResult platformList(MemberGameData memberGameData){
 		List<RspGamePlatform> list = gameCacheManager.getGamePlatformList(null);
