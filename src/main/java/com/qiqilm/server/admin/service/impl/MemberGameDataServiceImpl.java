@@ -123,6 +123,11 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                     log.info(EnumGamePlatform.MEITIAN_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
                     if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.MEITIAN_CHESS.getName()+"访问超时，稍后再试!");
                     return RequestParamData.meiTianGameBetDataWrapper(result);
+                }else if (EnumGamePlatform.NEWWORLD_CHESS.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.getBetURLByKXOrKY(memberGameData,gamePlatform);
+                    log.info(EnumGamePlatform.NEWWORLD_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.NEWWORLD_CHESS.getName()+"访问超时，稍后再试!");
+                    return RequestParamData.gameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
                 }
             }
         }catch (Exception e) {
@@ -154,10 +159,14 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                     String result = RequestParamData.requestKXBetDetail(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KAIXUAN_CHESS.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
                     return RequestParamData.gameDetailDataWrapper(result);
+                }else if (EnumGamePlatform.NEWWORLD_CHESS.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.requestXSJBetDetail(memberGameData,gamePlatform);
+                    log.info(EnumGamePlatform.NEWWORLD_CHESS.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
+                    return RequestParamData.gameDetailDataWrapper(result);
                 }
             }
         }catch (Exception e) {
-            log.error( "查询游戏局号明细失败，参数:{},错误信息:{}",JSON.toJSONString(memberGameData),e);
+            log.error( "查询游戏局号明细失败，参数:{},错误信息:",JSON.toJSONString(memberGameData),e);
             return AjaxResult.error("查询游戏局号明细失败Account:" + memberGameData.getAccount());
         }
         return AjaxResult.error("游戏未配置，请选择其他游戏!");
