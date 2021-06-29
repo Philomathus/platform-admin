@@ -624,9 +624,14 @@
 	</select>
 
 
-    <select id="selectMemberInfoAddressById" parameterType="String" resultType="String">
+    <select id="selectMemberInfoAddressById" parameterType="String" resultType="java.lang.String">
 		SELECT fun_getaddress(login_ip) ipaddress
 		from member_info where id = #{userid}
+	</select>
+
+	<select id="selectMemberInfoHistoryRechargeById" parameterType="String" resultType="java.lang.String">
+		select SUM(money) from member_pay_jour_history
+		where STATUS = '1' and member_id = #{userid}
 	</select>
 
 	<select id="selectMemberInfoWithdrawByIdb" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">

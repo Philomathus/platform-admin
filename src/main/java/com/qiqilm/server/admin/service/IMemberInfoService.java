@@ -76,4 +76,6 @@ public interface IMemberInfoService {
     AjaxResult changeEmail(MemberInfo memberInfo);
 
     String getMemberLoginAddress(String id);
+
+    String getHistoryRecharge(String id);
 }

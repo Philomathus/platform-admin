@@ -98,4 +98,6 @@ public interface MemberInfoMapper {
     void changeEmail(MemberInfo memberInfo);
 
     String selectMemberInfoAddressById(@Param("userid") String id);
+
+    String selectMemberInfoHistoryRechargeById(@Param("userid") String id);
 }
