@@ -201,7 +201,12 @@ public class RequestParamData {
                 log.error("查询游戏局号日志失败:{}", JSON.toJSONString(object));
                 return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
             }
-            return AjaxResult.success(d.get("data"));
+            if(d.get("data") != null){
+                return AjaxResult.success(d.get("data"));
+            }
+            if(d.get("gameLogURL") !=null){
+                return AjaxResult.success(d.get("gameLogURL"));
+            }
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
