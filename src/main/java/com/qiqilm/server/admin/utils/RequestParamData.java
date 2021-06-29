@@ -112,7 +112,8 @@ public class RequestParamData {
         String key = DigestUtils.md5Hex(agent + nowTime.getTime() + md5);
         String s1 = String.format(RE_XSJ_DETAIL_RECORD_S1,agent,nowTime.getTime(),"{0}",key);
         String s2 = String.format(RE_XSJ_DETAIL_RECORD_S2,"19",memberGameData.getGameUserNo(),
-                memberGameData.getRecordId(),memberGameData.getServerId(),memberGameData.getAccount());
+                memberGameData.getRecordId(),memberGameData.getAccount(),memberGameData.getServerId());
+        log.info("新世界请求参数:{}",s2);
         String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
         String param = s1.replace("{0}",s3);
         String apiUrl = gamePlatform.getRecordUrl();
