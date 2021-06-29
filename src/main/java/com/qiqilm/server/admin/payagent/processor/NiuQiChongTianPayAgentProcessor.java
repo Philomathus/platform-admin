@@ -162,19 +162,17 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
             log.info("牛气冲天代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
-                if ("1".equals(resultMap.getOrDefault("status", "").toString())) {
-                    String statusCode = String.valueOf(resultMap.getOrDefault("status", "").toString());
-                    int status = 4;
-                    int orderState = 0;
-                    if ("1".equals(statusCode)) {
-                        status = 6;
-                        orderState = 1;
-                    } else {
-                        status = 5;
-                        orderState = 2;
-                    }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
+                String statusCode = String.valueOf(resultMap.getOrDefault("status", "").toString());
+                int status = 4;
+                int orderState = 0;
+                if ("1".equals(statusCode)) {
+                    status = 6;
+                    orderState = 1;
+                } else {
+                    status = 5;
+                    orderState = 2;
                 }
+                payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
                 return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {

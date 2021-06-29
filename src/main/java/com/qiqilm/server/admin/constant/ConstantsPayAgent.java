@@ -95,4 +95,6 @@ public abstract class ConstantsPayAgent {
 	public static final String DIDI            = "diDi";
 	//银联代付
 	public static final String YINLIAN            = "yinLian";
+	//新通代付
+	public static final String XINTONG            = "xinTong";
 }
