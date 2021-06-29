@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.cache.VideoCacheUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +23,15 @@ public class HostLiveTimeOut {
     private VideoCacheUtil videoCacheUtil;
     @Autowired
     private ILiveVideoService liveVideoService;
+    @Value( "${spring.profiles.active}" )
+    private String profile;
 
     @Scheduled( fixedDelay = 120000, initialDelay = 120000 )
     public void listenerMonitor() {
         if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),100)){
+            return;
+        }
+        if(profile.equals("7706")){
             return;
         }
 
