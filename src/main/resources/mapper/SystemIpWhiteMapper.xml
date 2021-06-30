@@ -90,6 +90,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectEffectIp" resultType="java.lang.String">
-        select ip_id from system_ip_white where ip_status = '1' and ip_address = #{ip}
+        select ip_id from system_ip_white where ip_status = '1' and ip_address = #{ip} limit 1
 	</select>
 </mapper>

@@ -107,6 +107,15 @@ public class MemberInfoController extends BaseController {
     }
 
     /**
+     * 获取用户线上充值历史金额
+     */
+    @PreAuthorize("@ss.hasPermi('member:memberInfo:query')")
+    @GetMapping(value = "/getHistoryRecharge/{id}")
+    public AjaxResult getHistoryRecharge(@PathVariable("id") String id) {
+        return AjaxResult.success(memberInfoService.getHistoryRecharge(id));
+    }
+
+    /**
      * 新增用户信息
      */
     @PreAuthorize("@ss.hasPermi('member:memberInfo:add')")

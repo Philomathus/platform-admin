@@ -93,6 +93,7 @@ public class SysLoginService {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         //IP白名单记录登录数量
         systemIpWhiteMapper.incLoginCount(ipId);
+
         // 生成token
         String token = tokenService.createToken(loginUser);
         AjaxResult ajax = AjaxResult.success();
