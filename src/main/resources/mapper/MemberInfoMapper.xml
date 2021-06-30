@@ -120,10 +120,10 @@
 				and channelCode = #{channelcode}
 			</if>
 			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				and date_format(reg_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+				AND reg_time >=STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				and date_format(reg_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+				AND reg_time &lt;= STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
 			</if>
             <if test="downLoadDate[0] != null "> and reg_time >= '${downLoadDate[0]}'</if>
             <if test="downLoadDate[1] != null "> and reg_time &lt;= '${downLoadDate[1]}'</if>
