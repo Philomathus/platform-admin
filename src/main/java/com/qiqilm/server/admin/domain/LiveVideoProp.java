@@ -68,6 +68,10 @@ public class LiveVideoProp extends BaseEntity {
     @Excel(name = "收")
     private Long toUserId;
 
+    /** 主播昵称 */
+    @Excel(name = "主播昵称")
+    private String nickName;
+
     /** 日期字段,按日期归档；要不然数据量太大了；不好维护 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "日期字段,按日期归档；要不然数据量太大了；不好维护", width = 30, exportFormat = "yyyy-MM-dd")

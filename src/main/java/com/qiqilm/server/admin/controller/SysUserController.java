@@ -16,6 +16,7 @@ import com.qiqilm.server.admin.service.ISysRoleService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -195,6 +196,23 @@ public class SysUserController extends BaseController {
         PayAgentRechargeAccount payAgentRechargeAccount = payAgentRechargeAccountMapper.selectPayAgentRechargeAccountById(id);
         payAgentRechargeAccount.setGoogleAuthSecret(null);
         payAgentRechargeAccountMapper.updateGoogle(payAgentRechargeAccount);
+        return AjaxResult.success();
+    }
+
+    /**
+     * 重置代充人IM密码
+     */
+    @PreAuthorize("@ss.hasPermi('pay:payAgentRechargeAccount:reset')")
+    @GetMapping("updatePassword")
+    @Log(title = "重置代充人IM密码", businessType = BusinessType.UPDATE)
+    public AjaxResult updatePassword(Long id, int googleAuthCode) throws Exception{
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = userService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+        AjaxResult x = userService.checkGoogleAuthCode(googleAuthCode, googleAuthSecret);
+        if (x != null) return x;
+        PayAgentRechargeAccount payAgentRechargeAccount = payAgentRechargeAccountMapper.selectPayAgentRechargeAccountById(id);
+        payAgentRechargeAccountMapper.updatePassword(payAgentRechargeAccount.getImAccount(),DigestUtils.md5Hex("123456"));
         return AjaxResult.success();
     }
 

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberGameDatafixMapper">
 
     <resultMap type="MemberGameDatafix" id="MemberGameDatafixResult">
@@ -18,37 +16,36 @@
     </sql>
 
     <select id="selectMemberGameDatafixList" parameterType="MemberGameDatafix" resultMap="MemberGameDatafixResult">
-        select a.id, a.user_id, a.game_start_time, a.game_end_time, a.platform_id, a.status ,b.name as platformName
-        from ${dbMain}.member_game_datafix a
-        left join  ${dbMain}.game_platform b
-        on a.platform_id=b.id
+        <include refid="selectMemberGameDatafixVo"/>
         <where>
-            <if test="status != null "> and a.status = #{status}</if>
-            <if test="platformId != null "> and a.platform_id = #{platformId}</if>
-            <if test="userId != null and userId != '' ">and a.user_id= #{userId}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="gameStartTime != null  and gameStartTime != ''"> and game_start_time = #{gameStartTime}</if>
+            <if test="gameEndTime != null  and gameEndTime != ''"> and game_end_time = #{gameEndTime}</if>
+            <if test="platformId != null "> and platform_id = #{platformId}</if>
+            <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
-    
-    <select id="getgameDatafix" resultMap="MemberGameDatafixResult">
-        select id, user_id, game_start_time, game_end_time, platform_id, status from ${dbMain}.member_game_datafix  WHERE STATUS=0 LIMIT 1
-    </select>
 
+    <select id="selectMemberGameDatafixById" parameterType="String" resultMap="MemberGameDatafixResult">
+        <include refid="selectMemberGameDatafixVo"/>
+        where id = #{id}
+    </select>
 
     <insert id="insertMemberGameDatafix" parameterType="MemberGameDatafix">
         insert into ${dbMain}.member_game_datafix
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="userId != null">user_id,</if>
-            <if test="gameStartTime != null">game_start_time,</if>
-            <if test="gameEndTime != null">game_end_time,</if>
+            <if test="gameStartTime != null and gameStartTime != ''">game_start_time,</if>
+            <if test="gameEndTime != null and gameEndTime != ''">game_end_time,</if>
             <if test="platformId != null">platform_id,</if>
             <if test="status != null">status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="userId != null">#{userId},</if>
-            <if test="gameStartTime != null">#{gameStartTime},</if>
-            <if test="gameEndTime != null">#{gameEndTime},</if>
+            <if test="gameStartTime != null and gameStartTime != ''">#{gameStartTime},</if>
+            <if test="gameEndTime != null and gameEndTime != ''">#{gameEndTime},</if>
             <if test="platformId != null">#{platformId},</if>
             <if test="status != null">#{status},</if>
         </trim>
@@ -59,9 +56,9 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
 
-            <if test="gameStartTime != null">game_start_time = #{gameStartTime},</if>
+            <if test="gameStartTime != null and gameStartTime != ''">game_start_time = #{gameStartTime},</if>
 
-            <if test="gameEndTime != null">game_end_time = #{gameEndTime},</if>
+            <if test="gameEndTime != null and gameEndTime != ''">game_end_time = #{gameEndTime},</if>
 
             <if test="platformId != null">platform_id = #{platformId},</if>
 
@@ -70,6 +67,10 @@
         </trim>
         where id = #{id}
     </update>
+
+    <select id="getgameDatafix" resultMap="MemberGameDatafixResult">
+        select id, user_id, game_start_time, game_end_time, platform_id, status from ${dbMain}.member_game_datafix  WHERE STATUS=0 LIMIT 1
+    </select>
 
     <delete id="deleteMemberGameDatafixById" parameterType="String">
         delete from ${dbMain}.member_game_datafix where id = #{id}
@@ -81,5 +82,4 @@
             #{id}
         </foreach>
     </delete>
-
 </mapper>
