@@ -81,7 +81,7 @@ public class SysLoginService {
 
         log.info("管理员{}登录IP:{}", loginBody.getUsername(), ip);
         String ipId = systemIpWhiteMapper.selectEffectIp(ip);
-        if (StringUtils.isNotBlank(ipId)) {
+        if (StringUtils.isBlank(ipId)) {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginBody.getUsername(), AdminConstants.LOGIN_FAIL,
                     MessageUtils.message("user.block.ip"), ip));
             log.warn("限制IP:{}登录", ip);
