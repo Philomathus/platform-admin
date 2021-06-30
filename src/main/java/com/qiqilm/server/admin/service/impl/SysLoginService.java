@@ -80,8 +80,8 @@ public class SysLoginService {
         }
 
         log.info("管理员{}登录IP:{}", loginBody.getUsername(), ip);
-        List<String> ipIds = systemIpWhiteMapper.selectEffectIp(ip);
-        if (ipIds == null || ipIds.size() == 0) {
+        String ipId = systemIpWhiteMapper.selectEffectIp(ip);
+        if (StringUtils.isNotBlank(ipId)) {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginBody.getUsername(), AdminConstants.LOGIN_FAIL,
                     MessageUtils.message("user.block.ip"), ip));
             log.warn("限制IP:{}登录", ip);
@@ -92,7 +92,7 @@ public class SysLoginService {
                 MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         //IP白名单记录登录数量
-        systemIpWhiteMapper.incLoginCount(ipIds.get(0));
+        systemIpWhiteMapper.incLoginCount(ipId);
 
         // 生成token
         String token = tokenService.createToken(loginUser);
