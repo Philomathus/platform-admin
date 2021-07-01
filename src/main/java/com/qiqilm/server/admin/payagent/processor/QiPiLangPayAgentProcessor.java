@@ -142,7 +142,8 @@ public class QiPiLangPayAgentProcessor extends AbstractPayAgent {
                 if (!CollectionUtils.isEmpty(resultMap)) {
                     String code = resultMap.getOrDefault("code", "").toString();
                     if ("1".equals(code)) {
-                        Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("data");
+                        String data = resultMap.getOrDefault("data","").toString();
+                        Map<String, Object> dataMap = JsonUtil.json2Map(data);
                         int statusType = Integer.parseInt(dataMap.getOrDefault("status", "").toString());
                         if (statusType > 0) {
                             // status 4代付中 5代付失败 6代付成功
