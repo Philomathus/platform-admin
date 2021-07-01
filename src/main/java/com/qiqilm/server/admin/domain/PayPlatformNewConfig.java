@@ -104,7 +104,7 @@ public class PayPlatformNewConfig {
     private Integer payHttpmethod;
 
     /** 下单返回值类型 0为String 1为Map */
-    @Excel(name = "下单返回值类型 0为String 1为Map")
+    @Excel(name = "下单返回值类型 0为String 1为Map 2为html页面")
     private Integer payReturntype;
 
     /** 下单返回状态判断参数名称,以逗号分隔，后面是成功下单的值 */
