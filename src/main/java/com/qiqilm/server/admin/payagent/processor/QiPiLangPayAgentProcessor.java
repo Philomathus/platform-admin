@@ -26,9 +26,9 @@ import org.springframework.web.client.RestTemplate;
 import java.math.RoundingMode;
 import java.util.*;
 
-@Repository(value = ConstantsPayAgent.XINTONG + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.QIPILANG + "PayAgentProcessor")
 @Log4j2
-public class XinTongPayAgentProcessor extends AbstractPayAgent {
+public class QiPiLangPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
@@ -37,7 +37,7 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP).intValue());
         bodyMap.put("bankAccountName", withdrawLog.getBankUserName().trim());
         bodyMap.put("bankCardNum", withdrawLog.getBankAccount().trim());
-        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.XINTONG);
+        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.QIPILANG);
         bodyMap.put("clientIp", "127.0.0.1");
         bodyMap.put("remark", "remark");
 
@@ -58,13 +58,13 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("新通代付下单结果 - result:{}", res);
+        log.info("七匹狼代付下单结果 - result:{}", res);
         if (StringUtils.isNotBlank(res)) {
             Map<String, Object> resultMap = JsonUtil.json2Map(res);
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 if ("0000".equals(code)) {
-                    log.info("新通代付订单提交成功 - result:{}", res);
+                    log.info("七匹狼代付订单提交成功 - result:{}", res);
                     return true;
                 } else {
                     reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
@@ -72,7 +72,7 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
                 }
             }
         }
-        log.warn("新通代付订单提交失败 - result:{}", res);
+        log.warn("七匹狼代付订单提交失败 - result:{}", res);
         return false;
     }
 
@@ -88,7 +88,7 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
 
-        log.info("新通代付回调签名字符串:" + sign + "_" + signStr);
+        log.info("七匹狼代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String mch_order_num = (String) requestMap.get("mch_order_num");
 
@@ -136,7 +136,7 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
         String res = null;
         try {
             res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
-            log.info("新通代付查询结果- result:{}", res);
+            log.info("七匹狼代付查询结果- result:{}", res);
             if (StringUtils.isNotBlank(res)) {
                 Map<String, Object> resultMap = JsonUtil.json2Map(res);
                 if (!CollectionUtils.isEmpty(resultMap)) {
@@ -163,6 +163,6 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "新通代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return "七匹狼代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }

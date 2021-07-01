@@ -5,8 +5,10 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
+import com.qiqilm.server.admin.domain.PayPlatformNewConfig;
 import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.mapper.PayPlatformNewMapper;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
 import com.qiqilm.server.admin.service.IPayService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
@@ -32,6 +34,8 @@ public class PayPlatformNewController extends BaseController {
 	private IPayPlatformNewService payPlatformNewService;
 	@Autowired
 	private IPayService            payService;
+	@Autowired
+	private PayPlatformNewMapper payPlatformNewMapper;
 
 	/**
 	 * 查询支付平台列表
@@ -73,6 +77,15 @@ public class PayPlatformNewController extends BaseController {
 			payPlatformNew.setSignPublicKey(a);
 		}
 		return AjaxResult.success(payPlatformNew);
+	}
+
+	/**
+	 * 新增支付对接配值
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:config')" )
+	@PostMapping("/addPayPlatformConfig")
+	public AjaxResult addPayPlatformConfig( @RequestBody PayPlatformNewConfig payPlatformNewConfig ) {
+		return toAjax( payPlatformNewMapper.insertPayPlatformConfig( payPlatformNewConfig ) );
 	}
 
 	/**
