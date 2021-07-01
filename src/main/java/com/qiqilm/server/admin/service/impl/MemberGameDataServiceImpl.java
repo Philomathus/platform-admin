@@ -17,13 +17,12 @@ import com.qiqilm.server.admin.utils.RequestParamData;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -39,6 +38,8 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
     private MemberGameDataMapper memberGameDataMapper;
     @Resource
     private GamePlatformMapper gamePlatformMapper;
+    @Autowired
+    protected RestTemplate restTemplate;
 
     /**
      * 查询会员注单数据列表
@@ -111,15 +112,38 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 if (EnumGamePlatform.KY_CHESS.getType() == memberGameData.getPlatformId()){
                     String result = RequestParamData.requestKYBetRecord(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KY_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.KY_CHESS.getName()+"访问超时，稍后再试!");
                     return RequestParamData.gameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
                 }else if (EnumGamePlatform.KAIXUAN_CHESS.getType() == memberGameData.getPlatformId()){
                     String result = RequestParamData.requestKXBetRecord(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KAIXUAN_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.KAIXUAN_CHESS.getName()+"访问超时，稍后再试!");
                     return RequestParamData.gameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
                 }else if (EnumGamePlatform.MEITIAN_CHESS.getType() == memberGameData.getPlatformId()){
                     String result = RequestParamData.requestMTBetRecord(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.MEITIAN_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.MEITIAN_CHESS.getName()+"访问超时，稍后再试!");
                     return RequestParamData.meiTianGameBetDataWrapper(result);
+                }else if (EnumGamePlatform.NEWWORLD_CHESS.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.requestXSJBetRecord(memberGameData,gamePlatform);
+                    log.info(EnumGamePlatform.NEWWORLD_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.NEWWORLD_CHESS.getName()+"访问超时，稍后再试!");
+                    return RequestParamData.gameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
+                }else if (EnumGamePlatform.SHABA_SPORT.getType() == memberGameData.getPlatformId()){
+                    Map<String, Object> resultMap = RequestParamData.requestSbSportBetRecord(memberGameData,gamePlatform,restTemplate);
+                    log.info(EnumGamePlatform.SHABA_SPORT.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(resultMap));
+                    if (resultMap.isEmpty()) return AjaxResult.error(EnumGamePlatform.SHABA_SPORT.getName()+"访问超时，稍后再试!");
+                    int error_code = (int) resultMap.get("error_code");
+                    if ( error_code != 0){
+                        error_code = error_code + 30000;
+                        return AjaxResult.error(error_code, "查询游戏局号日志失败[未知错误]");
+                    }
+                    return AjaxResult.success(resultMap.get("Data"));
+                }else if (EnumGamePlatform.BBIN_SPORT.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.requestBBINSportBetRecord(memberGameData,gamePlatform);
+                    log.info(EnumGamePlatform.BBIN_SPORT.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.SHABA_SPORT.getName()+"访问超时，稍后再试!");
+                    return AjaxResult.success(result);
                 }
             }
         }catch (Exception e) {
@@ -151,14 +175,16 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                     String result = RequestParamData.requestKXBetDetail(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.KAIXUAN_CHESS.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
                     return RequestParamData.gameDetailDataWrapper(result);
+                }else if (EnumGamePlatform.NEWWORLD_CHESS.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.requestXSJBetDetail(memberGameData,gamePlatform);
+                    log.info(EnumGamePlatform.NEWWORLD_CHESS.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
+                    return RequestParamData.gameDetailDataWrapper(result);
                 }
             }
         }catch (Exception e) {
-            log.error( "查询游戏局号明细失败，参数:{},错误信息:{}",JSON.toJSONString(memberGameData),e);
+            log.error( "查询游戏局号明细失败，参数:{},错误信息:",JSON.toJSONString(memberGameData),e);
             return AjaxResult.error("查询游戏局号明细失败Account:" + memberGameData.getAccount());
         }
         return AjaxResult.error("游戏未配置，请选择其他游戏!");
     }
-
 }
-

@@ -2,13 +2,17 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.annotation.AccessLimit;
 import com.qiqilm.server.admin.annotation.Log;
+import com.qiqilm.server.admin.cache.GameCacheManager;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.domain.req.ReqMemberGameData;
+import com.qiqilm.server.admin.domain.rsp.RspGamePlatform;
 import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.service.IMemberGameDataService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,10 @@ import java.util.List;
 public class MemberGameDataController extends BaseController {
 	@Autowired
 	private IMemberGameDataService memberGameDataService;
+	@Autowired
+	private IGamePlatformService gamePlatformService;
+	@Autowired
+	private GameCacheManager gameCacheManager;
 
 	/**
 	 * 查询会员注单数据列表
@@ -82,5 +90,14 @@ public class MemberGameDataController extends BaseController {
 	@GetMapping( value = "/detailList" )
 	public AjaxResult getGameDetailList( MemberGameData memberGameData ) {
 		return memberGameDataService.getGameBetDetailData( memberGameData );
+	}
+	@GetMapping( value = "/platformList" )
+	public AjaxResult platformList(MemberGameData memberGameData){
+		List<RspGamePlatform> list = gameCacheManager.getGamePlatformList(null);
+		if (list != null){
+			return AjaxResult.success(list);
+		}
+		List<GamePlatform> list1 = gamePlatformService.selectGamePlatformList(new GamePlatform());
+		return AjaxResult.success(list1);
 	}
 }

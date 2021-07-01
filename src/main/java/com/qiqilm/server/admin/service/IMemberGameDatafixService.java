@@ -28,7 +28,6 @@ public interface IMemberGameDatafixService {
 	 */
 	public int insertMemberGameDatafix(MemberGameDatafix memberGameDatafix);
 
-
 	/**
 	 * 批量删除游戏注单修复
 	 *
@@ -44,5 +43,13 @@ public interface IMemberGameDatafixService {
 	 * @return 结果
 	 */
 	public int deleteMemberGameDatafixById(String id);
+
+	/**
+	 * 查询游戏注单修复
+	 *
+	 * @param id 游戏注单修复ID
+	 * @return 游戏注单修复
+	 */
+	public MemberGameDatafix selectMemberGameDatafixById(String id);
 
 }

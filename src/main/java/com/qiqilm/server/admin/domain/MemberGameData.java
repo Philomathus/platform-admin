@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  * @date 2021-01-29
  */
 @Data
-public class MemberGameData extends BaseEntity {
+public class MemberGameData extends GameData {
     private static final long serialVersionUID = 1L;
 
     /** 本地ID */
@@ -72,9 +72,6 @@ public class MemberGameData extends BaseEntity {
     /** 游戏开始时间 */
     @Excel(name = "游戏开始时间")
     private String gameStartTime;
-
-    /** 局记录id **/
-    private String recordId;
 
 
     @Override
