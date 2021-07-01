@@ -33,6 +33,9 @@ public class HelpNoticeUtil implements Serializable {
 	@Value( "${live.encrypt.privateKey}" )
 	private String liveRsaPrivateKey;
 
+	@Value( "${spring.profiles.active}" )
+	private String profile;
+
 	/**
 	 * 所有直播间发送消息
 	 *
@@ -42,7 +45,7 @@ public class HelpNoticeUtil implements Serializable {
 		if ( text == null ) {
 			return;
 		}
-
+		String agent = profile;
 		HashMap<String, Object> ext = new HashMap<>();
 		ext.put( "type", 0 ); //普通消息
 		ext.put( "fonts_color", "" );
@@ -55,11 +58,18 @@ public class HelpNoticeUtil implements Serializable {
 		info.put( "guardType", "2" );
 		ext.put( "sender", info );
 
+		if(!profile.equals("7706")){
+			agent = "";
+		}else{
+			info.put( "agent", agent );
+		}
+
 		try {
 			long time = System.currentTimeMillis();
 			ext.put( "systemtime", time );
+
 			String data = info.get( "user_id" ).toString() + info.get( "nick_name" ).toString() + time
-					+ info.get( "user_level" ).toString() + text;
+					+ info.get( "user_level" ).toString() + text + agent;
 			ext.put( "userinfomat", RSA8SignUtils.sign( data, liveRsaPrivateKey ) );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
@@ -86,7 +96,7 @@ public class HelpNoticeUtil implements Serializable {
 		if ( text == null ) {
 			return;
 		}
-
+		String agent = profile;
 		HashMap<String, Object> ext = new HashMap<>();
 		ext.put( "type", 0 ); //普通消息
 		ext.put( "fonts_color", "" );
@@ -98,13 +108,17 @@ public class HelpNoticeUtil implements Serializable {
 		info.put( "officer", "2" );
 		info.put( "guardType", "2" );
 		ext.put( "sender", info );
-
+		if(!profile.equals("7706")){
+			agent = "";
+		}else{
+			info.put( "agent", agent );
+		}
 
 		try {
 			long time = System.currentTimeMillis();
 			ext.put( "systemtime", time );
 			String data = info.get( "user_id" ).toString() + info.get( "nick_name" ).toString() + time
-					+ info.get( "user_level" ).toString() + text;
+					+ info.get( "user_level" ).toString() + text + agent;
 			ext.put( "userinfomat", RSA8SignUtils.sign( data, liveRsaPrivateKey ) );
 
 			MessageType messageType = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem ).setData( JsonUtil.object2Json( ext ) );
