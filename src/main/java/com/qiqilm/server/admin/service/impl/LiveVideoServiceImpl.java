@@ -3,7 +3,6 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.cache.VideoCacheUtil;
-import com.qiqilm.server.admin.cache.VideoPayCacheUtil;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
@@ -49,8 +48,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	private VideoCacheUtil     videoCacheUtil;
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
-	@Autowired
-	private VideoPayCacheUtil  videoPayCacheUtil;
 
 	@Resource
 	private ServerLiveMapper    serverLiveMapper;
@@ -186,9 +183,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		this.saveHostWageNote( liveUser, video );
 
-		if ( !isAborted && video.getIsLivePay() ) {
-			videoPayCacheUtil.unlink( id );
-		}
 
 		ServerLive serverLive = serverLiveMapper.selectServerLiveById( video.getPaiId() );
 		if ( serverLive != null && serverLive.getCountNum() > 0 ) {
@@ -307,14 +301,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			updateVideo.setCateId( 4 );// 设置主题ID为收费直播
 			updateVideo.setIsLivePay( true );
 			liveVideoMapper.updateLiveVideo( updateVideo );
+			RedisCacheUtil.me.clear( video.getId(), LiveVideo.class );
 			if(profile.equals("7701")){
 				liveVideoMapper.updateLive7706Video(updateVideo);
 			}
 
-			RedisCacheUtil.me.clear( video.getId(), LiveVideo.class );
-
-			// 初始化收费房缓存以及有效期
-			videoPayCacheUtil.initVideoPay( video.getId() );
 
 			//im
 			HashMap<String, Object> ext = new HashMap<>();
