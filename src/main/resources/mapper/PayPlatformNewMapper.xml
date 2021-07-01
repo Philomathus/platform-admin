@@ -97,6 +97,126 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="insertPayPlatformConfig" parameterType="PayPlatformConfig">
+        insert into 7700_main.pay_platform_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="payPlatfrom != null and payPlatfrom != ''">pay_platfrom,</if>
+            <if test="payCode != null and payCode != ''">pay_code,</if>
+            <if test="payMerid != null">pay_merId,</if>
+            <if test="payMethod != null">pay_method,</if>
+            <if test="payOrderno != null">pay_orderno,</if>
+            <if test="payMoney != null">pay_money,</if>
+            <if test="payCallbackurl != null">pay_callbackurl,</if>
+            <if test="payReturnurl != null">pay_returnurl,</if>
+            <if test="payIp != null">pay_ip,</if>
+            <if test="payAppid != null">pay_appid,</if>
+            <if test="payTimesecond != null">pay_timesecond,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="payUuidname != null">pay_uuidname,</if>
+            <if test="payParam1 != null">pay_param1,</if>
+            <if test="payParam2 != null">pay_param2,</if>
+            <if test="payParam3 != null">pay_param3,</if>
+            <if test="payParam4 != null">pay_param4,</if>
+            <if test="payParam5 != null">pay_param5,</if>
+            <if test="paySign != null">pay_sign,</if>
+            <if test="paySort != null">pay_sort,</if>
+            <if test="paySplice != null">pay_splice,</if>
+            <if test="payCase != null">pay_case,</if>
+            <if test="payHttpmethod != null">pay_httpmethod,</if>
+            <if test="payReturntype != null">pay_returntype,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="payMapname != null">pay_mapname,</if>
+            <if test="payUrl != null">pay_url,</if>
+            <if test="payFailreason != null">pay_failreason,</if>
+            <if test="callbackOrderno != null">callback_orderno,</if>
+            <if test="callbackSanorderno != null">callback_sanorderno,</if>
+            <if test="callbackParam1 != null">callback_param1,</if>
+            <if test="callbackParam2 != null">callback_param2,</if>
+            <if test="callbackMethod != null">callback_method,</if>
+            <if test="callbackSort != null">callback_sort,</if>
+            <if test="callbackSplice != null">callback_splice,</if>
+            <if test="callbackStatus != null">callback_status,</if>
+            <if test="callbackMoney != null">callback_money,</if>
+            <if test="callbackSuccess != null">callback_success,</if>
+            <if test="callbackSign != null">callback_sign,</if>
+            <if test="queryMerid != null">query_merId,</if>
+            <if test="queryOrderno != null">query_orderno,</if>
+            <if test="queryTimesecond != null">query_timesecond,</if>
+            <if test="queryTime != null">query_time,</if>
+            <if test="queryUuidname != null">query_uuidname,</if>
+            <if test="queryAppid != null">query_appid,</if>
+            <if test="queryParam1 != null">query_param1,</if>
+            <if test="querySign != null">query_sign,</if>
+            <if test="querySort != null">query_sort,</if>
+            <if test="querySplice != null">query_splice,</if>
+            <if test="queryCase != null">query_case,</if>
+            <if test="queryHttpmethod != null">query_httpmethod,</if>
+            <if test="queryReturntype != null">query_returntype,</if>
+            <if test="queryStatus != null">query_status,</if>
+            <if test="queryMapname != null">query_mapname,</if>
+            <if test="queryMoney != null">query_money,</if>
+            <if test="querySanorderno != null">query_sanorderno,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="payPlatfrom != null and payPlatfrom != ''">#{payPlatfrom},</if>
+            <if test="payCode != null and payCode != ''">#{payCode},</if>
+            <if test="payMerid != null">#{payMerid},</if>
+            <if test="payMethod != null">#{payMethod},</if>
+            <if test="payOrderno != null">#{payOrderno},</if>
+            <if test="payMoney != null">#{payMoney},</if>
+            <if test="payCallbackurl != null">#{payCallbackurl},</if>
+            <if test="payReturnurl != null">#{payReturnurl},</if>
+            <if test="payIp != null">#{payIp},</if>
+            <if test="payAppid != null">#{payAppid},</if>
+            <if test="payTimesecond != null">#{payTimesecond},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="payUuidname != null">#{payUuidname},</if>
+            <if test="payParam1 != null">#{payParam1},</if>
+            <if test="payParam2 != null">#{payParam2},</if>
+            <if test="payParam3 != null">#{payParam3},</if>
+            <if test="payParam4 != null">#{payParam4},</if>
+            <if test="payParam5 != null">#{payParam5},</if>
+            <if test="paySign != null">#{paySign},</if>
+            <if test="paySort != null">#{paySort},</if>
+            <if test="paySplice != null">#{paySplice},</if>
+            <if test="payCase != null">#{payCase},</if>
+            <if test="payHttpmethod != null">#{payHttpmethod},</if>
+            <if test="payReturntype != null">#{payReturntype},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="payMapname != null">#{payMapname},</if>
+            <if test="payUrl != null">#{payUrl},</if>
+            <if test="payFailreason != null">#{payFailreason},</if>
+            <if test="callbackOrderno != null">#{callbackOrderno},</if>
+            <if test="callbackSanorderno != null">#{callbackSanorderno},</if>
+            <if test="callbackParam1 != null">#{callbackParam1},</if>
+            <if test="callbackParam2 != null">#{callbackParam2},</if>
+            <if test="callbackMethod != null">#{callbackMethod},</if>
+            <if test="callbackSort != null">#{callbackSort},</if>
+            <if test="callbackSplice != null">#{callbackSplice},</if>
+            <if test="callbackStatus != null">#{callbackStatus},</if>
+            <if test="callbackMoney != null">#{callbackMoney},</if>
+            <if test="callbackSuccess != null">#{callbackSuccess},</if>
+            <if test="callbackSign != null">#{callbackSign},</if>
+            <if test="queryMerid != null">#{queryMerid},</if>
+            <if test="queryOrderno != null">#{queryOrderno},</if>
+            <if test="queryTimesecond != null">#{queryTimesecond},</if>
+            <if test="queryTime != null">#{queryTime},</if>
+            <if test="queryUuidname != null">#{queryUuidname},</if>
+            <if test="queryAppid != null">#{queryAppid},</if>
+            <if test="queryParam1 != null">#{queryParam1},</if>
+            <if test="querySign != null">#{querySign},</if>
+            <if test="querySort != null">#{querySort},</if>
+            <if test="querySplice != null">#{querySplice},</if>
+            <if test="queryCase != null">#{queryCase},</if>
+            <if test="queryHttpmethod != null">#{queryHttpmethod},</if>
+            <if test="queryReturntype != null">#{queryReturntype},</if>
+            <if test="queryStatus != null">#{queryStatus},</if>
+            <if test="queryMapname != null">#{queryMapname},</if>
+            <if test="queryMoney != null">#{queryMoney},</if>
+            <if test="querySanorderno != null">#{querySanorderno},</if>
+        </trim>
+    </insert>
+
     <update id="updatePayPlatformNew" parameterType="PayPlatformNew">
         update pay_platform_new
         <trim prefix="SET" suffixOverrides=",">

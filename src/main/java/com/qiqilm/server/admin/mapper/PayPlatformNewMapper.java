@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.PayPlatformNew;
+import com.qiqilm.server.admin.domain.PayPlatformNewConfig;
 import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
 
 /**
@@ -35,6 +36,9 @@ public interface PayPlatformNewMapper {
 	 * @return 结果
 	 */
 	public int insertPayPlatformNew(PayPlatformNew payPlatformNew);
+
+	//新增支付对接配置
+	public int insertPayPlatformConfig(PayPlatformNewConfig payPlatformNewConfig);
 
 	/**
 	 * 修改【请填写功能名称】
