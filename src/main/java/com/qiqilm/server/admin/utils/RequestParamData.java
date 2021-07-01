@@ -126,7 +126,7 @@ public class RequestParamData {
         String apiUrl = gamePlatform.getApiUrl();
         String getURL = apiUrl.concat( "WagersRecordBy109?" ).concat(builder.toString());
         log.info( "BBIN-体育-投注记录-请求参数：{}",getURL );
-        String strJSON = PostData.get(getURL);
+        String strJSON = PostData.get("http://linkapi.bangzhude.com/app/WebService/JSON/display.php/WagersRecordBy109?website=rtwrt1&action=ModifiedTime&uppername=dzf040&date=2021-07-01&starttime=07:35:17&endtime=07:39:17&key=bdad717c9304a6674701a52659cfb04812177fd47a7");
         Map<String,Object> resultMap = JsonUtil.json2Map(strJSON);
         log.info("BBIN-体育-投注记录-返回值:{}",JSON.toJSONString(resultMap));
         boolean result = (boolean) resultMap.get("result");
