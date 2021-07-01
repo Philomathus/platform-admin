@@ -140,7 +140,7 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                     }
                     return AjaxResult.success(resultMap.get("Data"));
                 }else if (EnumGamePlatform.BBIN_SPORT.getType() == memberGameData.getPlatformId()){
-                    String result = RequestParamData.requestBBINSportBetRecord(memberGameData,gamePlatform);
+                    String result = RequestParamData.requestBBINSportBetDetail(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.BBIN_SPORT.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
                     if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.SHABA_SPORT.getName()+"访问超时，稍后再试!");
                     return AjaxResult.success(result);

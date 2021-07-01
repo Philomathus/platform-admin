@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.MemberGameData;
+import com.qiqilm.server.admin.exception.BusinessException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -102,8 +103,42 @@ public class RequestParamData {
         }
         return resultMap;
     }
+    //BBIN体育投注列表
+    public static List<Map<String, String>> requestBBINSportBetRecord(MemberGameData memberGameData,GamePlatform gamePlatform){
+        Date startDate = DateFormatUtils.parse(memberGameData.getGameStartTime());
+        Date endDate = DateFormatUtils.parse(memberGameData.getGameEndTime());
+        String date =DateFormatUtils.beiJinToMeiDong(new Date(),"yyyy-MM-dd");
+        String beginTime =DateFormatUtils.beiJinToMeiDong(startDate,"HH:mm:ss");
+        String endTime = DateFormatUtils.beiJinToMeiDong(endDate,"HH:mm:ss");
+        StringBuilder builder = new StringBuilder();
+        String random = UuidUtil.getRandomUuid();
+        String a = random.substring(0,7).replace("-","a");
+        String c = random.substring(random.length()-5,random.length()-1).replace("-","a");
+        String md5 = gamePlatform.getDes()  + "SNjv90Bz" + convertTime(new Date());
+        md5 = DigestUtils.md5Hex(md5);
+        builder.append("website=").append(gamePlatform.getDes())
+                .append("&action=").append("ModifiedTime")
+                .append("&uppername=").append(gamePlatform.getAgent())
+                .append("&date=").append(date)
+                .append("&starttime=").append(beginTime)
+                .append("&endtime=").append(endTime)
+                .append("&key=").append(a).append(md5).append(c);
+        String apiUrl = gamePlatform.getApiUrl();
+        String getURL = apiUrl.concat( "WagersRecordBy109?" ).concat(builder.toString());
+        log.info( "BBIN-体育-投注记录-请求参数：{}",getURL );
+        String strJSON = PostData.get(getURL);
+        Map<String,Object> resultMap = JsonUtil.json2Map(strJSON);
+        log.info("BBIN-体育-投注记录-返回值:{}",JSON.toJSONString(resultMap));
+        boolean result = (boolean) resultMap.get("result");
+        if (!result) {
+            Map<String, String> stringMap = (Map<String, String>) resultMap.get("data");
+            throw new BusinessException(stringMap.get("Code"));
+        }
+        return ((List<Map<String, String>>) resultMap.get("data"));
+    }
+
     //BBIN体育-投注详情
-    public static String requestBBINSportBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
+    public static String requestBBINSportBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = memberGameData.getAgent();
         String des = gamePlatform.getDes();
         String random = UuidUtil.getRandomUuid();

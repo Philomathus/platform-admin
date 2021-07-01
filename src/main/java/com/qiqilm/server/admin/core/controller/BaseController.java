@@ -7,7 +7,10 @@ import com.qiqilm.server.admin.core.page.PageDomain;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.page.TableSupport;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.MemberGameData;
+import com.qiqilm.server.admin.domain.req.ReqMemberGameData;
 import com.qiqilm.server.admin.exception.ControllerExceptionHandler;
+import com.qiqilm.server.admin.service.IMemberGameDataMinService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.WebDataBinder;
@@ -15,7 +18,9 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * web层通用数据处理
@@ -101,4 +106,28 @@ public class BaseController extends ControllerExceptionHandler {
 	public String redirect( String url ) {
 		return StringUtils.format( "redirect:{}", url );
 	}
+
+	public Map defaultOrderBetState(){
+		Map<String, String> cacheOrderBetState = new HashMap<>();
+		cacheOrderBetState.put("ALL","全部");
+		cacheOrderBetState.put("X","未结算");
+		cacheOrderBetState.put("N","已取消");
+		cacheOrderBetState.put("W","赢");
+		cacheOrderBetState.put("L","输");
+		cacheOrderBetState.put("LW","赢一半");
+		cacheOrderBetState.put("LL","输一半");
+		cacheOrderBetState.put("O","平手");
+		cacheOrderBetState.put("S","等待中");
+		cacheOrderBetState.put("D","未接受");
+		cacheOrderBetState.put("C","注销");
+		cacheOrderBetState.put("F","非法下注");
+		cacheOrderBetState.put("SC","系统注销");
+		cacheOrderBetState.put("DC","危险球注销");
+		return cacheOrderBetState;
+	}
+
+	public List<Map> handlyGameData(IMemberGameDataMinService memberGameDataMinService, MemberGameData req){
+		return memberGameDataMinService.selectMemberGameDataMinList(req);
+	}
+
 }
