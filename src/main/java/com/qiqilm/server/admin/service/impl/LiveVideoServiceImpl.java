@@ -307,6 +307,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			updateVideo.setCateId( 4 );// 设置主题ID为收费直播
 			updateVideo.setIsLivePay( true );
 			liveVideoMapper.updateLiveVideo( updateVideo );
+			if(profile.equals("7701")){
+				liveVideoMapper.updateLive7706Video(updateVideo);
+			}
 
 			RedisCacheUtil.me.clear( video.getId(), LiveVideo.class );
 
