@@ -56,12 +56,12 @@ public class HelpNoticeUtil implements Serializable {
 		info.put( "nick_name", sysConfigCacheUtil.getConf( "77_help_nick_name" ) );
 		info.put( "officer", "2" );
 		info.put( "guardType", "2" );
-		info.put( "agent", agent );
 		ext.put( "sender", info );
-
 
 		if(!profile.equals("7706")){
 			agent = "";
+		}else{
+			info.put( "agent", agent );
 		}
 
 		try {
@@ -107,10 +107,11 @@ public class HelpNoticeUtil implements Serializable {
 		info.put( "nick_name", sysConfigCacheUtil.getConf( "77_help_nick_name" ) );
 		info.put( "officer", "2" );
 		info.put( "guardType", "2" );
-		info.put( "agent", agent );
 		ext.put( "sender", info );
 		if(!profile.equals("7706")){
 			agent = "";
+		}else{
+			info.put( "agent", agent );
 		}
 
 		try {
