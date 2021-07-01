@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * <p>Title: DateFormatUtils</p>
@@ -410,6 +411,13 @@ public abstract class DateFormatUtils {
 		cal.set( Calendar.MINUTE, 0 );
 		cal.set( Calendar.SECOND, 0 );
 		return cal.getTime();
+	}
+
+	public static String beiJinToMeiDong(Date date,String style){
+		SimpleDateFormat sdf8=new SimpleDateFormat(style);
+		sdf8.setTimeZone(TimeZone.getTimeZone("America/Caracas"));
+		String dataTime=sdf8.format(date);
+		return dataTime;
 	}
 
 	public static void main(String[] args) {
