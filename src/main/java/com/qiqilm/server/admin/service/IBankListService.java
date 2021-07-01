@@ -27,6 +27,8 @@ public interface IBankListService {
 	 */
 	public List<BankList> selectBankListList(BankList bankList);
 
+	public List<BankList> selectBankListLists();
+
 	/**
 	 * 新增出款银行列表
 	 *

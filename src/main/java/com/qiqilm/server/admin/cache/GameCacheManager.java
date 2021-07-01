@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -173,5 +174,23 @@ public class GameCacheManager {
 
 	public Long add( String useID, String game ) {
 		return stringRedisTemplate.opsForSet().add( Constants.PLATFORM_TOKEN.concat( game ).concat( ":users" ), useID );
+	}
+
+	public List<RspGamePlatform> getGamePlatformList( String gameTypeId ) {
+		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+		List<String>                    ids;
+		if ( StringUtils.isEmpty( gameTypeId ) ) {
+			ids = JSON.parseArray( operations.get( Constants.CX_GAME.concat( "platformIds:list" ) ), String.class );
+		} else {
+			ids = JSON.parseArray( operations.get( Constants.CX_GAME.concat( "platformGroups:" ).concat( gameTypeId ) ),
+					String.class );
+		}
+		List<RspGamePlatform> list = new ArrayList<>();
+		if ( ids != null ) {
+			for ( String pid : ids ) {
+				list.add( JSON.parseObject( operations.get( Constants.CX_GAME.concat( "platformId:" ).concat( String.valueOf( pid ) ) ), RspGamePlatform.class ) );
+			}
+		}
+		return list;
 	}
 }

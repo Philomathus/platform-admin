@@ -23,3 +23,5 @@ mybatis:
 payAgentLimit: 30000
 payAgentLimitBinLi: 50000
 payAgentLimitLianFuBao: 30000
+# 代理号
+agentCode: 7706
