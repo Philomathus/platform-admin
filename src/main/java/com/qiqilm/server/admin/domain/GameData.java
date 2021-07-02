@@ -22,5 +22,7 @@ public class GameData extends BaseEntity {
     private String serverId;
     /** 投注状态 betState **/
     private String betState;
+    /** 日期时间段 */
+    private String[] selectDate;
 
 }

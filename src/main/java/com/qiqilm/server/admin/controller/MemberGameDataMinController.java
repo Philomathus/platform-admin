@@ -57,37 +57,18 @@ public class MemberGameDataMinController extends BaseController {
 		try {
 			listMap = handlyGameData((req) ->{
 				List<Map<String,String>> list = new ArrayList<>();
-				req.setGameStartTime(Optional.ofNullable(req.getGameStartTime()).orElseGet(() -> {
-					if (StringUtils.isEmpty(req.getGameEndTime())){
-						Date nowTime = new Date();
-						Date startDate = null;
-						try {
-							startDate = DateFormatUtils.addMin(nowTime, -5);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						req.setGameEndTime(DateFormatUtils.formate(nowTime));
-						return DateFormatUtils.formate(startDate);
-					}
-					String endTime = req.getGameEndTime();
+				String[] dates = Optional.ofNullable(req.getSelectDate()).orElseGet(() ->{
+					Date nowTime = new Date();
+					Date startDate = null;
 					try {
-						Date startDate = DateFormatUtils.addMin(DateFormatUtils.parse(endTime), -5);
-						return DateFormatUtils.formate(startDate);
+						startDate = DateFormatUtils.addMin(nowTime, -5);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					return null;
-				}));
-				req.setGameEndTime(Optional.ofNullable(req.getGameEndTime()).orElseGet(() ->{
-					String startTime = req.getGameStartTime();
-					try {
-						Date endDate = DateFormatUtils.addMin(DateFormatUtils.parse(startTime), 5);
-						return DateFormatUtils.formate(endDate);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					return null;
-				}));
+					return new String[]{DateFormatUtils.formate(startDate),DateFormatUtils.formate(nowTime)};
+				});
+				req.setGameStartTime(dates[0]);
+				req.setGameEndTime(dates[1]);
 				try {
 					Optional.ofNullable(memberGameData.getPlatformId()).orElseThrow(()-> new Exception("游戏平台不存在，请检查!"));
 				} catch (Exception e) {
@@ -104,9 +85,9 @@ public class MemberGameDataMinController extends BaseController {
 						element.put("platformId",gamePlatform.getId()+"");
 						element.put("platformName",gamePlatform.getName());
 						IMemberGameDataMinService.BooleanAgent booleanAgent = () -> agentId.equals(profile);
-						if (!booleanAgent.getBoolean()){
+						if (booleanAgent.getBoolean()){
 							int count = 0;
-							if (StringUtils.isNotEmpty(memberGameData.getBetState())){
+							if (StringUtils.isNotEmpty(memberGameData.getBetState()) && !memberGameData.getBetState().equals("ALL")){
 								if (memberGameData.getBetState().equals(element.get("Result"))) count ++;
 							}else {
 								count ++;
