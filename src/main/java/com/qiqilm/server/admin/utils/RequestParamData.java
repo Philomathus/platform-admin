@@ -130,7 +130,6 @@ public class RequestParamData {
         String getURL = apiUrl.concat( "WagersRecordBy109?" ).concat(builder.toString());
         log.info( "BBIN-体育-投注记录-请求参数：{}",getURL );
         String strJSON = PostData.get(getURL);
-        strJSON ="{\"result\":true,\"data\":[{\"UserName\":\"7702bbin3785724\",\"WagersID\":\"2394293\",\"WagersDate\":\"2021-07-01 07:35:03\",\"GameType\":\"109998\",\"Result\":\"X\",\"BetAmount\":\"40.0000\",\"Payoff\":\"0.0000\",\"Currency\":\"RMB\",\"ExchangeRate\":\"1.0000\",\"Commissionable\":\"0.0000\",\"Origin\":\"P\",\"UPTIME\":\"2021-07-01 07:36:08\",\"OrderDate\":\"2021-07-01\",\"PayoutTime\":\"2100-01-01 00:00:00\",\"AccountDate\":\"2100-01-01\"}],\"pagination\":{\"Page\":1,\"PageLimit\":500,\"TotalNumber\":\"1\",\"TotalPage\":1}}\n";
         Map<String,Object> resultMap = JsonUtil.json2Map(strJSON);
         log.info("BBIN-体育-投注记录-返回值:{}",JSON.toJSONString(resultMap));
         boolean result = (boolean) resultMap.get("result");
