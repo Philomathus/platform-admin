@@ -97,4 +97,6 @@ public abstract class ConstantsPayAgent {
 	public static final String YINLIAN            = "yinLian";
 	//新通代付
 	public static final String XINTONG            = "xinTong";
+	//七匹狼代付
+	public static final String QIPILANG            = "qiPiLang";
 }

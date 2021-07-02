@@ -40,6 +40,14 @@ public interface LiveHostWageDayMapper {
 	 */
 	public int insertLiveHostWageDay( LiveHostWageDay liveHostWageDay );
 
+
+	/**
+	 * 新增主播时长7706
+	 * @param liveHostWageDay 主播时长
+	 * @return 结果
+	 */
+	public int insertLiveHostWageDay7706( LiveHostWageDay liveHostWageDay );
+
 	/**
 	 * 修改主播时长
 	 *
