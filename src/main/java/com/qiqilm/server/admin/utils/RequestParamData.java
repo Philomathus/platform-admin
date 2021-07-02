@@ -110,9 +110,10 @@ public class RequestParamData {
     public static List<Map<String, String>> requestBBINSportBetRecord(MemberGameData memberGameData,GamePlatform gamePlatform){
         Date startDate = DateFormatUtils.parse(memberGameData.getGameStartTime());
         Date endDate = DateFormatUtils.parse(memberGameData.getGameEndTime());
-        String date =DateFormatUtils.beiJinToMeiDong(new Date(),"yyyy-MM-dd");
+        String date =DateFormatUtils.beiJinToMeiDong(startDate,"yyyy-MM-dd");
         String beginTime =DateFormatUtils.beiJinToMeiDong(startDate,"HH:mm:ss");
         String endTime = DateFormatUtils.beiJinToMeiDong(endDate,"HH:mm:ss");
+        if (endTime.compareTo(beginTime)<0)endTime = "23:59:59";
         StringBuilder builder = new StringBuilder();
         String random = UuidUtil.getRandomUuid();
         String a = random.substring(0,7).replace("-","a");
@@ -120,7 +121,7 @@ public class RequestParamData {
         String md5 = gamePlatform.getDes()  + RE_BBIN_SPORT_ROCRED_KEY8 + convertTime(new Date());
         md5 = DigestUtils.md5Hex(md5);
         builder.append("website=").append(gamePlatform.getDes())
-                .append("&action=").append("ModifiedTime")
+                .append("&action=").append("BetTime")
                 .append("&uppername=").append(gamePlatform.getAgent())
                 .append("&date=").append(date)
                 .append("&starttime=").append(beginTime)
@@ -144,10 +145,10 @@ public class RequestParamData {
     public static String requestBBINSportBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String des = gamePlatform.getDes();
         String random = UuidUtil.getRandomUuid();
-        String a = random.substring(0,7).replace("-","a");
-        String c = random.substring(random.length()-5,random.length()-1).replace("-","a");
+        String string = random.replaceAll("-","");
+        String a = string.substring(0,4);
+        String c = string.substring(5,14);
         String md5 = des  + RE_BBIN_SPORT_DETAIL_KEY8 + convertTime(new Date());
-        md5 = DigestUtils.md5Hex(md5);
         String key = a + DigestUtils.md5Hex(md5) + c;
         String account = memberGameData.getAccount().replace("_","bbin");
         String s1 = String.format(RE_BBIN_SPORT_DETAIL_RECORD_S1,
@@ -338,4 +339,10 @@ public class RequestParamData {
             "\t\"timeZone\": \"GMT+8\",\n" +
             "\t\"currency\": \"CNY\"\n" +
             "}";
+
+    public static void main(String[] args) {
+        //String s = "1ac7567731a6d771793cab71310a5358";
+        String s = DigestUtils.md5Hex("rtwrt1gm5y0q20210702");
+        System.err.println(s);
+    }
 }
