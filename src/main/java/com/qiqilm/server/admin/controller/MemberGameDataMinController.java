@@ -1,17 +1,20 @@
 package com.qiqilm.server.admin.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.annotation.AccessLimit;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.MemberGameData;
-import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
+import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.GamePlatformMapper;
+import com.qiqilm.server.admin.service.IMemberGameDataMinService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RequestParamData;
 import com.qiqilm.server.admin.utils.StringUtils;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,13 +29,15 @@ import java.util.*;
  * @author 77tv
  * @date 2021-01-29
  */
+@Log4j2
 @RestController
 @RequestMapping( "/member/memberGameDataMin" )
 public class MemberGameDataMinController extends BaseController {
 
-
 	@Resource
 	private GamePlatformMapper gamePlatformMapper;
+	@Value( "${spring.profiles.active}" )
+	private String profile;
 
 	/** 注单列表 **/
 	@GetMapping( value = "/orderBetStateList" )
@@ -90,27 +95,36 @@ public class MemberGameDataMinController extends BaseController {
 				}
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( memberGameData.getPlatformId() );
 				if (gamePlatform != null){
-					List<Map<String, String>> mapList = RequestParamData.requestBBINSportBetRecord(memberGameData,gamePlatform);
-					mapList.stream().forEach(n ->{
-						int count = 0;
-						if (StringUtils.isNotEmpty(memberGameData.getBetState())){
-							if (memberGameData.getBetState().equals(n.get("Result"))) count ++;
-						}else {
-							count ++;
-						}
-						if (StringUtils.isNotEmpty(memberGameData.getAccount())){
-							String account = n.get("UserName").replace("bbin","_").toUpperCase();
-							if (account.equals(memberGameData.getAccount())) count ++;
-						}else {
-							count ++;
-						}
-						if (StringUtils.isNotEmpty(memberGameData.getGameId()) ){
-							if (memberGameData.getGameId().equals(n.get("WagersID"))) count ++;
-						}else {
-							count ++;
-						}
-						if (count == 3){
-							list.add(n);
+					RequestParamData.requestBBINSportBetRecord(memberGameData,gamePlatform).stream().forEach(element ->{
+						//初始化数据
+						String account = element.get("UserName").replace("bbin","_").toUpperCase();
+						String agentId = account.split("_")[0];
+						element.put("UserName",account);
+						element.put("agent",gamePlatform.getAgent());
+						element.put("platformId",gamePlatform.getId()+"");
+						element.put("platformName",gamePlatform.getName());
+						IMemberGameDataMinService.BooleanAgent booleanAgent = () -> agentId.equals(profile);
+						if (!booleanAgent.getBoolean()){
+							int count = 0;
+							if (StringUtils.isNotEmpty(memberGameData.getBetState())){
+								if (memberGameData.getBetState().equals(element.get("Result"))) count ++;
+							}else {
+								count ++;
+							}
+							if (StringUtils.isNotEmpty(memberGameData.getAccount())){
+								if (account.equals(memberGameData.getAccount())) count ++;
+							}else {
+								count ++;
+							}
+							if (StringUtils.isNotEmpty(memberGameData.getGameId()) ){
+								if (memberGameData.getGameId().equals(element.get("WagersID"))) count ++;
+							}else {
+								count ++;
+							}
+							element.put("Result", (String) defaultOrderBetState().get(element.get("Result")));
+							if (count == 3){
+								list.add(element);
+							}
 						}
 					});
 				}
@@ -126,4 +140,28 @@ public class MemberGameDataMinController extends BaseController {
 		return AjaxResult.success(listMap);
 	}
 
+	/**
+	 * 查询会员注单数据列表
+	 */
+	@AccessLimit(seconds = 5, maxCount = 0)
+	@PreAuthorize( "@ss.hasPermi('member:memberGameDataMin:detail')" )
+	@GetMapping( "/detail" )
+	public AjaxResult detail(MemberGameData memberGameData ) {
+		//校验游戏种类
+		if (memberGameData == null || memberGameData.getPlatformId() == 0){
+			return AjaxResult.error("查询游戏局号失败，请输入正确的查询参数");
+		}
+		try {
+			GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( memberGameData.getPlatformId() );
+			if (gamePlatform != null){
+				String result = RequestParamData.requestBBINSportBetDetail(memberGameData,gamePlatform);
+				log.info(EnumGamePlatform.BBIN_SPORT.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
+				return RequestParamData.gameBBINSportDetailDataWrapper(result);
+			}
+		}catch (Exception e) {
+			log.error( "查询游戏局号明细失败，参数:{},错误信息:",JSON.toJSONString(memberGameData),e);
+			return AjaxResult.error("查询游戏局号明细失败Account:" + memberGameData.getAccount());
+		}
+		return AjaxResult.error("游戏未配置，请选择其他游戏!");
+	}
 }
