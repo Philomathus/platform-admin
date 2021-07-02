@@ -154,6 +154,7 @@ public class RequestParamData {
         String apiUrl = gamePlatform.getApiUrl();
         String getURL = apiUrl.concat( "GetWagersSubDetailUrlBy109?" ).concat(param);
         log.info( "BBIN-体育-投注详情-请求参数：{}",getURL );
+        getURL = "http://linkapi.bangzhude.com/app/WebService/JSON/display.php/GetWagersSubDetailUrlBy109?website=rtwrt1&username=7702bbin3785724&lang=zh-cn&wagersid=2394293&key=4da7305fc954b891200d9a420acec6cb2f9b8ea351f";
         return PostData.get(getURL);
     }
 
@@ -316,7 +317,8 @@ public class RequestParamData {
         boolean bool = (boolean) resultMap.get("result");
         if (!bool) {
             Map<String, String> stringMap = (Map<String, String>) resultMap.get("data");
-            return AjaxResult.error(stringMap.get("Code"), "查询游戏局号日志失败[未知错误]");
+            String code = stringMap.get("Code");
+            return AjaxResult.error(Integer.valueOf(code), "查询游戏局号日志失败[未知错误]");
         }
         return AjaxResult.success(resultMap.get("data"));
     }
