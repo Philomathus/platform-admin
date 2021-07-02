@@ -22,6 +22,8 @@ import java.util.*;
 @Log4j2
 public class RequestParamData {
 
+    private static final String RE_BBIN_SPORT_ROCRED_KEY8 = "SNjv90Bz";
+    private static final String RE_BBIN_SPORT_DETAIL_KEY8 = "gm5y0q";
     private static final String RE_KY_DETAIL_RECORD_S1 = "agent=%s&timestamp=%s&param=%s&key=%s";
     private static final String RE_KY_DETAIL_RECORD_S2 = "s=%s&startTime=%s&endTime=%s";
     private static final String RE_KY_DETAIL_RECORD_S3 = "s=%s&kindID=%s&recordID=%s&account=%s";
@@ -31,6 +33,7 @@ public class RequestParamData {
     private static final String RE_AG_PLAY_DETAIL_RECORD_S1 = "cagent=%s&startdate=%s&enddate=%s&gametype=%s&gamecode=%s&page=1&perpage=100&key=%s";
     private static final String RE_SB_SPORT_DETAIL_RECORD_S1 = "vendor_id=%s&trans_id=%s";
     private static final String RE_BBIN_SPORT_DETAIL_RECORD_S1 = "website=%s&username=%s&lang=zh-cn&wagersid=%s&key=%s";
+
 
     //开元棋牌 - 对局详情 返回参数
     public static String requestKYBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
@@ -114,7 +117,7 @@ public class RequestParamData {
         String random = UuidUtil.getRandomUuid();
         String a = random.substring(0,7).replace("-","a");
         String c = random.substring(random.length()-5,random.length()-1).replace("-","a");
-        String md5 = gamePlatform.getDes()  + "SNjv90Bz" + convertTime(new Date());
+        String md5 = gamePlatform.getDes()  + RE_BBIN_SPORT_ROCRED_KEY8 + convertTime(new Date());
         md5 = DigestUtils.md5Hex(md5);
         builder.append("website=").append(gamePlatform.getDes())
                 .append("&action=").append("ModifiedTime")
@@ -140,21 +143,20 @@ public class RequestParamData {
 
     //BBIN体育-投注详情
     public static String requestBBINSportBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
-        String agent = memberGameData.getAgent();
         String des = gamePlatform.getDes();
         String random = UuidUtil.getRandomUuid();
         String a = random.substring(0,7).replace("-","a");
         String c = random.substring(random.length()-5,random.length()-1).replace("-","a");
-        String md5 = des  + "SNjv90Bz" + convertTime(new Date());
+        String md5 = des  + RE_BBIN_SPORT_DETAIL_KEY8 + convertTime(new Date());
         md5 = DigestUtils.md5Hex(md5);
         String key = a + DigestUtils.md5Hex(md5) + c;
+        String account = memberGameData.getAccount().replace("_","bbin");
         String s1 = String.format(RE_BBIN_SPORT_DETAIL_RECORD_S1,
-                des,agent,memberGameData.getGameId(),key);
+                des,account,memberGameData.getGameId(),key);
         String param = s1;
         String apiUrl = gamePlatform.getApiUrl();
         String getURL = apiUrl.concat( "GetWagersSubDetailUrlBy109?" ).concat(param);
         log.info( "BBIN-体育-投注详情-请求参数：{}",getURL );
-        getURL = "http://linkapi.bangzhude.com/app/WebService/JSON/display.php/GetWagersSubDetailUrlBy109?website=rtwrt1&username=7702bbin3785724&lang=zh-cn&wagersid=2394293&key=4da7305fc954b891200d9a420acec6cb2f9b8ea351f";
         return PostData.get(getURL);
     }
 
