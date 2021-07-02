@@ -20,5 +20,7 @@ public interface IMemberGameDataMinService<T> {
 	 */
 	List<T> selectMemberGameDataMinList(MemberGameData memberGameData);
 
+	@FunctionalInterface
+	interface BooleanAgent {    boolean getBoolean(); }
 
 }

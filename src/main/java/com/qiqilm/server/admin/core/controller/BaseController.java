@@ -8,7 +8,6 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.page.TableSupport;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberGameData;
-import com.qiqilm.server.admin.domain.req.ReqMemberGameData;
 import com.qiqilm.server.admin.exception.ControllerExceptionHandler;
 import com.qiqilm.server.admin.service.IMemberGameDataMinService;
 import com.qiqilm.server.admin.utils.*;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * web层通用数据处理
@@ -108,7 +107,7 @@ public class BaseController extends ControllerExceptionHandler {
 	}
 
 	public Map defaultOrderBetState(){
-		Map<String, String> cacheOrderBetState = new HashMap<>();
+		Map<String, String> cacheOrderBetState = new TreeMap<>();
 		cacheOrderBetState.put("ALL","全部");
 		cacheOrderBetState.put("X","未结算");
 		cacheOrderBetState.put("N","已取消");

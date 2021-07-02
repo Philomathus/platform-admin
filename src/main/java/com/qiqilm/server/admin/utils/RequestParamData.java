@@ -126,7 +126,8 @@ public class RequestParamData {
         String apiUrl = gamePlatform.getApiUrl();
         String getURL = apiUrl.concat( "WagersRecordBy109?" ).concat(builder.toString());
         log.info( "BBIN-体育-投注记录-请求参数：{}",getURL );
-        String strJSON = PostData.get("http://linkapi.bangzhude.com/app/WebService/JSON/display.php/WagersRecordBy109?website=rtwrt1&action=ModifiedTime&uppername=dzf040&date=2021-07-01&starttime=07:35:17&endtime=07:39:17&key=bdad717c9304a6674701a52659cfb04812177fd47a7");
+        String strJSON = PostData.get(getURL);
+        strJSON ="{\"result\":true,\"data\":[{\"UserName\":\"7702bbin3785724\",\"WagersID\":\"2394293\",\"WagersDate\":\"2021-07-01 07:35:03\",\"GameType\":\"109998\",\"Result\":\"X\",\"BetAmount\":\"40.0000\",\"Payoff\":\"0.0000\",\"Currency\":\"RMB\",\"ExchangeRate\":\"1.0000\",\"Commissionable\":\"0.0000\",\"Origin\":\"P\",\"UPTIME\":\"2021-07-01 07:36:08\",\"OrderDate\":\"2021-07-01\",\"PayoutTime\":\"2100-01-01 00:00:00\",\"AccountDate\":\"2100-01-01\"}],\"pagination\":{\"Page\":1,\"PageLimit\":500,\"TotalNumber\":\"1\",\"TotalPage\":1}}\n";
         Map<String,Object> resultMap = JsonUtil.json2Map(strJSON);
         log.info("BBIN-体育-投注记录-返回值:{}",JSON.toJSONString(resultMap));
         boolean result = (boolean) resultMap.get("result");
@@ -308,6 +309,19 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
+    //bbin-体育
+    public static AjaxResult gameBBINSportDetailDataWrapper(String result){
+        Map<String,Object> resultMap = JsonUtil.json2Map(result);
+        log.info("BBIN-体育-投注记录-返回值:{}",JSON.toJSONString(resultMap));
+        boolean bool = (boolean) resultMap.get("result");
+        if (!bool) {
+            Map<String, String> stringMap = (Map<String, String>) resultMap.get("data");
+            return AjaxResult.error(stringMap.get("Code"), "查询游戏局号日志失败[未知错误]");
+        }
+        return AjaxResult.success(resultMap.get("data"));
+    }
+
+
     public static String convertTime(Date date){
         SimpleDateFormat sdf8=new SimpleDateFormat("yyyyMMdd");
         sdf8.setTimeZone(TimeZone.getTimeZone("America/Caracas"));
