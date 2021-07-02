@@ -154,7 +154,15 @@
         select to_user_id hostId, IFNULL(SUM(total_ticket),0) sumHostProp from ${dbLive}.live_video_prop  where to_user_id > 0 and  p_user_id not in (select id from ${dbMain}.member_info where status in (2,0)) and create_date = #{dayTime} GROUP BY to_user_id
 	</select>
 
+	<select id="sumHostPropDay7706List" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
+        select to_user_id hostId, IFNULL(SUM(total_ticket),0) sumHostProp from 7706_live.live_video_prop  where to_user_id > 0 and  p_user_id not in (select id from 7706_main.member_info where status in (2,0)) and create_date = #{dayTime} GROUP BY to_user_id
+	</select>
+
 	<select id="sumHostLotteryDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
 		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from  ${dbLottery}.lottery_bet_bb_view  where  update_time &gt;= #{begin} and update_time &lt;= #{end} and anchor >0 and puser_id not in (select id from ${dbMain}.member_info where status  in (2,0))   GROUP BY anchor
+	</select>
+
+	<select id="sumHostLotteryDay7706List" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
+		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from  7706_lottery.lottery_bet_bb_view  where  update_time &gt;= #{begin} and update_time &lt;= #{end} and anchor >0 and puser_id not in (select id from 7706_main.member_info where status  in (2,0))   GROUP BY anchor
 	</select>
 </mapper>
