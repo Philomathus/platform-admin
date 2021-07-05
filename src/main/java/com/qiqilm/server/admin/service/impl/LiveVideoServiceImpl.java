@@ -541,6 +541,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			log.error( "7706主播投注数：{}", lotteryDayVos.size() );
 			for ( LiveHostWageDay updateLiveDay : update7706Map.values() ) {
 				LiveHostWageDay db =liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
+				if(db==null){
+					continue;
+				}
 				updateLiveDay.setHostId( db.getHostId() );
 				updateLiveDay.setStartTime( db.getStartTime());
 				updateLiveDay.setEndTime( db.getEndTime() );
