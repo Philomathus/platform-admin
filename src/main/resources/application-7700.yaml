@@ -22,5 +22,3 @@ mybatis:
       dbOim: oim
     # spring boot集成mybatis的方式打印sql
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-# 代理号
-agentCode: 7700
