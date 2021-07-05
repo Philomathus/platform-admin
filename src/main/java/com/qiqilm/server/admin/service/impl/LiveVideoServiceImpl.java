@@ -508,7 +508,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		}
 
-		if(!profile.equals("7701")){
+		if(profile.equals("7701")){
 			//先收集7706
 			Map<String, LiveHostWageDay> update7706Map = new HashMap<>();
 			propDayVos = liveVideoPropMapper.sumHostPropDay7706List( dayTime );
@@ -524,6 +524,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp() ));
 
 			}
+			log.error( "7706主播收礼物数：{}", propDayVos.size() );
 
 			lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay7706List( begin, end );
 			for ( HostPropDayVo v : lotteryDayVos ) {
@@ -537,8 +538,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				updateLiveDay.setLotteryCost( updateLiveDay.getLotteryCost().add(v.getSumHostProp()) );
 
 			}
+			log.error( "7706主播投注数：{}", lotteryDayVos.size() );
 			for ( LiveHostWageDay updateLiveDay : update7706Map.values() ) {
 				LiveHostWageDay db =liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
+				if(db==null){
+					continue;
+				}
 				updateLiveDay.setHostId( db.getHostId() );
 				updateLiveDay.setStartTime( db.getStartTime());
 				updateLiveDay.setEndTime( db.getEndTime() );
