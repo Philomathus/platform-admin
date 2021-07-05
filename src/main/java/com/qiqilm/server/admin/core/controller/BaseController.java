@@ -125,7 +125,24 @@ public class BaseController extends ControllerExceptionHandler {
 		return cacheOrderBetState;
 	}
 
-	public List<Map> handlyGameData(IMemberGameDataMinService memberGameDataMinService, MemberGameData req){
+	public TreeMap defaultSbBetState(){
+		TreeMap<String, String> betState = new TreeMap<>();
+		betState.put("ALL","全部");
+		betState.put("waiting","等待中");
+		betState.put("running","进行中");
+		betState.put("void","作废");
+		betState.put("refund","退款");
+		betState.put("reject","已取消");
+		betState.put("lose","输");
+		betState.put("won","赢");
+		betState.put("draw","和局");
+		betState.put("half won","半赢");
+		betState.put("half lose","半输");
+		return betState;
+
+	}
+
+	public List<Map> handlyGameData(IMemberGameDataMinService memberGameDataMinService, MemberGameData req) throws Exception {
 		return memberGameDataMinService.selectMemberGameDataMinList(req);
 	}
 

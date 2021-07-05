@@ -18,7 +18,7 @@ public interface IMemberGameDataMinService<T> {
 	 * @param memberGameData 会员注单数据
 	 * @return 会员注单数据集合
 	 */
-	List<T> selectMemberGameDataMinList(MemberGameData memberGameData);
+	List<T> selectMemberGameDataMinList(MemberGameData memberGameData) throws Exception;
 
 	@FunctionalInterface
 	interface BooleanAgent {    boolean getBoolean(); }

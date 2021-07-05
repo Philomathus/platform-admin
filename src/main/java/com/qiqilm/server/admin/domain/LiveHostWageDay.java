@@ -43,11 +43,11 @@ public class LiveHostWageDay extends BaseEntity {
 
     /** 主播直播结算印票 */
     @Excel(name = "主播直播结算印票")
-    private BigDecimal ticket;
+    private BigDecimal ticket = BigDecimal.ZERO;
 
     /** 主播直播结算印票 */
     @Excel(name = "主播直播彩票投注")
-    private BigDecimal lotteryCost;
+    private BigDecimal lotteryCost= BigDecimal.ZERO;
 
     /** 上播次数 */
     @Excel(name = "上播次数")
