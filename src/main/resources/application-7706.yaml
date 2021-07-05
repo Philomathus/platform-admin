@@ -20,8 +20,21 @@ mybatis:
       dbLive: 7706_live
       dbLottery: 7706_lottery
 
-payAgentLimit: 30000
+# 代付额度
+payAgentLimit: 5000
+# 顺为代付额度
+payAgentLimitShunWei: 50000
+# 宾利代付额度
 payAgentLimitBinLi: 50000
-payAgentLimitLianFuBao: 30000
+# 特仑苏代付额度
+payAgentLimitTels: 50000
+# 联付宝代付额度
+payAgentLimitLianFuBao: 2000
+# 马云代付额度
+payAgentLimitMaYun: 50000
+# 合众代付额度
+payAgentLimitHeZhong: 50000
+# 滴滴代付额度
+payAgentLimitDiDi: 50000
 # 代理号
 agentCode: 7706

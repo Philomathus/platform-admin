@@ -68,6 +68,30 @@
         </trim>
     </insert>
 
+    <insert id="insertLiveHostWageDay7706" parameterType="LiveHostWageDay" useGeneratedKeys="true" keyProperty="id">
+        insert ignore  into 7706_live.live_host_wage_day
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="familyId != null">family_id,</if>
+            <if test="hostId != null">host_id,</if>
+            <if test="startTime != null and startTime != ''">start_time,</if>
+            <if test="endTime != null and endTime != ''">end_time,</if>
+            <if test="liveTimeSec != null">live_time_sec,</if>
+            <if test="ticket != null">ticket,</if>
+            <if test="times != null">times,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="familyId != null">#{familyId},</if>
+            <if test="hostId != null">#{hostId},</if>
+            <if test="startTime != null and startTime != ''">#{startTime},</if>
+            <if test="endTime != null and endTime != ''">#{endTime},</if>
+            <if test="liveTimeSec != null">#{liveTimeSec},</if>
+            <if test="ticket != null">#{ticket},</if>
+            <if test="times != null">#{times},</if>
+        </trim>
+    </insert>
+
     <update id="updateLiveHostWageDay" parameterType="LiveHostWageDay">
         update ${dbLive}.live_host_wage_day
         <trim prefix="SET" suffixOverrides=",">

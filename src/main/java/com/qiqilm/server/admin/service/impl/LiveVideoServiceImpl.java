@@ -474,7 +474,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 	}
 
 	@Override
-	public void countHostGift() {
+	public void countHostGift(String profile) {
 		long s = System.currentTimeMillis();
 		log.info( "开始执行主播礼物计算,彩票投注" );
 		String              dayTime    = LocalDate.now().plusDays( -1 ).toString();
@@ -488,7 +488,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 
 		Map<String, LiveHostWageDay> updateMap = new HashMap<>();
-
 
 		for ( HostPropDayVo v : propDayVos ) {
 			LiveHostWageDay updateLiveDay = new LiveHostWageDay();
@@ -509,9 +508,69 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		}
 
+		if(profile.equals("7701")){
+			//先收集7706
+			Map<String, LiveHostWageDay> update7706Map = new HashMap<>();
+			propDayVos = liveVideoPropMapper.sumHostPropDay7706List( dayTime );
+
+			for ( HostPropDayVo v : propDayVos ) {
+				id = dayTime.concat( "-" ).concat( String.valueOf( v.getHostId() ) );
+				LiveHostWageDay updateLiveDay = update7706Map.get( id );
+				if ( updateLiveDay == null ) {
+					updateLiveDay = new LiveHostWageDay();
+					updateLiveDay.setId( id );
+					update7706Map.put( updateLiveDay.getId(), updateLiveDay );
+				}
+				updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp() ));
+
+			}
+			log.error( "7706主播收礼物数：{}", propDayVos.size() );
+
+			lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay7706List( begin, end );
+			for ( HostPropDayVo v : lotteryDayVos ) {
+				id = dayTime.concat( "-" ).concat( String.valueOf( v.getHostId() ) );
+				LiveHostWageDay updateLiveDay = update7706Map.get( id );
+				if ( updateLiveDay == null ) {
+					updateLiveDay = new LiveHostWageDay();
+					updateLiveDay.setId( id );
+					update7706Map.put( updateLiveDay.getId(), updateLiveDay );
+				}
+				updateLiveDay.setLotteryCost( updateLiveDay.getLotteryCost().add(v.getSumHostProp()) );
+
+			}
+			log.error( "7706主播投注数：{}", lotteryDayVos.size() );
+			for ( LiveHostWageDay updateLiveDay : update7706Map.values() ) {
+				LiveHostWageDay db =liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
+				if(db==null){
+					continue;
+				}
+				updateLiveDay.setHostId( db.getHostId() );
+				updateLiveDay.setStartTime( db.getStartTime());
+				updateLiveDay.setEndTime( db.getEndTime() );
+				updateLiveDay.setFamilyId( db.getFamilyId());
+				updateLiveDay.setLiveTimeSec( db.getLiveTimeSec() );
+				updateLiveDay.setTimes( db.getTimes());
+				liveHostWageDayMapper.insertLiveHostWageDay7706(updateLiveDay);
+			}
+
+			//合并到7701
+			for ( LiveHostWageDay v : update7706Map.values() ) {
+				if(updateMap.containsKey(v.getId())){
+					LiveHostWageDay tem = updateMap.get(v.getId());
+					tem.setTicket(tem.getTicket().add(v.getTicket() ));
+					tem.setLotteryCost( tem.getLotteryCost().add(v.getLotteryCost()) );
+					updateMap.put(v.getId(),tem);
+				}else{
+					updateMap.put(v.getId(),v);
+				}
+			}
+		}
+
 		for ( LiveHostWageDay updateLiveDay : updateMap.values() ) {
 			liveHostWageDayMapper.updateLiveHostWageDay( updateLiveDay );
 		}
+
+
 		log.info( "结束执行主播礼物计算,执行时间：{}ms", System.currentTimeMillis() - s );
 
 	}
