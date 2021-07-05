@@ -31,7 +31,7 @@ public class RequestParamData {
     private static final String RE_XSJ_DETAIL_RECORD_S1 = "agent=%s&timestamp=%s&param=%s&key=%s";
     private static final String RE_XSJ_DETAIL_RECORD_S2 = "s=%s&gameuserno=%s&id=%s&account=%s&serverID=%s";
     private static final String RE_AG_PLAY_DETAIL_RECORD_S1 = "cagent=%s&startdate=%s&enddate=%s&gametype=%s&gamecode=%s&page=1&perpage=100&key=%s";
-    private static final String RE_SB_SPORT_DETAIL_RECORD_S1 = "vendor_id=%s&trans_id=%s";
+    private static final String RE_SB_SPORT_DETAIL_RECORD_S1 = "vendor_id=%s&version_key=%s";
     private static final String RE_BBIN_SPORT_DETAIL_RECORD_S1 = "website=%s&username=%s&lang=zh-cn&wagersid=%s&key=%s";
 
 
@@ -86,31 +86,69 @@ public class RequestParamData {
         log.info( "AG-视讯-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
+    //沙巴体育-投注记录
+    public static List<Map<String,String>> requestSbSportBetRecord(GamePlatform gamePlatform, RestTemplate restTemplate) throws Exception {
+        String apiUrl = gamePlatform.getApiUrl()+"/GetBetDetail/";
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        map.add("vendor_id",gamePlatform.getAgent());
+        map.add("version_key","0");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>( map, httpHeaders );
+        log.info( "沙巴体育-投注记录-请求参数：{}",apiUrl );
+        Map<String,Object> resultMap = restTemplate.postForObject( apiUrl, httpEntity, Map.class );
+        log.info("沙巴体育-投注记录-返回值:{}",JSON.toJSONString(resultMap));
+        String code = resultMap.get("error_code").toString();
+        if (!"0".equals(code)){
+            throw new BusinessException(code);
+        }
+        Map<String,Object> objectMap = (Map<String, Object>) resultMap.get("Data");
+        List<Map<String,String>> betDetails = (List<Map<String,String>>) objectMap.get("BetDetails");
+        List<Map<String,String>> betNumberDetails = (List<Map<String,String>>) objectMap.get("BetNumberDetails");
+        List<Map<String,String>> betVirtualSportDetails = (List<Map<String,String>>) objectMap.get("BetVirtualSportDetails");
+        betDetails.addAll(betNumberDetails);
+        betDetails.addAll(betVirtualSportDetails);
+        return betDetails;
+    }
     //沙巴体育-投注详情
-    public static Map<String, Object> requestSbSportBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform, RestTemplate restTemplate) throws Exception {
+    public static AjaxResult requestSbSportBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform, RestTemplate restTemplate) throws Exception {
         String param = String.format( RE_SB_SPORT_DETAIL_RECORD_S1,gamePlatform.getAgent(),memberGameData.getGameId());
         String apiUrl = gamePlatform.getApiUrl()+"/GetBetDetailByTransID";
         String getURL = apiUrl.concat( "?" ).concat(param);
         log.info( "沙巴体育-投注详情-请求参数：{}",getURL );
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("vendor_id",gamePlatform.getAgent());
+        map.add("trans_id",memberGameData.getGameId());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>( map, httpHeaders );
-        Map<String,Object> resultMap = null;
-        try {
-            resultMap = restTemplate.postForObject( getURL, httpEntity, Map.class );
-        } catch ( Exception e ) {
-            e.printStackTrace();
-            return null;
+        Map<String,Object> resultMap = restTemplate.postForObject( getURL, httpEntity, Map.class );
+        String code = resultMap.get("error_code").toString();
+        if (!"0".equals(code)){
+            int error = Integer.valueOf(code) + 50000;
+            return AjaxResult.error(error, "沙巴体育-投注详情日志失败[未知错误]");
         }
-        return resultMap;
+        Map<String,Object> objectMap = (Map<String, Object>) resultMap.get("Data");
+        Map<String,String> stringMap = new HashMap<>();
+        if (objectMap.containsKey("BetDetails")){
+            List list = (List) objectMap.get("BetDetails");
+            stringMap = (Map<String, String>) list.get(0);
+        }
+        if (objectMap.containsKey("BetNumberDetails")){
+            List list = (List) objectMap.get("BetNumberDetails");
+            stringMap = (Map<String, String>) list.get(0);
+        }
+        if (objectMap.containsKey("BetVirtualSportDetails")){
+            List list = (List) objectMap.get("BetVirtualSportDetails");
+            stringMap = (Map<String, String>) list.get(0);
+        }
+        return AjaxResult.success(stringMap);
     }
     //BBIN体育投注列表
     public static List<Map<String, String>> requestBBINSportBetRecord(MemberGameData memberGameData,GamePlatform gamePlatform){
         Date startDate = DateFormatUtils.parse(memberGameData.getGameStartTime());
         Date endDate = DateFormatUtils.parse(memberGameData.getGameEndTime());
-        String date =DateFormatUtils.beiJinToMeiDong(startDate,"yyyy-MM-dd");
+        String date = DateFormatUtils.beiJinToMeiDong(startDate,"yyyy-MM-dd");
         String beginTime =DateFormatUtils.beiJinToMeiDong(startDate,"HH:mm:ss");
         String endTime = DateFormatUtils.beiJinToMeiDong(endDate,"HH:mm:ss");
         if (endTime.compareTo(beginTime)<0)endTime = "23:59:59";
@@ -140,7 +178,6 @@ public class RequestParamData {
         }
         return ((List<Map<String, String>>) resultMap.get("data"));
     }
-
     //BBIN体育-投注详情
     public static String requestBBINSportBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String des = gamePlatform.getDes();
@@ -159,7 +196,6 @@ public class RequestParamData {
         log.info( "BBIN-体育-投注详情-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
-
     //美天棋牌 - 投注详情 返回参数
     public static String requestMTBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         Map<String,String> data = new LinkedHashMap<>();
@@ -173,7 +209,6 @@ public class RequestParamData {
         log.info( "美天棋牌-对局详情-请求参数：{}",getURL);
         return PostData.post(getURL);
     }
-
     //凯旋棋牌|开元棋牌|新世界 对局列表 暂时共享
     public static String getBetURLByKXOrKY(MemberGameData memberGameData, GamePlatform gamePlatform)throws Exception {
         String agent = memberGameData.getAgent();
@@ -203,7 +238,6 @@ public class RequestParamData {
         String getURL = apiUrl.concat( "?" ).concat(param);
         return getURL;
     }
-
     //新世界 对局详情 暂时共享
     public static String getBetDetailURLByXSJ(MemberGameData memberGameData, GamePlatform gamePlatform)throws Exception {
         String agent = gamePlatform.getAgent();
@@ -220,7 +254,6 @@ public class RequestParamData {
         String getURL = apiUrl.concat( "?" ).concat(param);
         return getURL;
     }
-
     //封装数据
     public static AjaxResult gameBetDataWrapper(String result,String account){
         JSONObject object = JSON.parseObject(result);
@@ -277,7 +310,6 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
-
     //封装数据
     public static AjaxResult meiTianGameBetDataWrapper(String result){
         JSONObject object = JSON.parseObject(result);
@@ -291,7 +323,6 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
-
     //ag-视讯
     public static AjaxResult gameDetailDataWrapper(String result){
         JSONObject object = JSON.parseObject(result);
@@ -325,7 +356,6 @@ public class RequestParamData {
         return AjaxResult.success(resultMap.get("data"));
     }
 
-
     public static String convertTime(Date date){
         SimpleDateFormat sdf8=new SimpleDateFormat("yyyyMMdd");
         sdf8.setTimeZone(TimeZone.getTimeZone("America/Caracas"));
@@ -341,8 +371,11 @@ public class RequestParamData {
             "}";
 
     public static void main(String[] args) {
-        //String s = "1ac7567731a6d771793cab71310a5358";
-        String s = DigestUtils.md5Hex("rtwrt1gm5y0q20210702");
-        System.err.println(s);
+        Date startDate = DateFormatUtils.parse("2021-07-05 00:10:00");
+        Date endDate = DateFormatUtils.parse("2021-07-05 00:24:00");
+
+        long between = (endDate.getTime() - startDate.getTime()) / 1000;//除以1000是为了转换成秒
+        long day1 = between / (24 * 3600);
+        System.err.println(day1);
     }
 }
