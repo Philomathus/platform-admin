@@ -46,7 +46,7 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
     /**
      * 查询【代充人】列表
      *
-     * @param map 【代充人】
+     * @param payAcc 【代充人】
      * @return 【代充人】
      */
     @Override
