@@ -14,14 +14,17 @@ import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RequestParamData;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -32,25 +35,27 @@ import java.util.*;
  */
 @Log4j2
 @RestController
-@RequestMapping( "/member/memberGameDataMin" )
-public class MemberGameDataMinController extends BaseController {
+@RequestMapping( "/member/shaBaSportDataMin" )
+public class ShaBaSportDataMinController extends BaseController {
 
 	@Resource
 	private GamePlatformMapper gamePlatformMapper;
 	@Value( "${spring.profiles.active}" )
 	private String profile;
+	@Autowired
+	RestTemplate restTemplate;
 
 	/** 注单列表 **/
 	@GetMapping( value = "/orderBetStateList" )
 	public AjaxResult orderBetStateList(){
-		return AjaxResult.success(defaultOrderBetState());
+		return AjaxResult.success(defaultSbBetState());
 	}
 
 	/**
 	 * 查询会员注单数据列表
 	 */
 	@AccessLimit(seconds = 5, maxCount = 0)
-	@PreAuthorize( "@ss.hasPermi('member:memberGameDataMin:list')" )
+	@PreAuthorize( "@ss.hasPermi('member:shaBaSportDataMin:list')" )
 	@GetMapping( "/list" )
 	public AjaxResult list(MemberGameData memberGameData ) {
 		//查询注单
@@ -60,13 +65,13 @@ public class MemberGameDataMinController extends BaseController {
 				List<Map<String,String>> list = new ArrayList<>();
 				String[] dates = Optional.ofNullable(req.getSelectDate()).orElseGet(() ->{
 					Date nowTime = new Date();
-					String stringDate = "";
+					Date startDate = null;
 					try {
-						stringDate = DateFormatUtils.formate(nowTime,DateFormatUtils.SPLIT_PATTERN_DATE);
+						startDate = DateFormatUtils.addMin(nowTime, -5);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					return new String[]{stringDate+" 00:00:00",stringDate+" 23:59:59"};
+					return new String[]{DateFormatUtils.formate(startDate),DateFormatUtils.formate(nowTime)};
 				});
 				req.setGameStartTime(dates[0]);
 				req.setGameEndTime(dates[1]);
@@ -77,24 +82,17 @@ public class MemberGameDataMinController extends BaseController {
 				}
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( memberGameData.getPlatformId() );
 				if (gamePlatform != null){
-					RequestParamData.requestBBINSportBetRecord(memberGameData,gamePlatform).stream().forEach(element ->{
+					RequestParamData.requestSbSportBetRecord(gamePlatform,restTemplate).stream().forEach(element ->{
 						//初始化数据
-						String account = element.get("UserName").replace("bbin","_").toUpperCase();
-						String agentId = account.split("_")[0];
-						element.put("UserName",account);
+						String account = element.get("vendor_member_id");
 						element.put("agent",gamePlatform.getAgent());
 						element.put("platformId",gamePlatform.getId()+"");
 						element.put("platformName",gamePlatform.getName());
-						try {
-							element.put("WagersDate",DateFormatUtils.convertMeidongTOBeijing(element.get("WagersDate")));
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-						IMemberGameDataMinService.BooleanAgent booleanAgent = () -> agentId.equals(profile);
+						IMemberGameDataMinService.BooleanAgent booleanAgent = () -> account.equals(profile);
 						if (booleanAgent.getBoolean()){
 							int count = 0;
 							if (StringUtils.isNotEmpty(memberGameData.getBetState()) && !memberGameData.getBetState().equals("ALL")){
-								if (memberGameData.getBetState().equals(element.get("Result"))) count ++;
+								if (memberGameData.getBetState().equals(element.get("ticket_status"))) count ++;
 							}else {
 								count ++;
 							}
@@ -104,11 +102,24 @@ public class MemberGameDataMinController extends BaseController {
 								count ++;
 							}
 							if (StringUtils.isNotEmpty(memberGameData.getGameId()) ){
-								if (memberGameData.getGameId().equals(element.get("WagersID"))) count ++;
+								String transId= String.valueOf(element.get("trans_id"));
+								if (memberGameData.getGameId().equals(transId)) count ++;
 							}else {
 								count ++;
 							}
-							element.put("Result", (String) defaultOrderBetState().get(element.get("Result")));
+							element.put("ticket_status", (String) defaultSbBetState().get(element.get("ticket_status")));
+							String transactionTime = element.get("transaction_time");
+							if (StringUtils.isNotEmpty(transactionTime)){
+								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+								sdf.setTimeZone(TimeZone.getTimeZone("GMT-4"));
+								try {
+									Date date = sdf.parse(String.valueOf(transactionTime));
+									element.put("transaction_time",DateFormatUtils.convertToBeijingTime(date));
+								} catch (ParseException e) {
+									log.error("shaba 时间转换错误 transaction_time:{}",transactionTime);
+									e.printStackTrace();
+								}
+							}
 							if (count == 3){
 								list.add(element);
 							}
@@ -131,7 +142,7 @@ public class MemberGameDataMinController extends BaseController {
 	 * 查询会员注单数据列表
 	 */
 	@AccessLimit(seconds = 5, maxCount = 0)
-	@PreAuthorize( "@ss.hasPermi('member:memberGameDataMin:detail')" )
+	@PreAuthorize( "@ss.hasPermi('member:shaBaSportDataMin:detail')" )
 	@GetMapping( "/detail" )
 	public AjaxResult detail(MemberGameData memberGameData ) {
 		//校验游戏种类
@@ -141,9 +152,9 @@ public class MemberGameDataMinController extends BaseController {
 		try {
 			GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( memberGameData.getPlatformId() );
 			if (gamePlatform != null){
-				String result = RequestParamData.requestBBINSportBetDetail(memberGameData,gamePlatform);
-				log.info(EnumGamePlatform.BBIN_SPORT.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
-				return RequestParamData.gameBBINSportDetailDataWrapper(result);
+				AjaxResult ajaxResult = RequestParamData.requestSbSportBetDetail(memberGameData,gamePlatform,restTemplate);
+				log.info(EnumGamePlatform.BBIN_SPORT.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(ajaxResult));
+				return ajaxResult;
 			}
 		}catch (Exception e) {
 			log.error( "查询游戏局号明细失败，参数:{},错误信息:",JSON.toJSONString(memberGameData),e);
