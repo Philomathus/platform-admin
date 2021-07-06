@@ -30,7 +30,7 @@
     </select>
 
     <insert id="insertLotteryPrizeconfig" parameterType="LotteryPrizeconfig">
-        insert into db_data.lottery_prizeconfig
+        insert into ${dbLottery}.lottery_prizeconfig
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="lotteryId != null">lottery_id,</if>
             <if test="lotteryName != null">lottery_name,</if>
@@ -48,7 +48,7 @@
     </insert>
 
     <update id="updateLotteryPrizeconfig" parameterType="LotteryPrizeconfig">
-        update db_data.lottery_prizeconfig
+        update ${dbLottery}.lottery_prizeconfig
         <trim prefix="SET" suffixOverrides=",">
             <if test="lotteryName != null">lottery_name = #{lotteryName},</if>
     

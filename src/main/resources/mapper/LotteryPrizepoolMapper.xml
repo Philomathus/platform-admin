@@ -31,7 +31,7 @@
         p.p_killrate,
         p.pool_usemoney
         from ${dbLottery}.lottery_prizepool p
-        left join db_data.lottery_info i
+        left join ${dbLottery}.lottery_info i
         on p.lottery_id=i.id
         <where>
             <if test="lotteryId != null "> and p.lottery_id = #{lotteryId}</if>
