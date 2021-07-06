@@ -80,7 +80,9 @@ public class LivePropServiceImpl implements ILivePropService {
 	 */
 	@Override
 	public int updateLiveProp( LiveProp liveProp ) {
-		return livePropMapper.updateLiveProp( liveProp );
+		int i=livePropMapper.updateLiveProp( liveProp );
+		liveVideoCacheUtil.setLiveVideoCach(liveProp.getType());
+		return i;
 	}
 
 	/**
