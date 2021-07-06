@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-25
  */
+@Data
 public class LiveProp extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -75,6 +77,12 @@ public class LiveProp extends BaseEntity {
 	 */
 	@Excel( name = "0:普通礼物 1:gif礼物 2:大型动画礼物" )
 	private String isAnimated;
+
+	/**
+	 * 0:正常礼物；1:特殊礼物
+	 */
+	@Excel( name = "0:普通礼物 1:gif礼物 2:大型动画礼物" )
+	private String isSpecial;
 
 	/**
 	 * 0:禁用;1:启用;默认启用

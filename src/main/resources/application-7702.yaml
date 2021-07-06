@@ -24,7 +24,7 @@ mybatis:
 payAgentLimit: 30000
 # 宾利代付额度
 payAgentLimitBinLi: 50000
+# 特仑苏代付额度
+payAgentLimitTels: 100000
 # 联付宝代付额度
 payAgentLimitLianFuBao: 30000
-# 代理号
-agentCode: 7702

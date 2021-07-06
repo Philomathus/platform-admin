@@ -34,5 +34,7 @@ payAgentLimitLianFuBao: 2000
 payAgentLimitMaYun: 50000
 # 合众代付额度
 payAgentLimitHeZhong: 50000
+# 滴滴代付额度
+payAgentLimitDiDi: 50000
 # 代理号
 agentCode: 7701
