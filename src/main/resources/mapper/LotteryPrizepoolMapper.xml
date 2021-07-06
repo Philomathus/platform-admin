@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryPrizepoolMapper">
+
+    <resultMap type="LotteryPrizepool" id="LotteryPrizepoolResult">
+        <result property="id"    column="id"    />
+        <result property="lotteryId"    column="lottery_id"    />
+        <result property="lotteryName"    column="lottery_name"    />
+        <result property="lotteryDate"    column="lottery_date"    />
+        <result property="lotteryHour"    column="lottery_hour"    />
+        <result property="pTzTotal"    column="p_tz_total"    />
+        <result property="pPjTotal"    column="p_pj_total"    />
+        <result property="pSyTotal"    column="p_sy_total"    />
+        <result property="pKillrate"    column="p_killrate"    />
+        <result property="poolUsemoney"    column="pool_usemoney"    />
+    </resultMap>
+
+    <sql id="selectLotteryPrizepoolVo">
+        select id, lottery_id, lottery_date, lottery_hour, p_tz_total, p_pj_total, p_sy_total, p_killrate, pool_usemoney from ${dbLottery}.lottery_prizepool
+    </sql>
+
+    <select id="selectLotteryPrizepoolList" parameterType="LotteryPrizepool" resultMap="LotteryPrizepoolResult">
+        select
+        p.lottery_id,
+        i.name as Lottery_name,
+        p.lottery_date,
+        p.lottery_hour,
+        p.p_tz_total,
+        p.p_pj_total,
+        p.p_sy_total,
+        p.p_killrate,
+        p.pool_usemoney
+        from ${dbLottery}.lottery_prizepool p
+        left join db_data.lottery_info i
+        on p.lottery_id=i.id
+        <where>
+            <if test="lotteryId != null "> and p.lottery_id = #{lotteryId}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(p.lottery_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(p.lottery_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectLotteryPrizepoolById" parameterType="String" resultMap="LotteryPrizepoolResult">
+        <include refid="selectLotteryPrizepoolVo"/>
+        where id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryPrizeconfigMapper">
+
+    <resultMap type="LotteryPrizeconfig" id="LotteryPrizeconfigResult">
+        <result property="lotteryId"    column="lottery_id"    />
+        <result property="lotteryName"    column="lottery_name"    />
+        <result property="lotteryKillrate"    column="lottery_killrate"    />
+        <result property="lotteryNokillratehour"    column="lottery_nokillratehour"    />
+        <result property="lotteryRandom"    column="lottery_random"    />
+    </resultMap>
+
+    <sql id="selectLotteryPrizeconfigVo">
+        select lottery_id, lottery_name, lottery_killrate, lottery_nokillratehour, lottery_random from ${dbLottery}.lottery_prizeconfig
+    </sql>
+
+    <select id="selectLotteryPrizeconfigList" parameterType="LotteryPrizeconfig" resultMap="LotteryPrizeconfigResult">
+        <include refid="selectLotteryPrizeconfigVo"/>
+        <where>
+            <if test="lotteryName != null  and lotteryName != ''"> and lottery_name like concat('%', #{lotteryName}, '%')</if>
+            <if test="lotteryKillrate != null "> and lottery_killrate = #{lotteryKillrate}</if>
+            <if test="lotteryNokillratehour != null  and lotteryNokillratehour != ''"> and lottery_nokillratehour = #{lotteryNokillratehour}</if>
+            <if test="lotteryRandom != null "> and lottery_random = #{lotteryRandom}</if>
+        </where>
+    </select>
+
+    <select id="selectLotteryPrizeconfigById" parameterType="String" resultMap="LotteryPrizeconfigResult">
+        <include refid="selectLotteryPrizeconfigVo"/>
+        where lottery_id = #{lotteryId}
+    </select>
+
+    <insert id="insertLotteryPrizeconfig" parameterType="LotteryPrizeconfig">
+        insert into db_data.lottery_prizeconfig
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lotteryId != null">lottery_id,</if>
+            <if test="lotteryName != null">lottery_name,</if>
+            <if test="lotteryKillrate != null">lottery_killrate,</if>
+            <if test="lotteryNokillratehour != null">lottery_nokillratehour,</if>
+            <if test="lotteryRandom != null">lottery_random,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="lotteryId != null">#{lotteryId},</if>
+                    <if test="lotteryName != null">#{lotteryName},</if>
+                    <if test="lotteryKillrate != null">#{lotteryKillrate},</if>
+                    <if test="lotteryNokillratehour != null">#{lotteryNokillratehour},</if>
+                    <if test="lotteryRandom != null">#{lotteryRandom},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLotteryPrizeconfig" parameterType="LotteryPrizeconfig">
+        update db_data.lottery_prizeconfig
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lotteryName != null">lottery_name = #{lotteryName},</if>
+    
+            <if test="lotteryKillrate != null">lottery_killrate = #{lotteryKillrate},</if>
+    
+            <if test="lotteryNokillratehour != null">lottery_nokillratehour = #{lotteryNokillratehour},</if>
+    
+            <if test="lotteryRandom != null">lottery_random = #{lotteryRandom},</if>
+    
+        </trim>
+        where lottery_id = #{lotteryId}
+    </update>
+
+    <delete id="deleteLotteryPrizeconfigById" parameterType="String">
+        delete from ${dbLottery}.lottery_prizeconfig where lottery_id = #{lotteryId}
+    </delete>
+
+    <delete id="deleteLotteryPrizeconfigByIds" parameterType="String">
+        delete from ${dbLottery}.lottery_prizeconfig where lottery_id in
+        <foreach item="lotteryId" collection="array" open="(" separator="," close=")">
+            #{lotteryId}
+        </foreach>
+    </delete>
+</mapper>
