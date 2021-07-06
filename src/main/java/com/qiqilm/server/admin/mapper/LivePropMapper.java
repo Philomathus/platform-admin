@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.LiveProp;
+import com.qiqilm.server.admin.domain.rsp.PropListRsp;
 
 /**
  * 礼物列Mapper接口
@@ -60,4 +61,6 @@ public interface LivePropMapper {
 	public int deleteLivePropByIds(Long[] ids );
 
 	List<LiveProp> getList();
+
+    List<PropListRsp> livePropList(String type);
 }

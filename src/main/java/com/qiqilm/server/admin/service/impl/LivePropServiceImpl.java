@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.cache.LiveVideoCacheUtil;
 import com.qiqilm.server.admin.domain.LiveProp;
 import com.qiqilm.server.admin.mapper.LivePropMapper;
 import com.qiqilm.server.admin.service.ILivePropService;
@@ -23,6 +24,8 @@ public class LivePropServiceImpl implements ILivePropService {
 	private LivePropMapper        livePropMapper;
 	@Autowired
 	private ConfigDomainCacheUtil configDomainCacheUtil;
+	@Autowired
+	private  LiveVideoCacheUtil liveVideoCacheUtil;
 
 	/**
 	 * 查询礼物列
@@ -63,7 +66,10 @@ public class LivePropServiceImpl implements ILivePropService {
 	 */
 	@Override
 	public int insertLiveProp( LiveProp liveProp ) {
-		return livePropMapper.insertLiveProp( liveProp );
+		int i = livePropMapper.insertLiveProp(liveProp);
+		liveVideoCacheUtil.setLiveVideoCach(liveProp.getType());
+		return i;
+
 	}
 
 	/**
