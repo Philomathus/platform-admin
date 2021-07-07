@@ -14,6 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isMuch"    column="is_much"    />
         <result property="sort"    column="sort"    />
         <result property="isRedEnvelope"    column="is_red_envelope"    />
+        <result property="isSpecial"    column="is_special"    />
         <result property="isAnimated"    column="is_animated"    />
         <result property="isEffect"    column="is_effect"    />
         <result property="animType"    column="anim_type"    />
@@ -26,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLivePropVo">
-        select id, name, score, diamonds, icon, ticket, is_much, sort, is_red_envelope, is_animated, is_effect, anim_type, robot_diamonds, pc_icon, pc_gif, gif_gift_show_style, animated_url, type from ${dbLive}.live_prop
+        select id, name, score, diamonds, icon, ticket, is_much, sort, is_red_envelope, is_special, is_animated, is_effect, anim_type, robot_diamonds, pc_icon, pc_gif, gif_gift_show_style, animated_url, type from ${dbLive}.live_prop
     </sql>
 
     <select id="selectLivePropList" parameterType="LiveProp" resultMap="LivePropResult">
@@ -43,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isAnimated != null "> and is_animated = #{isAnimated}</if>
             <if test="isEffect != null "> and is_effect = #{isEffect}</if>
             <if test="animType != null  and animType != ''"> and anim_type = #{animType}</if>
+            <if test="isSpecial != null  and isSpecial != ''"> and is_special = #{isSpecial}</if>
             <if test="robotDiamonds != null "> and robot_diamonds = #{robotDiamonds}</if>
             <if test="pcIcon != null  and pcIcon != ''"> and pc_icon = #{pcIcon}</if>
             <if test="pcGif != null  and pcGif != ''"> and pc_gif = #{pcGif}</if>
@@ -69,6 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sort != null">sort,</if>
             <if test="isRedEnvelope != null">is_red_envelope,</if>
             <if test="isAnimated != null">is_animated,</if>
+            <if test="isSpecial != null  and isSpecial != ''">is_special,</if>
             <if test="isEffect != null">is_effect,</if>
             <if test="animType != null and animType != ''">anim_type,</if>
             <if test="robotDiamonds != null">robot_diamonds,</if>
@@ -87,6 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isMuch != null">#{isMuch},</if>
             <if test="sort != null">#{sort},</if>
             <if test="isRedEnvelope != null">#{isRedEnvelope},</if>
+            <if test="isSpecial != null  and isSpecial != ''">#{isSpecial},</if>
             <if test="isAnimated != null">#{isAnimated},</if>
             <if test="isEffect != null">#{isEffect},</if>
             <if test="animType != null and animType != ''">#{animType},</if>
@@ -108,6 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="icon != null and icon != ''">icon = #{icon},</if>
             <if test="ticket != null">ticket = #{ticket},</if>
             <if test="isMuch != null">is_much = #{isMuch},</if>
+            <if test="isSpecial != null">is_special = #{isSpecial},</if>
             <if test="sort != null">sort = #{sort},</if>
             <if test="isRedEnvelope != null">is_red_envelope = #{isRedEnvelope},</if>
             <if test="isAnimated != null">is_animated = #{isAnimated},</if>
@@ -137,5 +142,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getList" resultMap="LivePropResult">
          select id, CONCAT(diamonds,'  ',name) as name from ${dbLive}.live_prop
          where type=2 and is_Effect=0 order by id asc
+    </select>
+
+    <select id="livePropList" resultType="com.qiqilm.server.admin.domain.rsp.PropListRsp">
+        select id,name,diamonds,icon,is_much,sort from ${dbLive}.live_prop where type=#{type} and is_effect=1 order by sort asc
     </select>
 </mapper>

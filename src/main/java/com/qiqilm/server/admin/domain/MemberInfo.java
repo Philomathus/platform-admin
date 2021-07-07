@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.pagehelper.util.StringUtil;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import lombok.Data;
@@ -175,6 +176,13 @@ public class MemberInfo extends DownLoadTime {
     /** 渠道号 */
     @Excel(name = "渠道号")
     private String channelcode;
+
+    public String getChannelcode() {
+        if (StringUtil.isEmpty(channelcode)){
+            return "1";
+        }
+        return channelcode;
+    }
 
     /** 0=正常 1 =禁言 */
     @Excel(name = "是否禁言")
