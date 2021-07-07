@@ -17,6 +17,5 @@ public class PropListRsp {
 	private BigDecimal diamonds;
 
 	private Integer isMuch;
-	private Integer sort;
 
 }
