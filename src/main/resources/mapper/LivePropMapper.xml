@@ -143,4 +143,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          select id, CONCAT(diamonds,'  ',name) as name from ${dbLive}.live_prop
          where type=2 and is_Effect=0 order by id asc
     </select>
+
+    <select id="livePropList" resultType="com.qiqilm.server.admin.domain.rsp.PropListRsp">
+        select id,name,diamonds,icon,is_much from ${dbLive}.live_prop where type=#{type} and is_effect=1 order by sort asc
+    </select>
 </mapper>
