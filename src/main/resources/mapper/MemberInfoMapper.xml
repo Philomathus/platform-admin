@@ -120,10 +120,10 @@
 				and channelCode = #{channelcode}
 			</if>
 			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				and date_format(reg_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+				AND reg_time >=STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				and date_format(reg_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+				AND reg_time &lt;= STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
 			</if>
             <if test="downLoadDate[0] != null "> and reg_time >= '${downLoadDate[0]}'</if>
             <if test="downLoadDate[1] != null "> and reg_time &lt;= '${downLoadDate[1]}'</if>
@@ -624,9 +624,14 @@
 	</select>
 
 
-    <select id="selectMemberInfoAddressById" parameterType="String" resultType="String">
+    <select id="selectMemberInfoAddressById" parameterType="String" resultType="java.lang.String">
 		SELECT fun_getaddress(login_ip) ipaddress
 		from member_info where id = #{userid}
+	</select>
+
+	<select id="selectMemberInfoHistoryRechargeById" parameterType="String" resultType="java.lang.String">
+		select SUM(money) from member_pay_jour_history
+		where STATUS = '1' and member_id = #{userid}
 	</select>
 
 	<select id="selectMemberInfoWithdrawByIdb" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">

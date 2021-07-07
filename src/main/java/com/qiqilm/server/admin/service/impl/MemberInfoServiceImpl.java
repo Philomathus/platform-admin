@@ -373,6 +373,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
+    public String getHistoryRecharge(String id) {
+        return memberInfoMapper.selectMemberInfoHistoryRechargeById(id);
+    }
+
+    @Override
     public void updataStatus(MemberInfo memberInfo) {
         if (memberInfo.getBanSpeakTime()==0){
             memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), false );

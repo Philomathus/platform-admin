@@ -29,10 +29,8 @@ payAgentLimitBinLi: 50000
 # 特仑苏代付额度
 payAgentLimitTels: 50000
 # 联付宝代付额度
-payAgentLimitLianFuBao: 50000
+payAgentLimitLianFuBao: 5000
 # 马云代付额度
 payAgentLimitMaYun: 50000
 # 合众代付额度
 payAgentLimitHeZhong: 50000
-# 代理号
-agentCode: 7704

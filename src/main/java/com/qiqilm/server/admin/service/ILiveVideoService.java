@@ -40,7 +40,7 @@ public interface ILiveVideoService {
 
 	void updateNowLine();
 
-	void countHostGift();
+	void countHostGift(String profile);
 
 	LiveVideo liveInStatus(Long userId);
 }
