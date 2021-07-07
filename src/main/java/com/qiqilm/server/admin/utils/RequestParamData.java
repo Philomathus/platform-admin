@@ -39,6 +39,7 @@ public class RequestParamData {
     private static final String RE_XSJ_DETAIL_RECORD_S2 = "s=%s&gameuserno=%s&id=%s&account=%s&serverID=%s";
     private static final String RE_AG_PLAY_DETAIL_RECORD_S1 = "cagent=%s&startdate=%s&enddate=%s&gametype=%s&gamecode=%s&page=1&perpage=100&key=%s";
     private static final String RE_SB_SPORT_DETAIL_RECORD_S1 = "vendor_id=%s&version_key=%s";
+    private static final String RE_SB_SPORT_DETAIL_RECORD_S2 = "vendor_id=%s&trans_id=%s";
     private static final String RE_BBIN_SPORT_DETAIL_RECORD_S1 = "website=%s&username=%s&lang=zh-cn&wagersid=%s&key=%s";
 
 
@@ -129,19 +130,24 @@ public class RequestParamData {
         List<Map<String,String>> betDetails = (List<Map<String,String>>) objectMap.get("BetDetails");
         List<Map<String,String>> betNumberDetails = (List<Map<String,String>>) objectMap.get("BetNumberDetails");
         List<Map<String,String>> betVirtualSportDetails = (List<Map<String,String>>) objectMap.get("BetVirtualSportDetails");
-        betDetails.addAll(betNumberDetails);
-        betDetails.addAll(betVirtualSportDetails);
+        if (betNumberDetails != null && betNumberDetails.get(0) != null){
+            betDetails.addAll(betNumberDetails);
+        }
+        if (betVirtualSportDetails != null && betVirtualSportDetails.get(0) != null){
+            betDetails.addAll(betVirtualSportDetails);
+        }
         return betDetails;
     }
     //沙巴体育-投注详情
     public static AjaxResult requestSbSportBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform, RestTemplate restTemplate) throws Exception {
-        String param = String.format( RE_SB_SPORT_DETAIL_RECORD_S1,gamePlatform.getAgent(),memberGameData.getGameId());
+        String param = String.format( RE_SB_SPORT_DETAIL_RECORD_S2,gamePlatform.getAgent(),memberGameData.getGameId());
         String apiUrl = gamePlatform.getApiUrl()+"/GetBetDetailByTransID";
         String getURL = apiUrl.concat( "?" ).concat(param);
         log.info( "沙巴体育-投注详情-请求参数：{}",getURL );
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("vendor_id",gamePlatform.getAgent());
         map.add("trans_id",memberGameData.getGameId());
+        map.add("bet_type",memberGameData.getBetType());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>( map, httpHeaders );
