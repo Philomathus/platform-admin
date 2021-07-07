@@ -155,6 +155,7 @@ public class PayChannelNewController extends BaseController {
 	@GetMapping( "/effect-pay-type" )
 	public AjaxResult findEffectPayType() {
 		PayType       payType = new PayType();
+		payType.setType("1");
 		List<PayType> data    = payTypeService.selectPayTypeList( payType );
 		if ( StringUtils.isNull( data ) ) {
 			data = new ArrayList<>();
