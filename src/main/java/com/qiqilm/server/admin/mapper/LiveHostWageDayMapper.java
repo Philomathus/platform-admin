@@ -60,6 +60,8 @@ public interface LiveHostWageDayMapper {
 
 	public List<RspLiveHostWageDayFamily> familyPage(@Param( "dto" ) LiveHostWageDay dto );
 
+	public List<RspLiveHostWageDayFamily> familyPage_7706(@Param( "dto" ) LiveHostWageDay dto );
+
 	public List<Map<String, Object>> selectFamilyName();
 
 	public List<RspLiveHostWageDayList> hostPage(@Param( "dto" ) LiveHostWageDay dto );
