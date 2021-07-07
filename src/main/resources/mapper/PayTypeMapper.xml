@@ -67,6 +67,11 @@
 		</where>
 	</select>
 
+	<select id="selectPayTypeListDict" parameterType="PayType" resultMap="PayTypeResult">
+		<include refid="selectPayTypeVo"/>
+		where type = 1
+	</select>
+
 	<select id="selectPayTypeById" parameterType="String" resultMap="PayTypeResult">
 		<include refid="selectPayTypeVo"/>
 		where id = #{id}
