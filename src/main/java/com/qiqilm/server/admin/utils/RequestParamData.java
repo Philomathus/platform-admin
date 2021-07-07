@@ -15,7 +15,14 @@ import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -41,7 +48,6 @@ public class RequestParamData {
         log.info( "开元棋牌-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
-
     //开元棋牌 - 对局明细 返回参数
     public static String requestKYBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String getURL = getBetDetailURLByKXOrKY(memberGameData,gamePlatform);
@@ -54,7 +60,6 @@ public class RequestParamData {
         log.info( "凯旋棋牌-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
-
     //凯旋棋牌 - 对局明细 返回参数
     public static String requestKXBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String getURL = getBetDetailURLByKXOrKY(memberGameData, gamePlatform);
@@ -74,7 +79,7 @@ public class RequestParamData {
         return PostData.get(getURL);
     }
     //AG-视讯 - 对局列表 返回参数
-    public static String requestAGPlayBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
+    public static String requestAGPlayBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = memberGameData.getAgent();
         String md5 = gamePlatform.getMd5();
         String key = DigestUtils.md5Hex(agent + memberGameData.getGameStartTime() + memberGameData.getGameEndTime() + memberGameData.getKindId() + memberGameData.getGameId() +"1100" + md5);
@@ -84,14 +89,32 @@ public class RequestParamData {
         String apiUrl = gamePlatform.getApiUrl();
         String getURL = apiUrl.concat( "getroundsres.xml?" ).concat(param);
         log.info( "AG-视讯-对局列表-请求参数：{}",getURL );
-        return PostData.get(getURL);
+        String test = "<result>\n" +
+                "<info>0</info>\n" +
+                "<addition>\n" +
+                "<total>2</total>\n" +
+                "<num_per_page>20</num_per_page>\n" +
+                "</addition>\n" +
+                "<row gameCode=\"GA0011541607D\" begintime=\"2015-04-16 04:10:08\" \n" +
+                "closetime=\"2015-04-16 04:10:54\" dealer=\"Corinne\" gametype=\"BAC\" \n" +
+                "shoecode=\"23638\" flag=\"1\" bankerpoint=\"4\" playerpoint=\"1\" \n" +
+                "cardnum=\"6\" pair=\"0\" dragonpoint=\"0\" tigerpoint=\"0\" cardlist=\"20 1 \n" +
+                "6;24 6 44\" vid=\"A001\" platformtype=\"AGIN\"/>\n" +
+                "</result>";
+        return test;// PostData.get(getURL);
     }
     //沙巴体育-投注记录
-    public static List<Map<String,String>> requestSbSportBetRecord(GamePlatform gamePlatform, RestTemplate restTemplate) throws Exception {
-        String apiUrl = gamePlatform.getApiUrl()+"/GetBetDetail/";
+    public static List<Map<String,String>> requestSbSportBetRecord(GamePlatform gamePlatform, MemberGameData memberGameData,RestTemplate restTemplate) throws Exception {
+        String apiUrl = gamePlatform.getApiUrl()+"/GetBetDetailByTimeframe/";
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("vendor_id",gamePlatform.getAgent());
-        map.add("version_key","0");
+        Date startDate = DateFormatUtils.parse(memberGameData.getGameStartTime());
+        Date endDate = DateFormatUtils.parse(memberGameData.getGameEndTime());
+        String stringStartDate = DateFormatUtils.beiJinToMeiDong(startDate,"yyyy-MM-dd HH:mm:ss");
+        String stringEndDate = DateFormatUtils.beiJinToMeiDong(endDate,"yyyy-MM-dd HH:mm:ss");
+        map.add("start_date",stringStartDate);
+        map.add("end_date",stringEndDate);
+        map.add("time_type",1);//依下注时间查询
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>( map, httpHeaders );
@@ -324,6 +347,43 @@ public class RequestParamData {
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
     //ag-视讯
+    public static AjaxResult gameAgPlayDetailDataWrapper(String result){
+        try {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource src = new InputSource();
+            src.setCharacterStream(new StringReader(result));
+            Document doc = builder.parse(src);
+            Element root = doc.getDocumentElement(); // 获取根元素
+            NodeList nodeList = root.getElementsByTagName("row");
+            List list = new ArrayList();
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Element ss = (Element) nodeList.item(i);
+                Map detailMap = new HashMap();
+                detailMap.put("gameCode",ss.getAttribute("gameCode"));
+                detailMap.put("begintime",ss.getAttribute("begintime"));
+                detailMap.put("closetime",ss.getAttribute("closetime"));
+                detailMap.put("dealer",ss.getAttribute("dealer"));
+                detailMap.put("gametype",ss.getAttribute("gametype"));
+                detailMap.put("shoecode",ss.getAttribute("shoecode"));
+                detailMap.put("flag",ss.getAttribute("flag"));
+                detailMap.put("bankerpoint",ss.getAttribute("bankerpoint"));
+                detailMap.put("playerpoint",ss.getAttribute("playerpoint"));
+                detailMap.put("cardnum",ss.getAttribute("cardnum"));
+                detailMap.put("pair",ss.getAttribute("pair"));
+                detailMap.put("dragonpoint",ss.getAttribute("dragonpoint"));
+                detailMap.put("tigerpoint",ss.getAttribute("tigerpoint"));
+                detailMap.put("cardlist",ss.getAttribute("cardlist"));
+                detailMap.put("vid",ss.getAttribute("vid"));
+                detailMap.put("platformtype",ss.getAttribute("platformtype"));
+                list.add(detailMap);
+            }
+            return AjaxResult.success(list);
+        }catch (Exception e){
+            log.error("拉取AG视讯注单失败:", e);
+            return AjaxResult.error("999", "查询游戏局号,数据不存在");
+        }
+
+    }
     public static AjaxResult gameDetailDataWrapper(String result){
         JSONObject object = JSON.parseObject(result);
         JSONObject d = object.getJSONObject("d");
