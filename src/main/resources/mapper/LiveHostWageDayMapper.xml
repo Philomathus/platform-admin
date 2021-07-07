@@ -209,8 +209,8 @@
         convert(IFNULL(d.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as cost_qianliu,
         d.times
         from ${dbLive}.live_host_wage_day d
-        LEFT JOIN 7701_live.live_user u on d.host_id = u.id
-        LEFT JOIN 7701_live.live_family f on d.family_id=f.id
+        LEFT JOIN cx_live.live_user u on d.host_id = u.id
+        LEFT JOIN cx_live.live_family f on d.family_id=f.id
         <where>
             <if test="dto.dateDay!=null">and d.id like '${dto.dateDay}%'</if>
             <if test="dto.familyId!=null">and d.family_id = #{dto.familyId}</if>
