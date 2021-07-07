@@ -88,7 +88,7 @@ public class ShaBaSportDataMinController extends BaseController {
 						element.put("agent",gamePlatform.getAgent());
 						element.put("platformId",gamePlatform.getId()+"");
 						element.put("platformName",gamePlatform.getName());
-						IMemberGameDataMinService.BooleanAgent booleanAgent = () -> account.equals(profile);
+						IMemberGameDataMinService.BooleanAgent booleanAgent = () -> account.contains(profile);
 						if (booleanAgent.getBoolean()){
 							int count = 0;
 							if (StringUtils.isNotEmpty(memberGameData.getBetState()) && !memberGameData.getBetState().equals("ALL")){
@@ -153,7 +153,7 @@ public class ShaBaSportDataMinController extends BaseController {
 			GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( memberGameData.getPlatformId() );
 			if (gamePlatform != null){
 				AjaxResult ajaxResult = RequestParamData.requestSbSportBetDetail(memberGameData,gamePlatform,restTemplate);
-				log.info(EnumGamePlatform.BBIN_SPORT.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(ajaxResult));
+				log.info(EnumGamePlatform.SHABA_SPORT.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(ajaxResult));
 				return ajaxResult;
 			}
 		}catch (Exception e) {
