@@ -27,8 +27,6 @@ public interface IPayTypeService {
 	 */
 	public List<PayType> selectPayTypeList(PayType payType);
 
-	public List<PayType> selectPayTypeListDict(PayType payType);
-
 	Integer existCode(Integer code);
 
 	/**

@@ -65,18 +65,6 @@ public class PayTypeServiceImpl implements IPayTypeService {
 		return payTypes;
 	}
 
-	/**
-	 * 支付类型字典
-	 *
-	 * @param payType 支付类型字典
-	 * @return 支付类型字典
-	 */
-	@Override
-	public List<PayType> selectPayTypeListDict( PayType payType ) {
-		List<PayType> payTypes = payTypeMapper.selectPayTypeListDict( payType );
-		return payTypes;
-	}
-
 	@Override
 	public Integer existCode(Integer code) {
 		return payTypeMapper.existCode(code);

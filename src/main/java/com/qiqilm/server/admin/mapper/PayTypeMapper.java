@@ -29,8 +29,6 @@ public interface PayTypeMapper {
 	 */
 	public List<PayType> selectPayTypeList(PayType payType);
 
-	public List<PayType> selectPayTypeListDict(PayType payType);
-
 	/**
 	 * 新增支付类型
 	 *
