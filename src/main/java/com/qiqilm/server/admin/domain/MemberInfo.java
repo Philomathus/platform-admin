@@ -177,13 +177,6 @@ public class MemberInfo extends DownLoadTime {
     @Excel(name = "渠道号")
     private String channelcode;
 
-    public String getChannelcode() {
-        if (StringUtil.isEmpty(channelcode)){
-            return "1";
-        }
-        return channelcode;
-    }
-
     /** 0=正常 1 =禁言 */
     @Excel(name = "是否禁言")
     private String speak;
