@@ -67,7 +67,7 @@ public class ShaBaSportDataMinController extends BaseController {
 					Date nowTime = new Date();
 					Date startDate = null;
 					try {
-						startDate = DateFormatUtils.addMin(nowTime, -5);
+						startDate = DateFormatUtils.addHour(nowTime, -12);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -82,7 +82,7 @@ public class ShaBaSportDataMinController extends BaseController {
 				}
 				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( memberGameData.getPlatformId() );
 				if (gamePlatform != null){
-					RequestParamData.requestSbSportBetRecord(gamePlatform,restTemplate).stream().forEach(element ->{
+					RequestParamData.requestSbSportBetRecord(gamePlatform,memberGameData,restTemplate).stream().forEach(element ->{
 						//初始化数据
 						String account = element.get("vendor_member_id");
 						element.put("agent",gamePlatform.getAgent());
