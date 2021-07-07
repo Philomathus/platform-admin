@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.domain.LiveProp;
 import com.qiqilm.server.admin.mapper.LivePropMapper;
 import com.qiqilm.server.admin.service.ILivePropService;
 import com.qiqilm.server.admin.utils.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -81,7 +82,14 @@ public class LivePropServiceImpl implements ILivePropService {
 	@Override
 	public int updateLiveProp( LiveProp liveProp ) {
 		int i=livePropMapper.updateLiveProp( liveProp );
-		liveVideoCacheUtil.setLiveVideoCach(liveProp.getType());
+		String type;
+		if (Strings.isBlank(liveProp.getType())){
+			LiveProp liveProp1 = livePropMapper.selectLivePropById(liveProp.getId());
+			type=liveProp1.getType();
+		}else {
+			type=liveProp.getType();
+		}
+		liveVideoCacheUtil.setLiveVideoCach(type);
 		return i;
 	}
 
