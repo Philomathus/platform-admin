@@ -85,7 +85,7 @@ public class RequestParamData {
         String agent = memberGameData.getAgent();
         String md5 = gamePlatform.getMd5();
         Date startdate = DateFormatUtils.parse(memberGameData.getGameStartTime());
-        Date enddate = DateFormatUtils.parse(memberGameData.getGameEndTime());
+        Date enddate = DateFormatUtils.addMin(startdate,5);
         String stringStartDate =DateFormatUtils.beiJinToMeiDong(startdate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String stringEndDate =DateFormatUtils.beiJinToMeiDong(enddate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String lineCode = agent.split("_")[0];
@@ -356,7 +356,7 @@ public class RequestParamData {
             src.setCharacterStream(new StringReader(result));
             Document doc = builder.parse(src);
             Element root = doc.getDocumentElement(); // 获取根元素
-            Node infoNode = root.getChildNodes().item(1);
+            Node infoNode = root.getChildNodes().item(0);
             int info = Integer.valueOf(infoNode.getTextContent());
             if (info != 0){
                 return AjaxResult.error(info, "查询游戏局号日志失败[未知错误]");
@@ -411,6 +411,14 @@ public class RequestParamData {
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
     //bbin-体育
+    public static String test ="{\n" +
+            "\t\"resultCode\": \"1\",\n" +
+            "\t\"url\": \"https://admin.zpsunkaisuo.com/static/CG/html/playCheck.html?EnStr=eyJkYXRhU3RyIjoie1wicm93SURcIjpcIjE0MTk1MjQzOTFcIixcImxhbmdcIjpcIlpILUNOXCJ9IiwiY29kZSI6ImE3MWMzZTFjZjFhNTQ1YTU3YjgxOGY1MTQ0NWUzZWNkIiwibWVyY2hhbnRJZCI6IjIwMTcxNDAwIiwiY3VycmVuY3kiOiJDTlkifQ==&lang=ZH_CN\",\n" +
+            "\t\"date\": \"2021-06-25 20:35:02\",\n" +
+            "\t\"timeZone\": \"GMT+8\",\n" +
+            "\t\"currency\": \"CNY\"\n" +
+            "}";
+
     public static AjaxResult gameBBINSportDetailDataWrapper(String result){
         Map<String,Object> resultMap = JsonUtil.json2Map(result);
         log.info("BBIN-体育-投注记录-返回值:{}",JSON.toJSONString(resultMap));
@@ -429,20 +437,4 @@ public class RequestParamData {
         return sdf8.format(date);
     }
 
-    public static String test ="{\n" +
-            "\t\"resultCode\": \"1\",\n" +
-            "\t\"url\": \"https://admin.zpsunkaisuo.com/static/CG/html/playCheck.html?EnStr=eyJkYXRhU3RyIjoie1wicm93SURcIjpcIjE0MTk1MjQzOTFcIixcImxhbmdcIjpcIlpILUNOXCJ9IiwiY29kZSI6ImE3MWMzZTFjZjFhNTQ1YTU3YjgxOGY1MTQ0NWUzZWNkIiwibWVyY2hhbnRJZCI6IjIwMTcxNDAwIiwiY3VycmVuY3kiOiJDTlkifQ==&lang=ZH_CN\",\n" +
-            "\t\"date\": \"2021-06-25 20:35:02\",\n" +
-            "\t\"timeZone\": \"GMT+8\",\n" +
-            "\t\"currency\": \"CNY\"\n" +
-            "}";
-
-    public static void main(String[] args) {
-        Date startDate = DateFormatUtils.parse("2021-07-05 00:10:00");
-        Date endDate = DateFormatUtils.parse("2021-07-05 00:24:00");
-
-        long between = (endDate.getTime() - startDate.getTime()) / 1000;//除以1000是为了转换成秒
-        long day1 = between / (24 * 3600);
-        System.err.println(day1);
-    }
 }
