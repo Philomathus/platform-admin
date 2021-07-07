@@ -17,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -355,6 +356,11 @@ public class RequestParamData {
             src.setCharacterStream(new StringReader(result));
             Document doc = builder.parse(src);
             Element root = doc.getDocumentElement(); // 获取根元素
+            Node infoNode = root.getChildNodes().item(1);
+            int info = Integer.valueOf(infoNode.getTextContent());
+            if (info != 0){
+                return AjaxResult.error(info, "查询游戏局号日志失败[未知错误]");
+            }
             NodeList nodeList = root.getElementsByTagName("row");
             List list = new ArrayList();
             for (int i = 0; i < nodeList.getLength(); i++) {
