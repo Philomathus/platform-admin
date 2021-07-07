@@ -87,7 +87,8 @@ public class RequestParamData {
         String s1 = String.format(RE_AG_PLAY_DETAIL_RECORD_S1,
                 agent,memberGameData.getGameStartTime(),memberGameData.getGameEndTime(),memberGameData.getKindId(),memberGameData.getGameId(),key);
         String param = s1;
-        String apiUrl = gamePlatform.getApiUrl();
+        //先写死，后续在处理
+        String apiUrl = "http://gi1wy9.gdcapi.com:3333/";
         String getURL = apiUrl.concat( "getroundsres.xml?" ).concat(param);
         log.info( "AG-视讯-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
