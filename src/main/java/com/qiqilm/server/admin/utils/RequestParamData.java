@@ -90,19 +90,7 @@ public class RequestParamData {
         String apiUrl = gamePlatform.getApiUrl();
         String getURL = apiUrl.concat( "getroundsres.xml?" ).concat(param);
         log.info( "AG-视讯-对局列表-请求参数：{}",getURL );
-        String test = "<result>\n" +
-                "<info>0</info>\n" +
-                "<addition>\n" +
-                "<total>2</total>\n" +
-                "<num_per_page>20</num_per_page>\n" +
-                "</addition>\n" +
-                "<row gameCode=\"GA0011541607D\" begintime=\"2015-04-16 04:10:08\" \n" +
-                "closetime=\"2015-04-16 04:10:54\" dealer=\"Corinne\" gametype=\"BAC\" \n" +
-                "shoecode=\"23638\" flag=\"1\" bankerpoint=\"4\" playerpoint=\"1\" \n" +
-                "cardnum=\"6\" pair=\"0\" dragonpoint=\"0\" tigerpoint=\"0\" cardlist=\"20 1 \n" +
-                "6;24 6 44\" vid=\"A001\" platformtype=\"AGIN\"/>\n" +
-                "</result>";
-        return test;// PostData.get(getURL);
+        return PostData.get(getURL);
     }
     //沙巴体育-投注记录
     public static List<Map<String,String>> requestSbSportBetRecord(GamePlatform gamePlatform, MemberGameData memberGameData,RestTemplate restTemplate) throws Exception {
