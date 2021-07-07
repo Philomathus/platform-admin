@@ -83,13 +83,18 @@ public class RequestParamData {
     public static String requestAGPlayBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = memberGameData.getAgent();
         String md5 = gamePlatform.getMd5();
-        String key = DigestUtils.md5Hex(agent + memberGameData.getGameStartTime() + memberGameData.getGameEndTime() + memberGameData.getKindId() + memberGameData.getGameId() +"1100" + md5);
+        Date startdate = DateFormatUtils.parse(memberGameData.getGameStartTime());
+        Date enddate = DateFormatUtils.parse(memberGameData.getGameEndTime());
+        String stringStartDate =DateFormatUtils.beiJinToMeiDong(startdate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
+        String stringEndDate =DateFormatUtils.beiJinToMeiDong(enddate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
+        String key = DigestUtils.md5Hex(agent + stringStartDate + stringEndDate + memberGameData.getKindId() + memberGameData.getGameId() +"1100" + "5F14237EE2A67EF102203A4C97603BC5");
         String s1 = String.format(RE_AG_PLAY_DETAIL_RECORD_S1,
-                agent,memberGameData.getGameStartTime(),memberGameData.getGameEndTime(),memberGameData.getKindId(),memberGameData.getGameId(),key);
+                agent,stringStartDate,stringEndDate,memberGameData.getKindId(),memberGameData.getGameId(),key);
         String param = s1;
-        //先写死，后续在处理
+        //先写死，后续在处理 GY9
         String apiUrl = "http://gi1wy9.gdcapi.com:3333/";
         String getURL = apiUrl.concat( "getroundsres.xml?" ).concat(param);
+        getURL = getURL.replace(" ", "%20");
         log.info( "AG-视讯-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
