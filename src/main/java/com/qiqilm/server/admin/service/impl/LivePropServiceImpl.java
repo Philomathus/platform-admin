@@ -112,7 +112,10 @@ public class LivePropServiceImpl implements ILivePropService {
 	 */
 	@Override
 	public int deleteLivePropById( Long id ) {
-		return livePropMapper.deleteLivePropById( id );
+		LiveProp liveProp = livePropMapper.selectLivePropById(id);
+		int i= livePropMapper.deleteLivePropById( id );
+		liveVideoCacheUtil.setLiveVideoCach(liveProp.getType());
+		return i;
 	}
 
 	@Override
