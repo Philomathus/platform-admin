@@ -84,23 +84,28 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     @Override
     public List<RspLiveHostWageDayList> hostPage(LiveHostWageDay dto ) throws ParseException {
         this.setTime( dto );
-//        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
-
-        List<RspLiveHostWageDayList> liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
-        for ( RspLiveHostWageDayList liveHostWageDay : liveHostWageDays ) {
-            if ( liveHostWageDay.getTicket() != null ) {
+        List<RspLiveHostWageDayList> liveHostWageDays;
+        if(profile.equals("7706")){
+            liveHostWageDays = liveHostWageDayMapper.hostPage_7706(dto);
+        }else {
+            liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
+        }
+        if (liveHostWageDays.size()>0 && liveHostWageDays!=null){
+            for ( RspLiveHostWageDayList liveHostWageDay : liveHostWageDays ) {
+                if ( liveHostWageDay.getTicket() != null ) {
 //                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getTicket() );
-                //判断是否是散户
-                if ( liveHostWageDay.getFamilyId() == 0 ) {
+                    //判断是否是散户
+                    if ( liveHostWageDay.getFamilyId() == 0 ) {
 //                    liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
 //                            BigDecimal.ROUND_HALF_UP ) );
 //                    liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
-                    liveHostWageDay.setFamilyName( "散户" );
+                        liveHostWageDay.setFamilyName( "散户" );
 //                } else {
 //                    liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
 //                            BigDecimal.ROUND_HALF_UP ) );
 //                    liveHostWageDay.setSettlementRate( ticketCattyRatio );
 //
+                    }
                 }
             }
         }
