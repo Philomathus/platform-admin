@@ -166,7 +166,7 @@
         select id,nick_name,name from ${dbLive}.live_family
     </select>
 
-    <select id="hostPage" parameterType="LiveHostWageDay" resultType="RspLiveHostWageDayList">
+    <select id="hostPage" parameterType="LiveHostWageDay" resultType="com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList">
         select
         d.family_id familyId,
         d.host_id hostId,
@@ -242,6 +242,37 @@
             <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>
         </where>) t
         GROUP BY t.family_id ORDER BY t.family_id
+    </select>
+    <select id="hostPage_7706" resultType="com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList">
+        select
+        d.family_id familyId,
+        d.host_id hostId,
+        d.ticket liwu,
+        convert(d.live_time_sec/60/60,decimal(10,2)) as livetime,
+        d.lottery_cost lotteryCost,
+        d.times,
+        f.name familyName,
+        f.user_id familyUserId,
+        f.nick_name familyNickName,
+        u.nick_name nickName,
+        IFNULL(u.xpoint,0) as lotteryBili,
+        IFNULL(u.ypoint,0) as liwujiesuanbili,
+        IFNULL(d.ticket,0) * IFNULL(u.ypoint,0) as ticket,
+        convert(IFNULL(d.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as costQianliu,
+        IF(u.weixin_price > convert(d.live_time_sec/60/60,decimal(10,2)) or u.weibo_money > d.ticket ,0, convert(u.weixin_price * u.coin,decimal(10,2))) as livetimejiesuan,
+        <!--        SUBSTR(d.start_time,1,10) as shijian,-->
+        u.coin,
+        u.weibo_money as lwrenwu,
+        u.weixin_price as screnwu
+        from ${dbLive}.live_host_wage_day d
+        left join cx_live.live_family f on d.family_id=f.id
+        left join cx_live.live_user u on d.host_id=u.id
+        where d.live_time_sec > 0
+        <if test="dto.dateDay!=null">and d.id like '${dto.dateDay}%'</if>
+        <if test="dto.familyId!=null">and d.family_id = #{dto.familyId}</if>
+        <if test="dto.hostId!=null">and d.host_id = #{dto.hostId}</if>
+        <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
+        order by d.family_id
     </select>
 
 </mapper>
