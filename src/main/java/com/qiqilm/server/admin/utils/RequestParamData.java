@@ -85,7 +85,7 @@ public class RequestParamData {
         String agent = memberGameData.getAgent();
         Date startdate = DateFormatUtils.parse(memberGameData.getGameEndTime());
         startdate = DateFormatUtils.addMin(startdate,-5);
-        Date enddate = DateFormatUtils.addMin(startdate,5);
+        Date enddate = DateFormatUtils.addMin(startdate,10);
         String stringStartDate =DateFormatUtils.beiJinToMeiDong(startdate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String stringEndDate =DateFormatUtils.beiJinToMeiDong(enddate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String lineCode = agent.split("_")[0];
