@@ -49,7 +49,7 @@
             platform_type,
             status,
             game_start_time,
-            tableId
+            table_id
         )
         values (
             #{req.id},
