@@ -84,7 +84,7 @@ public class RequestParamData {
     public static String requestAGPlayBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = memberGameData.getAgent();
         Date startdate = DateFormatUtils.parse(memberGameData.getGameEndTime());
-        startdate = DateFormatUtils.addMin(startdate,-1);
+        startdate = DateFormatUtils.addMin(startdate,-5);
         Date enddate = DateFormatUtils.addMin(startdate,5);
         String stringStartDate =DateFormatUtils.beiJinToMeiDong(startdate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String stringEndDate =DateFormatUtils.beiJinToMeiDong(enddate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
