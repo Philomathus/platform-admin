@@ -89,7 +89,7 @@
             <if test="endTime != null and endTime != ''">#{endTime},</if>
             <if test="liveTimeSec != null">#{liveTimeSec},</if>
             <if test="ticket != null">#{ticket},</if>
-            <if test="lottery_cost != null">#{lotteryCost},</if>
+            <if test="lotteryCost != null">#{lotteryCost},</if>
             <if test="times != null">#{times},</if>
         </trim>
     </insert>
