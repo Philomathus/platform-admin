@@ -19,6 +19,7 @@
         <result property="platformType" column="platform_type"/>
         <result property="status" column="status"/>
         <result property="gameStartTime" column="game_start_time"/>
+        <result property="tableId" column="table_id"/>
     </resultMap>
 
     <sql id="selectMemberGameDataVo">
@@ -47,7 +48,8 @@
             agent,
             platform_type,
             status,
-            game_start_time
+            game_start_time,
+            tableId
         )
         values (
             #{req.id},
@@ -63,7 +65,8 @@
             #{req.agent},
             #{req.platformType},
             #{req.status},
-            #{req.gameStartTime}
+            #{req.gameStartTime},
+            #{req.tableId}
         )
     </insert>
     <!--打码逻辑结束-->
