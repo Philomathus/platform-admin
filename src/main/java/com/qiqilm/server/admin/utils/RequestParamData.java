@@ -89,7 +89,7 @@ public class RequestParamData {
         String stringStartDate =DateFormatUtils.beiJinToMeiDong(startdate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String stringEndDate =DateFormatUtils.beiJinToMeiDong(enddate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String lineCode = agent.split("_")[0];
-        String key = DigestUtils.md5Hex(lineCode + stringStartDate + stringEndDate + memberGameData.getKindId() + memberGameData.getGameId() +"1100" + "5F14237EE2A67EF102203A4C97603BC5");
+        String key = DigestUtils.md5Hex(lineCode + stringStartDate + stringEndDate + memberGameData.getKindId() + memberGameData.getTableId() +"1100" + "5F14237EE2A67EF102203A4C97603BC5");
         String s1 = String.format(RE_AG_PLAY_DETAIL_RECORD_S1,
                 lineCode,stringStartDate,stringEndDate,memberGameData.getKindId(),memberGameData.getGameId(),key);
         String param = s1;

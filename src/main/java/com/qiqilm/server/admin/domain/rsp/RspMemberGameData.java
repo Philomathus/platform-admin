@@ -52,4 +52,6 @@ public class RspMemberGameData {
     private BigDecimal totalBet;
 
     private BigDecimal totalIncome;
+
+    private String tableId;
 }

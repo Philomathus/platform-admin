@@ -84,6 +84,7 @@
         m.platform_id as platformId,
         m.game_start_time,
         m.game_end_time,
+        m.table_id as tableId,
         cg.platform_name AS platformName,
         cg.son_platform_name AS sonPlatformName
         FROM
