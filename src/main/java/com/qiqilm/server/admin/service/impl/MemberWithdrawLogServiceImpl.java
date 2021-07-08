@@ -554,13 +554,24 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		withdrawReportb.setT_value( rspMemberInfo1.getId() );
 		withdrawReports.add( withdrawReportb );
 
+//		WithdrawReport withdrawReportc = new WithdrawReport();
+//		withdrawReportc.setClass_twoname( "会员名称" );
+//		String phone = rspMemberInfo1.getPhone();
+//		if ( !StringUtils.isEmpty( phone ) ) {
+//			withdrawReportc.setT_value( PhoneUtil.getEncPhone( phone ) );
+//			withdrawReports.add( withdrawReportc );
+//		}
+
 		WithdrawReport withdrawReportc = new WithdrawReport();
-		withdrawReportc.setClass_twoname( "会员名称" );
-		String phone = rspMemberInfo1.getPhone();
-		if ( !StringUtils.isEmpty( phone ) ) {
-			withdrawReportc.setT_value( PhoneUtil.getEncPhone( phone ) );
-			withdrawReports.add( withdrawReportc );
+		withdrawReportc.setClass_twoname( "用户类型" );
+		if(!StringUtils.isEmpty(rspMemberInfo1.getChannelCode())){
+			if("0".equals(rspMemberInfo1.getChannelCode())){
+				withdrawReportc.setT_value( "游客" );
+			} else {
+				withdrawReportc.setT_value( "会员" );
+			}
 		}
+		withdrawReports.add( withdrawReportc );
 
 		WithdrawReport withdrawReportd = new WithdrawReport();
 		withdrawReportd.setClass_twoname( "会员VIP" );
