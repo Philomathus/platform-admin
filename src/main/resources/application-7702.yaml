@@ -28,5 +28,3 @@ payAgentLimitBinLi: 50000
 payAgentLimitTels: 100000
 # 联付宝代付额度
 payAgentLimitLianFuBao: 30000
-# 代理号
-agentCode: 7702

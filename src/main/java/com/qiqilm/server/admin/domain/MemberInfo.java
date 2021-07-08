@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.pagehelper.util.StringUtil;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import lombok.Data;
