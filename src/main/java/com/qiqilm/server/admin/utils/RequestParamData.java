@@ -83,9 +83,9 @@ public class RequestParamData {
     //AG-视讯 - 对局列表 返回参数
     public static String requestAGPlayBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String agent = memberGameData.getAgent();
-        String md5 = gamePlatform.getMd5();
         Date startdate = DateFormatUtils.parse(memberGameData.getGameEndTime());
         Date enddate = DateFormatUtils.addMin(startdate,5);
+        startdate = DateFormatUtils.addMin(startdate,-5);
         String stringStartDate =DateFormatUtils.beiJinToMeiDong(startdate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String stringEndDate =DateFormatUtils.beiJinToMeiDong(enddate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String lineCode = agent.split("_")[0];
@@ -435,6 +435,12 @@ public class RequestParamData {
         SimpleDateFormat sdf8=new SimpleDateFormat("yyyyMMdd");
         sdf8.setTimeZone(TimeZone.getTimeZone("America/Caracas"));
         return sdf8.format(date);
+    }
+
+    public static void main(String[] args) {
+        String strKey = "GY92021-07-07 05:50:002021-07-07 17:59:00BAC21070705379508411005F14237EE2A67EF102203A4C97603BC5";
+        String key = DigestUtils.md5Hex(strKey);
+        System.err.println(key);
     }
 
 }
