@@ -110,7 +110,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			gameDataLog.setPlatformType( platformType.get( og.getPlatformId() ) );
 			gameDataLog.setPlatformId( og.getPlatformId() );
 			gameDataLog.setRevenue( og.getRevenue() );
-			gameDataLog.setTableId( og.getTableId());
+			gameDataLog.setServerId( og.getServerId());
 
 			if ( beatRateMap.containsKey( og.getPlatformId() ) ) {
 				BigDecimal beatAdd =
@@ -164,7 +164,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			gameDataLog.setPlatformType( platformType.get( og.getPlatformId() ) );
 			gameDataLog.setPlatformId( og.getPlatformId() );
 			gameDataLog.setRevenue( og.getRevenue() );
-			gameDataLog.setTableId( og.getTableId());
+			gameDataLog.setServerId( og.getServerId());
 
 			if ( beatRateMap.containsKey( og.getPlatformId() ) ) {
 				BigDecimal beatAdd =

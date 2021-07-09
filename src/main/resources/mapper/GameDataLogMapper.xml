@@ -19,7 +19,6 @@
         <result property="gameEndTime"    column="game_end_time"    />
         <result property="platformId"    column="platform_id"    />
         <result property="agent"    column="agent"    />
-        <result property="tableId" column="table_id"/>
     </resultMap>
 
     <sql id="selectGameDataLogVo">
@@ -36,7 +35,7 @@
 
     <select id="selectGameDataAgentList"  resultMap="GameDataLogResult">
         select id, game_id, cx_agent, account, server_id, kind_id, table_id, chair_id, cell_score, all_bet, profit, revenue, game_start_time, game_end_time, platform_id,
-        agent,table_id from db_data.${tableNode}
+        agent from db_data.${tableNode}
         where game_start_time &gt;=  #{start} and game_start_time &lt;=  #{end}
         <if test="account != null "> and account = #{account}</if>
         <if test="platformId != null "> and platform_id = #{platformId}</if>
@@ -66,7 +65,6 @@
             <if test="gameEndTime != null">game_end_time,</if>
             <if test="platformId != null">platform_id,</if>
             <if test="agent != null">agent,</if>
-            <if test="tableId != null">table_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id},</if>
@@ -85,7 +83,6 @@
                     <if test="gameEndTime != null">#{gameEndTime},</if>
                     <if test="platformId != null">#{platformId},</if>
                     <if test="agent != null">#{agent},</if>
-                    <if test="tableId != null">#{tableId},</if>
              </trim>
     </insert>
 
@@ -121,8 +118,6 @@
             <if test="platformId != null">platform_id = #{platformId},</if>
     
             <if test="agent != null">agent = #{agent},</if>
-
-            <if test="tableId != null">table_id = #{tableId},</if>
     
         </trim>
         where id = #{id}
