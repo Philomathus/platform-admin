@@ -1,23 +1,18 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList;
 import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
-import com.qiqilm.server.admin.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
-import com.qiqilm.server.admin.domain.LiveHostWageDay;
 import com.qiqilm.server.admin.service.ILiveHostWageDayService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -27,10 +22,10 @@ import com.qiqilm.server.admin.service.ILiveHostWageDayService;
  */
 @Service
 public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
-    @Autowired
+    @Resource
     private LiveHostWageDayMapper liveHostWageDayMapper;
-    @Autowired
-    private SysConfigCacheUtil sysConfigCacheUtil;
+    @Value( "${spring.profiles.active}" )
+    private String profile;
 
     /**
      * 查询主播时长
@@ -58,22 +53,28 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     @Override
     public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto ) throws ParseException {
         this.setTime( dto );
-//        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
-        List<RspLiveHostWageDayFamily> liveHostWageDays = liveHostWageDayMapper.familyPage( dto );
-        for ( RspLiveHostWageDayFamily liveHostWageDay : liveHostWageDays ) {
-            if ( liveHostWageDay.getLiwu() != null ) {
+        List<RspLiveHostWageDayFamily> liveHostWageDays;
+        if(profile.equals("7706")){
+            liveHostWageDays = liveHostWageDayMapper.familyPage_7706(dto);
+        }else {
+            liveHostWageDays = liveHostWageDayMapper.familyPage( dto );
+        }
+        if (liveHostWageDays.size()>0 && liveHostWageDays!=null){
+            for ( RspLiveHostWageDayFamily liveHostWageDay : liveHostWageDays ) {
+                if ( liveHostWageDay.getLiwu() != null ) {
 //                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getAllticket() );
-                //判断是否是散户
-                if (liveHostWageDay.getFamilyId() == 0) {
+                    //判断是否是散户
+                    if (liveHostWageDay.getFamilyId() == 0) {
 //                    liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
 //                            BigDecimal.ROUND_HALF_UP ) );
 //                    liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
-                    liveHostWageDay.setFamilyName("散户");
+                        liveHostWageDay.setFamilyName("散户");
 //                } else {
 //                    liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
 //                             BigDecimal.ROUND_HALF_UP ) );
 //                    liveHostWageDay.setSettlementRate( ticketCattyRatio );
 //                }
+                    }
                 }
             }
         }
@@ -83,23 +84,28 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     @Override
     public List<RspLiveHostWageDayList> hostPage(LiveHostWageDay dto ) throws ParseException {
         this.setTime( dto );
-//        BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );
-
-        List<RspLiveHostWageDayList> liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
-        for ( RspLiveHostWageDayList liveHostWageDay : liveHostWageDays ) {
-            if ( liveHostWageDay.getTicket() != null ) {
+        List<RspLiveHostWageDayList> liveHostWageDays;
+        if(profile.equals("7706")){
+            liveHostWageDays = liveHostWageDayMapper.hostPage_7706(dto);
+        }else {
+            liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
+        }
+        if (liveHostWageDays.size()>0 && liveHostWageDays!=null){
+            for ( RspLiveHostWageDayList liveHostWageDay : liveHostWageDays ) {
+                if ( liveHostWageDay.getTicket() != null ) {
 //                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getTicket() );
-                //判断是否是散户
-                if ( liveHostWageDay.getFamilyId() == 0 ) {
+                    //判断是否是散户
+                    if ( liveHostWageDay.getFamilyId() == 0 ) {
 //                    liveHostWageDay.setAllticketRes( allTicket.multiply( dto.getSettlementRate() ).setScale( 2,
 //                            BigDecimal.ROUND_HALF_UP ) );
 //                    liveHostWageDay.setSettlementRate( dto.getSettlementRate() );
-                    liveHostWageDay.setFamilyName( "散户" );
+                        liveHostWageDay.setFamilyName( "散户" );
 //                } else {
 //                    liveHostWageDay.setAllticketRes( allTicket.multiply( ticketCattyRatio ).setScale( 2,
 //                            BigDecimal.ROUND_HALF_UP ) );
 //                    liveHostWageDay.setSettlementRate( ticketCattyRatio );
 //
+                    }
                 }
             }
         }
