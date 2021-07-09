@@ -78,6 +78,7 @@
             <if test="endTime != null and endTime != ''">end_time,</if>
             <if test="liveTimeSec != null">live_time_sec,</if>
             <if test="ticket != null">ticket,</if>
+            <if test="lotteryCost != null">lottery_cost,</if>
             <if test="times != null">times,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -88,6 +89,7 @@
             <if test="endTime != null and endTime != ''">#{endTime},</if>
             <if test="liveTimeSec != null">#{liveTimeSec},</if>
             <if test="ticket != null">#{ticket},</if>
+            <if test="lotteryCost != null">#{lotteryCost},</if>
             <if test="times != null">#{times},</if>
         </trim>
     </insert>
