@@ -1,12 +1,9 @@
 package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
-import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.math.BigDecimal;
 
 /**
  * 会员注单数据对象 member_game_data
@@ -72,6 +69,8 @@ public class MemberGameData extends GameData {
     /** 游戏开始时间 */
     @Excel(name = "游戏开始时间")
     private String gameStartTime;
+    /** 房间号 */
+    private String serverId;
 
 
     @Override
@@ -79,6 +78,7 @@ public class MemberGameData extends GameData {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("gameId", getGameId())
+            .append("serverId", getServerId())
             .append("account", getAccount())
             .append("kindId", getKindId())
             .append("cellScore", getCellScore())

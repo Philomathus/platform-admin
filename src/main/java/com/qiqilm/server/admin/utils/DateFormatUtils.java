@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * <p>Title: DateFormatUtils</p>
@@ -412,7 +413,52 @@ public abstract class DateFormatUtils {
 		return cal.getTime();
 	}
 
+	public static String beiJinToMeiDong(Date date,String style){
+		SimpleDateFormat sdf8=new SimpleDateFormat(style);
+		sdf8.setTimeZone(TimeZone.getTimeZone("America/Caracas"));
+		String dataTime=sdf8.format(date);
+		return dataTime;
+	}
+
+	public static String convertToBeijingTime(Date date){
+		SimpleDateFormat sdf8=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf8.setTimeZone(TimeZone.getTimeZone("GMT+8"));//委内瑞拉时间 (加拉加斯)
+		//System.out.println("东八区的时间:"+sdf8.format(date));//输出格式化日期
+		String dataTime=sdf8.format(date);
+		return dataTime;
+	}
+
+
+	public static String convertMeidongTOBeijing(String date1) throws ParseException {
+		SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sm.setTimeZone(TimeZone.getTimeZone("America/Caracas"));
+		Date date3=sm.parse(date1);
+		String resultDate=DateFormatUtils.convertToBeijingTime(date3);
+		return resultDate;
+	}
+
+
+
 	public static void main(String[] args) {
-		System.out.println(getTomorrowMorning(new Date()));
+		for (int i = 1; i < 10 ;i ++){
+			String stringDate = "2021-0"+i+"-05 11:00:00";
+			Date testDate = parse(stringDate);
+			System.err.println(testDate);
+			try {
+				System.out.println(convertMeidongTOBeijing(stringDate));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		for (int i = 10; i < 13 ;i ++){
+			String stringDate = "2021-0"+i+"-05 11:00:00";
+			Date testDate = parse(stringDate);
+			System.err.println(testDate);
+			try {
+				System.out.println(convertMeidongTOBeijing(stringDate));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

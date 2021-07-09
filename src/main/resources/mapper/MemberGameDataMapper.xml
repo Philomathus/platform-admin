@@ -19,10 +19,11 @@
         <result property="platformType" column="platform_type"/>
         <result property="status" column="status"/>
         <result property="gameStartTime" column="game_start_time"/>
+        <result property="serverId" column="server_id"/>
     </resultMap>
 
     <sql id="selectMemberGameDataVo">
-        select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time from ${dbMain}.member_game_data
+        select id, game_id, account, kind_id, cell_score, all_bet, profit, revenue, game_end_time, platform_id, agent, platform_type, status, game_start_time,server_id from ${dbMain}.member_game_data
     </sql>
 
     <!--打码逻辑开始-->
@@ -47,7 +48,8 @@
             agent,
             platform_type,
             status,
-            game_start_time
+            game_start_time,
+            server_id
         )
         values (
             #{req.id},
@@ -63,7 +65,8 @@
             #{req.agent},
             #{req.platformType},
             #{req.status},
-            #{req.gameStartTime}
+            #{req.gameStartTime},
+            #{req.serverId}
         )
     </insert>
     <!--打码逻辑结束-->
@@ -81,6 +84,7 @@
         m.platform_id as platformId,
         m.game_start_time,
         m.game_end_time,
+        m.server_id as serverId,
         cg.platform_name AS platformName,
         cg.son_platform_name AS sonPlatformName
         FROM
