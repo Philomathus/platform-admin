@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -62,6 +63,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     private MemberBcodeMapper memberBcodeMapper;
     @Autowired
     private NameUtil nameUtil;
+
     /**
      * 查询会员信息
      *
@@ -81,7 +83,13 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
      */
     @Override
     public List<MemberInfo> selectMemberInfoList(MemberInfo memberInfo) {
-        return memberInfoMapper.selectMemberInfoList(memberInfo);
+        List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
+        if (memberInfos.size() > 0 && !CollectionUtils.isEmpty(memberInfos)) {
+            for (MemberInfo me : memberInfos) {
+                me.setPhone(me.getPhone().substring(0, 3) + "****" + me.getPhone().substring(7, 11));
+            }
+        }
+        return memberInfos;
     }
 
     /**
@@ -165,10 +173,10 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         if (!"0".equals(markorder)) {
             List<LogMoney> markList = null;
             if (money.compareTo(BigDecimal.ZERO) > 0) {
-                markList = logMoneyMapper.findMark(userId, markorder, money, null, userId.substring(userId.length()-1));
+                markList = logMoneyMapper.findMark(userId, markorder, money, null, userId.substring(userId.length() - 1));
             } else {
                 BigDecimal negate = money.negate();
-                markList = logMoneyMapper.findMark(userId, markorder, null, negate, userId.substring(userId.length()-1));
+                markList = logMoneyMapper.findMark(userId, markorder, null, negate, userId.substring(userId.length() - 1));
             }
             if (markList.size() > 0) {
                 rspBase.setMsg("请查看此笔金额是否已经入款过，如否请输入其他订单备注");
@@ -302,13 +310,13 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public AjaxResult unbindCard(MemberCard member) {
         String id = member.getId();
-        String memberId=member.getMemberId();
-        List<MemberCard> memberCardList=memberCardMapper.memberCardList(memberId);
+        String memberId = member.getMemberId();
+        List<MemberCard> memberCardList = memberCardMapper.memberCardList(memberId);
         MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
-        if (Objects.isNull(memberCard)){
+        if (Objects.isNull(memberCard)) {
             return AjaxResult.success("卡号不存在");
         }
-        if (memberCardList.size()>1&&memberCard.getDv()==1){
+        if (memberCardList.size() > 1 && memberCard.getDv() == 1) {
             return AjaxResult.success("请先解绑副卡");
         }
         memberCardMapper.deleteMemberCardById(id);
@@ -327,7 +335,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             MemberCard memberCard2 = memberCards.get(0);
             //判断绑定的与修改成的是不是同一个,如果不是就不能修改
             if (!memberCard2.getId().equals(member.getId())) {
-                log.error("修改的id: {},上传的id: {}",memberCard2.getId(),member.getId());
+                log.error("修改的id: {},上传的id: {}", memberCard2.getId(), member.getId());
                 return AjaxResult.error("用户已绑定该银行卡");
             }
         }
@@ -352,12 +360,12 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
     @Override
     public void updateVip(String memberId, Integer vip, String nickName) {
-        memberBcodeMapper.updateVip(memberId,vip,nickName);
+        memberBcodeMapper.updateVip(memberId, vip, nickName);
     }
 
     @Override
     public AjaxResult updateInviterCode(String inviterCode, String memberId) {
-        memberInfoMapper.updateInviterCode(memberId,inviterCode);
+        memberInfoMapper.updateInviterCode(memberId, inviterCode);
         return AjaxResult.success("修改成功");
     }
 
@@ -379,13 +387,13 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
     @Override
     public void updataStatus(MemberInfo memberInfo) {
-        if (memberInfo.getBanSpeakTime()==0){
-            memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), false );
+        if (memberInfo.getBanSpeakTime() == 0) {
+            memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), false);
             memberInfo.setSpeak("0");
             memberInfoMapper.updateMemberInfo(memberInfo);
         }
-        if (memberInfo.getBanSpeakTime()>0){
-            memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), true );
+        if (memberInfo.getBanSpeakTime() > 0) {
+            memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), true);
             memberInfo.setSpeak("1");
             memberInfoMapper.updateMemberInfo(memberInfo);
         }

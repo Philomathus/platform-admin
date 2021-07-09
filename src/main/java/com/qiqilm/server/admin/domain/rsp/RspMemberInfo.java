@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.domain.rsp;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class RspMemberInfo {
@@ -17,6 +18,7 @@ public class RspMemberInfo {
     private String total_account;
     private String code_account;
     private String code_total;
+    private String channelCode;
     private String login_ip;
     private String ipaddress;
     //线下充值金额
