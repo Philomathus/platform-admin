@@ -69,9 +69,6 @@ public class MemberGameData extends GameData {
     /** 游戏开始时间 */
     @Excel(name = "游戏开始时间")
     private String gameStartTime;
-    /** 房间号 */
-    private String serverId;
-
 
     @Override
     public String toString() {
