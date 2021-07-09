@@ -86,7 +86,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
         if (memberInfos.size() > 0 && !CollectionUtils.isEmpty(memberInfos)) {
             for (MemberInfo me : memberInfos) {
-                me.setPhone(me.getPhone().substring(0, 3) + "****" + me.getPhone().substring(7, 11));
+                if (StringUtils.isEmpty(me.getPhone())) {
+                    me.setPhone(me.getPhone().substring(0, 3) + "****" + me.getPhone().substring(7, 11));
+                }
             }
         }
         return memberInfos;
