@@ -22,7 +22,7 @@
     </resultMap>
 
     <sql id="selectGameDataLogVo">
-        select id, game_id, cx_agent, account, server_id, kind_id, table_id, chair_id, cell_score, all_bet, profit, revenue, game_start_time, game_end_time, platform_id, agent from db_data.game_data_log
+        select id, game_id, cx_agent, account, server_id, kind_id, table_id, chair_id, cell_score, all_bet, profit, revenue, game_start_time, game_end_time, platform_id, agent,table_id from db_data.game_data_log
     </sql>
 
     <select id="selectGameDataLogList"  resultMap="GameDataLogResult">

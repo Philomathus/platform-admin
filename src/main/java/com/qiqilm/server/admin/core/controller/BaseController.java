@@ -7,7 +7,9 @@ import com.qiqilm.server.admin.core.page.PageDomain;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.page.TableSupport;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.MemberGameData;
 import com.qiqilm.server.admin.exception.ControllerExceptionHandler;
+import com.qiqilm.server.admin.service.IMemberGameDataMinService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.WebDataBinder;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * web层通用数据处理
@@ -101,4 +105,45 @@ public class BaseController extends ControllerExceptionHandler {
 	public String redirect( String url ) {
 		return StringUtils.format( "redirect:{}", url );
 	}
+
+	public Map defaultOrderBetState(){
+		Map<String, String> cacheOrderBetState = new TreeMap<>();
+		cacheOrderBetState.put("ALL","全部");
+		cacheOrderBetState.put("X","未结算");
+		cacheOrderBetState.put("N","已取消");
+		cacheOrderBetState.put("W","赢");
+		cacheOrderBetState.put("L","输");
+		cacheOrderBetState.put("LW","赢一半");
+		cacheOrderBetState.put("LL","输一半");
+		cacheOrderBetState.put("O","平手");
+		cacheOrderBetState.put("S","等待中");
+		cacheOrderBetState.put("D","未接受");
+		cacheOrderBetState.put("C","注销");
+		cacheOrderBetState.put("F","非法下注");
+		cacheOrderBetState.put("SC","系统注销");
+		cacheOrderBetState.put("DC","危险球注销");
+		return cacheOrderBetState;
+	}
+
+	public TreeMap defaultSbBetState(){
+		TreeMap<String, String> betState = new TreeMap<>();
+		betState.put("ALL","全部");
+		betState.put("waiting","等待中");
+		betState.put("running","进行中");
+		betState.put("void","作废");
+		betState.put("refund","退款");
+		betState.put("reject","已取消");
+		betState.put("lose","输");
+		betState.put("won","赢");
+		betState.put("draw","和局");
+		betState.put("half won","半赢");
+		betState.put("half lose","半输");
+		return betState;
+
+	}
+
+	public List<Map> handlyGameData(IMemberGameDataMinService memberGameDataMinService, MemberGameData req) throws Exception {
+		return memberGameDataMinService.selectMemberGameDataMinList(req);
+	}
+
 }
