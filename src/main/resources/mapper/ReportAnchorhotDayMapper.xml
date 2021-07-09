@@ -101,7 +101,7 @@
 		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from ${dbLive}.report_anchorhot_day
 		<where>
 			and num= #{num}
-			<if test="nickname != null and nickname != ''">nickname = #{nickname}</if>
+			<if test="nickname != null and nickname != ''">and nickname = #{nickname}</if>
 		</where>
 		ORDER BY sort
     </select>
@@ -109,7 +109,7 @@
 		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from ${dbLive}.report_anchorhot_week
 		<where>
 			and num= #{num}
-			<if test="nickname != null and nickname != ''">nickname = #{nickname}</if>
+			<if test="nickname != null and nickname != ''">and nickname = #{nickname}</if>
 		</where>
 		ORDER BY sort
 	</select>
@@ -118,7 +118,7 @@
 		 select rep_id, anchorid, nickname, day_ticket, sort, day_ticket_updiff, repdate, num, reptime, head_image from ${dbLive}.report_anchorhot_month
 		<where>
 			and num= #{num}
-			<if test="nickname != null and nickname != ''">nickname = #{nickname}</if>
+			<if test="nickname != null and nickname != ''">and nickname = #{nickname}</if>
 		</where>
 		ORDER BY sort
 	</select>
