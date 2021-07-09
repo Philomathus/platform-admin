@@ -127,7 +127,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			why = "管理员关播";
 			break;
 		case "timeOut":
-			why = "异常下播";
+			why = "当前网络不稳定，请重新开播";
 			break;
 		case "origin":
 			break;
