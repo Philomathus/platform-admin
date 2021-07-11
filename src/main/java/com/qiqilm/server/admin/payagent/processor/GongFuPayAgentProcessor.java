@@ -185,13 +185,15 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
                 String state = resultMap.getOrDefault("state", "").toString();
                 // status 4代付中 5代付失败 6代付成功
                 //state: WAITING 等待处理,PROCESSING 处理中,SUCCESSFUL 处理成功,FAILURE 处理失败
-                int status = 4;
-                if ("SUCCESSFUL".equals(state)) {
-                    status = 6;
-                } else if ("FAILURE".equals(state)) {
-                    status = 5;
+                if("SUCCESSFUL".equals(state) || "FAILURE".equals(state)) {
+                    int status = 4;
+                    if ("SUCCESSFUL".equals(state)) {
+                        status = 6;
+                    } else {
+                        status = 5;
+                    }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(state));
                 }
-                payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(state));
                 return JsonUtil.object2Json(resultMap);
             }
         } catch (
