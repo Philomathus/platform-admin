@@ -60,9 +60,13 @@ public interface LiveHostWageDayMapper {
 
 	public List<RspLiveHostWageDayFamily> familyPage(@Param( "dto" ) LiveHostWageDay dto );
 
+	public List<RspLiveHostWageDayFamily> familyPage_7706(@Param( "dto" ) LiveHostWageDay dto );
+
 	public List<Map<String, Object>> selectFamilyName();
 
 	public List<RspLiveHostWageDayList> hostPage(@Param( "dto" ) LiveHostWageDay dto );
+
+	public List<RspLiveHostWageDayList> hostPage_7706(@Param( "dto" ) LiveHostWageDay dto );
 
 	List<String> getliveHostWageDay( @Param( "createTime" ) String createTime, @Param( "familyId" ) Long familyId);
 }

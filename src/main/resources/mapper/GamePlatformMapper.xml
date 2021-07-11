@@ -33,6 +33,7 @@
     <select id="selectGamePlatformList" parameterType="GamePlatform" resultMap="GamePlatformResult">
         <include refid="selectGamePlatformVo"/>
         <where>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
             <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
         </where>

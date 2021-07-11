@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
+import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.mapper.GameDataLogMapper;
 import com.qiqilm.server.admin.service.IGameDataLogService;
@@ -97,7 +98,11 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
 			MemberGameData gameDataLog = new MemberGameData();
 			gameDataLog.setId( og.getId() );
-			gameDataLog.setGameId( og.getGameId() );
+			if (og.getPlatformId().equals(EnumGamePlatform.AG_LIVE.getType())){
+				gameDataLog.setGameId( og.getServerId() );
+			}else {
+				gameDataLog.setGameId( og.getGameId() );
+			}
 			gameDataLog.setAccount( og.getAccount() );
 			gameDataLog.setKindId( og.getKindId() );
 			gameDataLog.setCellScore( og.getCellScore() );
@@ -110,6 +115,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			gameDataLog.setPlatformType( platformType.get( og.getPlatformId() ) );
 			gameDataLog.setPlatformId( og.getPlatformId() );
 			gameDataLog.setRevenue( og.getRevenue() );
+			gameDataLog.setServerId( og.getServerId());
 
 			if ( beatRateMap.containsKey( og.getPlatformId() ) ) {
 				BigDecimal beatAdd =
@@ -147,10 +153,13 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			if ( mapper.findExist( og.getAccount().substring( og.getAccount().length() - 1 ), og.getId() ) != null ) {
 				continue;
 			}
-
 			MemberGameData gameDataLog = new MemberGameData();
 			gameDataLog.setId( og.getId() );
-			gameDataLog.setGameId( og.getGameId() );
+			if (og.getPlatformId().equals(EnumGamePlatform.AG_LIVE.getType())){
+				gameDataLog.setGameId( og.getServerId() );
+			}else {
+				gameDataLog.setGameId( og.getGameId() );
+			}
 			gameDataLog.setAccount( og.getAccount() );
 			gameDataLog.setKindId( og.getKindId() );
 			gameDataLog.setCellScore( og.getCellScore() );
