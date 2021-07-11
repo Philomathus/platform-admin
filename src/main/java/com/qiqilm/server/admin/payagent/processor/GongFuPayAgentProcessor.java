@@ -64,15 +64,18 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
                 BigDecimal.ROUND_HALF_UP));
         bodyMap.put("order_no", withdrawLog.getOrderNo());
 
-        if (StringUtils.isNotBlank(bank_id)) {
-            bodyMap.put("bank_id", bank_id);
-        } else {
+        if (!StringUtils.isNotBlank(bank_id)) {
             log.warn("功付代付订单提交失败,{}银行不支持,请联系技术", withdrawLog.getBankName());
             return false;
+        } else if(bank_id.length() > 4){
+            log.warn("功付代付订单提交失败,银行名称只能是4个字,请联系用户修改");
+            return false;
+        } else {
+            bodyMap.put("bank_id", bank_id);
         }
 
         bodyMap.put("payee_name", URLEncoder.encode(withdrawLog.getBankUserName().trim(),"utf-8"));
-        bodyMap.put("bank_name", URLEncoder.encode(withdrawLog.getBankName().trim()));
+        bodyMap.put("bank_name", URLEncoder.encode(withdrawLog.getBankName().trim(),"utf-8"));
         bodyMap.put("bank_account", withdrawLog.getBankAccount().trim());
 //        bodyMap.put("bank_branch_name", "bank_branch_name");
 //        bodyMap.put("bank_sub_branch_name", "bank_sub_branch_name");
@@ -109,6 +112,11 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
             return true;
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        String a = "阿斯顿";
+        System.out.println(a.length());
     }
 
     @Override
