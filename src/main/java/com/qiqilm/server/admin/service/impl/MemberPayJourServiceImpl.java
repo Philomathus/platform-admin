@@ -77,11 +77,19 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 
 	@Override
 	public List<RspPayJour> selectMemberPayJourLists(MemberPayJour memberPayJour) {
+		if (memberPayJour.getUpdateTime() != null) {
+			memberPayJour.setSelectStartDate(memberPayJour.getUpdateTime() + " 00:00:00");
+			memberPayJour.setSelectEndDate(memberPayJour.getUpdateTime() + " 23:59:59");
+		}
 		return memberPayJourMapper.selectMemberPayJourLists(memberPayJour);
 	}
 
 	@Override
 	public Map listCounts(MemberPayJour memberPayJour) {
+		if (memberPayJour.getUpdateTime() != null) {
+			memberPayJour.setSelectStartDate(memberPayJour.getUpdateTime() + " 00:00:00");
+			memberPayJour.setSelectEndDate(memberPayJour.getUpdateTime() + " 23:59:59");
+		}
 		return memberPayJourMapper.listCounts(memberPayJour);
 	}
 }

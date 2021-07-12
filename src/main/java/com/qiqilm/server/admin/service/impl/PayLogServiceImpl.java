@@ -38,6 +38,11 @@ public class PayLogServiceImpl implements IPayLogService {
      */
     @Override
     public List<PayLog> selectPayLogList(PayLog payLog) {
+        String[] selectDate = payLog.getSelectDate();
+        if ( selectDate != null && selectDate.length > 0 ) {
+            payLog.setSelectStartDate( selectDate[ 0 ]+ " 00:00:00");
+            payLog.setSelectEndDate( selectDate[ 1 ] + " 23:59:59" );
+        }
         return payLogMapper.selectPayLogList(payLog);
     }
 
