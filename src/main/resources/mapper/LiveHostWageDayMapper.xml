@@ -235,8 +235,8 @@
         convert(IFNULL(d.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as cost_qianliu,
         d.times
         from ${dbLive}.live_host_wage_day d
-        LEFT JOIN cx_live.live_user u on d.host_id = u.id
-        LEFT JOIN cx_live.live_family f on d.family_id=f.id
+        LEFT JOIN ${dbLive}.live_user u on d.host_id = u.id
+        LEFT JOIN ${dbLive}.live_family f on d.family_id=f.id
         <where>
             <if test="dto.dateDay!=null">and d.id like '${dto.dateDay}%'</if>
             <if test="dto.familyId!=null">and d.family_id = #{dto.familyId}</if>
@@ -267,8 +267,8 @@
         u.weibo_money as lwrenwu,
         u.weixin_price as screnwu
         from ${dbLive}.live_host_wage_day d
-        left join cx_live.live_family f on d.family_id=f.id
-        left join cx_live.live_user u on d.host_id=u.id
+        left join ${dbLive}.live_family f on d.family_id=f.id
+        left join ${dbLive}.live_user u on d.host_id=u.id
         where d.live_time_sec > 0
         <if test="dto.dateDay!=null">and d.id like '${dto.dateDay}%'</if>
         <if test="dto.familyId!=null">and d.family_id = #{dto.familyId}</if>
