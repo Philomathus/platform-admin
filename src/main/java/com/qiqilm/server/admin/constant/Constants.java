@@ -35,7 +35,6 @@ public abstract class Constants {
 	public static final Long    INIT_MEMBERCODE            = 10000L;
 	public static final String  CX_GAME                    = "CX:game:";
 	public static final String  CX_VIP                     = "CX:vip:";
-	public static final String  CX_WEB_SET                 = "CX:webSet:";
 	public static final String  REDIS_KEY_LOGIN_TOKEN_INFO = "CX:loginTokenInfo:";
 	public static final String  REDIS_KEY_LOGIN_ADMIN_INFO = "CX:loginAdminInfo:";
 	public static final String  PLATFORM_TOKEN             = "CX:platform:token:";
