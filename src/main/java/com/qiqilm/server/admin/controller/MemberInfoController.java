@@ -435,16 +435,16 @@ public class MemberInfoController extends BaseController {
     }
 
 
-    /**
-     * 查询资金明细列表
-     *
-     * @return
-     */
-    @ApiOperation(value = "查询资金明细列表", notes = "查询资金明细列表")
-    @RequestMapping(value = "/report", method = RequestMethod.GET)
-    public PageBO<WithdrawReport> findMemberCardList(@RequestParam("id") String memberId, PageVO req) {
-        return memberInfoService.withdrawReport(memberId, req.getPage(), req.getLimit());
-    }
+//    /**
+//     * 查询资金明细列表
+//     *
+//     * @return
+//     */
+//    @ApiOperation(value = "查询资金明细列表", notes = "查询资金明细列表")
+//    @RequestMapping(value = "/report", method = RequestMethod.GET)
+//    public PageBO<WithdrawReport> findMemberCardList(@RequestParam("id") String memberId, PageVO req) {
+//        return memberInfoService.withdrawReport(memberId, req.getPage(), req.getLimit());
+//    }
 
     /**
      * 会员银行卡列表
