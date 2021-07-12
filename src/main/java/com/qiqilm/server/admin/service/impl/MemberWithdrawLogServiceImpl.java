@@ -446,7 +446,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			BigDecimal levelIntegral = memberInfo.getLevelIntegral();//总充值金额
 			BigDecimal codeAccount = memberInfo.getCodeAccount();//打码账户
 			if (memberWithdrawLog.getBankCharge().compareTo(bankChargeMax)>=0&&
-					codeAccount.compareTo(levelIntegral.multiply(multipleCode))>=0){
+					codeAccount.compareTo(levelIntegral.multiply(multipleCode))<=0){
 				MemberInfo member=new MemberInfo();
 				member.setId(memberWithdrawLog.getMemberId());
 				member.setStatus(4);
