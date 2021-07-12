@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import lombok.Data;
@@ -66,6 +67,13 @@ public class PayLog extends BaseEntity {
     private Integer countTotal;//总成功笔数
     private BigDecimal countSuccessMoney;//总成功金额
     private Integer countSuccess;//成功笔数
+
+    @JsonIgnore
+    private String[] selectDate;
+    @JsonIgnore
+    private String   selectStartDate;
+    @JsonIgnore
+    private String   selectEndDate;
 
     @Override
     public String toString() {
