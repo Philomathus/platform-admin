@@ -192,7 +192,7 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
                     } else {
                         status = 5;
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.valueOf(state));
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
                 }
                 return JsonUtil.object2Json(resultMap);
             }
