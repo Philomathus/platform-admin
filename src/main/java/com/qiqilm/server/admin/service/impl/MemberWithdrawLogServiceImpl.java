@@ -449,7 +449,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 					codeAccount.compareTo(levelIntegral.multiply(multipleCode))<=0){
 				MemberInfo member=new MemberInfo();
 				member.setId(memberWithdrawLog.getMemberId());
-				member.setStatus(4);
+				member.setEmail("系统判定疑似套利号");
 				memberInfoMapper.updateMemberInfo(member);
 			}
 		}
