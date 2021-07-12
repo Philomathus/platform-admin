@@ -67,8 +67,8 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
         if (!StringUtils.isNotBlank(bank_id)) {
             log.warn("功付代付订单提交失败,{}银行不支持,请联系技术", withdrawLog.getBankName());
             return false;
-        } else if(bank_id.length() > 4){
-            log.warn("功付代付订单提交失败,银行名称只能是4个字,请联系用户修改");
+        } else if(withdrawLog.getBankName().length() > 4){
+            log.warn("功付代付订单提交失败,因三方代付系统限制,银行名称只能是4个字,请联系用户修改");
             return false;
         } else {
             bodyMap.put("bank_id", bank_id);
@@ -192,12 +192,11 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
                     } else {
                         status = 5;
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(state));
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.valueOf(state));
                 }
                 return JsonUtil.object2Json(resultMap);
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         return "功付代付查询失败,订单号:" + withdrawLog.getOrderNo();
