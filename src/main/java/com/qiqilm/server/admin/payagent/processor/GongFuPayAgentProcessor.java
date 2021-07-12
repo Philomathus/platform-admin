@@ -124,6 +124,8 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
         String sign = requestMap.remove("sign").toString();
         String state = requestMap.getOrDefault("state", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
+        String notify_time = bodyMap.remove("notify_time").toString();
+        bodyMap.put("notify_time",URLEncoder.encode(notify_time,"utf-8"));
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
