@@ -157,7 +157,7 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("银联代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            log.info("银联代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String success = resultMap.getOrDefault("success", "").toString();
                 if ("true".equals(success)) {

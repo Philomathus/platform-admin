@@ -160,7 +160,7 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("牛气冲天代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            log.info("牛气冲天代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String statusCode = String.valueOf(resultMap.getOrDefault("status", "").toString());
                 int status = 4;

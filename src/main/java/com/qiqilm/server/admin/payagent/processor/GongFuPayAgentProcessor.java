@@ -182,7 +182,7 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr() + payAgentPlatform.getMerId() + "/" + withdrawLog.getOrderNo(), httpEntity, Map.class);
-            log.info("功付代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            log.info("功付代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String state = resultMap.getOrDefault("state", "").toString();
                 // status 4代付中 5代付失败 6代付成功
