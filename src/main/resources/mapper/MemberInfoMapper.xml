@@ -104,7 +104,7 @@
 			<if test="status != null">
 				and id in (select id from member_info where status = #{status})
 			</if>
-			<if test="email != null">
+			<if test="email != null and email != ''">
 				and email like concat('%', #{email}, '%')
 			</if>
 			<if test="registIp != null  and registIp != ''">

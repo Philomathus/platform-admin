@@ -1,15 +1,12 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.domain.SystemIpWhite;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.SystemIpTypeWhiteMapper;
 import com.qiqilm.server.admin.domain.SystemIpTypeWhite;
+import com.qiqilm.server.admin.mapper.SystemIpTypeWhiteMapper;
 import com.qiqilm.server.admin.service.ISystemIpTypeWhiteService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * IP黑名单或反作弊禁言Service业务层处理
