@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.SystemIpTypeWhiteMapper">
+
+    <resultMap type="SystemIpTypeWhite" id="SystemIpTypeWhiteResult">
+        <result property="id"    column="id"    />
+        <result property="value"    column="value"    />
+        <result property="status"    column="status"    />
+        <result property="opname"    column="opName"    />
+        <result property="mark"    column="mark"    />
+    </resultMap>
+
+    <sql id="selectSystemIpTypeWhiteVo">
+        select id, value, status, opName, mark from 7700_main.system_ip_type_white
+    </sql>
+
+    <select id="selectSystemIpTypeWhiteList" parameterType="SystemIpTypeWhite" resultMap="SystemIpTypeWhiteResult">
+        <include refid="selectSystemIpTypeWhiteVo"/>
+        <where>
+            <if test="value != null  and value != ''"> and value = #{value}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="mark != null  and mark != ''"> and mark like concat('%', #{mark}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectSystemIpTypeWhiteById" parameterType="String" resultMap="SystemIpTypeWhiteResult">
+        <include refid="selectSystemIpTypeWhiteVo"/>
+        where id = #{id}
+    </select>
+    <select id="exists" resultType="java.lang.Integer">
+        select COUNT(1) from system_ip_type_white where value = #{value}
+    </select>
+
+    <insert id="insertSystemIpTypeWhite" parameterType="SystemIpTypeWhite">
+        insert into 7700_main.system_ip_type_white
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="value != null">value,</if>
+            <if test="status != null">status,</if>
+            <if test="opname != null">opName,</if>
+            <if test="mark != null">mark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="value != null">#{value},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="opname != null">#{opname},</if>
+                    <if test="mark != null">#{mark},</if>
+             </trim>
+    </insert>
+
+    <update id="updateSystemIpTypeWhite" parameterType="SystemIpTypeWhite">
+        update 7700_main.system_ip_type_white
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="value != null">value = #{value},</if>
+    
+            <if test="status != null">status = #{status},</if>
+    
+            <if test="opname != null">opName = #{opname},</if>
+    
+            <if test="mark != null">mark = #{mark},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSystemIpTypeWhiteById" parameterType="String">
+        delete from 7700_main.system_ip_type_white where id = #{id}
+    </delete>
+
+    <delete id="deleteSystemIpTypeWhiteByIds" parameterType="String">
+        delete from 7700_main.system_ip_type_white where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
