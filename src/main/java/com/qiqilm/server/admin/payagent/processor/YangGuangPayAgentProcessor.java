@@ -56,26 +56,29 @@ public class YangGuangPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        Map<String, Object> resultMap = null;
+        String res = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            res = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("阳光代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
-        if (!CollectionUtils.isEmpty(resultMap)) {
-            String code = resultMap.getOrDefault("code", "").toString();
-            String status = resultMap.getOrDefault("status", "").toString();
-            if ("0000".equals(code) && "1".equals(status)) {
-                log.info("阳光代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
-                return true;
-            } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+        log.info("阳光代付下单结果 - result:{}", res);
+        if (StringUtils.isNotBlank(res)) {
+            Map<String, Object> resultMap = JsonUtil.json2Map(res);
+            if (!CollectionUtils.isEmpty(resultMap)) {
+                String code = resultMap.getOrDefault("code", "").toString();
+                String status = resultMap.getOrDefault("status", "").toString();
+                if ("0000".equals(code) && "1".equals(status)) {
+                    log.info("阳光代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                    return true;
+                } else {
+                    reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
 
-                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+                    payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+                }
             }
         }
-        log.warn("阳光代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("阳光代付订单提交失败 - result:{}", res);
         return false;
     }
 
@@ -112,27 +115,30 @@ public class YangGuangPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        Map<String, Object> resultMap = null;
+        String res = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("阳光代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
-            if (!CollectionUtils.isEmpty(resultMap)) {
-                String code = resultMap.getOrDefault("code", "").toString();
-                if ("0000".equals(code)) {
-                    int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
-                    if (statusType > 0) {
-                        // status 4代付中 5代付失败 6代付成功
-                        // statusType  2失败 1成功 0处理中
-                        int status = 4;
-                        if (statusType == 1) {
-                            status = 6;
-                        } else if (statusType == 2) {
-                            status = 5;
+            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
+            log.info("阳光代付查询结果- result:{}", res);
+            if(StringUtils.isNotBlank(res)) {
+                Map<String, Object> resultMap = JsonUtil.json2Map(res);
+                if (!CollectionUtils.isEmpty(resultMap)) {
+                    String code = resultMap.getOrDefault("code", "").toString();
+                    if ("0000".equals(code)) {
+                        int statusType = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
+                        if (statusType > 0) {
+                            // status 4代付中 5代付失败 6代付成功
+                            // statusType  2失败 1成功 0处理中
+                            int status = 4;
+                            if (statusType == 1) {
+                                status = 6;
+                            } else if (statusType == 2) {
+                                status = 5;
+                            }
+                            payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                         }
-                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                     }
+                    return res;
                 }
-                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
