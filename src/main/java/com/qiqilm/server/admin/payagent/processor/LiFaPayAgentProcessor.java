@@ -188,7 +188,7 @@ public class LiFaPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("利发代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            log.info("利发代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String retCode = resultMap.getOrDefault("retCode", "").toString();
                 if ("SUCCESS".equals(retCode)) {

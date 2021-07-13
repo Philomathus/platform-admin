@@ -142,7 +142,7 @@ public class LuFeiPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info(ConstantsPayAgent.LU_FEI+"代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            log.info(ConstantsPayAgent.LU_FEI+"代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 if ("100".equals(code)) {
