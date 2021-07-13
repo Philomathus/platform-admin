@@ -118,13 +118,6 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         return false;
     }
 
-    public static void main(String[] args) {
-       String a = "大师啊的婚纱";
-           a =  a.substring(4,6);
-        System.out.println(a);
-
-    }
-
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
