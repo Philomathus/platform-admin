@@ -91,6 +91,6 @@ public class SystemIpTypeWhiteServiceImpl implements ISystemIpTypeWhiteService {
 
     @Override
     public int exists(String value) {
-        return 0;
+        return systemIpTypeWhiteMapper.exists(value);
     }
 }
