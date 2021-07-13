@@ -58,13 +58,6 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
 
         String bank_id = typeMap.getOrDefault(withdrawLog.getBankName(), "");
 
-        if(withdrawLog.getBankName().startsWith("中国") && withdrawLog.getBankName().length() == 6){
-            withdrawLog.setBankName(withdrawLog.getBankName().substring(2,6));
-        }
-        if("中国邮政储蓄银行".equals(withdrawLog.getBankName()) || "邮政储蓄银行".equals(withdrawLog.getBankName()) || "邮政银行".equals(withdrawLog.getBankName())){
-            withdrawLog.setBankName("中国邮政");
-        }
-
         SortedMap<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put("merchant_no", payAgentPlatform.getMerId());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0,
@@ -74,10 +67,6 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         if (!StringUtils.isNotBlank(bank_id)) {
             log.warn("秒到付代付订单提交失败,{}银行不支持,请联系技术", withdrawLog.getBankName());
             reqPayAgent.setFailReason("秒到付代付订单提交失败," + withdrawLog.getBankName() + "不支持,请联系技术");
-            return false;
-        } else if (withdrawLog.getBankName().length() > 4) {
-            log.warn("秒到付代付订单提交失败,三方代付系统限制,银行名称只能是4个字,请联系用户修改");
-            reqPayAgent.setFailReason("三方代付系统限制,银行名称只能是4个字,请联系用户修改");
             return false;
         } else {
             bodyMap.put("bank_id", bank_id);
@@ -99,6 +88,8 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         bodyMap.put("sign", sign);
+        bodyMap.remove("bank_name");
+        bodyMap.put("bank_name", withdrawLog.getBankName().trim());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
