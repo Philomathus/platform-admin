@@ -67,8 +67,8 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
         if (!StringUtils.isNotBlank(bank_id)) {
             log.warn("功付代付订单提交失败,{}银行不支持,请联系技术", withdrawLog.getBankName());
             return false;
-        } else if(bank_id.length() > 4){
-            log.warn("功付代付订单提交失败,银行名称只能是4个字,请联系用户修改");
+        } else if(withdrawLog.getBankName().length() > 4){
+            log.warn("功付代付订单提交失败,因三方代付系统限制,银行名称只能是4个字,请联系用户修改");
             return false;
         } else {
             bodyMap.put("bank_id", bank_id);
@@ -124,6 +124,8 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
         String sign = requestMap.remove("sign").toString();
         String state = requestMap.getOrDefault("state", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
+        String notify_time = bodyMap.remove("notify_time").toString();
+        bodyMap.put("notify_time",URLEncoder.encode(notify_time,"utf-8"));
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -180,7 +182,7 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr() + payAgentPlatform.getMerId() + "/" + withdrawLog.getOrderNo(), httpEntity, Map.class);
-            log.info("功付代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            log.info("功付代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String state = resultMap.getOrDefault("state", "").toString();
                 // status 4代付中 5代付失败 6代付成功
@@ -192,12 +194,11 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
                     } else {
                         status = 5;
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(state));
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
                 }
                 return JsonUtil.object2Json(resultMap);
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         return "功付代付查询失败,订单号:" + withdrawLog.getOrderNo();

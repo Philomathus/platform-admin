@@ -141,7 +141,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
         }
-        log.info("顺风代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+        log.info("顺风代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
                 Map<String, Object> dataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());

@@ -137,7 +137,7 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 		Map<String, Object> resultMap = null;
 		try {
 			resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
-			log.info("碧海代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+			log.info("碧海代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
 			if (!CollectionUtils.isEmpty(resultMap)) {
 				int code = Integer.parseInt(resultMap.getOrDefault("code", 0).toString());
 				if (code == 1) {

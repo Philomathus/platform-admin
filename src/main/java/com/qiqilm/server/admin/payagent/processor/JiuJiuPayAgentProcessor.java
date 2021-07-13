@@ -78,7 +78,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("久久代付下单结果 - result:{}", JsonUtil.object2Map(resultMap));
+        log.info("久久代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             if ("0".equals(code)) {
