@@ -90,6 +90,8 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("sign", sign);
         bodyMap.remove("bank_name");
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
+        bodyMap.remove("payee_name");
+        bodyMap.put("payee_name", withdrawLog.getBankUserName().trim());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
