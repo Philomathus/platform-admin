@@ -69,7 +69,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
                 log.info("newmax代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
 
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
