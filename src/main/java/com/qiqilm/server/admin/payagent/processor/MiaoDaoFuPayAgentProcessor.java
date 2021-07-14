@@ -49,12 +49,15 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         typeMap.put("中国邮政银行", "1");
         typeMap.put("邮政储蓄银行", "1");
         typeMap.put("邮政银行", "1");
-        typeMap.put("中国邮政", "1");
         typeMap.put("平安银行", "13");
         typeMap.put("浙商银行", "18");
         typeMap.put("渤海银行", "19");
         typeMap.put("光大银行", "9");
         typeMap.put("中国光大银行", "9");
+
+        if(!withdrawLog.getBankName().contains("银行")){
+            withdrawLog.setBankName(withdrawLog.getBankName() + "银行");
+        }
 
         String bank_id = typeMap.getOrDefault(withdrawLog.getBankName(), "");
 
