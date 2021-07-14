@@ -399,6 +399,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( withdrawLog.getOrderNo() );
 		int         deleteP     = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
 		if ( updateW <= 0 || deleteP <= 0 ){
+			log.error( "代付状态回退失败:{}", withdrawLog.getOrderNo() );
 			throw new BusinessException( "代付状态回退失败" );
 		}
 	}
