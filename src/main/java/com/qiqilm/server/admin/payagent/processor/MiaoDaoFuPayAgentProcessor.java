@@ -59,6 +59,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         typeMap.put("兴业银行", "15");
         typeMap.put("上海浦东发展银行", "16");
         typeMap.put("浦东发展银行", "16");
+        typeMap.put("浦发银行", "16");
         typeMap.put("浙商银行", "18");
         typeMap.put("渤海银行", "19");
         typeMap.put("光大银行", "9");
