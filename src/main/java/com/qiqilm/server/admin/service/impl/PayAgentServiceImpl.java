@@ -68,7 +68,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentLimitHeZhong;
 	@Value( "${payAgentLimitDiDi:5000}" )
 	private Integer payAgentLimitDiDi;
-
+	@Value( "${payAgentLimitNewMaxPay:5000}" )
+	private Integer payAgentLimitNewMaxPay;
+	@Value( "${payAgentLimitYangGuangPay:5000}" )
+	private Integer payAgentLimitYangGuangPay;
 	@Override
 	@Transactional( rollbackFor = Exception.class )
 	public void processOrderPay( MemberWithdrawLog withdrawLog, PayAgentLog payAgentLog, String orderNo,
@@ -171,7 +174,14 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.DIDI )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitDiDi ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitDiDi + "元以上出款" );
-		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
+		}else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.NEWMAX )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitNewMaxPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitNewMaxPay + "元以上出款" );
+		}else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitYangGuangPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitYangGuangPay + "元以上出款" );
+		}
+		else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DIDI )
@@ -180,7 +190,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU )
-				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 ) ) {
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.NEWMAX )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
 		}
 
