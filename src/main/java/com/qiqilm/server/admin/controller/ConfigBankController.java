@@ -1,33 +1,25 @@
 package com.qiqilm.server.admin.controller;
 
-import java.util.List;
-
-import com.qiqilm.server.admin.domain.ActivityType;
-import com.qiqilm.server.admin.domain.BankList;
-import com.qiqilm.server.admin.domain.PayType;
-import com.qiqilm.server.admin.service.IBankListService;
-import com.qiqilm.server.admin.service.impl.BankListServiceImpl;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import com.qiqilm.server.admin.utils.UuidUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.enums.BusinessType;
-import com.qiqilm.server.admin.domain.ConfigBank;
-import com.qiqilm.server.admin.service.IConfigBankService;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.BankList;
+import com.qiqilm.server.admin.domain.ConfigBank;
+import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.mapper.SysUserMapper;
+import com.qiqilm.server.admin.service.IBankListService;
+import com.qiqilm.server.admin.service.IConfigBankService;
+import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 【公司入款银行列表】Controller
@@ -41,27 +33,31 @@ public class ConfigBankController extends BaseController {
 	@Autowired
 	private IConfigBankService configBankService;
 	@Autowired
-	private IBankListService bankListService;
+	private IBankListService   bankListService;
+	@Autowired
+	private TokenService       tokenService;
+	@Autowired
+	private SysUserMapper      sysUserMapper;
 
 	/**
 	 * 查询【公司入款银行列表】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(ConfigBank configBank) {
+	public TableDataInfo list( ConfigBank configBank ) {
 		startPage();
-		List<ConfigBank> list = configBankService.selectConfigBankList(configBank);
+		List<ConfigBank> list = configBankService.selectConfigBankList( configBank );
 		return getDataTable( list );
 	}
-    
+
 	/**
 	 * 导出【公司入款银行列表】列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:export')" )
 	@Log( title = "【公司入款银行列表】", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(ConfigBank configBank, HttpServletResponse response) {
-		List<ConfigBank>      list = configBankService.selectConfigBankList(configBank);
+	public void export( ConfigBank configBank, HttpServletResponse response ) {
+		List<ConfigBank> list = configBankService.selectConfigBankList( configBank );
 		ExportExcelUtil.exportExcel( list, "公司入款银行列表", "公司入款银行表", ConfigBank.class, response );
 	}
 
@@ -70,8 +66,8 @@ public class ConfigBankController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:query')" )
 	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) String id) {
-		return AjaxResult.success( configBankService.selectConfigBankById(id) );
+	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
+		return AjaxResult.success( configBankService.selectConfigBankById( id ) );
 	}
 
 	/**
@@ -80,17 +76,34 @@ public class ConfigBankController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:add')" )
 	@Log( title = "【公司入款银行列表】", businessType = BusinessType.INSERT )
 	@PostMapping
-	public AjaxResult add( @RequestBody ConfigBank configBank) {
-		configBank.setId(UuidUtil.getRandomUuidWithoutSeparator());
-		BankList bankList = new BankList();
-		bankList.setBankName(configBank.getName());
-		List<BankList> bankLists = bankListService.selectBankListList(bankList);
-		if(bankList != null) {
-			configBank.setIcon(bankLists.get(0).getBankIcon());
-			configBank.setCode(bankLists.get(0).getBankCode());
-			configBank.setUrl(bankLists.get(0).getUrl());
+	public AjaxResult add( @RequestBody ConfigBank configBank ) throws Exception {
+		if ( configBank.getGoogleAuthCode() == null ) {
+			return AjaxResult.error( "请输入google验证码" );
 		}
-		return toAjax( configBankService.insertConfigBank(configBank) );
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String    userName  = loginUser.getUser().getUserName();
+
+		String googleAuthSecret = sysUserMapper.selectGoogleAuthKeyByUserName( userName );
+
+		if ( !StringUtils.hasText( googleAuthSecret ) ) {
+			return AjaxResult.error( "未绑定google验证秘钥，无法审核" );
+		}
+		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret, AuthUtil.getSecurityKeyStr(
+				"secretkey/googleAuthPrivateKey" ) );
+
+		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, configBank.getGoogleAuthCode() ) ) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
+		configBank.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+		BankList bankList = new BankList();
+		bankList.setBankName( configBank.getName() );
+		List<BankList> bankLists = bankListService.selectBankListList( bankList );
+		if ( bankList != null ) {
+			configBank.setIcon( bankLists.get( 0 ).getBankIcon() );
+			configBank.setCode( bankLists.get( 0 ).getBankCode() );
+			configBank.setUrl( bankLists.get( 0 ).getUrl() );
+		}
+		return toAjax( configBankService.insertConfigBank( configBank ) );
 	}
 
 	/**
@@ -98,11 +111,11 @@ public class ConfigBankController extends BaseController {
 	 *
 	 * @return
 	 */
-	@GetMapping("/bankLists")
+	@GetMapping( "/bankLists" )
 	public AjaxResult bankLists() {
-		BankList bankList = new BankList();
-		List<BankList> bankLists = bankListService.selectBankListList(bankList);
-		return AjaxResult.success(bankLists);
+		BankList       bankList  = new BankList();
+		List<BankList> bankLists = bankListService.selectBankListList( bankList );
+		return AjaxResult.success( bankLists );
 	}
 
 	/**
@@ -111,8 +124,26 @@ public class ConfigBankController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:edit')" )
 	@Log( title = "【公司入款银行列表】", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody ConfigBank configBank) {
-		return toAjax( configBankService.updateConfigBank(configBank) );
+	public AjaxResult edit( @RequestBody ConfigBank configBank ) throws Exception {
+		if ( configBank.getGoogleAuthCode() == null ) {
+			return AjaxResult.error( "请输入google验证码" );
+		}
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String    userName  = loginUser.getUser().getUserName();
+
+		String googleAuthSecret = sysUserMapper.selectGoogleAuthKeyByUserName( userName );
+
+		if ( !StringUtils.hasText( googleAuthSecret ) ) {
+			return AjaxResult.error( "未绑定google验证秘钥，无法审核" );
+		}
+		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret, AuthUtil.getSecurityKeyStr(
+				"secretkey/googleAuthPrivateKey" ) );
+
+		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, configBank.getGoogleAuthCode() ) ) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
+
+		return toAjax( configBankService.updateConfigBank( configBank ) );
 	}
 
 	/**
@@ -132,6 +163,6 @@ public class ConfigBankController extends BaseController {
 	@Log( title = "支付类型", businessType = BusinessType.UPDATE )
 	@PutMapping( "/changeStatus" )
 	public AjaxResult changeStatus( @RequestBody ConfigBank configBank ) {
-		return toAjax(configBankService.updateConfigBank(configBank));
+		return toAjax( configBankService.updateConfigBank( configBank ) );
 	}
 }

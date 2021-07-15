@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import java.math.BigDecimal;
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -66,6 +67,8 @@ public class ConfigBank extends BaseEntity {
     @Excel(name = "开放层级最大")
     private Integer openLevelMax;
 
+    @JsonIgnore
+    private Integer googleAuthCode;
 
     @Override
     public String toString() {
