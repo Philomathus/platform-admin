@@ -16,7 +16,7 @@ public enum BankCodeYinLianType {
     //PSBC( Arrays.asList( "邮政储蓄银行", "中国邮政储蓄银行", "中国邮政银行", "中国邮政储蓄", "中国邮政", "邮政银行" ) ),
     COMM(Arrays.asList( "交通银行" ) ),
     //CMB(Arrays.asList( "招商银行" ) ),
-    SPDB(Arrays.asList( "上海浦东发展银行" ) ),
+    SPDB(Arrays.asList( "上海浦东发展银行", "浦东发展银行", "浦发银行" ) ),
     CIB(Arrays.asList( "兴业银行" ) ),
     HXBANK(Arrays.asList( "华夏银行" ) ),
     GDB(Arrays.asList( "广东发展银行" ) ),
