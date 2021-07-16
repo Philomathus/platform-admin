@@ -40,21 +40,34 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         typeMap.put("中国工商银行", "2");
         typeMap.put("农业银行", "3");
         typeMap.put("中国农业银行", "3");
+        typeMap.put("交通银行", "7");
+        typeMap.put("中国交通银行", "7");
         typeMap.put("中国银行", "4");
         typeMap.put("建设银行", "5");
         typeMap.put("中国建设银行", "5");
+        typeMap.put("民生银行", "11");
+        typeMap.put("中国民生银行", "11");
         typeMap.put("中信银行", "8");
         typeMap.put("上海银行", "48");
         typeMap.put("中国邮政储蓄银行", "1");
         typeMap.put("中国邮政银行", "1");
         typeMap.put("邮政储蓄银行", "1");
         typeMap.put("邮政银行", "1");
-        typeMap.put("中国邮政", "1");
+        typeMap.put("广发银行", "12");
         typeMap.put("平安银行", "13");
+        typeMap.put("招商银行", "14");
+        typeMap.put("兴业银行", "15");
+        typeMap.put("上海浦东发展银行", "16");
+        typeMap.put("浦东发展银行", "16");
+        typeMap.put("浦发银行", "16");
         typeMap.put("浙商银行", "18");
         typeMap.put("渤海银行", "19");
         typeMap.put("光大银行", "9");
         typeMap.put("中国光大银行", "9");
+
+        if(!withdrawLog.getBankName().contains("银行")){
+            withdrawLog.setBankName(withdrawLog.getBankName() + "银行");
+        }
 
         String bank_id = typeMap.getOrDefault(withdrawLog.getBankName(), "");
 
@@ -90,6 +103,8 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("sign", sign);
         bodyMap.remove("bank_name");
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
+        bodyMap.remove("payee_name");
+        bodyMap.put("payee_name", withdrawLog.getBankUserName().trim());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -101,6 +116,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
             resultMap = restTemplate.postForObject(url, httpEntity, Map.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("提交失败原因:" + e);
         }
         log.info("秒到付代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
@@ -112,6 +128,8 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
             if ("WAITING".equals(state) || "PROCESSING".equals(state)) {
                 log.info("秒到付代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
+            } else {
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.info("秒到付代付订单提交失败 - 订单号:{}", withdrawLog.getOrderNo());
