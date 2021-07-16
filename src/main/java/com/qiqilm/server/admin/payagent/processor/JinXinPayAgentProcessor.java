@@ -78,7 +78,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             String success = resultMap.getOrDefault("success", "").toString();
-            if ("0".equals(code) || "true".equals(success)) {
+            if ("0".equals(code) && "true".equals(success)) {
                 Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("data");
                 if (!CollectionUtils.isEmpty(dataMap)) {
                     //代付状态: -1提现失败 0申请中 1提现成功 2:处理中 (注：只有值为-1时才可以回滚数据，其它状态值视为处理中，不要回滚数据)
