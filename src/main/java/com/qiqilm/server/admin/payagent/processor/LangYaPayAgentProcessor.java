@@ -158,7 +158,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("狼牙代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            log.info("狼牙代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 if ("1".equals(resultMap.getOrDefault("status", "").toString())) {
                     String statusCode = String.valueOf(resultMap.getOrDefault("status", "").toString());

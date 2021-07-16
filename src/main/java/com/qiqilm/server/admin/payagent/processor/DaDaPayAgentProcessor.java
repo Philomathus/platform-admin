@@ -134,7 +134,7 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("达达代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            log.info("达达代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
                     Map resDataMap = (Map) resultMap.get("data");

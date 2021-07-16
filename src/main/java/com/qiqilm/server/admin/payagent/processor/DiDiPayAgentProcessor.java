@@ -136,7 +136,7 @@ public class DiDiPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         try {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("滴滴代付查询结果- result:{}", JsonUtil.object2Map(resultMap));
+            log.info("滴滴代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 if ("0".equals(code)) {

@@ -98,6 +98,15 @@ public class MemberInfoController extends BaseController {
     }
 
     /**
+     * 获取完整手机号
+     */
+    @PreAuthorize("@ss.hasPermi('member:memberInfo:fullMobile')")
+    @GetMapping(value = "/fullMobile/{id}")
+    public AjaxResult fullMobile(@PathVariable("id") String id) {
+        return AjaxResult.success(memberInfoService.selectMemberInfoById(id));
+    }
+
+    /**
      * 获取用户登录地址
      */
     @PreAuthorize("@ss.hasPermi('member:memberInfo:query')")

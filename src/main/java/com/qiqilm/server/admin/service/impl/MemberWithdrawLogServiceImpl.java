@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
@@ -18,6 +19,7 @@ import com.qiqilm.server.admin.utils.PhoneUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UserDataUtil;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +56,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	private RedisUtil               redisUtil;
 	@Autowired
 	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
+	@Autowired
+	private SysConfigCacheUtil sysConfigCacheUtil;
 
 	/**
 	 * 查询会员提现信息
@@ -413,24 +417,42 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( !redisUtil.lock( EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5 ) ) {
 			return AjaxResult.error( "请勿重复提交" );
 		}
-
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
 		if ( StringUtils.hasText( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
 			return AjaxResult.error( "该订单已被" + memberWithdrawLog.getOpName() + "锁定" );
 		}
-
 		memberWithdrawLog.setRemark( req.getRemark() );
 		memberWithdrawLog.setStatus( 3 );
 		memberWithdrawLog.setOpName( userName );
 		memberWithdrawLog.setUpdateTime( new Date() );
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		if ( i > 0 ) {
+		MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(memberWithdrawLog.getMemberId());
+		if (memberInfo.getStatus()==1){
+			riskControl(memberInfo,memberWithdrawLog);
+		}
+		if ( i>0 ) {
 			redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
 			return AjaxResult.success();
 		}
 
 		return AjaxResult.error( "更新订单状态失败" );
+	}
+
+	private void riskControl(MemberInfo memberInfo,MemberWithdrawLog memberWithdrawLog) {
+		BigDecimal multipleCode=new BigDecimal(sysConfigCacheUtil.getConf( "multiple_code" ));//打码倍数
+		BigDecimal bankChargeMax=new BigDecimal(sysConfigCacheUtil.getConf( "bank_charge_max" ));//今日公司入款成功次数
+		if (Objects.nonNull(memberInfo)){
+			BigDecimal levelIntegral = memberInfo.getLevelIntegral();//总充值金额
+			BigDecimal codeAccount = memberInfo.getCodeAccount();//打码账户
+			if (memberWithdrawLog.getBankCharge().compareTo(bankChargeMax)>=0&&
+					codeAccount.compareTo(levelIntegral.multiply(multipleCode))<=0){
+				MemberInfo member=new MemberInfo();
+				member.setId(memberWithdrawLog.getMemberId());
+				member.setEmail("系统判定疑似套利号");
+				memberInfoMapper.updateMemberInfo(member);
+			}
+		}
 	}
 
 	@Override
@@ -554,13 +576,24 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		withdrawReportb.setT_value( rspMemberInfo1.getId() );
 		withdrawReports.add( withdrawReportb );
 
+//		WithdrawReport withdrawReportc = new WithdrawReport();
+//		withdrawReportc.setClass_twoname( "会员名称" );
+//		String phone = rspMemberInfo1.getPhone();
+//		if ( !StringUtils.isEmpty( phone ) ) {
+//			withdrawReportc.setT_value( PhoneUtil.getEncPhone( phone ) );
+//			withdrawReports.add( withdrawReportc );
+//		}
+
 		WithdrawReport withdrawReportc = new WithdrawReport();
-		withdrawReportc.setClass_twoname( "会员名称" );
-		String phone = rspMemberInfo1.getPhone();
-		if ( !StringUtils.isEmpty( phone ) ) {
-			withdrawReportc.setT_value( PhoneUtil.getEncPhone( phone ) );
-			withdrawReports.add( withdrawReportc );
+		withdrawReportc.setClass_twoname( "用户类型" );
+		if(!StringUtils.isEmpty(rspMemberInfo1.getChannelCode())){
+			if("0".equals(rspMemberInfo1.getChannelCode())){
+				withdrawReportc.setT_value( "游客" );
+			} else {
+				withdrawReportc.setT_value( "会员" );
+			}
 		}
+		withdrawReports.add( withdrawReportc );
 
 		WithdrawReport withdrawReportd = new WithdrawReport();
 		withdrawReportd.setClass_twoname( "会员VIP" );

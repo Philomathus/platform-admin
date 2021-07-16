@@ -36,5 +36,7 @@ payAgentLimitMaYun: 50000
 payAgentLimitHeZhong: 50000
 # 滴滴代付额度
 payAgentLimitDiDi: 50000
-# 代理号
-agentCode: 7701
+# newMax代付额度
+payAgentLimitNewMaxPay: 50000
+# 阳光代付额度
+payAgentLimitYangGuangPay: 50000
