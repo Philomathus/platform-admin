@@ -112,6 +112,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
+        log.info("盛联代付请求参数"+JsonUtil.object2Json(bodyMap));
         String sign = DigestUtils.md5Hex(tempStr);
         bodyMap.put("sign", sign);
 
