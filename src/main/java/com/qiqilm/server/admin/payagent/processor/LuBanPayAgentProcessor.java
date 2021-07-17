@@ -46,9 +46,9 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         //$sign = md5(md5($account_id.$out_trade_no.$bank_id).$user_key);
-        String tempStr = payAgentPlatform.getMerId() + withdrawLog.getOrderNo() + withdrawLog.getBankAccount().trim() + signMd5;
+        String tempStr = payAgentPlatform.getMerId() + withdrawLog.getOrderNo() + withdrawLog.getBankAccount().trim();
         String sign = DigestUtils.md5Hex(tempStr);
-        bodyMap.put("sign", DigestUtils.md5Hex(sign));
+        bodyMap.put("sign", DigestUtils.md5Hex(sign + signMd5));
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(bodyMap);
@@ -65,7 +65,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         log.info("鲁班代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
-            if ("0000".equals(code)) {
+            if ("200".equals(code)) {
                 log.info("鲁班代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
@@ -76,6 +76,44 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         }
         log.warn("鲁班代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
+    }
+
+    public static void main(String[] args) {
+        SortedMap<String, Object> bodyMap = new TreeMap<>();
+        bodyMap.put("account_id", "57");
+        bodyMap.put("out_trade_no", "TX24242934293");
+        bodyMap.put("amount", "10");
+        bodyMap.put("bank_name", "建设银行");
+        bodyMap.put("bank_user", "哈哈");
+        bodyMap.put("bank_id", "6217001650006934595");
+        bodyMap.put("callback_url", "http://47.57.3.228:43007/pay-agent/callBack/" + ConstantsPayAgent.LUBAN);
+        bodyMap.put("withdraw_type", "1");
+
+        //$sign = md5(md5($account_id.$out_trade_no.$bank_id).$user_key);
+        String tempStr = "57" + "TX24242934293" + "6217001650006934595";
+        String sign = DigestUtils.md5Hex(tempStr);
+        bodyMap.put("sign", DigestUtils.md5Hex(sign + "0B69F62085C6B6"));
+
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(bodyMap);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+
+        Map<String, Object> resultMap = null;
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            resultMap = restTemplate.postForObject("http://159.75.226.206/server/withdrawal/appwithdrawal", httpEntity, Map.class);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        log.info("鲁班代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        if (!CollectionUtils.isEmpty(resultMap)) {
+            String code = resultMap.getOrDefault("code", "").toString();
+            if ("200".equals(code)) {
+                log.info("鲁班代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+            }
+        }
     }
 
     @Override
