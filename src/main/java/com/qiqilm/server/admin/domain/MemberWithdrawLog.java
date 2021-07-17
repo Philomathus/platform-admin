@@ -133,7 +133,6 @@ public class MemberWithdrawLog extends BaseEntity {
     private String SearchCardBlack;
     private String province;
     private String city;
-    private Integer rechargeStatus;//人工入款是否警告。1警告，0正常
 
     @JsonIgnore
     private String bankCode;

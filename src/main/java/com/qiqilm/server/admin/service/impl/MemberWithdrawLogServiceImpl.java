@@ -85,13 +85,6 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			List<String> memberIds = new ArrayList<>();
 			for ( MemberWithdrawLog me : memberWithdrawLogList ) {
 				memberIds.add( me.getMemberId() );
-				String rechargeUserName = me.getRechargeUserName();
-				List<String> userName = Arrays.asList(rechargeUserName.split(","));
-				if (userName.size()>1){
-					me.setRechargeStatus(1);
-				}else {
-					me.setRechargeStatus(0);
-				}
 			}
 			List<MemberWithdrawLog> Statuss = memberWithdrawLogMapper.selectMemberIdStatus( memberIds );
 			for ( MemberWithdrawLog me : memberWithdrawLogList ) {
