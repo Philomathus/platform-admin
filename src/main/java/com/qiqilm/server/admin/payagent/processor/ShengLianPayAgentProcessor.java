@@ -102,7 +102,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
         }
 
         //异步回调地址
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + "yiBuShengLian");
+        bodyMap.put("notifyAddr", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + "yiBuShengLian");
         bodyMap.put("bankBranch", withdrawLog.getBankName().trim());
         bodyMap.put("cardNo", withdrawLog.getBankAccount().trim());
         bodyMap.put("cashType", "01");
@@ -152,14 +152,15 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put("version", "2.0");
         bodyMap.put("merchantNo", "yayt006209");
-        bodyMap.put("cashNo", "TX423423462");
+        bodyMap.put("cashNo", "TX42342346923424");
         bodyMap.put("orderAmount", 1000);
-        bodyMap.put("holderName", "欧皇");
+        bodyMap.put("holderName", "欧弟");
         bodyMap.put("province", "广东省");
         bodyMap.put("city", "深圳市");
         bodyMap.put("bankCode", "105");
 
-        bodyMap.put("bankBranch", "深圳支行");
+        bodyMap.put("notifyAddr", "http://47.57.3.228:43007/pay-agent/callBack/yiBuShengLian");
+        bodyMap.put("bankBranch", "支行");
         bodyMap.put("cardNo", "6217001650006934595");
         bodyMap.put("cashType", "01");
         bodyMap.put("timestamp",  DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
@@ -167,6 +168,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
         StringBuilder sb = new StringBuilder();
         bodyMap.forEach( ( k, v ) -> sb.append( k ).append( "=" ).append( v ).append( "&" ) );
         String tempStr = sb.substring( 0, sb.length() - 1 ) + "65da348cd123ca15ea874331ee8d5148";
+        System.out.println(tempStr);
         String sign = DigestUtils.md5Hex(tempStr);
         bodyMap.put("sign", sign);
 
