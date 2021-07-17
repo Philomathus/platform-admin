@@ -53,7 +53,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(bodyMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
@@ -124,7 +124,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(paramsMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         String res = null;
