@@ -79,40 +79,38 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
     }
 
     public static void main(String[] args) {
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
-        bodyMap.put("account_id", "57");
-        bodyMap.put("out_trade_no", "TX24242934293");
-        bodyMap.put("amount", "10");
-        bodyMap.put("bank_name", "建设银行");
-        bodyMap.put("bank_user", "哈哈");
-        bodyMap.put("bank_id", "6217001650006934595");
-        bodyMap.put("callback_url", "http://47.57.3.228:43007/pay-agent/callBack/" + ConstantsPayAgent.LUBAN);
-        bodyMap.put("withdraw_type", "1");
+        Map<String, String> paramsMap = new TreeMap<>();
+        paramsMap.put("ddh", "TX42342346923424");
 
-        //$sign = md5(md5($account_id.$out_trade_no.$bank_id).$user_key);
-        String tempStr = "57" + "TX24242934293" + "6217001650006934595";
-        String sign = DigestUtils.md5Hex(tempStr);
-        bodyMap.put("sign", DigestUtils.md5Hex(sign + "0B69F62085C6B6"));
-
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(bodyMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity(paramsMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
+        String res = null;
         try {
             RestTemplate restTemplate = new RestTemplate();
-            resultMap = restTemplate.postForObject("http://159.75.226.206/server/withdrawal/appwithdrawal", httpEntity, Map.class);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        log.info("鲁班代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
-        if (!CollectionUtils.isEmpty(resultMap)) {
-            String code = resultMap.getOrDefault("code", "").toString();
-            if ("200".equals(code)) {
-                log.info("鲁班代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+            res = restTemplate.postForObject("http://159.75.226.206/server/api/withdrawQuery", httpEntity, String.class);
+            log.info("鲁班代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            if (!CollectionUtils.isEmpty(resultMap)) {
+                String code = resultMap.getOrDefault("code", "").toString();
+                if ("200".equals(code)) {
+                    int msg = Integer.parseInt(resultMap.getOrDefault("msg", "").toString());
+                    if (msg > 1) {
+                        // status 4代付中 5代付失败 6代付成功
+                        // statusType  1打款中2提现已到账3提现已驳回
+                        int status = 4;
+                        if (msg == 2) {
+                            status = 6;
+                        } else if (msg == 3) {
+                            status = 5;
+                        }
+                    }
+                }
             }
+        } catch (
+                Exception e) {
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -159,17 +157,16 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         Map<String, String> paramsMap = new TreeMap<>();
         paramsMap.put("ddh", withdrawLog.getOrderNo());
 
-        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(paramsMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity(paramsMap, httpHeaders);
 
-        Map<String, Object> resultMap = null;
+        String res = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("鲁班代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
-            if (!CollectionUtils.isEmpty(resultMap)) {
+            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
+            log.info("鲁班代付查询结果- result:{}", res);
+            if (StringUtils.isNotBlank(res)) {
+                Map<String, Object> resultMap = JsonUtil.object2Map(res);
                 String code = resultMap.getOrDefault("code", "").toString();
                 if ("200".equals(code)) {
                     int msg = Integer.parseInt(resultMap.getOrDefault("msg", "").toString());
