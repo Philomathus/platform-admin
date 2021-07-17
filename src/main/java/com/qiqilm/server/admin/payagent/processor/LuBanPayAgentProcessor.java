@@ -78,42 +78,6 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         return false;
     }
 
-    public static void main(String[] args) {
-        Map<String, String> paramsMap = new TreeMap<>();
-        paramsMap.put("ddh", "TX42342346923424");
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, String>> httpEntity = new HttpEntity(paramsMap, httpHeaders);
-
-        Map<String, Object> resultMap = null;
-        String res = null;
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            res = restTemplate.postForObject("http://159.75.226.206/server/api/withdrawQuery", httpEntity, String.class);
-            log.info("鲁班代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
-            if (!CollectionUtils.isEmpty(resultMap)) {
-                String code = resultMap.getOrDefault("code", "").toString();
-                if ("200".equals(code)) {
-                    int msg = Integer.parseInt(resultMap.getOrDefault("msg", "").toString());
-                    if (msg > 1) {
-                        // status 4代付中 5代付失败 6代付成功
-                        // statusType  1打款中2提现已到账3提现已驳回
-                        int status = 4;
-                        if (msg == 2) {
-                            status = 6;
-                        } else if (msg == 3) {
-                            status = 5;
-                        }
-                    }
-                }
-            }
-        } catch (
-                Exception e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
