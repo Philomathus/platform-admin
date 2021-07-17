@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class ConfigBankController extends BaseController {
 	private IBankListService   bankListService;
 	@Autowired
 	private TokenService       tokenService;
-	@Autowired
+	@Resource
 	private SysUserMapper      sysUserMapper;
 
 	/**
@@ -95,6 +96,7 @@ public class ConfigBankController extends BaseController {
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
 		configBank.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+		configBank.setAccountName(configBank.getAccountName().trim());
 		BankList bankList = new BankList();
 		bankList.setBankName( configBank.getName() );
 		List<BankList> bankLists = bankListService.selectBankListList( bankList );
@@ -142,7 +144,7 @@ public class ConfigBankController extends BaseController {
 		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, configBank.getGoogleAuthCode() ) ) {
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
-
+		configBank.setAccountName(configBank.getAccountName().trim());
 		return toAjax( configBankService.updateConfigBank( configBank ) );
 	}
 
