@@ -128,6 +128,8 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
             if ("WAITING".equals(state) || "PROCESSING".equals(state)) {
                 log.info("秒到付代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
+            } else {
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.info("秒到付代付订单提交失败 - 订单号:{}", withdrawLog.getOrderNo());
