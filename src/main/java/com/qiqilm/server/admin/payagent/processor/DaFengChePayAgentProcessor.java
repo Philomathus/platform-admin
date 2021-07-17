@@ -27,33 +27,33 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-@Repository(value = ConstantsPayAgent.LUBAN + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.DAFENGCHE + "PayAgentProcessor")
 @Log4j2
-public class LuBanPayAgentProcessor extends AbstractPayAgent {
+public class DaFengChePayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
-        bodyMap.put("account_id", payAgentPlatform.getMerId());
+        bodyMap.put("app_id", payAgentPlatform.getMerId());
+        bodyMap.put("request_time", System.currentTimeMillis() / 1000);
+        bodyMap.put("sign_type", "MD5");
         bodyMap.put("out_trade_no", withdrawLog.getOrderNo());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP));
+        bodyMap.put("card_no", withdrawLog.getBankAccount().trim());
+        bodyMap.put("card_name", withdrawLog.getBankUserName().trim());
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
-        bodyMap.put("bank_user", withdrawLog.getBankUserName().trim());
-        bodyMap.put("bank_id", withdrawLog.getBankAccount().trim());
-        bodyMap.put("callback_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.LUBAN);
-        bodyMap.put("withdraw_type", "1");
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DAFENGCHE);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        //$sign = md5(md5($account_id.$out_trade_no.$bank_id).$user_key);
-        String tempStr = payAgentPlatform.getMerId() + withdrawLog.getOrderNo() + withdrawLog.getBankAccount().trim();
-        String sign = DigestUtils.md5Hex(tempStr);
-        bodyMap.put("sign", DigestUtils.md5Hex(sign + signMd5));
+        String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
+        String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+        bodyMap.put("sign", sign);
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(bodyMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
@@ -62,19 +62,20 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("鲁班代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info("大风车代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
-            String code = resultMap.getOrDefault("code", "").toString();
-            if ("200".equals(code)) {
-                log.info("鲁班代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+            String return_code = resultMap.getOrDefault("return_code", "").toString();
+            String trade_state = resultMap.getOrDefault("trade_state", "").toString();
+            if ("SUCCESS".equals(return_code) && "PROCESSING".equals(trade_state)) {
+                log.info("大风车代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+                reqPayAgent.setFailReason(resultMap.getOrDefault("return_msg", "").toString());
 
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("鲁班代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.warn("大风车代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -97,7 +98,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(bodyMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
@@ -107,11 +108,12 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("鲁班代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info("大风车代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
-            String code = resultMap.getOrDefault("code", "").toString();
-            if ("200".equals(code)) {
-                log.info("鲁班代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+            String return_code = resultMap.getOrDefault("return_code", "").toString();
+            String trade_state = resultMap.getOrDefault("trade_state", "").toString();
+            if ("SUCCESS".equals(return_code) && "PROCESSING".equals(trade_state)) {
+                log.info("大风车代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
             }
         }
     }
@@ -119,29 +121,32 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
-        String call_type = requestMap.getOrDefault("call_type", "").toString();
-        String flow_no = requestMap.getOrDefault("flow_no", "").toString();
-        String call_time = requestMap.getOrDefault("call_time", "").toString();
+        String out_trade_no = requestMap.getOrDefault("out_trade_no", "").toString();
+        String return_code = requestMap.getOrDefault("return_code", "").toString();
+        requestMap.remove("attach");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        String tempStr = flow_no + call_time + signMd5;
-        String signStr = DigestUtils.md5Hex(tempStr).toLowerCase();
-        log.info("鲁班代付回调签名:" + tempStr + "_" + sign);
+        SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
+
+        String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
+        String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
+
+        log.info("大风车代付回调签名:" + tempStr + "_" + sign);
         if (sign.equalsIgnoreCase(signStr)) {
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(flow_no);
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_no);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", flow_no);
+                log.error("提现相关记录丢失 - merOrderNo:{}", out_trade_no);
                 return "fail";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", flow_no);
-                return "success";
+                log.error("已有代付记录 - merOrderNo:{}", out_trade_no);
+                return "SUCCESS";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(flow_no);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "1".equals(call_type));
-            return "success";
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(out_trade_no);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "SUCCESS".equals(return_code));
+            return "SUCCESS";
         }
         return "fail";
     }
@@ -156,41 +161,47 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
     public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
-        Map<String, String> paramsMap = new TreeMap<>();
-        paramsMap.put("ddh", withdrawLog.getOrderNo());
+        Map<String, Object> paramsMap = new TreeMap<>();
+        paramsMap.put("app_id", payAgentPlatform.getMerId());
+        paramsMap.put("request_time", System.currentTimeMillis() / 1000);
+        paramsMap.put("sign_type", "MD5");
+        paramsMap.put("out_trade_no", withdrawLog.getOrderNo());
 
-        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
+
+        String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
+        String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+        paramsMap.put("sign", sign);
+
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(paramsMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("鲁班代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            log.info("大风车代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
-                String code = resultMap.getOrDefault("code", "").toString();
-                if ("200".equals(code)) {
-                    int msg = Integer.parseInt(resultMap.getOrDefault("msg", "").toString());
-                    if (msg > 1) {
-                        // status 4代付中 5代付失败 6代付成功
-                        // statusType  1打款中2提现已到账3提现已驳回
-                        int status = 4;
-                        if (msg == 2) {
-                            status = 6;
-                        } else if (msg == 3) {
-                            status = 5;
-                        }
-                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, msg);
+                String return_code = resultMap.getOrDefault("return_code", "").toString();
+                if ("SUCCESS".equals(return_code) || "FAIL".equals(return_code)) {
+                    // status 4代付中 5代付失败 6代付成功
+                    // return_code  SUCCESS成功 FAIL失败
+                    int status = 4;
+                    if ("SUCCESS".equals(return_code)) {
+                        status = 6;
+                    } else {
+                        status = 5;
                     }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
                 }
                 return JsonUtil.object2Json(resultMap);
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "鲁班代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return "大风车代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }
