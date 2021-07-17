@@ -46,7 +46,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         //$sign = md5(md5($account_id.$out_trade_no.$bank_id).$user_key);
-        String tempStr= payAgentPlatform.getMerId() + withdrawLog.getOrderNo() + withdrawLog.getBankAccount().trim() + signMd5;
+        String tempStr = payAgentPlatform.getMerId() + withdrawLog.getOrderNo() + withdrawLog.getBankAccount().trim() + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         bodyMap.put("sign", DigestUtils.md5Hex(sign));
 
@@ -56,28 +56,25 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("鲁班代付下单结果 - result:{}", res);
-        if (StringUtils.isNotBlank(res)) {
-            Map<String, Object> resultMap = JsonUtil.json2Map(res);
-            if (!CollectionUtils.isEmpty(resultMap)) {
-                String code = resultMap.getOrDefault("code", "").toString();
-                if ("0000".equals(code)) {
-                    log.info("鲁班代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
-                    return true;
-                } else {
-                    reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+        log.info("鲁班代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        if (!CollectionUtils.isEmpty(resultMap)) {
+            String code = resultMap.getOrDefault("code", "").toString();
+            if ("0000".equals(code)) {
+                log.info("鲁班代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                return true;
+            } else {
+                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
 
-                    payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
-                }
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("鲁班代付订单提交失败 - result:{}", res);
+        log.warn("鲁班代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -134,7 +131,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         try {
             res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
             log.info("鲁班代付查询结果- result:{}", res);
-            if(StringUtils.isNotBlank(res)) {
+            if (StringUtils.isNotBlank(res)) {
                 Map<String, Object> resultMap = JsonUtil.json2Map(res);
                 if (!CollectionUtils.isEmpty(resultMap)) {
                     String code = resultMap.getOrDefault("code", "").toString();
