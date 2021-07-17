@@ -128,10 +128,12 @@ public class MemberWithdrawLog extends BaseEntity {
      */
     @Excel(name = "银行卡黑名单", orderNum = "16")
     private String cardBlack = "0";
-
+    @Excel(name = "公司入款人姓名")
+    private String rechargeUserName;
     private String SearchCardBlack;
     private String province;
     private String city;
+    private Integer rechargeStatus;//人工入款是否警告。1警告，0正常
 
     @JsonIgnore
     private String bankCode;
