@@ -102,7 +102,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
         }
 
         //异步回调地址
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + "yiBuShengLian");
+//        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + "yiBuShengLian");
         bodyMap.put("bankBranch", withdrawLog.getBankName().trim());
         bodyMap.put("cardNo", withdrawLog.getBankAccount().trim());
         bodyMap.put("cashType", "01");
