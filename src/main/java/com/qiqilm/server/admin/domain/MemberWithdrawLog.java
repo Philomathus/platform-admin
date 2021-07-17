@@ -128,7 +128,8 @@ public class MemberWithdrawLog extends BaseEntity {
      */
     @Excel(name = "银行卡黑名单", orderNum = "16")
     private String cardBlack = "0";
-
+    @Excel(name = "公司入款人姓名")
+    private String rechargeUserName;
     private String SearchCardBlack;
     private String province;
     private String city;

@@ -114,7 +114,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 								} else {
 									me.setCardBlack( "0" );
 								}
-							}
+							}	
 						}
 					} else {
 						me.setCardBlack( "1" );
