@@ -157,16 +157,17 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         Map<String, String> paramsMap = new TreeMap<>();
         paramsMap.put("ddh", withdrawLog.getOrderNo());
 
+        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(paramsMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, String>> httpEntity = new HttpEntity(paramsMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
-            log.info("鲁班代付查询结果- result:{}", res);
-            if (StringUtils.isNotBlank(res)) {
-                Map<String, Object> resultMap = JsonUtil.object2Map(res);
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
+            log.info("鲁班代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 if ("200".equals(code)) {
                     int msg = Integer.parseInt(resultMap.getOrDefault("msg", "").toString());
