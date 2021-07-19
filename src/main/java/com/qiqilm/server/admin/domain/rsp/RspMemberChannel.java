@@ -21,7 +21,7 @@ public class RspMemberChannel {
     private Date regTime;*/
 
     @Excel(name = "0：游客，1：会员",width = 20,orderNum = "4")
-    private String channelCode;
+    private String channelcode;
 
     /** 状态(0= 禁用 1=正常 2=测试号3=超管号) */
     /*@Excel(name = "状态")
