@@ -694,7 +694,7 @@
 		WHERE account = #{userid} GROUP BY g.platform_id
 	</select>
 	<select id="memberstatistics" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberChannel">
-		select ifnull((count(*)),0) number,channelCode,email,inviter_code as inviterCode from member_info
+		select ifnull((count(*)),0) number,channelCode as  channelcode,email,inviter_code as inviterCode from member_info
 		<where>
 		<if test="inviterCode != null and  inviterCode != ''">
 			and inviter_code = #{inviterCode}

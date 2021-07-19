@@ -11,7 +11,7 @@
     </resultMap>
 
     <sql id="selectSystemIpTypeWhiteVo">
-        select id, value, status, opName, mark from 7700_main.system_ip_type_white
+        select id, value, status, opName, mark from ${dbMain}.system_ip_type_white
     </sql>
 
     <select id="selectSystemIpTypeWhiteList" parameterType="SystemIpTypeWhite" resultMap="SystemIpTypeWhiteResult">
@@ -32,7 +32,7 @@
     </select>
 
     <insert id="insertSystemIpTypeWhite" parameterType="SystemIpTypeWhite">
-        insert into 7700_main.system_ip_type_white
+        insert into ${dbMain}.system_ip_type_white
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="value != null">value,</if>
@@ -50,7 +50,7 @@
     </insert>
 
     <update id="updateSystemIpTypeWhite" parameterType="SystemIpTypeWhite">
-        update 7700_main.system_ip_type_white
+        update ${dbMain}.system_ip_type_white
         <trim prefix="SET" suffixOverrides=",">
             <if test="value != null">value = #{value},</if>
     
@@ -65,11 +65,11 @@
     </update>
 
     <delete id="deleteSystemIpTypeWhiteById" parameterType="String">
-        delete from 7700_main.system_ip_type_white where id = #{id}
+        delete from ${dbMain}.system_ip_type_white where id = #{id}
     </delete>
 
     <delete id="deleteSystemIpTypeWhiteByIds" parameterType="String">
-        delete from 7700_main.system_ip_type_white where id in
+        delete from ${dbMain}.system_ip_type_white where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
