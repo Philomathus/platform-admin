@@ -129,7 +129,6 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("提交失败原因:" + e);
         }
         log.info("秒到付代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
@@ -145,7 +144,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.info("秒到付代付订单提交失败 - 订单号:{}", withdrawLog.getOrderNo());
+        log.info("秒到付代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 

@@ -63,8 +63,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("南开代付订单提交失败 - result:{}", httpOrgCreateTestRtn);
-
+        log.warn("南开代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 

@@ -74,11 +74,11 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("newmax代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info("newmax代付鑫max下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             if ("1".equals(code)) {
-                log.info("newmax代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                log.info("newmax代付鑫max订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
@@ -86,7 +86,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("newmax代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("newmax代付鑫max订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -102,7 +102,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toLowerCase();
 
-        log.info("newmax代付回调签名字符串:" + sign + "_" + signStr);
+        log.info("newmax代付鑫max回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String out_trade_id = requestMap.getOrDefault("out_trade_id", "").toString();
 
@@ -161,7 +161,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map(text);
                     });
-            log.info("newmax代付查询结果:{}", JsonUtil.object2Json(resultMap));
+            log.info("newmax代付鑫max查询结果:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 Map dataMap = (Map) resultMap.getOrDefault("data", "");
                 int statusType = Integer.parseInt(dataMap.getOrDefault("status", "").toString());

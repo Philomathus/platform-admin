@@ -108,7 +108,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("绿箭代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("绿箭代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 

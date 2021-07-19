@@ -189,7 +189,6 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
 				} else if (status == 3) {
 					status = 5;
 				}
-				log.warn("state:{}", state);
 				payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
 			}
 			return res;
