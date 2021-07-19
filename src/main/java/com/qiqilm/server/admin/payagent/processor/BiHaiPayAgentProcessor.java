@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -13,12 +14,16 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -54,7 +59,7 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( JsonUtil.object2Json( resultMap ) );
+		log.warn("碧海代付订单下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
 		int code = ( int ) resultMap.get( "Code" );
 		if ( code == 0 ) {
 			resultMap = ( Map<String, Object> ) resultMap.get( "Data" );
@@ -65,7 +70,6 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 				}
 			}
 		}
-		log.warn( "代付订单提交失败" );
 		return false;
 	}
 
@@ -136,8 +140,16 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 
 		Map<String, Object> resultMap = null;
 		try {
-			resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
-			log.info("碧海代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+			resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+					restTemplate.httpEntityCallback( httpEntity ), response -> {
+						InputStream bodyStream = response.getBody();
+						String      text;
+						try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+							text = CharStreams.toString( reader );
+						}
+						return JsonUtil.json2Map( text );
+					} );
+			log.info("碧海代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
 			if (!CollectionUtils.isEmpty(resultMap)) {
 				int code = Integer.parseInt(resultMap.getOrDefault("code", 0).toString());
 				if (code == 1) {

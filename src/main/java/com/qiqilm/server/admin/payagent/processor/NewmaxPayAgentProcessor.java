@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -14,12 +15,16 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.Map;
 import java.util.SortedMap;
@@ -55,14 +60,21 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
+                        }
+                        return JsonUtil.json2Map(text);
+                    });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("newmax代付下单结果 - result:{}", res);
-        Map<String, Object> resultMap = JsonUtil.json2Map(res);
+        log.info("newmax代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             if ("1".equals(code)) {
@@ -138,30 +150,36 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
-            log.info("newmax代付查询结果:{}", res);
-            if (StringUtils.isNotBlank(res)) {
-                Map<String, Object> resultMap = JsonUtil.json2Map(res);
-                if (!CollectionUtils.isEmpty(resultMap)) {
-                    Map dataMap = (Map) resultMap.getOrDefault("data", "");
-                    int statusType = Integer.parseInt(dataMap.getOrDefault("status", "").toString());
-                    int status = 4;
-                    if(statusType == -1 || statusType == 2) {
-                        // status 4代付中 5代付失败 6代付成功
-                        // state-1：被拒绝；1：未支付；2支付成功
-                        if (statusType == 2) {
-                            status = 6;
-                        } else {
-                            status = 5;
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
                         }
-                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
+                        return JsonUtil.json2Map(text);
+                    });
+            log.info("newmax代付查询结果:{}", JsonUtil.object2Json(resultMap));
+            if (!CollectionUtils.isEmpty(resultMap)) {
+                Map dataMap = (Map) resultMap.getOrDefault("data", "");
+                int statusType = Integer.parseInt(dataMap.getOrDefault("status", "").toString());
+                int status = 4;
+                if (statusType == -1 || statusType == 2) {
+                    // status 4代付中 5代付失败 6代付成功
+                    // state-1：被拒绝；1：未支付；2支付成功
+                    if (statusType == 2) {
+                        status = 6;
+                    } else {
+                        status = 5;
                     }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                 }
-                return res;
+                return JsonUtil.object2Json(resultMap);
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             log.error(e.getMessage(), e);
         }
         return "newmax代付查询失败,订单号:" + withdrawLog.getOrderNo();
