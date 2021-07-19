@@ -21,6 +21,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -144,8 +145,8 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
             log.info("newmax代付查询结果:{}", res);
             if (StringUtils.isNotBlank(res)) {
                 Map<String, Object> resultMap = JsonUtil.json2Map(res);
-                if (!CollectionUtils.isEmpty(resultMap)) {
-                    Map dataMap = (Map) resultMap.getOrDefault("data", "");
+                if (!CollectionUtils.isEmpty(resultMap) && resultMap.containsKey( "data" )) {
+                    Map dataMap = (Map) resultMap.getOrDefault("data", new HashMap<>() );
                     int statusType = Integer.parseInt(dataMap.getOrDefault("status", "").toString());
                     int status = 4;
                     if(statusType == -1 || statusType == 2) {
