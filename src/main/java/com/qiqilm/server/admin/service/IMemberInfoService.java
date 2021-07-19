@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 
@@ -78,4 +79,6 @@ public interface IMemberInfoService {
     String getMemberLoginAddress(String id);
 
     String getHistoryRecharge(String id);
+
+	List<RspMemberChannel> memberstatistics(MemberInfo memberInfo);
 }

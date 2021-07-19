@@ -693,7 +693,30 @@
 		LEFT JOIN game_platform p on g.platform_id = p.id
 		WHERE account = #{userid} GROUP BY g.platform_id
 	</select>
-    <update id="changeEmail">
+	<select id="memberstatistics" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberChannel">
+		select ifnull((count(*)),0) number,channelCode,status,email,inviter_code as inviterCode from member_info
+		<where>
+		<if test="inviterCode != null and  inviterCode != ''">
+			and inviter_code = #{inviterCode}
+		</if>
+		<if test="channelcode != null  and channelcode != ''">
+			and channelCode = #{channelcode}
+		</if>
+		<if test="status != null and status !='' ">
+			and id in (select id from member_info where status = #{status})
+		</if>
+		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+				AND reg_time >=STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
+		</if>
+		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+				AND reg_time &lt;= STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
+		</if>
+		<if test="downLoadDate[0] != null "> and reg_time >= '${downLoadDate[0]}'</if>
+		<if test="downLoadDate[1] != null "> and reg_time &lt;= '${downLoadDate[1]}'</if>
+		</where>
+		GROUP BY email,channelCode,inviterCode,status
+	</select>
+	<update id="changeEmail">
         UPDATE member_info set email = #{email}
         <where>
             id = #{id}
