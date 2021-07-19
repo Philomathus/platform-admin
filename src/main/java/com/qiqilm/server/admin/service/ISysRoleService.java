@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.domain.SysRole;
+import com.qiqilm.server.admin.domain.SysUserRole;
 
 import java.util.List;
 import java.util.Set;
@@ -120,4 +121,6 @@ public interface ISysRoleService {
 	 * @return 结果
 	 */
 	public int deleteRoleByIds( Long[] roleIds );
+
+	void userRoleList(Long roleId);
 }

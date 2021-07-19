@@ -41,4 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	        #{userId}
             </foreach>
 	</delete>
+	<select id="userRoleList" parameterType="SysUserRole" resultMap="SysUserRoleResult">
+		select user_id,role_id from sys_n_user_role where role_id=#{roleId}
+	</select>
 </mapper>

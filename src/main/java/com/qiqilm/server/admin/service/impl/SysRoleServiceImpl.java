@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.annotation.DataScope;
 import com.qiqilm.server.admin.constant.UserConstants;
 import com.qiqilm.server.admin.domain.SysRole;
 import com.qiqilm.server.admin.domain.SysRoleMenu;
+import com.qiqilm.server.admin.domain.SysUserRole;
 import com.qiqilm.server.admin.exception.CustomException;
 import com.qiqilm.server.admin.mapper.SysRoleMapper;
 import com.qiqilm.server.admin.mapper.SysRoleMenuMapper;
@@ -30,6 +31,8 @@ public class SysRoleServiceImpl implements ISysRoleService {
 	private SysRoleMenuMapper roleMenuMapper;
 	@Autowired
 	private SysUserRoleMapper userRoleMapper;
+	@Autowired
+	private TokenService tokenService;
 
 	/**
 	 * 根据条件分页查询角色数据
@@ -243,5 +246,13 @@ public class SysRoleServiceImpl implements ISysRoleService {
 		// 删除角色与菜单关联
 		roleMenuMapper.deleteRoleMenu( roleIds );
 		return roleMapper.deleteRoleByIds( roleIds );
+	}
+	@Override
+	public void  userRoleList(Long roleId) {
+	List<SysUserRole>sysUserRolesList= userRoleMapper.userRoleList(roleId);
+		for (SysUserRole user:sysUserRolesList) {
+			Long userId1 = user.getUserId();
+			tokenService.delToken(userId1);
+		}
 	}
 }
