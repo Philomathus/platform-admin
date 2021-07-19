@@ -41,6 +41,8 @@ public class SysUserServiceImpl implements ISysUserService {
     private SmsApi smsApi;
 	@Autowired
     private MemberInfoMapper memberInfoMapper;
+	@Autowired
+	private TokenService tokenService;
 
 	/**
 	 * 根据条件分页查询用户列表
@@ -158,7 +160,10 @@ public class SysUserServiceImpl implements ISysUserService {
 		userRoleMapper.deleteUserRoleByUserId( userId );
 		// 新增用户与角色管理
 		insertUserRole( user );
-		return userMapper.updateUser( user );
+		int i = userMapper.updateUser(user);
+		tokenService.delToken(userId);
+
+		return i;
 	}
 
     /**
