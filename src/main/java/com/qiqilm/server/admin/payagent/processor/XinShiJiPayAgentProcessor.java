@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -11,10 +12,12 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.sun.corba.se.spi.ior.ObjectKey;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +25,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.*;
 
@@ -59,9 +65,18 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
+                        }
+                        return JsonUtil.json2Map(text);
+                    });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("新世纪代付下单报错原因:" + e);
         }
         log.info("新世纪代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
@@ -74,7 +89,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("新世纪代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("新世纪代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -141,32 +156,37 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
-            log.info("新世纪代付下单结果 - result:{}", res);
-            if (!StringUtils.isEmpty(res)) {
-                Map<String, Object> resultMap = JsonUtil.json2Map(res);
-                if (!CollectionUtils.isEmpty(resultMap)) {
-                    String success = resultMap.getOrDefault("status", "").toString();
-                    int refCode = Integer.parseInt(resultMap.getOrDefault("refCode", "").toString());
-                    if ("success".equals(success)) {
-                        // status 4代付中 5代付失败 6代付成功
-                        // refCode 1成功 2失败 3处理中 4待处理
-                        int status = 4;
-                        if (refCode == 1) {
-                            status = 6;
-                            refCode = 1;
-                        } else if (refCode == 2 || refCode == 5 || refCode == 7 || refCode == 8) {
-                            status = 5;
-                            refCode = 2;
-                        } else {
-                            refCode = 3;
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
                         }
-                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, refCode);
+                        return JsonUtil.json2Map(text);
+                    });
+            log.info("新世纪代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+            if (!CollectionUtils.isEmpty(resultMap)) {
+                String success = resultMap.getOrDefault("status", "").toString();
+                int refCode = Integer.parseInt(resultMap.getOrDefault("refCode", "").toString());
+                if ("success".equals(success)) {
+                    // status 4代付中 5代付失败 6代付成功
+                    // refCode 1成功 2失败 3处理中 4待处理
+                    int status = 4;
+                    if (refCode == 1) {
+                        status = 6;
+                        refCode = 1;
+                    } else if (refCode == 2 || refCode == 5 || refCode == 7 || refCode == 8) {
+                        status = 5;
+                        refCode = 2;
+                    } else {
+                        refCode = 3;
                     }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, refCode);
                 }
-                return res;
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

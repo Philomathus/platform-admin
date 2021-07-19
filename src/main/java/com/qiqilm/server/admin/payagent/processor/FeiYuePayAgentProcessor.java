@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -16,10 +17,14 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,14 +67,23 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 
 		Map<String, Object> resultMap = null;
 		try {
-			resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
+			resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+					restTemplate.httpEntityCallback( httpEntity ), response -> {
+						InputStream bodyStream = response.getBody();
+						String      text;
+						try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+							text = CharStreams.toString( reader );
+						}
+						return JsonUtil.json2Map( text );
+					} );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 			reqPayAgent.setFailReason( e.getMessage() );
 		}
+		log.info( "飞跃代付下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
 		if ( !CollectionUtils.isEmpty( resultMap ) ) {
 			if ( "0".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
-				log.info( "代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
+				log.info( "飞跃代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
 				return true;
 			} else {
 				reqPayAgent.setFailReason( resultMap.getOrDefault( "msg", "" ).toString() );
@@ -77,7 +91,7 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
-		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		log.warn( "飞跃代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo() );
 		return false;
 	}
 
@@ -147,7 +161,15 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 
 		Map<String, Object> resultMap = null;
 		try {
-			resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class );
+			resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+					restTemplate.httpEntityCallback( httpEntity ), response -> {
+						InputStream bodyStream = response.getBody();
+						String      text;
+						try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+							text = CharStreams.toString( reader );
+						}
+						return JsonUtil.json2Map( text );
+					} );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}

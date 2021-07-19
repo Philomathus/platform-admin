@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.payagent.processor;
 
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -10,19 +11,25 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.sun.corba.se.spi.ior.ObjectKey;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.jar.JarOutputStream;
 
 @Repository(value = ConstantsPayAgent.XIN_NIU_QI_CHONG_TIAN + "PayAgentProcessor")
 @Log4j2
@@ -59,24 +66,31 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(map, httpHeaders);
 
-        String result = null;
+        Map<String, Object> resultMap = null;
         try {
-            result = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.warn("新牛气冲天代付下单结果 - result:{}", result);
-        if (Strings.isNotBlank(result)) {
-            Map resultMap = JsonUtil.json2Map(result);
+        log.warn("新牛气冲天代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        if (!CollectionUtils.isEmpty(resultMap)) {
             if (StringUtils.equals("true", String.valueOf(resultMap.get("result")))) {
                 withdrawLog.setPayAgentOrderNo(resultMap.getOrDefault("odd", "").toString());
-                log.warn("新牛气冲天代付下单成功 - result:{}", result);
+                log.warn("新牛气冲天代付下单成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             }
             reqPayAgent.setFailReason(resultMap.getOrDefault("ims", "").toString());
             payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
         }
-        log.warn("新牛气冲天代付订单提交失败,订单号:{}", withdrawLog.getOrderNo());
+        log.warn("新牛气冲天代付订单提交失败,orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -136,12 +150,19 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(dataMap, httpHeaders);
 
-        String result = null;
+        Map<String, Object> resultMap = null;
         try {
-            result = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
-            log.warn("新牛气冲天代付查询结果" + result);
-            if (StringUtils.isNotBlank(result)) {
-                Map resultMap = JsonUtil.json2Map(result);
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
+            log.warn("新牛气冲天代付查询结果" + JsonUtil.object2Json(resultMap));
+            if (!CollectionUtils.isEmpty(resultMap)) {
                 if (!CollectionUtils.isEmpty(resultMap) && "true".equals(resultMap.getOrDefault("result", "").toString())) {
                     Integer statusCode = Integer.parseInt((String) resultMap.get("zt"));
                     if (statusCode >= 2) {
@@ -159,7 +180,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
                                 orderState);
                     }
                 }
-                return result;
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
