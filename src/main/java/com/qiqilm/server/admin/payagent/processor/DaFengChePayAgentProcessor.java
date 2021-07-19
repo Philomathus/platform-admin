@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -16,6 +17,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -23,6 +25,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -58,7 +63,15 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -77,45 +90,6 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
         }
         log.warn("大风车代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
-    }
-
-    public static void main(String[] args) {
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
-        bodyMap.put("account_id", "57");
-        bodyMap.put("out_trade_no", "TX24242934293");
-        bodyMap.put("amount", "10");
-        bodyMap.put("bank_name", "建设银行");
-        bodyMap.put("bank_user", "哈哈");
-        bodyMap.put("bank_id", "6217001650006934595");
-        bodyMap.put("callback_url", "http://47.57.3.228:43007/pay-agent/callBack/" + ConstantsPayAgent.LUBAN);
-        bodyMap.put("withdraw_type", "1");
-
-        //$sign = md5(md5($account_id.$out_trade_no.$bank_id).$user_key);
-        String tempStr = "57" + "TX24242934293" + "6217001650006934595";
-        String sign = DigestUtils.md5Hex(tempStr);
-        bodyMap.put("sign", DigestUtils.md5Hex(sign + "0B69F62085C6B6"));
-
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(bodyMap);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
-
-        Map<String, Object> resultMap = null;
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            resultMap = restTemplate.postForObject("http://159.75.226.206/server/withdrawal/appwithdrawal", httpEntity, Map.class);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        log.info("大风车代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
-        if (!CollectionUtils.isEmpty(resultMap)) {
-            String return_code = resultMap.getOrDefault("return_code", "").toString();
-            String trade_state = resultMap.getOrDefault("trade_state", "").toString();
-            if ("SUCCESS".equals(return_code) && "PROCESSING".equals(trade_state)) {
-                log.info("大风车代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
-            }
-        }
     }
 
     @Override
@@ -182,7 +156,15 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
             log.info("大风车代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String return_code = resultMap.getOrDefault("return_code", "").toString();

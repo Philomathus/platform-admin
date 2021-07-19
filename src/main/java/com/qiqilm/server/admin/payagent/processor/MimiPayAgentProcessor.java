@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -14,11 +15,16 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,21 +68,30 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>( map, httpHeaders );
 
 		String resultStr = null;
+		Map<String, Object> resultMap = null;
 		try {
-			resultStr = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, String.class );
+			resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+					restTemplate.httpEntityCallback( httpEntity ), response -> {
+						InputStream bodyStream = response.getBody();
+						String      text;
+						try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+							text = CharStreams.toString( reader );
+						}
+						return JsonUtil.json2Map( text );
+					} );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( "咪咪代付下单结果:" + JsonUtil.json2Map( resultStr ) );
-		dataMap.clear();
-		dataMap = JsonUtil.json2Map( resultStr );
-		if ( StringUtils.equals( "0", dataMap.get( "status" ) ) ) {
-			log.warn( "咪咪代付订单提交失败" );
-			return true;
-		}else{
-			reqPayAgent.setFailReason(dataMap.getOrDefault("msg", "").toString());
+		log.warn( "咪咪代付下单结果:" + JsonUtil.object2Json( resultMap ) );
+		if(!CollectionUtils.isEmpty(resultMap)) {
+			if (StringUtils.equals("0", dataMap.get("status"))) {
+				log.warn("咪咪代付提交成功" + JsonUtil.object2Json( resultMap ));
+				return true;
+			} else {
+				reqPayAgent.setFailReason(dataMap.getOrDefault("msg", "").toString());
+			}
 		}
-		log.warn( "咪咪代付订单提交失败" );
+		log.warn( "咪咪代付提交失败 - orderNo{}", withdrawLog.getOrderNo() );
 		return false;
 	}
 
