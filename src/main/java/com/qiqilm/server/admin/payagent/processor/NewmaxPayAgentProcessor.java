@@ -153,30 +153,12 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> resultMap = null;
         try {
-<<<<<<< HEAD
             resultMap = restTemplate.execute(payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
                     restTemplate.httpEntityCallback(httpEntity), response -> {
                         InputStream bodyStream = response.getBody();
                         String text;
                         try (Reader reader = new InputStreamReader(bodyStream)) {
                             text = CharStreams.toString(reader);
-=======
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
-            log.info("newmax代付查询结果:{}", res);
-            if (StringUtils.isNotBlank(res)) {
-                Map<String, Object> resultMap = JsonUtil.json2Map(res);
-                if (!CollectionUtils.isEmpty(resultMap) && resultMap.containsKey( "data" )) {
-                    Map dataMap = (Map) resultMap.getOrDefault("data", new HashMap<>() );
-                    int statusType = Integer.parseInt(dataMap.getOrDefault("status", "").toString());
-                    int status = 4;
-                    if(statusType == -1 || statusType == 2) {
-                        // status 4代付中 5代付失败 6代付成功
-                        // state-1：被拒绝；1：未支付；2支付成功
-                        if (statusType == 2) {
-                            status = 6;
-                        } else {
-                            status = 5;
->>>>>>> ke
                         }
                         return JsonUtil.json2Map(text);
                     });
