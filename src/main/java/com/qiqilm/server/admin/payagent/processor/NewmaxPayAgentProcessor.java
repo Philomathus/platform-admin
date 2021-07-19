@@ -73,6 +73,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
                     });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("鑫max代付代付下单报错原因:" + e);
         }
         log.info("newmax代付鑫max下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {

@@ -47,7 +47,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
                     payAgentPlatform.getMerId(), bodyMap, signMd5, payAgentPlatform.getSignPublicKey(), payAgentPlatform.getSignPrivateKey());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason(e.getMessage());
+            reqPayAgent.setFailReason("南开代付下单报错原因:" + e);
         }
         log.warn("南开代付下单结果:" + httpOrgCreateTestRtn);
         if (StringUtils.isNoneBlank(httpOrgCreateTestRtn)) {

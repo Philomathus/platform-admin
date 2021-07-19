@@ -114,6 +114,7 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("功付代付下单报错原因:" + e);
         }
         log.info("功付代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {

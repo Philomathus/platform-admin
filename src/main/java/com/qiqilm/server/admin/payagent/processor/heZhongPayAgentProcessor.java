@@ -72,6 +72,7 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("合众代付下单报错原因:" + e);
         }
         log.info("合众代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
@@ -84,11 +85,12 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                 SortedMap<String, Object> signMap = new TreeMap<>(dataMap);
                 String tempTwo = this.assemblyUrl(signMap) + "&" + signMd5;
                 String signTwo = DigestUtils.md5Hex(tempTwo).toUpperCase();
+
+                log.info("合众代付下单返回验签 :{}", signTwo + "_" + resultSign);
                 if (resultSign.equals(signTwo) && "3".equals(status)) {
                     log.info("合众代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                     return true;
                 }
-                log.info("合众代付返回验签失败 - orderNo:{}", withdrawLog.getOrderNo());
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
 

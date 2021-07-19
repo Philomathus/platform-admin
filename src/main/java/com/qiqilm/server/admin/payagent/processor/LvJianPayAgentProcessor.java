@@ -95,6 +95,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
             responseData = HttpClientTools.httpSendPostForm(payAgentPlatform.getPayOrderAddr(), params);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("绿箭代付下单报错原因:" + e);
         }
         log.info("绿箭代付下单结果 - result:{}", responseData);
         Map<String, Object> resultMap = JsonUtil.json2Map(responseData);

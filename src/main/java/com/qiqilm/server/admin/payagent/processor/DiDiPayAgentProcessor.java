@@ -71,6 +71,7 @@ public class DiDiPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("滴滴代付下单报错原因:" + e);
         }
         log.info("滴滴代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {

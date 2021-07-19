@@ -129,6 +129,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("秒到付代付下单报错原因:" + e);
         }
         log.info("秒到付代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {

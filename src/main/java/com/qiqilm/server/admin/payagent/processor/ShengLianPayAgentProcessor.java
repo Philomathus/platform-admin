@@ -138,7 +138,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("盛联代付提交失败原因:" + e);
+            reqPayAgent.setFailReason("盛联代付下单失败原因:" + e);
         }
         log.info("盛联代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {

@@ -50,6 +50,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
             resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), paramsMap, Map.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("天天代付下单报错原因:" + e);
         }
         log.warn("天天代付订单下单结果" + JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {

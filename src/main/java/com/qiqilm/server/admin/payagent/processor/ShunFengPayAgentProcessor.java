@@ -70,7 +70,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
-            reqPayAgent.setFailReason( e.getMessage() );
+            reqPayAgent.setFailReason("顺风代付下单报错原因:" + e);
         }
         log.warn("顺风代付下单结果:" + JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
