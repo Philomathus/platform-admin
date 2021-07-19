@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumAction;
@@ -385,6 +386,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public String getHistoryRecharge(String id) {
         return memberInfoMapper.selectMemberInfoHistoryRechargeById(id);
+    }
+
+    @Override
+    public List<RspMemberChannel> memberstatistics(MemberInfo memberInfo) {
+        return memberInfoMapper.memberstatistics(memberInfo);
     }
 
     @Override
