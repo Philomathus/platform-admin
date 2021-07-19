@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.payagent.processor;
 
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -17,12 +18,16 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -62,11 +67,18 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
+        Map<String, Object> resultMap = null;
         try {
-            String result = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
-            log.info("亿信代付申请返回结果:{}",JsonUtil.object2Json(result));
-            if (Strings.isNotBlank(result) ) {
-                Map resultMap = JsonUtil.json2Map( result );
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
+            log.info("亿信代付下单结果:{}",JsonUtil.object2Json(resultMap));
                 if (!CollectionUtils.isEmpty(resultMap)) {
                     if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
                         if ("success".equals(resultMap.getOrDefault("data", "").toString())) {
@@ -78,9 +90,8 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
 
                         payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
                     }
-                    log.error("亿信代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
                 }
-            }
+            log.error("亿信代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -145,11 +156,18 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
+        Map<String, Object> resultMap = null;
         try {
-            String result = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
-            log.info("亿信代付查询返回结果:{}",JsonUtil.object2Json(result));
-            if (Strings.isNotBlank(result) ) {
-                Map resultMap = JsonUtil.json2Map( result );
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
+            log.info("亿信代付查询返回结果:{}",JsonUtil.object2Json(resultMap));
                 if (!CollectionUtils.isEmpty(resultMap)) {
                     if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
                         Map detailMap = (Map) resultMap.get("data");
@@ -160,8 +178,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
                         }
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                     }
-                }
-                return result;
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -72,6 +72,7 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 					} );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
+			reqPayAgent.setFailReason("福财运2代付下单报错原因:" + e);
 		}
 		log.info( "福财运2代付下单结果- result:{}", JsonUtil.object2Json(resultMap) );
 		if ( !CollectionUtils.isEmpty( resultMap ) ) {
@@ -89,7 +90,7 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
-		log.warn( "福财运2代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		log.warn("福财运2代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
 		return false;
 	}
 

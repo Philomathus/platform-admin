@@ -82,16 +82,16 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( "咪咪代付下单结果:" + JsonUtil.object2Json( resultMap ) );
+		log.warn( "咪咪代付下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
 		if(!CollectionUtils.isEmpty(resultMap)) {
 			if (StringUtils.equals("0", dataMap.get("status"))) {
-				log.warn("咪咪代付提交成功" + JsonUtil.object2Json( resultMap ));
+				log.warn("咪咪代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ));
 				return true;
 			} else {
 				reqPayAgent.setFailReason(dataMap.getOrDefault("msg", "").toString());
 			}
 		}
-		log.warn( "咪咪代付提交失败 - orderNo{}", withdrawLog.getOrderNo() );
+		log.warn( "咪咪代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo() );
 		return false;
 	}
 

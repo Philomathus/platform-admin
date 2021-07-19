@@ -138,7 +138,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("盛联代付提交失败原因:" + e);
+            reqPayAgent.setFailReason("盛联代付下单失败原因:" + e);
         }
         log.info("盛联代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
@@ -157,7 +157,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
                 }
             }
         }
-        log.info("盛联代付订单提交失败 - 订单号:{}", withdrawLog.getOrderNo());
+        log.info("盛联代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 

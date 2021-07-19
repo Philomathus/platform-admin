@@ -68,9 +68,11 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         String sign = sign(bodyMap,signMd5);
         bodyMap.put("sign", sign);
 
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(bodyMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity(bodyMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
@@ -85,7 +87,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("金鑫代付提交失败原因:" + e);
+            reqPayAgent.setFailReason("金鑫代付下单报错原因:" + e);
         }
         log.info("金鑫代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
@@ -106,7 +108,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
                 }
             }
         }
-        log.info("金鑫代付订单提交失败 - 订单号:{}", withdrawLog.getOrderNo());
+        log.info("金鑫代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -161,9 +163,11 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         String sign = sign(bodyMap,signMd5);
         bodyMap.put("sign", sign);
 
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(bodyMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, String>> httpEntity = new HttpEntity(bodyMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {

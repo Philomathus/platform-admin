@@ -114,6 +114,7 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("功付代付下单报错原因:" + e);
         }
         log.info("功付代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
@@ -124,13 +125,10 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
             log.info("功付代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
             return true;
         }
+        log.info("功付代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
-    public static void main(String[] args) {
-        String a = "阿斯顿";
-        System.out.println(a.length());
-    }
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {

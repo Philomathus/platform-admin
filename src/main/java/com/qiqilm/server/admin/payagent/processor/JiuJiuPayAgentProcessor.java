@@ -85,6 +85,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("久久代付下单报错原因:" + e);
         }
         log.info("久久代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
@@ -98,7 +99,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
-        log.warn("久久代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("久久代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 

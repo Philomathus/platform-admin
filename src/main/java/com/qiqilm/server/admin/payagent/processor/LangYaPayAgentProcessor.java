@@ -85,6 +85,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        log.info("狼牙代付下单结果 - listResult:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("success".equals(resultMap.getOrDefault("status", "").toString())) {
                 Map<String, Object> result = (Map) resultMap.get("data");
@@ -92,7 +93,6 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
                 String success = result.getOrDefault("success", "").toString();
                 if ("1".equals(status) && "1".equals(success)) {
                     List<Map<String, Object>> listResult = (List<Map<String, Object>>) result.getOrDefault("list", new ArrayList<>());
-                    log.info("代付订单提交成功 - listResult:{}", JsonUtil.object2Json(listResult));
                     for (Map map : listResult) {
                         String outTradeNo = (String) map.getOrDefault("out_trade_no", "");
                         String statusRsp = map.getOrDefault("status", "").toString();
@@ -108,7 +108,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("狼牙代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("狼牙代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
