@@ -86,7 +86,7 @@ public class ShunTong4PayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
-        log.warn("福财运4代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("福财运4代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 

@@ -56,12 +56,20 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(e.getMessage());
         }
-        log.warn("五六代付下单结果:" + JsonUtil.object2Json(resultMap));
+        log.warn("五六代付下单结果 - result:" + JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
                 log.info("五六代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
@@ -72,8 +80,7 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
-        log.warn("五六代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
-
+        log.warn("五六代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 

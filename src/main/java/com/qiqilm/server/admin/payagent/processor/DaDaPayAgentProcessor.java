@@ -75,9 +75,10 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        log.info("达达代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
-                log.info("达达代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
+                log.info("达达代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
@@ -85,7 +86,7 @@ public class DaDaPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("达达代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("达达代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 

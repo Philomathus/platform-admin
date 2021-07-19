@@ -157,7 +157,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
                 }
             }
         }
-        log.info("盛联代付订单提交失败 - 订单号:{}", withdrawLog.getOrderNo());
+        log.info("盛联代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 

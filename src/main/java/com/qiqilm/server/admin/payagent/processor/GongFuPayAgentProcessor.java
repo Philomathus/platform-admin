@@ -124,13 +124,10 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
             log.info("功付代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
             return true;
         }
+        log.info("功付代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
-    public static void main(String[] args) {
-        String a = "阿斯顿";
-        System.out.println(a.length());
-    }
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {

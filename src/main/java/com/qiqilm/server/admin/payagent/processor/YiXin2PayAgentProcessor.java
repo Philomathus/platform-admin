@@ -78,7 +78,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map( text );
                     } );
-            log.info("亿信代付申请返回结果:{}",JsonUtil.object2Json(resultMap));
+            log.info("亿信代付下单结果:{}",JsonUtil.object2Json(resultMap));
                 if (!CollectionUtils.isEmpty(resultMap)) {
                     if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
                         if ("success".equals(resultMap.getOrDefault("data", "").toString())) {
@@ -90,8 +90,8 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
 
                         payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
                     }
-                    log.error("亿信代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
                 }
+            log.error("亿信代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

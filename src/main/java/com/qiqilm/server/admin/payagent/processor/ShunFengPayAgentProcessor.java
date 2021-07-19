@@ -75,10 +75,10 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         log.warn("顺风代付下单结果:" + JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
-                log.info("钱宝代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 Map dataMap =(Map) resultMap.getOrDefault("data", "");
                 String status = dataMap.getOrDefault("state", "").toString();
                 if ("1".equals(status)){
+                    log.info("顺风代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                     return true;
                 }
             } else {
@@ -87,7 +87,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
-        log.warn("顺风代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("顺风代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -102,13 +102,13 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
-        log.info("顺风代付回调待签名字符串:" + requestMap);
+
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         String out_trade_no = requestMap.getOrDefault( "out_trade_no", "" ).toString();
         String state = requestMap.getOrDefault( "state", "" ).toString();
 
+        log.info("顺风代付回调验签:" + signRes + "_" + sign);
         if (signRes.equals(sign)) {
-
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_no);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", out_trade_no);

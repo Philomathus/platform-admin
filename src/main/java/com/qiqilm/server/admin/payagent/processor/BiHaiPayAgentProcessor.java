@@ -59,17 +59,19 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn("碧海代付订单下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
+		log.warn("碧海代付下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
 		int code = ( int ) resultMap.get( "Code" );
 		if ( code == 0 ) {
 			resultMap = ( Map<String, Object> ) resultMap.get( "Data" );
 			if ( !CollectionUtils.isEmpty( resultMap ) ) {
 				code = ( int ) resultMap.get( "Status" );
 				if ( code != 8 && code != 16 ) {
+					log.warn("碧海代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
 					return true;
 				}
 			}
 		}
+		log.warn("碧海代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo() );
 		return false;
 	}
 
