@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import org.apache.ibatis.annotations.Param;
@@ -100,4 +101,6 @@ public interface MemberInfoMapper {
     String selectMemberInfoAddressById(@Param("userid") String id);
 
     String selectMemberInfoHistoryRechargeById(@Param("userid") String id);
+
+    List<RspMemberChannel> memberstatistics(MemberInfo memberInfo);
 }
