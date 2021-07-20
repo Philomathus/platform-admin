@@ -73,14 +73,14 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("97代付下单报错原因:" + e);
+            reqPayAgent.setFailReason(payAgentPlatform.getName()+"代付下单报错原因:" + e);
         }
-        log.info("97代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             String status = resultMap.getOrDefault("status", "").toString();
             if ("100".equals(code) && "true".equals(status)) {
-                log.info("97代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                log.info(payAgentPlatform.getName()+"代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
@@ -88,7 +88,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("97代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.warn(payAgentPlatform.getName()+"代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -104,7 +104,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
 
-        log.info("97代付回调签名字符串:" + sign + "_" + signStr);
+        log.info(payAgentPlatform.getName()+"代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String shOrderId = (String) requestMap.get("shOrderId");
 
@@ -163,7 +163,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map( text );
                     } );
-            log.info("97代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName()+"代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 String statusTrue = resultMap.getOrDefault("status", "").toString();
@@ -189,6 +189,6 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "97代付查询失败,订单号:"+withdrawLog.getOrderNo();
+        return payAgentPlatform.getName()+"代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

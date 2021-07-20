@@ -47,7 +47,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         if (bankCodeType == null) {
             payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             log.warn(payAgentPlatform.getName()+"代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
-            throw new BusinessException("此代付无法支持的银行类型：" + withdrawLog.getBankName());
+            throw new BusinessException(payAgentPlatform.getName()+"代付无法支持的银行类型：" + withdrawLog.getBankName());
         }
 
         TreeMap<String, Object> bodyMap = new TreeMap<>();
