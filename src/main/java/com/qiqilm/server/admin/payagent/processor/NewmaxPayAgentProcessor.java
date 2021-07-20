@@ -12,7 +12,6 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -165,7 +164,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
                     });
             log.info("newmax代付鑫max查询结果:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
-                Map dataMap = (Map) resultMap.getOrDefault("data", "");
+                Map dataMap = (Map) resultMap.getOrDefault("data", new HashMap<>() );
                 int statusType = Integer.parseInt(dataMap.getOrDefault("status", "").toString());
                 int status = 4;
                 if (statusType == -1 || statusType == 2) {
