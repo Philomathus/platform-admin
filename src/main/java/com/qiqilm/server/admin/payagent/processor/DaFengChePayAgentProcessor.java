@@ -97,7 +97,7 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
         String out_trade_no = requestMap.getOrDefault("out_trade_no", "").toString();
-        String return_code = requestMap.getOrDefault("return_code", "").toString();
+        String trade_state = requestMap.getOrDefault("trade_state", "").toString();
         requestMap.remove("attach");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -120,7 +120,7 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
                 return "SUCCESS";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(out_trade_no);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "SUCCESS".equals(return_code));
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "SUCCESS".equals(trade_state));
             return "SUCCESS";
         }
         return "fail";
@@ -157,34 +157,39 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
-                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
                         InputStream bodyStream = response.getBody();
-                        String      text;
-                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
-                            text = CharStreams.toString( reader );
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
                         }
-                        return JsonUtil.json2Map( text );
-                    } );
-            log.info("大风车代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+                        return JsonUtil.json2Map(text);
+                    });
+            log.info(payAgentPlatform.getName() + "代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String return_code = resultMap.getOrDefault("return_code", "").toString();
-                if ("SUCCESS".equals(return_code) || "FAIL".equals(return_code)) {
-                    // status 4代付中 5代付失败 6代付成功
-                    // return_code  SUCCESS成功 FAIL失败
-                    int status = 4;
-                    if ("SUCCESS".equals(return_code)) {
-                        status = 6;
-                    } else {
-                        status = 5;
+                if ("SUCCESS".equals(return_code)) {
+                    String trade_state = resultMap.getOrDefault("trade_state", "").toString();
+                    if ("SUCCESS".equals(trade_state) || "FAIL".equals(trade_state)) {
+                        // status 4代付中 5代付失败 6代付成功
+                        // trade_state  SUCCESS成功 FAIL失败 PROCESSING 處理中,需繼續查詢
+                        int status = 4;
+                        if ("SUCCESS".equals(trade_state)) {
+                            status = 6;
+                        } else {
+                            status = 5;
+                        }
+                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
+                    } else if ("PROCESSING".equals(trade_state)){
+                        this.queryOrderPay(payAgentLog);
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
                 }
                 return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "大风车代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName() + "代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }
