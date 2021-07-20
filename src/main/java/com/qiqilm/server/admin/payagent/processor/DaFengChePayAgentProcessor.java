@@ -176,14 +176,14 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
                         // status 4代付中 5代付失败 6代付成功
                         // trade_state  SUCCESS成功 FAIL失败 PROCESSING 處理中,需繼續查詢
                         int status = 4;
+                        int orderStatus = 2;
                         if ("SUCCESS".equals(trade_state)) {
                             status = 6;
+                            orderStatus = 1;
                         } else {
                             status = 5;
                         }
-                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
-                    } else if ("PROCESSING".equals(trade_state)){
-                        this.queryOrderPay(payAgentLog);
+                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderStatus);
                     }
                 }
                 return JsonUtil.object2Json(resultMap);
