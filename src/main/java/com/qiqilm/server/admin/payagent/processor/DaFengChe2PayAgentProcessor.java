@@ -97,6 +97,7 @@ public class DaFengChe2PayAgentProcessor extends AbstractPayAgent {
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
         String out_trade_no = requestMap.getOrDefault("out_trade_no", "").toString();
+        String return_code = requestMap.getOrDefault("return_code", "").toString();
         String trade_state = requestMap.getOrDefault("trade_state", "").toString();
         requestMap.remove("attach");
 
@@ -106,10 +107,10 @@ public class DaFengChe2PayAgentProcessor extends AbstractPayAgent {
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
+        String signStr = DigestUtils.md5Hex(tempStr);
 
         log.info(payAgentPlatform.getName() + "代付回调签名:" + tempStr + "_" + sign);
-        if (sign.equalsIgnoreCase(signStr)) {
+        if (sign.equalsIgnoreCase(signStr) && "SUCCESS".equals(return_code)) {
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_no);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", out_trade_no);
