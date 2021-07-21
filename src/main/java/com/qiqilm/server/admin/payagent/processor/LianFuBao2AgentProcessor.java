@@ -28,7 +28,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-@Repository( value = ConstantsPayAgent.LIAN_FU_BAO + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.LIAN_FU_BAO2 + "PayAgentProcessor" )
 @Log4j2
 public class LianFuBao2AgentProcessor extends AbstractPayAgent {
     @Override
@@ -44,7 +44,7 @@ public class LianFuBao2AgentProcessor extends AbstractPayAgent {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put( "merOrderNo", withdrawLog.getOrderNo() );
         bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
-        bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIAN_FU_BAO );
+        bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIAN_FU_BAO2 );
         bodyMap.put( "bankCode", withdrawLog.getBankCode() );
         bodyMap.put( "submitTime", reqPayAgent.getCurrentTime().getTime() );
         bodyMap.put( "bankAccountNo", withdrawLog.getBankAccount().trim() );
