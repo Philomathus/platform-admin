@@ -21,6 +21,8 @@ public abstract class ConstantsPayAgent {
 	public static final String XIAO_FEI              = "xiaoFei";
 	// 联付宝
 	public static final String LIAN_FU_BAO           = "lianFuBao";
+	// 联付宝2
+	public static final String LIAN_FU_BAO2          = "lianFuBao2";
 	// 牛气冲天
 	public static final String NIU_QI_CHONG_TIAN     = "niuQiChongTian";
 	// 华子代付
