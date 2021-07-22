@@ -84,6 +84,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
      */
     @Override
     public List<MemberInfo> selectMemberInfoList(MemberInfo memberInfo) {
+        if (!StringUtils.isEmpty(memberInfo.getSearchValue())){
+           memberInfo.setParams(null);
+        }
         List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
         if (memberInfos.size() > 0 && !CollectionUtils.isEmpty(memberInfos)) {
             for (MemberInfo me : memberInfos) {
