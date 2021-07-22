@@ -171,7 +171,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitBinLi + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI2 )
-				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI23 ))
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitShunWei ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitShunWei + "元以上出款" );
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
