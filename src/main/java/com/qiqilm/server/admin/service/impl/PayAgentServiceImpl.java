@@ -169,7 +169,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 ) )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitBinLi ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitBinLi + "元以上出款" );
-		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
+		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI2 )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI23 ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitShunWei ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitShunWei + "元以上出款" );
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
@@ -194,6 +196,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 )
