@@ -72,6 +72,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentLimitNewMaxPay;
 	@Value( "${payAgentLimitYangGuangPay:5000}" )
 	private Integer payAgentLimitYangGuangPay;
+	@Value( "${payAgentLimitDaFengChePay:5000}" )
+	private Integer payAgentLimitDaFengChePay;
+
 	@Override
 	@Transactional( rollbackFor = Exception.class )
 	public void processOrderPay( MemberWithdrawLog withdrawLog, PayAgentLog payAgentLog, String orderNo,
@@ -158,6 +161,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 ) )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitTels ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitTels + "元以上出款" );
+		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE2 ) )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitDaFengChePay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitDaFengChePay + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 ) )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitBinLi ) ) > 0 ) {
@@ -174,14 +181,13 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.DIDI )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitDiDi ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitDiDi + "元以上出款" );
-		}else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.NEWMAX )
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.NEWMAX )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitNewMaxPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitNewMaxPay + "元以上出款" );
-		}else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitYangGuangPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitYangGuangPay + "元以上出款" );
-		}
-		else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
+		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DIDI )
@@ -191,8 +197,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.NEWMAX )
-				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )) {
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG ) ) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
 		}
 
@@ -393,12 +401,12 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		newWithdrawLog.setId( withdrawLog.getId() );
 		newWithdrawLog.setStatus( 1 );
 		newWithdrawLog.setUpdateTime( new Date() );
-		newWithdrawLog.setRemark( String.format( "请求代付[%s]不成功",payAgentPlatform.getName() ) );
+		newWithdrawLog.setRemark( String.format( "请求代付[%s]不成功", payAgentPlatform.getName() ) );
 		int updateW = withdrawLogMapper.updateMemberWithdrawLog( newWithdrawLog );
 
 		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( withdrawLog.getOrderNo() );
 		int         deleteP     = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
-		if ( updateW <= 0 || deleteP <= 0 ){
+		if ( updateW <= 0 || deleteP <= 0 ) {
 			log.error( "代付状态回退失败:{}", withdrawLog.getOrderNo() );
 			throw new BusinessException( "代付状态回退失败" );
 		}

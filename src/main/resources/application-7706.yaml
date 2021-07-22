@@ -40,3 +40,5 @@ payAgentLimitDiDi: 50000
 payAgentLimitNewMaxPay: 50000
 # 阳光代付额度
 payAgentLimitYangGuangPay: 50000
+# 大风车代付额度
+payAgentLimitDaFengChePay: 50000
