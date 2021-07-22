@@ -104,7 +104,8 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
 
         String tempStr = flow_no + call_time + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toLowerCase();
-        log.info("鲁班代付回调签名:" + tempStr + "_" + sign);
+
+        log.info("鲁班代付回调签名:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(flow_no);
             if (withdrawLog == null) {
