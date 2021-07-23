@@ -12,6 +12,7 @@ import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
+import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.vo.*;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
@@ -104,6 +105,41 @@ public class MemberInfoController extends BaseController {
     @GetMapping(value = "/fullMobile/{id}")
     public AjaxResult fullMobile(@PathVariable("id") String id) {
         return AjaxResult.success(memberInfoService.selectMemberInfoById(id));
+    }
+
+    /**
+     * 手机号批量更新密码
+     */
+    @PostMapping(value = "/memberSmallFeatures")
+    public Object memberSmallFeatures(HttpServletRequest request,ReqSmallFeatures req) throws Exception {
+        RspBase rspBase = new RspBase();
+        if (req.getGoogleAuthCode() == null) {
+            rspBase.setMsg("请输入google验证码");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+        if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+            rspBase.setMsg("未绑定google验证秘钥，无法审核");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        if (googleAuthSecret.length() == 32) {
+            rspBase.setMsg("google验证秘钥未加密，请重新登录");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+                "/googleAuthPrivateKey"));
+
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, req.getGoogleAuthCode())) {
+            rspBase.setMsg("google验证码不正确，请检查");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        return AjaxResult.success(memberInfoService.updatePhones(req));
     }
 
     /**
