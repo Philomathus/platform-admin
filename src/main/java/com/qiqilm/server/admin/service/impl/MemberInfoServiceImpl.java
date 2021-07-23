@@ -84,7 +84,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
      */
     @Override
     public List<MemberInfo> selectMemberInfoList(MemberInfo memberInfo) {
-        if (!StringUtils.isEmpty(memberInfo.getSearchValue())){
+        if (!StringUtils.isEmpty(memberInfo.getSearchValue()) || !StringUtils.isEmpty(memberInfo.getLoginIp())){
            memberInfo.setParams(null);
         }
         List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
