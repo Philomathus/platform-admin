@@ -609,6 +609,10 @@
 		where id = #{userId}
 	</select>
 
+	<update id="updatePhones" parameterType="com.qiqilm.server.admin.domain.req.ReqSmallFeatures">
+		update member_info set password = #{password} where phone in (${phones})
+	</update>
+
 	<select id="countByUserName" resultType="int">
 		select count(0) from member_info where user_name = #{userName}
 	</select>

@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
@@ -74,6 +75,9 @@ public interface MemberInfoMapper {
     MemberInfo findRecommendByInviterCode(String inviterCode);
 
     BigDecimal getMemberMoney(String userId);
+
+    //批量手机号更新密码
+    int updatePhones(ReqSmallFeatures reqSmallFeatures);
 
     int countByUserName(String userName);
 
