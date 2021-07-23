@@ -11,6 +11,7 @@
 		<result property="status" column="status"/>
 		<result property="isOnline" column="is_online"/>
 		<result property="type" column="type"/>
+		<result property="deviceType" column="device_type"/>
 		<result property="creator" column="creator"/>
 		<result property="createTime" column="create_time"/>
 		<result property="updator" column="updator"/>
@@ -24,7 +25,7 @@
 	</resultMap>
 
 	<sql id="selectPayTypeVo">
-		select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, creator, create_time , updator,
+		select id, name, code, icon_url, indexes, is_recommend, status, is_online, type, device_type, creator, create_time , updator,
 		update_time , open_level,tex1,tex2,tex3,tex4,tex5 from ${dbMain}.pay_type
 	</sql>
 
@@ -54,6 +55,9 @@
 			</if>
 			<if test="type != null">
 				and type = #{type}
+			</if>
+			<if test="deviceType != null and deviceType != ''">
+				and device_type = #{deviceType}
 			</if>
 			<if test="creator != null  and creator != ''">
 				and creator = #{creator}
@@ -107,6 +111,9 @@
 			<if test="type != null">
 				type,
 			</if>
+			<if test="deviceType != null and deviceType != ''">
+				device_type,
+			</if>
 			<if test="creator != null">
 				creator,
 			</if>
@@ -151,6 +158,9 @@
 			<if test="type != null">
 				#{type},
 			</if>
+			<if test="deviceType != null and deviceType != ''">
+				#{deviceType},
+			</if>
 			<if test="creator != null">
 				#{creator},
 			</if>
@@ -192,6 +202,9 @@
 			</if>
 			<if test="type != null">
 				type = #{type},
+			</if>
+			<if test="deviceType != null and deviceType != ''">
+				device_type = #{deviceType},
 			</if>
 			<if test="creator != null">
 				creator = #{creator},

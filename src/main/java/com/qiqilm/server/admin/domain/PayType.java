@@ -51,6 +51,10 @@ public class PayType extends BaseEntity {
     @Excel(name = "支付类型 1线上支付 2线下支付 3 代充支付")
     private String type;
 
+    /** 设备类型 1安卓 2ios */
+    @Excel(name = "设备类型 ios,安卓,鸿蒙 以英文逗号分隔")
+    private String deviceType;
+
     /** 创建人 */
     @Excel(name = "创建人")
     private String creator;
