@@ -119,11 +119,13 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 				}
 			} );
 
-			List<String> memberIdList = memberInfoMapper.selectMemberSpeak( pUserIds.toArray( new String[ 0 ] ) );
-			for ( String memberId : memberIdList ) {
-				for ( LiveVideoChat videoChat : list ) {
-					if ( memberId.equals( videoChat.getFromPlatform() ) ) {
-						videoChat.setNoSpeaking( true );
+			if (!pUserIds.isEmpty()){
+				List<String> memberIdList = memberInfoMapper.selectMemberSpeak( pUserIds.toArray( new String[ 0 ] ) );
+				for ( String memberId : memberIdList ) {
+					for ( LiveVideoChat videoChat : list ) {
+						if ( memberId.equals( videoChat.getFromPlatform() ) ) {
+							videoChat.setNoSpeaking( true );
+						}
 					}
 				}
 			}
