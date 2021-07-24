@@ -74,6 +74,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentLimitYangGuangPay;
 	@Value( "${payAgentLimitDaFengChePay:5000}" )
 	private Integer payAgentLimitDaFengChePay;
+	@Value( "${payAgentLimitLuBanPay:5000}" )
+	private Integer payAgentLimitLuBanPay;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -162,7 +164,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitTels ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitTels + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE )
-				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE2 ) )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE2 )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE3 ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitDaFengChePay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitDaFengChePay + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
@@ -189,6 +192,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitYangGuangPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitYangGuangPay + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LUBAN )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitLuBanPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitLuBanPay + "元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG )
@@ -203,7 +209,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE2 )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE3 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.NEWMAX )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LUBAN )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG ) ) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
 		}
