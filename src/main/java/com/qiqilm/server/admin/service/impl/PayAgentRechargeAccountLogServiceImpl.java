@@ -206,7 +206,7 @@ public class PayAgentRechargeAccountLogServiceImpl implements IPayAgentRechargeA
 
         //存提表新增记录
         PayAgentRechargeRecord payAgentRechargeRecord = new PayAgentRechargeRecord();
-        payAgentRechargeRecord.setOrderNo( payAgentRechargeAccountLog.getOrderNo() );
+        payAgentRechargeRecord.setOrderNo( payAgentRechargeAccountLog.getOrderNo() + "_bank" );
         payAgentRechargeRecord.setRechargeNickName( payAgentRechargeAccountLog.getNickName() );
         payAgentRechargeRecord.setRechargeAcount( payAgentRechargeAccountLog.getAccount() );
         payAgentRechargeRecord.setType( "代充人入款存入" );
@@ -218,7 +218,7 @@ public class PayAgentRechargeAccountLogServiceImpl implements IPayAgentRechargeA
 
         //给pay_agent_recharge_trade_log增加记录
         PayAgentRechargeTradeLog payAgentRechargeTradeLog = new PayAgentRechargeTradeLog();
-        payAgentRechargeTradeLog.setOrderNo( payAgentRechargeAccountLog.getOrderNo() );
+        payAgentRechargeTradeLog.setOrderNo( payAgentRechargeAccountLog.getOrderNo() + "_bank" );
         payAgentRechargeTradeLog.setAccount( payAgentRechargeAccountLog.getAccount() );
         payAgentRechargeTradeLog.setNickName( payAgentRechargeAccountLog.getNickName() );
         payAgentRechargeTradeLog.setIncome( payAgentRechargeAccountLog.getSubMoney() );
