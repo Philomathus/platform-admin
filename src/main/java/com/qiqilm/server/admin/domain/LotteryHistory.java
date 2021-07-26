@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @date 2021-02-23
  */
 @Data
-public class LotteryHistory extends BaseEntity {
+public class LotteryHistory extends BaseEntity implements Cloneable{
     private static final long serialVersionUID = 1L;
 
     /** ID */
@@ -56,6 +56,11 @@ public class LotteryHistory extends BaseEntity {
     /** 开奖分析 */
     private String analyse;
 
+    /** 开始期数 **/
+    private String startIssue;
+    /** 结束期数 **/
+    private String endIssue;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -72,5 +77,16 @@ public class LotteryHistory extends BaseEntity {
             .append("ctl", getCtl())
             .append("analyse", getAnalyse())
             .toString();
+    }
+
+    @Override
+    public Object clone() {
+        LotteryHistory lotteryHistory = null;
+        try{
+            lotteryHistory = (LotteryHistory)super.clone();
+        }catch(CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return lotteryHistory;
     }
 }

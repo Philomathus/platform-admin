@@ -7,7 +7,10 @@ import com.qiqilm.server.admin.core.page.PageDomain;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.page.TableSupport;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LotteryHistory;
+import com.qiqilm.server.admin.domain.LotteryInfo;
 import com.qiqilm.server.admin.domain.MemberGameData;
+import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.exception.ControllerExceptionHandler;
 import com.qiqilm.server.admin.service.IMemberGameDataMinService;
 import com.qiqilm.server.admin.utils.*;
@@ -144,6 +147,93 @@ public class BaseController extends ControllerExceptionHandler {
 
 	public List<Map> handlyGameData(IMemberGameDataMinService memberGameDataMinService, MemberGameData req) throws Exception {
 		return memberGameDataMinService.selectMemberGameDataMinList(req);
+	}
+
+
+	public TreeMap<String, LotteryHistory> handlyLotteryHistory(LotteryInfo lotteryInfo, LotteryHistory lotteryHistory) {
+		String startIssue = lotteryHistory.getStartIssue();
+		String endIssue = lotteryHistory.getEndIssue();
+		String s = startIssue.split("-")[0];
+		String e = endIssue.split("-")[0];
+		Date preStart = DateUtils.dateTime(DateUtils.YYYY_MM_DD,s.substring(0,4) + "-" + s.substring(4,6) + "-"+s.substring(6,8));
+		Long sufStart = Long.valueOf(startIssue.split("-")[1]);
+		Date preEnd = DateUtils.dateTime(DateUtils.YYYY_MM_DD,e.substring(0,4) + "-" + e.substring(4,6) + "-"+e.substring(6,8));
+		Long sufEnd = Long.valueOf(endIssue.split("-")[1]);
+		Long day = (preEnd.getTime() - preStart.getTime()) / (1000 * 60 * 60 * 24);
+		//校验前缀
+		if (day <= 0 && sufStart > sufEnd) {
+			throw new BaseException("彩种名称[" + lotteryHistory.getName() + "],开始期数:{" + startIssue + "}不能大于结束期数:{" + endIssue + "},请排查!");
+		}
+		TreeMap<String,LotteryHistory> historyMap = new TreeMap<>();
+		//当天
+		if (day == 0) {
+			for (Long i = sufStart; i <= sufEnd; i++) {
+				LotteryHistory history = initLottery(preStart,i,lotteryInfo,lotteryHistory);
+				historyMap.put(history.getIssue(),history);
+			}
+			return historyMap;
+		}
+		Long min = 1L;//默认第一期
+		Long max = 24 * 60 / lotteryInfo.getCycle();
+		for (int i = 0; i <= day; i++) {
+			if (i == 0){
+				for (Long j = sufStart; j <= max; j++) {
+					LotteryHistory history = initLottery(preStart,j,lotteryInfo,lotteryHistory);
+					historyMap.put(history.getIssue(),history);
+				}
+			}
+			if (i >0 && i < day){
+				preStart = DateUtils.addDays(preStart,1);
+				for (Long j = min; j <= max; j++) {
+					LotteryHistory history = initLottery(preStart,j,lotteryInfo,lotteryHistory);
+					historyMap.put(history.getIssue(),history);
+				}
+			}
+			if (i == day){
+				preStart = DateUtils.addDays(preStart,1);
+				for (Long k = min; k <= sufEnd; k++) {
+					LotteryHistory history = initLottery(preStart,k,lotteryInfo,lotteryHistory);
+					historyMap.put(history.getIssue(),history);
+				}
+			}
+		}
+		return historyMap;
+	}
+
+	public LotteryHistory initLottery(Date preStart, Long i,LotteryInfo lotteryInfo, LotteryHistory lotteryHistory){
+		LotteryHistory lottery = (LotteryHistory) lotteryHistory.clone();
+		String dateTime = DateFormatUtils.formate(preStart,DateFormatUtils.TIGHT_PATTERN_DATE);
+		if (i < 10){
+			lottery.setIssue(dateTime + "-" + "000"+i);
+		}else if (i < 100){
+			lottery.setIssue(dateTime + "-" + "00"+i);
+		}else if (i < 1000){
+			lottery.setIssue(dateTime + "-" + "0"+i);
+		}else {
+			lottery.setIssue(dateTime + "-" +i);
+		}
+		String issue = lottery.getIssue();
+		String ymd = issue.substring(0,4) + "-" + issue.substring(4,6) + "-" + issue.substring(6,8);
+		Long h = Long.valueOf(issue.split("-")[1]) * lotteryInfo.getCycle() / 60;
+		Long m = Long.valueOf(issue.split("-")[1]) * lotteryInfo.getCycle() - (h * 60);
+		String hms = "";
+		if (h >= 10 && m >= 10){
+			hms = h + ":" +m + ":00";
+		}
+		if (h >= 10 && m < 10){
+			hms = h + ":0"+m + ":00";
+		}
+		if (h < 10 && m >= 10){
+			hms = "0"+h + ":" +m + ":00";
+		}
+		if (h < 10 && m < 10){
+			hms = "0"+h + ":0" +m + ":00";
+		}
+		lottery.setId(issue+"-" + lotteryInfo.getId());
+		lottery.setKtime(DateFormatUtils.parse(ymd+" " +hms,DateFormatUtils.SPLIT_PATTERN_DATETIME));
+		lottery.setStatus(1L);
+		lottery.setName(lotteryInfo.getName());
+		return lottery;
 	}
 
 }
