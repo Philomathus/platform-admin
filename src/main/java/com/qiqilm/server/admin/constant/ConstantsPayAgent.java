@@ -23,6 +23,8 @@ public abstract class ConstantsPayAgent {
 	public static final String LIAN_FU_BAO           = "lianFuBao";
 	// 联付宝2
 	public static final String LIAN_FU_BAO2          = "lianFuBao2";
+	// 联付宝2
+	public static final String LIAN_FU_BAO3          = "lianFuBao3";
 	// 牛气冲天
 	public static final String NIU_QI_CHONG_TIAN     = "niuQiChongTian";
 	// 华子代付
@@ -117,4 +119,8 @@ public abstract class ConstantsPayAgent {
 	public static final String DAFENGCHE            = "daFengChe";
 	//大风车2代付
 	public static final String DAFENGCHE2            = "daFengChe2";
+	//乐乐代付
+	public static final String LELE            = "leLe";
+	//鼎丰代付
+	public static final String DINGFENG            = "dingFeng";
 }
