@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.domain.LiveProplog;
 import com.qiqilm.server.admin.mapper.LiveProplogMapper;
 import com.qiqilm.server.admin.service.ILiveProplogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,6 +22,8 @@ import java.util.Objects;
 public class LiveProplogServiceImpl implements ILiveProplogService {
     @Autowired
     private LiveProplogMapper liveProplogMapper;
+    @Value( "${spring.profiles.active}" )
+    private String profile;
 
     /**
      * 查询用户送礼日志
@@ -45,7 +48,13 @@ public class LiveProplogServiceImpl implements ILiveProplogService {
             liveProplog.setStartTime(liveProplog.getSelectDate()[0] + " 00:00:00");
             liveProplog.setEndTime(liveProplog.getSelectDate()[1] + " 23:59:59");
         }
-        return liveProplogMapper.selectLiveProplogList(liveProplog);
+        List<LiveProplog> liveProplogs = null;
+        if("7706".equals(profile)){
+            liveProplogs = liveProplogMapper.selectLiveProplogList7706(liveProplog);
+        } else {
+            liveProplogs = liveProplogMapper.selectLiveProplogList(liveProplog);
+        }
+        return liveProplogs;
     }
 
     /**
