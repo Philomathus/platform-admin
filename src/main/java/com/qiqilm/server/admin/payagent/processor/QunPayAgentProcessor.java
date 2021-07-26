@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.payagent.processor;
 
 
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -16,6 +17,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -23,6 +25,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -61,7 +66,15 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
 
 		Map<String, Object> resultMap = null;
 		try {
-			resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+			resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+					restTemplate.httpEntityCallback( httpEntity ), response -> {
+						InputStream bodyStream = response.getBody();
+						String      text;
+						try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+							text = CharStreams.toString( reader );
+						}
+						return JsonUtil.json2Map( text );
+					} );
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			reqPayAgent.setFailReason(e.getMessage());
@@ -69,10 +82,10 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
 		log.warn("群支付代付下单结果:" + JsonUtil.object2Json(resultMap));
 		if (!CollectionUtils.isEmpty(resultMap)) {
 			if ("1000".equals(resultMap.getOrDefault("code", "").toString())) {
-				log.info("群支付代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
 				Map dataMap =(Map) resultMap.getOrDefault("data", "");
 				String status = dataMap.getOrDefault("status", "").toString();
 				if ("3".equals(status)){
+					log.info("群支付代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
 					return true;
 				}
 			} else {
@@ -81,7 +94,7 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
 				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
-		log.warn("群支付代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+		log.warn("群支付代付订单提交失败 - orderNo:{}", JsonUtil.object2Json(resultMap));
 		return false;
 	}
 
@@ -107,9 +120,10 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
 				"secretkey/payAgentPrivateKey" ) );
 		String signStr = this.assemblyUrl( map ) + signMd5;
 		String sign = DigestUtils.md5Hex( signStr );
-		//RSA 2048 SHA256 公钥验签
-		if (signRes.equals(sign)) {
 
+		//RSA 2048 SHA256 公钥验签
+		log.info("群支付代付回调签名字符串:" + signRes + "_" + sign);
+		if (signRes.equals(sign)) {
 			MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(batchnumber);
 			if (withdrawLog == null) {
 				log.error("提现相关记录丢失 - merOrderNo:{}", batchnumber);
@@ -175,7 +189,6 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
 				} else if (status == 3) {
 					status = 5;
 				}
-				log.warn("state:{}", state);
 				payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
 			}
 			return res;

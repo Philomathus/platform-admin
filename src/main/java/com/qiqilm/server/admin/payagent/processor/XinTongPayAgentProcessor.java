@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -16,6 +17,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -23,6 +25,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.*;
 
@@ -52,32 +57,39 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, String>> httpEntity = new HttpEntity(bodyMap, httpHeaders);
 
-        String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
+                        }
+                        return JsonUtil.json2Map(text);
+                    });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("新通代付下单报错原因:" + e);
         }
-        log.info("新通代付下单结果 - result:{}", res);
-        if (StringUtils.isNotBlank(res)) {
-            Map<String, Object> resultMap = JsonUtil.json2Map(res);
-            if (!CollectionUtils.isEmpty(resultMap)) {
-                String code = resultMap.getOrDefault("code", "").toString();
-                if ("0000".equals(code)) {
-                    log.info("新通代付订单提交成功 - result:{}", res);
-                    return true;
-                } else {
-                    reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
-                    payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
-                }
+        log.info("新通代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        if (!CollectionUtils.isEmpty(resultMap)) {
+            String code = resultMap.getOrDefault("code", "").toString();
+            if ("0000".equals(code)) {
+                log.info("新通代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                return true;
+            } else {
+                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("新通代付订单提交失败 - result:{}", res);
+        log.warn("新通代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
     @Override
-    public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
+    public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws
+            Exception {
         String sign = requestMap.remove("sign").toString();
         String status = requestMap.getOrDefault("status", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
@@ -109,7 +121,8 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public Map<String, Object> reverseCheckOrderPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap,
+    public Map<String, Object> reverseCheckOrderPay(PayAgentPlatform
+                                                            payAgentPlatform, Map<String, Object> requestMap,
                                                     String realIp) throws Exception {
         return null;
     }
@@ -133,32 +146,37 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, String>> httpEntity = new HttpEntity(paramsMap, httpHeaders);
 
-        String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
-            log.info("新通代付查询结果- result:{}", res);
-            if (StringUtils.isNotBlank(res)) {
-                Map<String, Object> resultMap = JsonUtil.json2Map(res);
-                if (!CollectionUtils.isEmpty(resultMap)) {
-                    String code = resultMap.getOrDefault("code", "").toString();
-                    if ("1".equals(code)) {
-                        String data = resultMap.getOrDefault("data","").toString();
-                        Map<String, Object> dataMap = JsonUtil.json2Map(data);
-                        int statusType = Integer.parseInt(dataMap.getOrDefault("status", "").toString());
-                        if (statusType > 0) {
-                            // status 4代付中 5代付失败 6代付成功
-                            // statusType 0已提交 1已处理 2已出款 3已退回 4已关闭 5已取消
-                            int status = 4;
-                            if (statusType == 1 || statusType == 2) {
-                                status = 6;
-                            } else {
-                                status = 5;
-                            }
-                            payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
                         }
+                        return JsonUtil.json2Map(text);
+                    });
+            log.info("新通代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            if (!CollectionUtils.isEmpty(resultMap)) {
+                String code = resultMap.getOrDefault("code", "").toString();
+                if ("1".equals(code)) {
+                    String data = resultMap.getOrDefault("data", "").toString();
+                    Map<String, Object> dataMap = JsonUtil.json2Map(data);
+                    int statusType = Integer.parseInt(dataMap.getOrDefault("status", "").toString());
+                    if (statusType > 0) {
+                        // status 4代付中 5代付失败 6代付成功
+                        // statusType 0已提交 1已处理 2已出款 3已退回 4已关闭 5已取消
+                        int status = 4;
+                        if (statusType == 1 || statusType == 2) {
+                            status = 6;
+                        } else {
+                            status = 5;
+                        }
+                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                     }
                 }
-                return res;
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.payagent.processor;
 
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -14,12 +15,16 @@ import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -55,12 +60,20 @@ public class QianBaoPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
+                        }
+                        return JsonUtil.json2Map(text);
+                    });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason(e.getMessage());
+            reqPayAgent.setFailReason("钱宝代付下单报错原因:" + e);
         }
-        log.warn("钱宝代付下单结果:" + JsonUtil.object2Json(resultMap));
+        log.warn("钱宝代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("1000".equals(resultMap.getOrDefault("code", "").toString())) {
                 log.info("钱宝代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
@@ -71,7 +84,7 @@ public class QianBaoPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("钱宝代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("钱宝代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
 
         return false;
     }
@@ -137,32 +150,37 @@ public class QianBaoPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
+                        }
+                        return JsonUtil.json2Map(text);
+                    });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.warn("钱宝代付查询结果:" + res);
-        if (StringUtils.isNoneBlank(res)) {
-            Map<String, Object> resultMap = JsonUtil.json2Map(res);
-            if (!CollectionUtils.isEmpty(resultMap)) {
-                if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
-                    Map<String, Object> dataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());
-                    int state = Integer.parseInt(dataMap.getOrDefault("state", -1).toString());
-                    // status 4代付中 5代付失败 6代付成功
-                    // state 1处理中 2支付成功 3支付失败
-                    int status = 4;
-                    if (state == 2) {
-                        status = 6;
-                    } else if (status == 3) {
-                        status = 5;
-                    }
-                    log.warn("state:{}", state);
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
+        log.warn("钱宝代付查询结果:" + JsonUtil.object2Json(resultMap));
+        if (!CollectionUtils.isEmpty(resultMap)) {
+            if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
+                Map<String, Object> dataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());
+                int state = Integer.parseInt(dataMap.getOrDefault("state", -1).toString());
+                // status 4代付中 5代付失败 6代付成功
+                // state 1处理中 2支付成功 3支付失败
+                int status = 4;
+                if (state == 2) {
+                    status = 6;
+                } else if (status == 3) {
+                    status = 5;
                 }
+                log.warn("state:{}", state);
+                payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
             }
-            return res;
+            return JsonUtil.object2Json(resultMap);
         }
         return "钱宝代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }

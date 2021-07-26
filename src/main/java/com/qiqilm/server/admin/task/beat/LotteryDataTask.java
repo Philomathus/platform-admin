@@ -61,9 +61,6 @@ public class LotteryDataTask {
         }
 
         String lottery_telegram = sysConfigCacheUtil.getConf( "lottery_telegram" );
-        if (Strings.isBlank(lottery_telegram)){
-            return;
-        }
 
         Date endDay  = new Date();
         Date starDay = DateFormatUtils.addMin( endDay, -3);

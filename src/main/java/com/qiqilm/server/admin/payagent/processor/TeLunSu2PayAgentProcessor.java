@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.payagent.processor;
 
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -15,11 +16,16 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,23 +56,32 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity( requestMap, httpHeaders );
-		String                                    resultMap  = null;
+
+		Map<String, Object> resultMap  = null;
 		try {
-			resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, String.class );
-			log.info( "特仑苏2代付下单返回数据" + resultMap );
+			resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+					restTemplate.httpEntityCallback( httpEntity ), response -> {
+						InputStream bodyStream = response.getBody();
+						String      text;
+						try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+							text = CharStreams.toString( reader );
+						}
+						return JsonUtil.json2Map( text );
+					} );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		if ( Strings.isNotBlank( resultMap ) ) {
-			Map map1 = JsonUtil.json2Map( resultMap );
-			if ( "success".equals( map1.getOrDefault( "msg", "" ).toString() ) ) {
+		log.info( "特仑苏2代付下单结果" + JsonUtil.object2Json(resultMap) );
+		if ( !CollectionUtils.isEmpty( resultMap ) ) {
+			if ( "success".equals( resultMap.getOrDefault( "msg", "" ).toString() ) ) {
+				log.warn( "特仑苏2代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
 				return true;
 			}else{
-				reqPayAgent.setFailReason(map1.getOrDefault("Chinese","").toString());
+				reqPayAgent.setFailReason(resultMap.getOrDefault("Chinese","").toString());
 				payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
 			}
 		}
-		log.warn( "代付订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
+		log.warn( "特仑苏2代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
 		return false;
 	}
 
@@ -134,22 +149,29 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 		httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>( requestMap, httpHeaders );
 
-		String result = null;
+		Map<String, Object> resultMap  = null;
 		try {
-			result = restTemplate.postForObject( payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class );
+			resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+					restTemplate.httpEntityCallback( httpEntity ), response -> {
+						InputStream bodyStream = response.getBody();
+						String      text;
+						try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+							text = CharStreams.toString( reader );
+						}
+						return JsonUtil.json2Map( text );
+					} );
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn( "特仑苏2查询结果:" + result );
-		if ( Strings.isNotBlank( result ) ) {
-			Map map = JsonUtil.json2Map( result );
-			if ( "success".equals( map.getOrDefault( "code", "" ).toString() ) ) {
-				Map    dataMapRsp = ( Map ) map.get( "data" );
+		log.warn( "特仑苏2查询结果:" + JsonUtil.object2Json(resultMap) );
+		if ( !CollectionUtils.isEmpty( resultMap ) ) {
+			if ( "success".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
+				Map    dataMapRsp = ( Map ) resultMap.get( "data" );
 				String orderNo    = dataMapRsp.getOrDefault( "orderNo", "" ).toString();
 				String state      = dataMapRsp.getOrDefault( "state", "" ).toString();
 				String money      = dataMapRsp.getOrDefault( "money", "" ).toString();
 				String mch_id     = dataMapRsp.getOrDefault( "mch_id", "" ).toString();
-				String sign1      = map.getOrDefault( "sign", "" ).toString();
+				String sign1      = resultMap.getOrDefault( "sign", "" ).toString();
 
 				Map<String, Object> rspMap = new LinkedHashMap<>();
 				rspMap.put( "orderNo", orderNo );
@@ -173,7 +195,7 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 							orderState );
 				}
 			}
-			return result;
+			return JsonUtil.object2Json(resultMap);
 		}
 		return "特仑苏2代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}

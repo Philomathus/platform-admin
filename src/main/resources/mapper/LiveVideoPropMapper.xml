@@ -54,14 +54,14 @@
 				and lvp.p_user_id = #{pUserId}
 			</if>
 			<if test="toUserId != null">
-				and to_user_id =#{toUserId}
+				and lvp.to_user_id =#{toUserId}
 			</if>
 			<if test="propName != null">
-				and prop_name =#{propName}
+				and lvp.prop_name =#{propName}
 			</if>
-			<if test="startTime != null">
-				and FROM_UNIXTIME(lvp.create_time) &gt;= #{startTime}
-				and FROM_UNIXTIME(lvp.create_time) &lt;= #{endTime}
+			<if test="sendStartTime != null">
+				and FROM_UNIXTIME(lvp.create_time) &gt;= #{sendStartTime}
+				and FROM_UNIXTIME(lvp.create_time) &lt;= #{sendEndTime}
 			</if>
 		</where>
 	</select>

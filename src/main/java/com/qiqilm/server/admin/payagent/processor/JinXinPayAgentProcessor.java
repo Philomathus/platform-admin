@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -20,6 +21,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
@@ -27,6 +29,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URLEncoder;
@@ -41,8 +46,8 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         BankCodeJinXinType bankCodeType = BankCodeJinXinType.getCodeByDesc(withdrawLog.getBankName());
         if (bankCodeType == null) {
             payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
-            log.warn("此代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
-            throw new BusinessException("此代付无法支持的银行类型：" + withdrawLog.getBankName());
+            log.warn(payAgentPlatform.getName()+"代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
+            throw new BusinessException(payAgentPlatform.getName()+"代付无法支持的银行类型：" + withdrawLog.getBankName());
         }
 
         TreeMap<String, Object> bodyMap = new TreeMap<>();
@@ -63,18 +68,28 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         String sign = sign(bodyMap,signMd5);
         bodyMap.put("sign", sign);
 
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(bodyMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity(bodyMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("金鑫代付提交失败原因:" + e);
+            reqPayAgent.setFailReason(payAgentPlatform.getName()+"代付下单报错原因:" + e);
         }
-        log.info("金鑫代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             String success = resultMap.getOrDefault("success", "").toString();
@@ -84,7 +99,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
                     //代付状态: -1提现失败 0申请中 1提现成功 2:处理中 (注：只有值为-1时才可以回滚数据，其它状态值视为处理中，不要回滚数据)
                     String defrayStatus = dataMap.getOrDefault("defrayStatus", "").toString();
                     if (!"-1".equals(defrayStatus)) {
-                        log.info("金鑫代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                        log.info(payAgentPlatform.getName()+"代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                         return true;
                     } else {
                         reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
@@ -93,7 +108,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
                 }
             }
         }
-        log.info("金鑫代付订单提交失败 - 订单号:{}", withdrawLog.getOrderNo());
+        log.info(payAgentPlatform.getName()+"代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -109,7 +124,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
 
         String signStr = sign(bodyMap,signMd5);
 
-        log.info("金鑫代付回调签名字符串:" + sign + "_" + signStr);
+        log.info(payAgentPlatform.getName()+"代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String requestReference  = (String) requestMap.get("requestReference ");
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(requestReference );
@@ -148,14 +163,24 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         String sign = sign(bodyMap,signMd5);
         bodyMap.put("sign", sign);
 
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(bodyMap);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, String>> httpEntity = new HttpEntity(bodyMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("金鑫代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
+            log.info(payAgentPlatform.getName()+"代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 String success = resultMap.getOrDefault("success", "").toString();
@@ -178,9 +203,8 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return "金鑫代付查询失败" + e;
         }
-        return "金鑫代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName()+"代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 
     // 大写
@@ -193,6 +217,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
     }
 
     public static String sign(String data) {
+        log.info("签名前字符串"+data);
         return hex(md5(data));
     }
 

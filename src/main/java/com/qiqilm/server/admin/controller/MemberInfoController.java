@@ -204,8 +204,9 @@ public class MemberInfoController extends BaseController {
         return toAjax(memberInfoService.changeSpeak(memberInfo));
     }
 
-    @PutMapping("/change-status")
+    @PreAuthorize("@ss.hasPermi('member:memberInfo:changeStatus')")
     @Log(title = "修改用户状态", businessType = BusinessType.UPDATE)
+    @PutMapping("/change-status")
     public Object changeStatus(ReqMemberInfo req) {
         RspBase rspBase = new RspBase();
         MemberInfo newMemberInfo = new MemberInfo();
@@ -224,8 +225,9 @@ public class MemberInfoController extends BaseController {
         return rspBase;
     }
 
-    @PutMapping("/change-statusBan")
+    @PreAuthorize("@ss.hasPermi('member:memberInfo:changeStatus')")
     @Log(title = "修改用户状态", businessType = BusinessType.UPDATE)
+    @PutMapping("/change-statusBan")
     public Object changeStatusBan(@RequestBody ReqMemberInfo req) {
         RspBase rspBase = new RspBase();
         MemberInfo newMemberInfo = new MemberInfo();

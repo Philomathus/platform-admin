@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.payagent.processor;
 
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -15,12 +16,16 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.*;
 
@@ -64,10 +69,19 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        log.info("牛气冲天代付下单结果 - listResult:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("success".equals(resultMap.getOrDefault("status", "").toString())) {
                 Map<String, Object> result = (Map) resultMap.get("data");
@@ -75,12 +89,11 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
                 String success = result.getOrDefault("success", "").toString();
                 if ("1".equals(status) && "1".equals(success)) {
                     List<Map<String, Object>> listResult = (List<Map<String, Object>>) result.getOrDefault("list", new ArrayList<>());
-                    log.info("代付订单提交成功 - listResult:{}", JsonUtil.object2Json(listResult));
                     for (Map map : listResult) {
                         String outTradeNo = (String) map.getOrDefault("out_trade_no", "");
                         String statusRsp = map.getOrDefault("status", "").toString();
                         if ("1".equals(statusRsp) && withdrawLog.getOrderNo().equals(outTradeNo)) {
-                            log.info("代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                            log.info("牛气冲天代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                             return true;
                         }
 
@@ -96,20 +109,20 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("牛气冲天代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-
         String rspSign = requestMap.remove("sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        log.info("牛气冲天回调待签名字符串:" + requestMap);
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+
+        log.info("牛气冲天回调签名字符串:" + rspSign + "_" +sign);
         if ((rspSign).equalsIgnoreCase(sign)) {
             String order_num = (String) requestMap.get("out_trade_no");
             String remit_result = (String) requestMap.get("status");
@@ -159,8 +172,16 @@ public class NiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
-            log.info("牛气冲天代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
+            log.info("牛气冲天代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String statusCode = String.valueOf(resultMap.getOrDefault("status", "").toString());
                 int status = 4;

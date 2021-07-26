@@ -8,9 +8,13 @@ import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LogMoneyMapper;
 import com.qiqilm.server.admin.mapper.MemberActionLogsMapper;
 import com.qiqilm.server.admin.service.ILogService;
+import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.UserDataUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -25,7 +29,10 @@ public class LogServiceImpl implements ILogService {
 	@Resource
 	private MemberActionLogsMapper actionLogsMapper;
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Override
+	@Transactional( rollbackFor = Exception.class )
 	public void logmarkMoney( String userid, String username, EnumMoney enumTrans, BigDecimal totalNow, BigDecimal totalold,
 							  String mark, String markorder ) {
 		BigDecimal trade = totalNow.subtract( totalold );
@@ -67,6 +74,7 @@ public class LogServiceImpl implements ILogService {
 
 	//备注行为enumTrans 现在金额totalNow   变动金额change  游戏agent  订单备注 name    变动订单号orderId
 	@Override
+	@Transactional( rollbackFor = Exception.class )
 	public void logMoneyAll( String userid, String username, EnumMoney enumTrans, BigDecimal totalNow, BigDecimal change,
 							 String agent, String name, String orderId ) {
 		int i = change.compareTo( BigDecimal.ZERO );
@@ -96,18 +104,21 @@ public class LogServiceImpl implements ILogService {
 		log.setMarkorder( orderId );
 		int insertM = logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
 		if ( insertM <= 0 ) {
+			logger.error( "资金日志插入失败1 - {}", JsonUtil.object2Json( log ) );
 			throw new BusinessException( "资金日志插入失败" );
 		}
 		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
 				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
 			int insertM2 = logMoneyMapper.insertLogMoney( log, "" );
 			if ( insertM2 <= 0 ) {
+				logger.error( "资金日志插入失败2 - {}", JsonUtil.object2Json( log ) );
 				throw new BusinessException( "资金日志插入失败" );
 			}
 		}
 	}
 
 	@Override
+	@Transactional( rollbackFor = Exception.class )
 	public void logMoneyAdd( String businessId, String userid, String username, EnumMoney enumTrans, BigDecimal add,
 							 BigDecimal old, String mark, String markorder ) {
 		if ( businessId == null ) {
@@ -141,6 +152,7 @@ public class LogServiceImpl implements ILogService {
 	}
 
 	@Override
+	@Transactional( rollbackFor = Exception.class )
 	public void logMemberAction( HttpServletRequest request, String userid, String username, EnumAction enumAction,
 								 String params1, String params2,
 								 String params3, String params4 ) {

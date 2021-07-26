@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.payagent.processor;
 
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -15,10 +16,14 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,20 +56,29 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
         HttpEntity<Map<String, String>> httpEntity = new HttpEntity( bodyMap, httpHeaders );
+
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class );
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
-            reqPayAgent.setFailReason( e.getMessage() );
+            reqPayAgent.setFailReason("顺风代付下单报错原因:" + e);
         }
         log.warn("顺风代付下单结果:" + JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
-                log.info("钱宝代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 Map dataMap =(Map) resultMap.getOrDefault("data", "");
                 String status = dataMap.getOrDefault("state", "").toString();
                 if ("1".equals(status)){
+                    log.info("顺风代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                     return true;
                 }
             } else {
@@ -73,7 +87,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
-        log.warn("顺风代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("顺风代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -88,13 +102,13 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
-        log.info("顺风代付回调待签名字符串:" + requestMap);
+
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         String out_trade_no = requestMap.getOrDefault( "out_trade_no", "" ).toString();
         String state = requestMap.getOrDefault( "state", "" ).toString();
 
+        log.info("顺风代付回调验签:" + signRes + "_" + sign);
         if (signRes.equals(sign)) {
-
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_no);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", out_trade_no);
@@ -129,15 +143,25 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
                 DateFormatUtils.SPLIT_PATTERN_DATETIME ) );
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey" ) );
+
         String signStr = this.assemblyUrl( bodyMap ) + signMd5;
         String sign = DigestUtils.md5Hex( signStr );
         bodyMap.put( "sign", sign );
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
         HttpEntity<Map<String, String>> httpEntity = new HttpEntity( bodyMap, httpHeaders );
+
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject( payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class );
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
         }

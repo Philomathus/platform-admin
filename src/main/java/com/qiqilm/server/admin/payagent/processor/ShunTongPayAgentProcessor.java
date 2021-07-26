@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -14,12 +15,16 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.Map;
 import java.util.SortedMap;
@@ -54,14 +59,22 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
-        String res = null;
+        Map<String, Object> resultMap = null;
         try {
-            res = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, String.class);
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            reqPayAgent.setFailReason("顺通代付下单报错原因:" + e);
         }
-        log.info("顺通代付下单结果- result:{}", res);
-        Map<String, Object> resultMap = JsonUtil.json2Map(res);
+        log.info("顺通代付下单结果- result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String status = resultMap.getOrDefault("status", "").toString();
             if ("1".equals(status)) {
@@ -77,7 +90,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
             }
         }
-        log.warn("顺通代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("顺通代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
