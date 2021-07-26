@@ -53,7 +53,7 @@ public class LeLePayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("account", account);
         bodyMap.put("mchOrderId", mchOrderId);
         bodyMap.put("accountOwner", accountOwner);
-        bodyMap.put("accountRemark ", accountRemark);
+        bodyMap.put("accountRemark", accountRemark);
         bodyMap.put("currency", "CNY");
         bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.LELE);
 
@@ -178,14 +178,6 @@ public class LeLePayAgentProcessor extends AbstractPayAgent {
         }
         return payAgentPlatform.getName() + "查询失败,订单号:" + withdrawLog.getOrderNo();
     }
-
-    public static void main(String[] args) {
-        String str = "9b08aeb6768c4f0c9c8620210301204717251CNY100.001234567772建⾏,⽀⾏李⼤富df0ccee0125f42969c2a";
-        String b = threeMd5(str);
-        System.out.println(b);
-    }
-
-
 
     //三次MD5计算
     public static String threeMd5(String src) {
