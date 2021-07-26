@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * token验证处理
@@ -234,5 +236,16 @@ public class TokenService {
 
     public static String getUserKey( Long userId ) {
 		return AdminConstants.LOGIN_USER_TOEN_KEY + userId;
+	}
+	public  void  delToken(Long userId){
+		String userKey  = getUserKey( userId);
+		Object userKeys = redisUtil.hGet("userKeys", userKey);
+		String tokenId = null;
+		if (userKeys!=null) {
+			 tokenId = (String) (JsonUtil.json2Map((String) userKeys)).get("userKey");
+		}
+		String token = TokenService.getTokenKey(tokenId);
+		redisUtil.hDelete("userKeys",userKey);
+		redisUtil.hDelete("tokenKeys",token);
 	}
 }

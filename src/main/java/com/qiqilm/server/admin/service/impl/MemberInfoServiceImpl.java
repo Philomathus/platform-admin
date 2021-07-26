@@ -7,6 +7,8 @@ import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
+import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumAction;
@@ -83,6 +85,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
      */
     @Override
     public List<MemberInfo> selectMemberInfoList(MemberInfo memberInfo) {
+        if (!StringUtils.isEmpty(memberInfo.getSearchValue()) || !StringUtils.isEmpty(memberInfo.getLoginIp())){
+           memberInfo.setParams(null);
+        }
         List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
         if (memberInfos.size() > 0 && !CollectionUtils.isEmpty(memberInfos)) {
             for (MemberInfo me : memberInfos) {
@@ -310,6 +315,28 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
+    public AjaxResult updatePhones(ReqSmallFeatures req) {
+        if (!StringUtils.isEmpty(req.getPhones()) && !StringUtils.isEmpty(req.getPassword())) {
+          if(req.getPhones().contains("\n")){
+                try {
+                    String[] phones = req.getPhones().split("\n");
+                    StringBuilder phone = new StringBuilder();
+                    for(int i=0;i<phones.length;i++) {
+                        phone.append("\"").append(phones[i]).append("\"").append(",");
+                    }
+                    phone = new StringBuilder(phone.substring(0, phone.length() - 1));
+                    req.setPhones(phone.toString());
+                } catch (Exception e) {
+                    return AjaxResult.error(0, "分割手机号出错,请检查格式");
+                }
+            }
+            memberInfoMapper.updatePhones(req);
+            return AjaxResult.success();
+        }
+        return AjaxResult.error();
+    }
+
+    @Override
     public AjaxResult unbindCard(MemberCard member) {
         String id = member.getId();
         String memberId = member.getMemberId();
@@ -385,6 +412,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public String getHistoryRecharge(String id) {
         return memberInfoMapper.selectMemberInfoHistoryRechargeById(id);
+    }
+
+    @Override
+    public List<RspMemberChannel> memberstatistics(MemberInfo memberInfo) {
+        return memberInfoMapper.memberstatistics(memberInfo);
     }
 
     @Override

@@ -58,7 +58,7 @@ public class PayAgentLog {
 	private Date createTime;
 
 	/** 回调时间 */
-	@JsonFormat( pattern = "yyyy-MM-dd" )
+	@JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
 	@Excel( name = "回调时间", width = 30, isImportField = "true", exportFormat = "yyyy-MM-dd",
 			importFormat = "yyyy-MM-dd HH:mm:ss", databaseFormat = "yyyy-MM-dd" )
 	private Date callbackTime;

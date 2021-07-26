@@ -147,6 +147,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
             <if test="isAuthentication != null">is_authentication = #{isAuthentication},</if>
             <if test="loginIp != null">login_ip = #{loginIp},</if>
+            <if test="paypassword != null and paypassword != ''">paypassword = #{paypassword},</if>
             <if test="focusCount != null">focus_count = #{focusCount},</if>
             <if test="mobile != null and mobile != ''">mobile = #{mobile},</if>
             <if test="authenticationType != null">authentication_type = #{authenticationType},</if>

@@ -150,6 +150,8 @@ public class LiveUser extends DownLoadTime {
     private String bankName;
     private Long bankTypeId;
     private String weixinAccount;
+	private Integer googleAuthCode;
+	private String paypassword;
 
 
 	public String getAuthStr() {

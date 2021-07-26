@@ -242,6 +242,7 @@ public class SysUserController extends BaseController {
         SysUser sysUser = userService.selectUserById(id);
         sysUser.setGoogleAuthSecret(null);
         sysUserMapper.updateGoogle(sysUser);
+        tokenService.delToken(id);
         return AjaxResult.success();
     }
 

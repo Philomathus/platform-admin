@@ -1,6 +1,8 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
+import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import org.apache.ibatis.annotations.Param;
@@ -74,6 +76,9 @@ public interface MemberInfoMapper {
 
     BigDecimal getMemberMoney(String userId);
 
+    //批量手机号更新密码
+    int updatePhones(ReqSmallFeatures reqSmallFeatures);
+
     int countByUserName(String userName);
 
     int countByPhone(String phone);
@@ -100,4 +105,6 @@ public interface MemberInfoMapper {
     String selectMemberInfoAddressById(@Param("userid") String id);
 
     String selectMemberInfoHistoryRechargeById(@Param("userid") String id);
+
+    List<RspMemberChannel> memberstatistics(MemberInfo memberInfo);
 }

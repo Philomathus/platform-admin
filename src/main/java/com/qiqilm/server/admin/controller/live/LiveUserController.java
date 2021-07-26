@@ -6,23 +6,19 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.domain.BankList;
-import com.qiqilm.server.admin.domain.LiveUser;
-import com.qiqilm.server.admin.domain.LiveVideo;
-import com.qiqilm.server.admin.domain.PayPlatformNew;
+import com.qiqilm.server.admin.core.vo.RspBase;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
 import com.qiqilm.server.admin.domain.rsp.RspLotteryBet;
 import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
+import com.qiqilm.server.admin.domain.vo.ReqAddScore;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IBankListService;
 import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import com.qiqilm.server.admin.utils.ServletUtil;
-import com.qiqilm.server.admin.utils.StringUtils;
-import com.qiqilm.server.admin.utils.ValidatorUtil;
+import com.qiqilm.server.admin.utils.*;
 import com.qiqilm.server.admin.utils.lvJianPayAgentUtils.HttpClientTools;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -31,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -62,6 +59,8 @@ public class LiveUserController extends BaseController {
 	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Autowired
 	private IBankListService bankListService;
+	@Autowired
+	private ISysUserService sysUserService;
 	/**
 	 * 查询主播用户信息列表
 	 */
@@ -227,6 +226,46 @@ public class LiveUserController extends BaseController {
 		newLiveUser.setWeiboMoney(liveUser.getWeiboMoney());
 		newLiveUser.setWeixinPrice(liveUser.getWeixinPrice());
 		return toAjax( liveUserService.updateLiveUser( newLiveUser ) );
+	}
+
+	/**
+	 * 重置提现密码
+	 *
+	 * @return
+	 */
+	@ApiOperation(value = "重置提现密码", notes = "重置提现密码")
+	@PostMapping("/reset")
+	@Log(title = "重置提现密码", businessType = BusinessType.UPDATE)
+	public Object reset(HttpServletRequest request, LiveUser liveUser) throws Exception {
+		RspBase rspBase = new RspBase();
+		if (liveUser.getGoogleAuthCode() == null) {
+			rspBase.setMsg("请输入google验证码");
+			rspBase.setCode(1);
+			return rspBase;
+		}
+		LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+		String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+		if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+			rspBase.setMsg("未绑定google验证秘钥，无法审核");
+			rspBase.setCode(1);
+			return rspBase;
+		}
+		if (googleAuthSecret.length() == 32) {
+			rspBase.setMsg("google验证秘钥未加密，请重新登录");
+			rspBase.setCode(1);
+			return rspBase;
+		}
+		String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+				"/googleAuthPrivateKey"));
+
+		if (!GoogleAuthUtil.verifyCode(googleAuthKey, liveUser.getGoogleAuthCode())) {
+			rspBase.setMsg("google验证码不正确，请检查");
+			rspBase.setCode(1);
+			return rspBase;
+		}
+		liveUserService.updateLiveUser(liveUser);
+		return new RspBase();
 	}
 
 	/**

@@ -7,6 +7,8 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.SysRole;
+import com.qiqilm.server.admin.domain.SysUser;
+import com.qiqilm.server.admin.domain.SysUserRole;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ISysRoleService;
 import com.qiqilm.server.admin.service.ISysUserService;
@@ -22,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,6 +109,7 @@ public class SysRoleController extends BaseController {
 				loginUser.setUser( userService.selectUserByUserName( loginUser.getUser().getUserName() ) );
 				tokenService.setLoginUser( loginUser );
 			}
+			roleService.userRoleList(role.getRoleId());//踢蹬，所有角色下的用户踢蹬
 			return AjaxResult.success();
 		}
 		return AjaxResult.error( "修改角色'" + role.getRoleName() + "'失败，请联系管理员" );
