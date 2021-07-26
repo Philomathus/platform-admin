@@ -130,7 +130,7 @@ public class PayAgentRechargeAccountLogServiceImpl implements IPayAgentRechargeA
         payAgentRechargeAccountLog.setUpdateTime( DateUtils.getNowDate());
         payAgentRechargeAccountLogMapper.updatePayAgentRechargeAccountLog(payAgentRechargeAccountLog);
         PayAgentRechargeTradeLog payAgentRechargeTradeLog = new PayAgentRechargeTradeLog();
-        payAgentRechargeTradeLog.setOrderNo( payAgentRechargeAccountLog.getOrderNo() );
+        payAgentRechargeTradeLog.setOrderNo( payAgentRechargeAccountLog.getOrderNo() + "_bank" );
         payAgentRechargeTradeLog.setAccount( payAgentRechargeAccountLog.getAccount() );
         payAgentRechargeTradeLog.setNickName( payAgentRechargeAccountLog.getNickName() );
         BigDecimal bigDecimal = new BigDecimal( 0 );
