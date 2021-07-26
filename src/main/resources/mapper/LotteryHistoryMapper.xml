@@ -54,4 +54,16 @@
     <update id="changeStatus">
         update ${dbLottery}.lottery_history set status = 0 where id = #{id}
     </update>
+
+    <select id="selectBetweenByTimeList"  resultMap="LotteryHistoryResult">
+        SELECT issue FROM ${dbLottery}.lottery_history WHERE ktime BETWEEN #{startTime} AND #{endTime} AND lottery_id = #{lotteryId}
+    </select>
+
+    <insert id="batchLotteryHistoryList">
+        INSERT INTO ${dbLottery}.lottery_history(id, issue, lottery_id,code,ktime,status,`name`,kill_rate,total_bet,total_prize,ctl,analyse)
+        VALUES
+        <foreach collection ="list" item="history" separator =",">
+            (#{history.id},#{history.issue},#{history.lotteryId},NULL,#{history.ktime},#{history.status},#{history.name}, 0.00, 0, 0.00, 0, NULL)
+        </foreach >
+    </insert>
 </mapper>
