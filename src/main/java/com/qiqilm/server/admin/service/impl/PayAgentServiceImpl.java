@@ -156,7 +156,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "审核流程非法" );
 		}
 
-		if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
+		if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO2 )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO3 ) )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitLianFuBao ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitLianFuBao + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.TE_LUN_SU )
@@ -165,7 +167,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitTels + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE2 )
-				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE3 ))
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE3 ) )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitDaFengChePay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitDaFengChePay + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
@@ -174,7 +176,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitBinLi + "元以上出款" );
 		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI2 )
-				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 ))
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 ) )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitShunWei ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitShunWei + "元以上出款" );
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
@@ -202,6 +204,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO2 )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO3 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
@@ -230,9 +234,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret,
 				AuthUtil.getSecurityKeyStr( "secretkey/googleAuthPrivateKey" ) );
 
-//		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, reqPayAgent.getGoogleAuthCode() ) ) {
-//			return AjaxResult.error( "google验证码不正确，请检查" );
-//		}
+		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, reqPayAgent.getGoogleAuthCode() ) ) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
 
 		if ( !redisUtil.lock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo(), "1", 10 ) ) {
 			return AjaxResult.error( "请勿重复提交代付订单:" + reqPayAgent.getWithdrawOrderNo() );
