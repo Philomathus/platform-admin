@@ -649,7 +649,7 @@ public class MemberInfoHistoryController extends BaseController {
      * 查询腾讯IM禁言查询列表
      */
     //@PreAuthorize("@ss.hasPermi('live-web:ImMute:list')")
-    @GetMapping("/list")
+    @GetMapping("/imList")
     public AjaxResult list(ImMute imMute) {
         if (com.qiqilm.server.admin.utils.StringUtils.isEmpty(imMute.getUserId()) || com.qiqilm.server.admin.utils.StringUtils.isNotEmpty(imMute.getNickName())) {
             MemberInfo memberInfo = new MemberInfo();
