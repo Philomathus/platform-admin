@@ -32,17 +32,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectLiveProplogList7706" parameterType="LiveProplog" resultMap="LiveProplogResult">
-        select id, p_user_id, p_user_name, prop_id, prop_name, total_diamonds, total_ticket, current_diamonds, to_user_id, createtime from cx_live.live_proplog
-        <where>
-            <if test="searchValue != null  and searchValue != ''">
-                and (p_user_id = #{searchValue} or to_user_id = #{searchValue})
-            </if>
-            <if test="startTime != null and startTime != ''"> and createtime >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''"> and createtime &lt;= #{endTime}</if>
-        </where>
-    </select>
-
     <select id="countPropMoney" parameterType="LiveProplog" resultMap="LiveProplogResult">
         select sum(total_diamonds) as totalPorp from ${dbMain}.live_proplog
         <where>
