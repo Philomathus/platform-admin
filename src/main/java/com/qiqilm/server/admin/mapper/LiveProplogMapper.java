@@ -28,8 +28,6 @@ public interface LiveProplogMapper {
 	 */
 	public List<LiveProplog> selectLiveProplogList(LiveProplog liveProplog);
 
-	public List<LiveProplog> selectLiveProplogList7706(LiveProplog liveProplog);
-
 	/**
 	 * 新增用户送礼日志
 	 *
