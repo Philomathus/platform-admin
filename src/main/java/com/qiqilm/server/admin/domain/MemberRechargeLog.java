@@ -79,7 +79,7 @@ public class MemberRechargeLog extends BaseEntity {
 	private Integer type;
 
 	/** 存款人姓名 */
-	@Excel( name = "充值备注", orderNum = "7" )
+	@Excel( name = "存款人姓名", orderNum = "7" )
 	private String rechargeUserName;
 
 	/** 收款人 */
