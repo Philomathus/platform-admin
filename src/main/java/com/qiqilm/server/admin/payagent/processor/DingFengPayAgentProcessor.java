@@ -7,6 +7,9 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeLangYaType;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Base64;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
@@ -27,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import sun.misc.BASE64Encoder;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,16 +44,16 @@ import java.util.*;
 public class DingFengPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
+        SortedMap<String, String> bodyMap = new TreeMap<>();
         bodyMap.put("user_id", payAgentPlatform.getMerId());
         bodyMap.put("item_num", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0,
                 BigDecimal.ROUND_HALF_UP).toString());
         bodyMap.put("bank_account", withdrawLog.getBankAccount().trim());
-        bodyMap.put("bank_master_name", withdrawLog.getBankUserName().trim());
-        bodyMap.put("bank_creater_name", withdrawLog.getBankName().trim());
+        bodyMap.put("bank_master_name", URLEncoder.encode(withdrawLog.getBankUserName().trim(), "UTF-8"));
+        bodyMap.put("bank_creater_name", URLEncoder.encode(withdrawLog.getBankName().trim(), "UTF-8"));
 
         String url = sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DINGFENG;
-        String urlBase64 = Base64Encoding.encryptBASE64(url);
+        String urlBase64 = Base64Encrypt(url);
 
         bodyMap.put("notify_url", urlBase64);
         bodyMap.put("merchant_order_id", withdrawLog.getOrderNo());
@@ -61,25 +65,19 @@ public class DingFengPayAgentProcessor extends AbstractPayAgent {
         String signStr = DigestUtils.md5Hex(tempStr).toLowerCase();
         String sign = tempStr + "&sign=" + signStr;
         bodyMap.put("sign", sign);
+//        bodyMap.remove("notify_url");
+//        bodyMap.put("notify_url",url);
 
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(bodyMap);
-        log.warn(JsonUtil.object2Json(requestMap));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+//        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+//        requestMap.setAll(bodyMap);
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
+        String urle = payAgentPlatform.getPayOrderAddr() + "?" + sign;
         try {
-            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
-                    restTemplate.httpEntityCallback( httpEntity ), response -> {
-                        InputStream bodyStream = response.getBody();
-                        String      text;
-                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
-                            text = CharStreams.toString( reader );
-                        }
-                        return JsonUtil.json2Map( text );
-                    } );
+            resultMap = restTemplate.getForObject(urle,Map.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
@@ -115,18 +113,18 @@ public class DingFengPayAgentProcessor extends AbstractPayAgent {
 
         log.info(payAgentPlatform.getName()+"回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
-            String shOrderId = (String) requestMap.get("shOrderId");
+            String merchant_order_id = (String) requestMap.get("merchant_order_id");
 
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(merchant_order_id);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", shOrderId);
+                log.error("提现相关记录丢失 - merOrderNo:{}", merchant_order_id);
                 return "fail";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", shOrderId);
+                log.error("已有代付记录 - merOrderNo:{}", merchant_order_id);
                 return "success";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(shOrderId);
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merchant_order_id);
             payAgentLog.setPayAgentOrderNo(requestMap.getOrDefault("order_id","").toString());
             payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "9".equals(status));
             return "success";
@@ -201,4 +199,15 @@ public class DingFengPayAgentProcessor extends AbstractPayAgent {
         return payAgentPlatform.getName()+"查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 
+    public static String Base64Encrypt(String contents)
+    {
+        BASE64Encoder base=new BASE64Encoder();
+        String s = null;
+        try {
+            s = URLEncoder.encode(base.encode(contents.getBytes()),"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return s;
+    }
 }
