@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.LotteryHistory;
@@ -36,5 +37,15 @@ public interface LotteryHistoryMapper {
 	 String selectKtimeById(@Param("id") String id);
 
 	int changeStatus(String id);
+
+	/**
+	 * 补期数
+	 * @param lotteryHistories
+	 * @return
+	 */
+	public int batchLotteryHistoryList(List<LotteryHistory> lotteryHistories);
+
+	List<LotteryHistory> selectBetweenByTimeList(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("lotteryId") Long lotteryId);
+
 
 }

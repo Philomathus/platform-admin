@@ -34,4 +34,33 @@ public class PageUtil implements Serializable {
 		return subList;
 	}
 
+	public static List<List<?>> pageList( List list, int pagesize ) {
+
+		List<List<?>> resultList=new ArrayList<List<?>>();
+		int totalcount = list.size();
+		int pagecount  = 0;
+		int m          = totalcount % pagesize;
+		if ( m > 0 ) {
+			pagecount = totalcount / pagesize + 1;
+		} else {
+			pagecount = totalcount / pagesize;
+		}
+
+		for ( int i = 1; i <= pagecount; i++ ) {
+			if ( m == 0 ) {
+				List<?> subList = list.subList( ( i - 1 ) * pagesize, pagesize * ( i ) );
+				resultList.add( subList );
+			} else {
+				if ( i == pagecount ) {
+					List<?> subList = list.subList( ( i - 1 ) * pagesize, totalcount );
+					resultList.add( subList );
+					//System.out.println( subList );
+				} else {
+					List<?> subList = list.subList( ( i - 1 ) * pagesize, pagesize * ( i ) );
+					resultList.add( subList );
+				}
+			}
+		}
+		return resultList;
+	}
 }

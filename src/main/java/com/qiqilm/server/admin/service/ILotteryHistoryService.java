@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.LotteryHistory;
@@ -36,4 +37,17 @@ public interface ILotteryHistoryService {
 	public String selectKtimeById(String id);
 
 	int changeStatus(String id);
+
+	/**
+	 * 补开奖期数
+	 */
+	public int batchLotteryHistory(List<LotteryHistory> lotteryHistory);
+
+	/**
+	 * 查找在这个时间区间的数据
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	List<LotteryHistory> selectBetweenByTime(Date startTime, Date endTime, Long lotteryId);
 }
