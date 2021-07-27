@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LiveVideoPropMapper;
 import com.qiqilm.server.admin.domain.LiveVideoProp;
@@ -21,6 +22,8 @@ import com.qiqilm.server.admin.service.ILiveVideoPropService;
 public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     @Autowired
     private LiveVideoPropMapper liveVideoPropMapper;
+    @Value( "${spring.profiles.active}" )
+    private String profile;
 
 
     /**
@@ -32,7 +35,13 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     @Override
     public List<LiveVideoProp> selectLiveVideoPropList(LiveVideoProp liveVideoProp) {
         LiveVideoProp liveVideoProp1 = setTime(liveVideoProp);
-        return liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
+        List<LiveVideoProp> liveVideoProps = null;
+        if("7706".equals(profile)) {
+            liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7706(liveVideoProp1);
+        } else {
+            liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
+        }
+        return liveVideoProps;
     }
 
     @Override

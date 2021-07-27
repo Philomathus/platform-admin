@@ -25,6 +25,8 @@ public interface LiveVideoPropMapper {
 	 */
 	public List<LiveVideoProp> selectLiveVideoPropList( LiveVideoProp liveVideoProp );
 
+	public List<LiveVideoProp> selectLiveVideoPropList7706( LiveVideoProp liveVideoProp );
+
 	public List<LiveVideoPropVo> findVideoPropList( @Param( "start" ) long start, @Param( "end" ) long end );
 
 	LiveVideoProp getCount( LiveVideoProp liveVideoProp );
