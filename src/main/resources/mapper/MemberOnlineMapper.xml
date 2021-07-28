@@ -47,7 +47,7 @@
     </select>
 
     <select id="sumCount" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberOnline">
-        select count(online_time) count from ${dbMain}.member_online${req.tableLast}
+        select count(id) count from ${dbMain}.member_online${req.tableLast}
         where 1=1
         <if test="req.now_time != null and req.now_time != ''">
             and online_time <![CDATA[ >= ]]> #{req.now_time}
@@ -55,7 +55,7 @@
     </select>
 
     <select id="sumCountTwo" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberOnline">
-        select count(online_time) count from ${dbMain}.member_online${req.tableLastTwo}
+        select count(id) count from ${dbMain}.member_online${req.tableLastTwo}
         where 1=1
         <if test="req.now_time != null and req.now_time != ''">
             and online_time <![CDATA[ >= ]]> #{req.now_time}
