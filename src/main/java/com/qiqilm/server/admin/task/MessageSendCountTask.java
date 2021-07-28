@@ -77,7 +77,8 @@ public class MessageSendCountTask {
 			dto.setTableLastTwo(tableLastTwo);
 			//查昨日的表
 			RspMemberOnline memberOnlineTwo = memberOnlineMapper.sumCountTwo( dto );
-			memberOnline.setCount(memberOnline.getCount() + memberOnlineTwo.getCount());
+			Integer count = memberOnline.getCount() + memberOnlineTwo.getCount();
+			memberOnline.setCount(count);
 		}
 
 		Integer count = messageSendMapper.getLiveCount();
