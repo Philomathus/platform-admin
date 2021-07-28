@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,18 +56,19 @@ public class MessageSendCountTask {
 		if(!profile.startsWith("77")||profile.equals("7700")){
 			return;
 		}
-		long now_time = System.currentTimeMillis() / 1000 - 300;
+		long nowSix_time = System.currentTimeMillis() / 1000 - 360;
 
 		ReqMemberOnline dto = new ReqMemberOnline();
-		dto.setNow_time( now_time );
+		dto.setNow_time( nowSix_time );
 
 		dto.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
 		RspMemberOnline memberOnline = memberOnlineMapper.sumCount( dto );
 
-		//判斷是否在零點後5分鐘
-		long zero=System.currentTimeMillis()/(1000*3600*24)*(1000*3600*24)- TimeZone.getDefault().getRawOffset();
-		long nowTime = System.currentTimeMillis();
-		if((nowTime - zero) < 300000){
+		Date starDate = new Date(nowSix_time*1000);
+		long now_time = System.currentTimeMillis() / 1000 - 360;
+		Date endDate = new Date(now_time*1000);
+		//判斷开始时间和结束时间是否同一天
+		if(DateUtils.isSameDay(starDate,endDate)){
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DATE, -1);
@@ -94,5 +96,11 @@ public class MessageSendCountTask {
 			String     paytext    = "近200单充值成功率:" + bigDecimal + "%";
 			robotMessage.sendByChatId( paytext, online_user_telegram );
 		}
+	}
+
+	public static void main(String[] args) {
+		long now_time = System.currentTimeMillis() / 1000;
+		Date date = new Date(now_time*1000);
+		System.out.println(date);
 	}
 }
