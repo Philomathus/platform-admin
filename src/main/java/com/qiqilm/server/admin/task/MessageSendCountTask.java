@@ -65,7 +65,7 @@ public class MessageSendCountTask {
 		RspMemberOnline memberOnline = memberOnlineMapper.sumCount( dto );
 
 		Date starDate = new Date(nowSix_time*1000);
-		long now_time = System.currentTimeMillis() / 1000 - 360;
+		long now_time = System.currentTimeMillis() / 1000;
 		Date endDate = new Date(now_time*1000);
 		//判斷开始时间和结束时间是否同一天
 		if(DateUtils.isSameDay(starDate,endDate)){
@@ -96,11 +96,5 @@ public class MessageSendCountTask {
 			String     paytext    = "近200单充值成功率:" + bigDecimal + "%";
 			robotMessage.sendByChatId( paytext, online_user_telegram );
 		}
-	}
-
-	public static void main(String[] args) {
-		long now_time = System.currentTimeMillis() / 1000;
-		Date date = new Date(now_time*1000);
-		System.out.println(date);
 	}
 }
