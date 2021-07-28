@@ -143,7 +143,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
 		try {
-			boolean isAudit = this.finalAudit( req, userName, "审核人：" + userName );
+			boolean isAudit = this.finalAudit( req, userName, "审核人：" + userName,memberRechargeLog );
 			return isAudit ? AjaxResult.success( "审核成功" ) : AjaxResult.error( "审核失败" );
 
 		} catch ( Exception e ) {
@@ -155,8 +155,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 	}
 
 	@Transactional( rollbackFor = Exception.class )
-	public boolean finalAudit( ReqMemberRechargeLog req, String userName, String mark ) {
-		MemberRechargeLog memberRechargeLog = memberRechargeLogMapper.selectMemberRechargeLogById( req.getId() );
+	public boolean finalAudit( ReqMemberRechargeLog req, String userName, String mark,MemberRechargeLog memberRechargeLog) {
 		if ( memberRechargeLog.getStatus() != 1 ) {
 			throw new BaseException( "订单状态有误" );
 		}
