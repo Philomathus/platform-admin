@@ -199,7 +199,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LUBAN )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitLuBanPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitLuBanPay + "元以上出款" );
-		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LUBAN )
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.DINGFENG )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitDingFengPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitDingFengPay + "元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
