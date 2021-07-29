@@ -36,3 +36,6 @@ payAgentLimitMaYun: 50000
 payAgentLimitHeZhong: 50000
 # newMax代付额度
 payAgentLimitNewMaxPay: 50000
+# 鲁班代付额度
+payAgentLimitLuBanPay: 50000
+
