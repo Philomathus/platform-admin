@@ -76,6 +76,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentLimitDaFengChePay;
 	@Value( "${payAgentLimitLuBanPay:5000}" )
 	private Integer payAgentLimitLuBanPay;
+	@Value( "${payAgentLimitDingFengPay:5000}" )
+	private Integer payAgentLimitDingFengPay;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -197,6 +199,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LUBAN )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitLuBanPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitLuBanPay + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.DINGFENG )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitDingFengPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitDingFengPay + "元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG )
