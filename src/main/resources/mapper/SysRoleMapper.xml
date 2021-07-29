@@ -144,5 +144,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			#{roleId}
         </foreach>
  	</delete>
-
+	<select id="selectUserRole" parameterType="Long" resultMap="SysRoleResult">
+		select distinct r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.menu_check_strictly,
+		r.status, r.del_flag, r.create_time, r.remark
+		from sys_n_role r
+		left join sys_n_user_role ur on ur.role_id = r.role_id
+		where ur.user_id = #{userId}
+	</select>
 </mapper>

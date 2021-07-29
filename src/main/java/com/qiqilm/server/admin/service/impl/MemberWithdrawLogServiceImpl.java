@@ -58,6 +58,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
+	@Autowired
+	private SysRoleMapper sysRoleMapper;
 
 	/**
 	 * 查询会员提现信息
@@ -380,8 +382,12 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
-		if ( !StringUtils.isEmpty( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
-			return AjaxResult.error( "该订单只能由" + memberWithdrawLog.getOpName() + "处理" );
+		Long userId=loginUser.getUser().getUserId();
+		SysRole sysRole=sysRoleMapper.selectUserRole(userId);
+		if (!sysRole.getRoleKey().equals("common")){
+			if (!StringUtils.isEmpty( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
+				return AjaxResult.error( "该订单只能由" + memberWithdrawLog.getOpName() + "处理" );
+			}
 		}
 		if ( !redisUtil.lock( EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5 ) ) {
 			return AjaxResult.error( "请勿重复提交" );
