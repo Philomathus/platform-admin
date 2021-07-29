@@ -91,7 +91,7 @@ public class PayTypeServiceImpl implements IPayTypeService {
 		payType.setCreateTime( DateUtils.getNowDate() );
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    username  = loginUser.getUsername();
-		payType.setCreateBy( username );
+		payType.setCreator( username );
 		payType.setStatus( "0" );
 
 		setPayTypeCache( payType.getId() );
