@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.cache.MemberForbidUtil;
+import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
@@ -17,6 +18,7 @@ import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.NameUtil;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import com.qiqilm.server.admin.utils.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +30,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 会员信息 Service业务层处理
@@ -65,6 +65,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     private MemberBcodeMapper memberBcodeMapper;
     @Autowired
     private NameUtil nameUtil;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 查询会员信息
@@ -390,6 +392,24 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public void updateVip(String memberId, Integer vip, String nickName) {
         memberBcodeMapper.updateVip(memberId, vip, nickName);
+        //更新用户登录缓存
+        String token = redisUtil.strGet( Constants.USER_TOKEN_KEY + memberId );
+        MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(memberId);
+        redisUtil.hMSet( Constants.TOKEN_USER_KEY + token, this.initMemberCacheMap( memberInfo ) );
+    }
+
+    private Map<String, String> initMemberCacheMap( MemberInfo memberInfo ) {
+        Map<String, String> userInfoMap = new HashMap<>();
+        userInfoMap.put( "userId", memberInfo.getId() );
+        userInfoMap.put( "userName", memberInfo.getUserName() );
+        userInfoMap.put( "nickName", memberInfo.getNickName() == null ? "" : memberInfo.getNickName() );
+        userInfoMap.put( "headImage", memberInfo.getHeadImg() == null ? "" : memberInfo.getHeadImg() );
+        userInfoMap.put( "vip", memberInfo.getVip() == null ? "1" : memberInfo.getVip().toString() );
+        userInfoMap.put( "status", memberInfo.getStatus() == null ? "" : memberInfo.getStatus().toString() );
+        userInfoMap.put( "speak", memberInfo.getSpeak() != null && "1".equals(memberInfo.getSpeak()) ? "true":"false");
+        userInfoMap.put( "inviter", memberInfo.getInviterCode() == null ? "" : memberInfo.getInviterCode() );
+        userInfoMap.put( "giveMoney", memberInfo.getWechat() == null ? "0" : memberInfo.getWechat() );
+        return userInfoMap;
     }
 
     @Override
