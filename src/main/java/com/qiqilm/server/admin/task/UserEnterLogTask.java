@@ -47,11 +47,7 @@ public class UserEnterLogTask {
             return;
         }
 
-        String flag = sysConfigCacheUtil.getConf( "messageBot" );
-        String online_user_telegram = sysConfigCacheUtil.getConf( "online_user_telegram" );
-        if ( "0".equals( flag )|| Strings.isBlank(online_user_telegram) ) {
-            return ;
-        }
+
         if(!profile.startsWith("77")||profile.equals("7700")){
             return ;
         }
@@ -62,6 +58,12 @@ public class UserEnterLogTask {
         }catch (Exception e){
             log.error("进直播间会员数异常",e);
             count = -1;
+        }
+
+
+        String online_user_telegram = sysConfigCacheUtil.getConf( "online_user_telegram" );
+        if ( Strings.isBlank(online_user_telegram) ) {
+            return ;
         }
 
         try {
