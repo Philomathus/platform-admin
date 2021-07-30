@@ -6,11 +6,13 @@ import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
+import com.qiqilm.server.admin.domain.vo.ReqAddScore;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumAction;
 import com.qiqilm.server.admin.enums.EnumMoney;
@@ -67,6 +69,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	private NameUtil               nameUtil;
 	@Autowired
 	private RedisUtil              redisUtil;
+	@Autowired
+	private MemberDepositLogMapper   memberDepositLogMapper;
 
 	/**
 	 * 查询会员信息
@@ -157,8 +161,13 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
-	public RspBase addMemberMoneyOnly( String ip, String userId, BigDecimal money, BigDecimal beatNum, String Mk,
-									   String markorder, String admin_name ) {
+	public RspBase addMemberMoneyOnly(String ip, LoginUser loginUser, ReqAddScore req) {
+		String userId = req.getId();
+		BigDecimal money = req.getScore();
+		BigDecimal beatNum = req.getBeatNum();
+		String Mk = req.getMk() + ",操作人:" + loginUser.getUser().getUserName();
+		String markorder = req.getOrdermk();
+		String admin_name = loginUser.getUsername();
 		RspBase    rspBase       = new RspBase();
 		MemberInfo oldmemberInfo = this.selectMemberInfoById( userId );
 		BigDecimal total         = oldmemberInfo.getTotalAccount();
@@ -229,6 +238,20 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			rspBase.setCode( 2 );
 			return rspBase;
 		}
+
+		//人工加分日志
+		MemberDepositLog memberDepositLog = new MemberDepositLog();
+		memberDepositLog.setMemberId(req.getId());
+        memberDepositLog.setMoney(req.getScore());
+        memberDepositLog.setRemark(Mk);
+        memberDepositLog.setMoneydes(req.getMoneydes());
+		memberDepositLog.setBeatNum(Integer.valueOf(String.valueOf(beatNum)));
+		memberDepositLog.setRemarkPay(req.getRemarkPay());
+		memberDepositLog.setOrderRemark(req.getOrdermk());
+		memberDepositLog.setOpName(admin_name);
+		memberDepositLog.setOpTime(new Date());
+		memberDepositLog.setIp(ip);
+		memberDepositLogMapper.insertMemberDepositLog(memberDepositLog);
 		return rspBase;
 	}
 
