@@ -35,9 +35,9 @@
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
                 AND op_time &lt;= STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
             </if>
-            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="opName != null and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
             <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
-            <if test="moneydes != null "> and moneydes = #{moneydes}</if>
+            <if test="moneydes != null and moneydes != ''"> and moneydes = #{moneydes}</if>
         </where>
     </select>
 
