@@ -6,11 +6,13 @@ import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
+import com.qiqilm.server.admin.domain.vo.ReqAddScore;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import com.qiqilm.server.admin.enums.EnumAction;
 import com.qiqilm.server.admin.enums.EnumMoney;
@@ -41,415 +43,423 @@ import java.util.*;
 @Slf4j
 @Service
 public class MemberInfoServiceImpl implements IMemberInfoService {
-    @Autowired
-    private MemberInfoMapper memberInfoMapper;
-    @Autowired
-    private MemberActionLogsMapper actionLogsMapper;
-    @Autowired
-    private LogMoneyMapper logMoneyMapper;
-    @Autowired
-    private MemberBcodeMapper codeFlowMapper;
-    @Resource
-    private MemberGameMoneyMapper gameMoneyMapper;
-    @Resource
-    private LogGameOrderMapper logGameOrderMapper;
-    @Autowired
-    private ILogService logService;
-    @Autowired
-    private MemberCardMapper memberCardMapper;
-    @Autowired
-    private MemberCacheManager memberCacheManager;
-    @Autowired
-    private MemberForbidUtil memberForbidUtil;
-    @Autowired
-    private MemberBcodeMapper memberBcodeMapper;
-    @Autowired
-    private NameUtil nameUtil;
-    @Autowired
-    private RedisUtil redisUtil;
+	@Autowired
+	private MemberInfoMapper       memberInfoMapper;
+	@Autowired
+	private MemberActionLogsMapper actionLogsMapper;
+	@Autowired
+	private LogMoneyMapper         logMoneyMapper;
+	@Autowired
+	private MemberBcodeMapper      codeFlowMapper;
+	@Resource
+	private MemberGameMoneyMapper  gameMoneyMapper;
+	@Resource
+	private LogGameOrderMapper     logGameOrderMapper;
+	@Autowired
+	private ILogService            logService;
+	@Autowired
+	private MemberCardMapper       memberCardMapper;
+	@Autowired
+	private MemberCacheManager     memberCacheManager;
+	@Autowired
+	private MemberForbidUtil       memberForbidUtil;
+	@Autowired
+	private MemberBcodeMapper      memberBcodeMapper;
+	@Autowired
+	private NameUtil               nameUtil;
+	@Autowired
+	private RedisUtil              redisUtil;
+	@Autowired
+	private MemberDepositLogMapper   memberDepositLogMapper;
 
-    /**
-     * 查询会员信息
-     *
-     * @param id 会员信息 ID
-     * @return 会员信息
-     */
-    @Override
-    public MemberInfo selectMemberInfoById(String id) {
-        return memberInfoMapper.selectMemberInfoById(id);
-    }
+	/**
+	 * 查询会员信息
+	 *
+	 * @param id 会员信息 ID
+	 * @return 会员信息
+	 */
+	@Override
+	public MemberInfo selectMemberInfoById( String id ) {
+		return memberInfoMapper.selectMemberInfoById( id );
+	}
 
-    /**
-     * 查询会员信息 列表
-     *
-     * @param memberInfo 会员信息
-     * @return 会员信息
-     */
-    @Override
-    public List<MemberInfo> selectMemberInfoList(MemberInfo memberInfo) {
-        if (!StringUtils.isEmpty(memberInfo.getSearchValue()) || !StringUtils.isEmpty(memberInfo.getLoginIp())){
-           memberInfo.setParams(null);
-        }
-        List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
-        if (memberInfos.size() > 0 && !CollectionUtils.isEmpty(memberInfos)) {
-            for (MemberInfo me : memberInfos) {
-                if (!StringUtils.isEmpty(me.getPhone())) {
-                    me.setPhone(me.getPhone().substring(0, 3) + "****" + me.getPhone().substring(7, 11));
-                }
-            }
-        }
-        return memberInfos;
-    }
+	/**
+	 * 查询会员信息 列表
+	 *
+	 * @param memberInfo 会员信息
+	 * @return 会员信息
+	 */
+	@Override
+	public List<MemberInfo> selectMemberInfoList( MemberInfo memberInfo ) {
+		if ( !StringUtils.isEmpty( memberInfo.getSearchValue() ) || !StringUtils.isEmpty( memberInfo.getLoginIp() ) ) {
+			memberInfo.setParams( null );
+		}
+		List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList( memberInfo );
+		if ( memberInfos.size() > 0 && !CollectionUtils.isEmpty( memberInfos ) ) {
+			for ( MemberInfo me : memberInfos ) {
+				if ( !StringUtils.isEmpty( me.getPhone() ) ) {
+					me.setPhone( me.getPhone().substring( 0, 3 ) + "****" + me.getPhone().substring( 7, 11 ) );
+				}
+			}
+		}
+		return memberInfos;
+	}
 
-    /**
-     * 新增会员信息
-     *
-     * @param memberInfo 会员信息
-     * @return 结果
-     */
-    @Override
-    public AjaxResult insertMemberInfo(MemberInfo memberInfo) {
-        //校验是不是手机号
-        if (!ValidatorUtil.isNumber11(memberInfo.getPhone())) {
-            return AjaxResult.error("手机号必须是11位数字");
-        }
-        if (memberInfoMapper.countByPhone(memberInfo.getPhone()) > 0) {
-            return AjaxResult.error("此手机号已经存在");
-        }
-        MemberInfo member = memberCacheManager.createMember();
-        if (StringUtils.isEmpty(member.getId())) {
-            return AjaxResult.error("注册redis存在问题，请联系管理员");
-        }
+	/**
+	 * 新增会员信息
+	 *
+	 * @param memberInfo 会员信息
+	 * @return 结果
+	 */
+	@Override
+	public AjaxResult insertMemberInfo( MemberInfo memberInfo ) {
+		//校验是不是手机号
+		if ( !ValidatorUtil.isNumber11( memberInfo.getPhone() ) ) {
+			return AjaxResult.error( "手机号必须是11位数字" );
+		}
+		if ( memberInfoMapper.countByPhone( memberInfo.getPhone() ) > 0 ) {
+			return AjaxResult.error( "此手机号已经存在" );
+		}
+		MemberInfo member = memberCacheManager.createMember();
+		if ( StringUtils.isEmpty( member.getId() ) ) {
+			return AjaxResult.error( "注册redis存在问题，请联系管理员" );
+		}
 
-        member.setIsOnline(0);
-        member.setVip(1);//默认vip1
-        member.setStatus(2);
-        member.setTotalAccount(BigDecimal.ZERO);
-        member.setPassword(memberInfo.getPassword());
-        member.setUserName(member.getMemberCode());
-        member.setPhone(memberInfo.getPhone());
-        member.setRegTime(new Date());
-        member.setLevelIntegral(BigDecimal.ZERO);
-        member.setBoxAccount(BigDecimal.ZERO);
-        member.setCodeAccount(BigDecimal.ZERO);
-        member.setCodeTotal(BigDecimal.ZERO);
-        member.setInviteMoney(memberInfo.getInviteMoney());
-        member.setInviterCode(memberInfo.getInviterCode());
-        member.setNickName(nameUtil.nickNameRandom());
-        member.setLoginNum(0);
-        if (memberInfoMapper.insertMemberInfo(member) > 0) {
-            return AjaxResult.success("添加成功");
-        } else {
-            return AjaxResult.success("添加失败");
-        }
-    }
+		member.setIsOnline( 0 );
+		member.setVip( 1 );//默认vip1
+		member.setStatus( 2 );
+		member.setTotalAccount( BigDecimal.ZERO );
+		member.setPassword( memberInfo.getPassword() );
+		member.setUserName( member.getMemberCode() );
+		member.setPhone( memberInfo.getPhone() );
+		member.setRegTime( new Date() );
+		member.setLevelIntegral( BigDecimal.ZERO );
+		member.setBoxAccount( BigDecimal.ZERO );
+		member.setCodeAccount( BigDecimal.ZERO );
+		member.setCodeTotal( BigDecimal.ZERO );
+		member.setInviteMoney( memberInfo.getInviteMoney() );
+		member.setInviterCode( memberInfo.getInviterCode() );
+		member.setNickName( nameUtil.nickNameRandom() );
+		member.setLoginNum( 0 );
+		if ( memberInfoMapper.insertMemberInfo( member ) > 0 ) {
+			return AjaxResult.success( "添加成功" );
+		} else {
+			return AjaxResult.success( "添加失败" );
+		}
+	}
 
-    /**
-     * 修改会员信息
-     *
-     * @param memberInfo 会员信息
-     * @return 结果
-     */
-    @Override
-    public int updateMemberInfo(MemberInfo memberInfo) {
-        return memberInfoMapper.updateMemberInfo(memberInfo);
-    }
+	/**
+	 * 修改会员信息
+	 *
+	 * @param memberInfo 会员信息
+	 * @return 结果
+	 */
+	@Override
+	public int updateMemberInfo( MemberInfo memberInfo ) {
+		return memberInfoMapper.updateMemberInfo( memberInfo );
+	}
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public RspBase addMemberMoneyOnly(String ip, String userId, BigDecimal money, BigDecimal beatNum, String Mk,
-                                      String markorder, String admin_name) {
-        RspBase rspBase = new RspBase();
-        MemberInfo oldmemberInfo = this.selectMemberInfoById(userId);
-        BigDecimal total = oldmemberInfo.getTotalAccount();
+	@Override
+	@Transactional( rollbackFor = Exception.class )
+	public RspBase addMemberMoneyOnly(String ip, LoginUser loginUser, ReqAddScore req) {
+		String userId = req.getId();
+		BigDecimal money = req.getScore();
+		BigDecimal beatNum = req.getBeatNum();
+		String Mk = req.getMk() + ",操作人:" + loginUser.getUser().getUserName();
+		String markorder = req.getOrdermk();
+		String admin_name = loginUser.getUsername();
+		RspBase    rspBase       = new RspBase();
+		MemberInfo oldmemberInfo = this.selectMemberInfoById( userId );
+		BigDecimal total         = oldmemberInfo.getTotalAccount();
 
-        if (money.compareTo(BigDecimal.ZERO) > 0) {
-            if (money.compareTo(new BigDecimal(1000000)) > 0) {
-                rspBase.setMsg("最大金额为1000000");
-                rspBase.setCode(2);
-                return rspBase;
-            }
-        } else if (money.compareTo(BigDecimal.ZERO) < 0) {
-            BigDecimal lat = total.add(money);
-            if (lat.compareTo(BigDecimal.ZERO) < 0) {
-                rspBase.setMsg("余额" + money + "不足扣除");
-                rspBase.setCode(2);
-                return rspBase;
-            }
-            beatNum = new BigDecimal(0);
-        }
+		if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
+			if ( money.compareTo( new BigDecimal( 1000000 ) ) > 0 ) {
+				rspBase.setMsg( "最大金额为1000000" );
+				rspBase.setCode( 2 );
+				return rspBase;
+			}
+		} else if ( money.compareTo( BigDecimal.ZERO ) < 0 ) {
+			BigDecimal lat = total.add( money );
+			if ( lat.compareTo( BigDecimal.ZERO ) < 0 ) {
+				rspBase.setMsg( "余额" + money + "不足扣除" );
+				rspBase.setCode( 2 );
+				return rspBase;
+			}
+			beatNum = new BigDecimal( 0 );
+		}
 
-        if (!"0".equals(markorder)) {
-            List<LogMoney> markList = null;
-            if (money.compareTo(BigDecimal.ZERO) > 0) {
-                markList = logMoneyMapper.findMark(userId, markorder, money, null, userId.substring(userId.length() - 1));
-            } else {
-                BigDecimal negate = money.negate();
-                markList = logMoneyMapper.findMark(userId, markorder, null, negate, userId.substring(userId.length() - 1));
-            }
-            if (markList.size() > 0) {
-                rspBase.setMsg("请查看此笔金额是否已经入款过，如否请输入其他订单备注");
-                rspBase.setCode(2);
-                return rspBase;
-            }
-        }
+		if ( !"0".equals( markorder ) ) {
+			List<LogMoney> markList = null;
+			if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
+				markList = logMoneyMapper.findMark( userId, markorder, money, null, userId.substring( userId.length() - 1 ) );
+			} else {
+				BigDecimal negate = money.negate();
+				markList = logMoneyMapper.findMark( userId, markorder, null, negate, userId.substring( userId.length() - 1 ) );
+			}
+			if ( markList.size() > 0 ) {
+				rspBase.setMsg( "请查看此笔金额是否已经入款过，如否请输入其他订单备注" );
+				rspBase.setCode( 2 );
+				return rspBase;
+			}
+		}
 
-        if (total != null) {
-            BigDecimal now = total.add(money);
-            if (beatNum != null && beatNum.compareTo(BigDecimal.ZERO) > 0) {
-                MemberBcode codeFlow = new MemberBcode();
-                codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
-                codeFlow.setIncome(money.multiply(beatNum).setScale(2));
-                codeFlow.setCreateTime(new Date());
-                codeFlow.setStatus(0);
-                codeFlow.setCur(BigDecimal.ZERO);
-                codeFlow.setUserId(userId);
-                codeFlow.setDes("人工入款");
-                codeFlowMapper.insertMemberBcode(codeFlow);
-            } else {
-                beatNum = new BigDecimal(0);
-            }
-            memberInfoMapper.updateMoneySelect(userId, money, null, money.multiply(beatNum).setScale(2), null, null);
-            MemberActionLogs log = new MemberActionLogs();
-            log.setId(UuidUtil.getRandomUuidWithoutSeparator());
-            log.setUserId(userId);
-            log.setUserName(oldmemberInfo.getUserName());
-            log.setcTime(new Date());
-            log.setType(EnumAction.gm.getType());
-            log.setDes(EnumAction.gm.getDes());
-            log.setParam1("人工入款：" + money);
-            log.setParam2("剩余资金：" + now);
-            log.setParam3("操作人：" + admin_name);
-            log.setParam4("备注：" + Mk);
-            log.setParamIp(ip);
-            actionLogsMapper.insertMemberActionLogs(log);
-            logService.logmarkMoney(userId, oldmemberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder);
-        } else {
-            rspBase.setMsg("该成员redis未初始化金额，或者您输入的金额有误");
-            rspBase.setCode(2);
-            return rspBase;
-        }
-        return rspBase;
-    }
+		if ( total != null ) {
+			BigDecimal now = total.add( money );
+			if ( beatNum != null && beatNum.compareTo( BigDecimal.ZERO ) > 0 ) {
+				MemberBcode codeFlow = new MemberBcode();
+				codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+				codeFlow.setIncome( money.multiply( beatNum ).setScale( 2 ) );
+				codeFlow.setCreateTime( new Date() );
+				codeFlow.setStatus( 0 );
+				codeFlow.setCur( BigDecimal.ZERO );
+				codeFlow.setUserId( userId );
+				codeFlow.setDes( "人工入款" );
+				codeFlowMapper.insertMemberBcode( codeFlow );
+			} else {
+				beatNum = new BigDecimal( 0 );
+			}
+			memberInfoMapper.updateMoneySelect( userId, money, null, money.multiply( beatNum ).setScale( 2 ), null, null );
+			MemberActionLogs log = new MemberActionLogs();
+			log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+			log.setUserId( userId );
+			log.setUserName( oldmemberInfo.getUserName() );
+			log.setcTime( new Date() );
+			log.setType( EnumAction.gm.getType() );
+			log.setDes( EnumAction.gm.getDes() );
+			log.setParam1( "人工入款：" + money );
+			log.setParam2( "剩余资金：" + now );
+			log.setParam3( "操作人：" + admin_name );
+			log.setParam4( "备注：" + Mk );
+			log.setParamIp( ip );
+			actionLogsMapper.insertMemberActionLogs( log );
+			logService.logmarkMoney( userId, oldmemberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder );
+		} else {
+			rspBase.setMsg( "该成员redis未初始化金额，或者您输入的金额有误" );
+			rspBase.setCode( 2 );
+			return rspBase;
+		}
 
-    @Override
-    public PageBO<WithdrawReport> withdrawReport(String memberid, Integer pageNum, Integer pageSize) {
-        memberInfoMapper.call_pro_useranalysis(memberid);
-        PageBO<WithdrawReport> pageBO = new PageBO<>();
-        pageNum = 1;
-        pageSize = 100;
-        Page page = PageHelper.startPage(pageNum, pageSize, true);
-        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
-        String remark = memberInfoMapper.findBanRemark(memberid);
-        WithdrawReport withdrawReport = new WithdrawReport();
-        withdrawReport.setClass_twoname("禁言禁用备注");
-        withdrawReport.setT_value(remark);
-        withdrawReports.add(withdrawReport);
-        pageBO.setData(withdrawReports);
-        pageBO.setCount(page.getTotal());
-        return pageBO;
-    }
+		//人工加分日志
+		MemberDepositLog memberDepositLog = new MemberDepositLog();
+		memberDepositLog.setMemberId(req.getId());
+        memberDepositLog.setMoney(req.getScore());
+        memberDepositLog.setRemark(Mk);
+        memberDepositLog.setMoneydes(req.getMoneydes());
+		memberDepositLog.setBeatNum(Integer.valueOf(String.valueOf(beatNum)));
+		memberDepositLog.setRemarkPay(req.getRemarkPay());
+		memberDepositLog.setOrderRemark(req.getOrdermk());
+		memberDepositLog.setOpName(admin_name);
+		memberDepositLog.setOpTime(new Date());
+		memberDepositLog.setIp(ip);
+		memberDepositLogMapper.insertMemberDepositLog(memberDepositLog);
+		return rspBase;
+	}
+
+	@Override
+	public PageBO<WithdrawReport> withdrawReport( String memberid, Integer pageNum, Integer pageSize ) {
+		memberInfoMapper.call_pro_useranalysis( memberid );
+		PageBO<WithdrawReport> pageBO = new PageBO<>();
+		pageNum = 1;
+		pageSize = 100;
+		Page                 page            = PageHelper.startPage( pageNum, pageSize, true );
+		List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
+		String               remark          = memberInfoMapper.findBanRemark( memberid );
+		WithdrawReport       withdrawReport  = new WithdrawReport();
+		withdrawReport.setClass_twoname( "禁言禁用备注" );
+		withdrawReport.setT_value( remark );
+		withdrawReports.add( withdrawReport );
+		pageBO.setData( withdrawReports );
+		pageBO.setCount( page.getTotal() );
+		return pageBO;
+	}
 
 
-    @Override
-    public PageBO<MemberCard> findMemberCardPage(String memberid, Integer pageNum, Integer pageSize, String orderBy) {
-        PageBO<MemberCard> pageBO = new PageBO<>();
-        Page page = PageHelper.startPage(pageNum, pageSize, orderBy);
-        pageBO.setData(memberCardMapper.findList(memberid));
-        pageBO.setCount(page.getTotal());
-        return pageBO;
-    }
+	@Override
+	public PageBO<MemberCard> findMemberCardPage( String memberid, Integer pageNum, Integer pageSize, String orderBy ) {
+		PageBO<MemberCard> pageBO = new PageBO<>();
+		Page               page   = PageHelper.startPage( pageNum, pageSize, orderBy );
+		pageBO.setData( memberCardMapper.findList( memberid ) );
+		pageBO.setCount( page.getTotal() );
+		return pageBO;
+	}
 
-    @Override
-    public void outGameFail(String orderId, String userId, Integer platformId) {
-        MemberGameMoney myGameMoney = new MemberGameMoney();
-        myGameMoney.setId(userId + "_" + platformId);
-        myGameMoney.setStatus(2);
-        myGameMoney.setOderSn("");
-        gameMoneyMapper.updateMemberGameMoney(myGameMoney);
+	@Override
+	public void outGameFail( String orderId, String userId, Integer platformId ) {
+		MemberGameMoney myGameMoney = new MemberGameMoney();
+		myGameMoney.setId( userId + "_" + platformId );
+		myGameMoney.setStatus( 2 );
+		myGameMoney.setOderSn( "" );
+		gameMoneyMapper.updateMemberGameMoney( myGameMoney );
 
-        LogGameOrder logOrder = new LogGameOrder();
-        logOrder.setId(orderId);
-        logOrder.setStatus(1);
-        logOrder.setETime(new Date());
-        logGameOrderMapper.updateLogGameOrder(logOrder);
-    }
+		LogGameOrder logOrder = new LogGameOrder();
+		logOrder.setId( orderId );
+		logOrder.setStatus( 1 );
+		logOrder.setETime( new Date() );
+		logGameOrderMapper.updateLogGameOrder( logOrder );
+	}
 
-    @Override
-    public void outGMGameSucess(String orderId, String userId, Integer platformId, BigDecimal money, String account) {
-        MemberGameMoney myGameMoney = new MemberGameMoney();
-        myGameMoney.setId(userId + "_" + platformId);
-        myGameMoney.setStatus(0);
-        myGameMoney.setOderSn("");
-        myGameMoney.setMoney(BigDecimal.ZERO);
-        int i = gameMoneyMapper.updateMemberGameMoney(myGameMoney);
+	@Override
+	public void outGMGameSucess( String orderId, String userId, Integer platformId, BigDecimal money, String account ) {
+		MemberGameMoney myGameMoney = new MemberGameMoney();
+		myGameMoney.setId( userId + "_" + platformId );
+		myGameMoney.setStatus( 0 );
+		myGameMoney.setOderSn( "" );
+		myGameMoney.setMoney( BigDecimal.ZERO );
+		int i = gameMoneyMapper.updateMemberGameMoney( myGameMoney );
 
-        Date date = new Date();
-        LogGameOrder logOrder = new LogGameOrder();
-        logOrder.setId(orderId);
-        logOrder.setBTime(date);
-        logOrder.setETime(date);
-        logOrder.setMemberId(userId);
-        logOrder.setMoney(money);
-        logOrder.setStatus(2);
-        logOrder.setType(2);
-        logOrder.setUserName(account);
-        logOrder.setPlatformId(platformId);
-        int i1 = logGameOrderMapper.insertLogGameOrder(logOrder);
+		Date         date     = new Date();
+		LogGameOrder logOrder = new LogGameOrder();
+		logOrder.setId( orderId );
+		logOrder.setBTime( date );
+		logOrder.setETime( date );
+		logOrder.setMemberId( userId );
+		logOrder.setMoney( money );
+		logOrder.setStatus( 2 );
+		logOrder.setType( 2 );
+		logOrder.setUserName( account );
+		logOrder.setPlatformId( platformId );
+		int i1 = logGameOrderMapper.insertLogGameOrder( logOrder );
 
-        if (money.compareTo(BigDecimal.ZERO) > 0 && i > 0 && i1 > 0) {
-            memberInfoMapper.updateMoneySelect(userId, money, null, null, null, null);
-        }
-    }
+		if ( money.compareTo( BigDecimal.ZERO ) > 0 && i > 0 && i1 > 0 ) {
+			memberInfoMapper.updateMoneySelect( userId, money, null, null, null, null );
+		}
+	}
 
-    @Override
-    public int changeSpeak(MemberInfo memberInfo) {
-        if ("0".equals(memberInfo.getSpeak())) {
-            memberInfo.setSpeak("0");
-            memberInfoMapper.updateMemberInfo(memberInfo);
-            memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), false);
-        } else {
-            memberInfo.setSpeak("1");
-            memberInfoMapper.updateMemberInfo(memberInfo);
-            memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), true);
-        }
-        return 1;
-    }
+	@Override
+	public int changeSpeak( MemberInfo memberInfo ) {
+		if ( "0".equals( memberInfo.getSpeak() ) ) {
+			memberInfo.setSpeak( "0" );
+			memberInfoMapper.updateMemberInfo( memberInfo );
+			memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), false );
+		} else {
+			memberInfo.setSpeak( "1" );
+			memberInfoMapper.updateMemberInfo( memberInfo );
+			memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), true );
+		}
+		return 1;
+	}
 
-    @Override
-    public AjaxResult updatePhones(ReqSmallFeatures req) {
-        if (!StringUtils.isEmpty(req.getPhones()) && !StringUtils.isEmpty(req.getPassword())) {
-          if(req.getPhones().contains("\n")){
-                try {
-                    String[] phones = req.getPhones().split("\n");
-                    StringBuilder phone = new StringBuilder();
-                    for(int i=0;i<phones.length;i++) {
-                        phone.append("\"").append(phones[i]).append("\"").append(",");
-                    }
-                    phone = new StringBuilder(phone.substring(0, phone.length() - 1));
-                    req.setPhones(phone.toString());
-                } catch (Exception e) {
-                    return AjaxResult.error(0, "分割手机号出错,请检查格式");
-                }
-            }
-            memberInfoMapper.updatePhones(req);
-            return AjaxResult.success();
-        }
-        return AjaxResult.error();
-    }
+	@Override
+	public AjaxResult updatePhones( ReqSmallFeatures req ) {
+		if ( !StringUtils.isEmpty( req.getPhones() ) && !StringUtils.isEmpty( req.getPassword() ) ) {
+			if ( req.getPhones().contains( "\n" ) ) {
+				try {
+					String[]      phones = req.getPhones().split( "\n" );
+					StringBuilder phone  = new StringBuilder();
+					for ( int i = 0; i < phones.length; i++ ) {
+						phone.append( "\"" ).append( phones[ i ] ).append( "\"" ).append( "," );
+					}
+					phone = new StringBuilder( phone.substring( 0, phone.length() - 1 ) );
+					req.setPhones( phone.toString() );
+				} catch ( Exception e ) {
+					return AjaxResult.error( 0, "分割手机号出错,请检查格式" );
+				}
+			}
+			memberInfoMapper.updatePhones( req );
+			return AjaxResult.success();
+		}
+		return AjaxResult.error();
+	}
 
-    @Override
-    public AjaxResult unbindCard(MemberCard member) {
-        String id = member.getId();
-        String memberId = member.getMemberId();
-        List<MemberCard> memberCardList = memberCardMapper.memberCardList(memberId);
-        MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
-        if (Objects.isNull(memberCard)) {
-            return AjaxResult.success("卡号不存在");
-        }
-        if (memberCardList.size() > 1 && memberCard.getDv() == 1) {
-            return AjaxResult.success("请先解绑副卡");
-        }
-        memberCardMapper.deleteMemberCardById(id);
-        return AjaxResult.success("解绑成功");
-    }
+	@Override
+	public AjaxResult unbindCard( MemberCard member ) {
+		String           id             = member.getId();
+		String           memberId       = member.getMemberId();
+		List<MemberCard> memberCardList = memberCardMapper.memberCardList( memberId );
+		MemberCard       memberCard     = memberCardMapper.selectMemberCardById( id );
+		if ( Objects.isNull( memberCard ) ) {
+			return AjaxResult.success( "卡号不存在" );
+		}
+		if ( memberCardList.size() > 1 && memberCard.getDv() == 1 ) {
+			return AjaxResult.success( "请先解绑副卡" );
+		}
+		memberCardMapper.deleteMemberCardById( id );
+		return AjaxResult.success( "解绑成功" );
+	}
 
-    @Override
-    public AjaxResult changeBank(MemberCard member) {
-        String id = member.getId();
-        //判断用户是否已经绑定该银行卡
-        MemberCard memberCard1 = new MemberCard();
-        memberCard1.setBankAccount(member.getBankAccount());
-        memberCard1.setMemberId(member.getMemberId());
-        List<MemberCard> memberCards = memberCardMapper.selectMemberCardList(memberCard1);
-        if (!memberCards.isEmpty()) {
-            MemberCard memberCard2 = memberCards.get(0);
-            //判断绑定的与修改成的是不是同一个,如果不是就不能修改
-            if (!memberCard2.getId().equals(member.getId())) {
-                log.error("修改的id: {},上传的id: {}", memberCard2.getId(), member.getId());
-                return AjaxResult.error("用户已绑定该银行卡");
-            }
-        }
-        MemberCard memberCard = memberCardMapper.selectMemberCardById(id);
-        memberCard.setRealName(member.getRealName());
-        memberCard.setBankName(member.getBankName());
-        memberCard.setBankAddress(member.getBankAddress());
-        memberCard.setBankAccount(member.getBankAccount());
-        memberCardMapper.updateMemberCard(memberCard);
-        return AjaxResult.success("修改银行卡信息成功");
-    }
+	@Override
+	public AjaxResult changeBank( MemberCard member ) {
+		String id = member.getId();
+		//判断用户是否已经绑定该银行卡
+		MemberCard memberCard1 = new MemberCard();
+		memberCard1.setBankAccount( member.getBankAccount() );
+		memberCard1.setMemberId( member.getMemberId() );
+		List<MemberCard> memberCards = memberCardMapper.selectMemberCardList( memberCard1 );
+		if ( !memberCards.isEmpty() ) {
+			MemberCard memberCard2 = memberCards.get( 0 );
+			//判断绑定的与修改成的是不是同一个,如果不是就不能修改
+			if ( !memberCard2.getId().equals( member.getId() ) ) {
+				log.error( "修改的id: {},上传的id: {}", memberCard2.getId(), member.getId() );
+				return AjaxResult.error( "用户已绑定该银行卡" );
+			}
+		}
+		MemberCard memberCard = memberCardMapper.selectMemberCardById( id );
+		memberCard.setRealName( member.getRealName() );
+		memberCard.setBankName( member.getBankName() );
+		memberCard.setBankAddress( member.getBankAddress() );
+		memberCard.setBankAccount( member.getBankAccount() );
+		memberCardMapper.updateMemberCard( memberCard );
+		return AjaxResult.success( "修改银行卡信息成功" );
+	}
 
-    @Override
-    public void repairMemberBcode(String memberId) {
-//        int count=memberBcodeMapper.countMemberBcodeStatus(memberId);
-//        if (count>0){
-//            return;
-//        }
-        memberBcodeMapper.updateMemberBcodeStatus(memberId);
-        memberBcodeMapper.repairMemberInfo(memberId);
-    }
+	@Override
+	public void repairMemberBcode( String memberId ) {
+		//        int count=memberBcodeMapper.countMemberBcodeStatus(memberId);
+		//        if (count>0){
+		//            return;
+		//        }
+		memberBcodeMapper.updateMemberBcodeStatus( memberId );
+		memberBcodeMapper.repairMemberInfo( memberId );
+	}
 
-    @Override
-    public void updateVip(String memberId, Integer vip, String nickName) {
-        memberBcodeMapper.updateVip(memberId, vip, nickName);
-        //更新用户登录缓存
-        String token = redisUtil.strGet( Constants.USER_TOKEN_KEY + memberId );
-        MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(memberId);
-        redisUtil.hMSet( Constants.TOKEN_USER_KEY + token, this.initMemberCacheMap( memberInfo ) );
-    }
+	@Override
+	public void updateVip( String memberId, Integer vip, String nickName ) {
+		memberBcodeMapper.updateVip( memberId, vip, nickName );
+		//更新用户登录缓存
+		String token = redisUtil.strGet( Constants.USER_TOKEN_KEY + memberId );
+		if ( StringUtils.hasText( token ) ) {
+			redisUtil.hSet( Constants.TOKEN_USER_KEY + token, "vip", vip.toString() );
+		}
+	}
 
-    private Map<String, String> initMemberCacheMap( MemberInfo memberInfo ) {
-        Map<String, String> userInfoMap = new HashMap<>();
-        userInfoMap.put( "userId", memberInfo.getId() );
-        userInfoMap.put( "userName", memberInfo.getUserName() );
-        userInfoMap.put( "nickName", memberInfo.getNickName() == null ? "" : memberInfo.getNickName() );
-        userInfoMap.put( "headImage", memberInfo.getHeadImg() == null ? "" : memberInfo.getHeadImg() );
-        userInfoMap.put( "vip", memberInfo.getVip() == null ? "1" : memberInfo.getVip().toString() );
-        userInfoMap.put( "status", memberInfo.getStatus() == null ? "" : memberInfo.getStatus().toString() );
-        userInfoMap.put( "speak", memberInfo.getSpeak() != null && "1".equals(memberInfo.getSpeak()) ? "true":"false");
-        userInfoMap.put( "inviter", memberInfo.getInviterCode() == null ? "" : memberInfo.getInviterCode() );
-        userInfoMap.put( "giveMoney", memberInfo.getWechat() == null ? "0" : memberInfo.getWechat() );
-        return userInfoMap;
-    }
+	@Override
+	public AjaxResult updateInviterCode( String inviterCode, String memberId ) {
+		memberInfoMapper.updateInviterCode( memberId, inviterCode );
+		return AjaxResult.success( "修改成功" );
+	}
 
-    @Override
-    public AjaxResult updateInviterCode(String inviterCode, String memberId) {
-        memberInfoMapper.updateInviterCode(memberId, inviterCode);
-        return AjaxResult.success("修改成功");
-    }
+	@Override
+	public AjaxResult changeEmail( MemberInfo memberInfo ) {
+		memberInfoMapper.changeEmail( memberInfo );
+		return AjaxResult.success( "修改成功" );
+	}
 
-    @Override
-    public AjaxResult changeEmail(MemberInfo memberInfo) {
-        memberInfoMapper.changeEmail(memberInfo);
-        return AjaxResult.success("修改成功");
-    }
+	@Override
+	public String getMemberLoginAddress( String id ) {
+		return memberInfoMapper.selectMemberInfoAddressById( id );
+	}
 
-    @Override
-    public String getMemberLoginAddress(String id) {
-        return memberInfoMapper.selectMemberInfoAddressById(id);
-    }
+	@Override
+	public String getHistoryRecharge( String id ) {
+		return memberInfoMapper.selectMemberInfoHistoryRechargeById( id );
+	}
 
-    @Override
-    public String getHistoryRecharge(String id) {
-        return memberInfoMapper.selectMemberInfoHistoryRechargeById(id);
-    }
+	@Override
+	public List<RspMemberChannel> memberstatistics( MemberInfo memberInfo ) {
+		return memberInfoMapper.memberstatistics( memberInfo );
+	}
 
-    @Override
-    public List<RspMemberChannel> memberstatistics(MemberInfo memberInfo) {
-        return memberInfoMapper.memberstatistics(memberInfo);
-    }
-
-    @Override
-    public void updataStatus(MemberInfo memberInfo) {
-        if (memberInfo.getBanSpeakTime() == 0) {
-            memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), false);
-            memberInfo.setSpeak("0");
-            memberInfoMapper.updateMemberInfo(memberInfo);
-        }
-        if (memberInfo.getBanSpeakTime() > 0) {
-            memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), true);
-            memberInfo.setSpeak("1");
-            memberInfoMapper.updateMemberInfo(memberInfo);
-        }
-    }
+	@Override
+	public void updataStatus( MemberInfo memberInfo ) {
+		if ( memberInfo.getBanSpeakTime() == 0 ) {
+			memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), false );
+			memberInfo.setSpeak( "0" );
+			memberInfoMapper.updateMemberInfo( memberInfo );
+		}
+		if ( memberInfo.getBanSpeakTime() > 0 ) {
+			memberForbidUtil.setPlatformUserSpeak( memberInfo.getId(), true );
+			memberInfo.setSpeak( "1" );
+			memberInfoMapper.updateMemberInfo( memberInfo );
+		}
+	}
 }

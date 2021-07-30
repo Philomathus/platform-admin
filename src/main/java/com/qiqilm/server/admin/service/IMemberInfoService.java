@@ -1,12 +1,14 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
+import com.qiqilm.server.admin.domain.vo.ReqAddScore;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 
 import java.math.BigDecimal;
@@ -52,7 +54,7 @@ public interface IMemberInfoService {
 	public int updateMemberInfo(MemberInfo memberInfo);
 
 
-    RspBase addMemberMoneyOnly(String ip,String userId,BigDecimal money, BigDecimal beatNum, String Mk, String ordermk, String admin_name);
+    RspBase addMemberMoneyOnly(String ip, LoginUser loginUser, ReqAddScore req);
 
     PageBO<WithdrawReport> withdrawReport(String memberId, Integer page, Integer limit);
 
