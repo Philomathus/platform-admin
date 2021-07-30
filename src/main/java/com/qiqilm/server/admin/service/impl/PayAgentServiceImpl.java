@@ -221,6 +221,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DAFENGCHE3 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.NEWMAX )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LUBAN )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DINGFENG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG ) ) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
 		}
