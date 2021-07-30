@@ -361,11 +361,11 @@ public class MemberInfoController extends BaseController {
         String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
                 "/googleAuthPrivateKey"));
 
-//        if (!GoogleAuthUtil.verifyCode(googleAuthKey, req.getGoogleAuthCode())) {
-//            rspBase.setMsg("google验证码不正确，请检查");
-//            rspBase.setCode(1);
-//            return rspBase;
-//        }
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, req.getGoogleAuthCode())) {
+            rspBase.setMsg("google验证码不正确，请检查");
+            rspBase.setCode(1);
+            return rspBase;
+        }
 
         String ip = UserDataUtil.getIp(request);
         if (!redisUtil.lock(EnumLock.member, "addScore"+req.getId(), "1", 15)) {
