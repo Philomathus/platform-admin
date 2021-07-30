@@ -242,10 +242,13 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 		//人工加分日志
 		MemberDepositLog memberDepositLog = new MemberDepositLog();
 		memberDepositLog.setMemberId(req.getId());
+		String user_name = req.getId().substring(5);
+		memberDepositLog.setUserName(user_name);
         memberDepositLog.setMoney(req.getScore());
         memberDepositLog.setRemark(Mk);
         memberDepositLog.setMoneydes(req.getMoneydes());
-		memberDepositLog.setBeatNum(Integer.valueOf(String.valueOf(beatNum)));
+        String beatNumTwo = String.valueOf(beatNum.setScale(0,BigDecimal.ROUND_HALF_UP));
+		memberDepositLog.setBeatNum(Integer.valueOf(beatNumTwo));
 		memberDepositLog.setRemarkPay(req.getRemarkPay());
 		memberDepositLog.setOrderRemark(req.getOrdermk());
 		memberDepositLog.setOpName(admin_name);
