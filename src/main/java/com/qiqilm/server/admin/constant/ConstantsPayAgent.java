@@ -123,6 +123,8 @@ public abstract class ConstantsPayAgent {
 	public static final String DAFENGCHE3            = "daFengChe3";
 	//乐乐代付
 	public static final String LELE            = "leLe";
+	//乐乐代付
+	public static final String LELE2            = "leLe2";
 	//鼎丰代付
 	public static final String DINGFENG            = "dingFeng";
 	//宏博代付
