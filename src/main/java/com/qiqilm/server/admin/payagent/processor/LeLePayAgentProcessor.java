@@ -159,7 +159,7 @@ public class LeLePayAgentProcessor extends AbstractPayAgent {
                 String code = resultMap.getOrDefault("code", "").toString();
                 if ("0".equals(code)) {
                     String data = resultMap.getOrDefault("data", "").toString();
-                    if ("Y".equals(data) || "W".equals(data)) {
+                    if ("Y".equals(data) || "N".equals(data)) {
                         // status 4代付中 5代付失败 6代付成功
                         // data 状态： W（审核中）、Y(审核通过-已下发)、N(驳回)
                         int status = 4;
