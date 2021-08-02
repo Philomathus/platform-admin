@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.qiqilm.server.admin.cache.GameCacheManager;
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.GameInfo;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.mapper.GamePlatformMapper;
 import com.qiqilm.server.admin.service.IGamePlatformService;
@@ -125,5 +126,10 @@ public class GamePlatformServiceImpl implements IGamePlatformService {
         int i = gamePlatformMapper.deleteGamePlatformById(id);
         gameCacheManager.initGamePlatforms();
         return i;
+    }
+
+    @Override
+    public List<GamePlatform> platformIdSelect() {
+        return gamePlatformMapper.platformIdSelect();
     }
 }

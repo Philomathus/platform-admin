@@ -59,5 +59,6 @@ public interface IGamePlatformService {
 	 */
 	public int deleteGamePlatformById(Long id);
 
+	List<GamePlatform> platformIdSelect();
 
 }
