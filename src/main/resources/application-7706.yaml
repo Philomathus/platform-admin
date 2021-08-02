@@ -46,3 +46,5 @@ payAgentLimitDaFengChePay: 50000
 payAgentLimitLuBanPay: 50000
 # 鼎丰代付额度
 payAgentLimitDingFengPay: 50000
+# 宏博代付额度
+payAgentLimitHongBoPay: 50000

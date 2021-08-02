@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class BankCardAddressTask {
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
 
-	//@Scheduled( fixedDelay = 60000, initialDelay = 1 )
+	@Scheduled( fixedDelay = 60000, initialDelay = 1 )
 	public void runTask() {
 		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 59 ) ) {
 			return;
@@ -61,7 +62,7 @@ public class BankCardAddressTask {
 		log.warn( "开始执行银行归属地查询成功 - 成功数量：{}", listMemberCard.size() );
 	}
 
-	// @Scheduled( fixedDelay = 120000, initialDelay = 1 )
+	 @Scheduled( fixedDelay = 120000, initialDelay = 1 )
 	public void runTaskLive() {
 		List<LiveUserBank> listMemberCard = liveUserBankService.getBankCardInfo();
 		String             apiUrl         = sysConfigCacheUtil.getConf( "bank_address_ip_url" );
@@ -78,9 +79,8 @@ public class BankCardAddressTask {
 		httpHeaders.setContentType( MediaType.APPLICATION_JSON );
 		HttpEntity   httpEntity   = new HttpEntity( bankAccount, httpHeaders );
 		RestTemplate restTemplate = new RestTemplate();
-		String       result       = restTemplate.postForObject( apiUrl, httpEntity, String.class );
-		if ( Strings.isNotBlank( result ) ) {
-			Map    map         = JsonUtil.json2Map( result );
+		Map map = restTemplate.postForObject( apiUrl, httpEntity, Map.class );
+		if ( !CollectionUtils.isEmpty( map )  ) {
 			Map    dataMap     = ( Map ) map.get( "data" );
             if (Objects.isNull(dataMap)) {
                 return null;

@@ -26,8 +26,9 @@
         <where>
             <if test="searchValue != null and searchValue != ''"> and (member_id = #{searchValue} or user_name = #{searchValue})</if>
             <if test="money != null and money != ''"> and money = #{money}</if>
-            <if test="remarkPay != null and remarkPay != ''"> and remark_pay = #{remarkPay}</if>
-            <if test="orderRemark != null and orderRemark != ''"> and order_remark = #{orderRemark}</if>
+            <if test="remarkPay != null and remarkPay != ''"> and remark_pay like concat('%', #{remarkPay}, '%')</if>
+            <if test="remark != null and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
+            <if test="orderRemark != null"> and order_remark like concat('%', #{orderRemark}, '%')</if>
             <if test="beatNum != null and beatNum != ''"> and beat_num = #{beatNum}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 AND op_time >= STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
