@@ -149,6 +149,8 @@ public class MemberWithdrawLog extends BaseEntity {
 
     @JsonIgnore
     private String payAgentOrderNo;
+    @JsonIgnore
+    private Integer googleAuthCode;
 
     public String getStatusDes() {
         if (status != null) {
