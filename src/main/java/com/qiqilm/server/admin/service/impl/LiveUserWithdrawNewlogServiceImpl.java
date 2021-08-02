@@ -509,6 +509,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 		LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
 		update.setId( liveUserWithdrawNewlog.getId() );
 		update.setOpName( userName );
+		update.setWithdrawMoney(req.getWithdrawMoney());
 		update.setRemark( "提现金额" + liveUserWithdrawNewlog.getWithdrawMoney()+"提现金额被"+userName+"修改为"+req.getWithdrawMoney() );
 		update.setUpdateTime( new Date() );
 		int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
