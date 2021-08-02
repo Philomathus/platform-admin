@@ -2,9 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.domain.BankCardAddress;
-import com.qiqilm.server.admin.domain.LiveFamily;
-import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
 import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
@@ -498,11 +496,20 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 		if ( liveUserWithdrawNewlog.getWstatus() != 1 ) {
 			return AjaxResult.error( liveUserWithdrawNewlog.getOrderNo() + "状态有误不能修改提现金额" );
 		}
-		String    userName  = loginUser.getUser().getUserName();
-
-		if ( !StringUtils.isEmpty( liveUserWithdrawNewlog.getOpName() ) && !userName.equals( liveUserWithdrawNewlog.getOpName() ) ) {
-			return AjaxResult.error( "该订单只能由" + liveUserWithdrawNewlog.getOpName() + "处理" );
+		SysUser user = loginUser.getUser();
+		if (user==null){
+			return AjaxResult.error( "用户不存在" );
 		}
+		List<SysRole> roles = user.getRoles();
+		if(null == roles || roles.size() ==0 ){
+			return AjaxResult.error( "该用户未分配角色" );
+		}
+		boolean contains = roles.stream().anyMatch(m -> "2".equals(m.getRoleId()));
+		if (!contains){
+			return AjaxResult.error( "权限不足，请联系管理员" );
+		}
+
+		String    userName  = loginUser.getUser().getUserName();
 		if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
 			return AjaxResult.error( "请勿重复提交" );
 		}
@@ -510,9 +517,9 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 		update.setId( liveUserWithdrawNewlog.getId() );
 		update.setOpName( userName );
 		update.setWithdrawMoney(req.getWithdrawMoney());
-		update.setRemark( "提现金额" + liveUserWithdrawNewlog.getWithdrawMoney()+"提现金额被"+userName+"修改为"+req.getWithdrawMoney() );
+		update.setRemark( "提现金额" + liveUserWithdrawNewlog.getWithdrawMoney()+"被"+userName+"修改为"+req.getWithdrawMoney() );
 		update.setUpdateTime( new Date() );
 		int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
-		return i > 0 ? AjaxResult.success() : AjaxResult.error( "更新订单拒绝出款状态失败" );
+		return i > 0 ? AjaxResult.success() : AjaxResult.error( "更新订单提现金额失败" );
 	}
 }
