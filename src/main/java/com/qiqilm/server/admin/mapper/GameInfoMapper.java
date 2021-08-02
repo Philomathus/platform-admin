@@ -70,6 +70,9 @@ public interface GameInfoMapper {
 	//给任务信息做的所属游戏下拉框
 	List<GameInfo> selectGameInfo();
 
+	//给任务信息做的平台游戏类型下拉框
+	List<GameInfo> kindIdSelect();
+
 
 	List<RspGameInfo> findTypeGames();
 

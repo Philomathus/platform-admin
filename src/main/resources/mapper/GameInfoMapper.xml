@@ -48,6 +48,9 @@
         <include refid="selectGameInfoVo"/>
     </select>
 
+    <select id="kindIdSelect" parameterType="GameInfo" resultMap="GameInfoResult">
+        select distinct IFNULL(0,kind_id), id from ${dbMain}.game_info
+    </select>
 
     <insert id="insertGameInfo" parameterType="GameInfo">
         insert into ${dbMain}.game_info

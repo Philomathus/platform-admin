@@ -52,6 +52,10 @@
         where id = #{id}
     </select>
 
+    <select id="platformIdSelect" resultMap="GamePlatformResult">
+        select id, name from ${dbMain}.game_platform
+    </select>
+
     <insert id="insertGamePlatform" parameterType="GamePlatform">
         insert into ${dbMain}.game_platform
         <trim prefix="(" suffix=")" suffixOverrides=",">
