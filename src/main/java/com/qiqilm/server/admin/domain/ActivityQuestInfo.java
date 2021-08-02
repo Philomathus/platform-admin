@@ -71,7 +71,7 @@ public class ActivityQuestInfo extends BaseEntity {
     @Excel(name = "平台类型")
     private Integer platformId;
 
-
+    private String platformName;
 
     @Override
     public String toString() {
