@@ -440,7 +440,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
 		return AjaxResult.error( "更新订单状态失败" );
 	}
-	
+
 	@Override
 	public AjaxResult abnormalWithdrawal( ReqMemberWithdrawLog req ) {
 		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
