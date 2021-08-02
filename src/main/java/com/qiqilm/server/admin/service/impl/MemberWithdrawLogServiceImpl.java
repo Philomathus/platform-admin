@@ -433,32 +433,12 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		memberWithdrawLog.setOpName( userName );
 		memberWithdrawLog.setUpdateTime( new Date() );
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
-		MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(memberWithdrawLog.getMemberId());
-		if (memberInfo.getStatus()==1){
-			riskControl(memberInfo,memberWithdrawLog);
-		}
 		if ( i>0 ) {
 			redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
 			return AjaxResult.success();
 		}
 
 		return AjaxResult.error( "更新订单状态失败" );
-	}
-
-	private void riskControl(MemberInfo memberInfo,MemberWithdrawLog memberWithdrawLog) {
-		BigDecimal multipleCode=new BigDecimal(sysConfigCacheUtil.getConf( "multiple_code" ));//打码倍数
-		BigDecimal bankChargeMax=new BigDecimal(sysConfigCacheUtil.getConf( "bank_charge_max" ));//今日公司入款成功次数
-		if (Objects.nonNull(memberInfo)){
-			BigDecimal levelIntegral = memberInfo.getLevelIntegral();//总充值金额
-			BigDecimal codeAccount = memberInfo.getCodeAccount();//打码账户
-			if (memberWithdrawLog.getBankCharge().compareTo(bankChargeMax)>=0&&
-					codeAccount.compareTo(levelIntegral.multiply(multipleCode))<=0){
-				MemberInfo member=new MemberInfo();
-				member.setId(memberWithdrawLog.getMemberId());
-				member.setEmail("系统判定疑似套利号");
-				memberInfoMapper.updateMemberInfo(member);
-			}
-		}
 	}
 
 	@Override
