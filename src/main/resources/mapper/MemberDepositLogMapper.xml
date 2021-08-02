@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MemberDepositLogMapper">
+
+    <resultMap type="MemberDepositLog" id="MemberDepositLogResult">
+        <result property="id"    column="id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="money"    column="money"    />
+        <result property="remark"    column="remark"    />
+        <result property="remarkPay"    column="remark_pay"    />
+        <result property="orderRemark"    column="order_remark"    />
+        <result property="beatNum"    column="beat_num"    />
+        <result property="opTime"    column="op_time"    />
+        <result property="opName"    column="op_name"    />
+        <result property="ip"    column="ip"    />
+        <result property="moneydes"    column="moneydes"    />
+    </resultMap>
+
+    <sql id="selectMemberDepositLogVo">
+        select id, member_id, user_name, money, remark, remark_pay, order_remark, beat_num, op_time, op_name, ip, moneydes from 7700_main.member_deposit_log
+    </sql>
+
+    <select id="selectMemberDepositLogList" parameterType="MemberDepositLog" resultMap="MemberDepositLogResult">
+        <include refid="selectMemberDepositLogVo"/>
+        <where>
+            <if test="searchValue != null and searchValue != ''"> and (member_id = #{searchValue} or user_name = #{searchValue})</if>
+            <if test="money != null and money != ''"> and money = #{money}</if>
+            <if test="remarkPay != null and remarkPay != ''"> and remark_pay = #{remarkPay}</if>
+            <if test="orderRemark != null and orderRemark != ''"> and order_remark = #{orderRemark}</if>
+            <if test="beatNum != null and beatNum != ''"> and beat_num = #{beatNum}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND op_time >= STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND op_time &lt;= STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="opName != null and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
+            <if test="moneydes != null and moneydes != ''"> and moneydes = #{moneydes}</if>
+        </where>
+    </select>
+
+    <select id="selectMemberDepositLogById" parameterType="Long" resultMap="MemberDepositLogResult">
+        <include refid="selectMemberDepositLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMemberDepositLog" parameterType="MemberDepositLog">
+        insert into 7700_main.member_deposit_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="money != null">money,</if>
+            <if test="remark != null">remark,</if>
+            <if test="remarkPay != null">remark_pay,</if>
+            <if test="orderRemark != null">order_remark,</if>
+            <if test="beatNum != null">beat_num,</if>
+            <if test="opTime != null">op_time,</if>
+            <if test="opName != null">op_name,</if>
+            <if test="ip != null">ip,</if>
+            <if test="moneydes != null">moneydes,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="memberId != null">#{memberId},</if>
+                    <if test="userName != null">#{userName},</if>
+                    <if test="money != null">#{money},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="remarkPay != null">#{remarkPay},</if>
+                    <if test="orderRemark != null">#{orderRemark},</if>
+                    <if test="beatNum != null">#{beatNum},</if>
+                    <if test="opTime != null">#{opTime},</if>
+                    <if test="opName != null">#{opName},</if>
+                    <if test="ip != null">#{ip},</if>
+                    <if test="moneydes != null">#{moneydes},</if>
+             </trim>
+    </insert>
+
+    <update id="updateMemberDepositLog" parameterType="MemberDepositLog">
+        update 7700_main.member_deposit_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null">member_id = #{memberId},</if>
+    
+            <if test="userName != null">user_name = #{userName},</if>
+    
+            <if test="money != null">money = #{money},</if>
+    
+            <if test="remark != null">remark = #{remark},</if>
+    
+            <if test="remarkPay != null">remark_pay = #{remarkPay},</if>
+    
+            <if test="orderRemark != null">order_remark = #{orderRemark},</if>
+    
+            <if test="beatNum != null">beat_num = #{beatNum},</if>
+    
+            <if test="opTime != null">op_time = #{opTime},</if>
+    
+            <if test="opName != null">op_name = #{opName},</if>
+    
+            <if test="ip != null">ip = #{ip},</if>
+    
+            <if test="moneydes != null">moneydes = #{moneydes},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMemberDepositLogById" parameterType="Long">
+        delete from 7700_main.member_deposit_log where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberDepositLogByIds" parameterType="String">
+        delete from 7700_main.member_deposit_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

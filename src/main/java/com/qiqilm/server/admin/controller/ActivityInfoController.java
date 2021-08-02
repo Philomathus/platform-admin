@@ -124,7 +124,7 @@ public class ActivityInfoController extends BaseController {
     /**
      * 活动信息状态修改
      */
-    @PreAuthorize( "@ss.hasPermi('pay:configBank:edit')" )
+    @PreAuthorize("@ss.hasPermi('admin:activityInfo:edit')")
     @Log( title = "活动信息状态", businessType = BusinessType.UPDATE )
     @PutMapping( "/changeStatus" )
     public AjaxResult changeStatus( @RequestBody ActivityInfo activityInfo ) {
