@@ -35,6 +35,14 @@ public interface ActivityQuestInfoMapper {
 	 */
 	public List<ActivityQuestInfo> selectQuestList();
 
+
+	/**
+	 * 查询任务信息列表列表
+	 *
+	 * @return 任务信息列表集合
+	 */
+	public List<ActivityQuestInfo> selectAllQuestList();
+
 	/**
 	 * 新增任务信息列表
 	 *
