@@ -504,7 +504,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 		if(null == roles || roles.size() ==0 ){
 			return AjaxResult.error( "该用户未分配角色" );
 		}
-		boolean contains = roles.stream().anyMatch(m -> "2".equals(m.getRoleId()));
+		boolean contains = roles.stream().anyMatch(m -> "2".equals(m.getRoleId().toString()));
 		if (!contains){
 			return AjaxResult.error( "权限不足，请联系管理员" );
 		}
