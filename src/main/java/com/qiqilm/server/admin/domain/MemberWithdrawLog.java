@@ -130,6 +130,8 @@ public class MemberWithdrawLog extends BaseEntity {
     private String cardBlack = "0";
     @Excel(name = "公司入款人姓名")
     private String rechargeUserName;
+    @Excel(name = "投注打码比例")
+    private String rechargeCodeRatio;
     private String SearchCardBlack;
     private String province;
     private String city;
