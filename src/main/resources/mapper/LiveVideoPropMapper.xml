@@ -53,15 +53,15 @@
 			<if test="pUserId != null and pUserId != ''">
 				and lvp.p_user_id = #{pUserId}
 			</if>
-			<if test="toUserId != null">
-				and lvp.to_user_id =#{toUserId}
+			<if test="toUserId != null and toUserId != ''">
+				and lvp.to_user_id = #{toUserId}
 			</if>
-			<if test="propName != null">
-				and lvp.prop_name =#{propName}
+			<if test="propName != null and propName != ''">
+				and lvp.prop_name = #{propName}
 			</if>
-			<if test="sendStartTime != null">
-				and FROM_UNIXTIME(lvp.create_time) &gt;= #{sendStartTime}
-				and FROM_UNIXTIME(lvp.create_time) &lt;= #{sendEndTime}
+			<if test="startTime != null and startTime != ''">
+				and FROM_UNIXTIME(lvp.create_time) &gt;= #{startTime}
+				and FROM_UNIXTIME(lvp.create_time) &lt;= #{endTime}
 			</if>
 		</where>
 	</select>
@@ -75,15 +75,15 @@
 			<if test="pUserId != null and pUserId != ''">
 				and lvp.p_user_id = #{pUserId}
 			</if>
-			<if test="toUserId != null">
+			<if test="toUserId != null and toUserId != ''">
 				and lvp.to_user_id =#{toUserId}
 			</if>
-			<if test="propName != null">
+			<if test="propName != null and propName != ''">
 				and lvp.prop_name =#{propName}
 			</if>
-			<if test="sendStartTime != null">
-				and FROM_UNIXTIME(lvp.create_time) &gt;= #{sendStartTime}
-				and FROM_UNIXTIME(lvp.create_time) &lt;= #{sendEndTime}
+			<if test="startTime != null and startTime != ''">
+				and FROM_UNIXTIME(lvp.create_time) &gt;= #{startTime}
+				and FROM_UNIXTIME(lvp.create_time) &lt;= #{endTime}
 			</if>
 		</where>
 	</select>
@@ -116,10 +116,10 @@
 			<if test="pUserId != null and pUserId != ''">
 				and p_user_id = #{pUserId}
 			</if>
-			<if test="toUserId != null">
+			<if test="toUserId != null and toUserId != ''">
 				and to_user_id =#{toUserId}
 			</if>
-			<if test="startTime != null">
+			<if test="startTime != null and startTime != ''">
 				and FROM_UNIXTIME(create_time) &gt;= #{startTime}
 				and FROM_UNIXTIME(create_time) &lt;= #{endTime}
 			</if>
