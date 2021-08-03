@@ -288,7 +288,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 	@Async
 	public void deQuestCheck( final List<MemberGameData> list, Map<String, BigDecimal> willCodeMap ) {
 		//查找全部任务
-		List<ActivityQuestInfo> listConfQuet = questInfoMapper.selectQuestList();
+		List<ActivityQuestInfo> listConfQuet = questInfoMapper.selectAllQuestList();
 		Set<Integer> questSet =
 				listConfQuet.stream().map( ActivityQuestInfo::getPlatformId ).collect( Collectors.toSet() );
 		for ( MemberGameData data : list ) {
