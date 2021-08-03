@@ -39,7 +39,7 @@ public class BankCardAddressTask {
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
 
-	@Scheduled( fixedDelay = 60000, initialDelay = 1 )
+//	@Scheduled( fixedDelay = 60000, initialDelay = 1 )
 	public void runTask() {
 		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 59 ) ) {
 			return;
@@ -62,7 +62,7 @@ public class BankCardAddressTask {
 		log.warn( "开始执行银行归属地查询成功 - 成功数量：{}", listMemberCard.size() );
 	}
 
-	 @Scheduled( fixedDelay = 120000, initialDelay = 1 )
+//	 @Scheduled( fixedDelay = 120000, initialDelay = 1 )
 	public void runTaskLive() {
 		List<LiveUserBank> listMemberCard = liveUserBankService.getBankCardInfo();
 		String             apiUrl         = sysConfigCacheUtil.getConf( "bank_address_ip_url" );

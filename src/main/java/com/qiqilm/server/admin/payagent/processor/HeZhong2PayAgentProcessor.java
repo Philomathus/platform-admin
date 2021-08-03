@@ -6,8 +6,6 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
-import com.qiqilm.server.admin.enums.BankCodeLangYaType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -23,33 +21,34 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-@Repository(value = ConstantsPayAgent.NINESEVEN + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.HEZHONG2 + "PayAgentProcessor")
 @Log4j2
-public class _97PayAgentProcessor extends AbstractPayAgent {
+public class HeZhong2PayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
-        bodyMap.put("account", payAgentPlatform.getMerId());
-        bodyMap.put("business", withdrawLog.getBankUserName().trim());
-        bodyMap.put("businessBank", withdrawLog.getBankName().trim());
-        bodyMap.put("businessCard", withdrawLog.getBankAccount().trim());
+        bodyMap.put("app_key", payAgentPlatform.getMerId());
+        bodyMap.put("timestamp", System.currentTimeMillis());
         bodyMap.put("money", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
-        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.NINESEVEN);
-        bodyMap.put("reverseUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.NINESEVEN);
-        bodyMap.put("shOrderId", withdrawLog.getOrderNo());
+        bodyMap.put("out_trade_sn", withdrawLog.getOrderNo());
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
+        bodyMap.put("bank_realname", withdrawLog.getBankUserName().trim());
+        bodyMap.put("bank_account", withdrawLog.getBankAccount().trim());
+        bodyMap.put("bank_name", withdrawLog.getBankName().trim());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
+        String tempStr = this.assemblyUrl(bodyMap) + "&" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         bodyMap.put("sign", sign);
 
@@ -57,7 +56,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         requestMap.setAll(bodyMap);
         log.warn(JsonUtil.object2Json(requestMap));
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
@@ -78,47 +77,58 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         log.info(payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
-            String status = resultMap.getOrDefault("status", "").toString();
-            if ("100".equals(code) && "true".equals(status)) {
-                log.info(payAgentPlatform.getName()+"订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
-                return true;
+            if ("200".equals(code)) {
+                Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("data");
+                String status = dataMap.getOrDefault("status", "").toString();
+                //大写(md5(app_key=值&money=值&out_trade_sn=值&status=值&商户token))
+                String resultSign = dataMap.remove("sign").toString();
+                SortedMap<String, Object> signMap = new TreeMap<>(dataMap);
+                String tempTwo = this.assemblyUrl(signMap) + "&" + signMd5;
+                String signTwo = DigestUtils.md5Hex(tempTwo).toUpperCase();
+
+                log.info(payAgentPlatform.getName()+"下单返回验签 :{}", signTwo + "_" + resultSign);
+                if (resultSign.equals(signTwo) && "3".equals(status)) {
+                    log.info(payAgentPlatform.getName()+"订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                    return true;
+                }
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
+                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
 
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn(payAgentPlatform.getName()+"订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.info(payAgentPlatform.getName()+"订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
-        String state = requestMap.getOrDefault("state", "").toString();
+        requestMap.remove("mark");
+        String status = requestMap.getOrDefault("status", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
+        String tempStr = this.assemblyUrl(bodyMap) + "&" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
 
         log.info(payAgentPlatform.getName()+"回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
-            String shOrderId = (String) requestMap.get("shOrderId");
+            String out_trade_sn = (String) requestMap.get("out_trade_sn");
 
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_sn);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", shOrderId);
+                log.error("提现相关记录丢失 - merOrderNo:{}", out_trade_sn);
                 return "fail";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", shOrderId);
+                log.error("已有代付记录 - merOrderNo:{}", out_trade_sn);
                 return "success";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(shOrderId);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "5".equals(state));
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(out_trade_sn);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "1".equals(status));
             return "success";
         }
         return "fail";
@@ -135,13 +145,13 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> paramsMap = new TreeMap<>();
-        paramsMap.put("shOrderId", withdrawLog.getOrderNo());
-        paramsMap.put("account", payAgentPlatform.getMerId());
+        paramsMap.put("out_trade_sn", withdrawLog.getOrderNo());
+        paramsMap.put("app_key", payAgentPlatform.getMerId());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
+        String tempStr = this.assemblyUrl(paramsMap) + "&" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         paramsMap.put("sign", sign);
 
@@ -149,7 +159,7 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
         requestMap.setAll(paramsMap);
         log.warn(JsonUtil.object2Json(requestMap));
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
@@ -166,22 +176,25 @@ public class _97PayAgentProcessor extends AbstractPayAgent {
             log.info(payAgentPlatform.getName()+"查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
-                String statusTrue = resultMap.getOrDefault("status", "").toString();
-                if ("100".equals(code) && "true".equals(statusTrue)) {
+                if ("200".equals(code)) {
                     Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("data");
-                    int state = Integer.parseInt(dataMap.getOrDefault("state", "").toString());
-                    if (state > 3 || state == 2) {
+                    int statusType = Integer.valueOf(dataMap.getOrDefault("status", "").toString());
+                    String resultSign = dataMap.remove("sign").toString();
+                    SortedMap<String, Object> signMap = new TreeMap<>(dataMap);
+                    String tempTwo = this.assemblyUrl(signMap) + "&" + signMd5;
+                    String signTwo = DigestUtils.md5Hex(tempTwo).toUpperCase();
+                    if (signTwo.equals(resultSign)) {
                         // status 4代付中 5代付失败 6代付成功
-                        // state提款状态（0待处理，1处理中，2关闭，3待确认，4失败，5成功）
+                        // statusType  1表示处理成功，2表示驳回申请,其他未处理
                         int status = 4;
-                        if (state == 5) {
-                            status = 6;
-                            state = 5;
-                        } else if (state == 4 || state == 2) {
-                            status = 5;
-                            state = 4;
+                        if (statusType == 1 || statusType == 2) {
+                            if (statusType == 1) {
+                                status = 6;
+                            } else {
+                                status = 5;
+                            }
+                            payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                         }
-                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
                     }
                 }
                 return JsonUtil.object2Json(resultMap);
