@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectActivityQuestInfoVo">
-        select a.id, a.icon, a.title, a.ctime, a.indexs, a.type_id, a.target, a.reward, a.detail, a.content, a.game_id, a.kind_id, g.name platformName from ${dbMain}.activity_quest_info a
+        select a.id, a.icon, a.title, a.ctime, a.indexs, a.type_id, a.target, a.reward, a.detail, a.content, a.game_id, a.kind_id, a.platform_id, g.name platformName from ${dbMain}.activity_quest_info a
         left join ${dbMain}.game_platform g on a.platform_id = g.id
     </sql>
 
