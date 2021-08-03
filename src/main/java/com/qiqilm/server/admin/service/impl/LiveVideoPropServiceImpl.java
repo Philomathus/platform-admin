@@ -61,7 +61,7 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     }
 
 
-    private  LiveVideoProp setTime(LiveVideoProp liveVideoProp){
+    private LiveVideoProp setTime(LiveVideoProp liveVideoProp){
         if ( liveVideoProp.getSelectDate() != null && liveVideoProp.getSelectDate().length > 0 ) {
             liveVideoProp.setStartTime( liveVideoProp.getSelectDate()[ 0 ] + " 00:00:00");
             liveVideoProp.setEndTime( liveVideoProp.getSelectDate()[ 1 ] + " 23:59:59");
