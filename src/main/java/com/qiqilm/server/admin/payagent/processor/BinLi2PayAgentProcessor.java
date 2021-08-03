@@ -103,7 +103,8 @@ public class BinLi2PayAgentProcessor extends AbstractPayAgent {
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
-        log.info("宾利2代付回调签名:" + tempStr + "_" + sign);
+
+        log.info(payAgentPlatform.getName()+"回调签名:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String shOrderId = (String) requestMap.get("merchant_order_sn");
 
