@@ -32,7 +32,7 @@ import java.util.TreeMap;
 
 @Repository(value = ConstantsPayAgent.HEZHONG + "PayAgentProcessor")
 @Log4j2
-public class heZhongPayAgentProcessor extends AbstractPayAgent {
+public class HeZhongPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
@@ -40,7 +40,7 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("timestamp", System.currentTimeMillis());
         bodyMap.put("money", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
         bodyMap.put("out_trade_sn", withdrawLog.getOrderNo());
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HEZHONG);
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
         bodyMap.put("bank_realname", withdrawLog.getBankUserName().trim());
         bodyMap.put("bank_account", withdrawLog.getBankAccount().trim());
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
@@ -72,9 +72,9 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("合众代付下单报错原因:" + e);
+            reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
-        log.info("合众代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             if ("200".equals(code)) {
@@ -86,9 +86,9 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                 String tempTwo = this.assemblyUrl(signMap) + "&" + signMd5;
                 String signTwo = DigestUtils.md5Hex(tempTwo).toUpperCase();
 
-                log.info("合众代付下单返回验签 :{}", signTwo + "_" + resultSign);
+                log.info(payAgentPlatform.getName()+"下单返回验签 :{}", signTwo + "_" + resultSign);
                 if (resultSign.equals(signTwo) && "3".equals(status)) {
-                    log.info("合众代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                    log.info(payAgentPlatform.getName()+"订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                     return true;
                 }
             } else {
@@ -97,7 +97,7 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.info("合众代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.info(payAgentPlatform.getName()+"订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -114,7 +114,7 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
 
-        log.info("合众代付回调签名字符串:" + sign + "_" + signStr);
+        log.info(payAgentPlatform.getName()+"回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String out_trade_sn = (String) requestMap.get("out_trade_sn");
 
@@ -173,7 +173,7 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map( text );
                     } );
-            log.info("合众代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName()+"查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 if ("200".equals(code)) {
@@ -202,6 +202,6 @@ public class heZhongPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "合众代付查询失败,订单号:"+withdrawLog.getOrderNo();
+        return payAgentPlatform.getName()+"查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }
