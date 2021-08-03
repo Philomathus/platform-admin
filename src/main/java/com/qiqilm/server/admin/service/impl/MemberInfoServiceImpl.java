@@ -245,7 +245,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 //		String user_name = req.getId().substring(5);
 //		memberDepositLog.setUserName(user_name);
 //        memberDepositLog.setMoney(req.getScore());
-//        memberDepositLog.setRemark(Mk);
+//        memberDepositLog.setRemark(req.getMk());
 //        memberDepositLog.setMoneydes(req.getMoneydes());
 //        String beatNumTwo = String.valueOf(beatNum.setScale(0,BigDecimal.ROUND_HALF_UP));
 //		memberDepositLog.setBeatNum(Integer.valueOf(beatNumTwo));
