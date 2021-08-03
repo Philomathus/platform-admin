@@ -60,6 +60,8 @@ public class LiveVideoProp extends BaseEntity {
     @Excel(name = "送礼平台用户ID")
     private String pUserId;
 
+    private String perUserId;
+
     /** 送礼平台用户登录名 */
     @Excel(name = "送礼平台用户登录名")
     private String pUserName;

@@ -39,14 +39,14 @@
 
 	<sql id="selectLiveVideoPropVo">
 		select id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id,
-		p_user_id, p_user_name, to_user_id, FROM_UNIXTIME(create_time) create_time , create_date, create_y, create_m, create_d,
+		p_user_id perUserId, p_user_name, to_user_id, FROM_UNIXTIME(create_time) create_time , create_date, create_y, create_m, create_d,
 		create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private,
 		from_ip, is_coin from ${dbLive}.live_video_prop
 	</sql>
 
 	<select id="selectLiveVideoPropList" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
 		select lvp.id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id,
-		lvp.p_user_id, p_user_name, to_user_id, lu.nick_name, FROM_UNIXTIME(lvp.create_time) create_time , create_date, create_y, create_m, create_d,
+		lvp.p_user_id perUserId, p_user_name, to_user_id, lu.nick_name, FROM_UNIXTIME(lvp.create_time) create_time , create_date, create_y, create_m, create_d,
 		create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private,
 		from_ip, is_coin from ${dbLive}.live_video_prop lvp left join ${dbLive}.live_user lu on lvp.to_user_id = lu.id
 		<where>
@@ -68,7 +68,7 @@
 
 	<select id="selectLiveVideoPropList7706" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
 		select lvp.id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id,
-		lvp.p_user_id, p_user_name, to_user_id, lu.nick_name, FROM_UNIXTIME(lvp.create_time) create_time , create_date, create_y, create_m, create_d,
+		lvp.p_user_id perUserId, p_user_name, to_user_id, lu.nick_name, FROM_UNIXTIME(lvp.create_time) create_time , create_date, create_y, create_m, create_d,
 		create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private,
 		from_ip, is_coin from ${dbLive}.live_video_prop lvp left join cx_live.live_user lu on lvp.to_user_id = lu.id
 		<where>
