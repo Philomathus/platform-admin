@@ -129,4 +129,6 @@ public abstract class ConstantsPayAgent {
 	public static final String DINGFENG            = "dingFeng";
 	//宏博代付
 	public static final String HONGBO            = "hongBo";
+	//马哥代付
+	public static final String MAGE            = "maGe";
 }

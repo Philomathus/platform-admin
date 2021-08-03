@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository(value = ConstantsPayAgent.BINLI2 + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.MAGE + "PayAgentProcessor")
 @Log4j2
-public class BinLi2PayAgentProcessor extends AbstractPayAgent {
+public class MaGePayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
@@ -40,7 +40,7 @@ public class BinLi2PayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("merchant_order_sn", withdrawLog.getOrderNo());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
         bodyMap.put("code", "1");
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.BINLI2);
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
         bodyMap.put("attach", "attach");
         bodyMap.put("timestamp", System.currentTimeMillis() / 1000);
         bodyMap.put("name", withdrawLog.getBankUserName().trim());
@@ -74,13 +74,13 @@ public class BinLi2PayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("宾利2代付下单报错原因:" + e);
+            reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
-        log.info("宾利2代付下单结果- result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果- result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             if ("1".equals(code)) {
-                log.info("宾利2代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                log.info(payAgentPlatform.getName()+"订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
@@ -88,7 +88,7 @@ public class BinLi2PayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("宾利2代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.warn(payAgentPlatform.getName()+"订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -133,8 +133,7 @@ public class BinLi2PayAgentProcessor extends AbstractPayAgent {
     @Override
     public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
-        PayAgentPlatform payAgentPlatform =
-                payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
+        PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
         Map<String, Object> paramsMap = new TreeMap<>();
         paramsMap.put("merchant_order_sn", withdrawLog.getOrderNo());
         paramsMap.put("merchant_sn", payAgentPlatform.getMerId());
@@ -164,7 +163,7 @@ public class BinLi2PayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map( text );
                     } );
-            log.info("宾利2代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName()+"查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 int code = Integer.parseInt(resultMap.getOrDefault("code", 0).toString());
                 if (code == 1) {
@@ -182,14 +181,13 @@ public class BinLi2PayAgentProcessor extends AbstractPayAgent {
                     } else {
                         statusType = 0;
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
-                            statusType);
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                 }
                 return JsonUtil.object2Json(resultMap);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "宾利2代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName()+"查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }

@@ -44,7 +44,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
         bodyMap.put("bank_user", withdrawLog.getBankUserName().trim());
         bodyMap.put("bank_id", withdrawLog.getBankAccount().trim());
-        bodyMap.put("callback_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.LUBAN);
+        bodyMap.put("callback_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
         bodyMap.put("withdraw_type", "1");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -74,13 +74,13 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
                     });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("鲁班代付下单报错原因:" + e);
+            reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
-        log.info("鲁班代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             if ("200".equals(code)) {
-                log.info("鲁班代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                log.info(payAgentPlatform.getName()+"订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
@@ -88,7 +88,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("鲁班代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.warn(payAgentPlatform.getName()+"订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -105,7 +105,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         String tempStr = flow_no + call_time + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toLowerCase();
 
-        log.info("鲁班代付回调签名:" + sign + "_" + signStr);
+        log.info(payAgentPlatform.getName()+"回调签名:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(flow_no);
             if (withdrawLog == null) {
@@ -151,21 +151,24 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map(text);
                     });
-            log.info("鲁班代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName()+"查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
                 if ("200".equals(code)) {
-                    int msg = Integer.parseInt(resultMap.getOrDefault("msg", "").toString());
-                    if (msg > 1) {
-                        // status 4代付中 5代付失败 6代付成功
-                        // statusType  1打款中2提现已到账3提现已驳回
-                        int status = 4;
-                        if (msg == 2) {
-                            status = 6;
-                        } else if (msg == 3) {
-                            status = 5;
+                    String msgg = resultMap.getOrDefault("msg", "").toString();
+                    if(StringUtils.isNotBlank(msgg)) {
+                        int msg = Integer.parseInt(msgg);
+                        if (msg > 1) {
+                            // status 4代付中 5代付失败 6代付成功
+                            // statusType  1打款中2提现已到账3提现已驳回
+                            int status = 4;
+                            if (msg == 2) {
+                                status = 6;
+                            } else if (msg == 3) {
+                                status = 5;
+                            }
+                            payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, msg);
                         }
-                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, msg);
                     }
                 }
                 return JsonUtil.object2Json(resultMap);
@@ -174,6 +177,6 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
                 Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "鲁班代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName()+"查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }
