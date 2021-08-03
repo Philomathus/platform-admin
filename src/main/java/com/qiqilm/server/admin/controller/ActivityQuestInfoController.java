@@ -7,10 +7,12 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ActivityQuestInfo;
 import com.qiqilm.server.admin.domain.ActivityQuestType;
 import com.qiqilm.server.admin.domain.GameInfo;
+import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IActivityQuestInfoService;
 import com.qiqilm.server.admin.service.IActivityQuestTypeService;
 import com.qiqilm.server.admin.service.IGameInfoService;
+import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class ActivityQuestInfoController extends BaseController {
 
 	@Autowired
 	private IGameInfoService gameInfoService;
+
+	@Autowired
+	private IGamePlatformService gamePlatformService;
 
 	/**
 	 * 查询任务信息列表列表
@@ -121,6 +126,28 @@ public class ActivityQuestInfoController extends BaseController {
 	@GetMapping( "/gameInfo" )
 	public AjaxResult findgameInfo() {
 		List<GameInfo> gameInfo = gameInfoService.selectGameInfo();
+		return AjaxResult.success( gameInfo );
+	}
+
+	/**
+	 * 平台游戏类型下拉框
+	 *
+	 * @return
+	 */
+	@GetMapping( "/kindIdSelect" )
+	public AjaxResult kindIdSelect() {
+		List<GameInfo> gameInfo = gameInfoService.kindIdSelect();
+		return AjaxResult.success( gameInfo );
+	}
+
+	/**
+	 * 平台类型下拉框
+	 *
+	 * @return
+	 */
+	@GetMapping( "/platformIdSelect" )
+	public AjaxResult platformIdSelect() {
+		List<GamePlatform> gameInfo = gamePlatformService.platformIdSelect();
 		return AjaxResult.success( gameInfo );
 	}
 }

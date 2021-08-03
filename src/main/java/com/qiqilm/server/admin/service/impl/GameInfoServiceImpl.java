@@ -151,4 +151,9 @@ public class GameInfoServiceImpl implements IGameInfoService {
 	public List<GameInfo> selectGameInfo() {
 		return gameInfoMapper.selectGameInfo();
 	}
+
+	@Override
+	public List<GameInfo> kindIdSelect() {
+		return gameInfoMapper.kindIdSelect();
+	}
 }

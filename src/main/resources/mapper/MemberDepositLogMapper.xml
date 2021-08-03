@@ -18,7 +18,7 @@
     </resultMap>
 
     <sql id="selectMemberDepositLogVo">
-        select id, member_id, user_name, money, remark, remark_pay, order_remark, beat_num, op_time, op_name, ip, moneydes from 7700_main.member_deposit_log
+        select id, member_id, user_name, money, remark, remark_pay, order_remark, beat_num, op_time, op_name, ip, moneydes from ${dbMain}.member_deposit_log
     </sql>
 
     <select id="selectMemberDepositLogList" parameterType="MemberDepositLog" resultMap="MemberDepositLogResult">
@@ -26,8 +26,9 @@
         <where>
             <if test="searchValue != null and searchValue != ''"> and (member_id = #{searchValue} or user_name = #{searchValue})</if>
             <if test="money != null and money != ''"> and money = #{money}</if>
-            <if test="remarkPay != null and remarkPay != ''"> and remark_pay = #{remarkPay}</if>
-            <if test="orderRemark != null and orderRemark != ''"> and order_remark = #{orderRemark}</if>
+            <if test="remarkPay != null and remarkPay != ''"> and remark_pay like concat('%', #{remarkPay}, '%')</if>
+            <if test="remark != null and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
+            <if test="orderRemark != null"> and order_remark like concat('%', #{orderRemark}, '%')</if>
             <if test="beatNum != null and beatNum != ''"> and beat_num = #{beatNum}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 AND op_time >= STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
@@ -47,7 +48,7 @@
     </select>
 
     <insert id="insertMemberDepositLog" parameterType="MemberDepositLog">
-        insert into 7700_main.member_deposit_log
+        insert into ${dbMain}.member_deposit_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="memberId != null">member_id,</if>
@@ -79,7 +80,7 @@
     </insert>
 
     <update id="updateMemberDepositLog" parameterType="MemberDepositLog">
-        update 7700_main.member_deposit_log
+        update ${dbMain}.member_deposit_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="memberId != null">member_id = #{memberId},</if>
     
@@ -108,11 +109,11 @@
     </update>
 
     <delete id="deleteMemberDepositLogById" parameterType="Long">
-        delete from 7700_main.member_deposit_log where id = #{id}
+        delete from ${dbMain}.member_deposit_log where id = #{id}
     </delete>
 
     <delete id="deleteMemberDepositLogByIds" parameterType="String">
-        delete from 7700_main.member_deposit_log where id in
+        delete from ${dbMain}.member_deposit_log where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
