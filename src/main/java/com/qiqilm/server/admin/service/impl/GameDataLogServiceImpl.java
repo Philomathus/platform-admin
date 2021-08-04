@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.service.IGameDataLogService;
 import com.qiqilm.server.admin.task.beat.GameDataTableHelp;
 import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
 import com.qiqilm.server.admin.utils.RobotMessage;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -155,7 +156,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			}
 			MemberGameData gameDataLog = new MemberGameData();
 			gameDataLog.setId( og.getId() );
-			if (og.getPlatformId().equals(EnumGamePlatform.AG_LIVE.getType())){
+			if (og.getPlatformId().equals(EnumGamePlatform.AG_LIVE.getType())&& !StringUtils.isEmpty(og.getServerId())){
 				gameDataLog.setGameId( og.getServerId() );
 			}else {
 				gameDataLog.setGameId( og.getGameId() );

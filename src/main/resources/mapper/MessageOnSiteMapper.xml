@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="receiver"    column="receiver"    />
         <result property="action"    column="action"    />
         <result property="pubdatetime"    column="pubDateTime"    />
+        <result property="toUserId"    column="to_user_id"    />
     </resultMap>
 
     <sql id="selectMessageOnSiteVo">
@@ -32,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
                 and date_format(pubDateTime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
+            and to_user_id is null
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
@@ -52,6 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="receiver != null">receiver,</if>
             <if test="action != null and action != ''">action,</if>
             <if test="pubdatetime != null">pubDateTime,</if>
+            <if test="toUserId != null">to_user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -61,6 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="receiver != null">#{receiver},</if>
             <if test="action != null and action != ''">#{action},</if>
             <if test="pubdatetime != null">#{pubdatetime},</if>
+            <if test="toUserId != null">#{toUserId},</if>
          </trim>
     </insert>
 
