@@ -4,8 +4,10 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.MessageOnSite;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.IMessageOnSiteService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 站内信息Controller
@@ -28,6 +31,8 @@ import java.util.List;
 public class MessageOnSiteController extends BaseController {
 	@Autowired
 	private IMessageOnSiteService messageOnSiteService;
+	@Autowired
+	private IMemberInfoService memberInfoService;
 
 
 	/**
@@ -93,5 +98,19 @@ public class MessageOnSiteController extends BaseController {
 	@DeleteMapping( "/{ids}" )
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( messageOnSiteService.deleteMessageOnSiteByIds( ids ) );
+	}
+	@PreAuthorize( "@ss.hasPermi('admin:messageOnSite:add')" )
+	@Log( title = "会员站内信息", businessType = BusinessType.INSERT )
+	@PostMapping("/addUserMessage")
+	public AjaxResult addUserMessage( @RequestBody MessageOnSite messageOnSite ) {
+		MemberInfo memberInfo = memberInfoService.selectMemberInfoById(messageOnSite.getToUserId());
+		if (Objects.isNull(memberInfo)) {
+			return AjaxResult.error("发送失败,会员id错误");
+		}
+		messageOnSite.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+		messageOnSite.setPubdatetime( new Date() );
+		messageOnSite.setReceiverType( "ALL_MEMBER" );
+		messageOnSite.setAction( "DIALOG" );
+		return toAjax( messageOnSiteService.insertMessageOnSite( messageOnSite ) );
 	}
 }
