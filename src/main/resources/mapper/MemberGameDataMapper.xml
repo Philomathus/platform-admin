@@ -94,7 +94,7 @@
 
     <sql id="whereSelect">
         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-            game_end_time >= STR_TO_DATE(#{startTime},'%Y-%m-%d %H:%i:%s') and game_end_time &lt;= STR_TO_DATE(#{endTime},'%Y-%m-%d %H:%i:%s')
+            game_end_time >= #{startTime} and game_end_time &lt;= #{endTime}
         </if>
         <if test="account != null and account != ''">
             and account = #{account}
