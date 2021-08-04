@@ -4,6 +4,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 77tv
  * @date 2021-01-25
  */
+@Data
 public class MessageOnSite extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -43,7 +45,8 @@ public class MessageOnSite extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "发布时间", width = 30, exportFormat = "yyyy-MM-dd HH:mm:ss")
     private Date pubdatetime;
-
+    @Excel(name = "会员id")
+    private String toUserId;
     public void setId(String id) {
         this.id = id;
     }
