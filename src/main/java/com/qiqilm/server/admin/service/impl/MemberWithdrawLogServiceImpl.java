@@ -382,12 +382,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
-		Long userId=loginUser.getUser().getUserId();
-		SysRole sysRole=sysRoleMapper.selectUserRole(userId);
-		if (!sysRole.getRoleKey().equals("common")){
-			if (!StringUtils.isEmpty( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
-				return AjaxResult.error( "该订单只能由" + memberWithdrawLog.getOpName() + "处理" );
-			}
+		List<SysRole> roles = loginUser.getUser().getRoles();
+		boolean contains = roles.stream().anyMatch(m -> "common".equals(m.getRoleKey()));
+		if (!contains){
+			return AjaxResult.error( "该订单只能由" + memberWithdrawLog.getOpName() + "处理" );
 		}
 		if ( !redisUtil.lock( EnumLock.member, memberWithdrawLog.getMemberId(), "1", 5 ) ) {
 			return AjaxResult.error( "请勿重复提交" );
