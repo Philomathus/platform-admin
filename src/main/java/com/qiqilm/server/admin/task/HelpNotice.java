@@ -23,7 +23,7 @@ public class HelpNotice {
 
     public static final String NOTICE_KEY = Constants.LIVE_PREX + "77-notice";
 
-    @Scheduled( fixedDelay = 120000, initialDelay = 60000 )
+    @Scheduled( fixedDelay = 240000, initialDelay = 60000 )
     public void notice(){
         if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),600)){
             return;
