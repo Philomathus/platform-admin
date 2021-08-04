@@ -25,7 +25,7 @@ public class HelpNotice {
 
     @Scheduled( fixedDelay = 600000, initialDelay = 60000 )
     public  void notice(){
-        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),600)){
+        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),500)){
             return;
         }
         String help_notice = sysConfigCacheUtil.getConf("77_help_notice",null);
