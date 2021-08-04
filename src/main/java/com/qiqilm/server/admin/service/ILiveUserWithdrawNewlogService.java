@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
+import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 
 import java.util.List;
 
@@ -81,6 +82,8 @@ public interface ILiveUserWithdrawNewlogService {
 
 	//合并订单
 	AjaxResult fixOrder( String[] ids );
+
+	AjaxResult modifyMoney( LiveUserWithdrawNewlog memberWithdrawLog ) throws Exception;
 
 
 
