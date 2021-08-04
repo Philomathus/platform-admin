@@ -23,8 +23,8 @@
     <sql id="whereSelect">
         <where>
             <if test="hostId != null ">and host_id = #{hostId}</if>
-            <if test="startTime != null and startTime != ''">and start_time >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and end_time &lt;= #{endTime}</if>
+            <if test="startTime != null and startTime != ''">and start_time <![CDATA[ >= ]]> #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and end_time <![CDATA[ <= ]]> #{endTime}</if>
         </where>
     </sql>
 
@@ -34,8 +34,8 @@
         from ${dbLive}.live_host_wage_day
         <where>
             <if test="hostId != null ">host_id = #{hostId}</if>
-            <if test="startTime != null and startTime != ''">and start_time >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and end_time &lt;= #{endTime}</if>
+            <if test="startTime != null and startTime != ''">and start_time <![CDATA[ >= ]]> #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and end_time <![CDATA[ <= ]]> #{endTime}</if>
         </where>) a
        left join ${dbLive}.live_user u on a.host_id=u.id
     </select>
@@ -110,8 +110,8 @@
             <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
             <if test="dto.familyName!=null and dto.familyName!=''">and f.name like concat('%',#{dto.familyName},'%')</if>
             <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>
-            <if test="dto.startTime!=null">and o.start_time >= #{dto.startTime}</if>
-            <if test="dto.endTime!=null">and o.end_time &lt;= #{dto.endTime}</if>
+            <if test="dto.startTime!=null">and o.start_time <![CDATA[ >= ]]> #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and o.end_time <![CDATA[ <= ]]> #{dto.endTime}</if>
         </where>
         group by o.family_id order by o.family_id asc
     </select>
@@ -140,8 +140,8 @@
             <if test="dto.familyId!=null">and o.family_id = #{dto.familyId}</if>
             <if test="dto.hostId!=null">and o.host_id = #{dto.hostId}</if>
             <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
-            <if test="dto.startTime!=null">and o.start_time >= #{dto.startTime}</if>
-            <if test="dto.endTime!=null">and o.end_time &lt;= #{dto.endTime}</if>
+            <if test="dto.startTime!=null">and o.start_time <![CDATA[ >= ]]> #{dto.startTime}</if>
+            <if test="dto.endTime!=null">and o.end_time <![CDATA[ <= ]]> #{dto.endTime}</if>
         group by o.host_id order by o.start_time desc
     </select>
 </mapper>

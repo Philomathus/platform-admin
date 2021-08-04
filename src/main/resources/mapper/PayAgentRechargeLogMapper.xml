@@ -32,8 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="selectStartDate != null and selectStartDate != ''">
                 and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
             </if>
-            <if test="downLoadDate[0] != null "> and create_time >= '${downLoadDate[0]}'</if>
-            <if test="downLoadDate[1] != null "> and create_time &lt;= '${downLoadDate[1]}'</if>
+            <if test="downLoadDate[0] != null "> and create_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>
+            <if test="downLoadDate[1] != null "> and create_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>
         </where>
     </select>
 

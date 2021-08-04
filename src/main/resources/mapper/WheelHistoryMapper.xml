@@ -23,7 +23,7 @@
             <if test="prize != null "> and prize = #{prize}</if>
             <if test="cTime != null "> and c_time = #{cTime}</if>
             <if test="sTime != null "> and c_time > #{sTime}</if>
-            <if test="eTime != null "> and c_time &lt;= #{eTime}</if>
+            <if test="eTime != null "> and c_time <![CDATA[ <= ]]> #{eTime}</if>
             <if test="wheelType != null "> and wheel_type = #{wheelType}</if>
         </where>
     </select>
