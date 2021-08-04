@@ -51,10 +51,10 @@
 				and cur = #{cur}
 			</if>
 			<if test="startTime != null and startTime != ''">
-				and create_time >= #{startTime}
+				and create_time <![CDATA[ >= ]]> #{startTime}
 			</if>
 			<if test="endTime != null and endTime != ''">
-				and create_time &lt;= #{endTime}
+				and create_time <![CDATA[ <= ]]> #{endTime}
 			</if>
 		</where>
 	</select>
@@ -162,10 +162,10 @@
 					and user_id = #{userId}
 				</if>
 				<if test="startTime != null and startTime != ''">
-					and create_time >= #{startTime}
+					and create_time <![CDATA[ >= ]]> #{startTime}
 				</if>
 				<if test="endTime != null and endTime != ''">
-					and create_time &lt;= #{endTime}
+					and create_time <![CDATA[ <= ]]> #{endTime}
 				</if>
             </where>
 	</select>
