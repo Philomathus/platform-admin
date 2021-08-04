@@ -57,10 +57,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				AND oper_param like concat('%', #{operParam}, '%')
 			</if>
 			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				and oper_time &gt;= #{params.beginTime}
+				and oper_time <![CDATA[ >= ]]> #{params.beginTime}
 			</if>
 			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				and oper_time &lt;= #{params.endTime}
+				and oper_time <![CDATA[ <= ]]> #{params.endTime}
 			</if>
 <!--			<if test="operParam != null and operParam != ''">-->
 <!--				AND (oper_param like concat ('%"id":"',#{operParam},'"%') OR oper_param like concat ('%"id":"%_',#{operParam},'"%'))-->

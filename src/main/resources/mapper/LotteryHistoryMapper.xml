@@ -28,10 +28,10 @@
             <if test="lotteryId != null "> and lottery_id = #{lotteryId}</if>
             <if test="code != null  and code != ''"> and code = #{code}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(ktime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                and date_format(ktime,'%y%m%d') <![CDATA[ >= ]]> date_format(#{params.beginTime},'%y%m%d')
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(ktime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                and date_format(ktime,'%y%m%d') <![CDATA[ <= ]]> date_format(#{params.endTime},'%y%m%d')
             </if>
             <if test="status != null "> and status = #{status}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>

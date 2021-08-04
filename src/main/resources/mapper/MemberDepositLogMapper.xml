@@ -31,10 +31,10 @@
             <if test="orderRemark != null"> and order_remark like concat('%', #{orderRemark}, '%')</if>
             <if test="beatNum != null and beatNum != ''"> and beat_num = #{beatNum}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND op_time >= STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
+                AND op_time <![CDATA[ >= ]]> STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND op_time &lt;= STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
+                AND op_time <![CDATA[ <= ]]> STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
             </if>
             <if test="opName != null and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
             <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
