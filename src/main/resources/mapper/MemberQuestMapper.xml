@@ -3,11 +3,13 @@
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberQuestMapper">
 
     <resultMap type="MemberQuest" id="MemberQuestResult">
-        <result property="id"    column="id"    />
-        <result property="memberId"    column="member_id"    />
-        <result property="questId"    column="quest_id"    />
-        <result property="status"    column="status"    />
-        <result property="curnum"    column="curNum"    />
+        <result property="id"        column="id" />
+        <result property="memberId"  column="member_id" />
+        <result property="title"     column="title"  />
+        <result property="questId"   column="quest_id" />
+        <result property="status"    column="status" />
+        <result property="curnum"    column="curNum" />
+        <result property="target"    column="target" />
     </resultMap>
 
     <sql id="selectMemberQuestVo">
@@ -15,12 +17,9 @@
     </sql>
 
     <select id="selectMemberQuestList" parameterType="MemberQuest" resultMap="MemberQuestResult">
-        <include refid="selectMemberQuestVo"/>
+        select mq.id, mq.member_id,aqi.title,mq.status,mq.curNum,aqi.target from member_quest mq LEFT JOIN  activity_quest_info aqi on mq.quest_id = aqi.id
         <where>
             <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
-            <if test="questId != null  and questId != ''"> and quest_id = #{questId}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="curnum != null "> and curNum = #{curnum}</if>
         </where>
     </select>
 
