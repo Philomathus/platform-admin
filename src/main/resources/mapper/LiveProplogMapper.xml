@@ -27,8 +27,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="searchValue != null  and searchValue != ''">
                 and (p_user_id = #{searchValue} or to_user_id = #{searchValue})
             </if>
-            <if test="startTime != null and startTime != ''"> and createtime >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''"> and createtime &lt;= #{endTime}</if>
+            <if test="startTime != null and startTime != ''"> and createtime <![CDATA[ >= ]]> #{startTime}</if>
+            <if test="endTime != null and endTime != ''"> and createtime <![CDATA[ <= ]]> #{endTime}</if>
         </where>
     </select>
 
@@ -38,8 +38,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="searchValue != null  and searchValue != ''">
                 and (p_user_id = #{searchValue} or to_user_id = #{searchValue})
             </if>
-            <if test="startTime != null and startTime != ''"> and createtime >= #{startTime}</if>
-            <if test="endTime != null and endTime != ''"> and createtime &lt;= #{endTime}</if>
+            <if test="startTime != null and startTime != ''"> and createtime <![CDATA[ >= ]]> #{startTime}</if>
+            <if test="endTime != null and endTime != ''"> and createtime <![CDATA[ <= ]]> #{endTime}</if>
         </where>
     </select>
 

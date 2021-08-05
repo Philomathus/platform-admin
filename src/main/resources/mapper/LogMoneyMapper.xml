@@ -117,7 +117,7 @@
 			</foreach>
 		</if>
 		<if test="startTime != null">
-			and create_time &gt;=  #{startTime} and create_time &lt;=  #{endTime}
+			and create_time <![CDATA[ >= ]]>  #{startTime} and create_time <![CDATA[ <= ]]> #{endTime}
 		</if>
 		<if test="mark != null  and mark != ''">
 			and mark like concat('%', #{mark}, '%')
@@ -176,7 +176,7 @@
             </foreach>
         </if>
         <if test="startTime != null">
-			and create_time &gt;=  #{startTime} and create_time &lt;=  #{endTime}
+			and create_time <![CDATA[ >= ]]>  #{startTime} and create_time <![CDATA[ <= ]]> #{endTime}
         </if>
         <if test="mark != null  and mark != ''">
             and mark like concat('%', #{mark}, '%')

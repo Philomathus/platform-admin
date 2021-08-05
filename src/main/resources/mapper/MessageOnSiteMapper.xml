@@ -28,10 +28,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="receiver != null  and receiver != ''"> and receiver = #{receiver}</if>
             <if test="action != null  and action != ''"> and action = #{action}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(pubDateTime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                and date_format(pubDateTime,'%y%m%d') <![CDATA[ >= ]]> date_format(#{params.beginTime},'%y%m%d')
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(pubDateTime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                and date_format(pubDateTime,'%y%m%d') <![CDATA[ <= ]]> date_format(#{params.endTime},'%y%m%d')
             </if>
             and to_user_id is null
             <!-- 数据范围过滤 -->

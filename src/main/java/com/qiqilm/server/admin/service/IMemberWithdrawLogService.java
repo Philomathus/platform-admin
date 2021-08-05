@@ -39,6 +39,8 @@ public interface IMemberWithdrawLogService {
 
 	AjaxResult back( ReqMemberWithdrawLog req );
 
+	AjaxResult failBack( ReqMemberWithdrawLog req );
+
 	AjaxResult queryStatus( ReqMemberWithdrawLog req );
 
 	AjaxResult lock( ReqMemberWithdrawLog req );

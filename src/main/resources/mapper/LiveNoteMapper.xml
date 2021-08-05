@@ -34,7 +34,7 @@
 
     <select id="findLotteryNoteList" resultMap="LiveNoteResult">
         <include refid="selectLiveNoteVo"/>
-        where  create_time &gt;=  #{start} and create_time &lt;=  #{end}
+        where  create_time <![CDATA[ >= ]]>  #{start} and create_time <![CDATA[ <= ]]>  #{end}
     </select>
 
 

@@ -39,8 +39,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="poscatNickName != null  and poscatNickName != ''"> and a.poscat_nick_name like concat('%', #{poscatNickName}, '%')</if>
             <if test="userNickName != null  and userNickName != ''"> and a.user_nick_name like concat('%', #{userNickName}, '%')</if>
             <if test="fromPlatform != null  and fromPlatform != ''"> and a.from_platform = #{fromPlatform}</if>
-            <if test="sendStartTime != null  and sendStartTime != ''"> and a.create_time >= #{sendStartTime}</if>
-            <if test="sendEndTime != null  and sendEndTime != ''"> and a.create_time &lt;= #{sendEndTime}</if>
+            <if test="sendStartTime != null  and sendStartTime != ''"> and a.create_time <![CDATA[ >= ]]> #{sendStartTime}</if>
+            <if test="sendEndTime != null  and sendEndTime != ''"> and a.create_time <![CDATA[ <= ]]> #{sendEndTime}</if>
         </where>
     </select>
 

@@ -123,13 +123,13 @@
 				and channelCode = #{channelcode}
 			</if>
 			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				AND reg_time >=STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
+				AND reg_time <![CDATA[ >= ]]> STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				AND reg_time &lt;= STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
+				AND reg_time <![CDATA[ <= ]]> STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
 			</if>
-            <if test="downLoadDate[0] != null "> and reg_time >= '${downLoadDate[0]}'</if>
-            <if test="downLoadDate[1] != null "> and reg_time &lt;= '${downLoadDate[1]}'</if>
+            <if test="downLoadDate[0] != null "> and reg_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>
+            <if test="downLoadDate[1] != null "> and reg_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>
 		</where>
 		order by reg_time desc
 	</select>
@@ -548,7 +548,7 @@
 		</set>
 		where id = #{userId}
 		<if test="money != null">
-			and total_account + #{money} >= 0
+			and total_account + #{money} <![CDATA[ >= ]]> 0
 		</if>
 	</update>
 
@@ -646,7 +646,7 @@
 	</select>
 
 	<select id="selectMemberInfoWithdrawByIdc" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
-		SELECT IFNULL(SUM(sub_money),0) submoney from member_pay_jour where status='1' and member_id = #{userid} and pay_time >= DATE_SUB(NOW(),INTERVAL 30 DAY)
+		SELECT IFNULL(SUM(sub_money),0) submoney from member_pay_jour where status='1' and member_id = #{userid} and pay_time <![CDATA[ >= ]]> DATE_SUB(NOW(),INTERVAL 30 DAY)
 	</select>
 
 	<select id="selectMemberInfoWithdrawByIdd" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
@@ -713,13 +713,13 @@
 			and id in (select id from member_info where status = #{status})
 		</if>-->
 		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				AND reg_time >=STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
+				AND reg_time <![CDATA[ >= ]]> STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				AND reg_time &lt;= STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
+				AND reg_time <![CDATA[ <= ]]> STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')
 		</if>
-		<if test="downLoadDate[0] != null "> and reg_time >= '${downLoadDate[0]}'</if>
-		<if test="downLoadDate[1] != null "> and reg_time &lt;= '${downLoadDate[1]}'</if>
+		<if test="downLoadDate[0] != null "> and reg_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>
+		<if test="downLoadDate[1] != null "> and reg_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>
 		</where>
 		GROUP BY email,channelCode
 	</select>
