@@ -74,4 +74,8 @@ public interface PayAgentLogMapper {
 	int countNoFail( String merOrderNo );
 
 	int countPlatOrderNo( @Param( "orderNo" ) String orderNo, @Param( "payAgentPlatId" ) Long payAgentPlatId );
+
+    List<PayAgentLog> selectByAgentLogOrderList( @Param( "withdrawOrderNos" )List<String> withdrawOrderNos);
+
+	PayAgentLog selectPayAgentLogOrderNo(String merOrderNo);
 }
