@@ -280,6 +280,40 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	}
 
 	@Override
+	@Transactional( rollbackFor = Exception.class )
+	public AjaxResult failBack( ReqMemberWithdrawLog req ) {
+		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
+		if ( memberWithdrawLog == null ) {
+			return AjaxResult.error( "订单不存在" );
+		}
+		if ( memberWithdrawLog.getStatus() != 5 ) {
+			return AjaxResult.error( "该订单状态不是代付失败" );
+		}
+		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
+		if ( payAgentLog != null ) {
+			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
+			if ( i <= 0 ) {
+				return AjaxResult.error( "代付记录删除失败，请重试！" );
+			}
+		}
+
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String    userName  = loginUser.getUser().getUserName();
+
+		MemberWithdrawLog newMemberWithdrawLog = new MemberWithdrawLog();
+		newMemberWithdrawLog.setId( memberWithdrawLog.getId() );
+		newMemberWithdrawLog.setRemark( "由" + userName + "操作回退" );
+		newMemberWithdrawLog.setStatus( 1 );
+		newMemberWithdrawLog.setOpName( userName );
+
+		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( newMemberWithdrawLog );
+		if ( i > 0 ) {
+			return AjaxResult.success();
+		}
+		throw new BusinessException( "回退订单状态失败" );
+	}
+
+	@Override
 	public AjaxResult queryStatus( ReqMemberWithdrawLog req ) {
 		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo(req.getOrderNo());
 		if ( payAgentLog == null ) {
