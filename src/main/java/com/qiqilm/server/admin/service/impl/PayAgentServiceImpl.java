@@ -28,10 +28,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Service
 @Log4j2
@@ -145,7 +142,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( reqPayAgent.getWithdrawOrderNo() );
 
 		PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( reqPayAgent.getPayAgentPlatId() );
-
+		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogOrderNo(reqPayAgent.getWithdrawOrderNo());
+		if (payAgentLog!=null){
+			return AjaxResult.error("该订单已有代付记录");
+		}
 		if ( withdrawLog == null || payAgentPlatform == null ) {
 			log.warn( "提现记录或代付平台未找到 - withdrawOrderNo:{};payAgentPlatId:{}", reqPayAgent.getWithdrawOrderNo(),
 					reqPayAgent.getPayAgentPlatId() );
@@ -288,10 +288,15 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			log.warn( "代付平台未找到 - payAgentPlatId:{}", reqPayAgent.getPayAgentPlatId() );
 			return AjaxResult.error( "代付平台未找到" );
 		}
-
+		List<PayAgentLog> payAgentLogList=payAgentLogMapper.selectByAgentLogOrderList(reqPayAgent.getWithdrawOrderNos());
+		if (payAgentLogList.size()>0){
+			return AjaxResult.error( "被选中的订单已有代付记录" );
+		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
-
+		if ( !redisUtil.lock( EnumLock.payAgent, userName, "1", 10 ) ) {
+			return AjaxResult.error( "代付订单提交过快" );
+		}
 
 		List<MemberWithdrawLog> withdrawLogs = withdrawLogMapper.selectPayAgentOrder( reqPayAgent.getWithdrawOrderNos(),
 				userName );
@@ -347,6 +352,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				failReasonList.put( withdrawLog.getOrderNo(), newReqPayAgent.getFailReason() );
 			}
 		}
+		redisUtil.unLock( EnumLock.payAgent, userName );
 		return AjaxResult.success( ImmutableMap.of( "fail", failReasonList, "sucess", sucessNum ) );
 	}
 

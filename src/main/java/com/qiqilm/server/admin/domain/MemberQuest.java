@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 member_quest
+ * 会员任务对象 member_quest
  *
  * @author 77tv
  * @date 2021-03-20
@@ -23,6 +23,10 @@ public class MemberQuest extends BaseEntity {
     @Excel(name = "会员id")
     private String memberId;
 
+    /** 任务标题 */
+    @Excel(name = "任务标题")
+    private String title;
+
     /** 任务id */
     @Excel(name = "任务id")
     private String questId;
@@ -35,14 +39,20 @@ public class MemberQuest extends BaseEntity {
     @Excel(name = "当前任务数量")
     private Integer curnum;
 
+    /** 目标任务数量 */
+    @Excel(name = "目标任务数量")
+    private Integer target;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("memberId", getMemberId())
+            .append("title", getTitle())
             .append("questId", getQuestId())
             .append("status", getStatus())
             .append("curnum", getCurnum())
+            .append("target", getTarget())
             .toString();
     }
 }
