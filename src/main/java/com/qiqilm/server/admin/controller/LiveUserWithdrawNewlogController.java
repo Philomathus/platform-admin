@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
+import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveUserWithdrawNewlogService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
@@ -160,5 +161,12 @@ public class LiveUserWithdrawNewlogController extends BaseController {
 	@GetMapping( value = "/countTotal" )
 	public AjaxResult getTotal( LiveUserWithdrawNewlog req ) {
 		return liveUserWithdrawNewlogService.getTotal( req );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('live-web:liveUserWithdrawNewlog:modifyMoney')" )
+	@Log( title = "会员修改提现金额", businessType = BusinessType.AUDIT )
+	@PutMapping( "/modifyMoney" )
+	public AjaxResult modifyMoney( @RequestBody LiveUserWithdrawNewlog req ) throws Exception {
+		return liveUserWithdrawNewlogService.modifyMoney( req );
 	}
 }

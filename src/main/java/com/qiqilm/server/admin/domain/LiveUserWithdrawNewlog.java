@@ -109,6 +109,7 @@ public class LiveUserWithdrawNewlog extends BaseEntity {
     private String   startTime;
     @JsonIgnore
     private String   endTime;
+    private Integer googleAuthCode;
 
 
     public String getStartTime() {

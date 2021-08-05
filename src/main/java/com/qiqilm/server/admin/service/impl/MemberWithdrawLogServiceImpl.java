@@ -382,10 +382,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    userName  = loginUser.getUser().getUserName();
-		Long userId=loginUser.getUser().getUserId();
-		SysRole sysRole=sysRoleMapper.selectUserRole(userId);
-		if (!sysRole.getRoleKey().equals("common")){
-			if (!StringUtils.isEmpty( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
+		List<SysRole> roles = loginUser.getUser().getRoles();
+		boolean contains = roles.stream().anyMatch(m -> "common".equals(m.getRoleKey()));
+		if (!contains){
+			if(!StringUtils.isEmpty( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ){
 				return AjaxResult.error( "该订单只能由" + memberWithdrawLog.getOpName() + "处理" );
 			}
 		}

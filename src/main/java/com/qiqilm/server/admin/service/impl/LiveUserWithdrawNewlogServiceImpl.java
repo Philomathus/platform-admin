@@ -2,19 +2,15 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.domain.BankCardAddress;
-import com.qiqilm.server.admin.domain.LiveFamily;
-import com.qiqilm.server.admin.domain.LiveUserWithdrawNewlog;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
 import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
 import com.qiqilm.server.admin.mapper.LiveUserWithdrawNewlogMapper;
 import com.qiqilm.server.admin.service.IBankCardAddressService;
 import com.qiqilm.server.admin.service.ILiveUserWithdrawNewlogService;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
-import com.qiqilm.server.admin.utils.DateUtils;
-import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.service.ISysUserService;
+import com.qiqilm.server.admin.utils.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -44,6 +40,8 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 	private LiveFamilyMapper             liveFamilyMapper;
 	@Resource
 	private IBankCardAddressService      bankCardAddressService;
+	@Resource
+	private ISysUserService sysUserService;
 
 	/**
 	 * 查询主播提现管理
@@ -468,5 +466,60 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 			}
 		}
 		return AjaxResult.success();
+	}
+
+	@Override
+	public AjaxResult modifyMoney(LiveUserWithdrawNewlog req) throws Exception {
+		if (req.getGoogleAuthCode() == null) {
+			return AjaxResult.error( "请输入google验证码" );
+		}
+		LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+		String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+		if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+			return AjaxResult.error( "未绑定google验证秘钥，无法审核" );
+		}
+		if (googleAuthSecret.length() == 32) {
+			return AjaxResult.error( "google验证秘钥未加密，请重新登录" );
+		}
+		String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+				"/googleAuthPrivateKey"));
+
+		if (!GoogleAuthUtil.verifyCode(googleAuthKey, req.getGoogleAuthCode())) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
+		LiveUserWithdrawNewlog liveUserWithdrawNewlog =
+				liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById( req.getId() );
+		if ( liveUserWithdrawNewlog == null ) {
+			return AjaxResult.error( "订单不存在" );
+		}
+		if ( liveUserWithdrawNewlog.getWstatus() != 1 ) {
+			return AjaxResult.error( liveUserWithdrawNewlog.getOrderNo() + "状态有误不能修改提现金额" );
+		}
+		SysUser user = loginUser.getUser();
+		if (user==null){
+			return AjaxResult.error( "用户不存在" );
+		}
+		List<SysRole> roles = user.getRoles();
+		if(null == roles || roles.size() ==0 ){
+			return AjaxResult.error( "该用户未分配角色" );
+		}
+		boolean contains = roles.stream().anyMatch(m -> "2".equals(m.getRoleId().toString()));
+		if (!contains){
+			return AjaxResult.error( "权限不足，请联系管理员" );
+		}
+
+		String    userName  = loginUser.getUser().getUserName();
+		if ( !redisUtil.lock( EnumLock.Anchor, liveUserWithdrawNewlog.getUserId().toString(), "1", 5 ) ) {
+			return AjaxResult.error( "请勿重复提交" );
+		}
+		LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
+		update.setId( liveUserWithdrawNewlog.getId() );
+		update.setOpName( userName );
+		update.setWithdrawMoney(req.getWithdrawMoney());
+		update.setRemark( "提现金额" + liveUserWithdrawNewlog.getWithdrawMoney()+"被"+userName+"修改为"+req.getWithdrawMoney() );
+		update.setUpdateTime( new Date() );
+		int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
+		return i > 0 ? AjaxResult.success() : AjaxResult.error( "更新订单提现金额失败" );
 	}
 }
