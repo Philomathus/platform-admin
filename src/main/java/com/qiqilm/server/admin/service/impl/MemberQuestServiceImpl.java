@@ -37,15 +37,7 @@ public class MemberQuestServiceImpl implements IMemberQuestService {
      */
     @Override
     public List<MemberQuest> selectMemberQuestList(MemberQuest memberQuest) {
-        List<MemberQuest> memberQuestList = memberQuestMapper.selectMemberQuestList(memberQuest);
-        for(MemberQuest memberQuests : memberQuestList){
-            if(memberQuests.getCurnum().intValue()==memberQuests.getTarget().intValue()
-                    && memberQuests.getStatus()==0){
-                memberQuests.setStatus(1);
-                this.updateMemberQuest(memberQuests);
-            }
-        }
-        return memberQuestList;
+        return memberQuestMapper.selectMemberQuestList(memberQuest);
     }
 
     @Override
