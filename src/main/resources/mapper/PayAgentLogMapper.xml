@@ -132,4 +132,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select count(1) from pay_agent_log
         where withdraw_order_no = #{orderNo} and pay_agent_plat_id = #{payAgentPlatId}
     </select>
+
+    <select id="selectByAgentLogOrderList" resultMap="PayAgentLogResult">
+        <include refid="selectPayAgentLogVo" />
+        where
+        withdraw_order_no in
+        <foreach item="orderNo" collection="withdrawOrderNos" open="(" separator="," close=")">
+            #{orderNo}
+        </foreach>
+    </select>
+    <select id="selectPayAgentLogOrderNo" resultMap="PayAgentLogResult">
+        <include refid="selectPayAgentLogVo"/>
+        where withdraw_order_no = #{merOrderNo}
+    </select>
 </mapper>
