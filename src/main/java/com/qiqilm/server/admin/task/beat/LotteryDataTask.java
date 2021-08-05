@@ -63,7 +63,7 @@ public class LotteryDataTask {
         String lottery_telegram = sysConfigCacheUtil.getConf( "lottery_telegram" );
 
         Date endDay  = new Date();
-        Date starDay = DateFormatUtils.addMin( endDay, -3);
+        Date starDay = DateFormatUtils.addMin( endDay, -2);
         String start = DateFormatUtils.formate( starDay );
         String end = DateFormatUtils.formate( endDay );
         try {
