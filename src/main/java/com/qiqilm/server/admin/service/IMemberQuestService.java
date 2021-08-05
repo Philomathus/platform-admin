@@ -27,6 +27,8 @@ public interface IMemberQuestService {
 	 */
 	public List<MemberQuest> selectMemberQuestList(MemberQuest memberQuest);
 
+	public int addMemberScore(MemberQuest memberQuest);
+
 	/**
 	 * 新增【请填写功能名称】
 	 *
