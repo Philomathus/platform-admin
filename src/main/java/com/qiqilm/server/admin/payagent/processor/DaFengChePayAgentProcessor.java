@@ -100,6 +100,7 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
         String return_code = requestMap.getOrDefault("return_code", "").toString();
         String trade_state = requestMap.getOrDefault("trade_state", "").toString();
         requestMap.remove("attach");
+        requestMap.remove("nonce_str");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));

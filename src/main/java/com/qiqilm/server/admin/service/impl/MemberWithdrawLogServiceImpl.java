@@ -259,7 +259,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( payAgentLog != null ) {
 			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
 			if ( i <= 0 ) {
-				return AjaxResult.error( "代付记录删除失败，请重试！" );
+				throw new BusinessException( "代付记录删除失败，请重试!" );
 			}
 		}
 
@@ -293,7 +293,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( payAgentLog != null ) {
 			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
 			if ( i <= 0 ) {
-				return AjaxResult.error( "代付记录删除失败，请重试！" );
+				throw new BusinessException( "代付记录删除失败，请重试!" );
 			}
 		}
 
