@@ -746,4 +746,32 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		nowTime.add( Calendar.MINUTE, -10 );
 		return sdf.format( nowTime.getTime() );
 	}
+	@Override
+	public List<MemberWithdrawLog> selectMemberWithdrawLogCount(MemberWithdrawLog memberWithdrawLog) {
+		List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.countOpNameOrder(memberWithdrawLog);
+		for (MemberWithdrawLog m:memberWithdrawLogList) {
+			//状态(0申请中1锁定2审核不通过3人工入款成功 4代付中5代付失败6代付成功 7出款异常 8人工代付中)
+			if (m.getStatus()==0){
+				m.setStatusName("申请中");
+			}else if(m.getStatus()==1){
+				m.setStatusName("锁定");
+			}else if (m.getStatus()==2){
+				m.setStatusName("审核不通过");
+			}else if(m.getStatus()==3) {
+				m.setStatusName("人工入款成功");
+			}else if (m.getStatus()==4){
+				m.setStatusName("代付中");
+			}else if (m.getStatus()==5){
+				m.setStatusName("代付失败");
+			}else if (m.getStatus()==6){
+				m.setStatusName("代付成功");
+			}else if (m.getStatus()==7){
+				m.setStatusName("出款异常");
+			}else if (m.getStatus()==8){
+				m.setStatusName("人工代付中");
+			}
+		}
+		return memberWithdrawLogList;
+	}
+
 }
