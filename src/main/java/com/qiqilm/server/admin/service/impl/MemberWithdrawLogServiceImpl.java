@@ -326,7 +326,17 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 		String msg = null;
 		try {
-			msg = basePayAgent.queryOrderPay( payAgentLog );
+			basePayAgent.queryOrderPay( payAgentLog );
+			PayAgentLog payAgentLog1 = payAgentLogMapper.selectPayAgentLogOrderNo(req.getOrderNo());
+			Integer callbackStatus = payAgentLog1.getCallbackStatus();
+			//回调状态 0 代付处理中 1 代付成功 代付失败
+			if (callbackStatus==0){
+				msg="代付处理中";
+			}else if (callbackStatus==1){
+				msg="代付成功";
+			}else {
+				msg="代付失败";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
