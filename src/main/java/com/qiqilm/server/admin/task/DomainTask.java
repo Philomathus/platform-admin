@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,7 +35,7 @@ public class DomainTask {
 	@Value( "${spring.profiles.active}" )
 	private String profile;
 
-	@Scheduled( fixedDelay = 300000, initialDelay=300000  )
+	//@Scheduled( fixedDelay = 300000, initialDelay=300000  )
 	public void checkDomain() {
 
 		if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),200)){

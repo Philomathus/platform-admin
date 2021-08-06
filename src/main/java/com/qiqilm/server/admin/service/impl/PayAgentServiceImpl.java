@@ -115,6 +115,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
 		List<PayAgentPlatform> payAgentPlatforms = payAgentPlatformMapper.selectPayAgentPlatformList( null );
 
+		log.warn( "pal:" + payAgentLogs.size() + "pap:" + payAgentPlatforms.size() );
+
 		for ( PayAgentLog payAgentLog : payAgentLogs ) {
 			for ( PayAgentPlatform payAgentPlatform : payAgentPlatforms ) {
 				if ( payAgentLog.getPayAgentPlatId().toString().equals( payAgentPlatform.getId().toString() ) ) {

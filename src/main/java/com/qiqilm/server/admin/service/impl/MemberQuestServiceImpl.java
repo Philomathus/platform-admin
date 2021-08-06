@@ -42,6 +42,9 @@ public class MemberQuestServiceImpl implements IMemberQuestService {
 
     @Override
     public int addMemberScore(MemberQuest memberQuest) {
+        if(memberQuestMapper.selectMemberQuestById(memberQuest.getId()).getStatus()>0){
+            return  0;
+        }
         return memberQuestMapper.updateMemberQuest(memberQuest);
     }
 
