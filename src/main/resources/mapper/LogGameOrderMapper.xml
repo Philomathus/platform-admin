@@ -13,10 +13,11 @@
 		<result property="money" column="money"/>
 		<result property="bTime" column="b_time"/>
 		<result property="eTime" column="e_time"/>
+		<result property="retryCount" column="retry_count"/>
 	</resultMap>
 
 	<sql id="selectLogGameOrderVo">
-		select id, type, member_id, user_name, platform_id, status, money, b_time, e_time from ${dbMain}.log_game_order
+		select id, type, member_id, user_name, platform_id, status, money, b_time, e_time,retry_count from ${dbMain}.log_game_order
 	</sql>
 
 	<select id="selectLogGameOrderList" parameterType="LogGameOrder" resultMap="LogGameOrderResult">
@@ -28,8 +29,14 @@
 			<if test="type != null">
 				and type = #{type}
 			</if>
-			<if test="status != null">
-				and status = #{status}
+			<if test="platformId != null">
+				and platform_id = #{platformId}
+			</if>
+			<if test="stateList != null">
+				and status IN
+				<foreach item="state" collection="stateList" open="(" separator="," close=")">
+					#{state}
+				</foreach>
 			</if>
 			<if test="startTime != null and startTime != ''">
 				and b_time >= #{startTime}
