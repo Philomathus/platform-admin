@@ -240,21 +240,21 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 		}
 
 		//人工加分日志
-		MemberDepositLog memberDepositLog = new MemberDepositLog();
-		memberDepositLog.setMemberId(req.getId());
-		String user_name = req.getId().substring(5);
-		memberDepositLog.setUserName(user_name);
-        memberDepositLog.setMoney(req.getScore());
-        memberDepositLog.setRemark(req.getMk());
-        memberDepositLog.setMoneydes(req.getMoneydes());
-        String beatNumTwo = String.valueOf(beatNum.setScale(0,BigDecimal.ROUND_HALF_UP));
-		memberDepositLog.setBeatNum(Integer.valueOf(beatNumTwo));
-		memberDepositLog.setRemarkPay(req.getRemarkPay());
-		memberDepositLog.setOrderRemark(req.getOrdermk());
-		memberDepositLog.setOpName(admin_name);
-		memberDepositLog.setOpTime(new Date());
-		memberDepositLog.setIp(ip);
-		memberDepositLogMapper.insertMemberDepositLog(memberDepositLog);
+//		MemberDepositLog memberDepositLog = new MemberDepositLog();
+//		memberDepositLog.setMemberId(req.getId());
+//		String user_name = req.getId().substring(5);
+//		memberDepositLog.setUserName(user_name);
+//        memberDepositLog.setMoney(req.getScore());
+//        memberDepositLog.setRemark(req.getMk());
+//        memberDepositLog.setMoneydes(req.getMoneydes());
+//        String beatNumTwo = String.valueOf(beatNum.setScale(0,BigDecimal.ROUND_HALF_UP));
+//		memberDepositLog.setBeatNum(Integer.valueOf(beatNumTwo));
+//		memberDepositLog.setRemarkPay(req.getRemarkPay());
+//		memberDepositLog.setOrderRemark(req.getOrdermk());
+//		memberDepositLog.setOpName(admin_name);
+//		memberDepositLog.setOpTime(new Date());
+//		memberDepositLog.setIp(ip);
+//		memberDepositLogMapper.insertMemberDepositLog(memberDepositLog);
 		return rspBase;
 	}
 
