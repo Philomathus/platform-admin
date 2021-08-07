@@ -175,11 +175,6 @@ public class MemberWithdrawLogController extends BaseController {
 	@GetMapping( "/count" )
 	public TableDataInfo count( MemberWithdrawLog memberWithdrawLog ) {
 		startPage();
-//		if (memberWithdrawLog.getSearchTime()!=null){
-//			String[] searchTime = memberWithdrawLog.getSearchTime();
-//			memberWithdrawLog.setStartTime(searchTime[0]);
-//			memberWithdrawLog.setEndTime(searchTime[1]);
-//		}
 		List<MemberWithdrawLog> list = memberWithdrawLogService.selectMemberWithdrawLogCount( memberWithdrawLog );
 		return getDataTable( list );
 	}
