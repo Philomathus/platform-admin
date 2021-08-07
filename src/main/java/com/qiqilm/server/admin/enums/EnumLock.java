@@ -7,6 +7,8 @@ public enum EnumLock {
 
     game("game:"),
 
+    loginUser("loginUser:"),
+
     member("member:"),
     adminUser("adminUser:"),
     Anchor("Anchor"),
