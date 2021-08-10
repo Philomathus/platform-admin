@@ -34,6 +34,7 @@ import java.util.*;
 @Repository(value = ConstantsPayAgent.XIANGYUE + "PayAgentProcessor")
 @Log4j2
 public class XiangYuePayAgentProcessor extends AbstractPayAgent {
+    private final static String MCHID115354 = "258369";
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         SortedMap<String, String> bodyMap = new TreeMap<>();
@@ -49,7 +50,10 @@ public class XiangYuePayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         //MD5(name + Card + Bankof + money + remarks + mchid + notifyurl + 商户key + MD5(支付密码))"
-        String MD5payPassword = DigestUtils.md5Hex("258369");
+        String MD5payPassword = null;
+        if("115354".equals(payAgentPlatform.getMerId())) {
+            MD5payPassword = DigestUtils.md5Hex(MCHID115354);
+        }
         String tempStr = bodyMap.get("name") + bodyMap.get("Card") + bodyMap.get("Bankof") + bodyMap.get("money") + bodyMap.get("remarks") + bodyMap.get("mchid")
                 + bodyMap.get("notifyurl") + signMd5 + MD5payPassword.toLowerCase();
         String sign = DigestUtils.md5Hex(tempStr);
