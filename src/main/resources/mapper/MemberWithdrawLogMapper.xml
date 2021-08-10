@@ -414,6 +414,7 @@
             <if test="searchTime[1] != null and searchTime[1] != ''"> and update_time <![CDATA[ <= ]]> '${searchTime[1]}'</if>
         </where>
         GROUP BY
-        STATUS
+        STATUS,
+        op_name
     </select>
 </mapper>
