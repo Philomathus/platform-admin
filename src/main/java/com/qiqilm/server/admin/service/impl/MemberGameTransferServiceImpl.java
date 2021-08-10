@@ -37,6 +37,10 @@ public class MemberGameTransferServiceImpl implements IMemberGameTransferService
 	 */
 	@Override
 	public List<MemberGameTransfer> selectMemberGameTransferList(MemberGameTransfer memberGameTransfer) {
+		if (memberGameTransfer.getSelectDate() != null && memberGameTransfer.getSelectDate().length > 0){
+			memberGameTransfer.setStartTime(memberGameTransfer.getSelectDate()[ 0 ] + " 00:00:00");
+			memberGameTransfer.setEndTime(memberGameTransfer.getSelectDate()[ 1 ] + " 23:59:59");
+		}
 		return memberGameTransferMapper.selectMemberGameTransferList(memberGameTransfer);
 	}
 

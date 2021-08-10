@@ -190,4 +190,47 @@
             <include refid="whereCount"></include>
         </where>
     </select>
+
+	<update id="updateByIdSelective">
+		update log_money${dbNodes}
+		<set>
+			<if test="user_id != null">
+				user_id = #{req.user_id},
+			</if>
+			<if test="user_name != null">
+				user_name = #{req.user_name},
+			</if>
+			<if test="type != null">
+				type = #{req.type},
+			</if>
+			<if test="des != null">
+				des = #{req.des},
+			</if>
+			<if test="income != null">
+				income = #{req.income},
+			</if>
+			<if test="pay != null">
+				pay = #{req.pay},
+			</if>
+			<if test="total != null">
+				total = #{req.total},
+			</if>
+			<if test="agent != null">
+				agent = #{req.agent},
+			</if>
+			<if test="create_time != null">
+				create_time = #{req.create_time},
+			</if>
+			<if test="total_before != null">
+				total_before = #{req.total_before},
+			</if>
+			<if test="mark != null">
+				mark = #{req.mark},
+			</if>
+			<if test="markorder != null">
+				markorder = #{req.markorder},
+			</if>
+		</set>
+		where id = #{req.id}
+	</update>
 </mapper>

@@ -8,7 +8,6 @@ import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IGameInfoService;
-import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.service.ILogGameOrderService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ public class LogGameOrderController extends BaseController {
 	private ILogGameOrderService logGameOrderService;
 	@Autowired
 	private IGameInfoService gameInfoService;
-
 	/**
 	 * 查询会员上下分列表
 	 */
@@ -99,23 +97,26 @@ public class LogGameOrderController extends BaseController {
 		return toAjax( logGameOrderService.deleteLogGameOrderByIds( ids ) );
 	}
 
+
 	/**
-	 * 校验上下分
+	 * 回退上下分
 	 */
-	@PreAuthorize( "@ss.hasPermi('member:logGameOrder:vaildScore')" )
-	@Log( title = "校验上下分", businessType = BusinessType.UPDATE )
-	@PostMapping( "/vaildScore" )
-	public AjaxResult handleVaildScore(@RequestBody List<LogGameOrder> scoreList ) {
-		return toAjax( 0);
+	@PreAuthorize( "@ss.hasPermi('member:logGameOrder:backScore')" )
+	@Log( title = "会员回退上下分", businessType = BusinessType.UPDATE )
+	@PostMapping( "/backScore" )
+	public AjaxResult handleBackScore(@RequestBody List<LogGameOrder> scoreList  ) {
+		return toAjax( logGameOrderService.executeBackScore(scoreList));
 	}
 
 	/**
-	 * 校验上下分
+	 * 查询会员上下分列表
 	 */
-	@PreAuthorize( "@ss.hasPermi('member:logGameOrder:backScore')" )
-	@Log( title = "会员上下分", businessType = BusinessType.UPDATE )
-	@PostMapping( "/backScore" )
-	public AjaxResult handleBackScore( @RequestBody List<LogGameOrder> scoreList  ) {
-		return toAjax( 0);
+	@PreAuthorize( "@ss.hasPermi('member:logGameOrder:scoreList')" )
+	@GetMapping( "/score/list" )
+	public TableDataInfo scorelist( LogGameOrder logGameOrder ) {
+		startPage();
+		List<LogGameOrder> list = logGameOrderService.selectLogGameScoreList( logGameOrder );
+		return getDataTable( list );
 	}
+
 }

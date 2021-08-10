@@ -47,6 +47,28 @@
 		</where>
 	</select>
 
+	<select id="selectLogGameScoreList" parameterType="LogGameOrder" resultMap="LogGameOrderResult">
+		SELECT lgo.id,lgo.type,lgo.member_id,lgo.platform_id,mgt.transfer_amount AS money FROM log_game_order lgo LEFT JOIN member_game_transfer mgt ON lgo.id = mgt.transfer_id
+		WHERE lgo.status IN(8,9,10) AND mgt.transfer_state = 'Succeeded'
+		<if test="searchValue != null  and searchValue != ''">
+			and (member_id = #{searchValue} or user_name like concat(#{searchValue}, '%'))
+		</if>
+		<if test="type != null">
+			and type = #{type}
+		</if>
+		<if test="platformId != null">
+			and platform_id = #{platformId}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			and b_time >= #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			and b_time &lt;= #{endTime}
+		</if>
+	</select>
+
+
+
 	<select id="selectLogGameOrderById" parameterType="String" resultMap="LogGameOrderResult">
 		<include refid="selectLogGameOrderVo"/>
 		where id = #{id}

@@ -51,6 +51,4 @@ public class MemberGameTransferController extends BaseController {
 		List<MemberGameTransfer> list = memberGameTransferService.selectMemberGameTransferList( memberGameTransfer );
 		return getDataTable( list );
 	}
-
-
 }

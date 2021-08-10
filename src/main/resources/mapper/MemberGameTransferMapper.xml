@@ -30,7 +30,8 @@
       <if test="transferState != null  and transferState != ''"> and transfer_state = #{transferState}</if>
       <if test="transferType != null  and transferType != ''"> and transfer_type = #{transferType}</if>
       <if test="transferAmount != null "> and transfer_amount = #{transferAmount}</if>
-      <if test="transferTime != null "> and transfer_time = #{transferTime}</if>
+      <if test="startTime != null "> and transfer_time >= #{startTime}</if>
+      <if test="endTime != null">and transfer_time <![CDATA[ <= ]]> #{endTime}</if>
     </where>
   </select>
 
