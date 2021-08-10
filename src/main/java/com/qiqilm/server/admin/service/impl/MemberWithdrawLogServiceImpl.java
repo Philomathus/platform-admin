@@ -15,10 +15,7 @@ import com.qiqilm.server.admin.payagent.BasePayAgent;
 import com.qiqilm.server.admin.payagent.PayAgentProcessorFactoryUtil;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
-import com.qiqilm.server.admin.utils.PhoneUtil;
-import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.ServletUtil;
-import com.qiqilm.server.admin.utils.UserDataUtil;
+import com.qiqilm.server.admin.utils.*;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -748,6 +745,12 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	}
 	@Override
 	public List<MemberWithdrawLog> selectMemberWithdrawLogCount(MemberWithdrawLog memberWithdrawLog) {
+		if (Objects.isNull(memberWithdrawLog.getSearchTime())){
+			Date nowTime = new Date();
+			String stringDate = DateFormatUtils.formate(nowTime,DateFormatUtils.SPLIT_PATTERN_DATE);
+			String[] searchTime = new String[]{stringDate+" 00:00:00",stringDate+" 23:59:59"};
+			memberWithdrawLog.setSearchTime(searchTime);
+		}
 		List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.countOpNameOrder(memberWithdrawLog);
 		for (MemberWithdrawLog m:memberWithdrawLogList) {
 			//状态(0申请中1锁定2审核不通过3人工入款成功 4代付中5代付失败6代付成功 7出款异常 8人工代付中)
