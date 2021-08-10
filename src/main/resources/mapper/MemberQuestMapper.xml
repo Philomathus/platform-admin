@@ -18,7 +18,7 @@
 
     <select id="selectMemberQuestList" parameterType="MemberQuest" resultMap="MemberQuestResult">
         select mq.id, mq.member_id,aqi.title,mq.status,mq.curNum,aqi.target
-        from member_quest mq ,  activity_quest_info aqi where quest_id = aqi.id
+        from member_quest mq ,  activity_quest_info aqi where mq.quest_id = aqi.id
         <where>
             <if test="memberId != null  and memberId != ''"> and mq.member_id = #{memberId} </if>
             <if test="title != null  and title != ''"> and aqi.title like concat('%', #{title}, '%') </if>
