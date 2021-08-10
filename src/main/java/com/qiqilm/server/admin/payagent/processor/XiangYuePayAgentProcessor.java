@@ -53,6 +53,8 @@ public class XiangYuePayAgentProcessor extends AbstractPayAgent {
         String MD5payPassword = null;
         if("115354".equals(payAgentPlatform.getMerId())) {
             MD5payPassword = DigestUtils.md5Hex(MCHID115354);
+        } else {
+            reqPayAgent.setFailReason("请加入新户的支付密码到代码中");
         }
         String tempStr = bodyMap.get("name") + bodyMap.get("Card") + bodyMap.get("Bankof") + bodyMap.get("money") + bodyMap.get("remarks") + bodyMap.get("mchid")
                 + bodyMap.get("notifyurl") + signMd5 + MD5payPassword.toLowerCase();
