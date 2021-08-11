@@ -558,7 +558,7 @@
 			code_account = convert(code_account + #{code_account},decimal(15,2)),
 			code_total = convert(code_total + #{code_total},decimal(15,2))
 		</set>
-		where id = #{userId} and status in (1,4,6)
+		where id = #{userId} and status in (1,4,6,7)
 	</update>
 	<insert id="call_pro_useranalysis" statementType="CALLABLE">
 		{call pro_useranalysis(#{userid,mode=IN,jdbcType=VARCHAR})}
@@ -578,7 +578,7 @@
 
 	<select id="selectMemberSpeak" resultType="java.lang.String">
 		select id
-		from member_info where speak = 1
+		from member_info where status = 0
 						   and id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
