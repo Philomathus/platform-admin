@@ -60,4 +60,6 @@ public interface IMemberWithdrawLogService {
 	AjaxResult getTotal( MemberWithdrawLog memberWithdrawLog );
 
 	List<MemberWithdrawLog> getWithdrawLogList();
+
+	List<MemberWithdrawLog> selectMemberWithdrawLogCount(MemberWithdrawLog memberWithdrawLog);
 }

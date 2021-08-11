@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -169,5 +170,12 @@ public class MemberWithdrawLogController extends BaseController {
 	@PutMapping( "/manualWithdrawal" )
 	public AjaxResult manualWithdrawal( @RequestBody ReqMemberWithdrawLog req ) {
 		return memberWithdrawLogService.manualWithdrawal( req );
+	}
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:list')" )
+	@GetMapping( "/count" )
+	public TableDataInfo count( MemberWithdrawLog memberWithdrawLog ) {
+		startPage();
+		List<MemberWithdrawLog> list = memberWithdrawLogService.selectMemberWithdrawLogCount( memberWithdrawLog );
+		return getDataTable( list );
 	}
 }

@@ -402,4 +402,19 @@
             #{id}
         </foreach>
     </select>
+    <select id="countOpNameOrder" resultMap="MemberWithdrawLogResult">
+        SELECT
+        count(id) as times,
+        sum(withdraw_money) AS money,
+        op_name,status
+        FROM `${dbMain}`.member_withdraw_log
+        <where>
+            <if test="opName != null and opName != ''">and op_name = #{opName}</if>
+            <if test="searchTime[0] != null and searchTime[0] != ''" > and update_time <![CDATA[ >= ]]> '${searchTime[0]}'</if>
+            <if test="searchTime[1] != null and searchTime[1] != ''"> and update_time <![CDATA[ <= ]]> '${searchTime[1]}'</if>
+        </where>
+        GROUP BY
+        STATUS,
+        op_name
+    </select>
 </mapper>

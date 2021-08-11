@@ -61,4 +61,6 @@ public interface MemberWithdrawLogMapper {
 	List<MemberWithdrawLog> selectPayAgentOrder( @Param( "withdrawOrderNos" ) List<String> withdrawOrderNos,
 												 @Param( "userName" ) String userName );
 	List<MemberWithdrawLog> selectMemberIdStatus(@Param( "array" ) List<String> memberIds);
+
+	List<MemberWithdrawLog> countOpNameOrder(MemberWithdrawLog memberWithdrawLog);
 }
