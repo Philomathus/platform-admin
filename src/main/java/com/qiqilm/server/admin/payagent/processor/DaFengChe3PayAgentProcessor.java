@@ -107,7 +107,7 @@ public class DaFengChe3PayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
 
-        log.info(payAgentPlatform.getName() + "回调签名:" + tempStr + "_" + sign);
+        log.info(payAgentPlatform.getName() + "回调签名:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr) && "SUCCESS".equals(return_code)) {
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_no);
             if (withdrawLog == null) {
