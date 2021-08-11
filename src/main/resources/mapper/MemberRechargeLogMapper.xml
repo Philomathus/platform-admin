@@ -256,7 +256,7 @@
 		<if test="req.orderNo != null  and req.orderNo != ''">
 			and order_no = #{req.orderNo}
 		</if>
-		<if test="req.status != null and req.status != ''">
+		<if test="req.status != null">
 			and status = #{req.status}
 		</if>
 		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
