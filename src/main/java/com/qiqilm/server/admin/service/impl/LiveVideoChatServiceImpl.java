@@ -2,17 +2,22 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.cache.MemberForbidUtil;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveVideoChat;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.SpeakIpBlackList;
+import com.qiqilm.server.admin.enums.EnumLock;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LiveVideoChatMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.mapper.SpeakIpBlackListMapper;
 import com.qiqilm.server.admin.service.ILiveVideoChatService;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashSet;
@@ -31,6 +36,8 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 	private LiveVideoChatMapper liveVideoChatMapper;
 	@Autowired
 	private MemberForbidUtil    memberForbidUtil;
+	@Resource
+	private RedisUtil redisUtil;
 
 	@Autowired
 	private MemberInfoMapper       memberInfoMapper;
@@ -133,16 +140,20 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 	}
 
 	@Override
-	public String suspendUser( String pUserId, boolean flag, Integer num, String userIp,String msg,String banAccount ) {
-		if ( memberForbidUtil.setPlatformUserSpeak( pUserId, flag ) ) {
+	public AjaxResult suspendUser(String pUserId, boolean flag, Integer num, String userIp, String msg, String banAccount ) {
+		/*if ( memberForbidUtil.setPlatformUserSpeak( pUserId, flag ) ) {
 			memberInfoMapper.updateSpeak( pUserId, num );
-		}
+		}*/
 		if ( flag ) {
-            //当用户为正常号时才能封停
+            //封停
             MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(pUserId);
-            if (memberInfo.getStatus()==1) {
-
-			SpeakIpBlackList speakIpBlackList = new SpeakIpBlackList();
+            if (memberInfo==null){
+				return AjaxResult.error( "会员不存在" );
+			}
+            if (memberInfo.getStatus()==0){
+				return AjaxResult.error( "状态已更新，请刷新" );
+			}
+            SpeakIpBlackList speakIpBlackList = new SpeakIpBlackList();
 			speakIpBlackList.setUserId( pUserId );
 			speakIpBlackList.setUserIp( userIp );
 			speakIpBlackList.setCreateTime( new Date() );
@@ -152,24 +163,24 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 
 			MemberInfo update = new MemberInfo();
 			update.setId( pUserId );
-			update.setSpeak( "1");
+			update.setStatus(0);
 			memberInfoMapper.updateMemberInfo( update );
             // 退出登录
             memberCacheManager.delToken(pUserId);
-			memberForbidUtil.setPlatformUserSpeak( pUserId, true );
-            }
+			//memberForbidUtil.setPlatformUserSpeak( pUserId, true );
+
 		} else {
 			speakIpBlackListMapper.deleteSpeakIp( userIp );
 
 			// 解封账号
 			MemberInfo update = new MemberInfo();
 			update.setId( pUserId );
-			update.setSpeak( "0" );
+			update.setStatus(1);
 			memberInfoMapper.updateMemberInfo( update );
-			memberForbidUtil.setPlatformUserSpeak( pUserId, false );
+			//memberForbidUtil.setPlatformUserSpeak( pUserId, false );
 		}
 
-		return null;
+		return AjaxResult.success();
 	}
 
 	@Override
