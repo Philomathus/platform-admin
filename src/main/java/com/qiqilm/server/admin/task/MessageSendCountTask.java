@@ -43,7 +43,7 @@ public class MessageSendCountTask {
 	//30分钟执行
 	//@Scheduled( fixedDelay = 1800000, initialDelay = 1 )
 	@Scheduled(cron="0 0 0-23 * * ?" )
-	public void runTask() {
+	public void runTask() throws Exception {
 		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 1500 ) ) {
 			return;
 		}
@@ -56,26 +56,20 @@ public class MessageSendCountTask {
 		if(!profile.startsWith("77")||profile.equals("7700")){
 			return;
 		}
-		long nowSix_time = System.currentTimeMillis() / 1000 - 360;
+
+		Date now = new Date();
+		Date before = DateFormatUtils.addMin( now, -6);
 
 		ReqMemberOnline dto = new ReqMemberOnline();
-		dto.setNow_time( nowSix_time );
+		dto.setNow_time( before.getTime() / 1000 );
+		dto.setTableLast(new SimpleDateFormat("yyyyMMdd").format(now));
 
-		dto.setTableLast(new SimpleDateFormat("yyyyMMdd").format(new Date()));
 		RspMemberOnline memberOnline = memberOnlineMapper.sumCount( dto );
 
-		Date starDate = new Date(nowSix_time*1000);
-		long now_time = System.currentTimeMillis() / 1000;
-		Date endDate = new Date(now_time*1000);
 		//判斷开始时间和结束时间是否同一天
-		if(DateUtils.isSameDay(starDate,endDate)){
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.DATE, -1);
-			String systemNowDate = sdf.format(calendar.getTime());
-			String tableLastTwo = systemNowDate.replaceAll("-","");
-			dto.setTableLastTwo(tableLastTwo);
+		if(!DateUtils.isSameDay(now,before)){
 			//查昨日的表
+			dto.setTableLastTwo(new SimpleDateFormat("yyyyMMdd").format(before));
 			RspMemberOnline memberOnlineTwo = memberOnlineMapper.sumCountTwo( dto );
 			Integer count = memberOnline.getCount() + memberOnlineTwo.getCount();
 			memberOnline.setCount(count);
