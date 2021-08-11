@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.chongxuan.web.type.ScoreState;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.domain.LogMoney;
@@ -172,7 +173,7 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		MemberGameMoney myGameMoney = new MemberGameMoney();
 		myGameMoney.setId( logGameOrder.getMemberId().concat( "_" ).concat( String.valueOf( logGameOrder.getPlatformId() ) ) );
 		String name = "下分";
-		if (logGameOrder.getType() == 2){
+		if (logGameOrder.getType() == 1){
 			myGameMoney.setStatus( 0 );
 			name = "上分";
 		}else {
@@ -183,13 +184,13 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		gameMoneyMapper.updateMemberGameMoney( myGameMoney );
 		LogGameOrder logOrder = new LogGameOrder();
 		logOrder.setId( logGameOrder.getId() );
-		if (logGameOrder.getType() == 2){
-			logOrder.setBTime( new Date() );
-		}else {
-			logOrder.setETime( new Date() );
-		}
+		logOrder.setETime( new Date() );
 		logOrder.setMemberId(logGameOrder.getMemberId() );
-		logOrder.setStatus( 2 ); //成功
+		if (logGameOrder.getType() == 1){
+			logOrder.setStatus(ScoreState.BACK_SCORE.getType()); //成功
+		}else {
+			logOrder.setStatus( ScoreState.SCORE_SUCCESS.getType() ); //成功
+		}
 		logOrder.setType( logGameOrder.getType() );
 		logOrder.setMoney( logGameOrder.getMoney() );
 		logOrder.setPlatformId(logGameOrder.getPlatformId() );
@@ -197,12 +198,13 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		BigDecimal now = memberInfoMapper.getMemberMoney( logGameOrder.getMemberId() );
 		BigDecimal change = now.add(logGameOrder.getMoney());
 		int i = change.compareTo( BigDecimal.ZERO );
+		memberInfoMapper.updateMoneySelect( logGameOrder.getMemberId(), change, null, null, null, null );
 		LogMoney logMoney = new LogMoney();
 		logMoney.setId( logGameOrder.getId() );
 		logMoney.setUserId( logGameOrder.getMemberId() );
 		logMoney.setUserName( logGameOrder.getUserName() );
 		if (logGameOrder.getType() == 2){
-			logMoney.setCreateTime( new Date() );
+			logMoney.setUpdateTime( new Date() );
 		}
 		logMoney.setIncome( BigDecimal.ZERO );
 		logMoney.setPay( BigDecimal.ZERO );
