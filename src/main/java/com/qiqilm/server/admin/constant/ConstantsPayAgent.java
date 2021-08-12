@@ -23,8 +23,14 @@ public abstract class ConstantsPayAgent {
 	public static final String LIAN_FU_BAO           = "lianFuBao";
 	// 联付宝2
 	public static final String LIAN_FU_BAO2          = "lianFuBao2";
-	// 联付宝2
+	// 联付宝3
 	public static final String LIAN_FU_BAO3          = "lianFuBao3";
+	// 联付宝4
+	public static final String LIAN_FU_BAO4          = "lianFuBao4";
+	// 联付宝5
+	public static final String LIAN_FU_BAO5          = "lianFuBao5";
+	// 联付宝6
+	public static final String LIAN_FU_BAO6          = "lianFuBao6";
 	// 牛气冲天
 	public static final String NIU_QI_CHONG_TIAN     = "niuQiChongTian";
 	// 华子代付
@@ -91,6 +97,8 @@ public abstract class ConstantsPayAgent {
 	public static final String LVJIAN            = "lvJian";
 	//合众代付
 	public static final String HEZHONG            = "heZhong";
+	//合众2代付
+	public static final String HEZHONG2            = "heZhong2";
 	//利发代付
 	public static final String LIFA            = "liFa";
 	//碧海代付
@@ -123,10 +131,18 @@ public abstract class ConstantsPayAgent {
 	public static final String DAFENGCHE3            = "daFengChe3";
 	//乐乐代付
 	public static final String LELE            = "leLe";
+	//乐乐代付
+	public static final String LELE2            = "leLe2";
 	//鼎丰代付
 	public static final String DINGFENG            = "dingFeng";
 	//宏博代付
 	public static final String HONGBO            = "hongBo";
+	//马哥代付
+	public static final String MAGE            = "maGe";
+	//相约代付
+	public static final String XIANGYUE            = "xiangYue";
+	//小月代付
+	public static final String XIAOYUE            = "xiaoYue";
 	//爱农代付
 	public static final String AINONG            = "aiNong";
 }
