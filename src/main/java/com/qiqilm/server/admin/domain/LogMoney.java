@@ -83,6 +83,8 @@ public class LogMoney extends BaseEntity {
 	@Excel( name = "订单号备注" )
 	private String markorder;
 
+	private String agent;
+
 	@JsonIgnore
 	private String[] types;
 	@JsonIgnore
@@ -93,6 +95,7 @@ public class LogMoney extends BaseEntity {
 	private String   endTime;
 	@JsonIgnore
 	private String   tableLast;
+
 
 	@Override
 	public String toString() {
@@ -105,6 +108,7 @@ public class LogMoney extends BaseEntity {
 				.append( "income", getIncome() )
 				.append( "pay", getPay() )
 				.append( "total", getTotal() )
+				.append("agent",getAgent())
 				.append( "createTime", getCreateTime() )
 				.append( "totalBefore", getTotalBefore() )
 				.append( "mark", getMark() )

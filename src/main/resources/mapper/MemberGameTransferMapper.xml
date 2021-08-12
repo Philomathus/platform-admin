@@ -33,6 +33,7 @@
       <if test="startTime != null "> and transfer_time >= #{startTime}</if>
       <if test="endTime != null">and transfer_time <![CDATA[ <= ]]> #{endTime}</if>
     </where>
+    order by transfer_time desc
   </select>
 
   <select id="selectMemberGameTransferById" parameterType="String" resultMap="MemberGameTransferResult">

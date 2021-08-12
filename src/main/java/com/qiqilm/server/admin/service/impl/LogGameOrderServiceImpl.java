@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.chongxuan.web.game.SpringApplicationUtil;
 import com.chongxuan.web.type.ScoreState;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
@@ -8,6 +9,7 @@ import com.qiqilm.server.admin.domain.MemberGameMoney;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogGameOrderService;
+import com.qiqilm.server.admin.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +34,6 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 	private LogGameOrderMapper logGameOrderMapper;
 	@Autowired
 	private GamePlatformMapper gamePlatformMapper;
-	@Resource
-	private MemberGameMoneyMapper gameMoneyMapper;
 	@Autowired
 	private MemberInfoMapper memberInfoMapper;
 	@Autowired
@@ -162,7 +162,8 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		int count = 0;
 		//下分
 		for (LogGameOrder logGameOrder: list){
-			saveOrUpdateScore(logGameOrder);
+			LogGameOrderServiceImpl logGameOrderService = SpringUtils.getBean(this.getClass());
+			logGameOrderService.saveOrUpdateScore(logGameOrder);
 			count ++;
 		}
 		return count;
@@ -170,18 +171,11 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 
 	@Transactional( rollbackFor = Exception.class )
 	public void saveOrUpdateScore(LogGameOrder logGameOrder){
-		MemberGameMoney myGameMoney = new MemberGameMoney();
-		myGameMoney.setId( logGameOrder.getMemberId().concat( "_" ).concat( String.valueOf( logGameOrder.getPlatformId() ) ) );
-		String name = "下分";
+		//因为是补分，或者加分，所以不能处理会员资金冻结表
+		String name = "下分补分";
 		if (logGameOrder.getType() == 1){
-			myGameMoney.setStatus( 0 );
-			name = "上分";
-		}else {
-			myGameMoney.setStatus( 2 );
+			name = "上分回退";
 		}
-		myGameMoney.setOderSn( "" );
-		myGameMoney.setMoney( BigDecimal.ZERO );
-		gameMoneyMapper.updateMemberGameMoney( myGameMoney );
 		LogGameOrder logOrder = new LogGameOrder();
 		logOrder.setId( logGameOrder.getId() );
 		logOrder.setETime( new Date() );
@@ -196,9 +190,9 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		logOrder.setPlatformId(logGameOrder.getPlatformId() );
 		logGameOrderMapper.updateLogGameOrder(logOrder);
 		BigDecimal now = memberInfoMapper.getMemberMoney( logGameOrder.getMemberId() );
-		BigDecimal change = now.add(logGameOrder.getMoney());
+		BigDecimal change = logGameOrder.getMoney();
 		int i = change.compareTo( BigDecimal.ZERO );
-		memberInfoMapper.updateMoneySelect( logGameOrder.getMemberId(), change, null, null, null, null );
+		memberInfoMapper.updateMoneySelect( logGameOrder.getMemberId(), change.add(now), null, null, null, null );
 		LogMoney logMoney = new LogMoney();
 		logMoney.setId( logGameOrder.getId() );
 		logMoney.setUserId( logGameOrder.getMemberId() );
@@ -211,12 +205,14 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		if ( i > 0 ) {
 			logMoney.setIncome( change );
 		} else {
-			logMoney.setPay( change.negate() );
+			logMoney.setPay( change);
 		}
-		logMoney.setTotal( change );
+		GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(logGameOrder.getPlatformId());
+		logMoney.setTotal( change.add(now) );
 		logMoney.setTotalBefore( now );
 		logMoney.setType( EnumMoney.platform.getType());
 		logMoney.setDes( EnumMoney.platform.getDes());
+		logMoney.setAgent(gamePlatform.getAgent());
 		logMoney.setMark( logGameOrder.getPlatformName()+name );
 		logMoney.setMarkorder( logGameOrder.getId() );
 		String db = logMoney.getUserId().substring( logMoney.getUserId().length() - 1 );
