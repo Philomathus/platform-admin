@@ -91,10 +91,9 @@ public class LiveHostWageDayController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('admin:liveHostWageNote:lists')")
     @GetMapping("/lists")
-    public TableDataInfo lists(LiveHostWageDay dto) {
-        startPage();
+    public AjaxResult lists(LiveHostWageDay dto) {
         List<RspLiveHostWageDays> list = liveHostWageDayService.liveHostWageDays(dto);
-        return getDataTable(list);
+        return AjaxResult.success(list);
     }
 
     /**

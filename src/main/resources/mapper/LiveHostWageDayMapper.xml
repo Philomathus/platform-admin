@@ -276,8 +276,8 @@
         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
         order by d.family_id
     </select>
-    <select id="callprorepLivehostwagedays" resultType="string" statementType="CALLABLE">
-      {call ${dbLive}.prorep_livehostwagedays(#{p_begintime,mode=IN,jdbcType=VARCHAR},#{p_endtime,mode=IN,jdbcType=VARCHAR})}
+    <select id="callprorepLivehostwagedays" statementType="CALLABLE" resultType="java.lang.String">
+      {call ${dbLive}.prorep_livehostwagedays(#{p_begintime,mode=IN,jdbcType=VARCHAR},#{p_endtime,mode=IN,jdbcType=VARCHAR},#{kj_result,mode=OUT,jdbcType=VARCHAR})}
     </select>
 
     <select id="getLiveHostWageDays" resultType="com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDays">

@@ -119,15 +119,8 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     public List<RspLiveHostWageDays> liveHostWageDays(LiveHostWageDay dto) {
         this.strEndTime(dto);
         //调用存贮过程
-        String s = liveHostWageDayMapper.callprorepLivehostwagedays(dto.getStartTime(), dto.getEndTime());
-        List<RspLiveHostWageDays> liveHostWageDays = null;
-        if (s.equals("0")){
-            liveHostWageDays = liveHostWageDayMapper.getLiveHostWageDays(dto);
-        }else {
-            log.error("调用存贮过程失败");
-            return liveHostWageDays;
-        }
-        return liveHostWageDays;
+        liveHostWageDayMapper.callprorepLivehostwagedays(dto.getStartTime(), dto.getEndTime());
+        return liveHostWageDayMapper.getLiveHostWageDays(dto);
     }
 
     private void setTime( LiveHostWageDay dto ) {
