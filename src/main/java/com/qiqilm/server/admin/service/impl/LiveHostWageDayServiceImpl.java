@@ -141,6 +141,9 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     private void strEndTime( LiveHostWageDay dto ) {
         String[] searchTime = dto.getSelectDate();
         if ( searchTime != null && searchTime.length > 0 ) {
+            dto.setStartTime( searchTime[ 0 ] );
+            dto.setEndTime( searchTime[ 1 ] );
+        } else {
             Date d          = new Date();
             SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
             String           dateNowStr = sdf.format( d );
@@ -148,9 +151,6 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
             dto.getSelectDate()[ 1 ] = dateNowStr;
             dto.setStartTime(dateNowStr );
             dto.setEndTime(dateNowStr );
-        } else {
-            dto.setStartTime( searchTime[ 0 ] );
-            dto.setEndTime( searchTime[ 1 ] );
         }
     }
 }

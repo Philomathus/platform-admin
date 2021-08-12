@@ -58,8 +58,8 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
         param.put("applyAmt",withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         param.put("payeeAcctAttr","PRIVATE");
         param.put("bankName",withdrawLog.getBankName());
-        param.put("bankProvince",withdrawLog.getBankAddress().substring(0,3));
-        param.put("bankCity",withdrawLog.getBankAddress().substring(4,7));
+        param.put("bankProvince","广东省");
+        param.put("bankCity","深圳市");
         param.put("applyReason","test");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
