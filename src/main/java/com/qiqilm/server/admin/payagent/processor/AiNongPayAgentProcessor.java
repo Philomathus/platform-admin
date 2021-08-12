@@ -197,8 +197,8 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
                 //  04 提交到渠道，05 代付成功，06 代付失败
                 String statusCode = resultMap.getOrDefault("orderStatus", "").toString();
 
-                if("05".equals(statusCode)  || "06".equals(statusCode)){
-                    if ("05".equals(statusCode)) {
+                if("01".equals(statusCode) || "02".equals(statusCode) || "05".equals(statusCode)  || "06".equals(statusCode)){
+                    if ("01".equals(statusCode) || "05".equals(statusCode)) {
                         status = 6;
                     } else {
                         status = 5;
