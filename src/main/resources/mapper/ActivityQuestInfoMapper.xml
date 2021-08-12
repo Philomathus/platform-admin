@@ -18,12 +18,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="gameId"    column="game_id"    />
         <result property="kindId"    column="kind_id"    />
         <result property="platformId"    column="platform_id"    />
-        <result property="taskMode"    column="task_mode"    />
+<!--        <result property="taskMode"    column="task_mode"    />-->
 
     </resultMap>
 
     <sql id="selectActivityQuestInfoVo">
-        select a.id, a.icon, a.title, a.ctime, a.indexs, a.type_id, a.target, a.reward, a.detail, a.content, a.game_id, a.kind_id, a.platform_id, g.name platformName,a.task_mode from ${dbMain}.activity_quest_info a
+        select a.id, a.icon, a.title, a.ctime, a.indexs, a.type_id, a.target, a.reward, a.detail, a.content, a.game_id, a.kind_id, a.platform_id, g.name platformName from ${dbMain}.activity_quest_info a
         left join ${dbMain}.game_platform g on a.platform_id = g.id
     </sql>
 
@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectAllQuestList" parameterType="ActivityQuestInfo" resultMap="ActivityQuestInfoResult">
-         select id, icon, title, ctime, indexs, type_id, target, reward, detail, content, game_id, kind_id, platform_id,task_mode from activity_quest_info
+         select id, icon, title, ctime, indexs, type_id, target, reward, detail, content, game_id, kind_id, platform_id from activity_quest_info
     </select>
 
     <select id="selectActivityQuestInfoList" parameterType="ActivityQuestInfo" resultMap="ActivityQuestInfoResult">
@@ -84,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gameId != null">game_id,</if>
             <if test="kindId != null">kind_id,</if>
             <if test="platformId != null">platform_id,</if>
-            <if test="taskMode != null">task_mode,</if>
+<!--            <if test="taskMode != null">task_mode,</if>-->
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -100,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gameId != null">#{gameId},</if>
             <if test="kindId != null">#{kindId},</if>
             <if test="platformId != null">#{platformId},</if>
-            <if test="taskMode != null">#{taskMode},</if>
+<!--            <if test="taskMode != null">#{taskMode},</if>-->
          </trim>
     </insert>
 
@@ -119,7 +119,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gameId != null">game_id = #{gameId},</if>
             <if test="kindId != null">kind_id = #{kindId},</if>
             <if test="platformId != null">platform_id = #{platformId},</if>
-            <if test="taskMode != null">task_mode = #{taskMode},</if>
+<!--            <if test="taskMode != null">task_mode = #{taskMode},</if>-->
         </trim>
         where id = #{id}
     </update>

@@ -46,7 +46,7 @@ public class MemberQuest extends BaseEntity {
     /**
      * 任务模式 0长期 1每日任务
      */
-    private Integer taskMode;
+//    private Integer taskMode;
 
     @Override
     public String toString() {
@@ -58,7 +58,7 @@ public class MemberQuest extends BaseEntity {
             .append("status", getStatus())
             .append("curnum", getCurnum())
             .append("target", getTarget())
-            .append("taskMode", getTaskMode())
+//            .append("taskMode", getTaskMode())
             .toString();
     }
 }

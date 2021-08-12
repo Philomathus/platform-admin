@@ -76,7 +76,7 @@ public class ActivityQuestInfo extends BaseEntity {
     /**
      * 任务模式（0永久任务 1每日任务）
      */
-    private Integer taskMode;
+//    private Integer taskMode;
 
     @Override
     public String toString() {
@@ -94,7 +94,7 @@ public class ActivityQuestInfo extends BaseEntity {
             .append("gameId", getGameId())
             .append("kindId", getKindId())
             .append("platformId", getPlatformId())
-             .append("taskMode", getTaskMode())
+//             .append("taskMode", getTaskMode())
             .toString();
     }
 }
