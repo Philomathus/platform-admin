@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.domain.LiveHostWageDay;
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDays;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -69,4 +70,8 @@ public interface LiveHostWageDayMapper {
 	public List<RspLiveHostWageDayList> hostPage_7706(@Param( "dto" ) LiveHostWageDay dto );
 
 	List<String> getliveHostWageDay( @Param( "createTime" ) String createTime, @Param( "familyId" ) Long familyId);
+
+	String callprorepLivehostwagedays(@Param( "p_begintime" ) String p_begintime,@Param( "p_endtime" ) String p_endtime);
+
+	List<RspLiveHostWageDays> getLiveHostWageDays(@Param( "dto" ) LiveHostWageDay dto);
 }

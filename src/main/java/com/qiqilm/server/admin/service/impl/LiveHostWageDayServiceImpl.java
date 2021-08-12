@@ -3,8 +3,10 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDays;
 import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
 import com.qiqilm.server.admin.service.ILiveHostWageDayService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ import java.util.List;
  * @date 2021-03-29
  */
 @Service
+@Log4j2
 public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     @Resource
     private LiveHostWageDayMapper liveHostWageDayMapper;
@@ -112,6 +115,21 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
         return liveHostWageDays;
     }
 
+    @Override
+    public List<RspLiveHostWageDays> liveHostWageDays(LiveHostWageDay dto) {
+        this.strEndTime(dto);
+        //调用存贮过程
+        String s = liveHostWageDayMapper.callprorepLivehostwagedays(dto.getStartTime(), dto.getEndTime());
+        List<RspLiveHostWageDays> liveHostWageDays = null;
+        if (s.equals("0")){
+            liveHostWageDays = liveHostWageDayMapper.getLiveHostWageDays(dto);
+        }else {
+            log.error("调用存贮过程失败");
+            return liveHostWageDays;
+        }
+        return liveHostWageDays;
+    }
+
     private void setTime( LiveHostWageDay dto ) {
         if ( dto.getDateDay() == null ) {
             Date d          = new Date();
@@ -124,6 +142,22 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
         } else {
             dto.setStartTime(dto.getDateDay() + " 00:00:00");
             dto.setEndTime(dto.getDateDay() + " 23:59:59");
+        }
+    }
+
+    private void strEndTime( LiveHostWageDay dto ) {
+        String[] searchTime = dto.getSelectDate();
+        if ( searchTime != null && searchTime.length > 0 ) {
+            Date d          = new Date();
+            SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
+            String           dateNowStr = sdf.format( d );
+            dto.getSelectDate()[ 0 ] = dateNowStr;
+            dto.getSelectDate()[ 1 ] = dateNowStr;
+            dto.setStartTime(dateNowStr );
+            dto.setEndTime(dateNowStr );
+        } else {
+            dto.setStartTime( searchTime[ 0 ] );
+            dto.setEndTime( searchTime[ 1 ] );
         }
     }
 }
