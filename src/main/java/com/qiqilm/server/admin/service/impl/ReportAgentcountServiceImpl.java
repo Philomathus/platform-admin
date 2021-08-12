@@ -34,7 +34,6 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 	 */
 	@Override
 	public Object selectReportAgentcountList( ReportAgentcount reportAgentcount ) throws ParseException {
-		log.warn("reportAgent进入Service1："+System.currentTimeMillis());
 		List<ReportAgentcount> allList   = new ArrayList<>();
 		String                 agenttime = null;
 		if ( reportAgentcount.getAgenttime() == null ) {
@@ -54,12 +53,8 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 
 		//if ( (reportAgentcount.getAgentcode() != null && allList.size() == 0) ||  (reportAgentcount.getAgentcode() != null && dateNowStr().equals(agenttime))) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
 		if (reportAgentcount.getAgentcode() != null) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
-			log.warn("reportAgent执行存储过程前："+System.currentTimeMillis());
-			reportAgentcountMapper.calldataProrepPlamcom( agenttime, agenttime, reportAgentcount.getAgentcode() );//调用存储过程
-			log.warn("reportAgent执行存储过程后："+System.currentTimeMillis());
-			log.warn("reportAgent查询数据库前："+System.currentTimeMillis());
+			reportAgentcountMapper.calldataProrepPlamcom( agenttime, agenttime, reportAgentcount.getAgentcode().trim() );//调用存储过程
 			List<ReportAgentcount> allList1 = reportAgentcountMapper.selectReportAgentcountList( reportAgentcount );
-			log.warn("reportAgent查询数据库后："+System.currentTimeMillis());
 			resultMap.put( "rows", allList1 );
 			return resultMap;
 		}
