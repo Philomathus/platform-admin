@@ -292,8 +292,8 @@
      total_money as totalsettle
      from ${dbLive}.live_hostwagedays
      <where>
-         <if test="dto.hostId!=null">and d.host_id = #{dto.hostId}</if>
-         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
+         <if test="dto.hostId!=null">and host_id = #{dto.hostId}</if>
+         <if test="dto.nickName!=null and dto.nickName!=''">and nick_name like concat('%',#{dto.nickName},'%')</if>
      </where>
      order by host_id
     </select>
