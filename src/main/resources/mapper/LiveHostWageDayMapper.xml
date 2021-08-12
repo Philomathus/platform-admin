@@ -276,5 +276,25 @@
         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
         order by d.family_id
     </select>
+    <select id="callprorepLivehostwagedays" resultType="string" statementType="CALLABLE">
+      {call ${dbLive}.prorep_livehostwagedays(#{p_begintime,mode=IN,jdbcType=VARCHAR},#{p_endtime,mode=IN,jdbcType=VARCHAR})}
+    </select>
+
+    <select id="getLiveHostWageDays" resultType="com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDays">
+     select
+     host_id as hostId,
+     nick_name as nickName,
+     live_time_sec as livetime,
+     livetimejiesuan as  livetimejiesuan,
+     ticket as ticket,
+     costqianliu as costQianliu,
+     times as times,
+     total_money as totalsettle
+     from ${dbLive}.live_hostwagedays
+     <where>
+         <if test="dto.hostId!=null">and d.host_id = #{dto.hostId}</if>
+         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
+     </where>
+    </select>
 
 </mapper>
