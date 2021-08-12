@@ -43,6 +43,11 @@ public class MemberQuest extends BaseEntity {
     @Excel(name = "目标任务数量")
     private Integer target;
 
+    /**
+     * 任务模式 0长期 1每日任务
+     */
+    private Integer taskMode;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -53,6 +58,7 @@ public class MemberQuest extends BaseEntity {
             .append("status", getStatus())
             .append("curnum", getCurnum())
             .append("target", getTarget())
+            .append("taskMode", getTaskMode())
             .toString();
     }
 }

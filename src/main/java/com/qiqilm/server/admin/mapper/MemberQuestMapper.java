@@ -58,4 +58,9 @@ public interface MemberQuestMapper {
 	 * @return 结果
 	 */
 	int deleteMemberQuestByIds(String[] ids );
+
+	/**
+	 * 重置每日任务
+	 */
+	void resetDayTaskStatus();
 }
