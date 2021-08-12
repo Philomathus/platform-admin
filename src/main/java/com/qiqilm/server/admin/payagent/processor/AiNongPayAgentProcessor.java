@@ -55,8 +55,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
         param.put("finaCode",finaCode);
         param.put("payeeAcct",withdrawLog.getBankAccount());
         param.put("payeeName",withdrawLog.getBankUserName());
-        param.put("applyAmt",withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0,
-                BigDecimal.ROUND_HALF_UP).toString());
+        param.put("applyAmt",withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         param.put("payeeAcctAttr","PRIVATE");
         param.put("bankName",withdrawLog.getBankName());
         param.put("bankProvince",withdrawLog.getBankAddress().substring(0,3));
