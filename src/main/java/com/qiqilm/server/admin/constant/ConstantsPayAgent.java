@@ -97,8 +97,6 @@ public abstract class ConstantsPayAgent {
 	public static final String LVJIAN            = "lvJian";
 	//合众代付
 	public static final String HEZHONG            = "heZhong";
-	//合众2代付
-	public static final String HEZHONG2            = "heZhong2";
 	//利发代付
 	public static final String LIFA            = "liFa";
 	//碧海代付
@@ -131,16 +129,8 @@ public abstract class ConstantsPayAgent {
 	public static final String DAFENGCHE3            = "daFengChe3";
 	//乐乐代付
 	public static final String LELE            = "leLe";
-	//乐乐代付
-	public static final String LELE2            = "leLe2";
 	//鼎丰代付
 	public static final String DINGFENG            = "dingFeng";
 	//宏博代付
 	public static final String HONGBO            = "hongBo";
-	//马哥代付
-	public static final String MAGE            = "maGe";
-	//相约代付
-	public static final String XIANGYUE            = "xiangYue";
-	//小月代付
-	public static final String XIAOYUE            = "xiaoYue";
 }
