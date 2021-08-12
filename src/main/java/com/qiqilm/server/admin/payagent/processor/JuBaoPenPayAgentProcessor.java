@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.payagent.processor;
 
-import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -14,24 +13,20 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository(value = ConstantsPayAgent.HONGBO + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.JUBAOPEN + "PayAgentProcessor")
 @Log4j2
-public class HongBoPayAgentProcessor extends AbstractPayAgent {
+public class JuBaoPenPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         Map<String, Object> dataMap = new TreeMap<>();
@@ -40,7 +35,7 @@ public class HongBoPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("money", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         dataMap.put("pay_type", "MANUAL_BANK");
         dataMap.put("secret_type", "md5_secret");
-        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HONGBO);
+        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JUBAOPEN);
         dataMap.put("bank_name", withdrawLog.getBankName());
         dataMap.put("bank_no", withdrawLog.getBankAccount().trim());
         dataMap.put("bank_user_name", withdrawLog.getBankUserName().trim());
@@ -53,42 +48,33 @@ public class HongBoPayAgentProcessor extends AbstractPayAgent {
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(dataMap);
-        log.warn("宏博代付下单请求参数{}",JsonUtil.object2Json(requestMap));
+        log.warn("聚宝盆代付下单请求参数{}",JsonUtil.object2Json(requestMap));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
-
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
-                    restTemplate.httpEntityCallback( httpEntity ), response -> {
-                        InputStream bodyStream = response.getBody();
-                        String      text;
-                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
-                            text = CharStreams.toString( reader );
-                        }
-                        return JsonUtil.json2Map( text );
-                    } );
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.warn("宏博代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("聚宝盆代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
 
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
-                log.info("宏博代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
+                log.info("聚宝盆代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
             }
         }
-        log.warn("宏博代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn("聚宝盆代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
         return false;
     }
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-
+        requestMap.values().removeIf(value -> !org.springframework.util.StringUtils.hasText(value.toString()));
         String rspSign = requestMap.remove("sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -96,7 +82,7 @@ public class HongBoPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
 
-        log.info("宏博代付回调签名:" + rspSign + "_" + sign);
+        log.info("聚宝盆代付回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
             String order_num = requestMap.getOrDefault("order_no", "").toString();
             String remit_result = requestMap.getOrDefault("status", "").toString();
@@ -143,22 +129,14 @@ public class HongBoPayAgentProcessor extends AbstractPayAgent {
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(dataMap);
-        log.warn(JsonUtil.object2Json(requestMap));
+        log.warn("聚宝盆代付单条查询代付订单接口请求参数 - result:{}", JsonUtil.object2Json(requestMap));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
-                    restTemplate.httpEntityCallback( httpEntity ), response -> {
-                        InputStream bodyStream = response.getBody();
-                        String      text;
-                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
-                            text = CharStreams.toString( reader );
-                        }
-                        return JsonUtil.json2Map( text );
-                    } );
-            log.warn("宏博代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
+            log.warn("聚宝盆代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap) && "0".equals(resultMap.getOrDefault("code", "").toString())) {
                 Map resDataMap = (Map) resultMap.get("data");
                 //  status 4代付中 5代付失败 6代付成功

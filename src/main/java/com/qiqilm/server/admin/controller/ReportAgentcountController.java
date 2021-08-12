@@ -147,6 +147,8 @@ public class ReportAgentcountController extends BaseController {
 		if ( add > 0 ) {
 			return AjaxResult.error( 0, "此推广码已存在,请勿重复新增" );
 		}
+		String agentcode = reportAgentcount.getAgentcode();
+		reportAgentcount.setAgentcode(agentcode.trim());
 		reportAgentcountService.addPromotionCode( reportAgentcount );
 		return AjaxResult.success( "新增成功" );
 	}
