@@ -437,6 +437,27 @@ public abstract class DateFormatUtils {
 		return resultDate;
 	}
 
+	/**
+	 * 拼接每日任务有效时间范围
+	 * @return 例：2021-08-12 00:00:00至2021-08-12 23:59:59
+	 */
+	public static String getZeroToDayOver() {
+		Calendar calendar2 = Calendar.getInstance();
+		calendar2.set(calendar2.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DAY_OF_MONTH),
+				23, 59, 59);
+		Date endOfDate = calendar2.getTime();
+		return SPLIT_FORMAT_DATETIME.format( getTodayMorning()).concat("至").concat(SPLIT_FORMAT_DATETIME.format(endOfDate));
+	}
+
+	public static long getTodayEndTime() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		return calendar.getTime().getTime();
+	}
+
 
 
 	public static void main(String[] args) {
