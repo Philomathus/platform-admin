@@ -27,7 +27,7 @@ public class HostShuffle {
         try {
             liveVideoService.processVideoSort();
         } catch ( Exception e ) {
-            log.error( e.getMessage(), e );
+            log.error( "主播排序异常", e );
         }
     }
 }
