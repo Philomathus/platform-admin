@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.chongxuan.web.type.ScoreState;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.domain.LogMoney;
