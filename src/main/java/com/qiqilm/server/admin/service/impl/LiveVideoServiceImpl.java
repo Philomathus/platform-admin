@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 直播Service业务层处理
@@ -169,11 +170,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		liveVideoMapper.updateLiveVideo( updateVideo );
 
-		try {
-			this.processVideoSort();
-		} catch ( Exception e ) {
-			log.error( e.getMessage(), e );
-		}
+//		try {
+//			this.processVideoSort();
+//		} catch ( Exception e ) {
+//			log.error( e.getMessage(), e );
+//		}
 
 		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" + id ) );
 
@@ -382,17 +383,20 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		int i = liveVideoMapper.updateLiveVideo( liveVideo );
 		redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 		if ( i > 0 ) {
-			this.processVideoSort();
-			Long sort = liveVideo.getSort();
-			if ( sort != null && sort <= 20 ) {
-				LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById( liveVideo.getId() );
-				String    msg        = sysConfigCacheUtil.getConf( "first_twenty_notice" );
-				String    groupId    = liveVideo1.getGroupId();
-				if ( StringUtils.isNotEmpty( msg ) && StringUtils.isNotEmpty( groupId ) ) {
-					helpNoticeUtil.sendMsg( msg, groupId );
+			if(StringUtils.isNotBlank(liveVideo.getEffect()) && "1".equals(liveVideo.getEffect())) {
+				this.processVideoSort();
+				Long sort = liveVideo.getSort();
+				if (sort != null && sort <= 20) {
+					LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById(liveVideo.getId());
+					String msg = sysConfigCacheUtil.getConf("first_twenty_notice");
+					String groupId = liveVideo1.getGroupId();
+					if (StringUtils.isNotEmpty(msg) && StringUtils.isNotEmpty(groupId)) {
+						helpNoticeUtil.sendMsg(msg, groupId);
+					}
 				}
+				return AjaxResult.success("更新成功");
 			}
-			return AjaxResult.success( "更新成功" );
+			return AjaxResult.success( "更新成功,但不立即生效" );
 		}
 		return AjaxResult.error( "更新失败" );
 	}
@@ -432,6 +436,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				resultList.add( sortHostId );
 				sortHostMap.remove( i );
 			} else if ( !CollectionUtils.isEmpty( recommendHostList ) ) {
+				Collections.shuffle(recommendHostList);
 				resultList.add( recommendHostList.get( 0 ) );
 				recommendHostList.remove( 0 );
 			} else if ( !CollectionUtils.isEmpty( normalHostList ) ) {

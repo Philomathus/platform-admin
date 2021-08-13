@@ -14,8 +14,8 @@ import javax.annotation.Resource;
 /**
  * 每日任务重置调度
  */
-@Log4j2
-@Component
+//@Log4j2
+//@Component
 public class ActivityTodayTask {
 
     @Autowired
