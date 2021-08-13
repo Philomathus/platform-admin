@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.im;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
+import com.qiqilm.server.admin.cache.ImMessageCacheUtil;
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.domain.GroupMemberList;
@@ -36,6 +37,8 @@ public class ImApiImpl implements ImApi {
 	private LiveCacheUtil     liveCacheUtil;
 	@Autowired
 	private ServerImCacheUtil serverImCacheUtil;
+	@Autowired
+	private ImMessageCacheUtil imMessageCacheUtil;
 
 	private String getUrl( String api ) {
 		List<String> confs = serverImCacheUtil.getValue( Arrays.asList( "tim_sdkappid", "tim_sdk_key", "tim_identifier" ) );
@@ -271,24 +274,25 @@ public class ImApiImpl implements ImApi {
 
 	@Async
 	@Override
-	public MsgRsp sendSystemNotify( String groupId, String content, String... userId ) {
+	public void sendSystemNotify( String groupId, String content, String... userId ) {
 		SendSystemNotification notification = new SendSystemNotification();
 		notification.setGroupId( groupId );
 		notification.setContent( content );
 		if ( userId.length > 0 ) {
 			notification.setMembers( Arrays.asList( userId ) );
 		}
-		return doPost( notification, MsgRsp.class, 1 );
+		imMessageCacheUtil.setImNotifyMessage( notification );
 	}
 
 	@Async
 	@Override
-	public ImRsp sendGroupMessage( String groupId, String userId, MessageType... message ) {
+	public void sendGroupMessage( String groupId, String userId, MessageType... message ) {
 		SendGroupMsg sendGroupMsg = new SendGroupMsg();
 		sendGroupMsg.setGroupId( groupId );
 		sendGroupMsg.setMsgBody( Arrays.asList( message ) );
 		sendGroupMsg.setFromAccount( userId );
-		return doPost( sendGroupMsg, ImRsp.class, 1 );
+		// 放到redis队列里
+		imMessageCacheUtil.setImGroupMessage( sendGroupMsg );
 	}
 
 	@Override
