@@ -22,6 +22,12 @@ public interface ILogMoneyService {
 	 */
 	public List<LogMoney> selectLogMoneyList(LogMoney logMoney);
 
+	/**
+	 * @param logMoney 行为类型统计
+	 * @return {@link TableDataInfo}
+	 */
+	AjaxResult listCount(LogMoney logMoney);
+
     /**
      * @param logMoney 日志的钱
      * @return {@link TableDataInfo}

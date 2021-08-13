@@ -215,6 +215,7 @@ public class LiveVideo extends BaseEntity {
 	private Integer lineStatus;
 	private String  openPay;
 	private String  info;
+	private String  effect;
 
 	@JsonIgnore
 	private String[] types;

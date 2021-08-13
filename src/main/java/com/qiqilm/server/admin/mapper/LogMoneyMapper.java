@@ -44,4 +44,5 @@ public interface LogMoneyMapper {
 							 @Param( "dbNodes" ) String dbNodes );
 
 	Map totalCount( LogMoney logMoney );
+	Map listCount( LogMoney logMoney );
 }
