@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MemberGameTransferMapper">
+
+  <resultMap type="MemberGameTransfer" id="MemberGameTransferResult">
+    <result property="id"    column="id"    />
+    <result property="userId"    column="user_id"    />
+    <result property="agent"    column="agent"    />
+    <result property="platformId"    column="platform_id"    />
+    <result property="transferId"    column="transfer_id"    />
+    <result property="product"    column="product"    />
+    <result property="transferState"    column="transfer_state"    />
+    <result property="transferType"    column="transfer_type"    />
+    <result property="transferAmount"    column="transfer_amount"    />
+    <result property="transferTime"    column="transfer_time"    />
+  </resultMap>
+
+  <sql id="selectMemberGameTransferVo">
+    select id, user_id, agent, platform_id, transfer_id, product, transfer_state, transfer_type, transfer_amount, transfer_time from 7700_main.member_game_transfer
+  </sql>
+
+  <select id="selectMemberGameTransferList" parameterType="MemberGameTransfer" resultMap="MemberGameTransferResult">
+    <include refid="selectMemberGameTransferVo"/>
+    <where>
+      <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+      <if test="agent != null  and agent != ''"> and agent = #{agent}</if>
+      <if test="platformId != null  and platformId != ''"> and platform_id = #{platformId}</if>
+      <if test="transferId != null  and transferId != ''"> and transfer_id = #{transferId}</if>
+      <if test="product != null  and product != ''"> and product = #{product}</if>
+      <if test="transferState != null  and transferState != ''"> and transfer_state = #{transferState}</if>
+      <if test="transferType != null  and transferType != ''"> and transfer_type = #{transferType}</if>
+      <if test="transferAmount != null "> and transfer_amount = #{transferAmount}</if>
+      <if test="startTime != null "> and transfer_time >= #{startTime}</if>
+      <if test="endTime != null">and transfer_time <![CDATA[ <= ]]> #{endTime}</if>
+    </where>
+    order by transfer_time desc
+  </select>
+
+  <select id="selectMemberGameTransferById" parameterType="String" resultMap="MemberGameTransferResult">
+    <include refid="selectMemberGameTransferVo"/>
+    where id = #{id}
+  </select>
+
+  <insert id="insertMemberGameTransfer" parameterType="MemberGameTransfer">
+    insert into 7700_main.member_game_transfer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">id,</if>
+      <if test="userId != null">user_id,</if>
+      <if test="agent != null">agent,</if>
+      <if test="platformId != null">platform_id,</if>
+      <if test="transferId != null">transfer_id,</if>
+      <if test="product != null">product,</if>
+      <if test="transferState != null">transfer_state,</if>
+      <if test="transferType != null">transfer_type,</if>
+      <if test="transferAmount != null">transfer_amount,</if>
+      <if test="transferTime != null">transfer_time,</if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">#{id},</if>
+      <if test="userId != null">#{userId},</if>
+      <if test="agent != null">#{agent},</if>
+      <if test="platformId != null">#{platformId},</if>
+      <if test="transferId != null">#{transferId},</if>
+      <if test="product != null">#{product},</if>
+      <if test="transferState != null">#{transferState},</if>
+      <if test="transferType != null">#{transferType},</if>
+      <if test="transferAmount != null">#{transferAmount},</if>
+      <if test="transferTime != null">#{transferTime},</if>
+    </trim>
+  </insert>
+
+  <update id="updateMemberGameTransfer" parameterType="MemberGameTransfer">
+    update 7700_main.member_game_transfer
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="userId != null">user_id = #{userId},</if>
+
+      <if test="agent != null">agent = #{agent},</if>
+
+      <if test="platformId != null">platform_id = #{platformId},</if>
+
+      <if test="transferId != null">transfer_id = #{transferId},</if>
+
+      <if test="product != null">product = #{product},</if>
+
+      <if test="transferState != null">transfer_state = #{transferState},</if>
+
+      <if test="transferType != null">transfer_type = #{transferType},</if>
+
+      <if test="transferAmount != null">transfer_amount = #{transferAmount},</if>
+
+      <if test="transferTime != null">transfer_time = #{transferTime},</if>
+
+    </trim>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteMemberGameTransferById" parameterType="String">
+    delete from 7700_main.member_game_transfer where id = #{id}
+  </delete>
+
+  <delete id="deleteMemberGameTransferByIds" parameterType="String">
+    delete from 7700_main.member_game_transfer where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+</mapper>

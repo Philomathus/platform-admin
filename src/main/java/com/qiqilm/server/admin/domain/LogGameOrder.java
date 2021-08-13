@@ -77,10 +77,17 @@ public class LogGameOrder extends BaseEntity {
 	@JsonFormat( pattern = DateFormatUtils.SPLIT_PATTERN_DATETIME )
 	@Excel( name = "结束时间", width = 30, exportFormat = DateFormatUtils.SPLIT_PATTERN_DATETIME )
 	private Date     eTime;
+
+	/**
+	 * 重试次数
+	 */
+	private Integer retryCount;
+
 	/**
 	 * 选择日期
 	 */
 	private String[] selectDate;
+	private Integer[] stateList;
 	private String   startTime;
 	private String   endTime;
 

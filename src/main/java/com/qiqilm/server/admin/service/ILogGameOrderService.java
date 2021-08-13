@@ -27,6 +27,8 @@ public interface ILogGameOrderService {
 	 */
 	public List<LogGameOrder> selectLogGameOrderList(LogGameOrder logGameOrder);
 
+	List<LogGameOrder> selectLogGameScoreList( LogGameOrder logGameOrder );
+
 	/**
 	 * 新增会员上下分
 	 *
@@ -58,4 +60,7 @@ public interface ILogGameOrderService {
 	 * @return 结果
 	 */
 	public int deleteLogGameOrderById(String id);
+
+	int executeBackScore(List<LogGameOrder> list);
+
 }
