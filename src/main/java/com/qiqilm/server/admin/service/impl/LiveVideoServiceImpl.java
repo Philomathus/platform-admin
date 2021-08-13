@@ -180,6 +180,13 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
 
+
+
+		if(video.getIsRecommend()==1){
+			recommendPosEvent(id,video.getSortInit());
+		}
+
+
 		LiveUser liveUser = liveUserMapper.selectLiveUserById( id );
 
 		this.saveHostWageNote( liveUser, video );
@@ -200,6 +207,21 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		}
 
 		return false;
+	}
+
+	public void recommendPosEvent( Long id ,Integer sortInit){
+		LiveVideo update = new LiveVideo();
+		update.setId(liveVideoMapper.getMaxSortInitLiveId());
+		update.setSortInit(sortInit);
+		liveVideoMapper.updateLiveVideo( update );
+
+
+		if(profile.equals("7701")){
+			update.setId(liveVideoMapper.getMaxSortInitShareLiveId());//找到最大推荐位置
+			update.setSortInit(liveVideoMapper.getLiveVideoShare(id).getSortInit());//找到下拨人位置
+			liveVideoMapper.updateLive7706Video(update);
+		}
+
 	}
 
 	private void saveHostWageNote( LiveUser liveUser, LiveVideo video ) {
