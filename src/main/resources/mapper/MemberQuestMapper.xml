@@ -10,8 +10,7 @@
         <result property="status"    column="status" />
         <result property="curnum"    column="curNum" />
         <result property="target"    column="target" />
-<!--        <result property="taskMode"    column="task_mode" />-->
-<!--        <result property="taskRangeTime"    column="task_range_time" />-->
+        <result property="taskMode"    column="task_mode" />
     </resultMap>
 
     <sql id="selectMemberQuestVo">
@@ -40,9 +39,7 @@
             <if test="questId != null">quest_id,</if>
             <if test="status != null">status,</if>
             <if test="curnum != null">curNum,</if>
-<!--            <if test="taskMode != null">task_mode,</if>-->
-<!--            <if test="taskRangeTime != null">task_range_time,</if>-->
-
+            <if test="taskMode != null">task_mode,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -50,8 +47,7 @@
             <if test="questId != null">#{questId},</if>
             <if test="status != null">#{status},</if>
             <if test="curnum != null">#{curnum},</if>
-<!--            <if test="taskMode != null">#{taskMode},</if>-->
-<!--            <if test="taskRangeTime != null">#{taskRangeTime},</if>-->
+            <if test="taskMode != null">#{taskMode},</if>
         </trim>
     </insert>
 
