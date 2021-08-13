@@ -1,13 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.chongxuan.web.game.SpringApplicationUtil;
 import com.chongxuan.web.type.ScoreState;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.domain.LogMoney;
-import com.qiqilm.server.admin.domain.MemberGameMoney;
 import com.qiqilm.server.admin.enums.EnumMoney;
-import com.qiqilm.server.admin.mapper.*;
+import com.qiqilm.server.admin.mapper.GamePlatformMapper;
+import com.qiqilm.server.admin.mapper.LogGameOrderMapper;
+import com.qiqilm.server.admin.mapper.LogMoneyMapper;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILogGameOrderService;
 import com.qiqilm.server.admin.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -181,9 +181,9 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		logOrder.setETime( new Date() );
 		logOrder.setMemberId(logGameOrder.getMemberId() );
 		if (logGameOrder.getType() == 1){
-			logOrder.setStatus(ScoreState.BACK_SCORE.getType()); //成功
+			logOrder.setStatus(13); //成功
 		}else {
-			logOrder.setStatus( ScoreState.SCORE_SUCCESS.getType() ); //成功
+			logOrder.setStatus( 2 ); //成功
 		}
 		logOrder.setType( logGameOrder.getType() );
 		logOrder.setMoney( logGameOrder.getMoney() );
