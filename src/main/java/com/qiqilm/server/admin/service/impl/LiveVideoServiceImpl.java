@@ -406,7 +406,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 		if ( i > 0 ) {
 			if(StringUtils.isNotBlank(liveVideo.getEffect()) && "2".equals(liveVideo.getEffect())) {
-				return AjaxResult.success( "更新成功,但不立即生效" );
+				return AjaxResult.success( "更新成功" );
 			}
 			this.processVideoSort();
 			Long sort = liveVideo.getSort();
