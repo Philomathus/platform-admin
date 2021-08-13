@@ -126,6 +126,7 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
             return true;
         }
         log.info("功付代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
         return false;
     }
 
