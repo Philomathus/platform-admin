@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDays;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveHostWageDayService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
@@ -83,6 +84,27 @@ public class LiveHostWageDayController extends BaseController {
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(liveHostWageDayService.selectLiveHostWageDayById(id));
+    }
+
+    /**
+     * 查询主播每日时长统计列表
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveHostWageNote:lists')")
+    @GetMapping("/lists")
+    public AjaxResult lists(LiveHostWageDay dto) {
+        List<RspLiveHostWageDays> list = liveHostWageDayService.liveHostWageDays(dto);
+        return AjaxResult.success(list);
+    }
+
+    /**
+     * 导出主播统计每日时长统计列表
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveHostWageNote:exportHosts')")
+    @Log(title = "主播时长礼物彩票总和", businessType = BusinessType.EXPORT)
+    @GetMapping("/exportHosts")
+    public void exportHosts(LiveHostWageDay dto, HttpServletResponse response) throws ParseException {
+        List<RspLiveHostWageDays> list = liveHostWageDayService.liveHostWageDays(dto);
+        ExportExcelUtil.exportExcel(list, "主播时长礼物彩票总和", "主播时长礼物彩票总和", RspLiveHostWageDays.class, response);
     }
 }
 

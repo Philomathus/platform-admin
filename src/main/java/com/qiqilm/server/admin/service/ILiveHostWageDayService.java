@@ -6,6 +6,7 @@ import java.util.List;
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList;
+import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDays;
 
 
 /**
@@ -34,4 +35,8 @@ public interface ILiveHostWageDayService {
 	public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto) throws ParseException;
 
 	public List<RspLiveHostWageDayList> hostPage(LiveHostWageDay dto) throws ParseException;
+
+	List<RspLiveHostWageDays>  liveHostWageDays(LiveHostWageDay dto);
+
+
 }

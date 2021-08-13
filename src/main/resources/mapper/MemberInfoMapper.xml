@@ -578,7 +578,7 @@
 
 	<select id="selectMemberSpeak" resultType="java.lang.String">
 		select id
-		from member_info where speak = 1
+		from member_info where status = 0
 						   and id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
