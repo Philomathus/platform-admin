@@ -10,7 +10,7 @@
         <result property="status"    column="status" />
         <result property="curnum"    column="curNum" />
         <result property="target"    column="target" />
-        <result property="taskMode"    column="task_mode" />
+<!--        <result property="taskMode"    column="task_mode" />-->
 <!--        <result property="taskRangeTime"    column="task_range_time" />-->
     </resultMap>
 
@@ -40,7 +40,7 @@
             <if test="questId != null">quest_id,</if>
             <if test="status != null">status,</if>
             <if test="curnum != null">curNum,</if>
-            <if test="taskMode != null">task_mode,</if>
+<!--            <if test="taskMode != null">task_mode,</if>-->
 <!--            <if test="taskRangeTime != null">task_range_time,</if>-->
 
         </trim>
@@ -50,7 +50,7 @@
             <if test="questId != null">#{questId},</if>
             <if test="status != null">#{status},</if>
             <if test="curnum != null">#{curnum},</if>
-            <if test="taskMode != null">#{taskMode},</if>
+<!--            <if test="taskMode != null">#{taskMode},</if>-->
 <!--            <if test="taskRangeTime != null">#{taskRangeTime},</if>-->
         </trim>
     </insert>

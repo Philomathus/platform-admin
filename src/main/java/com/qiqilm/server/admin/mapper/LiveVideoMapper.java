@@ -73,4 +73,10 @@ public interface LiveVideoMapper {
 	List<Long> selectExpiredVideo();
 
 	LiveVideo liveInStatus(Long userId);
+
+	Long getMaxSortInitLiveId();
+
+	Long getMaxSortInitShareLiveId();
+
+	LiveVideo getLiveVideoShare(@Param( "hostId" ) Long hostId);
 }

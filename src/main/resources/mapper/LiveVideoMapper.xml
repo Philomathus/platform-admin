@@ -673,4 +673,18 @@
     <select id="liveInStatus" resultMap="LiveVideoResult">
         select live_in from ${dbLive}.live_video where user_id = #{userId}
     </select>
+
+
+
+    <select id="getMaxSortInitLiveId" resultType="java.lang.Integer ">
+       select id from  live_video where live_in = 1 and sort_init = (select MAX(sort_init) from  live_video where live_in = 1 ) limit 1
+    </select>
+
+    <select id="getMaxSortInitShareLiveId" resultType="java.lang.Integer ">
+       select id from  7706_live.live_video where live_in = 1 and sort_init = (select MAX(sort_init) from  7706_live.live_video where live_in = 1 ) limit 1
+    </select>
+
+    <select id="getLiveVideoShare" resultMap="LiveVideoResult">
+         select * from  7706_live.live_video WHERE id = #{hostId}
+    </select>
 </mapper>

@@ -72,8 +72,7 @@ public class LiveVideoChatController extends BaseController {
 		}
 		LoginUser loginUser  = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    banAccount = loginUser.getUser().getUserName();
-		liveVideoChatService.suspendUser( pUserId, flag, num, userIp, msg, banAccount );
-		return AjaxResult.success();
+		return liveVideoChatService.suspendUser( pUserId, flag, num, userIp, msg, banAccount );
 	}
 
 	/**
