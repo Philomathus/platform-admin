@@ -16,6 +16,7 @@
 		<result property="totalBefore" column="total_before"/>
 		<result property="mark" column="mark"/>
 		<result property="markorder" column="markorder"/>
+		<result property="agent" column="agent"  />
 	</resultMap>
 
 	<sql id="selectLogMoneyVo">
@@ -182,6 +183,7 @@
             and mark like concat('%', #{mark}, '%')
         </if>
     </sql>
+
     <select id="totalCount" parameterType="LogMoney" resultType="java.util.Map">
         select ifnull(sum(income),0) as totalIncome,
 		ifnull(sum(pay),0) as totalPay
@@ -200,4 +202,47 @@
 			<include refid="whereSelect" />
 		</where>
 	</select>
+
+	<update id="updateByIdSelective">
+		update log_money${dbNodes}
+		<set>
+			<if test="req.userId != null">
+				user_id = #{req.userId},
+			</if>
+			<if test="req.userName != null">
+				user_name = #{req.userName},
+			</if>
+			<if test="req.type != null">
+				type = #{req.type},
+			</if>
+			<if test="req.des != null">
+				des = #{req.des},
+			</if>
+			<if test="req.income != null">
+				income = #{req.income},
+			</if>
+			<if test="req.income != null">
+				pay = #{req.income},
+			</if>
+			<if test="req.total != null">
+				total = #{req.total},
+			</if>
+			<if test="req.agent != null">
+				agent = #{req.agent},
+			</if>
+			<if test="req.createTime != null">
+				create_time = #{req.createTime},
+			</if>
+			<if test="req.totalBefore != null">
+				total_before = #{req.totalBefore},
+			</if>
+			<if test="req.mark != null">
+				mark = #{req.mark},
+			</if>
+			<if test="req.markorder != null">
+				markorder = #{req.markorder},
+			</if>
+		</set>
+		where id = #{req.id}
+	</update>
 </mapper>

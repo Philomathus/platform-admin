@@ -45,4 +45,7 @@ public interface LogMoneyMapper {
 
 	Map totalCount( LogMoney logMoney );
 	Map listCount( LogMoney logMoney );
+
+	int updateByIdSelective(@Param("req") LogMoney reqLogMoney, @Param( "dbNodes" ) String dbNodes);
+
 }

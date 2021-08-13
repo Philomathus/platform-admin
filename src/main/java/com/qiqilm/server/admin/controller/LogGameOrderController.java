@@ -4,8 +4,10 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.service.IGameInfoService;
 import com.qiqilm.server.admin.service.ILogGameOrderService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,8 @@ import java.util.List;
 public class LogGameOrderController extends BaseController {
 	@Autowired
 	private ILogGameOrderService logGameOrderService;
-
+	@Autowired
+	private IGameInfoService gameInfoService;
 	/**
 	 * 查询会员上下分列表
 	 */
@@ -36,6 +39,12 @@ public class LogGameOrderController extends BaseController {
 		startPage();
 		List<LogGameOrder> list = logGameOrderService.selectLogGameOrderList( logGameOrder );
 		return getDataTable( list );
+	}
+
+	@GetMapping( value = "/listGame" )
+	public AjaxResult getGameListInfo() {
+		List<GamePlatform> gamePlatforms = gameInfoService.getGameListInfo();
+		return AjaxResult.success( gamePlatforms );
 	}
 
 	/**
@@ -87,4 +96,27 @@ public class LogGameOrderController extends BaseController {
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( logGameOrderService.deleteLogGameOrderByIds( ids ) );
 	}
+
+
+	/**
+	 * 回退上下分
+	 */
+	@PreAuthorize( "@ss.hasPermi('member:logGameOrder:backScore')" )
+	@Log( title = "会员回退上下分", businessType = BusinessType.UPDATE )
+	@PostMapping( "/backScore" )
+	public AjaxResult handleBackScore(@RequestBody List<LogGameOrder> scoreList  ) {
+		return toAjax( logGameOrderService.executeBackScore(scoreList));
+	}
+
+	/**
+	 * 查询会员上下分列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('member:logGameOrder:scoreList')" )
+	@GetMapping( "/score/list" )
+	public TableDataInfo scorelist( LogGameOrder logGameOrder ) {
+		startPage();
+		List<LogGameOrder> list = logGameOrderService.selectLogGameScoreList( logGameOrder );
+		return getDataTable( list );
+	}
+
 }
