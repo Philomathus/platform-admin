@@ -319,8 +319,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 						memberQuest.setCurnum( confQuest.getTarget() );
 						memberQuest.setStatus( 1 );
 					}
-//					memberQuest.setTaskMode(confQuest.getTaskMode());
-//					memberQuest.setTaskRangeTime(DateFormatUtils.getZeroToDayOver());
+					memberQuest.setTaskMode(confQuest.getTaskMode());
 					memberQuestMapper.insertMemberQuest( memberQuest );
 				} else if ( memberQuest.getStatus() == 0 ) {
 					memberQuest.setCurnum( memberQuest.getCurnum() + add );
