@@ -21,4 +21,4 @@ mybatis:
       dbLottery: 7700_lottery
       dbOim: oim
     # spring boot集成mybatis的方式打印sql
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
