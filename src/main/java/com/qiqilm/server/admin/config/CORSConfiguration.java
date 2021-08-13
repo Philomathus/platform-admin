@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.config;
 
-import com.qiqilm.server.admin.constant.AdminConstants;
 import com.qiqilm.server.admin.interceptor.AccessLimitInterceptor;
 import com.qiqilm.server.admin.interceptor.RepeatSubmitInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;

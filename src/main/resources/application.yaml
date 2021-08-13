@@ -1,4 +1,9 @@
 server:
+  tomcat:
+    max-connections: 30000
+    threads:
+      min-spare: 100
+      max: 1000
   port: 42002
 logging:
   level:
@@ -85,6 +90,12 @@ spring:
 
 pagehelper:
   autoRuntimeDialect: true
+
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
 
 # token配置
 token:
