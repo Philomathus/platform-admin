@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveVideoChat;
 
 /**
@@ -66,7 +67,7 @@ public interface ILiveVideoChatService {
 	 */
 	void setSpeakForbid( List<LiveVideoChat> list );
 
-	String suspendUser( String pUserId,boolean flag,Integer num,String userIp,String msg,String banAccount);
+	AjaxResult suspendUser(String pUserId, boolean flag, Integer num, String userIp, String msg, String banAccount);
 
 	void forbidSendMsg( String pUserId, Integer forbidTime ,Integer videoId );
 }
