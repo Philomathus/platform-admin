@@ -676,11 +676,11 @@
 
 
 
-    <select id="getMaxSortInitLiveId" resultType="java.lang.Integer ">
+    <select id="getMaxSortInitLiveId" resultType="Long">
        select id from  live_video where live_in = 1 and sort_init = (select MAX(sort_init) from  live_video where live_in = 1 ) limit 1
     </select>
 
-    <select id="getMaxSortInitShareLiveId" resultType="java.lang.Integer ">
+    <select id="getMaxSortInitShareLiveId" resultType="Long">
        select id from  7706_live.live_video where live_in = 1 and sort_init = (select MAX(sort_init) from  7706_live.live_video where live_in = 1 ) limit 1
     </select>
 
