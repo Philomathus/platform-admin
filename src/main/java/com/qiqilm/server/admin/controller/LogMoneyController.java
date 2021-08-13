@@ -41,6 +41,15 @@ public class LogMoneyController extends BaseController {
 	}
 
 	/**
+	 * 行为类型统计
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:logMoney:list')" )
+	@GetMapping( "/listCount" )
+	public AjaxResult listCount( LogMoney logMoney ) {
+		return logMoneyService.listCount( logMoney );
+	}
+
+	/**
 	 * 查询 会员资金信息统计
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:logMoney:list')" )

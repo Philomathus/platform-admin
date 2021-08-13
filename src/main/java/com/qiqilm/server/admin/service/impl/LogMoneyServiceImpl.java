@@ -49,6 +49,16 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
 		return AjaxResult.success( logMoneyMapper.totalCount( logMoney ) );
 	}
 
+	@Override
+	public AjaxResult listCount( LogMoney logMoney ) {
+		this.getTime( logMoney );
+		if ( StringUtils.isNotBlank( logMoney.getSearchValue() ) && logMoney.getSearchValue().startsWith( "77" ) ) {
+			String tableLast = logMoney.getSearchValue().substring(logMoney.getSearchValue().length() - 1);
+			logMoney.setTableLast( tableLast );
+		}
+		return AjaxResult.success( logMoneyMapper.listCount( logMoney ) );
+	}
+
 
 	private void getTime( LogMoney logMoney ) {
 		if ( logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0 ) {

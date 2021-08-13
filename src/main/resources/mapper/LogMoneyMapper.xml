@@ -190,4 +190,14 @@
             <include refid="whereCount"/>
 		</where>
     </select>
+
+	<select id="listCount" parameterType="LogMoney" resultType="java.util.Map">
+		select SUM(income)+SUM(pay) as totalIncome from ${dbMain}.log_money${tableLast}
+		<where>
+			<if test="searchValue != null  and searchValue != ''">
+				and user_id = #{searchValue}
+			</if>
+			<include refid="whereSelect" />
+		</where>
+	</select>
 </mapper>
