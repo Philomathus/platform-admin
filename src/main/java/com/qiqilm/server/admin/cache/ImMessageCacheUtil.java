@@ -1,10 +1,11 @@
-package com.live.common.util.cache;
+package com.qiqilm.server.admin.cache;
 
-import com.live.common.Constants;
-import com.live.common.util.JsonUtil;
-import com.live.common.util.RedisUtil;
-import com.live.common.util.im.vo.api.SendGroupMsg;
-import com.live.common.util.im.vo.api.SendSystemNotification;
+
+import com.qiqilm.server.admin.constant.Constants;
+import com.qiqilm.server.admin.im.vo.api.SendGroupMsg;
+import com.qiqilm.server.admin.im.vo.api.SendSystemNotification;
+import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImMessageCacheUtil {
 	@Autowired
-	private             RedisUtil redisUtil;
-	public static final String    SYSTEM_NOTIFICATION = Constants.redisPRex + "systemSendMessage";
-	public static final String    GROUP_MESSAGE       = Constants.redisPRex + "groupSendMessage:";
+	private RedisUtil redisUtil;
+	public static final String    SYSTEM_NOTIFICATION = Constants.LIVE_PREX + "systemSendMessage";
+	public static final String    GROUP_MESSAGE       = Constants.LIVE_PREX + "groupSendMessage:";
 
 
 	public void setImNotifyMessage( SendSystemNotification notification ) {

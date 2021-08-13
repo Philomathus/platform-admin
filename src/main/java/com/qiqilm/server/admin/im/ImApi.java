@@ -44,9 +44,9 @@ public interface ImApi {
 
 	//	void addGroupMember( String groupId, String... userId );     //添加成员
 
-	MsgRsp sendSystemNotify( String groupId, String content, String... userId );  //群通知
+	void sendSystemNotify( String groupId, String content, String... userId );  //群通知
 
-	ImRsp sendGroupMessage( String groupId, String userId, MessageType... message ); //群消息
+	void sendGroupMessage( String groupId, String userId, MessageType... message ); //群消息
 
 	Object getGroupHistory( String groupId, Integer msgSeq, int size );  //消息历史
 
