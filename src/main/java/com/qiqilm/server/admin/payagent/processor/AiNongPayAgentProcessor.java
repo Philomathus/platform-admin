@@ -103,6 +103,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
                 }
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.warn("爱农代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
