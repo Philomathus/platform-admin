@@ -1043,4 +1043,27 @@ public class RedisUtil {
 	public boolean adminLock(EnumLock mode,String lockKey){
 		return this.adminLock(mode,lockKey,20);
 	}
+
+	/**
+	 * 分布式锁
+	 *
+	 * @param lockKey 锁key
+	 * @param timeOut 时间秒
+	 * @return
+	 */
+	public boolean lock( String lockKey, int timeOut ) {
+		try {
+
+			Boolean lock = stringRedisTemplate.opsForValue().setIfAbsent( Constants.LIVE_HOST_LOCK.concat( lockKey ), "0",
+					Duration.ofSeconds( timeOut ) );
+			if ( lock == null ) {
+				return false;
+			}
+			return lock;
+		} catch ( Exception e ) {
+			log.error( "live加锁失败lockKey:{}", lockKey, e );
+			return false;
+		}
+
+	}
 }
