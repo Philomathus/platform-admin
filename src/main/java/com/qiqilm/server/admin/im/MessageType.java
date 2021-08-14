@@ -3,10 +3,11 @@ package com.qiqilm.server.admin.im;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.qiqilm.server.admin.exception.BaseException;
+import lombok.Data;
 
 import java.util.Objects;
 
-
+@Data
 public class MessageType {
 
     private String groupId ;
@@ -80,12 +81,4 @@ public class MessageType {
        node.put("MsgContent",content);
        return node;
    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
 }
