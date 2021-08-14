@@ -190,12 +190,17 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
             Map resultMap = (Map) JSON.parse(jsonStr);
             log.warn("爱农代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
 
-            if (!CollectionUtils.isEmpty(resultMap) && "0000".equals(resultMap.getOrDefault("retCode", "").toString())) {
+            if (!CollectionUtils.isEmpty(resultMap)) {
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
-                //  statusCode 00 提交申请，01 审核通过，02 申请被拒绝，03 已打批次，
-                //  04 提交到渠道，05 代付成功，06 代付失败
+                //  statusCode 00 提交申请，01 审核通过，02 申请被拒绝，03 已打批次，04 提交到渠道，05 代付成功，06 代付失败
                 String statusCode = resultMap.getOrDefault("orderStatus", "").toString();
+                String retCode = resultMap.getOrDefault("retCode", "").toString();
+
+                if(retCode.equals("ORDER_NOT_EXIST")){
+                    statusCode = "06";
+                }
+
                 if("02".equals(statusCode) || "05".equals(statusCode)  || "06".equals(statusCode)){
                     if ("05".equals(statusCode)) {
                         status = 6;
@@ -212,4 +217,5 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
         }
         return payAgentPlatform.getName()+"查询失败,订单号:"+withdrawLog.getOrderNo();
     }
+
 }
