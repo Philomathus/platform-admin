@@ -417,7 +417,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 		if ( i > 0 ) {
 			if(StringUtils.isNotBlank(liveVideo.getEffect()) && "2".equals(liveVideo.getEffect())) {
-				return AjaxResult.success( "更新成功,但不立即生效" );
+				return AjaxResult.success( "更新成功" );
 			} else {
 				this.processVideoSort();
 				Long sort = liveVideo.getSort();
@@ -431,7 +431,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				}
 				return AjaxResult.success("更新成功");
 			}
-
 		}
 		return AjaxResult.error( "更新失败" );
 	}
