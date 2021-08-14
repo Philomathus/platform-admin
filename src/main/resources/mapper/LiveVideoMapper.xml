@@ -25,7 +25,7 @@
         <result property="isLivePay" column="is_live_pay"/>
         <result property="lineName" column="lineName"/>
         <result property="lineStatus" column="lineStatus"/>
-        <result column="create_type" property="createType"/>
+        <result property="createType" column="create_type"/>
         <result property="openPay" column="open_pay"/>
         <result property="groupId" column="group_id"/>
         <result property="playUrl" column="play_url"/>
@@ -548,7 +548,7 @@
 		select id, title, live_in, group_id, play_url from ${dbLive}.live_video where live_in = 1
 	</select>
 
-    <select id="countLineCount" resultType="java.lang.Integer">
+    <select id="countLineCount" resultType="Integer">
 		select count(1) from ${dbLive}.live_video where live_in = 1 and pai_id = #{paiId}
 	</select>
     <insert id="insertLiveVideo" parameterType="LiveVideo">
