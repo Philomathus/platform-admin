@@ -217,8 +217,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 
 		if(profile.equals("7701")){
+			LiveVideo shareVideo = liveVideoMapper.getLiveVideoShare(id);
+			if(shareVideo.getIsRecommend()!=1){
+				return;
+			}
 			update.setId(liveVideoMapper.getMaxSortInitShareLiveId());//找到最大推荐位置
-			update.setSortInit(liveVideoMapper.getLiveVideoShare(id).getSortInit());//找到下拨人位置
+			update.setSortInit(shareVideo.getSortInit());//找到下拨人位置
 			liveVideoMapper.updateLive7706Video(update);
 		}
 
