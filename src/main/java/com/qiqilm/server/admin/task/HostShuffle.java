@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.task;
 
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.RedisUtil;
@@ -16,13 +17,17 @@ public class HostShuffle {
     @Autowired
     private ILiveVideoService liveVideoService;
 
-    @Scheduled( fixedDelay = 600000, initialDelay = 60000 )
+    @Autowired
+    private SysConfigCacheUtil sysConfigCacheUtil;
+
+    @Scheduled( fixedDelay = 300000, initialDelay = 30000 )
     public  void shuffle(){
 
-        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),500)){
+        int queTime = sysConfigCacheUtil.getConfInt("host-shuffle-que",1);
+
+        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),600*queTime)){
             return;
         }
-
 
         try {
             liveVideoService.processVideoSort();

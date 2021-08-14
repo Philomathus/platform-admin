@@ -217,8 +217,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 
 		if(profile.equals("7701")){
+			LiveVideo shareVideo = liveVideoMapper.getLiveVideoShare(id);
+			if(shareVideo.getIsRecommend()!=1){
+				return;
+			}
 			update.setId(liveVideoMapper.getMaxSortInitShareLiveId());//找到最大推荐位置
-			update.setSortInit(liveVideoMapper.getLiveVideoShare(id).getSortInit());//找到下拨人位置
+			update.setSortInit(shareVideo.getSortInit());//找到下拨人位置
 			liveVideoMapper.updateLive7706Video(update);
 		}
 
@@ -406,7 +410,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
 		if ( i > 0 ) {
 			if(StringUtils.isNotBlank(liveVideo.getEffect()) && "2".equals(liveVideo.getEffect())) {
-				return AjaxResult.success( "更新成功,但不立即生效" );
+				return AjaxResult.success( "更新成功" );
 			}
 			this.processVideoSort();
 			Long sort = liveVideo.getSort();
