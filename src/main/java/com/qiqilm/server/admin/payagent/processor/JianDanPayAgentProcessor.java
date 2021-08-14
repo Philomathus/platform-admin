@@ -175,25 +175,25 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
 
 
             if (!CollectionUtils.isEmpty(resultMap)) {
+                //  status 4代付中 5代付失败 6代付成功
+                int status = 4;
+                //  statusCode 1.待处理，2.处理中，3.结算成功，4.失败，5.冲正
+                int statusCode = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
+
                 Boolean boo = (Boolean)resultMap.getOrDefault("ok", "");
-                if(boo){
-                    //  status 4代付中 5代付失败 6代付成功
-                    int status = 4;
-                    //  statusCode 1.待处理，2.处理中，3.结算成功，4.失败，5.冲正
-                    int statusCode = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
-
-                    if(statusCode == 3 || statusCode == 4 || statusCode == 5){
-                        if (statusCode == 3) {
-                            status = 6;
-                        } else {
-                            status = 5;
-                        }
-                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusCode);
-                    }
-
-                    return JsonUtil.object2Json(resultMap);
+                if(!boo){
+                    statusCode = 4;
                 }
 
+                if(statusCode == 3 || statusCode == 4 || statusCode == 5){
+                    if (statusCode == 3) {
+                        status = 6;
+                    } else {
+                        status = 5;
+                    }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusCode);
+                }
+                return JsonUtil.object2Json(resultMap);
             }
         } catch (
                 Exception e) {
