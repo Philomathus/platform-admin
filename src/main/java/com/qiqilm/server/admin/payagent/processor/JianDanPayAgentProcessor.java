@@ -99,36 +99,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-        String sign = requestMap.remove("sign").toString();
-        requestMap.remove("extend_info");
-        requestMap.remove("remark");
-        String status = requestMap.getOrDefault("status", "").toString();
-        SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
-
-        String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        String signStr = DigestUtils.md5Hex(tempStr).toLowerCase();
-
-        log.info("简单代付回调签名字符串:" + sign + "_" + signStr);
-        if (sign.equalsIgnoreCase(signStr)) {
-            String out_trade_id = requestMap.getOrDefault("out_trade_id", "").toString();
-
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_id);
-            if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", out_trade_id);
-                return "fail";
-            }
-            if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", out_trade_id);
-                return "success";
-            }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(out_trade_id);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
-            return "success";
-        }
-        return "fail";
+        return null;
     }
 
     @Override
