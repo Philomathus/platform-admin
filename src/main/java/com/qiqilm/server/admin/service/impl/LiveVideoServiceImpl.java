@@ -385,18 +385,19 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		if ( i > 0 ) {
 			if(StringUtils.isNotBlank(liveVideo.getEffect()) && "2".equals(liveVideo.getEffect())) {
 				return AjaxResult.success( "更新成功,但不立即生效" );
-			}
-			this.processVideoSort();
-			Long sort = liveVideo.getSort();
-			if (sort != null && sort <= 20) {
-				LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById(liveVideo.getId());
-				String msg = sysConfigCacheUtil.getConf("first_twenty_notice");
-				String groupId = liveVideo1.getGroupId();
-				if (StringUtils.isNotEmpty(msg) && StringUtils.isNotEmpty(groupId)) {
-					helpNoticeUtil.sendMsg(msg, groupId);
+			} else {
+				this.processVideoSort();
+				Long sort = liveVideo.getSort();
+				if (sort != null && sort <= 20) {
+					LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById(liveVideo.getId());
+					String msg = sysConfigCacheUtil.getConf("first_twenty_notice");
+					String groupId = liveVideo1.getGroupId();
+					if (StringUtils.isNotEmpty(msg) && StringUtils.isNotEmpty(groupId)) {
+						helpNoticeUtil.sendMsg(msg, groupId);
+					}
 				}
+				return AjaxResult.success("更新成功");
 			}
-			return AjaxResult.success("更新成功");
 
 		}
 		return AjaxResult.error( "更新失败" );
