@@ -182,9 +182,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 
 
-		if(video.getIsRecommend()==1){
+		if(video.getIsRecommend()==1||video.getSort()<=100){
 			recommendPosEvent(id,video.getSortInit());
 		}
+       //有可能7706  为推荐位置
+		recommendPosShareEvent(id);
 
 
 		LiveUser liveUser = liveUserMapper.selectLiveUserById( id );
@@ -215,12 +217,17 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		update.setSortInit(sortInit);
 		liveVideoMapper.updateLiveVideo( update );
 
+	}
+
+	public void recommendPosShareEvent( Long id ){
+
 
 		if(profile.equals("7701")){
 			LiveVideo shareVideo = liveVideoMapper.getLiveVideoShare(id);
-			if(shareVideo.getIsRecommend()!=1){
+			if(shareVideo.getIsRecommend()!=1&&shareVideo.getSort()>100){
 				return;
 			}
+			LiveVideo update = new LiveVideo();
 			update.setId(liveVideoMapper.getMaxSortInitShareLiveId());//找到最大推荐位置
 			update.setSortInit(shareVideo.getSortInit());//找到下拨人位置
 			liveVideoMapper.updateLive7706Video(update);
