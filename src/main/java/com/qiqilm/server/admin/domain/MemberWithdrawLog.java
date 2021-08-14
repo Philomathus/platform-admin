@@ -142,9 +142,9 @@ public class MemberWithdrawLog extends BaseEntity {
     @JsonIgnore
     private String bankCode;
     @JsonIgnore
-    private Integer priceMin;
+    private String priceMin;
     @JsonIgnore
-    private Integer priceMax;
+    private String priceMax;
     @JsonIgnore
     private String[] searchTime;
     @JsonIgnore
