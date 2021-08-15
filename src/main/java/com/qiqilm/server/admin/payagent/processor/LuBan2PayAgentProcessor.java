@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository(value = ConstantsPayAgent.LUBAN + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.LUBAN2 + "PayAgentProcessor")
 @Log4j2
 public class LuBan2PayAgentProcessor extends AbstractPayAgent {
     @Override
