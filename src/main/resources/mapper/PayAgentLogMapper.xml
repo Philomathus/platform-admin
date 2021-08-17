@@ -117,6 +117,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and (callback_status = 0 or callback_status is null)
 	</select>
 
+    <select id="selectByPayAgentOrderNo" resultMap="PayAgentLogResult">
+        select
+        <include refid="selectPayAgentLogVo"/>
+        from pay_agent_log where pay_agent_order_no = #{orderCode}
+        and (callback_status = 0 or callback_status is null)
+    </select>
+
     <select id="findNoCallback" resultMap="PayAgentLogResult">
         <include refid="selectPayAgentLogVo"/>
         where (callback_status = 0 or callback_status is null)

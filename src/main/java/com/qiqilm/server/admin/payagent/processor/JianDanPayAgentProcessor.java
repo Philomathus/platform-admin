@@ -88,8 +88,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
                 log.info("简单代付提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
-
+                reqPayAgent.setFailReason(resultMap.getOrDefault("error", "").toString());
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
@@ -99,7 +98,42 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-        return null;
+        String sign = requestMap.remove("sign").toString();
+        requestMap.remove("extend_info");
+        requestMap.remove("remark");
+        String status = requestMap.getOrDefault("status", "").toString();
+        SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
+
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
+
+        String tempStr = this.assemblyUrl(bodyMap);
+        tempStr = URLEncoder.encode(tempStr,"UTF-8").replace("*","%2A").replace("+","%20").replace("%7E","~");
+        String signStr = DigestUtils.md5Hex(tempStr) + signMd5;
+
+        log.info("简单代付回调签名字符串:" + sign + "_" + signStr);
+        if (sign.equalsIgnoreCase(signStr)) {
+            String orderCode = requestMap.getOrDefault("order_code", "").toString();
+
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByPayAgentOrderNo(orderCode);
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
+            if (withdrawLog == null) {
+                log.error("提现相关记录丢失 - orderCode:{}", orderCode);
+                return "fail";
+            }
+            if ( withdrawLog.getStatus() == 2 ) {
+                log.error( "订单已拒绝，无需回调 - merOrderNo:{}", orderCode );
+                return "ok";
+            }
+            if (withdrawLog.getStatus() == 6) {
+                log.error("已有代付记录 - orderCode:{}", orderCode);
+                return "ok";
+            }
+
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
+            return "ok";
+        }
+        return "fail";
     }
 
     @Override

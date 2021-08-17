@@ -69,6 +69,8 @@ public interface PayAgentLogMapper {
 
 	PayAgentLog selectByWithdrawOrderNo( String merOrderNo );
 
+	PayAgentLog selectByPayAgentOrderNo( @Param( "orderCode" ) String orderCode );
+
 	List<PayAgentLog> findNoCallback();
 
 	int countNoFail( String merOrderNo );
