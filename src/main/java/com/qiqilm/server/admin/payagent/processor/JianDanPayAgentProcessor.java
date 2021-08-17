@@ -111,6 +111,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap);
         tempStr = URLEncoder.encode(tempStr,"UTF-8").replace("*","%2A").replace("+","%20").replace("%7E","~");
         String signStr = DigestUtils.md5Hex(tempStr) + signMd5;
+        signStr = DigestUtils.md5Hex(signStr);
 
         log.info("简单代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
