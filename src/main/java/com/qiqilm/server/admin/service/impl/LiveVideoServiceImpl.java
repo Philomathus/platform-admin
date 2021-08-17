@@ -170,24 +170,15 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		liveVideoMapper.updateLiveVideo( updateVideo );
 
-//		try {
-//			this.processVideoSort();
-//		} catch ( Exception e ) {
-//			log.error( e.getMessage(), e );
-//		}
+		try {
+			this.processVideoSort();
+		} catch ( Exception e ) {
+			log.error( e.getMessage(), e );
+		}
 
 		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" + id ) );
 
 		LiveVideo video = liveVideoMapper.selectLiveVideoById( id );
-
-
-
-		if(video.getIsRecommend()==1||video.getSort()<=100){
-			recommendPosEvent(id,video.getSortInit());
-		}
-       //有可能7706  为推荐位置
-		recommendPosShareEvent(id);
-
 
 		LiveUser liveUser = liveUserMapper.selectLiveUserById( id );
 
@@ -211,29 +202,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		return false;
 	}
 
-	public void recommendPosEvent( Long id ,Integer sortInit){
-		LiveVideo update = new LiveVideo();
-		update.setId(liveVideoMapper.getMaxSortInitLiveId());
-		update.setSortInit(sortInit);
-		liveVideoMapper.updateLiveVideo( update );
-
-	}
-
-	public void recommendPosShareEvent( Long id ){
-
-
-		if(profile.equals("7701")){
-			LiveVideo shareVideo = liveVideoMapper.getLiveVideoShare(id);
-			if(shareVideo.getIsRecommend()!=1&&shareVideo.getSort()>100){
-				return;
-			}
-			LiveVideo update = new LiveVideo();
-			update.setId(liveVideoMapper.getMaxSortInitShareLiveId());//找到最大推荐位置
-			update.setSortInit(shareVideo.getSortInit());//找到下拨人位置
-			liveVideoMapper.updateLive7706Video(update);
-		}
-
-	}
 
 	private void saveHostWageNote( LiveUser liveUser, LiveVideo video ) {
 
@@ -470,7 +438,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				resultList.add( sortHostId );
 				sortHostMap.remove( i );
 			} else if ( !CollectionUtils.isEmpty( recommendHostList ) ) {
-				Collections.shuffle(recommendHostList);
+				// 加个锁  阻止定时器短时间内又乱序
+				if(!redisUtil.lock( "host:shuffle" + profile, 120 )){
+					Collections.shuffle(recommendHostList);
+				}
 				resultList.add( recommendHostList.get( 0 ) );
 				recommendHostList.remove( 0 );
 			} else if ( !CollectionUtils.isEmpty( normalHostList ) ) {
