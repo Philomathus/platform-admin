@@ -191,7 +191,7 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		BigDecimal now = memberInfoMapper.getMemberMoney( logGameOrder.getMemberId() );
 		BigDecimal change = logGameOrder.getMoney();
 		int i = change.compareTo( BigDecimal.ZERO );
-		memberInfoMapper.updateMoneySelect( logGameOrder.getMemberId(), change.add(now), null, null, null, null );
+		memberInfoMapper.updateMoneySelect( logGameOrder.getMemberId(), change, null, null, null, null );
 		LogMoney logMoney = new LogMoney();
 		logMoney.setId( logGameOrder.getId() );
 		logMoney.setUserId( logGameOrder.getMemberId() );
