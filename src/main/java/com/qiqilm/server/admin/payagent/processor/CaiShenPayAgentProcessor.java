@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.util.*;
 
 @Repository(value = ConstantsPayAgent.CAISHEN + "PayAgentProcessor")
@@ -97,37 +96,32 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
-        String status = requestMap.getOrDefault("status", "").toString();
-        SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-
-        String tempStr = this.assemblyUrl(bodyMap);
-        tempStr = URLEncoder.encode(tempStr,"UTF-8").replace("*","%2A").replace("+","%20").replace("%7E","~");
-        String signStr = DigestUtils.md5Hex(tempStr) + signMd5;
-        signStr = DigestUtils.md5Hex(signStr);
+        String tranFlow = requestMap.getOrDefault("tran_flow", "").toString();
+        String signStr = DigestUtils.md5Hex(tranFlow + signMd5 );
 
         log.info("财神代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
-            String orderCode = requestMap.getOrDefault("order_code", "").toString();
+            String merOrderNo = requestMap.getOrDefault("tran_flow", "").toString();
+            String rtnCode = requestMap.getOrDefault("rtn_code", "").toString();
 
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByPayAgentOrderNo(orderCode);
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(merOrderNo);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - orderCode:{}", orderCode);
+                log.error("提现相关记录丢失 - merOrderNo:{}", merOrderNo);
                 return "fail";
             }
             if ( withdrawLog.getStatus() == 2 ) {
-                log.error( "订单已拒绝，无需回调 - merOrderNo:{}", orderCode );
+                log.error( "订单已拒绝，无需回调 - merOrderNo:{}", merOrderNo );
                 return "ok";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - orderCode:{}", orderCode);
+                log.error("已有代付记录 - merOrderNo:{}", merOrderNo);
                 return "ok";
             }
-
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merOrderNo);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "0000".equals(rtnCode));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", merOrderNo, "0000".equals(rtnCode) ? "成功" : "失败");
             return "ok";
         }
         return "fail";
