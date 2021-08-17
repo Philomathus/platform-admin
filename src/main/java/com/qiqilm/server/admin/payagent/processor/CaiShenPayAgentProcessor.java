@@ -179,15 +179,10 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
                 //  statusCode
-                //  0000 交易成功(处理完成，已经到账)  0001 交易成功(处理中)  0002 交易失败
+                //  0000 交易成功(处理完成，已经到账)  0001 交易成功(处理中)  0002 交易失败  0006 是没有找到订单  9999 系统异常
                 int statusCode = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
 
-                Boolean boo = (Boolean)resultMap.getOrDefault("ok", "");
-                if(!boo){
-                    statusCode = 4;
-                }
-
-                if(statusCode == 3 || statusCode == 4 || statusCode == 5){
+                if("0000".equals(statusCode) || "0002".equals(statusCode) || "0006".equals(statusCode) || "9999".equals(statusCode)){
                     if (statusCode == 3) {
                         status = 6;
                     } else {
