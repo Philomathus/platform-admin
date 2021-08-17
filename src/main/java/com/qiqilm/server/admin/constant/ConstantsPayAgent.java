@@ -13,6 +13,9 @@ public abstract class ConstantsPayAgent {
 	// 顺为代付
 	public static final String SHUN_WEI2             = "shunWei2";
 	public static final String SHUN_WEI3             = "shunWei3";
+	public static final String SHUN_WEI4             = "shunWei4";
+	public static final String SHUN_WEI5             = "shunWei5";
+	public static final String SHUN_WEI6             = "shunWei6";
 	// 天天代付
 	public static final String TIAN_TIAN             = "tianTian";
 	// 咪咪代付
@@ -23,8 +26,14 @@ public abstract class ConstantsPayAgent {
 	public static final String LIAN_FU_BAO           = "lianFuBao";
 	// 联付宝2
 	public static final String LIAN_FU_BAO2          = "lianFuBao2";
-	// 联付宝2
+	// 联付宝3
 	public static final String LIAN_FU_BAO3          = "lianFuBao3";
+	// 联付宝4
+	public static final String LIAN_FU_BAO4          = "lianFuBao4";
+	// 联付宝5
+	public static final String LIAN_FU_BAO5          = "lianFuBao5";
+	// 联付宝6
+	public static final String LIAN_FU_BAO6          = "lianFuBao6";
 	// 牛气冲天
 	public static final String NIU_QI_CHONG_TIAN     = "niuQiChongTian";
 	// 华子代付
@@ -133,4 +142,12 @@ public abstract class ConstantsPayAgent {
 	public static final String HONGBO            = "hongBo";
 	//马哥代付
 	public static final String MAGE            = "maGe";
+	//相约代付
+	public static final String XIANGYUE            = "xiangYue";
+	//小月代付
+	public static final String XIAOYUE            = "xiaoYue";
+	//爱农代付
+	public static final String AINONG            = "aiNong";
+	//聚宝盆代付
+	public static final String JUBAOPEN            = "juBaoPen";
 }

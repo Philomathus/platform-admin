@@ -71,14 +71,14 @@ public class DaFengChe3PayAgentProcessor extends AbstractPayAgent {
                     });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason(payAgentPlatform.getName() + "代付下单报错原因:" + e);
+            reqPayAgent.setFailReason(payAgentPlatform.getName() + "下单报错原因:" + e);
         }
-        log.info(payAgentPlatform.getName() + "代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String return_code = resultMap.getOrDefault("return_code", "").toString();
             String trade_state = resultMap.getOrDefault("trade_state", "").toString();
             if ("SUCCESS".equals(return_code) && "PROCESSING".equals(trade_state)) {
-                log.info(payAgentPlatform.getName() + "代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                log.info(payAgentPlatform.getName() + "订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("return_msg", "").toString());
@@ -86,7 +86,7 @@ public class DaFengChe3PayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn(payAgentPlatform.getName() + "代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.warn(payAgentPlatform.getName() + "订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -97,6 +97,7 @@ public class DaFengChe3PayAgentProcessor extends AbstractPayAgent {
         String return_code = requestMap.getOrDefault("return_code", "").toString();
         String trade_state = requestMap.getOrDefault("trade_state", "").toString();
         requestMap.remove("attach");
+        requestMap.remove("nonce_str");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -106,7 +107,7 @@ public class DaFengChe3PayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
 
-        log.info(payAgentPlatform.getName() + "代付回调签名:" + tempStr + "_" + sign);
+        log.info(payAgentPlatform.getName() + "回调签名:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr) && "SUCCESS".equals(return_code)) {
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_no);
             if (withdrawLog == null) {
@@ -164,7 +165,7 @@ public class DaFengChe3PayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map(text);
                     });
-            log.info(payAgentPlatform.getName() + "代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName() + "查询结果 - result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String return_code = resultMap.getOrDefault("return_code", "").toString();
                 if ("SUCCESS".equals(return_code)) {
@@ -188,6 +189,6 @@ public class DaFengChe3PayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return payAgentPlatform.getName() + "代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName() + "查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }

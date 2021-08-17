@@ -35,10 +35,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="callbackTime != null "> and callback_time = #{callbackTime}</if>
             <if test="callbackStatus != null "> and callback_status = #{callbackStatus}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                and date_format(create_time,'%y%m%d') <![CDATA[ >= ]]> date_format(#{params.beginTime},'%y%m%d')
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                and date_format(create_time,'%y%m%d') <![CDATA[ <= ]]> date_format(#{params.endTime},'%y%m%d')
             </if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
@@ -131,5 +131,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="countPlatOrderNo" resultType="int">
         select count(1) from pay_agent_log
         where withdraw_order_no = #{orderNo} and pay_agent_plat_id = #{payAgentPlatId}
+    </select>
+
+    <select id="selectByAgentLogOrderList" resultMap="PayAgentLogResult">
+        <include refid="selectPayAgentLogVo" />
+        where
+        withdraw_order_no in
+        <foreach item="orderNo" collection="withdrawOrderNos" open="(" separator="," close=")">
+            #{orderNo}
+        </foreach>
+    </select>
+    <select id="selectPayAgentLogOrderNo" resultMap="PayAgentLogResult">
+        <include refid="selectPayAgentLogVo"/>
+        where withdraw_order_no = #{merOrderNo}
     </select>
 </mapper>

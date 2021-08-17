@@ -18,6 +18,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="gameId"    column="game_id"    />
         <result property="kindId"    column="kind_id"    />
         <result property="platformId"    column="platform_id"    />
+<!--        <result property="taskMode"    column="task_mode"    />-->
+
     </resultMap>
 
     <sql id="selectActivityQuestInfoVo">
@@ -49,11 +51,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gameId != null  and gameId != ''"> and a.game_id = #{gameId}</if>
             <if test="kindId != null  and kindId != ''"> and a.kind_id = #{kindId}</if>
             <if test="platformId != null "> and a.platform_id = #{platformId}</if>
+<!--             <if test="taskMode != null "> and a.task_mode = #{taskMode}</if>-->
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(a.ctime,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                and date_format(a.ctime,'%y%m%d') <![CDATA[ >= ]]> date_format(#{params.beginTime},'%y%m%d')
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(a.ctime,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                and date_format(a.ctime,'%y%m%d') <![CDATA[ <= ]]> date_format(#{params.endTime},'%y%m%d')
             </if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
@@ -81,6 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gameId != null">game_id,</if>
             <if test="kindId != null">kind_id,</if>
             <if test="platformId != null">platform_id,</if>
+<!--            <if test="taskMode != null">task_mode,</if>-->
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -96,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gameId != null">#{gameId},</if>
             <if test="kindId != null">#{kindId},</if>
             <if test="platformId != null">#{platformId},</if>
+<!--            <if test="taskMode != null">#{taskMode},</if>-->
          </trim>
     </insert>
 
@@ -114,6 +119,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gameId != null">game_id = #{gameId},</if>
             <if test="kindId != null">kind_id = #{kindId},</if>
             <if test="platformId != null">platform_id = #{platformId},</if>
+<!--            <if test="taskMode != null">task_mode = #{taskMode},</if>-->
         </trim>
         where id = #{id}
     </update>

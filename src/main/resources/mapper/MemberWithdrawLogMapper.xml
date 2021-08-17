@@ -67,7 +67,7 @@
             from `${dbMain}`.member_withdraw_log
             WHERE `status` in (3, 6)
             GROUP BY member_id
-            HAVING count(1) &gt; 1)
+            HAVING count(1) > 1)
         </if>
         <if test="status != null and status != '' and status != -1">
             and `status` = #{status}
@@ -76,8 +76,8 @@
             and status = #{status}
         </if>
         <if test="priceMin != null and priceMax != null  and priceMin != ''  and priceMax != ''">
-            and withdraw_money &gt;= #{priceMin}
-            and withdraw_money &lt;= #{priceMax}
+            and withdraw_money <![CDATA[ >= ]]> #{priceMin}
+            and withdraw_money <![CDATA[ <= ]]> #{priceMax}
         </if>
         <if test="opName != null and opName != ''">
             and op_name = #{opName}
@@ -96,8 +96,8 @@
             <if test="searchValue != null and searchValue != ''">
                 and order_no = #{searchValue}
             </if>
-            <if test="downLoadDate[0] != null "> and create_time >= '${downLoadDate[0]}'</if>
-            <if test="downLoadDate[1] != null "> and create_time &lt;= '${downLoadDate[1]}'</if>
+            <if test="downLoadDate[0] != null "> and create_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>
+            <if test="downLoadDate[1] != null "> and create_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>
         </where>
         <if test="searchValue != null and searchValue != ''">
         UNION
@@ -317,7 +317,7 @@
             from `${dbMain}`.member_withdraw_log
             WHERE `status` in (3, 6)
             GROUP BY member_id
-            HAVING count(1) &gt; 1)
+            HAVING count(1) > 1)
         </if>
         <if test="status != null and status != '' and status != -1">
             and `status` = #{status}
@@ -327,12 +327,12 @@
             or bank_user_name = #{searchValue})
         </if>
         <if test="priceMin != null and priceMax != null  and priceMin != ''  and priceMax != ''">
-            and withdraw_money &gt;= #{priceMin}
-            and withdraw_money &lt;= #{priceMax}
+            and withdraw_money <![CDATA[ >= ]]> #{priceMin}
+            and withdraw_money <![CDATA[ <= ]]> #{priceMax}
         </if>
         <if test="startTime != null and startTime != ''">
-            and create_time >= #{startTime}
-            and create_time &lt;= #{endTime}
+            and create_time <![CDATA[ >= ]]> #{startTime}
+            and create_time <![CDATA[ <= ]]> #{endTime}
         </if>
         <if test="remark != null and remark != ''">
             and remark like concat('%', #{remark}, '%')
@@ -380,7 +380,7 @@
 
     <select id="selectMemberWithdrawLogShunWeiList" resultType="com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei">
         <include refid="selectMemberWithdrawLogShunWeiVo"/>
-        where `status` &lt;= 1 and id in
+        where `status` <![CDATA[ <= ]]> 1 and id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -401,5 +401,20 @@
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </select>
+    <select id="countOpNameOrder" resultMap="MemberWithdrawLogResult">
+        SELECT
+        count(id) as times,
+        sum(withdraw_money) AS money,
+        op_name,status
+        FROM `${dbMain}`.member_withdraw_log
+        <where>
+            <if test="opName != null and opName != ''">and op_name = #{opName}</if>
+            <if test="searchTime[0] != null and searchTime[0] != ''" > and update_time <![CDATA[ >= ]]> '${searchTime[0]}'</if>
+            <if test="searchTime[1] != null and searchTime[1] != ''"> and update_time <![CDATA[ <= ]]> '${searchTime[1]}'</if>
+        </where>
+        GROUP BY
+        STATUS,
+        op_name
     </select>
 </mapper>

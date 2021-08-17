@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 直播Service业务层处理
@@ -169,11 +170,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 		liveVideoMapper.updateLiveVideo( updateVideo );
 
-		try {
-			this.processVideoSort();
-		} catch ( Exception e ) {
-			log.error( e.getMessage(), e );
-		}
+//		try {
+//			this.processVideoSort();
+//		} catch ( Exception e ) {
+//			log.error( e.getMessage(), e );
+//		}
 
 		videoCacheUtil.clearVideoMonitorTime( Integer.parseInt( "" + id ) );
 
@@ -432,6 +433,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				resultList.add( sortHostId );
 				sortHostMap.remove( i );
 			} else if ( !CollectionUtils.isEmpty( recommendHostList ) ) {
+				Collections.shuffle(recommendHostList);
 				resultList.add( recommendHostList.get( 0 ) );
 				recommendHostList.remove( 0 );
 			} else if ( !CollectionUtils.isEmpty( normalHostList ) ) {

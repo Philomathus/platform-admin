@@ -8,7 +8,7 @@ import com.qiqilm.server.admin.domain.MemberQuest;
 import com.qiqilm.server.admin.service.IMemberQuestService;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ * 会员任务列表Service业务层处理
  *
  * @author 77tv
  * @date 2021-03-20
@@ -19,10 +19,10 @@ public class MemberQuestServiceImpl implements IMemberQuestService {
     private MemberQuestMapper memberQuestMapper;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询会员任务列表
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id 系统编号
+     * @return 会员任务
      */
     @Override
     public MemberQuest selectMemberQuestById(String id) {
@@ -30,21 +30,30 @@ public class MemberQuestServiceImpl implements IMemberQuestService {
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询会员任务列表
      *
-     * @param memberQuest 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param memberQuest 会员任务
+     * @return 会员任务列表
      */
     @Override
     public List<MemberQuest> selectMemberQuestList(MemberQuest memberQuest) {
         return memberQuestMapper.selectMemberQuestList(memberQuest);
     }
 
+    @Override
+    public int addMemberScore(MemberQuest memberQuest) {
+        if(memberQuestMapper.selectMemberQuestById(memberQuest.getId()).getStatus()>0){
+            return  0;
+        }
+        return memberQuestMapper.updateMemberQuest(memberQuest);
+    }
+
+
     /**
-     * 新增【请填写功能名称】
+     * 新增会员任务
      *
      * @param memberQuest 【请填写功能名称】
-     * @return 结果
+     * @return 执行结果
      */
     @Override
     public int insertMemberQuest(MemberQuest memberQuest) {
@@ -52,10 +61,10 @@ public class MemberQuestServiceImpl implements IMemberQuestService {
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改会员任务
      *
-     * @param memberQuest 【请填写功能名称】
-     * @return 结果
+     * @param memberQuest 会员任务
+     * @return 执行结果
      */
     @Override
     public int updateMemberQuest(MemberQuest memberQuest) {
@@ -63,10 +72,10 @@ public class MemberQuestServiceImpl implements IMemberQuestService {
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除会员任务
      *
-     * @param ids 需要删除的【请填写功能名称】ID
-     * @return 结果
+     * @param ids 系统编号
+     * @return 执行结果
      */
     @Override
     public int deleteMemberQuestByIds(String[] ids) {
@@ -74,10 +83,10 @@ public class MemberQuestServiceImpl implements IMemberQuestService {
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除会员任务
      *
-     * @param id 【请填写功能名称】ID
-     * @return 结果
+     * @param id 系统编号
+     * @return 执行结果
      */
     @Override
     public int deleteMemberQuestById(String id) {

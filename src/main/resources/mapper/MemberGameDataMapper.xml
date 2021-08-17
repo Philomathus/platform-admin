@@ -94,7 +94,7 @@
 
     <sql id="whereSelect">
         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-            game_end_time >= #{startTime} and game_end_time &lt;= #{endTime}
+            game_end_time <![CDATA[ >= ]]> #{startTime} and game_end_time <![CDATA[ <= ]]> #{endTime}
         </if>
         <if test="account != null and account != ''">
             and account = #{account}
@@ -124,8 +124,8 @@
         <if test="platformType != null  and platformType != ''">and platform_type = #{platformType}</if>
         <if test="status != null ">and status = #{status}</if>
         <if test="gameStartTime != null  and gameStartTime != ''">and game_start_time = #{gameStartTime}</if>
-        <if test="startTime != null and startTime != ''">and game_start_time >= #{startTime}</if>
-        <if test="endTime != null and endTime != ''">and game_end_time &lt;= #{endTime}</if>
+        <if test="startTime != null and startTime != ''">and game_start_time <![CDATA[ >= ]]> #{startTime}</if>
+        <if test="endTime != null and endTime != ''">and game_end_time <![CDATA[ <= ]]> #{endTime}</if>
     </sql>
     <select id="getCount" resultType="com.qiqilm.server.admin.domain.MemberGameData">
         SELECT cast(SUM(cell_score) AS decimal(10,2)) totalSuccessBet,

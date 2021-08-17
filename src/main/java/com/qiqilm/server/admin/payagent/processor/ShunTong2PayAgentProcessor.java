@@ -135,8 +135,7 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 	@Override
 	public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
 		MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-		PayAgentPlatform    payAgentPlatform =
-                payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
+		PayAgentPlatform    payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
 		Map<String, Object> paramsMap        = new TreeMap<>();
 		paramsMap.put( "obid", withdrawLog.getOrderNo() );
 		paramsMap.put( "mchno", payAgentPlatform.getMerId() );
@@ -148,8 +147,7 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 		String sign    = DigestUtils.md5Hex( tempStr );
 		paramsMap.put( "sign", sign );
 
-		String url = "?" + "mchno=" + paramsMap.get( "mchno" ) + "&obid=" + paramsMap.get( "obid" ) + "&sign=" + paramsMap.get(
-		        "sign" );
+		String url = "?" + "mchno=" + paramsMap.get( "mchno" ) + "&obid=" + paramsMap.get( "obid" ) + "&sign=" + paramsMap.get("sign");
 
 		String res = null;
 		try {

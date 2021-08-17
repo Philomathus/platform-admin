@@ -256,12 +256,12 @@
 		<if test="req.orderNo != null  and req.orderNo != ''">
 			and order_no = #{req.orderNo}
 		</if>
-		<if test="req.status != null and req.status != ''">
+		<if test="req.status != null">
 			and status = #{req.status}
 		</if>
 		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
-			and recharge_money &gt;= #{req.priceMin}
-			and recharge_money &lt;= #{req.priceMax}
+			and recharge_money <![CDATA[ >= ]]> #{req.priceMin}
+			and recharge_money <![CDATA[ <= ]]> #{req.priceMax}
 		</if>
 		<if test="req.searchValue != null and req.searchValue != ''">
 			and (member_id = #{req.searchValue} or user_name = #{req.searchValue})
@@ -269,8 +269,8 @@
 		<if test="req.selectStartDate != null and req.selectStartDate != ''">
 			and update_time <![CDATA[ >= ]]> #{req.selectStartDate} and update_time <![CDATA[ <= ]]> #{req.selectEndDate}
 		</if>
-        <if test="req.downLoadDate[0] != null "> and update_time >= '${req.downLoadDate[0]}'</if>
-        <if test="req.downLoadDate[1] != null "> and update_time &lt;= '${req.downLoadDate[1]}'</if>
+        <if test="req.downLoadDate[0] != null "> and update_time <![CDATA[ >= ]]> '${req.downLoadDate[0]}'</if>
+        <if test="req.downLoadDate[1] != null "> and update_time <![CDATA[ <= ]]> '${req.downLoadDate[1]}'</if>
 	</sql>
 
 	<sql id="totalCount">
@@ -291,7 +291,7 @@
 		update member_recharge_log
 		set status = 4
 		where status = 0
-		and create_time &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+		and create_time <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 30 MINUTE)
 	</update>
 
 	<select id="countRechargeDaySucess" parameterType="java.lang.String" resultType="Integer">
@@ -301,8 +301,8 @@
 		SELECT bank_user_name as bankUserName,bank_name as bankName,bank_account as bankAccount,recharge_money as rechargeMoney,COUNT(1) as time,update_time as updateTime FROM member_recharge_log
 		WHERE  STATUS = '3'
 		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
-			and recharge_money &gt;= #{req.priceMin}
-			and recharge_money &lt;= #{req.priceMax}
+			and recharge_money <![CDATA[ >= ]]> #{req.priceMin}
+			and recharge_money <![CDATA[ <= ]]> #{req.priceMax}
 		</if>
 		<if test="req.bankUserName != null and req.bankUserName != ''">
 			and bank_user_name = #{req.bankUserName}
@@ -317,8 +317,8 @@
 		SELECT *,sum(recharge_money) as rechargeMoney ,count(*) as totalcount FROM member_recharge_log
 		WHERE  STATUS = '3'
 		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
-			and recharge_money &gt;= #{req.priceMin}
-			and recharge_money &lt;= #{req.priceMax}
+			and recharge_money <![CDATA[ >= ]]> #{req.priceMin}
+			and recharge_money <![CDATA[ <= ]]> #{req.priceMax}
 		</if>
 		<if test="req.bankUserName != null and req.bankUserName != ''">
 			and bank_user_name = #{req.bankUserName}

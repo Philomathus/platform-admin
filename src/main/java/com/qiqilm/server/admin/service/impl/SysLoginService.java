@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginBody;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ConfigEnvironment;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper;
 import com.qiqilm.server.admin.mapper.SystemIpWhiteMapper;
 import com.qiqilm.server.admin.service.ISysUserService;
@@ -39,6 +40,8 @@ public class SysLoginService {
     private SystemIpWhiteMapper systemIpWhiteMapper;
     @Autowired
     private ConfigEnvironmentMapper configEnvironmentMapper;
+    @Autowired
+    private RedisUtil               redisUtil;
 
     /**
      * 登录验证
@@ -48,6 +51,9 @@ public class SysLoginService {
      * @return 结果
      */
     public AjaxResult login(String ip, LoginBody loginBody) throws Exception {
+        if ( !redisUtil.lock( EnumLock.loginUser, loginBody.getUsername(), "1", 5 ) ) {
+            return AjaxResult.error( "正在登录中，请勿重复点击登录" );
+        }
         String googleAuthSecret = userService.selectGoogleAuthKeyByUserName(loginBody.getUsername());
         if (StringUtils.isBlank(googleAuthSecret)) {
             return AjaxResult.error("请联系管理员绑定google验证秘钥");
@@ -98,6 +104,7 @@ public class SysLoginService {
         String token = tokenService.createToken(loginUser);
         AjaxResult ajax = AjaxResult.success();
         ajax.put(AdminConstants.TOKEN, token);
+        redisUtil.unLock( EnumLock.loginUser, loginBody.getUsername() );
         return ajax;
     }
 

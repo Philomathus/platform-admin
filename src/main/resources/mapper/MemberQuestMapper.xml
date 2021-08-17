@@ -3,24 +3,27 @@
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberQuestMapper">
 
     <resultMap type="MemberQuest" id="MemberQuestResult">
-        <result property="id"    column="id"    />
-        <result property="memberId"    column="member_id"    />
-        <result property="questId"    column="quest_id"    />
-        <result property="status"    column="status"    />
-        <result property="curnum"    column="curNum"    />
+        <result property="id"        column="id" />
+        <result property="memberId"  column="member_id" />
+        <result property="title"     column="title"  />
+        <result property="questId"   column="quest_id" />
+        <result property="status"    column="status" />
+        <result property="curnum"    column="curNum" />
+        <result property="target"    column="target" />
+<!--        <result property="taskMode"    column="task_mode" />-->
+<!--        <result property="taskRangeTime"    column="task_range_time" />-->
     </resultMap>
 
     <sql id="selectMemberQuestVo">
-        select id, member_id, quest_id, status, curNum from member_quest
+        SELECT id, member_id, quest_id, status, curNum,task_mode FROM member_quest
     </sql>
 
     <select id="selectMemberQuestList" parameterType="MemberQuest" resultMap="MemberQuestResult">
-        <include refid="selectMemberQuestVo"/>
+        SELECT mq.id, mq.member_id,aqi.title,mq.status,mq.curNum,aqi.target,mq.task_mode FROM member_quest mq ,  activity_quest_info aqi
         <where>
-            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
-            <if test="questId != null  and questId != ''"> and quest_id = #{questId}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="curnum != null "> and curNum = #{curnum}</if>
+            mq.quest_id = aqi.id
+            <if test="memberId != null  and memberId != ''"> AND mq.member_id = #{memberId} </if>
+            <if test="title != null  and title != ''"> AND aqi.title LIKE concat('%', #{title}, '%') </if>
         </where>
     </select>
 
@@ -37,6 +40,9 @@
             <if test="questId != null">quest_id,</if>
             <if test="status != null">status,</if>
             <if test="curnum != null">curNum,</if>
+<!--            <if test="taskMode != null">task_mode,</if>-->
+<!--            <if test="taskRangeTime != null">task_range_time,</if>-->
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -44,6 +50,8 @@
             <if test="questId != null">#{questId},</if>
             <if test="status != null">#{status},</if>
             <if test="curnum != null">#{curnum},</if>
+<!--            <if test="taskMode != null">#{taskMode},</if>-->
+<!--            <if test="taskRangeTime != null">#{taskRangeTime},</if>-->
         </trim>
     </insert>
 
@@ -60,6 +68,11 @@
 
         </trim>
         where id = #{id}
+    </update>
+
+<!--    重置每日任务状态、打码量、有效时间-->
+    <update id="resetDayTaskStatus">
+        update member_quest set status = 0,curNum = 0 where task_mode=1
     </update>
 
     <delete id="deleteMemberQuestById" parameterType="String">

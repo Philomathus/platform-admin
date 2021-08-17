@@ -39,10 +39,10 @@
 				</foreach>
 			</if>
 			<if test="startTime != null and startTime != ''">
-				and b_time >= #{startTime}
+				and b_time <![CDATA[ >= ]]> #{startTime}
 			</if>
 			<if test="endTime != null and endTime != ''">
-				and b_time &lt;= #{endTime}
+				and b_time <![CDATA[ <= ]]> #{endTime}
 			</if>
 		</where>
 	</select>

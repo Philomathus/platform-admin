@@ -100,6 +100,7 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
         String return_code = requestMap.getOrDefault("return_code", "").toString();
         String trade_state = requestMap.getOrDefault("trade_state", "").toString();
         requestMap.remove("attach");
+        requestMap.remove("nonce_str");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -109,7 +110,7 @@ public class DaFengChePayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
 
-        log.info("大风车代付回调签名:" + tempStr + "_" + sign);
+        log.info("大风车代付回调签名:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr) && "SUCCESS".equals(return_code)) {
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(out_trade_no);
             if (withdrawLog == null) {

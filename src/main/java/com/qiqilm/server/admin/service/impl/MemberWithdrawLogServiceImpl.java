@@ -15,10 +15,7 @@ import com.qiqilm.server.admin.payagent.BasePayAgent;
 import com.qiqilm.server.admin.payagent.PayAgentProcessorFactoryUtil;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
-import com.qiqilm.server.admin.utils.PhoneUtil;
-import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.ServletUtil;
-import com.qiqilm.server.admin.utils.UserDataUtil;
+import com.qiqilm.server.admin.utils.*;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -259,7 +256,41 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( payAgentLog != null ) {
 			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
 			if ( i <= 0 ) {
-				return AjaxResult.error( "代付记录删除失败，请重试！" );
+				throw new BusinessException( "代付记录删除失败，请重试!" );
+			}
+		}
+
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String    userName  = loginUser.getUser().getUserName();
+
+		MemberWithdrawLog newMemberWithdrawLog = new MemberWithdrawLog();
+		newMemberWithdrawLog.setId( memberWithdrawLog.getId() );
+		newMemberWithdrawLog.setRemark( "由" + userName + "操作回退" );
+		newMemberWithdrawLog.setStatus( 1 );
+		newMemberWithdrawLog.setOpName( userName );
+
+		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( newMemberWithdrawLog );
+		if ( i > 0 ) {
+			return AjaxResult.success();
+		}
+		throw new BusinessException( "回退订单状态失败" );
+	}
+
+	@Override
+	@Transactional( rollbackFor = Exception.class )
+	public AjaxResult failBack( ReqMemberWithdrawLog req ) {
+		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
+		if ( memberWithdrawLog == null ) {
+			return AjaxResult.error( "订单不存在" );
+		}
+		if ( memberWithdrawLog.getStatus() != 5 ) {
+			return AjaxResult.error( "该订单状态不是代付失败" );
+		}
+		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
+		if ( payAgentLog != null ) {
+			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
+			if ( i <= 0 ) {
+				throw new BusinessException( "代付记录删除失败，请重试!" );
 			}
 		}
 
@@ -292,7 +323,17 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 		String msg = null;
 		try {
-			msg = basePayAgent.queryOrderPay( payAgentLog );
+			basePayAgent.queryOrderPay( payAgentLog );
+			PayAgentLog payAgentLog1 = payAgentLogMapper.selectPayAgentLogOrderNo(req.getOrderNo());
+			Integer callbackStatus = payAgentLog1.getCallbackStatus();
+			//回调状态 0 代付处理中 1 代付成功 代付失败
+			if (callbackStatus==0){
+				msg="代付处理中";
+			}else if (callbackStatus==1){
+				msg="代付成功";
+			}else {
+				msg="代付失败";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -702,4 +743,38 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		nowTime.add( Calendar.MINUTE, -10 );
 		return sdf.format( nowTime.getTime() );
 	}
+	@Override
+	public List<MemberWithdrawLog> selectMemberWithdrawLogCount(MemberWithdrawLog memberWithdrawLog) {
+		if (Objects.isNull(memberWithdrawLog.getSearchTime())){
+			Date nowTime = new Date();
+			String stringDate = DateFormatUtils.formate(nowTime,DateFormatUtils.SPLIT_PATTERN_DATE);
+			String[] searchTime = new String[]{stringDate+" 00:00:00",stringDate+" 23:59:59"};
+			memberWithdrawLog.setSearchTime(searchTime);
+		}
+		List<MemberWithdrawLog> memberWithdrawLogList = memberWithdrawLogMapper.countOpNameOrder(memberWithdrawLog);
+		for (MemberWithdrawLog m:memberWithdrawLogList) {
+			//状态(0申请中1锁定2审核不通过3人工入款成功 4代付中5代付失败6代付成功 7出款异常 8人工代付中)
+			if (m.getStatus()==0){
+				m.setStatusName("申请中");
+			}else if(m.getStatus()==1){
+				m.setStatusName("锁定");
+			}else if (m.getStatus()==2){
+				m.setStatusName("审核不通过");
+			}else if(m.getStatus()==3) {
+				m.setStatusName("人工入款成功");
+			}else if (m.getStatus()==4){
+				m.setStatusName("代付中");
+			}else if (m.getStatus()==5){
+				m.setStatusName("代付失败");
+			}else if (m.getStatus()==6){
+				m.setStatusName("代付成功");
+			}else if (m.getStatus()==7){
+				m.setStatusName("出款异常");
+			}else if (m.getStatus()==8){
+				m.setStatusName("人工代付中");
+			}
+		}
+		return memberWithdrawLogList;
+	}
+
 }

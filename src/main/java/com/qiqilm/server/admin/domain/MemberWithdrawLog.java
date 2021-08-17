@@ -135,6 +135,9 @@ public class MemberWithdrawLog extends BaseEntity {
     private String SearchCardBlack;
     private String province;
     private String city;
+    private Integer times;
+    private BigDecimal money;
+    private String statusName;
 
     @JsonIgnore
     private String bankCode;

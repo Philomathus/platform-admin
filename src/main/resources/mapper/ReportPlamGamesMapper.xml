@@ -54,10 +54,10 @@
         <where>
             <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
             <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
-                AND  begindate &gt;=  STR_TO_DATE(#{begindate},'%Y-%m-%d')
+                AND  begindate <![CDATA[ >= ]]>  STR_TO_DATE(#{begindate},'%Y-%m-%d')
             </if>
             <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
-                AND begindate &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
+                AND begindate <![CDATA[ <= ]]> STR_TO_DATE(#{endDate},'%Y-%m-%d')
             </if>
         </where>
         GROUP BY gameplame
@@ -73,10 +73,10 @@
         <where>
             AND STATUS  in ('2'))
             <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
-                AND  create_date &gt;=  STR_TO_DATE(#{begindate},'%Y-%m-%d')
+                AND  create_date <![CDATA[ >= ]]>  STR_TO_DATE(#{begindate},'%Y-%m-%d')
             </if>
             <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
-                AND create_date &lt;= STR_TO_DATE(#{endDate},'%Y-%m-%d')
+                AND create_date <![CDATA[ <= ]]> STR_TO_DATE(#{endDate},'%Y-%m-%d')
             </if>
             AND prop_id = '-2'
         </where>
@@ -87,10 +87,10 @@
         <where>
             <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
             <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
-                AND date_format(begindate,'%y%m%d') &gt;= date_format(#{begindate},'%y%m%d')
+                AND date_format(begindate,'%y%m%d') <![CDATA[ >= ]]> date_format(#{begindate},'%y%m%d')
             </if>
             <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
-                AND date_format(begindate,'%y%m%d') &lt;= date_format(#{endDate},'%y%m%d')
+                AND date_format(begindate,'%y%m%d') <![CDATA[ <= ]]> date_format(#{endDate},'%y%m%d')
             </if>
         </where>
     </select>

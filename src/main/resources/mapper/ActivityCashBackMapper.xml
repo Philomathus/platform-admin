@@ -31,31 +31,31 @@
 
     <select id="selectActivityCashBackBycash" parameterType="java.math.BigDecimal" resultType="java.lang.Integer">
         select rebate from ${dbMain}.activity_cash_back
-        where status =1 and  deposit_total_min &lt;= #{cash}
-        and deposit_total_max &gt; #{cash}
+        where status =1 and  deposit_total_min <![CDATA[ <= ]]> #{cash}
+        and deposit_total_max > #{cash}
     </select>
     <select id="selectActivityCashBackLists"
             resultType="com.qiqilm.server.admin.domain.rsp.RspActivityCashBack">
         SELECT t.user_id,t.income,t.mark,t.create_time FROM (
-        SELECT * FROM log_money0 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
+        SELECT * FROM log_money0 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
-        SELECT * FROM log_money1 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
+        SELECT * FROM log_money1 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
-        SELECT * FROM log_money2 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
+        SELECT * FROM log_money2 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
-        SELECT * FROM log_money3 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
+        SELECT * FROM log_money3 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
-        SELECT * FROM log_money4 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
+        SELECT * FROM log_money4 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
-        SELECT * FROM log_money5 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
+        SELECT * FROM log_money5 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
-        SELECT * FROM log_money6 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
+        SELECT * FROM log_money6 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
-        SELECT * FROM log_money7 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
+        SELECT * FROM log_money7 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
-        SELECT * FROM log_money8 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
+        SELECT * FROM log_money8 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
-        SELECT * FROM log_money9 WHERE create_time >= #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5') ) t
+        SELECT * FROM log_money9 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5') ) t
     </select>
 
     <insert id="insertActivityCashBack" parameterType="ActivityCashBack" useGeneratedKeys="true" keyProperty="id">

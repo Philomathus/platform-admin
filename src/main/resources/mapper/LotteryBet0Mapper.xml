@@ -125,14 +125,14 @@
             and status = #{status}
         </if>
 		<if test="priceMin != null and priceMax != null  and priceMin != ''  and priceMax != ''">
-			and cost &gt;= #{priceMin}
-			and cost &lt;= #{priceMax}
+			and cost <![CDATA[ >= ]]> #{priceMin}
+			and cost <![CDATA[ <= ]]> #{priceMax}
 		</if>
         <if test="lotteryName != null  and lotteryName != ''">
             and lottery_name like concat('%', #{lotteryName}, '%')
         </if>
         <if test="startTime != null">
-            and bet_time &gt;= #{startTime} and bet_time &lt;= #{endTime}
+            and bet_time <![CDATA[ >= ]]> #{startTime} and bet_time <![CDATA[ <= ]]> #{endTime}
         </if>
 	</sql>
 

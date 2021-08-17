@@ -64,8 +64,8 @@
             and (phone is not null and phone !='')
             <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
-            <if test="selectDate != null"> and reg_time >= '${selectDate[0]}'</if>
-            <if test="selectDate != null"> and reg_time &lt;= '${selectDate[1]}'</if>
+            <if test="selectDate != null"> and reg_time <![CDATA[ >= ]]> '${selectDate[0]}'</if>
+            <if test="selectDate != null"> and reg_time <![CDATA[ <= ]]> '${selectDate[1]}'</if>
         </where>
     </select>
 
@@ -268,10 +268,10 @@
             and (phone is not null and phone !='')
         <if test="inviterCode != null  and inviterCode != ''"> and inviter_code = #{inviterCode}</if>
         <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
-        <if test="selectDate != null"> and reg_time >= '${selectDate[0]}'</if>
-        <if test="selectDate != null"> and reg_time &lt;= '${selectDate[1]}'</if>
+        <if test="selectDate != null"> and reg_time <![CDATA[ >= ]]> '${selectDate[0]}'</if>
+        <if test="selectDate != null"> and reg_time <![CDATA[ <= ]]> '${selectDate[1]}'</if>
         </where>
-        GROUP BY login_ip HAVING COUNT(1) >= 2
+        GROUP BY login_ip HAVING COUNT(1) <![CDATA[ >= ]]> 2
     </select>
 
 

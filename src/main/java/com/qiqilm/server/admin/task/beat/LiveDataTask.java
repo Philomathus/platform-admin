@@ -49,7 +49,7 @@ public class LiveDataTask {
             return;
         }
         Date endDay  = new Date();
-        Date starDay = DateFormatUtils.addMin( endDay, -3);
+        Date starDay = DateFormatUtils.addMin( endDay, -2);
 
         try {
             gameDataLogService.beatLiveProp(platformTypeId,beatRate,starDay.getTime()/1000,endDay.getTime()/1000);
