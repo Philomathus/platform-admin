@@ -274,25 +274,24 @@ public class ImApiImpl implements ImApi {
 
 	@Async
 	@Override
-	public void sendSystemNotify( String groupId, String content, String... userId ) {
+	public MsgRsp sendSystemNotify( String groupId, String content, String... userId ) {
 		SendSystemNotification notification = new SendSystemNotification();
 		notification.setGroupId( groupId );
 		notification.setContent( content );
 		if ( userId.length > 0 ) {
 			notification.setMembers( Arrays.asList( userId ) );
 		}
-		imMessageCacheUtil.setImNotifyMessage( notification );
+		return doPost( notification, MsgRsp.class, 1 );
 	}
 
 	@Async
 	@Override
-	public void sendGroupMessage( String groupId, String userId, MessageType... message ) {
+	public ImRsp sendGroupMessage( String groupId, String userId, MessageType... message ) {
 		SendGroupMsg sendGroupMsg = new SendGroupMsg();
 		sendGroupMsg.setGroupId( groupId );
 		sendGroupMsg.setMsgBody( Arrays.asList( message ) );
 		sendGroupMsg.setFromAccount( userId );
-		// 放到redis队列里
-		imMessageCacheUtil.setImGroupMessage( sendGroupMsg );
+		return doPost( sendGroupMsg, ImRsp.class, 1 );
 	}
 
 	@Override

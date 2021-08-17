@@ -67,6 +67,9 @@
         select count(0) from ${dbMain}.report_agentcode
         where `CODE` = #{code}
     </select>
+    <select id="callplamagentData" resultType="java.lang.String" statementType="CALLABLE" >
+        {call prorep_plamagent_data(#{p_begintime,mode=IN,jdbcType=VARCHAR},#{kj_result,mode=OUT,jdbcType=VARCHAR})}
+    </select>
 
     <insert id="addPromotionCode">
         insert into ${dbMain}.report_agentcode (`CODE`) values (#{code})
