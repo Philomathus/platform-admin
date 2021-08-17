@@ -8,11 +8,11 @@ import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,43 +25,46 @@ import org.springframework.util.MultiValueMap;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
-@Repository(value = ConstantsPayAgent.JIANDAN + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.CAISHEN + "PayAgentProcessor")
 @Log4j2
-public class JianDanPayAgentProcessor extends AbstractPayAgent {
+public class CaiShenPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
-        bodyMap.put("secret_id",payAgentPlatform.getMerId());
-        bodyMap.put("signtime",System.currentTimeMillis()/1000);
-        bodyMap.put("ver","1.0");
-
-        bodyMap.put("card_num",withdrawLog.getBankAccount());
-        bodyMap.put("holder_name", withdrawLog.getBankUserName().trim());
-        bodyMap.put("bank_name", withdrawLog.getBankName().trim());
-        bodyMap.put("branch_bank_name", withdrawLog.getBankName().trim());
-        bodyMap.put("money", withdrawLog.getWithdrawMoney());
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JIANDAN);
-        bodyMap.put("extend_info", withdrawLog.getOrderNo());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
+        String merchant_no = payAgentPlatform.getMerId();
+        String tran_flow = withdrawLog.getOrderNo();
+        String amount = withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+        String acc_no = withdrawLog.getBankAccount();
+        String acc_name = withdrawLog.getBankUserName().trim();
 
-        String tempStr = this.assemblyUrl(bodyMap);
-        tempStr = URLEncoder.encode(tempStr,"UTF-8").replace("*","%2A").replace("+","%20").replace("%7E","~");
-        String sign = DigestUtils.md5Hex(tempStr) + signMd5;
-        bodyMap.put("sign", DigestUtils.md5Hex(sign));
+        SortedMap<String, Object> bodyMap = new TreeMap<>();
+        bodyMap.put("version","v4");
+        bodyMap.put("merchant_no",merchant_no);
+        bodyMap.put("tran_flow",tran_flow);
+        bodyMap.put("tran_date", DateFormatUtils.formate(new Date(), "yyyy-MM-dd"));
+        bodyMap.put("tran_time", DateFormatUtils.formate(new Date(), "HH:mm:ss"));
+        bodyMap.put("acc_no", acc_no);
+        bodyMap.put("acc_name", acc_name);
+        bodyMap.put("amount", amount);
+        bodyMap.put("bank_name", withdrawLog.getBankName().trim());
+        bodyMap.put("ext1", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.CAISHEN);
 
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(bodyMap);
-        log.warn("简单代付下单请求参数{}",JsonUtil.object2Json(requestMap));
+        String tempSign = "md5="+signMd5 + "&" + "merchant_no=" + merchant_no + "&" + "tran_flow="
+                + tran_flow + "&" + "amount=" + amount + "&" + "acc_no=" + acc_no + "&"
+                + "acc_name=" + acc_name;
+        String encrypted = DigestUtils.md5Hex(tempSign);
+        bodyMap.put("encrypted",encrypted);
+
+        log.warn(payAgentPlatform.getName()+"下单请求参数{}",JsonUtil.object2Json(bodyMap));
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity(bodyMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
@@ -76,26 +79,20 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
                     });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("简单代付下单报错原因:" + e);
+            reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
-        log.info("简单代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
-            Boolean boo = (Boolean)resultMap.getOrDefault("ok", "");
-            if (boo) {
-                String orderCode = resultMap.getOrDefault("order_code", "").toString();
-                PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogOrderNo(withdrawLog.getOrderNo());
-                PayAgentLog pupdate = new PayAgentLog();
-                pupdate.setId(payAgentLog.getId());
-                pupdate.setPayAgentOrderNo(orderCode);
-                payAgentLogMapper.updatePayAgentLog(pupdate);
-                log.info("简单代付提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+            String code = resultMap.getOrDefault("rtn_code", "").toString();
+            if (code.equals("0001")) {
+                log.info(payAgentPlatform.getName()+"提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("error", "").toString());
+                reqPayAgent.setFailReason(resultMap.getOrDefault("rtn_msg", "").toString());
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("简单代付提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.warn(payAgentPlatform.getName()+"提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -113,26 +110,26 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
         String signStr = DigestUtils.md5Hex(tempStr) + signMd5;
         signStr = DigestUtils.md5Hex(signStr);
 
-        log.info("简单代付回调签名字符串:" + sign + "_" + signStr);
+        log.info("财神代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
-            String merOrderNo = requestMap.getOrDefault("outOrderNo", "").toString();
-            String tranResult = requestMap.getOrDefault("tranResult", "").toString();
+            String orderCode = requestMap.getOrDefault("order_code", "").toString();
 
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(merOrderNo);
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByPayAgentOrderNo(orderCode);
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", merOrderNo);
+                log.error("提现相关记录丢失 - orderCode:{}", orderCode);
                 return "fail";
             }
             if ( withdrawLog.getStatus() == 2 ) {
-                log.error( "订单已拒绝，无需回调 - merOrderNo:{}", merOrderNo );
+                log.error( "订单已拒绝，无需回调 - merOrderNo:{}", orderCode );
                 return "ok";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", merOrderNo);
+                log.error("已有代付记录 - orderCode:{}", orderCode);
                 return "ok";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merOrderNo);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "SUCCESS".equals(tranResult));
+
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
             return "ok";
         }
         return "fail";
@@ -148,31 +145,22 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
     public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
-        Map<String, Object> paramsMap = new TreeMap<>();
-        paramsMap.put("secret_id",payAgentPlatform.getMerId());
-        paramsMap.put("signtime",System.currentTimeMillis()/1000);
-        paramsMap.put("ver","1.0");
 
-        String orderNo = payAgentLog.getPayAgentOrderNo();
-        if(StringUtils.isBlank(orderNo)){
-            return "简单代付查询失败,订单号:" + withdrawLog.getOrderNo();
-        }
-        paramsMap.put("order_code",orderNo);
+        Map<String, Object> paramsMap = new TreeMap<>();
+        paramsMap.put("version","v4");
+        paramsMap.put("merchant_no",payAgentPlatform.getMerId());
+        paramsMap.put("tran_date", DateFormatUtils.formate(new Date(), "yyyy-MM-dd"));
+        paramsMap.put("tran_time", DateFormatUtils.formate(new Date(), "HH:mm:ss"));
+        paramsMap.put("tran_flow",withdrawLog.getOrderNo());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                         "secretkey/payAgentPrivateKey"));
+        paramsMap.put("sign", DigestUtils.md5Hex(signMd5+withdrawLog.getOrderNo()).toUpperCase());
 
-        String tempStr = this.assemblyUrl(paramsMap);
-        tempStr = URLEncoder.encode(tempStr,"UTF-8").replace("*","%2A").replace("+","%20").replace("%7E","~");
-        String sign = DigestUtils.md5Hex(tempStr) + signMd5;
-        paramsMap.put("sign", DigestUtils.md5Hex(sign));
-
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(paramsMap);
-        log.warn(JsonUtil.object2Json(requestMap));
+        log.warn(payAgentPlatform.getName()+"查询代付状态接口请求参数{}",JsonUtil.object2Json(paramsMap));
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity(paramsMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
@@ -185,13 +173,13 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map(text);
                     });
-            log.info("简单代付查询结果:{}", JsonUtil.object2Json(resultMap));
-
+            log.info(payAgentPlatform.getName()+"查询结果:{}", JsonUtil.object2Json(resultMap));
 
             if (!CollectionUtils.isEmpty(resultMap)) {
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
-                //  statusCode 1.待处理，2.处理中，3.结算成功，4.失败，5.冲正
+                //  statusCode
+                //  0000 交易成功(处理完成，已经到账)  0001 交易成功(处理中)  0002 交易失败
                 int statusCode = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
 
                 Boolean boo = (Boolean)resultMap.getOrDefault("ok", "");
@@ -213,7 +201,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
                 Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "简单代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName()+"查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 
 }
