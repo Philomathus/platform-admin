@@ -102,7 +102,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
                     return true;
                 }
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+                reqPayAgent.setFailReason(resultMap.getOrDefault("retMsg", "").toString());
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
