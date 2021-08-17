@@ -100,8 +100,6 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
-        requestMap.remove("extend_info");
-        requestMap.remove("remark");
         String status = requestMap.getOrDefault("status", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
@@ -111,6 +109,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap);
         tempStr = URLEncoder.encode(tempStr,"UTF-8").replace("*","%2A").replace("+","%20").replace("%7E","~");
         String signStr = DigestUtils.md5Hex(tempStr) + signMd5;
+        signStr = DigestUtils.md5Hex(signStr);
 
         log.info("简单代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
@@ -132,6 +131,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
             }
 
             payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
+            log.info("简单代付回调状态：{}", "2".equals(status) ? "成功" : "失败");
             return "ok";
         }
         return "fail";
