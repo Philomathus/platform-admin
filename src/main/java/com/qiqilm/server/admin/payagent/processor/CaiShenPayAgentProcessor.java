@@ -19,8 +19,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -180,15 +178,15 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
                 int status = 4;
                 //  statusCode
                 //  0000 交易成功(处理完成，已经到账)  0001 交易成功(处理中)  0002 交易失败  0006 是没有找到订单  9999 系统异常
-                int statusCode = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
+                String statusCode = resultMap.getOrDefault("rtn_code", "").toString();
 
                 if("0000".equals(statusCode) || "0002".equals(statusCode) || "0006".equals(statusCode) || "9999".equals(statusCode)){
-                    if (statusCode == 3) {
+                    if ("0000".equals(statusCode)) {
                         status = 6;
                     } else {
                         status = 5;
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusCode);
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.valueOf(statusCode));
                 }
                 return JsonUtil.object2Json(resultMap);
             }
