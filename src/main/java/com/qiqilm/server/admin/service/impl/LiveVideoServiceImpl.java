@@ -388,9 +388,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				return AjaxResult.success( "更新成功" );
 			} else {
 				this.processVideoSort();
-				Long sort = liveVideo.getSort();
+				LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById(liveVideo.getId());
+				Long sort = liveVideo1.getSort();
 				if (sort != null && sort <= 20) {
-					LiveVideo liveVideo1 = liveVideoMapper.selectLiveVideoById(liveVideo.getId());
 					String msg = sysConfigCacheUtil.getConf("first_twenty_notice");
 					String groupId = liveVideo1.getGroupId();
 					if (StringUtils.isNotEmpty(msg) && StringUtils.isNotEmpty(groupId)) {
