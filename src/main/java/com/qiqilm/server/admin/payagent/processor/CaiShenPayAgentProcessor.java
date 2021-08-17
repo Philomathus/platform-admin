@@ -19,14 +19,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.util.*;
 
 @Repository(value = ConstantsPayAgent.CAISHEN + "PayAgentProcessor")
@@ -99,37 +96,32 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
-        String status = requestMap.getOrDefault("status", "").toString();
-        SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-
-        String tempStr = this.assemblyUrl(bodyMap);
-        tempStr = URLEncoder.encode(tempStr,"UTF-8").replace("*","%2A").replace("+","%20").replace("%7E","~");
-        String signStr = DigestUtils.md5Hex(tempStr) + signMd5;
-        signStr = DigestUtils.md5Hex(signStr);
+        String tranFlow = requestMap.getOrDefault("tran_flow", "").toString();
+        String signStr = DigestUtils.md5Hex(tranFlow + signMd5 );
 
         log.info("财神代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
-            String orderCode = requestMap.getOrDefault("order_code", "").toString();
+            String merOrderNo = requestMap.getOrDefault("tran_flow", "").toString();
+            String rtnCode = requestMap.getOrDefault("rtn_code", "").toString();
 
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByPayAgentOrderNo(orderCode);
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(merOrderNo);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - orderCode:{}", orderCode);
+                log.error("提现相关记录丢失 - merOrderNo:{}", merOrderNo);
                 return "fail";
             }
             if ( withdrawLog.getStatus() == 2 ) {
-                log.error( "订单已拒绝，无需回调 - merOrderNo:{}", orderCode );
+                log.error( "订单已拒绝，无需回调 - merOrderNo:{}", merOrderNo );
                 return "ok";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - orderCode:{}", orderCode);
+                log.error("已有代付记录 - merOrderNo:{}", merOrderNo);
                 return "ok";
             }
-
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merOrderNo);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "0000".equals(rtnCode));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", merOrderNo, "0000".equals(rtnCode) ? "成功" : "失败");
             return "ok";
         }
         return "fail";
@@ -179,21 +171,16 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
                 //  statusCode
-                //  0000 交易成功(处理完成，已经到账)  0001 交易成功(处理中)  0002 交易失败
-                int statusCode = Integer.parseInt(resultMap.getOrDefault("status", "").toString());
+                //  0000 交易成功(处理完成，已经到账)  0001 交易成功(处理中)  0002 交易失败  0006 是没有找到订单  9999 系统异常
+                String statusCode = resultMap.getOrDefault("rtn_code", "").toString();
 
-                Boolean boo = (Boolean)resultMap.getOrDefault("ok", "");
-                if(!boo){
-                    statusCode = 4;
-                }
-
-                if(statusCode == 3 || statusCode == 4 || statusCode == 5){
-                    if (statusCode == 3) {
+                if("0000".equals(statusCode) || "0002".equals(statusCode) || "0006".equals(statusCode) || "9999".equals(statusCode)){
+                    if ("0000".equals(statusCode)) {
                         status = 6;
                     } else {
                         status = 5;
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusCode);
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.valueOf(statusCode));
                 }
                 return JsonUtil.object2Json(resultMap);
             }
