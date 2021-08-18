@@ -56,16 +56,16 @@
 			and (member_id = #{searchValue} or user_name like concat(#{searchValue}, '%'))
 		</if>
 		<if test="type != null">
-			and mgt.type = #{type}
+			and lgo.type = #{type}
 		</if>
 		<if test="platformId != null">
-			and mgt.platform_id = #{platformId}
+			and lgo.platform_id = #{platformId}
 		</if>
 		<if test="startTime != null and startTime != ''">
-			and mgt.b_time >= #{startTime}
+			and lgo.b_time >= #{startTime}
 		</if>
 		<if test="endTime != null and endTime != ''">
-			and mgt.b_time &lt;= #{endTime}
+			and lgo.b_time &lt;= #{endTime}
 		</if>
 	</select>
 
