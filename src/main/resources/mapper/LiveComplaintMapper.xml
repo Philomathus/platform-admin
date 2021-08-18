@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveComplaintMapper">
+
+    <resultMap type="LiveComplaint" id="LiveComplaintResult">
+        <result property="id"    column="id"    />
+        <result property="content"    column="content"    />
+        <result property="userId"    column="user_id"    />
+        <result property="anchor"    column="anchor"    />
+        <result property="anchorNick"    column="anchor_nick"    />
+        <result property="roomName"    column="room_name"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectLiveComplaintVo">
+        SELECT id, content, user_id,mobile,room_name,anchor_nick, anchor, create_time FROM ${dbLive}.live_complaint
+    </sql>
+
+    <select id="selectLiveComplaintList" parameterType="LiveComplaint" resultMap="LiveComplaintResult">
+        <include refid="selectLiveComplaintVo"/>
+        <where>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="anchor != null  and anchor != ''"> and anchor = #{anchor}</if>
+        </where>
+    </select>
+<!--
+    <select id="selectLiveComplaintById" parameterType="Long" resultMap="LiveComplaintResult">
+        <include refid="selectLiveComplaintVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLiveComplaint" parameterType="LiveComplaint" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.live_complaint
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content != null">content,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="anchor != null">anchor,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="roomName != null">room_name,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="anchorNick != null">anchor_nick,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="content != null">#{content},</if>
+                <if test="userId != null">#{userId},</if>
+                <if test="anchor != null">#{anchor},</if>
+                <if test="createTime != null">#{createTime},</if>
+                <if test="roomName != null">#{roomName},</if>
+                <if test="mobile != null">#{mobile},</if>
+                <if test="anchorNick != null">#{anchorNick},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLiveComplaint" parameterType="LiveComplaint">
+        update 7700_live.live_complaint
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null">content = #{content},</if>
+    
+            <if test="userId != null">user_id = #{userId},</if>
+    
+            <if test="anchor != null">anchor = #{anchor},</if>
+    
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLiveComplaintById" parameterType="Long">
+        delete from ${dbLive}.live_complaint where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveComplaintByIds" parameterType="String">
+        delete from ${dbLive}.live_complaint where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>-->
+</mapper>

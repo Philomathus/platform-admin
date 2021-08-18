@@ -93,12 +93,11 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
             reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
         log.warn("爱农代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
-
         if (!CollectionUtils.isEmpty(resultMap)) {
             String retCode = resultMap.getOrDefault("retCode", "").toString();
             String orderStatus = resultMap.getOrDefault("orderStatus", "").toString();
             if ("0000".equals(retCode)) {
-                if(!orderStatus.equals("02") && !orderStatus.equals("06")){
+                if (!orderStatus.equals("02") && !orderStatus.equals("06")) {
                     log.info("爱农代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                     return true;
                 }

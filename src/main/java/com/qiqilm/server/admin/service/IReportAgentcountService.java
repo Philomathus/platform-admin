@@ -35,6 +35,8 @@ public interface IReportAgentcountService {
 
 	void delPromotionCode(ReportAgentcount reportAgentcount);
 
+	String plamagent_data(ReportAgentcount reportAgentcount);
+
 	List<ReportAgentcount> exportAgentcountList(ReportAgentcount reportAgentcount);
 
     List<RspMemberAgent> selectMemberAgent(ReportAgentcount reportAgentcount);

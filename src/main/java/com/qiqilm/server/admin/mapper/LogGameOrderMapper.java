@@ -27,6 +27,16 @@ public interface LogGameOrderMapper {
 	 */
 	public List<LogGameOrder> selectLogGameOrderList(LogGameOrder logGameOrder);
 
+
+	/**
+	 * 查询会员上下分列表
+	 *
+	 * @param logGameOrder 会员上下分
+	 * @return 会员上下分集合
+	 */
+	public List<LogGameOrder> selectLogGameScoreList(LogGameOrder logGameOrder);
+
+
 	/**
 	 * 新增会员上下分
 	 *

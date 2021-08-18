@@ -63,6 +63,8 @@ public abstract class Constants {
 	// 进入日志临时缓存
 	public static final String LIVEENTERLOG = LIVE_PREX + "live-enter-log";
 
+	public static final String  LIVE_HOST_LOCK                 = LIVE_PREX + "lock:";
+
 	private Constants() {
 		throw new RuntimeException( "Constants.class can't be instantiated" );
 	}

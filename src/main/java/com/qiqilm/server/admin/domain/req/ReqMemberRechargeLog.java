@@ -25,7 +25,7 @@ public class ReqMemberRechargeLog {
 	private String updateTime;
 
 	@JsonIgnore
-	private Integer priceMin;
+	private String priceMin;
 	@JsonIgnore
-	private Integer priceMax;
+	private String priceMax;
 }

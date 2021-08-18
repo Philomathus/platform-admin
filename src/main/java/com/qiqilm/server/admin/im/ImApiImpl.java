@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.im;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
+import com.qiqilm.server.admin.cache.ImMessageCacheUtil;
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.domain.GroupMemberList;
@@ -36,6 +37,8 @@ public class ImApiImpl implements ImApi {
 	private LiveCacheUtil     liveCacheUtil;
 	@Autowired
 	private ServerImCacheUtil serverImCacheUtil;
+	@Autowired
+	private ImMessageCacheUtil imMessageCacheUtil;
 
 	private String getUrl( String api ) {
 		List<String> confs = serverImCacheUtil.getValue( Arrays.asList( "tim_sdkappid", "tim_sdk_key", "tim_identifier" ) );

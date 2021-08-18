@@ -145,6 +145,25 @@ public class BaseController extends ControllerExceptionHandler {
 
 	}
 
+	public TreeMap defaultTransferType(){
+		TreeMap<String, String> transferType = new TreeMap<>();
+		transferType.put("ALL","全部");
+		transferType.put("Deposit","额度转出");
+		transferType.put("Withdraw","额度转入");
+		return transferType;
+	}
+
+	public TreeMap defaultTransferState(){
+		TreeMap<String, String> transferState = new TreeMap<>();
+		transferState.put("ALL","全部");
+		transferState.put("Succeeded","成功");
+		transferState.put("Inprogress","待处理");
+		transferState.put("Unconfirmed","未确认");
+		transferState.put("Failed","失败");
+		return transferState;
+
+	}
+
 	public List<Map> handlyGameData(IMemberGameDataMinService memberGameDataMinService, MemberGameData req) throws Exception {
 		return memberGameDataMinService.selectMemberGameDataMinList(req);
 	}

@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="code != null  and code != ''"> and code = #{code}</if>
             <if test="merId != null  and merId != ''"> and mer_id = #{merId}</if>
             <if test="orgId != null  and orgId != ''"> and org_id = #{orgId}</if>
-            <if test="platPayUrl != null  and platPayUrl != ''"> and plat_pay_url = #{platPayUrl}</if>
+            <if test="platPayUrl != null  and platPayUrl != ''"> and plat_pay_url like concat('%', #{platPayUrl}, '%')</if>
             <if test="platQueryUrl != null  and platQueryUrl != ''"> and plat_query_url = #{platQueryUrl}</if>
             <if test="signMd5 != null  and signMd5 != ''"> and sign_md5 = #{signMd5}</if>
             <if test="signPublicKey != null  and signPublicKey != ''"> and sign_public_key = #{signPublicKey}</if>
