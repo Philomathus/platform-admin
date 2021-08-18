@@ -115,6 +115,7 @@ public class BaWangPayAgentProcessor extends AbstractPayAgent {
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(order_num);
             payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", order_num, "2".equals(status)? "成功" : "失败");
             return "success";
         }
         return "fail";
