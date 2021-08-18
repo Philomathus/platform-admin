@@ -86,7 +86,7 @@ public class JuBaoPenPayAgentProcessor extends AbstractPayAgent {
         log.info("聚宝盆代付回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
             String order_num = requestMap.getOrDefault("order_no", "").toString();
-            String remit_result = requestMap.getOrDefault("status", "").toString();
+            String status = requestMap.getOrDefault("status", "").toString();
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_num);
             if (withdrawLog == null) {
@@ -102,7 +102,8 @@ public class JuBaoPenPayAgentProcessor extends AbstractPayAgent {
                 return "SUCCESS";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(order_num);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(remit_result));
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", order_num, "2".equals(status)? "成功" : "失败");
             return "SUCCESS";
         }
         return "fail";
