@@ -16,7 +16,7 @@
   </resultMap>
 
   <sql id="selectMemberGameTransferVo">
-    select id, user_id, agent, platform_id, transfer_id, product, transfer_state, transfer_type, transfer_amount, transfer_time from 7700_main.member_game_transfer
+    select id, user_id, agent, platform_id, transfer_id, product, transfer_state, transfer_type, transfer_amount, transfer_time from member_game_transfer
   </sql>
 
   <select id="selectMemberGameTransferList" parameterType="MemberGameTransfer" resultMap="MemberGameTransferResult">
@@ -42,7 +42,7 @@
   </select>
 
   <insert id="insertMemberGameTransfer" parameterType="MemberGameTransfer">
-    insert into 7700_main.member_game_transfer
+    insert into member_game_transfer
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">id,</if>
       <if test="userId != null">user_id,</if>
@@ -70,7 +70,7 @@
   </insert>
 
   <update id="updateMemberGameTransfer" parameterType="MemberGameTransfer">
-    update 7700_main.member_game_transfer
+    update member_game_transfer
     <trim prefix="SET" suffixOverrides=",">
       <if test="userId != null">user_id = #{userId},</if>
 
@@ -95,11 +95,11 @@
   </update>
 
   <delete id="deleteMemberGameTransferById" parameterType="String">
-    delete from 7700_main.member_game_transfer where id = #{id}
+    delete from member_game_transfer where id = #{id}
   </delete>
 
   <delete id="deleteMemberGameTransferByIds" parameterType="String">
-    delete from 7700_main.member_game_transfer where id in
+    delete from member_game_transfer where id in
     <foreach item="id" collection="array" open="(" separator="," close=")">
       #{id}
     </foreach>
