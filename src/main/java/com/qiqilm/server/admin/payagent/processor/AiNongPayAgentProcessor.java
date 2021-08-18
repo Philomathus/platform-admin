@@ -142,6 +142,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merOrderNo);
             payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "SUCCESS".equals(tranResult));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", merOrderNo, "SUCCESS".equals(tranResult)? "成功" : "失败");
             return "SUCCESS";
         }
         return "fail";
