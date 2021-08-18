@@ -5,11 +5,10 @@ import com.qiqilm.server.admin.domain.rsp.RspMemberAgent;
 import com.qiqilm.server.admin.domain.vo.ReportPlamHome;
 import com.qiqilm.server.admin.mapper.ReportAgentcountMapper;
 import com.qiqilm.server.admin.service.IReportAgentcountService;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -23,7 +22,7 @@ import java.util.*;
 @Service
 @Log4j2
 public class ReportAgentcountServiceImpl implements IReportAgentcountService {
-	@Autowired
+	@Resource
 	private ReportAgentcountMapper reportAgentcountMapper;
 
 	/**
@@ -99,6 +98,11 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 	@Override
 	public void delPromotionCode( ReportAgentcount reportAgentcount ) {
 		reportAgentcountMapper.delPromotionCode( reportAgentcount );
+	}
+
+	@Override
+	public String plamagent_data(ReportAgentcount reportAgentcount) {
+		return reportAgentcountMapper.callplamagentData(reportAgentcount.getAgenttime());
 	}
 
 	@Override
