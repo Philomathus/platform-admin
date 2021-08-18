@@ -7,10 +7,8 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -47,8 +45,7 @@ public class BaWangPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("remark", withdrawLog.getBankName());
         dataMap.put("reqTime", DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = payAgentPlatform.getHeaderKey();
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
@@ -94,8 +91,7 @@ public class BaWangPayAgentProcessor extends AbstractPayAgent {
 
         String rspSign = requestMap.remove("sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = payAgentPlatform.getHeaderKey();
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
 
@@ -138,8 +134,7 @@ public class BaWangPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("mchId", payAgentPlatform.getMerId());
         dataMap.put("mchOrderNo", withdrawLog.getOrderNo());
         dataMap.put("reqTime", DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = payAgentPlatform.getHeaderKey();
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
