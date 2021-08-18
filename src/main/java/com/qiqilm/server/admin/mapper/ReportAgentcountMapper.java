@@ -32,4 +32,6 @@ public interface ReportAgentcountMapper {
 	void delPromotionCode(ReportAgentcount reportAgentcount);
 
     List<RspMemberAgent> selectMemberAgent(ReportAgentcount reportAgentcount);
+
+	String callplamagentData(@Param( "p_begintime" ) String p_begintime);
 }
