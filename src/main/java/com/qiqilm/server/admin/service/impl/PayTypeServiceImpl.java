@@ -135,4 +135,8 @@ public class PayTypeServiceImpl implements IPayTypeService {
 		return i;
 	}
 
+	@Override
+	public int selectPayChannelNew( String id ) {
+		return payTypeMapper.selectPayChannelNew( id );
+	}
 }

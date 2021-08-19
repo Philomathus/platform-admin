@@ -52,4 +52,6 @@ public interface IPayTypeService {
 	 * @return 结果
 	 */
 	public int deletePayTypeById(String id);
+
+	int selectPayChannelNew(String id);
 }
