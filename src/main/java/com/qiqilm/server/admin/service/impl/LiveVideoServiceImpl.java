@@ -395,7 +395,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 				}
 			}
 		}
-		return AjaxResult.error( "更新失败" );
+		return AjaxResult.success("更新成功");
 	}
 
 	@Override
