@@ -34,4 +34,6 @@ public interface ReportAgentcountMapper {
     List<RspMemberAgent> selectMemberAgent(ReportAgentcount reportAgentcount);
 
 	String callplamagentData(@Param( "p_begintime" ) String p_begintime);
+
+	int  rmemberCounts(@Param( "startTime" ) String startTime,@Param("endTime") String endTime);
 }

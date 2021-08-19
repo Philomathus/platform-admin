@@ -168,8 +168,7 @@ public class ReportAgentcountController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:generatedata')" )
 	@GetMapping( "/generatedata" )
 	public AjaxResult generatedata(ReportAgentcount reportAgentcount ) throws ParseException {
-		reportAgentcountService.plamagent_data(reportAgentcount);
-		return AjaxResult.success( "预生成数据成功" );
+		return reportAgentcountService.plamagent_data(reportAgentcount);
 	}
 
 }
