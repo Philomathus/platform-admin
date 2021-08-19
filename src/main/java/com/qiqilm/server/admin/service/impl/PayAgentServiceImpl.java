@@ -223,7 +223,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.XIAOYUE )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitXiaoYuePay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitXiaoYuePay + "元以上出款" );
-		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.XIAOYUE )
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.YINLIAN )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitYinLianPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitYinLianPay + "元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
