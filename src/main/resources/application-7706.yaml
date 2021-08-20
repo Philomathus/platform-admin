@@ -50,3 +50,5 @@ payAgentLimitDingFengPay: 50000
 payAgentLimitHongBoPay: 50000
 # 小月代付额度
 payAgentLimitXiaoYuePay: 50000
+# 银联代付额度
+payAgentLimitYinLianPay: 50000

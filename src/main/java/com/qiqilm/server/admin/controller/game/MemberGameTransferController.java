@@ -26,8 +26,6 @@ public class MemberGameTransferController extends BaseController {
 
 	@Autowired
 	private IMemberGameTransferService memberGameTransferService;
-	@Autowired
-	private IGamePlatformService gamePlatformService;
 
 	/** 交易状态列表 **/
 	@GetMapping( value = "/transferTypeList" )

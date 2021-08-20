@@ -242,10 +242,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from pay_platform_new where id = #{id}
     </delete>
 
-    <delete id="deletePayPlatformNewByIds" parameterType="String">
-        delete from pay_platform_new where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+    <select id="selectPayChannelNew" parameterType="Long" resultType="java.lang.Integer">
+        select count(0) from pay_channel_new where pay_platform_id = #{id}
+    </select>
 </mapper>

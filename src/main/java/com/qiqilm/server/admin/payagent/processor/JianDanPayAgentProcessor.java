@@ -102,7 +102,6 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
-        String status = requestMap.getOrDefault("status", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -115,8 +114,8 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
 
         log.info("简单代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
-            String merOrderNo = requestMap.getOrDefault("outOrderNo", "").toString();
-            String tranResult = requestMap.getOrDefault("tranResult", "").toString();
+            String merOrderNo = requestMap.getOrDefault("extend_info", "").toString();
+            String status = requestMap.getOrDefault("status", "").toString();
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(merOrderNo);
             if (withdrawLog == null) {
@@ -132,7 +131,8 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
                 return "ok";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merOrderNo);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "SUCCESS".equals(tranResult));
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "3".equals(status));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", merOrderNo, "3".equals(status)? "成功" : "失败");
             return "ok";
         }
         return "fail";

@@ -88,7 +88,6 @@ public class MaYunPayAgentProcessor extends AbstractPayAgent {
         return false;
     }
 
-    @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         if (this.checkWhiteIp(payAgentPlatform.getPlatWhiteIpList(), realIp)) {
             log.warn("请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json(requestMap));
@@ -115,8 +114,8 @@ public class MaYunPayAgentProcessor extends AbstractPayAgent {
                 return "success";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merchantOrderSn);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, merchantOrderSn, payAgentPlatform,
-                    "2".equals(status));
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, merchantOrderSn, payAgentPlatform, "2".equals(status));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", merchantOrderSn, "2".equals(status)? "成功" : "失败");
             return "success";
 
         }
