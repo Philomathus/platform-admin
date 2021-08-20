@@ -38,4 +38,5 @@ payAgentLimitHeZhong: 50000
 payAgentLimitNewMaxPay: 50000
 # 鲁班代付额度
 payAgentLimitLuBanPay: 50000
-
+# 银联代付额度
+payAgentLimitYinLianPay: 50000
