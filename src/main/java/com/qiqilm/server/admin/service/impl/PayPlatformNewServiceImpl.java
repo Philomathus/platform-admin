@@ -85,21 +85,6 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
 	}
 
 	/**
-	 * 批量删除支付平台
-	 *
-	 * @param ids 需要删除的支付平台ID
-	 * @return 结果
-	 */
-	@Override
-	public int deletePayPlatformNewByIds( Long[] ids ) {
-		int i = payPlatformNewMapper.deletePayPlatformNewByIds( ids );
-		if ( i > 0 ) {
-			payCacheUtil.clearPayPlatform( ids );
-		}
-		return i;
-	}
-
-	/**
 	 * 删除支付平台信息
 	 *
 	 * @param id 支付平台ID
@@ -112,5 +97,10 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
 			payCacheUtil.clearPayPlatform( id );
 		}
 		return i;
+	}
+
+	@Override
+	public int selectPayChannelNew( Long id ) {
+		return payPlatformNewMapper.selectPayChannelNew( id );
 	}
 }
