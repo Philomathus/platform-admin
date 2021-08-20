@@ -272,4 +272,8 @@
 		   or (type in ('2', '3') and `status` = '1')
 		order by indexes
 	</select>
+
+	<select id="selectPayChannelNew" parameterType="String" resultType="java.lang.Integer">
+		select count(0) from pay_channel_new where pay_type_id = #{id}
+	</select>
 </mapper>
