@@ -172,7 +172,7 @@
 		</where>
 	</select>
 	<select id="sumHostPropDay" resultType="java.math.BigDecimal">
-        select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and create_date = #{dayTime}
+        select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and  p_user_id not in (select id from ${dbMain}.member_info where status in (2,0)) and create_date = #{dayTime}
 	</select>
 
 	<select id="sumHostPropDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
