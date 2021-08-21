@@ -110,7 +110,7 @@ public class LogGameOrderController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:logGameOrder:backScore')" )
 	@Log( title = "会员回退上下分", businessType = BusinessType.UPDATE )
 	@PostMapping( "/backScore" )
-	public AjaxResult handleBackScore(HttpServletRequest request, @RequestBody List<LogGameOrder> scoreList  ) {
+	public AjaxResult handleBackScore(@RequestBody List<LogGameOrder> scoreList  ) {
 		try {
 			if (!redisUtil.lock( EnumLock.game, "batchScore", "batchBackScore", 15 ) ) {
 				return new AjaxResult().error("请勿重复提交,稍后再试!");
