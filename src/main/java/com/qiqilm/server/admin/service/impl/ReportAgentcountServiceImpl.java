@@ -106,7 +106,8 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 		AjaxResult ajaxResult=new AjaxResult();
 		String agenttime=reportAgentcount.getAgenttime();
 		int i = reportAgentcountMapper.rmemberCounts(agenttime + " 00:00:00", agenttime + " 23:59:59");
-		if (i==0 || dateNowStr()==agenttime){
+		String nowStr = dateNowStr();
+		if (i==0 || nowStr==agenttime){
 			reportAgentcountMapper.callplamagentData(reportAgentcount.getAgenttime());
 			return ajaxResult.success("基础数据预生成成功");
 		}
