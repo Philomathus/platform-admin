@@ -93,11 +93,10 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		}
 		//默认查询上分
 		List<LogGameOrder> logGameOrders = new ArrayList<>();
-		if (logGameOrder.getType() == null || logGameOrder.getType() == 1){
-			logGameOrder.setType(1);
+		//查所有
+		if (logGameOrder.getType() == 1){
 			logGameOrders = logGameOrderMapper.selectUpLogGameScoreList( logGameOrder );
-		}
-		if (logGameOrder.getType() == 2){
+		}else{
 			logGameOrders = logGameOrderMapper.selectDownLogGameScoreList( logGameOrder );
 		}
 		if ( !CollectionUtils.isEmpty( logGameOrders ) ) {
