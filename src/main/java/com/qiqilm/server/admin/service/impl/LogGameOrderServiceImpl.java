@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -89,7 +91,15 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 			logGameOrder.setStartTime( logGameOrder.getSelectDate()[ 0 ] + " 00:00:00" );
 			logGameOrder.setEndTime( logGameOrder.getSelectDate()[ 1 ] + " 23:59:59" );
 		}
-		List<LogGameOrder> logGameOrders = logGameOrderMapper.selectLogGameScoreList( logGameOrder );
+		//默认查询上分
+		List<LogGameOrder> logGameOrders = new ArrayList<>();
+		if (logGameOrder.getType() == null || logGameOrder.getType() == 1){
+			logGameOrder.setType(1);
+			logGameOrders = logGameOrderMapper.selectUpLogGameScoreList( logGameOrder );
+		}
+		if (logGameOrder.getType() == 2){
+			logGameOrders = logGameOrderMapper.selectDownLogGameScoreList( logGameOrder );
+		}
 		if ( !CollectionUtils.isEmpty( logGameOrders ) ) {
 			List<GamePlatform> gamePlatformList = gamePlatformMapper.selectGamePlatformList( null );
 			for ( LogGameOrder datum : logGameOrders ) {
