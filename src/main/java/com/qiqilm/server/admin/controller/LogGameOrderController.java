@@ -112,18 +112,13 @@ public class LogGameOrderController extends BaseController {
 	@Log( title = "会员回退上下分", businessType = BusinessType.UPDATE )
 	@PostMapping( "/backScore" )
 	public AjaxResult handleBackScore(HttpServletRequest request, @RequestBody List<LogGameOrder> scoreList  ) {
-		String token = request.getHeader("Authorization");
-		if (StringUtils.isEmpty(token)){
-			return new AjaxResult().error("token不能为空!");
-		}
-		token = token.replace("Bearer ","");
 		try {
-			if (!redisUtil.lock( EnumLock.game, token, "batchBackScore", 15 ) ) {
+			if (!redisUtil.lock( EnumLock.game, "batchScore", "batchBackScore", 15 ) ) {
 				return new AjaxResult().error("请勿重复提交,稍后再试!");
 			}
 			return toAjax( logGameOrderService.executeBackScore(scoreList));
 		}finally {
-			redisUtil.unLock(EnumLock.game, token);
+			redisUtil.unLock(EnumLock.game, "batchScore");
 		}
 	}
 
