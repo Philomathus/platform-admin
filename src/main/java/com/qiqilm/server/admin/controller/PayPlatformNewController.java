@@ -174,9 +174,14 @@ public class PayPlatformNewController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:remove')" )
 	@Log( title = "支付平台", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( payPlatformNewService.deletePayPlatformNewByIds( ids ) );
+	@DeleteMapping( "/{id}" )
+	public AjaxResult remove( @PathVariable Long id ) {
+		//查询此支付平台下还有无支付通道
+		int a = payPlatformNewService.selectPayChannelNew(id);
+		if(a>0){
+			return AjaxResult.error("此支付平台下还存在支付通道,删除失败");
+		}
+		return toAjax( payPlatformNewService.deletePayPlatformNewById( id ) );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:patchOrder')" )

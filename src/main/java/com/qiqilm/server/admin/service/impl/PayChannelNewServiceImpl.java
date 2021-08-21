@@ -98,8 +98,8 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 			throw new BusinessException( "通道费率不得为空" );
 		}
 		if ( payChannelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
-				|| payChannelNew.getPayRate().compareTo( new BigDecimal( "0.02" ) ) < 0 ) {
-			throw new BusinessException( "通道费率不得大于0.4或小于0.02" );
+				|| payChannelNew.getPayRate().compareTo( new BigDecimal( "0.01" ) ) < 0 ) {
+			throw new BusinessException( "通道费率不得大于0.4或小于0.01" );
 		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    username  = loginUser.getUsername();

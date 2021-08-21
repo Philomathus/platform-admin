@@ -98,6 +98,11 @@ public class PayTypeController extends BaseController {
 	@Log( title = "支付类型", businessType = BusinessType.DELETE )
 	@DeleteMapping( "/{id}" )
 	public AjaxResult remove( @PathVariable String id ) {
+		//查询此支付类型下还有无支付通道
+		int a = payTypeService.selectPayChannelNew(id);
+		if(a>0){
+			return AjaxResult.error("此支付类型下还存在支付通道,删除失败");
+		}
 		return toAjax( payTypeService.deletePayTypeById( id ) );
 	}
 

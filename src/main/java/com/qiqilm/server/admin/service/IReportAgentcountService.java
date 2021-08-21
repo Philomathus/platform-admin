@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ReportAgentcount;
 import com.qiqilm.server.admin.domain.ReportPlamGameschilds;
 import com.qiqilm.server.admin.domain.rsp.RspMemberAgent;
@@ -35,7 +36,7 @@ public interface IReportAgentcountService {
 
 	void delPromotionCode(ReportAgentcount reportAgentcount);
 
-	String plamagent_data(ReportAgentcount reportAgentcount);
+	AjaxResult plamagent_data(ReportAgentcount reportAgentcount);
 
 	List<ReportAgentcount> exportAgentcountList(ReportAgentcount reportAgentcount);
 
