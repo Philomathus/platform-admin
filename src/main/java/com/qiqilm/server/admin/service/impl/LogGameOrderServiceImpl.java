@@ -1,13 +1,12 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.domain.LogMoney;
+import com.qiqilm.server.admin.domain.MemberGameTransfer;
 import com.qiqilm.server.admin.enums.EnumMoney;
-import com.qiqilm.server.admin.mapper.GamePlatformMapper;
-import com.qiqilm.server.admin.mapper.LogGameOrderMapper;
-import com.qiqilm.server.admin.mapper.LogMoneyMapper;
-import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogGameOrderService;
 import com.qiqilm.server.admin.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +36,8 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 	private MemberInfoMapper memberInfoMapper;
 	@Autowired
 	private LogMoneyMapper logMoneyMapper;
+	@Autowired
+	private MemberGameTransferMapper memberGameTransferMapper;
 
 
 	/**
@@ -189,7 +190,14 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		logOrder.setPlatformId(logGameOrder.getPlatformId() );
 		logGameOrderMapper.updateLogGameOrder(logOrder);
 		BigDecimal now = memberInfoMapper.getMemberMoney( logGameOrder.getMemberId() );
-		BigDecimal change = logGameOrder.getMoney();
+		MemberGameTransfer memberGameTransfer = new MemberGameTransfer();
+		memberGameTransfer.setPlatformId(logGameOrder.getPlatformId()+"");
+		memberGameTransfer.setTransferId(logGameOrder.getId());
+		List<MemberGameTransfer> list = memberGameTransferMapper.selectMemberGameTransferList(memberGameTransfer);
+		if (list.size() > 1){
+			log.error("额度记录表出现多条记录，请排查信息:{}", JSON.toJSONString(list));
+		}
+		BigDecimal change = list.get(0).getTransferAmount();//真实资金
 		int i = change.compareTo( BigDecimal.ZERO );
 		memberInfoMapper.updateMoneySelect( logGameOrder.getMemberId(), change, null, null, null, null );
 		LogMoney logMoney = new LogMoney();
