@@ -50,10 +50,10 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 		}
 		AjaxResult ajaxResult=new AjaxResult();
 		//预生成数据校验
-		/*int i = reportAgentcountMapper.rmemberCounts(agenttime + " 00:00:00", agenttime + " 23:59:59");
+		int i = reportAgentcountMapper.rmemberCounts(agenttime + " 00:00:00", agenttime + " 23:59:59");
 		if (i==0){
-			return ajaxResult.error("预生成数据失败，请重新生成...");
-		}*/
+			return ajaxResult.error("基础数据未生成，请生成"+agenttime+"数据");
+		}
 		if (reportAgentcount.getAgentcode() != null) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
 			reportAgentcountMapper.calldataProrepPlamcom( agenttime, agenttime, reportAgentcount.getAgentcode().trim() );//调用存储过程
 			List<ReportAgentcount> allList1 = reportAgentcountMapper.selectReportAgentcountList( reportAgentcount );
@@ -103,14 +103,14 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 
 	@Override
 	public AjaxResult plamagent_data(ReportAgentcount reportAgentcount) {
-		reportAgentcountMapper.callplamagentData(reportAgentcount.getAgenttime());
 		AjaxResult ajaxResult=new AjaxResult();
 		String agenttime=reportAgentcount.getAgenttime();
 		int i = reportAgentcountMapper.rmemberCounts(agenttime + " 00:00:00", agenttime + " 23:59:59");
-		if (i==0){
-			return ajaxResult.error("预生成数据失败，请重新生成...");
+		if (i==0 || dateNowStr()==agenttime){
+			reportAgentcountMapper.callplamagentData(reportAgentcount.getAgenttime());
+			return ajaxResult.success("基础数据预生成成功");
 		}
-		return ajaxResult.success("预生成数据成功");
+		return ajaxResult.success("基础数据预已经生成");
 	}
 
 	@Override
