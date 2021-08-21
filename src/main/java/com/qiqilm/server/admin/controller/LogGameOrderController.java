@@ -1,19 +1,24 @@
 package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.annotation.Log;
+import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IGameInfoService;
 import com.qiqilm.server.admin.service.ILogGameOrderService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -30,6 +35,8 @@ public class LogGameOrderController extends BaseController {
 	private ILogGameOrderService logGameOrderService;
 	@Autowired
 	private IGameInfoService gameInfoService;
+	@Autowired
+	private RedisUtil redisUtil;
 	/**
 	 * 查询会员上下分列表
 	 */
@@ -97,7 +104,6 @@ public class LogGameOrderController extends BaseController {
 		return toAjax( logGameOrderService.deleteLogGameOrderByIds( ids ) );
 	}
 
-
 	/**
 	 * 回退上下分
 	 */
@@ -105,7 +111,14 @@ public class LogGameOrderController extends BaseController {
 	@Log( title = "会员回退上下分", businessType = BusinessType.UPDATE )
 	@PostMapping( "/backScore" )
 	public AjaxResult handleBackScore(@RequestBody List<LogGameOrder> scoreList  ) {
-		return toAjax( logGameOrderService.executeBackScore(scoreList));
+		try {
+			if (!redisUtil.lock( EnumLock.game, "batchScore", "batchBackScore", 15 ) ) {
+				return new AjaxResult().error("请勿重复提交,稍后再试!");
+			}
+			return toAjax( logGameOrderService.executeBackScore(scoreList));
+		}finally {
+			redisUtil.unLock(EnumLock.game, "batchScore");
+		}
 	}
 
 	/**
