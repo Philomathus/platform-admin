@@ -68,4 +68,20 @@ public interface LogGameOrderMapper {
 	 * @return 结果
 	 */
 	public int deleteLogGameOrderByIds(String[] ids );
+
+	/**
+	 * 查询会员上下分列表
+	 *
+	 * @param logGameOrder 会员上下分
+	 * @return 会员上下分集合
+	 */
+	public List<LogGameOrder> selectUpLogGameScoreList(LogGameOrder logGameOrder);
+
+	/**
+	 * 查询会员上下分列表
+	 *
+	 * @param logGameOrder 会员上下分
+	 * @return 会员上下分集合
+	 */
+	public List<LogGameOrder> selectDownLogGameScoreList(LogGameOrder logGameOrder);
 }

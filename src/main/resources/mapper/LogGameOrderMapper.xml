@@ -47,6 +47,52 @@
 		</where>
 	</select>
 
+
+
+	<select id="selectUpLogGameScoreList" parameterType="LogGameOrder" resultMap="LogGameOrderResult">
+		SELECT lgo.id,lgo.type,lgo.member_id,lgo.platform_id,lgo.money FROM log_game_order lgo
+		WHERE lgo.type = 1 AND lgo.status =10 AND lgo.retry_count > 3 AND
+		NOT EXISTS (SELECT transfer_id FROM member_game_transfer WHERE transfer_id = lgo.id)
+
+		<if test="searchValue != null  and searchValue != ''">
+			and (member_id = #{searchValue} or user_name like concat(#{searchValue}, '%'))
+		</if>
+		<if test="type != null">
+			and lgo.type = #{type}
+		</if>
+		<if test="platformId != null">
+			and lgo.platform_id = #{platformId}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			and lgo.b_time >= #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			and lgo.b_time &lt;= #{endTime}
+		</if>
+	</select>
+
+	<select id="selectDownLogGameScoreList" parameterType="LogGameOrder" resultMap="LogGameOrderResult">
+		SELECT lgo.id,lgo.type,lgo.member_id,lgo.platform_id,lgo.money FROM log_game_order lgo
+		WHERE lgo.type = 2 AND lgo.status IN (5, 6, 8, 9, 10) AND lgo.id IN (
+		SELECT transfer_id FROM member_game_transfer WHERE transfer_id = lgo.id AND transfer_state = 'Succeeded' AND
+		transfer_type ='Withdraw')
+		<if test="searchValue != null  and searchValue != ''">
+			and (member_id = #{searchValue} or user_name like concat(#{searchValue}, '%'))
+		</if>
+		<if test="type != null">
+			and lgo.type = #{type}
+		</if>
+		<if test="platformId != null">
+			and lgo.platform_id = #{platformId}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			and lgo.b_time >= #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			and lgo.b_time &lt;= #{endTime}
+		</if>
+	</select>
+
 	<select id="selectLogGameScoreList" parameterType="LogGameOrder" resultMap="LogGameOrderResult">
 		SELECT lgo.id,lgo.type,lgo.member_id,lgo.platform_id,lgo.money FROM log_game_order lgo
 		WHERE 1 = 1 AND (
