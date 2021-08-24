@@ -61,7 +61,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
         param.put("bankProvince","广东省");
         param.put("bankCity","深圳市");
         param.put("applyReason","test");
-        param.put("backUrl",sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.AINONG);
+        param.put("backUrl",sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
