@@ -43,7 +43,7 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "accnm", withdrawLog.getBankUserName().trim() );
 		bodyMap.put( "banknm", withdrawLog.getBankName().trim() );
 		bodyMap.put( "acctype", "unionpay" );
-		bodyMap.put( "notice_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.SHUNTONG2 );
+		bodyMap.put( "notice_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"secretkey/payAgentPrivateKey" ) );
