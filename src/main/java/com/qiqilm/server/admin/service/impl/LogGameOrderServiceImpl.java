@@ -216,6 +216,7 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		}
 		int i = change.compareTo( BigDecimal.ZERO );
 		memberInfoMapper.updateMoneySelect( logGameOrder.getMemberId(), change, null, null, null, null );
+		logGameOrder = null;//测试
 		LogMoney logMoney = new LogMoney();
 		logMoney.setId( logGameOrder.getId() );
 		logMoney.setUserId( logGameOrder.getMemberId() );
