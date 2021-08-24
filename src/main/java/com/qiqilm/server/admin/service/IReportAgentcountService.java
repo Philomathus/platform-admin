@@ -24,7 +24,7 @@ public interface IReportAgentcountService {
 	 * @param reportAgentcount 代理统计，主要用于代理渠道的统计
 	 * @return 代理统计，主要用于代理渠道的统计集合
 	 */
-	public Object selectReportAgentcountList(ReportAgentcount reportAgentcount) throws ParseException;
+	public Object selectReportAgentcountList(ReportAgentcount reportAgentcount) throws Exception;
 
 
 

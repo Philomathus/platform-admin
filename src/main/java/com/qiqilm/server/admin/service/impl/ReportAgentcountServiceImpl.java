@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.domain.rsp.RspMemberAgent;
 import com.qiqilm.server.admin.domain.vo.ReportPlamHome;
 import com.qiqilm.server.admin.mapper.ReportAgentcountMapper;
 import com.qiqilm.server.admin.service.IReportAgentcountService;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 	 * @return 代理统计，主要用于代理渠道的统计
 	 */
 	@Override
-	public Object selectReportAgentcountList(ReportAgentcount reportAgentcount ) throws ParseException {
+	public Object selectReportAgentcountList(ReportAgentcount reportAgentcount ) throws Exception {
 		List<ReportAgentcount> allList   = new ArrayList<>();
 		String                 agenttime = null;
 		if ( reportAgentcount.getAgenttime() == null ) {
@@ -50,9 +51,22 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 		}
 		AjaxResult ajaxResult=new AjaxResult();
 		//预生成数据校验
-		int i = reportAgentcountMapper.rmemberCounts(agenttime + " 00:00:00", agenttime + " 23:59:59");
-		if (i==0){
-			return ajaxResult.error("基础数据未生成，请生成"+agenttime+"数据");
+		String nowStr = dateNowStr();
+		if (nowStr.equals(agenttime)){
+			//如果是当天，校验是否是一个小时之前的数据
+			String s = reportAgentcountMapper.rmemberInfoLately();
+			Date parse = DateFormatUtils.parse(s);
+			long intervalTime = DateFormatUtils.getIntervalTime(parse, new Date());
+			if (intervalTime>3600000){
+				return ajaxResult.error("请重新生成"+agenttime+"数据");
+			}
+		}else {
+			//昨天的数据，判断数量是否相等
+			int i = reportAgentcountMapper.memberInfoCounts(agenttime + " 00:00:00", agenttime + " 23:59:59");
+			int r = reportAgentcountMapper.rmemberInfoCounts(agenttime + " 00:00:00", agenttime + " 23:59:59");
+			if (i!=r){
+				return ajaxResult.error("请重新生成"+agenttime+"数据");
+			}
 		}
 		if (reportAgentcount.getAgentcode() != null) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
 			reportAgentcountMapper.calldataProrepPlamcom( agenttime, agenttime, reportAgentcount.getAgentcode().trim() );//调用存储过程
@@ -103,15 +117,8 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
 
 	@Override
 	public AjaxResult plamagent_data(ReportAgentcount reportAgentcount) {
-		AjaxResult ajaxResult=new AjaxResult();
-		String agenttime=reportAgentcount.getAgenttime();
-		int i = reportAgentcountMapper.rmemberCounts(agenttime + " 00:00:00", agenttime + " 23:59:59");
-		String nowStr = dateNowStr();
-		if (i==0 || nowStr==agenttime){
-			reportAgentcountMapper.callplamagentData(reportAgentcount.getAgenttime());
-			return ajaxResult.success("基础数据预生成成功");
-		}
-		return ajaxResult.success("基础数据预已经生成");
+		reportAgentcountMapper.callplamagentData(reportAgentcount.getAgenttime());
+		return AjaxResult.success("预生成数据成功");
 	}
 
 	@Override
