@@ -1,13 +1,12 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.domain.LogMoney;
+import com.qiqilm.server.admin.domain.MemberGameTransfer;
 import com.qiqilm.server.admin.enums.EnumMoney;
-import com.qiqilm.server.admin.mapper.GamePlatformMapper;
-import com.qiqilm.server.admin.mapper.LogGameOrderMapper;
-import com.qiqilm.server.admin.mapper.LogMoneyMapper;
-import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogGameOrderService;
 import com.qiqilm.server.admin.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 	private MemberInfoMapper memberInfoMapper;
 	@Autowired
 	private LogMoneyMapper logMoneyMapper;
+	@Autowired
+	private MemberGameTransferMapper memberGameTransferMapper;
 
 
 	/**
@@ -88,7 +91,15 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 			logGameOrder.setStartTime( logGameOrder.getSelectDate()[ 0 ] + " 00:00:00" );
 			logGameOrder.setEndTime( logGameOrder.getSelectDate()[ 1 ] + " 23:59:59" );
 		}
-		List<LogGameOrder> logGameOrders = logGameOrderMapper.selectLogGameScoreList( logGameOrder );
+		//默认查询上分
+		List<LogGameOrder> logGameOrders = new ArrayList<>();
+		if (logGameOrder.getType() == null || logGameOrder.getType() == 1){
+			logGameOrder.setType(1);
+			logGameOrders = logGameOrderMapper.selectUpLogGameScoreList( logGameOrder );
+		}
+		if (logGameOrder.getType() == 2){
+			logGameOrders = logGameOrderMapper.selectDownLogGameScoreList( logGameOrder );
+		}
 		if ( !CollectionUtils.isEmpty( logGameOrders ) ) {
 			List<GamePlatform> gamePlatformList = gamePlatformMapper.selectGamePlatformList( null );
 			for ( LogGameOrder datum : logGameOrders ) {
@@ -189,7 +200,20 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		logOrder.setPlatformId(logGameOrder.getPlatformId() );
 		logGameOrderMapper.updateLogGameOrder(logOrder);
 		BigDecimal now = memberInfoMapper.getMemberMoney( logGameOrder.getMemberId() );
+		MemberGameTransfer memberGameTransfer = new MemberGameTransfer();
+		memberGameTransfer.setPlatformId(logGameOrder.getPlatformId()+"");
+		memberGameTransfer.setTransferId(logGameOrder.getId());
+		//没有上分成功，回退资金
 		BigDecimal change = logGameOrder.getMoney();
+		if (logGameOrder.getType() == 2){
+			List<MemberGameTransfer> list = memberGameTransferMapper.selectMemberGameTransferList(memberGameTransfer);
+			if (list != null && list.size() >0){
+				if (list.size() > 1){
+					log.error("额度记录表出现多条记录，请排查信息:{}", JSON.toJSONString(list));
+				}
+				change = list.get(0).getTransferAmount();//真实资金
+			}
+		}
 		int i = change.compareTo( BigDecimal.ZERO );
 		memberInfoMapper.updateMoneySelect( logGameOrder.getMemberId(), change, null, null, null, null );
 		LogMoney logMoney = new LogMoney();

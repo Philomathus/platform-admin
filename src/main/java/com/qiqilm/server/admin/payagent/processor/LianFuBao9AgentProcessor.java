@@ -28,9 +28,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-@Repository( value = ConstantsPayAgent.LIAN_FU_BAO3 + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.LIAN_FU_BAO9 + "PayAgentProcessor" )
 @Log4j2
-public class LianFuBao3AgentProcessor extends AbstractPayAgent {
+public class LianFuBao9AgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         BankCodeLianFuBaoType bankCodeType = BankCodeLianFuBaoType.getCodeByDesc( withdrawLog.getBankName() );

@@ -96,7 +96,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		Set<Callable<RspGameBalance>> forkJoinTasks = new HashSet<>();
 		if (lists.contains(EnumGamePlatform.AG_LIVE.getType())) forkJoinTasks.add( this.agBalanceTask( userId, date ) );
 		if (lists.contains(EnumGamePlatform.OG_LIVE.getType())) forkJoinTasks.add( this.ogBalanceTask( userId ) );
-		if (lists.contains(EnumGamePlatform.KY_CHESS.getType())) forkJoinTasks.add( this.kyBalanceTask( userId ) );
+		if (lists.contains(EnumGamePlatform.KY_CHESS.getType()) || lists.contains(EnumGamePlatform.KY_CHESS_NEW.getType())) forkJoinTasks.add( this.kyBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.MG_LIVE.getType())) forkJoinTasks.add( this.mgBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.NG_LIVE.getType())) forkJoinTasks.add( this.ngBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.BBIN_LIVE.getType())) forkJoinTasks.add( this.bbinBalanceTask( userId, EnumGamePlatform.BBIN_LIVE.getType()) );

@@ -56,7 +56,7 @@ public class ShunWei3PayAgentProcessor extends AbstractPayAgent {
 		String sign = DigestUtils.md5Hex( JsonUtil.object2Json( paramMap ).concat( signMd5 ) );
 
 		paramMap.put( "request_sign", sign );
-		paramMap.put( "callback_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.SHUN_WEI3 );
+		paramMap.put( "callback_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
 		// 参数加密
 		String encryptData = RSACoder.encryptByPublicKey( JsonUtil.object2Json( paramMap ),
