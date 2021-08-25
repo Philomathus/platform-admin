@@ -344,7 +344,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
 	@Override
 	public AjaxResult updatePhones( ReqSmallFeatures req ) {
-		if ( !StringUtils.isEmpty( req.getPhones() ) && !StringUtils.isEmpty( req.getPassword() ) ) {
+		if ( StringUtils.hasText( req.getPhones() ) && StringUtils.hasText( req.getPassword() ) ) {
 			if ( req.getPhones().contains( "\n" ) ) {
 				try {
 					String[]      phones = req.getPhones().split( "\n" );
@@ -361,7 +361,33 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			memberInfoMapper.updatePhones( req );
 			return AjaxResult.success();
 		}
-		return AjaxResult.error();
+		return AjaxResult.error(0,"请输入批量手机号和密码");
+	}
+
+	@Override
+	public AjaxResult queryPhones( ReqSmallFeatures req ) {
+		if ( StringUtils.hasText( req.getUserIds() ) ) {
+			if ( req.getUserIds().contains( "\n" ) ) {
+				try {
+					String[]      userIds = req.getUserIds().split( "\n" );
+					StringBuilder userId  = new StringBuilder();
+					for ( int i = 0; i < userIds.length; i++ ) {
+						userId.append( "\"" ).append( userIds[ i ] ).append( "\"" ).append( "," );
+					}
+					userId = new StringBuilder( userId.substring( 0, userId.length() - 1 ) );
+					req.setUserIds( userId.toString() );
+				} catch ( Exception e ) {
+					return AjaxResult.error( 0, "分割会员ID出错,请检查格式" );
+				}
+			}
+			List<ReqSmallFeatures> phonesAndUserId = memberInfoMapper.queryPhones( req );
+			List<String> phonesByIds = new ArrayList<>();
+			for(ReqSmallFeatures ph:phonesAndUserId){
+				phonesByIds.add(ph.getUserIds() + ":" + ph.getPhonesByIds());
+			}
+			return AjaxResult.success(phonesByIds);
+		}
+		return AjaxResult.error(0,"请输入批量会员ID");
 	}
 
 	@Override

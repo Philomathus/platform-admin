@@ -6,5 +6,7 @@ import lombok.Data;
 public class ReqSmallFeatures {
     private String phones;
     private String password;
+    private String userIds;
+    private String phonesByIds;
     private Integer googleAuthCode;
 }
