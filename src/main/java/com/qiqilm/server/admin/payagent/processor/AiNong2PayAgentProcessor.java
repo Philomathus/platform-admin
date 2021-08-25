@@ -32,9 +32,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository(value = ConstantsPayAgent.AINONG + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.AINONG2 + "PayAgentProcessor")
 @Log4j2
-public class AiNongPayAgentProcessor extends AbstractPayAgent {
+public class AiNong2PayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
 
@@ -72,7 +72,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(param);
-        log.warn("爱农代付下单请求参数{}",JsonUtil.object2Json(requestMap));
+        log.warn(payAgentPlatform.getName()+"下单请求参数{}",JsonUtil.object2Json(requestMap));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
@@ -92,13 +92,13 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
-        log.warn("爱农代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn(payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             String retCode = resultMap.getOrDefault("retCode", "").toString();
             String orderStatus = resultMap.getOrDefault("orderStatus", "").toString();
             if ("0000".equals(retCode)) {
                 if (!orderStatus.equals("02") && !orderStatus.equals("06")) {
-                    log.info("爱农代付订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
+                    log.info(payAgentPlatform.getName()+"订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                     return true;
                 }
             } else {
@@ -106,7 +106,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("爱农代付订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
+        log.warn(payAgentPlatform.getName()+"订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
         return false;
     }
 
@@ -122,7 +122,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
 
-        log.info("爱农代付回调签名:" + rspSign + "_" + sign);
+        log.info(payAgentPlatform.getName()+"回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
             String merOrderNo = requestMap.getOrDefault("outOrderNo", "").toString();
             String tranResult = requestMap.getOrDefault("tranResult", "").toString();
@@ -180,7 +180,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(dataMap);
-        log.warn("爱农代付查询订单请求参数:{}", JsonUtil.object2Json( requestMap ) );
+        log.warn(payAgentPlatform.getName()+"查询订单请求参数:{}", JsonUtil.object2Json( requestMap ) );
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(requestMap, httpHeaders);
@@ -189,7 +189,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
         try {
             jsonStr = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
             Map resultMap = (Map) JSON.parse(jsonStr);
-            log.warn("爱农代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+            log.warn(payAgentPlatform.getName()+"查询结果 - result:{}", JsonUtil.object2Json(resultMap));
 
             if (!CollectionUtils.isEmpty(resultMap)) {
                 //  status 4代付中 5代付失败 6代付成功

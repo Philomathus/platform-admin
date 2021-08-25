@@ -202,11 +202,17 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 		MemberGameTransfer memberGameTransfer = new MemberGameTransfer();
 		memberGameTransfer.setPlatformId(logGameOrder.getPlatformId()+"");
 		memberGameTransfer.setTransferId(logGameOrder.getId());
-		List<MemberGameTransfer> list = memberGameTransferMapper.selectMemberGameTransferList(memberGameTransfer);
-		if (list.size() > 1){
-			log.error("额度记录表出现多条记录，请排查信息:{}", JSON.toJSONString(list));
+		//没有上分成功，回退资金
+		BigDecimal change = logGameOrder.getMoney();
+		if (logGameOrder.getType() == 2){
+			List<MemberGameTransfer> list = memberGameTransferMapper.selectMemberGameTransferList(memberGameTransfer);
+			if (list != null && list.size() >0){
+				if (list.size() > 1){
+					log.error("额度记录表出现多条记录，请排查信息:{}", JSON.toJSONString(list));
+				}
+				change = list.get(0).getTransferAmount();//真实资金
+			}
 		}
-		BigDecimal change = list.get(0).getTransferAmount();//真实资金
 		int i = change.compareTo( BigDecimal.ZERO );
 		memberInfoMapper.updateMoneySelect( logGameOrder.getMemberId(), change, null, null, null, null );
 		LogMoney logMoney = new LogMoney();

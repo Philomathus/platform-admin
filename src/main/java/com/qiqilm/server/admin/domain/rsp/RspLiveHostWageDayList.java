@@ -21,40 +21,46 @@ public class RspLiveHostWageDayList {
     @Excel( name = "家族名称", orderNum = "3" )
     private String familyName;
 
-    @Excel( name = "直播时长", orderNum = "4" )
+    @Excel( name = "直播开始时间", orderNum = "4" )
+    private String startTime;
+
+    @Excel( name = "直播结束时间", orderNum = "5" )
+    private String endTime;
+
+    @Excel( name = "直播时长", orderNum = "6" )
     private String livetime;
 
-    @Excel( name = "礼物任务", orderNum = "5" )
+    @Excel( name = "礼物任务", orderNum = "7" )
     private String lwrenwu;
 
-    @Excel( name = "时长任务", orderNum = "6" )
+    @Excel( name = "时长任务", orderNum = "8" )
     private String screnwu;
 
-    @Excel( name = "时薪", orderNum = "7" )
+    @Excel( name = "时薪", orderNum = "9" )
     private String coin;
 
-    @Excel( name = "时长结算", orderNum = "8" )
+    @Excel( name = "时长结算", orderNum = "10" )
     private String livetimejiesuan;
 
-    @Excel( name = "收礼金额", orderNum = "9" )
+    @Excel( name = "收礼金额", orderNum = "11" )
     private String liwu;
 
-    @Excel( name = "礼物提成", orderNum = "10" )
+    @Excel( name = "礼物提成", orderNum = "12" )
     private BigDecimal liwujiesuanbili;
 
-    @Excel( name = "礼物结算", orderNum = "11" )
+    @Excel( name = "礼物结算", orderNum = "13" )
     private BigDecimal ticket;
 
-    @Excel( name = "彩票投注", orderNum = "12" )
+    @Excel( name = "彩票投注", orderNum = "14" )
     private BigDecimal lotteryBili;
 
-    @Excel( name = "彩票提成", orderNum = "13" )
+    @Excel( name = "彩票提成", orderNum = "15" )
     private String costQianliu;
 
-    @Excel( name = "彩票结算", orderNum = "14" )
+    @Excel( name = "彩票结算", orderNum = "16" )
     private BigDecimal lotteryCost;
 
-    @Excel( name = "开播次数", orderNum = "15" )
+    @Excel( name = "开播次数", orderNum = "17" )
     private Integer times;
 
 //    private int livetime;
