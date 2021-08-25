@@ -67,6 +67,7 @@ public interface IMemberInfoService {
 	int changeSpeak(MemberInfo memberInfo);
 
 	AjaxResult updatePhones(ReqSmallFeatures req);
+	AjaxResult queryPhones(ReqSmallFeatures req);
 
 	AjaxResult unbindCard(MemberCard memberCard);
 

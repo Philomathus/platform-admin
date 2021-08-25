@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ReportAgentcount;
 import com.qiqilm.server.admin.domain.ReportPlamGameschilds;
 import com.qiqilm.server.admin.domain.rsp.RspMemberAgent;
@@ -23,7 +24,7 @@ public interface IReportAgentcountService {
 	 * @param reportAgentcount 代理统计，主要用于代理渠道的统计
 	 * @return 代理统计，主要用于代理渠道的统计集合
 	 */
-	public Object selectReportAgentcountList(ReportAgentcount reportAgentcount) throws ParseException;
+	public Object selectReportAgentcountList(ReportAgentcount reportAgentcount) throws Exception;
 
 
 
@@ -35,7 +36,7 @@ public interface IReportAgentcountService {
 
 	void delPromotionCode(ReportAgentcount reportAgentcount);
 
-	String plamagent_data(ReportAgentcount reportAgentcount);
+	AjaxResult plamagent_data(ReportAgentcount reportAgentcount);
 
 	List<ReportAgentcount> exportAgentcountList(ReportAgentcount reportAgentcount);
 
