@@ -8,6 +8,11 @@ server:
 logging:
   level:
     root: info
+    com:
+      chongxuan:
+        web:
+          dao:
+            LogGameOrderMapper: DEBUG
 spring:
   # 资源信息
   messages:
