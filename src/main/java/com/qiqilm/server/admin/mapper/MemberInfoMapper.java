@@ -79,7 +79,7 @@ public interface MemberInfoMapper {
     //批量手机号更新密码
     int updatePhones(ReqSmallFeatures reqSmallFeatures);
     //批量会员ID查询手机号
-    List<String> queryPhones(ReqSmallFeatures reqSmallFeatures);
+    List<ReqSmallFeatures> queryPhones(ReqSmallFeatures reqSmallFeatures);
 
     int countByUserName(String userName);
 

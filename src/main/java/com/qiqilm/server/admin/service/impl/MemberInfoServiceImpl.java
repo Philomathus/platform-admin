@@ -380,7 +380,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 					return AjaxResult.error( 0, "分割会员ID出错,请检查格式" );
 				}
 			}
-			List<String> phonesByIds = memberInfoMapper.queryPhones( req );
+			List<ReqSmallFeatures> phonesAndUserId = memberInfoMapper.queryPhones( req );
+			List<String> phonesByIds = new ArrayList<>();
+			for(ReqSmallFeatures ph:phonesAndUserId){
+				phonesByIds.add(ph.getUserIds() + ":" + ph.getPhonesByIds());
+			}
 			return AjaxResult.success(phonesByIds);
 		}
 		return AjaxResult.error(0,"请输入批量会员ID");

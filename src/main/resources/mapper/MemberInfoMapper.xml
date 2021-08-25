@@ -613,8 +613,8 @@
 		update member_info set password = #{password} where phone in (${phones})
 	</update>
 
-	<select id="queryPhones" parameterType="com.qiqilm.server.admin.domain.req.ReqSmallFeatures" resultType="java.lang.String">
-		select phone from member_info where id in (${userIds})
+	<select id="queryPhones" parameterType="com.qiqilm.server.admin.domain.req.ReqSmallFeatures" resultType="com.qiqilm.server.admin.domain.req.ReqSmallFeatures">
+		select id userIds, phone phonesByIds from member_info where id in (${userIds})
 	</select>
 
 	<select id="countByUserName" resultType="int">
