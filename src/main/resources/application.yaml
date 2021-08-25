@@ -9,10 +9,11 @@ logging:
   level:
     root: info
     com:
-      chongxuan:
-        web:
-          dao:
-            LogGameOrderMapper: DEBUG
+      qiqilm:
+        server:
+          admin:
+            mapper:
+              LogGameOrderMapper: DEBUG
 spring:
   # 资源信息
   messages:
