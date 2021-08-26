@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
+import java.util.Set;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveBlack;
@@ -28,4 +29,6 @@ public interface LiveBlackMapper {
 	int deleteLiveBlackById(Long id);
 
 	int deleteLiveBlackById7706(Long id);
+
+	Set userBlackList(Long host_id);
 }

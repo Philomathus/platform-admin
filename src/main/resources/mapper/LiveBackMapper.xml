@@ -39,6 +39,7 @@
         g.id,
         g.remark,
         g.host_id as hostId,
+        g.create_time as createTime,
         g.black_user_id as blackUserId,
         m.vip,
         m.nick_name as nickName,
@@ -59,4 +60,7 @@
     <delete id="deleteLiveBlackById7706" parameterType="Long">
         delete from cx_live.live_black where id = #{id}
     </delete>
+    <select id="userBlackList" resultType="java.lang.String">
+        select black_user_id from ${dbLive}.live_black where host_id = #{host_id}
+    </select>
 </mapper>
