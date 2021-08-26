@@ -357,6 +357,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 				} catch ( Exception e ) {
 					return AjaxResult.error( 0, "分割手机号出错,请检查格式" );
 				}
+			} else {
+				req.setPhones( "\"" + req.getPhones() + "\"" );
 			}
 			memberInfoMapper.updatePhones( req );
 			return AjaxResult.success();
@@ -379,6 +381,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 				} catch ( Exception e ) {
 					return AjaxResult.error( 0, "分割会员ID出错,请检查格式" );
 				}
+			} else {
+				req.setUserIds( "\"" + req.getUserIds() + "\"" );
 			}
 			List<ReqSmallFeatures> phonesAndUserId = memberInfoMapper.queryPhones( req );
 			List<String> phonesByIds = new ArrayList<>();
