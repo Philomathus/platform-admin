@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.ManageCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveBlack;
 import com.qiqilm.server.admin.mapper.LiveBlackMapper;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,8 +22,11 @@ import java.util.List;
 public class LiveBlackServiceImpl implements ILiveBlackService {
     @Autowired
     private LiveBlackMapper liveBlackMapper;
-    @Value( "${spring.profiles.active}" )
+    @Value("${spring.profiles.active}")
     private String profile;
+    @Autowired
+    private ManageCacheUtil manageCacheUtil;
+
     /**
      * 查询拉黑列表
      *
@@ -31,26 +36,43 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
     @Override
     public List<LiveBlack> selectLiveBlackList(LiveBlack liveBlack) {
         List<LiveBlack> liveBlackList = null;
-        if(profile.equals("7706")){
-            liveBlackList = liveBlackMapper.selectLiveBlackList7706(liveBlack);
-        }else {
-             liveBlackList = liveBlackMapper.selectLiveBlackList(liveBlack);
+        if (profile.equals("7706")) {
+            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7706(liveBlack);
+            List<LiveBlack> liveBlackList7706 = new ArrayList<>();
+            for (LiveBlack liveBlack1 : liveBlackAllList) {
+                if (liveBlack1.getBlackUserId().startsWith("7706")) {
+                    liveBlackList7706.add(liveBlack1);
+                }
+            }
+            return liveBlackList7706;
+        } else if (profile.equals("7701")) {
+            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
+            List<LiveBlack> liveBlackList7701 = new ArrayList<>();
+            for (LiveBlack liveBlack1 : liveBlackAllList) {
+                if (liveBlack1.getBlackUserId().startsWith("7701")) {
+                    liveBlackList7701.add(liveBlack1);
+                }
+            }
+            return liveBlackList7701;
+        } else {
+            liveBlackList = liveBlackMapper.selectLiveBlackList(liveBlack);
         }
-       return  liveBlackList;
+        return liveBlackList;
     }
 
     @Override
     public AjaxResult deleteLiveBlackById(LiveBlack liveBlack) {
         int num;
-        if (liveBlack.getBlackUserId().startsWith("7706")){
-             num = liveBlackMapper.deleteLiveBlackById7706(liveBlack.getId());
-        }else {
-             num=liveBlackMapper.deleteLiveBlackById(liveBlack.getId());
+        if (liveBlack.getBlackUserId().startsWith("7706")) {
+            num = liveBlackMapper.deleteLiveBlackById7706(liveBlack.getId());
+        } else {
+            num = liveBlackMapper.deleteLiveBlackById(liveBlack.getId());
         }
-        if (num<=0){
+        if (num <= 0) {
             return AjaxResult.error("移除黑名单失败");
         }
-       return AjaxResult.success("移除黑名单成功");
+        manageCacheUtil.refreshBlack(liveBlack.getHostId());
+        return AjaxResult.success("移除黑名单成功");
     }
 
 
