@@ -3,8 +3,11 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.ManageCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveBlack;
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.mapper.LiveBlackMapper;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILiveBlackService;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
     private String profile;
     @Autowired
     private ManageCacheUtil manageCacheUtil;
+    @Autowired
+    private MemberInfoMapper memberInfoMapper;
 
     /**
      * 查询拉黑列表
@@ -72,6 +77,7 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
             return AjaxResult.error("移除黑名单失败");
         }
         manageCacheUtil.refreshBlack(liveBlack.getHostId());
+        memberInfoMapper.updateSpeak(liveBlack.getBlackUserId(),0);
         return AjaxResult.success("移除黑名单成功");
     }
 
