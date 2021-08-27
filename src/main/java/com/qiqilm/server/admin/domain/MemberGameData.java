@@ -24,7 +24,7 @@ public class MemberGameData extends GameData {
 
     /** 游戏局号 */
     @Excel(name = "游戏局号")
-    private String gameCode;
+    private String gameRound;
 
     /** 账号 */
     @Excel(name = "账号")

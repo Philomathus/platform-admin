@@ -101,7 +101,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			MemberGameData gameDataLog = new MemberGameData();
 			gameDataLog.setId( og.getId() );
 			gameDataLog.setGameId( og.getGameId() );
-			gameDataLog.setGameCode( og.getGameCode());
+			gameDataLog.setGameRound(og.getGameRound());
 			gameDataLog.setAccount( og.getAccount() );
 			gameDataLog.setKindId( og.getKindId() );
 			gameDataLog.setCellScore( og.getCellScore() );
@@ -155,7 +155,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			MemberGameData gameDataLog = new MemberGameData();
 			gameDataLog.setId( og.getId() );
 			gameDataLog.setGameId( og.getGameId() );
-			gameDataLog.setGameCode(og.getGameCode());
+			gameDataLog.setGameRound(og.getGameRound());
 			gameDataLog.setAccount( og.getAccount() );
 			gameDataLog.setKindId( og.getKindId() );
 			gameDataLog.setCellScore( og.getCellScore() );
