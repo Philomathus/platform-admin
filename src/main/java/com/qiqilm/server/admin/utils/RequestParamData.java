@@ -89,9 +89,9 @@ public class RequestParamData {
         String stringStartDate =DateFormatUtils.beiJinToMeiDong(startdate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String stringEndDate =DateFormatUtils.beiJinToMeiDong(enddate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String lineCode = agent.split("_")[0];
-        String key = DigestUtils.md5Hex(lineCode + stringStartDate + stringEndDate + memberGameData.getKindId() + memberGameData.getGameId() +"1100" + "5F14237EE2A67EF102203A4C97603BC5");
+        String key = DigestUtils.md5Hex(lineCode + stringStartDate + stringEndDate + memberGameData.getKindId() + memberGameData.getGameRound() +"1100" + "5F14237EE2A67EF102203A4C97603BC5");
         String s1 = String.format(RE_AG_PLAY_DETAIL_RECORD_S1,
-                lineCode,stringStartDate,stringEndDate,memberGameData.getKindId(),memberGameData.getGameId(),key);
+                lineCode,stringStartDate,stringEndDate,memberGameData.getKindId(),memberGameData.getGameRound(),key);
         String param = s1;
         //先写死，后续在处理 GY9
         String apiUrl = "http://zd.mkecy.com/game-detail/";
@@ -136,13 +136,13 @@ public class RequestParamData {
     }
     //沙巴体育-投注详情
     public static AjaxResult requestSbSportBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform, RestTemplate restTemplate) throws Exception {
-        String param = String.format( RE_SB_SPORT_DETAIL_RECORD_S2,gamePlatform.getAgent(),memberGameData.getGameId());
+        String param = String.format( RE_SB_SPORT_DETAIL_RECORD_S2,gamePlatform.getAgent(),memberGameData.getGameRound());
         String apiUrl = gamePlatform.getApiUrl()+"/GetBetDetailByTransID";
         String getURL = apiUrl.concat( "?" ).concat(param);
         log.info( "沙巴体育-投注详情-请求参数：{}",getURL );
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("vendor_id",gamePlatform.getAgent());
-        map.add("trans_id",memberGameData.getGameId());
+        map.add("trans_id",memberGameData.getGameRound());
         map.add("bet_type",memberGameData.getBetType());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
@@ -214,7 +214,7 @@ public class RequestParamData {
         String key = a + DigestUtils.md5Hex(md5) + c;
         String account = memberGameData.getAccount().replace("_","bbin");
         String s1 = String.format(RE_BBIN_SPORT_DETAIL_RECORD_S1,
-                des,account,memberGameData.getGameId(),key);
+                des,account,memberGameData.getGameRound(),key);
         String param = s1;
         String apiUrl = gamePlatform.getApiUrl();
         String getURL = apiUrl.concat( "GetWagersSubDetailUrlBy109?" ).concat(param);
@@ -224,7 +224,7 @@ public class RequestParamData {
     //美天棋牌 - 投注详情 返回参数
     public static String requestMTBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         Map<String,String> data = new LinkedHashMap<>();
-        data.put("rowID",memberGameData.getGameId());
+        data.put("rowID",memberGameData.getGameRound());
         data.put("lang","ZH-CN");
         String merchantId = gamePlatform.getAgent();
         String code = DigestUtils.md5Hex(gamePlatform.getMd5()+JSON.toJSONString(data));
@@ -367,6 +367,7 @@ public class RequestParamData {
                 Element ss = (Element) nodeList.item(i);
                 Map detailMap = new HashMap();
                 detailMap.put("gameCode",ss.getAttribute("gameCode"));
+                detailMap.put("gameRound",ss.getAttribute("gameCode"));
                 detailMap.put("begintime",ss.getAttribute("begintime"));
                 detailMap.put("closetime",ss.getAttribute("closetime"));
                 detailMap.put("dealer",ss.getAttribute("dealer"));
