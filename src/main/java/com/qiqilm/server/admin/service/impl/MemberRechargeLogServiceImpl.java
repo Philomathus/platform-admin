@@ -90,10 +90,10 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 		List<MemberRechargeLog> memberRechargeLogs = memberRechargeLogMapper.selectMemberRechargeLogList(req);
 		for (MemberRechargeLog me:memberRechargeLogs) {
 			if (Strings.isNotBlank(me.getMemberCardRealName())&&
-					me.getMemberCardRealName().equals(me.getRechargeUserName())){
-				me.setNameStatus(1);
-			}else {
+					!me.getMemberCardRealName().equals(me.getRechargeUserName())){
 				me.setNameStatus(0);
+			}else {
+				me.setNameStatus(1);
 			}
 		}
 		return memberRechargeLogs;
