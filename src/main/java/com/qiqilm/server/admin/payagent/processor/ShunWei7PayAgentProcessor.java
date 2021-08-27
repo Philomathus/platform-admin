@@ -305,7 +305,7 @@ public class ShunWei7PayAgentProcessor extends AbstractPayAgent {
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
                     }
                 }
-                return jsonObject.getOrDefault("msg", "");
+                return jsonObject.getOrDefault("message", "");
             }
         }
         return payAgentPlatform.getName()+"查询失败,订单号:" + withdrawLog.getOrderNo();
