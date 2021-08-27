@@ -207,7 +207,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusCode);
                 }
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("msg", "").toString();
             }
         } catch (
                 Exception e) {

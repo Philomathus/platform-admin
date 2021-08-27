@@ -200,8 +200,8 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType);
                     }
                 }
+                return resultMap.getOrDefault("msg", "").toString();
             }
-            return responseData;
         }
         return "绿箭代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }

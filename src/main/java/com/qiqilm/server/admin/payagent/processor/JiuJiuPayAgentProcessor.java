@@ -170,7 +170,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
                     status = 5;
                 }
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, data);
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("msg", "").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

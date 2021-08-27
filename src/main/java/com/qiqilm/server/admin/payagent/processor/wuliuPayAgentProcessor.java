@@ -176,7 +176,7 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
                 }
             }
-            return JsonUtil.object2Json(resultMap);
+            return resultMap.getOrDefault("msg", "").toString();
         }
         return "五六代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }

@@ -180,7 +180,7 @@ public class QianBaoPayAgentProcessor extends AbstractPayAgent {
                 log.warn("state:{}", state);
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, state);
             }
-            return JsonUtil.object2Json(resultMap);
+            return resultMap.getOrDefault("msg", "").toString();
         }
         return "钱宝代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }

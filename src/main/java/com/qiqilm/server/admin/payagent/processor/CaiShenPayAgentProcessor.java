@@ -182,7 +182,7 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.valueOf(statusCode));
                 }
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("rtn_msg", "").toString();
             }
         } catch (
                 Exception e) {

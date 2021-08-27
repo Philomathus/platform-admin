@@ -143,6 +143,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, resultFlag);
                     }
                 }
+                return resultMap.getOrDefault("msg", "").toString();
             }
             return httpOrgCreateTestRtn;
         }

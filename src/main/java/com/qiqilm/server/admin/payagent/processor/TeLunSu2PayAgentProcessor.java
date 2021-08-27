@@ -195,7 +195,7 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 							orderState );
 				}
 			}
-			return JsonUtil.object2Json(resultMap);
+			return resultMap.getOrDefault("msg", "").toString();
 		}
 		return "特仑苏2代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}
