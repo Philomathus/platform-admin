@@ -143,7 +143,7 @@ public class MemberInfoController extends BaseController {
     }
 
     /**
-     * 手机号批量更新密码
+     * 批量会员ID查询手机号
      */
     @PostMapping(value = "/queryPhones")
     public Object queryPhones(ReqSmallFeatures req) throws Exception {

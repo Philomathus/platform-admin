@@ -90,6 +90,8 @@ public class MemberRechargeLog extends BaseEntity {
 	@Excel( name = "订单号", orderNum = "3" )
 	private String orderNo;
 
+	@Excel( name = "绑卡姓名", orderNum = "3" )
+	private String memberCardRealName;
 	/** 优惠比例 */
 	private BigDecimal discountBill;
 
@@ -100,6 +102,7 @@ public class MemberRechargeLog extends BaseEntity {
 	private String endDate;
 
 	private String ip;
+	private Integer nameStatus;
 
 	public String getStatusDesc() {
 		if ( status != null ) {
