@@ -138,6 +138,8 @@ public class MemberWithdrawLog extends BaseEntity {
     private Integer times;
     private BigDecimal money;
     private String statusName;
+    //公司入款姓名与提现姓名状态
+    private Integer rechargeUserNameStatus;
 
     @JsonIgnore
     private String bankCode;

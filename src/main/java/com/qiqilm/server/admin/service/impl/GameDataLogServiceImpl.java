@@ -100,11 +100,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
 			MemberGameData gameDataLog = new MemberGameData();
 			gameDataLog.setId( og.getId() );
-			if (og.getPlatformId().equals(EnumGamePlatform.AG_LIVE.getType())){
-				gameDataLog.setGameId( og.getServerId() );
-			}else {
-				gameDataLog.setGameId( og.getGameId() );
-			}
+			gameDataLog.setGameId( og.getGameId() );
+			gameDataLog.setGameRound(og.getGameRound());
 			gameDataLog.setAccount( og.getAccount() );
 			gameDataLog.setKindId( og.getKindId() );
 			gameDataLog.setCellScore( og.getCellScore() );
@@ -157,11 +154,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			}
 			MemberGameData gameDataLog = new MemberGameData();
 			gameDataLog.setId( og.getId() );
-			if (og.getPlatformId().equals(EnumGamePlatform.AG_LIVE.getType())&& !StringUtils.isEmpty(og.getServerId())){
-				gameDataLog.setGameId( og.getServerId() );
-			}else {
-				gameDataLog.setGameId( og.getGameId() );
-			}
+			gameDataLog.setGameId( og.getGameId() );
+			gameDataLog.setGameRound(og.getGameRound());
 			gameDataLog.setAccount( og.getAccount() );
 			gameDataLog.setKindId( og.getKindId() );
 			gameDataLog.setCellScore( og.getCellScore() );

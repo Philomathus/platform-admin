@@ -8,6 +8,12 @@ server:
 logging:
   level:
     root: info
+    com:
+      qiqilm:
+        server:
+          admin:
+            mapper:
+              LogGameOrderMapper: DEBUG
 spring:
   # 资源信息
   messages:
@@ -36,8 +42,8 @@ spring:
         ## 数据库连接超时时间,默认30秒，即30000
         connection-timeout: 60000
         connection-test-query: SELECT 1 FROM DUAL
-        validation-timeout: 3000
-        login-timeout: 5
+        validation-timeout: 30000
+        login-timeout: 10
     secondary:
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
@@ -56,8 +62,8 @@ spring:
         ## 数据库连接超时时间,默认30秒，即30000
         connection-timeout: 60000
         connection-test-query: SELECT 1 FROM DUAL
-        validation-timeout: 3000
-        login-timeout: 5
+        validation-timeout: 30000
+        login-timeout: 10
 
   redis:
     jedis:

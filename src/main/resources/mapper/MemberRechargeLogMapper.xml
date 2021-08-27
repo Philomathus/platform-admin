@@ -22,6 +22,7 @@
 		<result property="orderNo" column="order_no"/>
 		<result property="discountBill" column="discount_bill"/>
 		<result property="first" column="first"/>
+		<result property="memberCardRealName" column="member_card_real_name"/>
 	</resultMap>
 
 	<sql id="selectMemberRechargeLogVo">
@@ -43,7 +44,8 @@
 			   order_no,
 			   discount_bill,
 			   first,
-		       ip
+		       ip,
+		       member_card_real_name
 		from member_recharge_log
 	</sql>
 
