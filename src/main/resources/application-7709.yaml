@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://rdsdb-7709.cew7dbl7cqsw.ap-northeast-1.rds.amazonaws.com:3306/7709_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://rdsdb-7709.c6uwqqgyc6gv.ap-northeast-1.rds.amazonaws.com:3306/7709_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: 77tv_web
       password: 77tvweb_oradba
     secondary:
@@ -9,7 +9,7 @@ spring:
       username: 77tv_web
       password: 77tvweb_oradba
   redis:
-    host: redis-7709.glzish.ng.0001.apne1.cache.amazonaws.com
+    host: redis-7709.kn1a4p.ng.0001.apne1.cache.amazonaws.com
     port: 6379
     password: jCy^EybKk8T#lhBighjk
 

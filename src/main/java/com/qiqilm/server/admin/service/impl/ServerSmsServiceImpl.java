@@ -21,6 +21,7 @@ import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.mapper.ServerSmsMapper;
 import com.qiqilm.server.admin.service.IServerSmsService;
 import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.RandomUtils;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
@@ -196,7 +197,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	}
 
 	private String sendSmsTencent( ServerSms serverSms, String phone ) {
-		final String code = String.valueOf( ( int ) ( Math.random() * 9999 ) );
+		String code = createCode();
 		try {
 			Credential  cred        = new Credential( serverSms.getAppKey(), serverSms.getAppAccess() );
 			HttpProfile httpProfile = new HttpProfile();
@@ -230,9 +231,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	}
 
 	private String sendSmsAliyun( ServerSms serverSms, String phone ) {
-
-		final String code = String.valueOf( ( int ) ( Math.random() * 9999 ) );
-
+		String code = createCode();
 		System.setProperty( "sun.net.client.defaultConnectTimeout", "10000" );
 		System.setProperty( "sun.net.client.defaultReadTimeout", "10000" );
 		final String regionId = serverSms.getRegion();
@@ -265,7 +264,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	}
 
 	private String sendSmsBaidu( ServerSms serverSms, String phone ) {
-		final String           code   = String.valueOf( ( int ) ( Math.random() * 9999 ) );
+		String code = createCode();
 		SmsClientConfiguration config = new SmsClientConfiguration();
 		config.setCredentials( new DefaultBceCredentials( serverSms.getAppKey(), serverSms.getAppAccess() ) );
 		config.setEndpoint( serverSms.getRegion() );
@@ -291,5 +290,12 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 		} catch ( Exception e ) {
 			throw new BaseException( e );
 		}
+	}
+	private  String createCode() {
+		StringBuilder code = new StringBuilder();
+		for ( int i = 1; i <= 6; i++ ) {
+			code.append( RandomUtils.randomIntWithMax( 0, 9 ) );
+		}
+		return code.toString();
 	}
 }
