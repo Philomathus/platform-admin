@@ -22,6 +22,10 @@ public class MemberGameData extends GameData {
     @Excel(name = "游戏局号")
     private String gameId;
 
+    /** 游戏局号 */
+    @Excel(name = "游戏局号")
+    private String gameCode;
+
     /** 账号 */
     @Excel(name = "账号")
     private String account;
