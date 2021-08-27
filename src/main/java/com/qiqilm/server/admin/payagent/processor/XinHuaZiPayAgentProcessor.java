@@ -172,7 +172,7 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
                 }
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 0);
             }
-            return JsonUtil.object2Json(resultMap);
+            return resultMap.getOrDefault("msg", "").toString();
         }
         return "华子代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }

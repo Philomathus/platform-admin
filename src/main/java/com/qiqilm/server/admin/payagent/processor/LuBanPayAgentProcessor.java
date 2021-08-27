@@ -171,7 +171,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
                         }
                     }
                 }
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("msg", "").toString();
             }
         } catch (
                 Exception e) {

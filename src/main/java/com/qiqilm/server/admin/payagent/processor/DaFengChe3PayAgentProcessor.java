@@ -184,7 +184,7 @@ public class DaFengChe3PayAgentProcessor extends AbstractPayAgent {
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderStatus);
                     }
                 }
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("return_msg", "").toString() + "," + resultMap.getOrDefault("error_msg", "").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

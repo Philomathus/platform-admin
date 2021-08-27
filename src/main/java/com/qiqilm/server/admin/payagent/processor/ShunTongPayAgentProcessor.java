@@ -171,8 +171,8 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
                                 statusType);
                     }
+                    return resultMap.getOrDefault("msg", "").toString();
                 }
-                return res;
             }
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );

@@ -177,7 +177,7 @@ public class XinPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
                 }
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("msg", "").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

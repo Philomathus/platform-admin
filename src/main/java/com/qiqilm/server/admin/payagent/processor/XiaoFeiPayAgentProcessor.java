@@ -166,7 +166,7 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
                 }
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
             }
-            return JsonUtil.object2Json(resultMap);
+            return resultMap.getOrDefault("msg", "").toString();
         }
         return "小飞代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }

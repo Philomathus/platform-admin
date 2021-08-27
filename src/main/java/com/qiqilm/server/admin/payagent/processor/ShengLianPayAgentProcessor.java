@@ -292,7 +292,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
                         }
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
                     }
-                    return JsonUtil.object2Json(resultMap);
+                    return resultMap.getOrDefault("msg", "").toString();
                 }
             }
         } catch (Exception e) {

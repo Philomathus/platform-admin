@@ -272,7 +272,7 @@ public class LianFuBao9AgentProcessor extends AbstractPayAgent {
                 }
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
             }
-            return JsonUtil.object2Json(resultMap);
+            return resultMap.getOrDefault("message", "").toString();
         }
         return payAgentPlatform.getName()+"查询失败,订单号:"+withdrawLog.getOrderNo();
     }
