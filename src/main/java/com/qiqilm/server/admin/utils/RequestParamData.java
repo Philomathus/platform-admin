@@ -36,8 +36,8 @@ public class RequestParamData {
     private static final String RE_KY_DETAIL_RECORD_S2 = "s=%s&startTime=%s&endTime=%s";
     private static final String RE_KY_DETAIL_RECORD_S3 = "s=%s&kindID=%s&recordID=%s&account=%s";
     private static final String RE_MT_DETAIL_RECORD_S1 = "/%s/%s/%s";
-    private static final String RE_XSJ_DETAIL_RECORD_S1 = "agent=%s&timestamp=%s&param=%s&key=%s";
-    private static final String RE_XSJ_DETAIL_RECORD_S2 = "s=%s&gameuserno=%s&id=%s&account=%s&serverID=%s";
+    private static final String RE_XSJ_DETAIL_RECORD_S1 = "channel=%s&mTime=%s&paramerter=%s&key=%s";
+    private static final String RE_XSJ_DETAIL_RECORD_S2 = "method=%s&gameuserno=%s&id=%s&account=%s&serverID=%s";
     private static final String RE_AG_PLAY_DETAIL_RECORD_S1 = "cagent=%s&startdate=%s&enddate=%s&gametype=%s&gamecode=%s&page=1&perpage=100&key=%s";
     private static final String RE_SB_SPORT_DETAIL_RECORD_S1 = "vendor_id=%s&version_key=%s";
     private static final String RE_SB_SPORT_DETAIL_RECORD_S2 = "vendor_id=%s&trans_id=%s";
@@ -70,7 +70,7 @@ public class RequestParamData {
     }
     //新世界棋牌 - 对局列表 返回参数
     public static String requestXSJBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
-        String getURL = getBetURLByKXOrKY(memberGameData, gamePlatform);
+        String getURL = getBetURLByXSJ(memberGameData, gamePlatform);
         log.info( "新世界棋牌-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
@@ -264,6 +264,24 @@ public class RequestParamData {
         String getURL = apiUrl.concat( "?" ).concat(param);
         return getURL;
     }
+
+    //新世界 对局列表 暂时共享
+    public static String getBetURLByXSJ(MemberGameData memberGameData, GamePlatform gamePlatform)throws Exception {
+        String agent = memberGameData.getAgent();
+        Date endTime = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,memberGameData.getGameEndTime());
+        Date nowTime = new Date();
+        String md5 = gamePlatform.getMd5();
+        String key = DigestUtils.md5Hex(agent + nowTime.getTime() + md5);
+        String s1 = String.format(RE_KY_DETAIL_RECORD_S1,agent,nowTime.getTime(),"{0}",key);
+        String s2 = String.format(RE_KY_DETAIL_RECORD_S2,"9",endTime.getTime(),endTime.getTime());
+        String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
+        String param = s1.replace("{0}",s3);
+        String apiUrl = gamePlatform.getRecordUrl();
+        String getURL = apiUrl.concat( "?" ).concat(param);
+        log.error("s2:{},md5:{},des:{}",s2,md5,gamePlatform.getDes());
+        return getURL;
+    }
+
     //新世界 对局详情 暂时共享
     public static String getBetDetailURLByXSJ(MemberGameData memberGameData, GamePlatform gamePlatform)throws Exception {
         String agent = gamePlatform.getAgent();
