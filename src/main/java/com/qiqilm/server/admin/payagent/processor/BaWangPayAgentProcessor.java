@@ -174,7 +174,7 @@ public class BaWangPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
-                return resultMap.getOrDefault("msg", "").toString();
+                return resultMap.getOrDefault("transMsg", "").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
