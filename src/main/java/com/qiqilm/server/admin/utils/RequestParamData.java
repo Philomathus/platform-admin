@@ -355,6 +355,68 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
+
+    //封装数据
+    public static AjaxResult xsjGameBetDataWrapper(String result,String account){
+        JSONObject object = JSON.parseObject(result);
+        JSONObject dataStr = object.getJSONObject("dataStr");
+        if (object != null) {
+            Integer code = Integer.valueOf(dataStr.getString("code"));
+            if (code != 0) {
+                code = code + 20000;
+                return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
+            }
+            JSONObject objects = dataStr.getJSONObject("contents");
+            JSONArray recordID = objects.getJSONArray("RecordID");
+            JSONArray gameID = objects.getJSONArray("gameCode");
+            JSONArray gameRound = objects.getJSONArray("gameCode");
+            JSONArray accounts = objects.getJSONArray("PlayerAccount");
+            JSONArray serverID = objects.getJSONArray("ServerCode");
+            JSONArray kindID = objects.getJSONArray("GameArrNo");
+            JSONArray tableID = objects.getJSONArray("table");
+            JSONArray chairID = objects.getJSONArray("bank");
+            JSONArray userCount = objects.getJSONArray("allPlayer");
+            JSONArray cellScore = objects.getJSONArray("effScore");
+            JSONArray allBet = objects.getJSONArray("allScore");
+            JSONArray profit = objects.getJSONArray("netIn");
+            JSONArray revenue = objects.getJSONArray("sharesScore");
+            JSONArray gameStartTime = objects.getJSONArray("gameBeginTime");
+            JSONArray gameEndTime = objects.getJSONArray("gameFinishTime");
+            JSONArray cardValue = objects.getJSONArray("cardArr");
+            JSONArray channelID = objects.getJSONArray("channelNo");
+            JSONArray lineCode = objects.getJSONArray("AppCode");
+
+            List list = new ArrayList();
+            for (int i = 0; i < gameID.size(); i++) {
+                Map map = new HashMap();
+                map.put("gameID", gameID.get(i));
+                map.put("gameRound",gameRound.get(i));
+                if (!accounts.get(i).equals(account)) continue;
+                map.put("accounts", accounts.get(i));
+                map.put("serverID", serverID.get(i));
+                map.put("kindID", kindID.get(i));
+                map.put("tableID", tableID.get(i));
+                map.put("chairID", chairID.get(i));
+                map.put("userCount", userCount.get(i));
+                map.put("cellScore", cellScore.get(i));
+                map.put("allBet", allBet.get(i));
+                map.put("profit", profit.get(i));
+                map.put("revenue", revenue.get(i));
+                map.put("gameStartTime", gameStartTime.get(i));
+                map.put("gameEndTime", gameEndTime.get(i));
+                map.put("cardValue", cardValue.get(i));
+                map.put("channelID", channelID.get(i));
+                map.put("lineCode", lineCode.get(i));
+                map.put("recordID", recordID.get(i));
+                list.add(map);
+            }
+            dataStr.put("list", list);
+            log.info("新世界棋牌:{}",dataStr.get("contents"));
+            return AjaxResult.success(dataStr);
+        }
+        return AjaxResult.error("999", "查询游戏局号,数据不存在");
+    }
+
     //封装数据
     public static AjaxResult meiTianGameBetDataWrapper(String result){
         JSONObject object = JSON.parseObject(result);
@@ -458,10 +520,5 @@ public class RequestParamData {
         return sdf8.format(date);
     }
 
-    public static void main(String[] args) {
-        String strKey = "GY92021-07-07 05:50:002021-07-07 17:59:00BAC21070705379508411005F14237EE2A67EF102203A4C97603BC5";
-        String key = DigestUtils.md5Hex(strKey);
-        System.err.println(key);
-    }
 
 }
