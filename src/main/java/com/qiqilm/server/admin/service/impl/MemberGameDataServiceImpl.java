@@ -129,6 +129,10 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                     log.info(EnumGamePlatform.NEWWORLD_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
                     if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.NEWWORLD_CHESS.getName()+"访问超时，稍后再试!");
                     return RequestParamData.xsjGameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
+                }else if (EnumGamePlatform.AG_LIVE.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.requestAGPlayBetDetail(memberGameData,"getorders.xml?");
+                    log.info(EnumGamePlatform.AG_LIVE.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    return RequestParamData.gameAgPlayBetDataWrapper(result);
                 }
             }
         }catch (Exception e) {
@@ -165,7 +169,7 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                     log.info(EnumGamePlatform.NEWWORLD_CHESS.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
                     return RequestParamData.gameXSJDetailDataWrapper(result);
                 }else if (EnumGamePlatform.AG_LIVE.getType() == memberGameData.getPlatformId()){
-                    String result = RequestParamData.requestAGPlayBetDetail(memberGameData,gamePlatform);
+                    String result = RequestParamData.requestAGPlayBetDetail(memberGameData,"getroundsres.xml?");
                     log.info(EnumGamePlatform.AG_LIVE.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
                     return RequestParamData.gameAgPlayDetailDataWrapper(result);
                 }

@@ -81,8 +81,9 @@ public class RequestParamData {
         log.info( "新世界棋牌-对局详情-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
+
     //AG-视讯 - 对局列表 返回参数
-    public static String requestAGPlayBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
+    public static String requestAGPlayBetDetail(MemberGameData memberGameData,String url) throws Exception {
         String agent = memberGameData.getAgent();
         Date startdate = DateFormatUtils.parse(memberGameData.getGameEndTime());
         startdate = DateFormatUtils.addMin(startdate,-5);
@@ -96,7 +97,7 @@ public class RequestParamData {
         String param = s1;
         //先写死，后续在处理 GY9
         String apiUrl = "http://zd.mkecy.com/game-detail/";
-        String getURL = apiUrl.concat( "getroundsres.xml?" ).concat(param);
+        String getURL = apiUrl.concat( url ).concat(param);
         getURL = getURL.replace(" ", "%20");
         log.info( "AG-视讯-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
@@ -430,6 +431,57 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
+
+    //ag-视讯 数据列表
+    public static AjaxResult gameAgPlayBetDataWrapper(String result){
+        try {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource src = new InputSource();
+            src.setCharacterStream(new StringReader(result));
+            Document doc = builder.parse(src);
+            Element root = doc.getDocumentElement(); // 获取根元素
+            Node infoNode = root.getChildNodes().item(0);
+            int info = Integer.valueOf(infoNode.getTextContent());
+            if (info != 0){
+                return AjaxResult.error(info, "查询游戏局号日志失败[未知错误]");
+            }
+            NodeList nodeList = root.getElementsByTagName("row");
+            List list = new ArrayList();
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Element ss = (Element) nodeList.item(i);
+                Map detailMap = new HashMap();
+                detailMap.put("gameId",ss.getAttribute("billNo"));
+                detailMap.put("playName",ss.getAttribute("playName"));
+                detailMap.put("gameRound",ss.getAttribute("gameCode"));
+                detailMap.put("netAmount",ss.getAttribute("netAmount"));
+                detailMap.put("betTime",ss.getAttribute("betTime"));
+                detailMap.put("gametype",ss.getAttribute("gametype"));
+                detailMap.put("betAmount",ss.getAttribute("betAmount"));
+                detailMap.put("validBetAmount",ss.getAttribute("validBetAmount"));
+                detailMap.put("flag",ss.getAttribute("flag"));
+                detailMap.put("playType",ss.getAttribute("playType"));
+                detailMap.put("currency",ss.getAttribute("currency"));
+                detailMap.put("tableCode",ss.getAttribute("tableCode"));
+                detailMap.put("recalcuTime",ss.getAttribute("recalcuTime"));
+                detailMap.put("beforeCredit",ss.getAttribute("beforeCredit"));
+                detailMap.put("betIP",ss.getAttribute("betIP"));
+                detailMap.put("platformType",ss.getAttribute("platformType"));
+                detailMap.put("remark",ss.getAttribute("remark"));
+                detailMap.put("round",ss.getAttribute("round"));
+                detailMap.put("result",ss.getAttribute("result"));
+                detailMap.put("deviceType",ss.getAttribute("deviceType"));
+                detailMap.put("odds",ss.getAttribute("odds"));
+                detailMap.put("cardindex",ss.getAttribute("cardindex"));
+                list.add(detailMap);
+            }
+            return AjaxResult.success(list);
+        }catch (Exception e){
+            log.error("拉取AG视讯注单失败:", e);
+            return AjaxResult.error("999", "查询游戏局号,数据不存在");
+        }
+
+    }
+
     //ag-视讯
     public static AjaxResult gameAgPlayDetailDataWrapper(String result){
         try {
