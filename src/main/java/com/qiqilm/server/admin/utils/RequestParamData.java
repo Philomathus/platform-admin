@@ -493,6 +493,23 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
+
+    public static AjaxResult gameXSJDetailDataWrapper(String result){
+        JSONObject object = JSON.parseObject(result);
+        JSONObject d = object.getJSONObject("dataStr");
+        if (d != null) {
+            Integer code = d.getInteger("code");
+            if (code != 0) {
+                code = code + 10000;
+                log.error("查询游戏局号日志失败:{}", JSON.toJSONString(object));
+                return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
+            }
+            if(d.get("gameLogURL") !=null){
+                return AjaxResult.success(d.get("gameLogURL"));
+            }
+        }
+        return AjaxResult.error("999", "查询游戏局号,数据不存在");
+    }
     //bbin-体育
     public static String test ="{\n" +
             "\t\"resultCode\": \"1\",\n" +
