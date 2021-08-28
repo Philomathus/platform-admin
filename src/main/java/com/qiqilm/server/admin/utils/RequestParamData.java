@@ -455,7 +455,7 @@ public class RequestParamData {
                 detailMap.put("gameRound",ss.getAttribute("gameCode"));
                 detailMap.put("netAmount",ss.getAttribute("netAmount"));
                 detailMap.put("betTime",ss.getAttribute("betTime"));
-                detailMap.put("gametype",ss.getAttribute("gametype"));
+                detailMap.put("gametype",ss.getAttribute("gameType"));
                 detailMap.put("betAmount",ss.getAttribute("betAmount"));
                 detailMap.put("validBetAmount",ss.getAttribute("validBetAmount"));
                 detailMap.put("flag",ss.getAttribute("flag"));
