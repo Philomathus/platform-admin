@@ -71,7 +71,7 @@ public class RequestParamData {
     //新世界棋牌 - 对局列表 返回参数
     public static String requestXSJBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         String getURL = getBetURLByKXOrKY(memberGameData, gamePlatform);
-        log.info( "凯旋棋牌-对局列表-请求参数：{}",getURL );
+        log.info( "新世界棋牌-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
     //新世界棋牌 - 对局明细 返回参数
@@ -247,6 +247,7 @@ public class RequestParamData {
         String param = s1.replace("{0}",s3);
         String apiUrl = gamePlatform.getRecordUrl();
         String getURL = apiUrl.concat( "?" ).concat(param);
+        log.error("s2:{},md5:{},des:{}",s2,md5,gamePlatform.getDes());
         return getURL;
     }
     //凯旋棋牌|开元棋牌 对局详情 暂时共享
