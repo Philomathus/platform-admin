@@ -92,7 +92,7 @@ public class AiNong2PayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
-        log.warn(payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String retCode = resultMap.getOrDefault("retCode", "").toString();
             String orderStatus = resultMap.getOrDefault("orderStatus", "").toString();

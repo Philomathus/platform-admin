@@ -85,7 +85,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("狼牙代付下单结果 - listResult:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("success".equals(resultMap.getOrDefault("status", "").toString())) {
                 Map<String, Object> result = (Map) resultMap.get("data");

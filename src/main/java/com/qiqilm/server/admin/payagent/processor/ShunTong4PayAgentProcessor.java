@@ -71,7 +71,7 @@ public class ShunTong4PayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason("福财运4代付下单报错原因:" + e);
         }
-        log.info("福财运4代付下单结果- result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String status = resultMap.getOrDefault("status", "").toString();
             if ("1".equals(status)) {

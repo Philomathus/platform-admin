@@ -86,7 +86,7 @@ public class LianFuBao6AgentProcessor extends AbstractPayAgent {
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
         }
-        log.info( payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
             if ( "200".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
                 log.info( payAgentPlatform.getName()+"订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );

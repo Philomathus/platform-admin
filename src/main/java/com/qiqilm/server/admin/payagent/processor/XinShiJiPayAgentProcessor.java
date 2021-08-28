@@ -78,7 +78,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason("新世纪代付下单报错原因:" + e);
         }
-        log.info("新世纪代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("success".equals(resultMap.getOrDefault("status", "").toString())) {
                 log.info("新世纪代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));

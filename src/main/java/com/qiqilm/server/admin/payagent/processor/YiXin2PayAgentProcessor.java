@@ -78,7 +78,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map( text );
                     } );
-            log.info("亿信代付下单结果:{}",JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
                 if (!CollectionUtils.isEmpty(resultMap)) {
                     if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
                         if ("success".equals(resultMap.getOrDefault("data", "").toString())) {

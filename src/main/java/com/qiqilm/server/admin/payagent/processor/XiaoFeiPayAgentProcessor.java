@@ -76,7 +76,7 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.warn("小飞代付下单结果:" + JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             if (StringUtils.equals("200", String.valueOf(resultMap.get("code")))) {
                 Map<String, Object> attrDataMap = (Map<String, Object>) resultMap.get("attrData");

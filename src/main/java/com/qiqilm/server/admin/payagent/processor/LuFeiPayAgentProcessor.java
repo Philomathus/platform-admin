@@ -76,7 +76,7 @@ public class LuFeiPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info(ConstantsPayAgent.LU_FEI+"代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             String status = resultMap.getOrDefault("trade_status", "").toString();

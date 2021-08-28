@@ -49,7 +49,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason("南开代付下单报错原因:" + e);
         }
-        log.warn("南开代付下单结果:" + httpOrgCreateTestRtn);
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", httpOrgCreateTestRtn,withdrawLog.getOrderNo());
         if (StringUtils.isNoneBlank(httpOrgCreateTestRtn)) {
             Map<String, Object> resultMap = JsonUtil.json2Map(httpOrgCreateTestRtn);
             String respCode = resultMap.getOrDefault("respCode", "").toString();

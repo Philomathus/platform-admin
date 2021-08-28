@@ -78,7 +78,7 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(e.getMessage());
         }
-        log.warn("群支付代付下单结果:" + JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("1000".equals(resultMap.getOrDefault("code", "").toString())) {
                 Map dataMap = (Map) resultMap.getOrDefault("data", "");

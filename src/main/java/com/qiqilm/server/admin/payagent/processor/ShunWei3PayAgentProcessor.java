@@ -74,7 +74,7 @@ public class ShunWei3PayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		log.info( "顺为代付下单结果{}",result );
+		log.warn( payAgentPlatform.getName()+"下单结果:{},订单号:{}",result,withdrawLog.getOrderNo());
 		Map<String, String> resultMap = JsonUtil.json2Map( result );
 		if (!CollectionUtils.isEmpty(resultMap)) {
 			if ("200".equals(resultMap.get("state_code"))) {

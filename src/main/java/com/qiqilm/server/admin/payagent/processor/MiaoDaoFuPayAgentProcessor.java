@@ -131,7 +131,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason("秒到付代付下单报错原因:" + e);
         }
-        log.info("秒到付代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             //WAITING 等待处理
             //PROCESSING 处理中

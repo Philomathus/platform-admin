@@ -72,7 +72,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
             log.error( e.getMessage(), e );
             reqPayAgent.setFailReason("顺风代付下单报错原因:" + e);
         }
-        log.warn("顺风代付下单结果:" + JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
                 Map dataMap =(Map) resultMap.getOrDefault("data", "");

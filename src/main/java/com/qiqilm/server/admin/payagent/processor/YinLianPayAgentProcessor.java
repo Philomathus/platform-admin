@@ -90,7 +90,7 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason("银联代付下单报错原因:" + e);
         }
-        log.info("银联代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String success = resultMap.getOrDefault("success", "").toString();
             if ("true".equals(success)) {
