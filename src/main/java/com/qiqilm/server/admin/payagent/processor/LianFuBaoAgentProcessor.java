@@ -44,7 +44,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 		SortedMap<String, Object> bodyMap = new TreeMap<>();
 		bodyMap.put( "merOrderNo", withdrawLog.getOrderNo() );
 		bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
-		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIAN_FU_BAO );
+		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 		bodyMap.put( "bankCode", withdrawLog.getBankCode() );
 		bodyMap.put( "submitTime", reqPayAgent.getCurrentTime().getTime() );
 		bodyMap.put( "bankAccountNo", withdrawLog.getBankAccount().trim() );
@@ -86,7 +86,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.info( "联付宝代付下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
+		log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
 		if ( !CollectionUtils.isEmpty( resultMap ) ) {
 			if ( "200".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
 				log.info( "联付宝代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
@@ -270,7 +270,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 					log.warn("orderState:{}", orderState);
 					payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
 				}
-			return JsonUtil.object2Json(resultMap);
+			return resultMap.getOrDefault("message", "").toString();
 		}
 		return "联付宝代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}

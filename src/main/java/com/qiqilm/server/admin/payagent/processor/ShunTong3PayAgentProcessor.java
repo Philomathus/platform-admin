@@ -40,7 +40,7 @@ public class ShunTong3PayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("accnm", withdrawLog.getBankUserName().trim());
         bodyMap.put("banknm", withdrawLog.getBankName().trim());
         bodyMap.put("acctype", "unionpay");
-        bodyMap.put("notice_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.SHUNTONG3);
+        bodyMap.put("notice_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -71,7 +71,7 @@ public class ShunTong3PayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason("福财运3代付下单报错原因:" + e);
         }
-        log.info("福财运3代付下单结果- result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String status = resultMap.getOrDefault("status", "").toString();
             if ("1".equals(status)) {
@@ -168,8 +168,8 @@ public class ShunTong3PayAgentProcessor extends AbstractPayAgent {
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
                                 statusType);
                     }
+                    return resultMap.getOrDefault("msg", "").toString();
                 }
-                return res;
             }
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );

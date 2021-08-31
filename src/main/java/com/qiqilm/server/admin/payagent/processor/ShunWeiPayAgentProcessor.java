@@ -56,7 +56,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		String sign = DigestUtils.md5Hex( JsonUtil.object2Json( paramMap ).concat( signMd5 ) );
 
 		paramMap.put( "request_sign", sign );
-		paramMap.put( "callback_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.SHUN_WEI );
+		paramMap.put( "callback_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
 		// 参数加密
 		String encryptData = RSACoder.encryptByPublicKey( JsonUtil.object2Json( paramMap ),
@@ -74,7 +74,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		log.info( "顺为代付下单结果{}",result );
+		log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", result,withdrawLog.getOrderNo());
 		Map<String, String> resultMap = JsonUtil.json2Map( result );
 		if (!CollectionUtils.isEmpty(resultMap)) {
 			if ("200".equals(resultMap.get("state_code"))) {
@@ -276,7 +276,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		log.warn("顺为代付订单查询结果 - result:{}", result);
+		log.warn("顺为代付查询结果 - result:{}", result);
 		if (StringUtils.isNotBlank(result)) {
 			Map<String, String> jsonObject = JsonUtil.json2Map(result);
 			if (!CollectionUtils.isEmpty(jsonObject)) {
@@ -305,7 +305,7 @@ public class ShunWeiPayAgentProcessor extends AbstractPayAgent {
 						payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
 					}
 				}
-				return result;
+				return jsonObject.getOrDefault("msg", "");
 			}
 		}
 		return "顺为代付查询失败,订单号:" + withdrawLog.getOrderNo();

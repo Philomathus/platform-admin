@@ -73,7 +73,7 @@ public class MaYunPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(e.getMessage());
         }
-        log.info("马云代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("1".equals(resultMap.getOrDefault("code", "").toString())) {
                 log.info("马云代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
@@ -164,7 +164,7 @@ public class MaYunPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.warn("马云代付订单查询结果" + JsonUtil.object2Json(resultMap));
+        log.warn("马云代付查询结果" + JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("1".equals(resultMap.getOrDefault("code", "").toString())) {
                 Map dataMap = (Map) resultMap.getOrDefault("data", "");
@@ -187,7 +187,7 @@ public class MaYunPayAgentProcessor extends AbstractPayAgent {
 
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
             }
-            return JsonUtil.object2Json(resultMap);
+            return resultMap.getOrDefault("msg", "").toString();
         }
         return "马云代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }

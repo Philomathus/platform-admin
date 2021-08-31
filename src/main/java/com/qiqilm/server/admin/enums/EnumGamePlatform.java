@@ -27,7 +27,8 @@ public enum EnumGamePlatform {
 	BG_FISH(22,"BG捕鱼"),
 	BG_DIANZI(23,"BG电游"),
 	PRAGMATIC_PLAY( 20, "PragmaticPlay" ),
-	BBIN_LIVE( 8, "BBIN视讯" );
+	BBIN_LIVE( 8, "BBIN视讯" ),
+	KY_CHESS_NEW(50,"开元棋牌(新)");
 
 	private int    type;
 	private String name;

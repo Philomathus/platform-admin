@@ -1,0 +1,53 @@
+spring:
+  datasource:
+    primary:
+      jdbc-url: jdbc:mysql://rdsdb-7709.c6uwqqgyc6gv.ap-northeast-1.rds.amazonaws.com:3306/7709_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: 77tv_web
+      password: 77tvweb_oradba
+    secondary:
+      jdbc-url: jdbc:mysql://rdsdb-7709.c6uwqqgyc6gv.ap-northeast-1.rds.amazonaws.com:3306/db_data?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: 77tv_web
+      password: 77tvweb_oradba
+  redis:
+    host: redis-7709.kn1a4p.ng.0001.apne1.cache.amazonaws.com
+    port: 6379
+
+mybatis:
+  configuration:
+    variables:
+      dbMain: 7709_main
+      dbLive: 7709_live
+      dbLottery: 7709_lottery
+
+# 代付额度
+payAgentLimit: 5000
+# 顺为代付额度
+payAgentLimitShunWei: 50000
+# 宾利代付额度
+payAgentLimitBinLi: 50000
+# 特仑苏代付额度
+payAgentLimitTels: 50000
+# 联付宝代付额度
+payAgentLimitLianFuBao: 50000
+# 马云代付额度
+payAgentLimitMaYun: 50000
+# 合众代付额度
+payAgentLimitHeZhong: 50000
+# 滴滴代付额度
+payAgentLimitDiDi: 50000
+# newMax代付额度
+payAgentLimitNewMaxPay: 50000
+# 阳光代付额度
+payAgentLimitYangGuangPay: 50000
+# 大风车代付额度
+payAgentLimitDaFengChePay: 50000
+# 魯班代付额度
+payAgentLimitLuBanPay: 50000
+# 鼎丰代付额度
+payAgentLimitDingFengPay: 50000
+# 宏博代付额度
+payAgentLimitHongBoPay: 50000
+# 小月代付额度
+payAgentLimitXiaoYuePay: 50000
+# 银联代付额度
+payAgentLimitYinLianPay: 50000

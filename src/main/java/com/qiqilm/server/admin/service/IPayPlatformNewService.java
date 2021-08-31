@@ -35,6 +35,7 @@ public interface IPayPlatformNewService {
 	 * @return 结果
 	 */
 	public int insertPayPlatformNew(PayPlatformNew payPlatformNew);
+	public int insertPayPlatformNewAll(PayPlatformNew payPlatformNew);
 
 	/**
 	 * 修改【请填写功能名称】
@@ -45,18 +46,12 @@ public interface IPayPlatformNewService {
 	public int updatePayPlatformNew(PayPlatformNew payPlatformNew);
 
 	/**
-	 * 批量删除【请填写功能名称】
-	 *
-	 * @param ids 需要删除的【请填写功能名称】ID
-	 * @return 结果
-	 */
-	public int deletePayPlatformNewByIds(Long[] ids );
-
-	/**
 	 * 删除【请填写功能名称】信息
 	 *
 	 * @param id 【请填写功能名称】ID
 	 * @return 结果
 	 */
 	public int deletePayPlatformNewById(Long id);
+
+	int selectPayChannelNew(Long id);
 }

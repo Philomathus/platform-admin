@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.domain.PayPlatformNewConfig;
 import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
@@ -11,7 +12,9 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.mapper.PayPlatformNewMapper;
 import com.qiqilm.server.admin.service.IPayPlatformNewService;
 import com.qiqilm.server.admin.service.IPayService;
+import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +39,8 @@ public class PayPlatformNewController extends BaseController {
 	private IPayService            payService;
 	@Autowired
 	private PayPlatformNewMapper payPlatformNewMapper;
+	@Autowired
+	private TokenService tokenService;
 
 	/**
 	 * 查询支付平台列表
@@ -124,6 +129,22 @@ public class PayPlatformNewController extends BaseController {
 	}
 
 	/**
+	 * 全平台新增支付
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:add')" )
+	@Log( title = "全平台新增支付", businessType = BusinessType.INSERT )
+	@PostMapping("/{id}")
+	public AjaxResult addAll( @RequestBody PayPlatformNew payPlatformNew, @PathVariable String id ) {
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String    username  = loginUser.getUsername();
+		if(!"xiaoou".equals(username)){
+			AjaxResult.error(0,"只有技术人员才可操作全平台新增支付");
+		}
+		payPlatformNew.setId(id);
+		return toAjax( payPlatformNewService.insertPayPlatformNewAll( payPlatformNew ) );
+	}
+
+	/**
 	 * 修改支付平台
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:edit')" )
@@ -174,9 +195,14 @@ public class PayPlatformNewController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:remove')" )
 	@Log( title = "支付平台", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( payPlatformNewService.deletePayPlatformNewByIds( ids ) );
+	@DeleteMapping( "/{id}" )
+	public AjaxResult remove( @PathVariable Long id ) {
+		//查询此支付平台下还有无支付通道
+		int a = payPlatformNewService.selectPayChannelNew(id);
+		if(a>0){
+			return AjaxResult.error("此支付平台下还存在支付通道,删除失败");
+		}
+		return toAjax( payPlatformNewService.deletePayPlatformNewById( id ) );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('pay:payPlatformNew:patchOrder')" )

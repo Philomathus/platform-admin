@@ -61,7 +61,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
         param.put("bankProvince","广东省");
         param.put("bankCity","深圳市");
         param.put("applyReason","test");
-        param.put("backUrl",sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.AINONG);
+        param.put("backUrl",sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -92,7 +92,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
-        log.warn("爱农代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String retCode = resultMap.getOrDefault("retCode", "").toString();
             String orderStatus = resultMap.getOrDefault("orderStatus", "").toString();
@@ -211,7 +211,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
 
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("tranDesc","").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

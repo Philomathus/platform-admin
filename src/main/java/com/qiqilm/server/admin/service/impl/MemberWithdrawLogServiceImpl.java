@@ -83,6 +83,13 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( !CollectionUtils.isEmpty( memberWithdrawLogList ) ) {
 			List<String> memberIds = new ArrayList<>();
 			for ( MemberWithdrawLog me : memberWithdrawLogList ) {
+				//入款人姓名不为空，并且入款人不包含提现人，整条数据标红警告
+				if (Strings.isNotBlank(me.getRechargeUserName())&&
+						!me.getRechargeUserName().contains(me.getBankUserName())){
+					me.setRechargeUserNameStatus(1);//等于1,数据警告
+				}else {
+					me.setRechargeUserNameStatus(0);
+				}
 				memberIds.add( me.getMemberId() );
 			}
 			List<MemberWithdrawLog> Statuss = memberWithdrawLogMapper.selectMemberIdStatus( memberIds );
@@ -322,22 +329,23 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 		String msg = null;
+		String msgStatus = null;
 		try {
-			basePayAgent.queryOrderPay( payAgentLog );
+			msg = basePayAgent.queryOrderPay( payAgentLog );
 			PayAgentLog payAgentLog1 = payAgentLogMapper.selectPayAgentLogOrderNo(req.getOrderNo());
 			Integer callbackStatus = payAgentLog1.getCallbackStatus();
 			//回调状态 0 代付处理中 1 代付成功 代付失败
 			if (callbackStatus==0){
-				msg="代付处理中";
+				msgStatus="代付处理中";
 			}else if (callbackStatus==1){
-				msg="代付成功";
+				msgStatus="代付成功";
 			}else {
-				msg="代付失败";
+				msgStatus="代付失败";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return AjaxResult.success(msg);
+		return AjaxResult.success(msgStatus + ",查询返回结果:" + msg);
 	}
 
 	@Override

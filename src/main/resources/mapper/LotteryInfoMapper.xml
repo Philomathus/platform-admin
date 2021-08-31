@@ -31,4 +31,17 @@
             <if test="cycle != null "> and cycle = #{cycle}</if>
         </where>
     </select>
+
+    <select id="selectLotteryInfoListById" parameterType="String" resultMap="LotteryInfoResult">
+        <include refid="selectLotteryInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <update id="updateLotteryInfo" parameterType="LotteryInfo">
+        update ${dbLottery}.lottery_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="icon != null">icon = #{icon},</if>
+        </trim>
+        where id = #{id}
+    </update>
 </mapper>

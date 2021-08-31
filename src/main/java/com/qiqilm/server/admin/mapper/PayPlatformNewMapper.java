@@ -36,6 +36,7 @@ public interface PayPlatformNewMapper {
 	 * @return 结果
 	 */
 	public int insertPayPlatformNew(PayPlatformNew payPlatformNew);
+	public int insertPayPlatformNewAll(String a);
 
 	//新增支付对接配置
 	public int insertPayPlatformConfig(PayPlatformNewConfig payPlatformNewConfig);
@@ -56,11 +57,5 @@ public interface PayPlatformNewMapper {
 	 */
 	public int deletePayPlatformNewById(Long id);
 
-	/**
-	 * 批量删除【请填写功能名称】
-	 *
-	 * @param ids 需要删除的数据ID
-	 * @return 结果
-	 */
-	public int deletePayPlatformNewByIds(Long[] ids );
+	int selectPayChannelNew(Long id);
 }

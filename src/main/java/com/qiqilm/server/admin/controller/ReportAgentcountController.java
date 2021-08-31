@@ -110,7 +110,7 @@ public class ReportAgentcountController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
 	@GetMapping( "/list" )
-	public Object list( ReportAgentcount reportAgentcount ) throws ParseException {
+	public Object list( ReportAgentcount reportAgentcount ) throws Exception {
 		return reportAgentcountService.selectReportAgentcountList( reportAgentcount );
 	}
 	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:list')" )
@@ -168,8 +168,7 @@ public class ReportAgentcountController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:reportAgentcount:generatedata')" )
 	@GetMapping( "/generatedata" )
 	public AjaxResult generatedata(ReportAgentcount reportAgentcount ) throws ParseException {
-		reportAgentcountService.plamagent_data(reportAgentcount);
-		return AjaxResult.success( "预生成数据成功" );
+		return reportAgentcountService.plamagent_data(reportAgentcount);
 	}
 
 }

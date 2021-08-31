@@ -66,4 +66,6 @@ public interface PayTypeMapper {
 	int countByCode( Integer code );
 
 	List<PayType> selectCachePayTypeList();
+
+	int selectPayChannelNew(String id);
 }
