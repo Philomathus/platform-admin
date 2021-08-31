@@ -132,7 +132,7 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 }else if (EnumGamePlatform.AG_LIVE.getType() == memberGameData.getPlatformId()){
                     String result = RequestParamData.requestAGPlayBetDetail(memberGameData,"getorders.xml?");
                     log.info(EnumGamePlatform.AG_LIVE.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
-                    return RequestParamData.gameAgPlayBetDataWrapper(result);
+                    return RequestParamData.gameAgPlayBetDataWrapper(result,memberGameData.getAccount());
                 }
             }
         }catch (Exception e) {
