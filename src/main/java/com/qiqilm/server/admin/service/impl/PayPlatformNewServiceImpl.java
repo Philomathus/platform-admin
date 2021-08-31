@@ -76,29 +76,27 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
      */
     @Override
     public int insertPayPlatformNewAll(PayPlatformNew payPlatformNew) {
-        payPlatformNew.setCreateTime(DateUtils.getNowDate());
-        payPlatformNew.setCreator("artisan");
         List<String> agentPlatform = new ArrayList<>();
-        agentPlatform.add("7700_main");
-//        agentPlatform.add("7701_main");
-//        agentPlatform.add("7702_main");
-//        agentPlatform.add("7703_main");
-//        agentPlatform.add("7704_main");
-//        agentPlatform.add("7706_main");
-//        agentPlatform.add("7707_main");
-//        agentPlatform.add("7708_main");
-//        agentPlatform.add("7709_main");
-        String sqlConfig = "(`id`, `name`, `code`, mer_id, plat_pay_url, plat_query_url, plat_white_ip_list) VALUES ("
+        agentPlatform.add("7701_main");
+        agentPlatform.add("7702_main");
+        agentPlatform.add("7703_main");
+        agentPlatform.add("7704_main");
+        agentPlatform.add("7706_main");
+        agentPlatform.add("7707_main");
+        agentPlatform.add("7708_main");
+        agentPlatform.add("7709_main");
+        String sqlConfig = "(`id`, `name`, `code`, mer_id, plat_pay_url, plat_query_url, plat_white_ip_list, creator, create_time) VALUES ("
                 + "\"" + payPlatformNew.getId() + "\","
                 + "\"" + payPlatformNew.getName() + "\","
                 + "\"" + payPlatformNew.getCode() + "\","
                 + "\"" + payPlatformNew.getMerId() + "\","
                 + "\"" + payPlatformNew.getPlatPayUrl() + "\","
                 + "\"" + payPlatformNew.getPlatQueryUrl() + "\","
-                + "\"" + payPlatformNew.getPlatWhiteIpList() + "\")";
-        String sqlSplic = "";
+                + "\"" + payPlatformNew.getPlatWhiteIpList() + "\","
+                + "\"" + "admin" + "\","
+                + "\"" + DateUtils.getNowDate() + "\")";
         for (String ag : agentPlatform) {
-            sqlSplic = "INSERT INTO " + ag + ".pay_platform_new " + sqlConfig;
+            String sqlSplic = "INSERT INTO " + ag + ".pay_platform_new " + sqlConfig;
             payPlatformNewMapper.insertPayPlatformNewAll(sqlSplic);
         }
         return 1;
