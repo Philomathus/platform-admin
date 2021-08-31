@@ -51,6 +51,7 @@ public class ServerOss extends BaseEntity {
 	 * 状态
 	 */
 	private Integer isEffect;
+	private Integer provider;
 
 	@Override
 	public String toString() {
@@ -67,6 +68,7 @@ public class ServerOss extends BaseEntity {
 				.append( "createTime", getCreateTime() )
 				.append( "updateBy", getUpdateBy() )
 				.append( "updateTime", getUpdateTime() )
+				.append( "provider", getProvider() )
 				.toString();
 	}
 }
