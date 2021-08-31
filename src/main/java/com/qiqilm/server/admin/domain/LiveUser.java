@@ -152,6 +152,8 @@ public class LiveUser extends DownLoadTime {
     private String weixinAccount;
 	private Integer googleAuthCode;
 	private String paypassword;
+	private String qqId;
+	private String qqToken;
 
 
 	public String getAuthStr() {
