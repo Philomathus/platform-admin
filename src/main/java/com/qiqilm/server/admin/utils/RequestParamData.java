@@ -433,7 +433,7 @@ public class RequestParamData {
     }
 
     //ag-视讯 数据列表
-    public static AjaxResult gameAgPlayBetDataWrapper(String result){
+    public static AjaxResult gameAgPlayBetDataWrapper(String result,String account){
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             InputSource src = new InputSource();
@@ -451,6 +451,9 @@ public class RequestParamData {
                 Element ss = (Element) nodeList.item(i);
                 Map detailMap = new HashMap();
                 detailMap.put("gameId",ss.getAttribute("billNo"));
+                String playName = ss.getAttribute("playName");
+                if (!playName.equals(account))
+                    continue;
                 detailMap.put("playName",ss.getAttribute("playName"));
                 detailMap.put("gameRound",ss.getAttribute("gameCode"));
                 detailMap.put("netAmount",ss.getAttribute("netAmount"));
