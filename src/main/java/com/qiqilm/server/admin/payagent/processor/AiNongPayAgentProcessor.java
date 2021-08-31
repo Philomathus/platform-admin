@@ -210,8 +210,7 @@ public class AiNongPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
-
-                return resultMap.getOrDefault("tranDesc","").toString();
+                return resultMap.getOrDefault("retMsg","").toString() + "," + resultMap.getOrDefault("tranDesc","").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
