@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://rdsdb-7709.c6uwqqgyc6gv.ap-northeast-1.rds.amazonaws.com:3306/7709_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://rdsdb-7709.c6uwqqgyc6gv.ap-northeast-1.rds.amazonaws.com:3306/7709_main?useUnicode=true&characterEncoding=utf8mb4&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: 77tv_web
       password: 77tvweb_oradba
     secondary:
