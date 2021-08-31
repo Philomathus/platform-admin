@@ -54,6 +54,18 @@ public class LiveVideoChatController extends BaseController {
 	}
 
 	/**
+	 * 查询会员发言列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideoChat:list')" )
+	@GetMapping( "/listLiveVideoPushChat" )
+	public TableDataInfo listLiveVideoPushChat( LiveVideoChat liveVideoChat ) {
+		startPage();
+		List<LiveVideoChat> list = liveVideoChatService.selectLiveVideoPushChatList( liveVideoChat );
+
+		return getDataTable( list );
+	}
+
+	/**
 	 * 直播间用户封停
 	 *
 	 * @return

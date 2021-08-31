@@ -69,6 +69,17 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
 	}
 
 	/**
+	 * 查询会员发言列表
+	 *
+	 * @param liveVideoChat 会员发言
+	 * @return 会员发言
+	 */
+	@Override
+	public List<LiveVideoChat> selectLiveVideoPushChatList( LiveVideoChat liveVideoChat ) {
+		return liveVideoChatMapper.selectLiveVideoPushChatList( liveVideoChat );
+	}
+
+	/**
 	 * 新增会员发言
 	 *
 	 * @param liveVideoChat 会员发言
