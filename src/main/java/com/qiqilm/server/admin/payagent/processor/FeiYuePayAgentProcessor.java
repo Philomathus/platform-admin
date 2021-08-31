@@ -173,7 +173,7 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.warn("飞跃代付订单查询结果" + JsonUtil.object2Json( resultMap ));
+		log.warn("飞跃代付查询结果" + JsonUtil.object2Json( resultMap ));
 		if ( !CollectionUtils.isEmpty( resultMap )) {
 			if ("0".equals(resultMap.getOrDefault("code", "").toString())) {
 				Map<String, Object> resultDataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());

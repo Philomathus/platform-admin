@@ -164,7 +164,7 @@ public class MaYunPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.warn("马云代付订单查询结果" + JsonUtil.object2Json(resultMap));
+        log.warn("马云代付查询结果" + JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("1".equals(resultMap.getOrDefault("code", "").toString())) {
                 Map dataMap = (Map) resultMap.getOrDefault("data", "");

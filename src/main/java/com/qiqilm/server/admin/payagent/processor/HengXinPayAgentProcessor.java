@@ -250,7 +250,7 @@ public class HengXinPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("恒星代付订单查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info("恒星代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("200".equals(resultMap.getOrDefault("code", "").toString())) {
                 Map<String, Object> resultDataMap = (Map<String, Object>) resultMap.getOrDefault("data", new HashMap<>());
