@@ -88,7 +88,7 @@ public class LaoXiangPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
 
-        String rspSign = requestMap.remove("sign").toString();
+        String rspSign = requestMap.remove("pay_sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
