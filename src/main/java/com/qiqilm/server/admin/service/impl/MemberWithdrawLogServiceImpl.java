@@ -577,7 +577,9 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	 */
 	@Override
 	public AjaxResult withdrawReport( String id ) {
-
+		if ( !redisUtil.lock( EnumLock.member, id, "1", 10 ) ) {
+			return AjaxResult.error( "请勿重复提交" );
+		}
 		//        memberInfoMapper.call_pro_useranalysis(id);
 		//        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
 
