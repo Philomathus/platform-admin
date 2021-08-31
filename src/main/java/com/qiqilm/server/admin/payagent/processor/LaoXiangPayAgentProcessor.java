@@ -141,7 +141,7 @@ public class LaoXiangPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+        String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("pay_sign", sign);
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
