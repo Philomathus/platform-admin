@@ -59,6 +59,10 @@ public class PayPlatformNew extends BaseEntity {
     @Excel(name = "平台IP白名单")
     private String platWhiteIpList;
 
+    /** 链接类型 */
+    @Excel(name = "链接类型")
+    private String urlType;
+
     /** 创建人 */
     @Excel(name = "创建人")
     private String creator;
@@ -83,6 +87,7 @@ public class PayPlatformNew extends BaseEntity {
             .append("signPublicKey", getSignPublicKey())
             .append("signPrivateKey", getSignPrivateKey())
             .append("platWhiteIpList", getPlatWhiteIpList())
+            .append("urlType", getUrlType())
             .append("creator", getCreator())
             .append("createTime", getCreateTime())
             .append("updator", getUpdator())
