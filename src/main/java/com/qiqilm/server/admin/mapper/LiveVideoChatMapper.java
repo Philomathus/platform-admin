@@ -26,6 +26,7 @@ public interface LiveVideoChatMapper {
 	 * @return 会员发言集合
 	 */
 	public List<LiveVideoChat> selectLiveVideoChatList(LiveVideoChat liveVideoChat);
+	public List<LiveVideoChat> selectLiveVideoPushChatList(LiveVideoChat liveVideoChat);
 
 	/**
 	 * 新增会员发言

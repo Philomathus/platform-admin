@@ -178,7 +178,7 @@ public class LaoXiangPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("message","").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
