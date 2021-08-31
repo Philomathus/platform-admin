@@ -31,11 +31,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectLiveVideoChatList" parameterType="LiveVideoChat" resultMap="LiveVideoChatResult">
         <include refid="selectLiveVideoChatVo"/>
         <where>
+            and (a.type = 0 or a.type = 1)
             <if test="poscatId != null "> and a.poscat_id = #{poscatId}</if>
             <if test="group != null  and group != ''"> and a.`group` = #{group}</if>
             <if test="userId != null "> and a.user_id = #{userId}</if>
             <if test="msg != null  and msg != ''"> and a.msg = #{msg}</if>
-            <if test="type != null "> and a.type = #{type}</if>
+            <if test="poscatNickName != null  and poscatNickName != ''"> and a.poscat_nick_name like concat('%', #{poscatNickName}, '%')</if>
+            <if test="userNickName != null  and userNickName != ''"> and a.user_nick_name like concat('%', #{userNickName}, '%')</if>
+            <if test="fromPlatform != null  and fromPlatform != ''"> and a.from_platform = #{fromPlatform}</if>
+            <if test="sendStartTime != null  and sendStartTime != ''"> and a.create_time <![CDATA[ >= ]]> #{sendStartTime}</if>
+            <if test="sendEndTime != null  and sendEndTime != ''"> and a.create_time <![CDATA[ <= ]]> #{sendEndTime}</if>
+        </where>
+    </select>
+
+    <select id="selectLiveVideoPushChatList" parameterType="LiveVideoChat" resultMap="LiveVideoChatResult">
+        <include refid="selectLiveVideoChatVo"/>
+        <where>
+            and a.type = 2
+            <if test="poscatId != null "> and a.poscat_id = #{poscatId}</if>
+            <if test="group != null  and group != ''"> and a.`group` = #{group}</if>
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="msg != null  and msg != ''"> and a.msg = #{msg}</if>
             <if test="poscatNickName != null  and poscatNickName != ''"> and a.poscat_nick_name like concat('%', #{poscatNickName}, '%')</if>
             <if test="userNickName != null  and userNickName != ''"> and a.user_nick_name like concat('%', #{userNickName}, '%')</if>
             <if test="fromPlatform != null  and fromPlatform != ''"> and a.from_platform = #{fromPlatform}</if>
