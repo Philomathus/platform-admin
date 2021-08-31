@@ -204,7 +204,7 @@ public class ZhongJiaPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
-                return JsonUtil.object2Json(map);
+                return resultMap.getOrDefault("msg","").toString();
             }
 
         } catch (Exception e) {
