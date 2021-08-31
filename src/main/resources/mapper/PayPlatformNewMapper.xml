@@ -61,6 +61,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <insert id="insertPayPlatformNewAll" parameterType="String">
+        ${a}
+    </insert>
+
     <insert id="insertPayPlatformNew" parameterType="PayPlatformNew" useGeneratedKeys="true" keyProperty="id">
         insert into pay_platform_new
         <trim prefix="(" suffix=")" suffixOverrides=",">
