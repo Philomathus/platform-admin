@@ -74,7 +74,7 @@ public class ShunWei12PayAgentProcessor extends AbstractPayAgent {
         } catch ( Exception e ) {
             e.printStackTrace();
         }
-        log.info( payAgentPlatform.getName()+"下单结果{}",result );
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", result,withdrawLog.getOrderNo());
         Map<String, String> resultMap = JsonUtil.json2Map( result );
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("200".equals(resultMap.get("state_code"))) {
@@ -305,7 +305,7 @@ public class ShunWei12PayAgentProcessor extends AbstractPayAgent {
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
                     }
                 }
-                return result;
+                return jsonObject.getOrDefault("message", "");
             }
         }
         return payAgentPlatform.getName()+"查询失败,订单号:" + withdrawLog.getOrderNo();

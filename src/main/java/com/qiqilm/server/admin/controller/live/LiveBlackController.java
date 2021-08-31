@@ -25,9 +25,10 @@ public class LiveBlackController extends BaseController {
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveBlack:list')" )
 	@GetMapping( "/list" )
-	public Object liveBlackList(LiveBlack liveBlack) {
+	public TableDataInfo liveBlackList(LiveBlack liveBlack) {
+		startPage();
 		List<LiveBlack> list = liveBlackService.selectLiveBlackList(liveBlack);
-		return list;
+		return getDataTable( list );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveBlack:remove')" )

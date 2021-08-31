@@ -71,7 +71,7 @@ public class BaWangPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info(payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
 
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("SUCCESS".equals(resultMap.getOrDefault("retCode", "").toString())) {
@@ -174,7 +174,7 @@ public class BaWangPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("transMsg", "").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
