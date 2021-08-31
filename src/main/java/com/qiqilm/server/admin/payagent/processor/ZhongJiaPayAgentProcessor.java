@@ -108,6 +108,7 @@ public class ZhongJiaPayAgentProcessor extends AbstractPayAgent {
         StringBuilder sb = new StringBuilder();
         requestMap.forEach( ( k, v ) -> sb.append( v ).append( "&" ) );
         String sign = signMd5 + "&" + sb.substring( 0, sb.length() - 1 );
+        sign = DigestUtils.md5Hex(sign);
 
         log.info(payAgentPlatform.getName()+"回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
