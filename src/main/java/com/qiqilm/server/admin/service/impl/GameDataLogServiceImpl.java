@@ -271,7 +271,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			try {
 				memberInfoMapper.updateBeatCode( userId, c, w );
 			} catch ( Exception e ) {
-				log.error( "打码异常userId:{},code_account：{},code_total:{}", userId, c, w );
+				log.error( "打码异常userId:{},code_account：{},code_total:{}", userId, c, w ,e);
 			}
 
 		}

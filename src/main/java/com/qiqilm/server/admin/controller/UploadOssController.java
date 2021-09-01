@@ -1,7 +1,9 @@
 package com.qiqilm.server.admin.controller;
 
+import com.qiqilm.server.admin.cache.ServerOssCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.ServerOss;
 import com.qiqilm.server.admin.service.IServerOssService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -21,10 +23,15 @@ public class UploadOssController {
 	private IServerOssService  serverOssService;
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
-
+	@Autowired
+	private ServerOssCacheUtil serverOssCacheUtil;
 	@PostMapping( "{path}" )
-	public AjaxResult upload( @RequestParam( "file" ) MultipartFile file, @PathVariable String path ) throws IOException {
+	public AjaxResult upload( @RequestParam( "file" )
+										  MultipartFile file, @PathVariable String path )
+			throws IOException {
+		ServerOss serverOss = serverOssCacheUtil.getEffect();
 		String      fileName    = file.getOriginalFilename();
+		String url = null;
 		String      extension   = FilenameUtils.getExtension( fileName );
 		InputStream inputStream = file.getInputStream();
 		File        newFile     = new File( System.getProperty( "java.io.tmpdir" ) + fileName );
@@ -32,8 +39,15 @@ public class UploadOssController {
 		String rFileName = DigestUtils.md5Hex( new FileInputStream( newFile ) );
 		String fileKey = sysConfigCacheUtil.getConf( "agent_id" ) + "/" + path + "/" + rFileName
 				+ FilenameUtils.EXTENSION_SEPARATOR + extension;
-		String url = serverOssService.uploadInputStream( new FileInputStream( newFile ), fileKey );
-		newFile.delete();
-		return AjaxResult.success( "上传成功", url );
+
+		if (serverOss.getProvider()==0){//阿里云
+			url = serverOssService.uploadInputStream( new FileInputStream( newFile ), fileKey );
+			newFile.delete();
+		}
+		if (serverOss.getProvider()==1){//亚马逊
+			serverOssService.amazonawsUpload(file,fileKey,serverOss,newFile);
+			url=serverOss.getEndpoint()+ fileKey;
+		}
+		return AjaxResult.success( "上传成功",url);
 	}
 }

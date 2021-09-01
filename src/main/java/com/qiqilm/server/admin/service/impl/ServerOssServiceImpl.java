@@ -2,7 +2,13 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.qiqilm.server.admin.cache.ServerOssCacheUtil;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ServerOss;
 import com.qiqilm.server.admin.mapper.ServerOssMapper;
 import com.qiqilm.server.admin.service.IServerOssService;
@@ -10,7 +16,9 @@ import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
@@ -141,5 +149,21 @@ public class ServerOssServiceImpl implements IServerOssService {
 		// 关闭client
 		ossClient.shutdown();
 		return "/" + fileKey;
+	}
+	@Override
+	public void amazonawsUpload(MultipartFile file, String path, ServerOss serverOss,File newFile) {
+		Regions clientRegion = Regions.AP_NORTHEAST_1;//地区
+		String bucketName = serverOss.getBucket();//桶的名称
+		try {
+			AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+					.withRegion(clientRegion)
+					.build();
+			s3Client.putObject(bucketName, path, newFile);
+			s3Client.shutdown();
+		} catch (AmazonServiceException e) {
+			e.printStackTrace();
+		} catch (SdkClientException e) {
+			e.printStackTrace();
+		}
 	}
 }
