@@ -128,7 +128,11 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                     String result = RequestParamData.requestXSJBetRecord(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.NEWWORLD_CHESS.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
                     if (StringUtils.isEmpty(result)) return AjaxResult.error(EnumGamePlatform.NEWWORLD_CHESS.getName()+"访问超时，稍后再试!");
-                    return RequestParamData.gameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
+                    return RequestParamData.xsjGameBetDataWrapper(result,memberGameData.getAgent()+"_"+memberGameData.getAccount());
+                }else if (EnumGamePlatform.AG_LIVE.getType() == memberGameData.getPlatformId()){
+                    String result = RequestParamData.requestAGPlayBetDetail(memberGameData,"getorders.xml?");
+                    log.info(EnumGamePlatform.AG_LIVE.getName()+"获取局列表返回结果数据:"+JSON.toJSONString(result));
+                    return RequestParamData.gameAgPlayBetDataWrapper(result,memberGameData.getAccount());
                 }
             }
         }catch (Exception e) {
@@ -163,9 +167,9 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 }else if (EnumGamePlatform.NEWWORLD_CHESS.getType() == memberGameData.getPlatformId()){
                     String result = RequestParamData.requestXSJBetDetail(memberGameData,gamePlatform);
                     log.info(EnumGamePlatform.NEWWORLD_CHESS.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
-                    return RequestParamData.gameDetailDataWrapper(result);
+                    return RequestParamData.gameXSJDetailDataWrapper(result);
                 }else if (EnumGamePlatform.AG_LIVE.getType() == memberGameData.getPlatformId()){
-                    String result = RequestParamData.requestAGPlayBetDetail(memberGameData,gamePlatform);
+                    String result = RequestParamData.requestAGPlayBetDetail(memberGameData,"getroundsres.xml?");
                     log.info(EnumGamePlatform.AG_LIVE.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
                     return RequestParamData.gameAgPlayDetailDataWrapper(result);
                 }

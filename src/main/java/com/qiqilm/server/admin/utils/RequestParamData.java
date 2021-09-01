@@ -36,8 +36,9 @@ public class RequestParamData {
     private static final String RE_KY_DETAIL_RECORD_S2 = "s=%s&startTime=%s&endTime=%s";
     private static final String RE_KY_DETAIL_RECORD_S3 = "s=%s&kindID=%s&recordID=%s&account=%s";
     private static final String RE_MT_DETAIL_RECORD_S1 = "/%s/%s/%s";
-    private static final String RE_XSJ_DETAIL_RECORD_S1 = "agent=%s&timestamp=%s&param=%s&key=%s";
-    private static final String RE_XSJ_DETAIL_RECORD_S2 = "s=%s&gameuserno=%s&id=%s&account=%s&serverID=%s";
+    private static final String RE_XSJ_DETAIL_RECORD_S1 = "channel=%s&mTime=%s&paramerter=%s&key=%s";
+    private static final String RE_XSJ_DETAIL_RECORD_S2 = "method=%s&startTime=%s&endTime=%s";
+    private static final String RE_XSJ_DETAIL_RECORD_S3 = "method=%s&gameuserno=%s&id=%s&account=%s&serverID=%s";
     private static final String RE_AG_PLAY_DETAIL_RECORD_S1 = "cagent=%s&startdate=%s&enddate=%s&gametype=%s&gamecode=%s&page=1&perpage=100&key=%s";
     private static final String RE_SB_SPORT_DETAIL_RECORD_S1 = "vendor_id=%s&version_key=%s";
     private static final String RE_SB_SPORT_DETAIL_RECORD_S2 = "vendor_id=%s&trans_id=%s";
@@ -70,8 +71,8 @@ public class RequestParamData {
     }
     //新世界棋牌 - 对局列表 返回参数
     public static String requestXSJBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
-        String getURL = getBetURLByKXOrKY(memberGameData, gamePlatform);
-        log.info( "凯旋棋牌-对局列表-请求参数：{}",getURL );
+        String getURL = getBetURLByXSJ(memberGameData, gamePlatform);
+        log.info( "新世界棋牌-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
     //新世界棋牌 - 对局明细 返回参数
@@ -80,8 +81,9 @@ public class RequestParamData {
         log.info( "新世界棋牌-对局详情-请求参数：{}",getURL );
         return PostData.get(getURL);
     }
+
     //AG-视讯 - 对局列表 返回参数
-    public static String requestAGPlayBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
+    public static String requestAGPlayBetDetail(MemberGameData memberGameData,String url) throws Exception {
         String agent = memberGameData.getAgent();
         Date startdate = DateFormatUtils.parse(memberGameData.getGameEndTime());
         startdate = DateFormatUtils.addMin(startdate,-5);
@@ -89,13 +91,13 @@ public class RequestParamData {
         String stringStartDate =DateFormatUtils.beiJinToMeiDong(startdate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String stringEndDate =DateFormatUtils.beiJinToMeiDong(enddate,DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String lineCode = agent.split("_")[0];
-        String key = DigestUtils.md5Hex(lineCode + stringStartDate + stringEndDate + memberGameData.getKindId() + memberGameData.getGameId() +"1100" + "5F14237EE2A67EF102203A4C97603BC5");
+        String key = DigestUtils.md5Hex(lineCode + stringStartDate + stringEndDate + memberGameData.getKindId() + memberGameData.getGameRound() +"1100" + "5F14237EE2A67EF102203A4C97603BC5");
         String s1 = String.format(RE_AG_PLAY_DETAIL_RECORD_S1,
-                lineCode,stringStartDate,stringEndDate,memberGameData.getKindId(),memberGameData.getGameId(),key);
+                lineCode,stringStartDate,stringEndDate,memberGameData.getKindId(),memberGameData.getGameRound(),key);
         String param = s1;
         //先写死，后续在处理 GY9
         String apiUrl = "http://zd.mkecy.com/game-detail/";
-        String getURL = apiUrl.concat( "getroundsres.xml?" ).concat(param);
+        String getURL = apiUrl.concat( url ).concat(param);
         getURL = getURL.replace(" ", "%20");
         log.info( "AG-视讯-对局列表-请求参数：{}",getURL );
         return PostData.get(getURL);
@@ -136,13 +138,13 @@ public class RequestParamData {
     }
     //沙巴体育-投注详情
     public static AjaxResult requestSbSportBetDetail(MemberGameData memberGameData, GamePlatform gamePlatform, RestTemplate restTemplate) throws Exception {
-        String param = String.format( RE_SB_SPORT_DETAIL_RECORD_S2,gamePlatform.getAgent(),memberGameData.getGameId());
+        String param = String.format( RE_SB_SPORT_DETAIL_RECORD_S2,gamePlatform.getAgent(),memberGameData.getGameRound());
         String apiUrl = gamePlatform.getApiUrl()+"/GetBetDetailByTransID";
         String getURL = apiUrl.concat( "?" ).concat(param);
         log.info( "沙巴体育-投注详情-请求参数：{}",getURL );
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("vendor_id",gamePlatform.getAgent());
-        map.add("trans_id",memberGameData.getGameId());
+        map.add("trans_id",memberGameData.getGameRound());
         map.add("bet_type",memberGameData.getBetType());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
@@ -214,7 +216,7 @@ public class RequestParamData {
         String key = a + DigestUtils.md5Hex(md5) + c;
         String account = memberGameData.getAccount().replace("_","bbin");
         String s1 = String.format(RE_BBIN_SPORT_DETAIL_RECORD_S1,
-                des,account,memberGameData.getGameId(),key);
+                des,account,memberGameData.getGameRound(),key);
         String param = s1;
         String apiUrl = gamePlatform.getApiUrl();
         String getURL = apiUrl.concat( "GetWagersSubDetailUrlBy109?" ).concat(param);
@@ -224,7 +226,7 @@ public class RequestParamData {
     //美天棋牌 - 投注详情 返回参数
     public static String requestMTBetRecord(MemberGameData memberGameData, GamePlatform gamePlatform) throws Exception {
         Map<String,String> data = new LinkedHashMap<>();
-        data.put("rowID",memberGameData.getGameId());
+        data.put("rowID",memberGameData.getGameRound());
         data.put("lang","ZH-CN");
         String merchantId = gamePlatform.getAgent();
         String code = DigestUtils.md5Hex(gamePlatform.getMd5()+JSON.toJSONString(data));
@@ -247,6 +249,7 @@ public class RequestParamData {
         String param = s1.replace("{0}",s3);
         String apiUrl = gamePlatform.getRecordUrl();
         String getURL = apiUrl.concat( "?" ).concat(param);
+        log.error("s2:{},md5:{},des:{}",s2,md5,gamePlatform.getDes());
         return getURL;
     }
     //凯旋棋牌|开元棋牌 对局详情 暂时共享
@@ -263,6 +266,24 @@ public class RequestParamData {
         String getURL = apiUrl.concat( "?" ).concat(param);
         return getURL;
     }
+
+    //新世界 对局列表 暂时共享
+    public static String getBetURLByXSJ(MemberGameData memberGameData, GamePlatform gamePlatform)throws Exception {
+        String agent = memberGameData.getAgent();
+        Date endTime = DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,memberGameData.getGameEndTime());
+        Date nowTime = new Date();
+        String md5 = gamePlatform.getMd5();
+        String key = DigestUtils.md5Hex(agent + nowTime.getTime() + md5);
+        String s1 = String.format(RE_XSJ_DETAIL_RECORD_S1,agent,nowTime.getTime(),"{0}",key);
+        String s2 = String.format(RE_XSJ_DETAIL_RECORD_S2,"9",endTime.getTime(),endTime.getTime());
+        String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
+        String param = s1.replace("{0}",s3);
+        String apiUrl = gamePlatform.getRecordUrl();
+        String getURL = apiUrl.concat( "?" ).concat(param);
+        log.error("s2:{},md5:{},des:{}",s2,md5,gamePlatform.getDes());
+        return getURL;
+    }
+
     //新世界 对局详情 暂时共享
     public static String getBetDetailURLByXSJ(MemberGameData memberGameData, GamePlatform gamePlatform)throws Exception {
         String agent = gamePlatform.getAgent();
@@ -270,7 +291,7 @@ public class RequestParamData {
         String md5 = gamePlatform.getMd5();
         String key = DigestUtils.md5Hex(agent + nowTime.getTime() + md5);
         String s1 = String.format(RE_XSJ_DETAIL_RECORD_S1,agent,nowTime.getTime(),"{0}",key);
-        String s2 = String.format(RE_XSJ_DETAIL_RECORD_S2,"19",memberGameData.getGameUserNo(),
+        String s2 = String.format(RE_XSJ_DETAIL_RECORD_S3,"19",memberGameData.getGameUserNo(),
                 memberGameData.getRecordId(),memberGameData.getAccount(),memberGameData.getServerId());
         log.info("新世界请求参数:{}",s2);
         String s3 = Encrypt.AESEncrypt(s2,gamePlatform.getDes());
@@ -335,6 +356,68 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
+
+    //封装数据
+    public static AjaxResult xsjGameBetDataWrapper(String result,String account){
+        JSONObject object = JSON.parseObject(result);
+        JSONObject dataStr = object.getJSONObject("dataStr");
+        if (object != null) {
+            Integer code = Integer.valueOf(dataStr.getString("code"));
+            if (code != 0) {
+                code = code + 20000;
+                return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
+            }
+            JSONObject objects = dataStr.getJSONObject("contents");
+            JSONArray recordID = objects.getJSONArray("RecordID");
+            JSONArray gameID = objects.getJSONArray("gameCode");
+            JSONArray gameRound = objects.getJSONArray("gameCode");
+            JSONArray accounts = objects.getJSONArray("PlayerAccount");
+            JSONArray serverID = objects.getJSONArray("ServerCode");
+            JSONArray kindID = objects.getJSONArray("GameArrNo");
+            JSONArray tableID = objects.getJSONArray("table");
+            JSONArray chairID = objects.getJSONArray("bank");
+            JSONArray userCount = objects.getJSONArray("allPlayer");
+            JSONArray cellScore = objects.getJSONArray("effScore");
+            JSONArray allBet = objects.getJSONArray("allScore");
+            JSONArray profit = objects.getJSONArray("netIn");
+            JSONArray revenue = objects.getJSONArray("sharesScore");
+            JSONArray gameStartTime = objects.getJSONArray("gameBeginTime");
+            JSONArray gameEndTime = objects.getJSONArray("gameFinishTime");
+            JSONArray cardValue = objects.getJSONArray("cardArr");
+            JSONArray channelID = objects.getJSONArray("channelNo");
+            JSONArray lineCode = objects.getJSONArray("AppCode");
+
+            List list = new ArrayList();
+            for (int i = 0; i < gameID.size(); i++) {
+                Map map = new HashMap();
+                map.put("gameID", gameID.get(i));
+                map.put("gameRound",gameRound.get(i));
+                if (!accounts.get(i).equals(account)) continue;
+                map.put("accounts", accounts.get(i));
+                map.put("serverID", serverID.get(i));
+                map.put("kindID", kindID.get(i));
+                map.put("tableID", tableID.get(i));
+                map.put("chairID", chairID.get(i));
+                map.put("userCount", userCount.get(i));
+                map.put("cellScore", cellScore.get(i));
+                map.put("allBet", allBet.get(i));
+                map.put("profit", profit.get(i));
+                map.put("revenue", revenue.get(i));
+                map.put("gameStartTime", gameStartTime.get(i));
+                map.put("gameEndTime", gameEndTime.get(i));
+                map.put("cardValue", cardValue.get(i));
+                map.put("channelID", channelID.get(i));
+                map.put("lineCode", lineCode.get(i));
+                map.put("recordID", recordID.get(i));
+                list.add(map);
+            }
+            dataStr.put("list", list);
+            log.info("新世界棋牌:{}",dataStr.get("contents"));
+            return AjaxResult.success(dataStr);
+        }
+        return AjaxResult.error("999", "查询游戏局号,数据不存在");
+    }
+
     //封装数据
     public static AjaxResult meiTianGameBetDataWrapper(String result){
         JSONObject object = JSON.parseObject(result);
@@ -348,6 +431,60 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
+
+    //ag-视讯 数据列表
+    public static AjaxResult gameAgPlayBetDataWrapper(String result,String account){
+        try {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource src = new InputSource();
+            src.setCharacterStream(new StringReader(result));
+            Document doc = builder.parse(src);
+            Element root = doc.getDocumentElement(); // 获取根元素
+            Node infoNode = root.getChildNodes().item(0);
+            int info = Integer.valueOf(infoNode.getTextContent());
+            if (info != 0){
+                return AjaxResult.error(info, "查询游戏局号日志失败[未知错误]");
+            }
+            NodeList nodeList = root.getElementsByTagName("row");
+            List list = new ArrayList();
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Element ss = (Element) nodeList.item(i);
+                Map detailMap = new HashMap();
+                detailMap.put("gameId",ss.getAttribute("billNo"));
+                String playName = ss.getAttribute("playName");
+                if (!playName.equals(account))
+                    continue;
+                detailMap.put("playName",ss.getAttribute("playName"));
+                detailMap.put("gameRound",ss.getAttribute("gameCode"));
+                detailMap.put("netAmount",ss.getAttribute("netAmount"));
+                detailMap.put("betTime",ss.getAttribute("betTime"));
+                detailMap.put("gametype",ss.getAttribute("gameType"));
+                detailMap.put("betAmount",ss.getAttribute("betAmount"));
+                detailMap.put("validBetAmount",ss.getAttribute("validBetAmount"));
+                detailMap.put("flag",ss.getAttribute("flag"));
+                detailMap.put("playType",ss.getAttribute("playType"));
+                detailMap.put("currency",ss.getAttribute("currency"));
+                detailMap.put("tableCode",ss.getAttribute("tableCode"));
+                detailMap.put("recalcuTime",ss.getAttribute("recalcuTime"));
+                detailMap.put("beforeCredit",ss.getAttribute("beforeCredit"));
+                detailMap.put("betIP",ss.getAttribute("betIP"));
+                detailMap.put("platformType",ss.getAttribute("platformType"));
+                detailMap.put("remark",ss.getAttribute("remark"));
+                detailMap.put("round",ss.getAttribute("round"));
+                detailMap.put("result",ss.getAttribute("result"));
+                detailMap.put("deviceType",ss.getAttribute("deviceType"));
+                detailMap.put("odds",ss.getAttribute("odds"));
+                detailMap.put("cardindex",ss.getAttribute("cardindex"));
+                list.add(detailMap);
+            }
+            return AjaxResult.success(list);
+        }catch (Exception e){
+            log.error("拉取AG视讯注单失败:", e);
+            return AjaxResult.error("999", "查询游戏局号,数据不存在");
+        }
+
+    }
+
     //ag-视讯
     public static AjaxResult gameAgPlayDetailDataWrapper(String result){
         try {
@@ -367,6 +504,7 @@ public class RequestParamData {
                 Element ss = (Element) nodeList.item(i);
                 Map detailMap = new HashMap();
                 detailMap.put("gameCode",ss.getAttribute("gameCode"));
+                detailMap.put("gameRound",ss.getAttribute("gameCode"));
                 detailMap.put("begintime",ss.getAttribute("begintime"));
                 detailMap.put("closetime",ss.getAttribute("closetime"));
                 detailMap.put("dealer",ss.getAttribute("dealer"));
@@ -410,6 +548,23 @@ public class RequestParamData {
         }
         return AjaxResult.error("999", "查询游戏局号,数据不存在");
     }
+
+    public static AjaxResult gameXSJDetailDataWrapper(String result){
+        JSONObject object = JSON.parseObject(result);
+        JSONObject d = object.getJSONObject("dataStr");
+        if (d != null) {
+            Integer code = d.getInteger("code");
+            if (code != 0) {
+                code = code + 10000;
+                log.error("查询游戏局号日志失败:{}", JSON.toJSONString(object));
+                return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
+            }
+            if(d.get("gameLogURL") !=null){
+                return AjaxResult.success(d.get("gameLogURL"));
+            }
+        }
+        return AjaxResult.error("999", "查询游戏局号,数据不存在");
+    }
     //bbin-体育
     public static String test ="{\n" +
             "\t\"resultCode\": \"1\",\n" +
@@ -437,10 +592,5 @@ public class RequestParamData {
         return sdf8.format(date);
     }
 
-    public static void main(String[] args) {
-        String strKey = "GY92021-07-07 05:50:002021-07-07 17:59:00BAC21070705379508411005F14237EE2A67EF102203A4C97603BC5";
-        String key = DigestUtils.md5Hex(strKey);
-        System.err.println(key);
-    }
 
 }
