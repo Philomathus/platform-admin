@@ -157,11 +157,11 @@ public class ServerOssServiceImpl implements IServerOssService {
 		Regions clientRegion = Regions.AP_NORTHEAST_1;//地区
 		String bucketName = serverOss.getBucket();//桶的名称
 		try {
-			BasicAWSCredentials creds = new BasicAWSCredentials("AKIA245SKQNKHAJBC4R5", "ORlBoUKEjQqP6thKO4XpPhXeNhEXBZQDPDRjkjUa");
+			BasicAWSCredentials creds = new BasicAWSCredentials(serverOss.getAccessKey(), serverOss.getAccessSecret());
 			AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 					.withRegion(clientRegion)
 					.withCredentials(new AWSStaticCredentialsProvider(creds))
-					.build();
+					.build();//创建证书及注册地址
 			s3Client.putObject(bucketName, path, newFile);
 			s3Client.shutdown();
 		} catch (AmazonServiceException e) {
