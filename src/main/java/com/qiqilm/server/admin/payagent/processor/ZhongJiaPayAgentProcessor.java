@@ -49,7 +49,7 @@ public class ZhongJiaPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("merchantNo", payAgentPlatform.getMerId());
         dataMap.put("money", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).intValue());
         dataMap.put("orderNo",withdrawLog.getOrderNo());
-        dataMap.put("channel", "HYBDAIFU4");
+        dataMap.put("channel", "HYBDGSJ");
         dataMap.put("name", encrypt(withdrawLog.getBankName(),payAgentPlatform.getSignMd5()));
         dataMap.put("cardNo", encrypt(withdrawLog.getBankAccount(),payAgentPlatform.getSignMd5()));
         dataMap.put("idcard", encrypt("36522819610223364",payAgentPlatform.getSignMd5()));
