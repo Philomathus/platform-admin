@@ -54,4 +54,6 @@ public class RspMemberGameData {
     private BigDecimal totalIncome;
 
     private String serverId;
+
+    private String gameRound;
 }

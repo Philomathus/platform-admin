@@ -1,16 +1,13 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
-import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.mapper.*;
-import com.qiqilm.server.admin.mapper.GameDataLogMapper;
 import com.qiqilm.server.admin.service.IGameDataLogService;
 import com.qiqilm.server.admin.task.beat.GameDataTableHelp;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
 import com.qiqilm.server.admin.utils.RobotMessage;
-import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -100,11 +97,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
 			MemberGameData gameDataLog = new MemberGameData();
 			gameDataLog.setId( og.getId() );
-			if (og.getPlatformId().equals(EnumGamePlatform.AG_LIVE.getType())){
-				gameDataLog.setGameId( og.getServerId() );
-			}else {
-				gameDataLog.setGameId( og.getGameId() );
-			}
+			gameDataLog.setGameId( og.getGameId() );
+			gameDataLog.setGameRound(og.getGameRound());
 			gameDataLog.setAccount( og.getAccount() );
 			gameDataLog.setKindId( og.getKindId() );
 			gameDataLog.setCellScore( og.getCellScore() );
@@ -157,11 +151,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			}
 			MemberGameData gameDataLog = new MemberGameData();
 			gameDataLog.setId( og.getId() );
-			if (og.getPlatformId().equals(EnumGamePlatform.AG_LIVE.getType())&& !StringUtils.isEmpty(og.getServerId())){
-				gameDataLog.setGameId( og.getServerId() );
-			}else {
-				gameDataLog.setGameId( og.getGameId() );
-			}
+			gameDataLog.setGameId( og.getGameId() );
+			gameDataLog.setGameRound(og.getGameRound());
 			gameDataLog.setAccount( og.getAccount() );
 			gameDataLog.setKindId( og.getKindId() );
 			gameDataLog.setCellScore( og.getCellScore() );
@@ -174,7 +165,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			gameDataLog.setPlatformType( platformType.get( og.getPlatformId() ) );
 			gameDataLog.setPlatformId( og.getPlatformId() );
 			gameDataLog.setRevenue( og.getRevenue() );
-
+			log.info("测试:{}", JSON.toJSONString(gameDataLog));
 			if ( beatRateMap.containsKey( og.getPlatformId() ) ) {
 				BigDecimal beatAdd =
 						new BigDecimal( og.getCellScore() ).multiply( beatRateMap.get( og.getPlatformId() ) ).setScale( 4,
@@ -280,7 +271,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			try {
 				memberInfoMapper.updateBeatCode( userId, c, w );
 			} catch ( Exception e ) {
-				log.error( "打码异常userId:{},code_account：{},code_total:{}", userId, c, w );
+				log.error( "打码异常userId:{},code_account：{},code_total:{}", userId, c, w ,e);
 			}
 
 		}
