@@ -4,6 +4,8 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -155,8 +157,10 @@ public class ServerOssServiceImpl implements IServerOssService {
 		Regions clientRegion = Regions.AP_NORTHEAST_1;//地区
 		String bucketName = serverOss.getBucket();//桶的名称
 		try {
+			BasicAWSCredentials creds = new BasicAWSCredentials("AKIA245SKQNKHAJBC4R5", "ORlBoUKEjQqP6thKO4XpPhXeNhEXBZQDPDRjkjUa");
 			AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 					.withRegion(clientRegion)
+					.withCredentials(new AWSStaticCredentialsProvider(creds))
 					.build();
 			s3Client.putObject(bucketName, path, newFile);
 			s3Client.shutdown();
