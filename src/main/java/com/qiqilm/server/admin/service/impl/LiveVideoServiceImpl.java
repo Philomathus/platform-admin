@@ -197,6 +197,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 		RedisCacheUtil.me.clear( id, LiveVideo.class );
 		if(profile.equals("7701")){
 			liveVideoMapper.updateLive7706Video( updateVideo );
+		} else if(profile.equals("7704")){
+			liveVideoMapper.updateLive7705Video( updateVideo );
 		}
 
 		return false;

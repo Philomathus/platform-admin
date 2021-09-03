@@ -43,6 +43,7 @@ public interface LiveVideoMapper {
 	public int updateLiveVideo(LiveVideo liveVideo);
 
 	public int updateLive7706Video(LiveVideo liveVideo);
+	public int updateLive7705Video(LiveVideo liveVideo);
 
 	/**
 	 * 修改直播,结束时间可以为null
