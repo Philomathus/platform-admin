@@ -59,7 +59,7 @@ public class ConfigEnvironmentController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:recommonPic:edit')" )
 	@GetMapping( value = "/getRecommonPic/{envCode}" )
 	public AjaxResult getInfoRecommonPic( @PathVariable( "envCode" ) String envCode ) {
-		return AjaxResult.success( configEnvironmentService.selectConfigEnvironmentById( envCode ) );
+		return AjaxResult.success( configEnvironmentService.selectConfigEnvironmentByIdTwo( envCode ) );
 	}
 
 	/**
