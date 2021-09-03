@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.domain.ConfigEnvironment;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IConfigEnvironmentService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +69,7 @@ public class ConfigEnvironmentController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:recommonPic:edit')" )
 	@PutMapping( value = "/updateRecommonPic" )
 	public AjaxResult updateRecommonPic( @RequestBody ConfigEnvironment configEnvironment ) {
+		configEnvironment.setEnvValue("${domain.oss}" + configEnvironment.getEnvValue());
 		return toAjax( configEnvironmentService.updateConfigEnvironment( configEnvironment ) );
 	}
 
