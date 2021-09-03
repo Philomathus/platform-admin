@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="selectWheelHistoryDiceVo">
-        select id, p_user_id, name, dice_name, c_time, dice_value, dice_id from ${dbMain}.wheel_history_dice
+        select id, p_user_id, name, dice_name, c_time, dice_value, dice_id from ${dbLive}.wheel_history_dice
     </sql>
 
     <select id="selectWheelHistoryDiceList" parameterType="WheelHistoryDice" resultMap="WheelHistoryDiceResult">
@@ -33,7 +33,7 @@
     </select>
 
     <insert id="insertWheelHistoryDice" parameterType="WheelHistoryDice" useGeneratedKeys="true" keyProperty="id">
-        insert into ${dbMain}.wheel_history_dice
+        insert into ${dbLive}.wheel_history_dice
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pUserId != null">p_user_id,</if>
             <if test="name != null">name,</if>
@@ -53,7 +53,7 @@
     </insert>
 
     <update id="updateWheelHistoryDice" parameterType="WheelHistoryDice">
-        update ${dbMain}.wheel_history_dice
+        update ${dbLive}.wheel_history_dice
         <trim prefix="SET" suffixOverrides=",">
             <if test="pUserId != null">p_user_id = #{pUserId},</if>
     
@@ -72,11 +72,11 @@
     </update>
 
     <delete id="deleteWheelHistoryDiceById" parameterType="Long">
-        delete from ${dbMain}.wheel_history_dice where id = #{id}
+        delete from ${dbLive}.wheel_history_dice where id = #{id}
     </delete>
 
     <delete id="deleteWheelHistoryDiceByIds" parameterType="String">
-        delete from ${dbMain}.wheel_history_dice where id in
+        delete from ${dbLive}.wheel_history_dice where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

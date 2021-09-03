@@ -8,7 +8,7 @@
     </resultMap>
 
     <sql id="selectWheelUserDiceVo">
-        select id, times from 7700_live.wheel_user_dice
+        select id, times from ${dbLive}.wheel_user_dice
     </sql>
 
     <select id="selectWheelUserDiceList" parameterType="WheelUserDice" resultMap="WheelUserDiceResult">
@@ -24,7 +24,7 @@
     </select>
 
     <insert id="insertWheelUserDice" parameterType="WheelUserDice">
-        insert into 7700_live.wheel_user_dice
+        insert into ${dbLive}.wheel_user_dice
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="times != null">times,</if>
@@ -36,7 +36,7 @@
     </insert>
 
     <update id="updateWheelUserDice" parameterType="WheelUserDice">
-        update 7700_live.wheel_user_dice
+        update ${dbLive}.wheel_user_dice
         <trim prefix="SET" suffixOverrides=",">
             <if test="times != null">times = #{times},</if>
     
@@ -44,7 +44,7 @@
         where id = #{id}
     </update>
     <update id="updateWheelUserDiceTimes" parameterType="WheelUserDice">
-        update 7700_live.wheel_user_dice
+        update ${dbLive}.wheel_user_dice
         <trim prefix="SET" suffixOverrides=",">
             <if test="times != null">times =times+ #{times},</if>
 
@@ -53,11 +53,11 @@
     </update>
 
     <delete id="deleteWheelUserDiceById" parameterType="String">
-        delete from 7700_live.wheel_user_dice where id = #{id}
+        delete from ${dbLive}.wheel_user_dice where id = #{id}
     </delete>
 
     <delete id="deleteWheelUserDiceByIds" parameterType="String">
-        delete from 7700_live.wheel_user_dice where id in
+        delete from ${dbLive}.wheel_user_dice where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

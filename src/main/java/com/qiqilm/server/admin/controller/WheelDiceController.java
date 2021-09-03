@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.LiveMount;
+import com.qiqilm.server.admin.service.ILiveMountService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,8 @@ import javax.servlet.http.HttpServletResponse;
 public class WheelDiceController extends BaseController {
 	@Autowired
 	private IWheelDiceService wheelDiceService;
+	@Autowired
+	private ILiveMountService liveMountService;
 
 	/**
 	 * 查询中秋博饼列表
@@ -73,6 +77,12 @@ public class WheelDiceController extends BaseController {
 	@Log( title = "中秋博饼", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody WheelDice wheelDice) {
+		if (wheelDice.getType().equals(2)) {
+			LiveMount liveMount = liveMountService.selectLiveMountById(Long.valueOf(wheelDice.getPrize()));
+			if (liveMount==null){
+				return AjaxResult.error("请填写正确的坐骑id");
+			}
+		}
 		return toAjax( wheelDiceService.insertWheelDice(wheelDice) );
 	}
 
