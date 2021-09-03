@@ -31,6 +31,11 @@
         </where>
     </select>
 
+    <select id="selectConfigEnvironmentTwo" parameterType="ConfigEnvironment" resultMap="ConfigEnvironmentResult">
+        <include refid="selectConfigEnvironmentVo"/>
+        where env_code in ("share_background", "share_icon")
+    </select>
+
     <select id="selectConfigEnvironmentById" parameterType="String" resultMap="ConfigEnvironmentResult">
         <include refid="selectConfigEnvironmentVo"/>
         where env_code = #{envCode}

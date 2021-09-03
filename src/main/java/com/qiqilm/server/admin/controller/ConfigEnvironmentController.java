@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.annotation.Log;
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -27,6 +28,8 @@ import java.util.List;
 public class ConfigEnvironmentController extends BaseController {
 	@Autowired
 	private IConfigEnvironmentService configEnvironmentService;
+	@Autowired
+	private ConfigDomainCacheUtil configDomainCacheUtil;
 
 	/**
 	 * 查询环境参数配置列表
@@ -37,6 +40,35 @@ public class ConfigEnvironmentController extends BaseController {
 		startPage();
 		List<ConfigEnvironment> list = configEnvironmentService.selectConfigEnvironmentList( configEnvironment );
 		return getDataTable( list );
+	}
+
+	/**
+	 * 查询推广图
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:recommonPic:list')" )
+	@GetMapping( "/listRecommonPic" )
+	public TableDataInfo listRecommonPic( ConfigEnvironment configEnvironment ) {
+		startPage();
+		List<ConfigEnvironment> list = configEnvironmentService.selectConfigEnvironmentTwo( configEnvironment );
+		return getDataTable( list );
+	}
+
+	/**
+	 * 获取推广图详细信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:recommonPic:edit')" )
+	@GetMapping( value = "/getRecommonPic/{envCode}" )
+	public AjaxResult getInfoRecommonPic( @PathVariable( "envCode" ) String envCode ) {
+		return AjaxResult.success( configEnvironmentService.selectConfigEnvironmentById( envCode ) );
+	}
+
+	/**
+	 * 修改推广图
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:recommonPic:edit')" )
+	@PutMapping( value = "/updateRecommonPic" )
+	public AjaxResult updateRecommonPic( @RequestBody ConfigEnvironment configEnvironment ) {
+		return toAjax( configEnvironmentService.updateConfigEnvironment( configEnvironment ) );
 	}
 
 	/**

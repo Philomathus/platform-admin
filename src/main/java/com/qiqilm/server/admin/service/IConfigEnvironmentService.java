@@ -19,6 +19,7 @@ public interface IConfigEnvironmentService {
 	 * @return 【请填写功能名称】
 	 */
 	public ConfigEnvironment selectConfigEnvironmentById(String envCode);
+	public ConfigEnvironment selectConfigEnvironmentByIdTwo(String envCode);
 
 	/**
 	 * 查询【请填写功能名称】列表
@@ -27,6 +28,7 @@ public interface IConfigEnvironmentService {
 	 * @return 【请填写功能名称】集合
 	 */
 	public List<ConfigEnvironment> selectConfigEnvironmentList(ConfigEnvironment configEnvironment);
+	public List<ConfigEnvironment> selectConfigEnvironmentTwo(ConfigEnvironment configEnvironment);
 
 	/**
 	 * 新增【请填写功能名称】
