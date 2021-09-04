@@ -69,7 +69,33 @@
     </insert>
 
     <insert id="insertLiveHostWageDay7706" parameterType="LiveHostWageDay" useGeneratedKeys="true" keyProperty="id">
-        insert ignore  into 7706_live.live_host_wage_day
+        insert ignore into 7706_live.live_host_wage_day
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="familyId != null">family_id,</if>
+            <if test="hostId != null">host_id,</if>
+            <if test="startTime != null and startTime != ''">start_time,</if>
+            <if test="endTime != null and endTime != ''">end_time,</if>
+            <if test="liveTimeSec != null">live_time_sec,</if>
+            <if test="ticket != null">ticket,</if>
+            <if test="lotteryCost != null">lottery_cost,</if>
+            <if test="times != null">times,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="familyId != null">#{familyId},</if>
+            <if test="hostId != null">#{hostId},</if>
+            <if test="startTime != null and startTime != ''">#{startTime},</if>
+            <if test="endTime != null and endTime != ''">#{endTime},</if>
+            <if test="liveTimeSec != null">#{liveTimeSec},</if>
+            <if test="ticket != null">#{ticket},</if>
+            <if test="lotteryCost != null">#{lotteryCost},</if>
+            <if test="times != null">#{times},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertLiveHostWageDay7705" parameterType="LiveHostWageDay" useGeneratedKeys="true" keyProperty="id">
+        insert ignore into 7705_live.live_host_wage_day
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="familyId != null">family_id,</if>
@@ -247,6 +273,50 @@
         </where>) t
         GROUP BY t.family_id ORDER BY t.family_id
     </select>
+
+    <select id="familyPage_7705" resultType="com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily">
+        select
+        t.family_id familyId,
+        t.name familyName,
+        t.user_id familyUserId,
+        t.nick_name familyNickName,
+        SUM(t.livetime) as livetime,
+        SUM(t.livetimejiesuan) as livetimejiesuan,
+        SUM(t.liwu) as liwu,
+        SUM(t.ticket) as liwujiesuan,
+        SUM(t.lottery_cost) as lotteryCost,
+        SUM(t.cost_qianliu) as costQianliu,
+        SUM(t.times) as times
+        from (
+        select
+        d.family_id,
+        f.user_id,
+        f.name,
+        f.nick_name,
+        d.host_id,
+        convert(d.live_time_sec/60/60,decimal(10,2)) as livetime,
+        u.weibo_money as lwrenwu,
+        u.weixin_price as screnwu,
+        u.coin,
+        IF(u.weixin_price > convert(d.live_time_sec/60/60,decimal(10,2)) or u.weibo_money > d.ticket ,0, convert(u.weixin_price * u.coin,decimal(10,2))) as livetimejiesuan,
+        d.ticket as liwu,
+        IFNULL(u.ypoint,0) as liwujiesuanbili,
+        convert(IFNULL(d.ticket,0) * IFNULL(u.ypoint,0),decimal(10,2)) as ticket,
+        d.lottery_cost,IFNULL(u.xpoint,0) as lotterylibi,
+        convert(IFNULL(d.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as cost_qianliu,
+        d.times
+        from ${dbLive}.live_host_wage_day d
+        LEFT JOIN ${dbLive}.live_user u on d.host_id = u.id
+        LEFT JOIN ${dbLive}.live_family f on d.family_id=f.id
+        <where>
+            <if test="dto.dateDay!=null">and d.id like '${dto.dateDay}%'</if>
+            <if test="dto.familyId!=null">and d.family_id = #{dto.familyId}</if>
+            <if test="dto.familyName!=null and dto.familyName!=''">and f.name like concat('%',#{dto.familyName},'%')</if>
+            <if test="dto.familyNickName!=null and dto.familyNickName!=''">and f.nick_name like concat('%',#{dto.familyNickName},'%')</if>
+        </where>) t
+        GROUP BY t.family_id ORDER BY t.family_id
+    </select>
+
     <select id="hostPage_7706" resultType="com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList">
         select
         d.family_id familyId,
@@ -280,6 +350,41 @@
         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
         order by d.family_id
     </select>
+
+    <select id="hostPage_7705" resultType="com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList">
+        select
+        d.family_id familyId,
+        d.host_id hostId,
+        d.ticket liwu,
+        convert(d.live_time_sec/60/60,decimal(10,2)) as livetime,
+        d.lottery_cost lotteryCost,
+        d.times,
+        f.name familyName,
+        d.start_time as startTime,
+        d.end_time as endTime,
+        f.user_id familyUserId,
+        f.nick_name familyNickName,
+        u.nick_name nickName,
+        IFNULL(u.xpoint,0) as lotteryBili,
+        IFNULL(u.ypoint,0) as liwujiesuanbili,
+        IFNULL(d.ticket,0) * IFNULL(u.ypoint,0) as ticket,
+        convert(IFNULL(d.lottery_cost,0) * IFNULL(u.xpoint,0),decimal(10,2)) as costQianliu,
+        IF(u.weixin_price > convert(d.live_time_sec/60/60,decimal(10,2)) or u.weibo_money > d.ticket ,0, convert(u.weixin_price * u.coin,decimal(10,2))) as livetimejiesuan,
+        <!--        SUBSTR(d.start_time,1,10) as shijian,-->
+        u.coin,
+        u.weibo_money as lwrenwu,
+        u.weixin_price as screnwu
+        from ${dbLive}.live_host_wage_day d
+        left join ${dbLive}.live_family f on d.family_id=f.id
+        left join ${dbLive}.live_user u on d.host_id=u.id
+        where d.live_time_sec > 0
+        <if test="dto.dateDay!=null">and d.id like '${dto.dateDay}%'</if>
+        <if test="dto.familyId!=null">and d.family_id = #{dto.familyId}</if>
+        <if test="dto.hostId!=null">and d.host_id = #{dto.hostId}</if>
+        <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
+        order by d.family_id
+    </select>
+
     <select id="callprorepLivehostwagedays" statementType="CALLABLE" resultType="java.lang.String">
       {call ${dbLive}.prorep_livehostwagedays(#{p_begintime,mode=IN,jdbcType=VARCHAR},#{p_endtime,mode=IN,jdbcType=VARCHAR},#{kj_result,mode=OUT,jdbcType=VARCHAR})}
     </select>

@@ -88,6 +88,27 @@
 		</where>
 	</select>
 
+	<select id="selectLiveVideoPropList7705" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
+		select lvp.id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id,
+		lvp.p_user_id perUserId, p_user_name, to_user_id, lu.nick_name, FROM_UNIXTIME(lvp.create_time) create_time , create_date, create_y, create_m, create_d,
+		create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private,
+		from_ip, is_coin from ${dbLive}.live_video_prop lvp left join cx_live.live_user lu on lvp.to_user_id = lu.id
+		<where>
+			<if test="pUserId != null and pUserId != ''">
+				and lvp.p_user_id = #{pUserId}
+			</if>
+			<if test="toUserId != null and toUserId != ''">
+				and lvp.to_user_id =#{toUserId}
+			</if>
+			<if test="propName != null and propName != ''">
+				and lvp.prop_name =#{propName}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				and FROM_UNIXTIME(lvp.create_time) <![CDATA[ >= ]]> #{startTime}
+				and FROM_UNIXTIME(lvp.create_time) <![CDATA[ <= ]]> #{endTime}
+			</if>
+		</where>
+	</select>
 
 	<select id="selectLiveVideoPropById" parameterType="Long" resultMap="LiveVideoPropResult">
 		<include refid="selectLiveVideoPropVo"/>
@@ -183,11 +204,19 @@
         select to_user_id hostId, IFNULL(SUM(total_ticket),0) sumHostProp from 7706_live.live_video_prop  where to_user_id > 0 and  p_user_id not in (select id from 7706_main.member_info where  status = 2) and create_date = #{dayTime} GROUP BY to_user_id
 	</select>
 
+	<select id="sumHostPropDay7705List" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
+		select to_user_id hostId, IFNULL(SUM(total_ticket),0) sumHostProp from 7705_live.live_video_prop  where to_user_id > 0 and  p_user_id not in (select id from 7705_main.member_info where  status = 2) and create_date = #{dayTime} GROUP BY to_user_id
+	</select>
+
 	<select id="sumHostLotteryDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
 		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from  ${dbLottery}.lottery_bet_bb_view  where  update_time <![CDATA[ >= ]]> #{begin} and update_time <![CDATA[ <= ]]> #{end} and anchor >0 and puser_id not in (select id from ${dbMain}.member_info where  status = 2)   GROUP BY anchor
 	</select>
 
 	<select id="sumHostLotteryDay7706List" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
 		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from  7706_lottery.lottery_bet_bb_view  where  update_time <![CDATA[ >= ]]> #{begin} and update_time <![CDATA[ <= ]]> #{end} and anchor >0 and puser_id not in (select id from 7706_main.member_info where  status = 2)   GROUP BY anchor
+	</select>
+
+	<select id="sumHostLotteryDay7705List" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
+		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from  7705_lottery.lottery_bet_bb_view  where  update_time <![CDATA[ >= ]]> #{begin} and update_time <![CDATA[ <= ]]> #{end} and anchor >0 and puser_id not in (select id from 7705_main.member_info where  status = 2)   GROUP BY anchor
 	</select>
 </mapper>
