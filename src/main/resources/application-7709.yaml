@@ -5,7 +5,7 @@ spring:
       username: 77tv_web
       password: 77tvweb_oradba
     secondary:
-      jdbc-url: jdbc:mysql://rdsdb-7709.c6uwqqgyc6gv.ap-northeast-1.rds.amazonaws.com:3306/db_data?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://datacenters.rwlb.rds.aliyuncs.com:3306/db_data?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: 77tv_web
       password: 77tvweb_oradba
   redis:
