@@ -16,7 +16,7 @@
     </sql>
 
     <select id="selectMemberGameDatafixList" parameterType="MemberGameDatafix" resultMap="MemberGameDatafixResult">
-        select m.id, m.user_id, m.game_start_time, m.game_end_time, m.platform_id, m.status, g.name from ${dbMain}.member_game_datafix m LEFT JOIN ${dbMain}.game_platform g on m.platform_id = g.id
+        select m.id, m.user_id, m.game_start_time, m.game_end_time, m.platform_id, m.status, g.name platformName from ${dbMain}.member_game_datafix m LEFT JOIN ${dbMain}.game_platform g on m.platform_id = g.id
         <where>
             <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
             <if test="gameStartTime != null  and gameStartTime != ''"> and game_start_time = #{gameStartTime}</if>
