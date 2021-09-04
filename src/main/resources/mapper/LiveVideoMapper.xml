@@ -825,11 +825,19 @@
         select id from  live_video where live_in = 1 and sort_init = (select MAX(sort_init) from  live_video where live_in = 1 and is_recommend = 1) limit 1
     </select>
 
-    <select id="getMaxSortInitShareLiveId" resultType="Long">
+    <select id="getMaxSortInitShareLiveId7706" resultType="Long">
        select id from  7706_live.live_video where live_in = 1 and sort_init = (select MAX(sort_init) from  7706_live.live_video where live_in = 1 and is_recommend = 1) limit 1
     </select>
 
-    <select id="getLiveVideoShare" resultMap="LiveVideoResult">
+    <select id="getMaxSortInitShareLiveId7705" resultType="Long">
+        select id from  7705_live.live_video where live_in = 1 and sort_init = (select MAX(sort_init) from  7705_live.live_video where live_in = 1 and is_recommend = 1) limit 1
+    </select>
+
+    <select id="getLiveVideoShare7706" resultMap="LiveVideoResult">
          select * from  7706_live.live_video WHERE id = #{hostId}
+    </select>
+
+    <select id="getLiveVideoShare7705" resultMap="LiveVideoResult">
+        select * from  7705_live.live_video WHERE id = #{hostId}
     </select>
 </mapper>

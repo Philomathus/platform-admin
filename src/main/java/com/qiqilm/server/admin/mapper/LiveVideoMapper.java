@@ -77,7 +77,9 @@ public interface LiveVideoMapper {
 
 	Long getMaxSortInitLiveId();
 
-	Long getMaxSortInitShareLiveId();
+	Long getMaxSortInitShareLiveId7706();
+	Long getMaxSortInitShareLiveId7705();
 
-	LiveVideo getLiveVideoShare(@Param( "hostId" ) Long hostId);
+	LiveVideo getLiveVideoShare7706(@Param( "hostId" ) Long hostId);
+	LiveVideo getLiveVideoShare7705(@Param( "hostId" ) Long hostId);
 }

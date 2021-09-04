@@ -59,7 +59,9 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
         List<RspLiveHostWageDayFamily> liveHostWageDays;
         if(profile.equals("7706")){
             liveHostWageDays = liveHostWageDayMapper.familyPage_7706(dto);
-        }else {
+        } else if(profile.equals("7705")){
+            liveHostWageDays = liveHostWageDayMapper.familyPage_7705(dto);
+        } else {
             liveHostWageDays = liveHostWageDayMapper.familyPage( dto );
         }
         if (liveHostWageDays.size()>0 && liveHostWageDays!=null){
@@ -90,7 +92,9 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
         List<RspLiveHostWageDayList> liveHostWageDays;
         if(profile.equals("7706")){
             liveHostWageDays = liveHostWageDayMapper.hostPage_7706(dto);
-        }else {
+        } else if(profile.equals("7705")){
+            liveHostWageDays = liveHostWageDayMapper.hostPage_7705(dto);
+        } else{
             liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
         }
         if (liveHostWageDays.size()>0 && liveHostWageDays!=null){
