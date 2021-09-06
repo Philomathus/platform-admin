@@ -60,8 +60,8 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
             log.info("游戏会员id后缀"+reqMemberGameData.getAccount()+";pattern"+pattern);
             if (pattern.matcher(tableLast).matches()) {
-                log.info("游戏会员id后缀"+reqMemberGameData.getAccount()+";tableLast"+reqMemberGameData.getTableLast());
                 reqMemberGameData.setTableLast(tableLast);
+                log.info("游戏会员id后缀"+reqMemberGameData.getAccount()+";tableLast"+reqMemberGameData.getTableLast());
             } else {
                 reqMemberGameData.setTableLast("0");
             }
