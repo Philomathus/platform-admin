@@ -88,7 +88,7 @@
         cg.platform_name AS platformName,
         cg.son_platform_name AS sonPlatformName
         FROM
-        ${dbMain}.member_game_data${tableLast} m
+        ${dbMain}.member_game_data#{tableLast} m
         LEFT JOIN config_gametype cg ON m.agent = cg.platform_id
         AND m.kind_id = cg.son_platform_id
         <where>
