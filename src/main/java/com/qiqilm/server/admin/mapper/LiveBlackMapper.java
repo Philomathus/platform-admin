@@ -25,10 +25,12 @@ public interface LiveBlackMapper {
 
 
 	List<LiveBlack> selectLiveBlackList7706(LiveBlack liveBlack);
+	List<LiveBlack> selectLiveBlackList7705(LiveBlack liveBlack);
 
 	int deleteLiveBlackById(Long id);
 
 	int deleteLiveBlackById7706(Long id);
+	int deleteLiveBlackById7705(Long id);
 
 	Set userBlackList(Long host_id);
 }
