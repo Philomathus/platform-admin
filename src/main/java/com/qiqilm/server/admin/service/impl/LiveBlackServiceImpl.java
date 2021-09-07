@@ -50,15 +50,15 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
                 }
             }
             return liveBlackList7706;
-        } else if (profile.equals("7705")) {
-            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7705(liveBlack);
-            List<LiveBlack> liveBlackList7705 = new ArrayList<>();
-            for (LiveBlack liveBlack1 : liveBlackAllList) {
-                if (liveBlack1.getBlackUserId().startsWith("7705")) {
-                    liveBlackList7705.add(liveBlack1);
-                }
-            }
-            return liveBlackList7705;
+//        } else if (profile.equals("7705")) {
+//            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7705(liveBlack);
+//            List<LiveBlack> liveBlackList7705 = new ArrayList<>();
+//            for (LiveBlack liveBlack1 : liveBlackAllList) {
+//                if (liveBlack1.getBlackUserId().startsWith("7705")) {
+//                    liveBlackList7705.add(liveBlack1);
+//                }
+//            }
+//            return liveBlackList7705;
         } else if (profile.equals("7701")) {
             List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
             List<LiveBlack> liveBlackList7701 = new ArrayList<>();
