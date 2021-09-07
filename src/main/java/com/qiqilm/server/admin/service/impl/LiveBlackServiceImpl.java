@@ -88,8 +88,8 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
         int num;
         if (liveBlack.getBlackUserId().startsWith("7706")) {
             num = liveBlackMapper.deleteLiveBlackById7706(liveBlack.getId());
-        } else if (liveBlack.getBlackUserId().startsWith("7705")) {
-            num = liveBlackMapper.deleteLiveBlackById7705(liveBlack.getId());
+//        } else if (liveBlack.getBlackUserId().startsWith("7705")) {
+//            num = liveBlackMapper.deleteLiveBlackById7705(liveBlack.getId());
         } else {
             num = liveBlackMapper.deleteLiveBlackById(liveBlack.getId());
         }
