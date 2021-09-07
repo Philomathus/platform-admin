@@ -55,10 +55,13 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
         }
         if (StringUtils.isNotBlank(reqMemberGameData.getAccount())) {
             String tableLast = reqMemberGameData.getAccount().substring(reqMemberGameData.getAccount().length() - 1);
+            log.info("游戏会员id后缀"+reqMemberGameData.getAccount()+";表名称"+tableLast);
             //判断是否为数字
             Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+            log.info("游戏会员id后缀"+reqMemberGameData.getAccount()+";pattern"+pattern);
             if (pattern.matcher(tableLast).matches()) {
                 reqMemberGameData.setTableLast(tableLast);
+                log.info("游戏会员id后缀"+reqMemberGameData.getAccount()+";tableLast"+reqMemberGameData.getTableLast());
             } else {
                 reqMemberGameData.setTableLast("0");
             }
