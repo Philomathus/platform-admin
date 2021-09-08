@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LiveBlackMapper">
+
+    <resultMap type="LiveBlack" id="LiveBlackResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="hostId"    column="host_id"    />
+        <result property="blackUserId"    column="black_user_id"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectLiveBlackVo">
+        select id,  FROM_UNIXTIME(create_time) create_time,  host_id, black_user_id, remark from ${dbLive}.live_black
+    </sql>
+
+    <select id="selectLiveBlackList" resultType="com.qiqilm.server.admin.domain.LiveBlack">
+        SELECT
+        g.id,
+        g.remark,
+        g.create_time as createTime,
+        g.black_user_id as blackUserId,
+        g.host_id as hostId,
+        m.vip,
+        m.nick_name as nickName,
+        r.nick_name as hostName
+        FROM
+        ${dbLive}.live_black g
+        LEFT JOIN ${dbLive}.live_user r ON g.host_id = r.id
+        INNER JOIN ${dbMain}.member_info m ON g.black_user_id = m.id
+        <where>
+            <if test="hostId != null "> and host_id = #{hostId}</if>
+            <if test="blackUserId != null  and blackUserId != ''"> and black_user_id = #{blackUserId}</if>
+        </where>
+        ORDER BY g.create_time desc
+    </select>
+
+    <select id="selectLiveBlackList7706" resultType="com.qiqilm.server.admin.domain.LiveBlack">
+        SELECT
+        g.id,
+        g.remark,
+        g.host_id as hostId,
+        g.create_time as createTime,
+        g.black_user_id as blackUserId,
+        m.vip,
+        m.nick_name as nickName,
+        r.nick_name as hostName
+        FROM
+        cx_live.live_black g
+        LEFT JOIN cx_live.live_user r ON g.host_id = r.id
+        INNER JOIN 7706_main.member_info m ON g.black_user_id = m.id
+        <where>
+            <if test="hostId != null "> and host_id = #{hostId}</if>
+            <if test="blackUserId != null  and blackUserId != ''"> and black_user_id = #{blackUserId}</if>
+        </where>
+        ORDER BY g.create_time desc
+    </select>
+
+    <select id="selectLiveBlackList7705" resultType="com.qiqilm.server.admin.domain.LiveBlack">
+        SELECT
+        g.id,
+        g.remark,
+        g.host_id as hostId,
+        g.create_time as createTime,
+        g.black_user_id as blackUserId,
+        m.vip,
+        m.nick_name as nickName,
+        r.nick_name as hostName
+        FROM
+        cx_live.live_black g
+        LEFT JOIN cx_live.live_user r ON g.host_id = r.id
+        INNER JOIN 7705_main.member_info m ON g.black_user_id = m.id
+        <where>
+            <if test="hostId != null "> and host_id = #{hostId}</if>
+            <if test="blackUserId != null  and blackUserId != ''"> and black_user_id = #{blackUserId}</if>
+        </where>
+        ORDER BY g.create_time desc
+    </select>
+
+    <delete id="deleteLiveBlackById" parameterType="Long">
+        delete from ${dbLive}.live_black where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveBlackById7706" parameterType="Long">
+        delete from cx_live.live_black where id = #{id}
+    </delete>
+
+    <delete id="deleteLiveBlackById7705" parameterType="Long">
+        delete from 7704_live.live_black where id = #{id}
+    </delete>
+
+    <select id="userBlackList" resultType="java.lang.String">
+        select black_user_id from ${dbLive}.live_black where host_id = #{host_id}
+    </select>
+</mapper>

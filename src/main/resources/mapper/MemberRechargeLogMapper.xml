@@ -22,6 +22,7 @@
 		<result property="orderNo" column="order_no"/>
 		<result property="discountBill" column="discount_bill"/>
 		<result property="first" column="first"/>
+		<result property="memberCardRealName" column="member_card_real_name"/>
 	</resultMap>
 
 	<sql id="selectMemberRechargeLogVo">
@@ -43,7 +44,8 @@
 			   order_no,
 			   discount_bill,
 			   first,
-		       ip
+		       ip,
+		       member_card_real_name
 		from member_recharge_log
 	</sql>
 
@@ -53,10 +55,11 @@
 	</select>
 
 	<select id="MemberRechargeLogLists"  resultMap="MemberRechargeLogResult">
-		select member_id,
-        ifnull(sum(recharge_money),0) as recharge_money from member_recharge_log
-        where status=3 and date_format(create_time,'%y%m%d') =  DATE_ADD(CURDATE(), INTERVAL -1 DAY)
-        GROUP BY member_id
+		select l.member_id,
+        ifnull(sum(l.recharge_money),0) as recharge_money from member_recharge_log l
+        left join member_info m ON l.member_id = m.id
+        where l.status=3 and m.status=1 and date_format(l.create_time,'%y%m%d') =  DATE_ADD(CURDATE(), INTERVAL -1 DAY)
+        GROUP BY l.member_id
      </select>
 
 

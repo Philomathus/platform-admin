@@ -78,7 +78,7 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
-        log.info(payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("rtn_code", "").toString();
             if (code.equals("0001")) {
@@ -182,7 +182,7 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.valueOf(statusCode));
                 }
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("rtn_msg", "").toString();
             }
         } catch (
                 Exception e) {

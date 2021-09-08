@@ -36,6 +36,7 @@ public interface PayPlatformNewMapper {
 	 * @return 结果
 	 */
 	public int insertPayPlatformNew(PayPlatformNew payPlatformNew);
+	public int insertPayPlatformNewAll(String a);
 
 	//新增支付对接配置
 	public int insertPayPlatformConfig(PayPlatformNewConfig payPlatformNewConfig);

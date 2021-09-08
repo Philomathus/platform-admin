@@ -71,7 +71,7 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
-		log.info( "特仑苏2代付下单结果" + JsonUtil.object2Json(resultMap) );
+		log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
 		if ( !CollectionUtils.isEmpty( resultMap ) ) {
 			if ( "success".equals( resultMap.getOrDefault( "msg", "" ).toString() ) ) {
 				log.warn( "特仑苏2代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
@@ -195,7 +195,7 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 							orderState );
 				}
 			}
-			return JsonUtil.object2Json(resultMap);
+			return resultMap.getOrDefault("msg", "").toString();
 		}
 		return "特仑苏2代付查询失败,订单号:"+withdrawLog.getOrderNo();
 	}

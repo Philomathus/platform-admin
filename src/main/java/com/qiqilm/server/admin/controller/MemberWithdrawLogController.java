@@ -158,6 +158,12 @@ public class MemberWithdrawLogController extends BaseController {
 		return memberWithdrawLogService.artificial( req );
 	}
 
+	@Log( title = "修改备注", businessType = BusinessType.AUDIT )
+	@PostMapping( "/updateRemark" )
+	public AjaxResult updateRemark( @RequestBody ReqMemberWithdrawLog req ) {
+		return memberWithdrawLogService.updateRemark( req );
+	}
+
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:abnormalWithdrawal')" )
 	@Log( title = "会员出款异常", businessType = BusinessType.AUDIT )
 	@PutMapping( "/abnormalWithdrawal" )

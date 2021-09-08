@@ -79,7 +79,7 @@ public class HuaZiPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(e.getMessage());
         }
-        log.info("华子代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("T".equals(resultMap.getOrDefault("status", "").toString())) {
                 log.info("华子代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
@@ -196,7 +196,7 @@ public class HuaZiPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
                         Integer.parseInt(orderState));
             }
-            return JsonUtil.object2Json(resultMap);
+            return resultMap.getOrDefault("msg", "").toString();
         }
         return "华子代付查询失败,订单号:"+withdrawLog.getOrderNo();
     }

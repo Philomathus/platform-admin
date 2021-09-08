@@ -52,3 +52,9 @@ payAgentLimitHongBoPay: 50000
 payAgentLimitXiaoYuePay: 50000
 # 银联代付额度
 payAgentLimitYinLianPay: 50000
+# 爱农代付额度
+payAgentLimitAiNongPay: 50000
+# 众家代付额度
+payAgentLimitZhongJiaPay: 50000
+# 老乡代付额度
+payAgentLimitLaoXiangPay: 50000

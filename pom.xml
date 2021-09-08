@@ -37,6 +37,34 @@
 		<maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
 	</properties>
 
+
+	<profiles>
+		<profile>
+			<id>7700</id>
+			<properties>
+				<spring.profiles.active>7700</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>7701</id>
+			<properties>
+				<spring.profiles.active>7701</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>7702</id>
+			<properties>
+				<spring.profiles.active>7702</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>7703</id>
+			<properties>
+				<spring.profiles.active>7703</spring.profiles.active>
+			</properties>
+		</profile>
+	</profiles>
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- Spring Boot依赖配置-->
