@@ -38,8 +38,8 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
         List<LiveVideoProp> liveVideoProps = null;
         if("7706".equals(profile)) {
             liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7706(liveVideoProp1);
-        } else if("7705".equals(profile)) {
-            liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7705(liveVideoProp1);
+//        } else if("7705".equals(profile)) {
+//            liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7705(liveVideoProp1);
         } else {
             liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
         }

@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.utils;
 
 import org.apache.commons.codec.binary.Base64;
-import sun.misc.BASE64Decoder;
+import org.springframework.util.Base64Utils;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -42,7 +42,7 @@ public class AesUtil {
 
 	//字节解密
 	public static byte[] base64Decode(String base64Code) throws Exception{
-		return new BASE64Decoder().decodeBuffer(base64Code);
+		return Base64Utils.decodeFromString( base64Code);
 	}
 	//字符串加密
 	public static String aesEncrypt(String content, String encryptKey) throws Exception {

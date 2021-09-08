@@ -1,8 +1,32 @@
 package com.qiqilm.server.admin.utils.nanKaiPayAgentUtils;
 
+import com.alibaba.fastjson.JSONObject;
+import com.qiqilm.server.admin.utils.JsonUtil;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.springframework.util.Base64Utils;
+
+import javax.crypto.Cipher;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.*;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -11,38 +35,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
-import javax.crypto.Cipher;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import com.qiqilm.server.admin.utils.JsonUtil;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.util.EntityUtils;
-import com.alibaba.fastjson.JSONObject;
-
-import java.security.cert.CertificateException;
-
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 
 /*
@@ -140,15 +135,9 @@ public class HttpClientUtils extends DefaultHttpClient {
 
     }
 
-    public static byte[] decryptBASE64(String key) throws Exception {
-
-        return (new BASE64Decoder()).decodeBuffer(key);
-
-    }
-
     public static String encryptBASE64(byte[] key) throws Exception {
 
-        String keys = (new BASE64Encoder()).encodeBuffer(key);
+        String keys = Base64Utils.encodeToString(key);
 
         if (keys != null) {
             Pattern p = Pattern.compile("\\s*|\t|\r|\n");
