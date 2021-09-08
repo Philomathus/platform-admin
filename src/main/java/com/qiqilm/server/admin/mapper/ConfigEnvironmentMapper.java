@@ -27,6 +27,7 @@ public interface ConfigEnvironmentMapper {
 	 * @return 环境参数配置集合
 	 */
 	public List<ConfigEnvironment> selectConfigEnvironmentList( ConfigEnvironment configEnvironment );
+	public List<ConfigEnvironment> selectConfigEnvironmentTwo( ConfigEnvironment configEnvironment );
 
 	/**
 	 * 新增环境参数配置
