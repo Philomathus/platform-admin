@@ -1,4 +1,4 @@
-FROM public.ecr.aws/k1q4o5j3/openjdk-8-jre:latest
+FROM public.ecr.aws/r2e4u8r8/openjdk-8-jre:latest
 
 RUN mkdir -p /opt/platform-admin/logs/ /opt/platform-admin/tmp/
 
