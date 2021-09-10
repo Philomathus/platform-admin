@@ -25,6 +25,7 @@
             <if test="cTime != null "> and c_time = #{cTime}</if>
             <if test="diceId != null "> and dice_id = #{diceId}</if>
         </where>
+        ORDER BY c_time DESC
     </select>
 
     <select id="selectWheelHistoryDiceById" parameterType="Long" resultMap="WheelHistoryDiceResult">
