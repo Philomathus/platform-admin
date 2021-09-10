@@ -29,7 +29,7 @@ public class WheelLotteryTask {
 	@Resource
 	private RedisUtil redisUtil;
 
-	@Scheduled(cron="0 0 16 * * ?")// 每天16:00点执行一次
+	@Scheduled(cron="0 37 14 * * ?")// 每天16:00点执行一次
 	public void cashBackTask() {
 		String lottery_wheel_switch = sysConfigCacheUtil.getConf("lottery_wheel_switch","0");
 		if(!("1").equals(lottery_wheel_switch)){
@@ -40,6 +40,10 @@ public class WheelLotteryTask {
 		}
 		//查询昨天公司入款金额
 		List<MemberRechargeLog> memberRechargeLogs = memberRechargeLogService.memberRechargeLogLists();
+		if (memberRechargeLogs == null || memberRechargeLogs.size() == 0){
+			log.warn("昨日没充值数据");
+			return;
+		}
 		long now = System.currentTimeMillis();
 		for (MemberRechargeLog memberRechargeLog:memberRechargeLogs){
 			//抽奖次数
@@ -57,13 +61,14 @@ public class WheelLotteryTask {
 	}
 
 	private boolean updateLotteryTimes(String userId,Integer times){
-		WheelUserDice wheelUserDice = wheelUserDiceMapper.selectWheelUserDiceById(userId);
+		WheelUserDice wheelUserDice=wheelUserDiceMapper.selectWheelUserDiceById(userId);
+		WheelUserDice wheelDice=new WheelUserDice();
+		wheelDice.setTimes(times);
 		if ( wheelUserDice == null) {
-			wheelUserDice.setId(userId);
-			wheelUserDice.setTimes(times);
-			return wheelUserDiceMapper.insertWheelUserDice(wheelUserDice)>0;
+			wheelDice.setId(userId);
+			return wheelUserDiceMapper.insertWheelUserDice(wheelDice)>0;
 		}
-		return wheelUserDiceMapper.updateWheelUserDice(wheelUserDice)>0;
+		return wheelUserDiceMapper.updateWheelUserDiceTimes(wheelDice)>0;
 	}
 
 }

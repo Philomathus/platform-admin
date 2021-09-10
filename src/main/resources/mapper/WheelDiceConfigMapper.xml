@@ -29,7 +29,7 @@
         where id = #{id}
     </select>
     <select id="selectWheelDiceBycash" resultType="java.lang.Integer">
-        select rebate from ${dbMain}.wheel_dice_config
+        select lottery_times from wheel_dice_config
         where status =1 and  deposit_total_min <![CDATA[ <= ]]> #{cash}
         and deposit_total_max > #{cash}
     </select>
