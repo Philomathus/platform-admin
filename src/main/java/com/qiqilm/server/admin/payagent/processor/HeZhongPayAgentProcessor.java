@@ -49,6 +49,7 @@ public class HeZhongPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + "&" + signMd5;
+        log.info("合众代付签名前字符串:{}",tempStr);
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         bodyMap.put("sign", sign);
 
