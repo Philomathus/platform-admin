@@ -42,6 +42,10 @@ public class ChatComplaint extends BaseEntity {
     @Excel(name = "审批备注")
     private String comments;
 
+    /** 审批备注 */
+    @Excel(name = "客服代充账号")
+    private String account;
+
     /** 处理状态(0未处理 1已处理 2驳回) */
     @Excel(name = "处理状态(0未处理 1已处理 2驳回)")
     private String status;

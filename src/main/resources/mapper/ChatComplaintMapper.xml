@@ -12,10 +12,11 @@
         <result property="comments"    column="comments"    />
         <result property="createTime"    column="create_time"    />
         <result property="status"    column="status"    />
+        <result property="account"    column="account"    />
     </resultMap>
 
     <sql id="selectChatComplaintVo">
-        select id, remark, user_id, kf_id, processing_time, approver, comments, create_time, status from chat_complaint
+        select id, remark, user_id, kf_id, account, processing_time, approver, comments, create_time, status from chat_complaint
     </sql>
 
     <select id="selectChatComplaintList" parameterType="ChatComplaint" resultMap="ChatComplaintResult">
@@ -27,6 +28,7 @@
             <if test="approver != null  and approver != ''"> and approver = #{approver}</if>
             <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="account != null "> and account = #{account}</if>
         </where>
     </select>
 
@@ -46,6 +48,7 @@
             <if test="comments != null">comments,</if>
             <if test="createTime != null">create_time,</if>
             <if test="status != null">status,</if>
+            <if test="account != null">account,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="remark != null">#{remark},</if>
@@ -56,6 +59,7 @@
                     <if test="comments != null">#{comments},</if>
                 <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
                     <if test="status != null">#{status},</if>
+                    <if test="account != null">#{account},</if>
              </trim>
     </insert>
 
@@ -77,6 +81,8 @@
             <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
     
             <if test="status != null">status = #{status},</if>
+
+            <if test="account != null">account = #{account},</if>
     
         </trim>
         where id = #{id}
