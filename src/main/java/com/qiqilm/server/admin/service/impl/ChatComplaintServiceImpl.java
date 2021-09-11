@@ -1,7 +1,11 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.ChatComplaintMapper;
@@ -18,6 +22,8 @@ import com.qiqilm.server.admin.service.IChatComplaintService;
 public class ChatComplaintServiceImpl implements IChatComplaintService {
     @Autowired
     private ChatComplaintMapper chatComplaintMapper;
+    @Autowired
+    private TokenService       tokenService;
 
     /**
      * 查询客服投诉
@@ -61,6 +67,10 @@ public class ChatComplaintServiceImpl implements IChatComplaintService {
      */
     @Override
     public int updateChatComplaint(ChatComplaint chatComplaint) {
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        chatComplaint.setApprover(userName);
+        chatComplaint.setProcessingTime(new Date());
         return chatComplaintMapper.updateChatComplaint(chatComplaint);
     }
 
