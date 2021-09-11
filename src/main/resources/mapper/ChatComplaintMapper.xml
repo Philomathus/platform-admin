@@ -24,11 +24,15 @@
         <where>
             <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
             <if test="kfId != null  and kfId != ''"> and kf_id = #{kfId}</if>
-            <if test="processingTime != null "> and processing_time = #{processingTime}</if>
             <if test="approver != null  and approver != ''"> and approver = #{approver}</if>
             <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="account != null "> and account = #{account}</if>
+            <if test="selectDate != null and selectDate != ''"><!-- 开始时间检索 -->
+                and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 
