@@ -44,6 +44,11 @@ public class ChatComplaintServiceImpl implements IChatComplaintService {
      */
     @Override
     public List<ChatComplaint> selectChatComplaintList(ChatComplaint chatComplaint) {
+        String[] selectDate = chatComplaint.getSelectDate();
+        if ( selectDate != null && selectDate.length > 0 ) {
+            chatComplaint.setSelectStartDate( selectDate[ 0 ]+ " 00:00:00");
+            chatComplaint.setSelectEndDate( selectDate[ 1 ] + " 23:59:59" );
+        }
         return chatComplaintMapper.selectChatComplaintList(chatComplaint);
     }
 
