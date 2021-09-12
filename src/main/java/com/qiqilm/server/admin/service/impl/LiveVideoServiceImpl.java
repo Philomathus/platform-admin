@@ -17,7 +17,9 @@ import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.bouncycastle.crypto.digests.MD5Digest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -244,7 +246,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			try {
 				long time = System.currentTimeMillis();
 				ext.put( "systemtime", time );
-				String signData = video.getId().toString() + video.getMaxWatchNumber().toString() + why + time;
+				String signData = video.getId().toString() + video.getMaxWatchNumber().toString() + why + time + DigestUtils.md5Hex(video.getId() + "qewqeqewqe");
 				log.warn( signData );
 				ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
 
