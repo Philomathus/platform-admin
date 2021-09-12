@@ -254,7 +254,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
 				MessageType message = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem )
 						.setData( JsonUtil.object2Json( ext ) );
-				imApi.sendGroupMessage( video.getGroupId(), video.getUserId().toString(), message );
+				imApi.sendGroupMessage( video.getGroupId(), message );
 			} catch ( Exception e ) {
 				log.error( "房间号不存在或无法发送直播结束通知 - videoId:{};groupId:{}", video.getId(), video.getGroupId(), e );
 			}
@@ -331,8 +331,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			}
 
 			MessageType message = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem ).setData( JsonUtil.object2Json( ext ) );
-			imApi.sendGroupMessage( video.getGroupId(), room_id.toString(),
-					message );
+			imApi.sendGroupMessage( video.getGroupId(), message );
 			return msg;
 		}
 		throw new RuntimeException( "切换失败" );
