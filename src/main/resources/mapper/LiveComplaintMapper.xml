@@ -34,6 +34,11 @@
             <if test="approver != null  and approver != ''"> and approver = #{approver}</if>
             <if test="processingTime != null "> and processing_time = #{processingTime}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="selectDate != null and selectDate != ''"><!-- 开始时间检索 -->
+                and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 
