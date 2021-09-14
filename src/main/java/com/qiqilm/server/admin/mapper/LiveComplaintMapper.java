@@ -41,7 +41,7 @@ public interface LiveComplaintMapper {
 	 * @param liveComplaint 主播投诉记录
 	 * @return 结果
 	 */
-//	public int updateLiveComplaint(LiveComplaint liveComplaint);
+	public int updateLiveComplaint(LiveComplaint liveComplaint);
 
 	/**
 	 * 删除主播投诉记录

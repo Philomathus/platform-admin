@@ -1,7 +1,11 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LiveComplaintMapper;
@@ -18,6 +22,8 @@ import com.qiqilm.server.admin.service.ILiveComplaintService;
 public class LiveComplaintServiceImpl implements ILiveComplaintService {
     @Autowired
     private LiveComplaintMapper liveComplaintMapper;
+    @Autowired
+    private TokenService       tokenService;
 
     /**
      * 查询主播投诉记录
@@ -38,6 +44,11 @@ public class LiveComplaintServiceImpl implements ILiveComplaintService {
      */
     @Override
     public List<LiveComplaint> selectLiveComplaintList(LiveComplaint liveComplaint) {
+        String[] selectDate = liveComplaint.getSelectDate();
+        if ( selectDate != null && selectDate.length > 0 ) {
+            liveComplaint.setSelectStartDate( selectDate[ 0 ]+ " 00:00:00");
+            liveComplaint.setSelectEndDate( selectDate[ 1 ] + " 23:59:59" );
+        }
         return liveComplaintMapper.selectLiveComplaintList(liveComplaint);
     }
 
@@ -59,10 +70,14 @@ public class LiveComplaintServiceImpl implements ILiveComplaintService {
      * @param liveComplaint 主播投诉记录
      * @return 结果
      */
-//    @Override
-//    public int updateLiveComplaint(LiveComplaint liveComplaint) {
-//        return liveComplaintMapper.updateLiveComplaint(liveComplaint);
-//    }
+    @Override
+    public int updateLiveComplaint(LiveComplaint liveComplaint) {
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        liveComplaint.setApprover(userName);
+        liveComplaint.setProcessingTime(new Date());
+        return liveComplaintMapper.updateLiveComplaint(liveComplaint);
+    }
 
     /**
      * 批量删除主播投诉记录

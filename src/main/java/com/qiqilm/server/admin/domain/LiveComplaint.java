@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.domain;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
@@ -16,7 +17,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @date 2021-08-14
  */
 @Data
-@ToString
 public class LiveComplaint extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -33,7 +33,9 @@ public class LiveComplaint extends BaseEntity {
     @Excel(name = "手机号")
     private String mobile;
 
-    /** 主播 */
+    @Excel(name = "处理状态")
+    private String status;
+
     @Excel(name = "主播ID")
     private String anchor;
 
@@ -46,5 +48,22 @@ public class LiveComplaint extends BaseEntity {
 
     @Excel(name = "投诉内容")
     private String content;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "审批时间", width = 30, databaseFormat = "yyyy-MM-dd")
+    private Date processingTime;
+
+    @Excel(name = "审批备注")
+    private String comments;
+
+    @Excel(name = "审批人")
+    private String approver;
+
+    @JsonIgnore
+    private String[] selectDate;
+    @JsonIgnore
+    private String   selectStartDate;
+    @JsonIgnore
+    private String   selectEndDate;
 
 }
