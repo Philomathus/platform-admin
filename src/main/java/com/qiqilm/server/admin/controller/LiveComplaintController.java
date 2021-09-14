@@ -49,13 +49,13 @@ public class LiveComplaintController extends BaseController {
 	/**
 	 * 导出主播投诉记录列表
 	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:export')" )
-//	@Log( title = "主播投诉记录", businessType = BusinessType.EXPORT )
-//	@GetMapping( "/export" )
-//	public void export(LiveComplaint liveComplaint, HttpServletResponse response) {
-//		List<LiveComplaint>      list = liveComplaintService.selectLiveComplaintList(liveComplaint);
-//		ExportExcelUtil.exportExcel( list, "主播投诉记录", "主播投诉记录表", LiveComplaint.class, response );
-//	}
+	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:export')" )
+	@Log( title = "主播投诉记录", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public void export(LiveComplaint liveComplaint, HttpServletResponse response) {
+		List<LiveComplaint>      list = liveComplaintService.selectLiveComplaintList(liveComplaint);
+		ExportExcelUtil.exportExcel( list, "主播投诉记录", "主播投诉记录表", LiveComplaint.class, response );
+	}
 
 //	/**
 //	 * 获取主播投诉记录详细信息
@@ -76,15 +76,15 @@ public class LiveComplaintController extends BaseController {
 //		return toAjax( liveComplaintService.insertLiveComplaint(liveComplaint) );
 //	}
 //
-//	/**
-//	 * 修改主播投诉记录
-//	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:edit')" )
-//	@Log( title = "主播投诉记录", businessType = BusinessType.UPDATE )
-//	@PutMapping
-//	public AjaxResult edit( @RequestBody LiveComplaint liveComplaint) {
-//		return toAjax( liveComplaintService.updateLiveComplaint(liveComplaint) );
-//	}
+	/**
+	 * 修改主播投诉记录
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:edit')" )
+	@Log( title = "主播投诉记录", businessType = BusinessType.UPDATE )
+	@PutMapping
+	public AjaxResult edit( @RequestBody LiveComplaint liveComplaint) {
+		return toAjax( liveComplaintService.updateLiveComplaint(liveComplaint) );
+	}
 //
 //	/**
 //	 * 删除主播投诉记录
