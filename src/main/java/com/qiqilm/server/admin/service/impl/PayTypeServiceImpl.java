@@ -42,7 +42,12 @@ public class PayTypeServiceImpl implements IPayTypeService {
 	 */
 	@Override
 	public PayType selectPayTypeById( String id ) {
-		return payTypeMapper.selectPayTypeById( id );
+		PayType payType = payTypeMapper.selectPayTypeById( id );
+		String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+		if ( StringUtils.isNotBlank( payType.getIconUrl() ) && !payType.getIconUrl().startsWith( "http" ) ) {
+		    payType.setIconUrl( domainValue + payType.getIconUrl() );
+		}
+		return payType;
 	}
 
 	/**
