@@ -22,7 +22,7 @@
     </resultMap>
 
     <sql id="selectConfigUsdtRechargeVo">
-        select id, channel_name, chain_name, recharge_address, discount_bill, exchange_rate, indexs, icon, status, open_level, open_level_max, create_by,  FROM_UNIXTIME(create_time) create_time ,  update_by,  FROM_UNIXTIME(update_time) update_time ,  remark from 7700_main.config_usdt_recharge
+        select id, channel_name, chain_name, recharge_address, discount_bill, exchange_rate, indexs, icon, status, open_level, open_level_max, create_by, create_time ,  update_by, update_time ,  remark from 7700_main.config_usdt_recharge
     </sql>
 
     <select id="selectConfigUsdtRechargeList" parameterType="ConfigUsdtRecharge" resultMap="ConfigUsdtRechargeResult">
@@ -79,9 +79,9 @@
                     <if test="openLevel != null">#{openLevel},</if>
                     <if test="openLevelMax != null">#{openLevelMax},</if>
                     <if test="createBy != null">#{createBy},</if>
-                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                <if test="createTime != null">#{createTime},</if>
                     <if test="updateBy != null">#{updateBy},</if>
-                <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+                <if test="updateTime != null">#{updateTime},</if>
                     <if test="remark != null">#{remark},</if>
              </trim>
     </insert>
@@ -111,11 +111,11 @@
     
             <if test="createBy != null">create_by = #{createBy},</if>
     
-            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
     
             <if test="updateBy != null">update_by = #{updateBy},</if>
     
-            <if test="updateTime != null">update_time = UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
     
             <if test="remark != null">remark = #{remark},</if>
     
