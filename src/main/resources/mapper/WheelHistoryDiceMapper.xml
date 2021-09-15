@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelHistoryDiceMapper">
+
+    <resultMap type="WheelHistoryDice" id="WheelHistoryDiceResult">
+        <result property="id"    column="id"    />
+        <result property="pUserId"    column="p_user_id"    />
+        <result property="name"    column="name"    />
+        <result property="diceName"    column="dice_name"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="diceValue"    column="dice_value"    />
+        <result property="diceId"    column="dice_id"    />
+    </resultMap>
+
+    <sql id="selectWheelHistoryDiceVo">
+        select id, p_user_id, name, dice_name, c_time, dice_value, dice_id from ${dbLive}.wheel_history_dice
+    </sql>
+
+    <select id="selectWheelHistoryDiceList" parameterType="WheelHistoryDice" resultMap="WheelHistoryDiceResult">
+        <include refid="selectWheelHistoryDiceVo"/>
+        <where>
+            <if test="pUserId != null  and pUserId != ''"> and p_user_id = #{pUserId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="diceName != null  and diceName != ''"> and dice_name like concat('%', #{diceName}, '%')</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="diceId != null "> and dice_id = #{diceId}</if>
+        </where>
+        ORDER BY c_time DESC
+    </select>
+
+    <select id="selectWheelHistoryDiceById" parameterType="Long" resultMap="WheelHistoryDiceResult">
+        <include refid="selectWheelHistoryDiceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWheelHistoryDice" parameterType="WheelHistoryDice" useGeneratedKeys="true" keyProperty="id">
+        insert into ${dbLive}.wheel_history_dice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pUserId != null">p_user_id,</if>
+            <if test="name != null">name,</if>
+            <if test="diceName != null">dice_name,</if>
+            <if test="cTime != null">c_time,</if>
+            <if test="diceValue != null">dice_value,</if>
+            <if test="diceId != null">dice_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="pUserId != null">#{pUserId},</if>
+                    <if test="name != null">#{name},</if>
+                    <if test="diceName != null">#{diceName},</if>
+                    <if test="cTime != null">#{cTime},</if>
+                    <if test="diceValue != null">#{diceValue},</if>
+                    <if test="diceId != null">#{diceId},</if>
+             </trim>
+    </insert>
+
+    <update id="updateWheelHistoryDice" parameterType="WheelHistoryDice">
+        update ${dbLive}.wheel_history_dice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pUserId != null">p_user_id = #{pUserId},</if>
+    
+            <if test="name != null">name = #{name},</if>
+    
+            <if test="diceName != null">dice_name = #{diceName},</if>
+    
+            <if test="cTime != null">c_time = #{cTime},</if>
+    
+            <if test="diceValue != null">dice_value = #{diceValue},</if>
+    
+            <if test="diceId != null">dice_id = #{diceId},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelHistoryDiceById" parameterType="Long">
+        delete from ${dbLive}.wheel_history_dice where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelHistoryDiceByIds" parameterType="String">
+        delete from ${dbLive}.wheel_history_dice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

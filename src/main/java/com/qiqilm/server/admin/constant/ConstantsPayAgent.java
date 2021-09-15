@@ -173,4 +173,13 @@ public abstract class ConstantsPayAgent {
 	public static final String CAISHEN            = "caiShen";
 	//霸王代付
 	public static final String BAWANG            = "baWang";
+	//众家代付
+	public static final String ZHONGJIA          = "zhongJia";
+	//老乡代付
+	public static final String LAOXIANG          = "laoXiang";
+	//弗良代付
+	public static final String FULIANG           = "fuLiang";
+	public static final String FULIANG2           = "fuLiang2";
+	//亚丁代付
+	public static final String YADING            = "yaDing";
 }

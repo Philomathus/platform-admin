@@ -52,7 +52,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason("天天代付下单报错原因:" + e);
         }
-        log.warn("天天代付订单下单结果" + JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             int code = (int) resultMap.get("Code");
             if (code == 0) {

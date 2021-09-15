@@ -75,7 +75,7 @@ public class XiangYuePayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(payAgentPlatform.getName()+"下单报错原因:" + e);
         }
-        log.info(payAgentPlatform.getName()+"下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String result = resultMap.getOrDefault("result", "").toString();
             if ("true".equals(result)) {
@@ -176,7 +176,7 @@ public class XiangYuePayAgentProcessor extends AbstractPayAgent {
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, zt);
                     }
                 }
-                return JsonUtil.object2Json(resultMap);
+                return resultMap.getOrDefault("msg", "").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -69,8 +69,6 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	private NameUtil               nameUtil;
 	@Autowired
 	private RedisUtil              redisUtil;
-	@Autowired
-	private MemberDepositLogMapper   memberDepositLogMapper;
 
 	/**
 	 * 查询会员信息
@@ -91,13 +89,13 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	 */
 	@Override
 	public List<MemberInfo> selectMemberInfoList( MemberInfo memberInfo ) {
-		if ( !StringUtils.isEmpty( memberInfo.getSearchValue() ) || !StringUtils.isEmpty( memberInfo.getLoginIp() ) ) {
+		if ( StringUtils.hasText( memberInfo.getSearchValue() ) || StringUtils.hasText( memberInfo.getLoginIp() ) || StringUtils.hasText( memberInfo.getPhone() ) ) {
 			memberInfo.setParams( null );
 		}
 		List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList( memberInfo );
 		if ( memberInfos.size() > 0 && !CollectionUtils.isEmpty( memberInfos ) ) {
 			for ( MemberInfo me : memberInfos ) {
-				if ( !StringUtils.isEmpty( me.getPhone() ) ) {
+				if ( StringUtils.hasText( me.getPhone() ) ) {
 					me.setPhone( me.getPhone().substring( 0, 3 ) + "****" + me.getPhone().substring( 7, 11 ) );
 				}
 			}

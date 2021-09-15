@@ -329,22 +329,23 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 		String msg = null;
+		String msgStatus = null;
 		try {
-			basePayAgent.queryOrderPay( payAgentLog );
+			msg = basePayAgent.queryOrderPay( payAgentLog );
 			PayAgentLog payAgentLog1 = payAgentLogMapper.selectPayAgentLogOrderNo(req.getOrderNo());
 			Integer callbackStatus = payAgentLog1.getCallbackStatus();
 			//回调状态 0 代付处理中 1 代付成功 代付失败
 			if (callbackStatus==0){
-				msg="代付处理中";
+				msgStatus="代付处理中";
 			}else if (callbackStatus==1){
-				msg="代付成功";
+				msgStatus="代付成功";
 			}else {
-				msg="代付失败";
+				msgStatus="代付失败";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return AjaxResult.success(msg);
+		return AjaxResult.success(msgStatus + ",查询返回结果:" + msg);
 	}
 
 	@Override
@@ -501,6 +502,15 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	}
 
 	@Override
+	public AjaxResult updateRemark( ReqMemberWithdrawLog req ) {
+		MemberWithdrawLog memberWithdrawLog = new MemberWithdrawLog();
+		memberWithdrawLog.setId(req.getId());
+		memberWithdrawLog.setRemark(req.getRemark());
+		memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
+		return AjaxResult.success();
+	}
+
+	@Override
 	public AjaxResult abnormalWithdrawal( ReqMemberWithdrawLog req ) {
 		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
 		if ( memberWithdrawLog == null ) {
@@ -584,7 +594,9 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	 */
 	@Override
 	public AjaxResult withdrawReport( String id ) {
-
+		if ( !redisUtil.lock( EnumLock.member, id, "1", 10 ) ) {
+			return AjaxResult.error( "请勿重复查询" );
+		}
 		//        memberInfoMapper.call_pro_useranalysis(id);
 		//        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
 

@@ -13,7 +13,7 @@ logging:
         server:
           admin:
             mapper:
-              MemberGameDataMapper: DEBUG
+              LogGameOrderMapper: DEBUG
 spring:
   # 资源信息
   messages:

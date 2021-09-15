@@ -62,6 +62,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <insert id="insertPayPlatformNewAll" parameterType="String">
+        ${a}
+    </insert>
+
     <insert id="insertPayPlatformNew" parameterType="PayPlatformNew" useGeneratedKeys="true" keyProperty="id">
         insert into pay_platform_new
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -101,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <insert id="insertPayPlatformConfig" parameterType="PayPlatformNewConfig">
-        insert into 7700_main.pay_platform_config
+        insert into pay_platform_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="payPlatfrom != null and payPlatfrom != ''">pay_platfrom,</if>
             <if test="payCode != null and payCode != ''">pay_code,</if>

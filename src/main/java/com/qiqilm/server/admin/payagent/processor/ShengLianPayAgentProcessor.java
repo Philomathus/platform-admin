@@ -140,7 +140,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason("盛联代付下单失败原因:" + e);
         }
-        log.info("盛联代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String code = resultMap.getOrDefault("code", "").toString();
             if ("000000".equals(code)) {
@@ -159,54 +159,6 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
         }
         log.info("盛联代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
-    }
-
-    public static void main(String[] args) {
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
-        bodyMap.put("version", "2.0");
-        bodyMap.put("merchantNo", "yayt006209");
-        bodyMap.put("cashNo", "TX42342346923424");
-        bodyMap.put("orderAmount", 1000);
-        bodyMap.put("holderName", "欧弟");
-        bodyMap.put("province", "广东省");
-        bodyMap.put("city", "深圳市");
-        bodyMap.put("bankCode", "105");
-
-        bodyMap.put("notifyAddr", "http://47.57.3.228:43007/pay-agent/callBack/yiBuShengLian");
-        bodyMap.put("bankBranch", "支行");
-        bodyMap.put("cardNo", "6217001650006934595");
-        bodyMap.put("cashType", "01");
-        bodyMap.put("timestamp",  DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
-
-        StringBuilder sb = new StringBuilder();
-        bodyMap.forEach( ( k, v ) -> sb.append( k ).append( "=" ).append( v ).append( "&" ) );
-        String tempStr = sb.substring( 0, sb.length() - 1 ) + "65da348cd123ca15ea874331ee8d5148";
-        System.out.println(tempStr);
-        String sign = DigestUtils.md5Hex(tempStr);
-        bodyMap.put("sign", sign);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity(bodyMap, httpHeaders);
-
-        Map<String, Object> resultMap = null;
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            resultMap = restTemplate.postForObject("http://yayuib.com:10338/api/cash/apply", httpEntity, Map.class);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        log.info("盛联代付下单结果 - result:{}", JsonUtil.object2Json(resultMap));
-        if (!CollectionUtils.isEmpty(resultMap)) {
-            String code = resultMap.getOrDefault("code", "").toString();
-            if ("000000".equals(code)) {
-                Map<String, Object> dataMap = (Map<String, Object>)resultMap.get("data");
-                String defrayStatus = dataMap.getOrDefault("defrayStatus", "").toString();
-                if(!"-1".equals(defrayStatus)) {
-                    System.out.println("111");
-                }
-            }
-        }
     }
 
     @Override
@@ -292,7 +244,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
                         }
                         payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
                     }
-                    return JsonUtil.object2Json(resultMap);
+                    return resultMap.getOrDefault("msg", "").toString();
                 }
             }
         } catch (Exception e) {

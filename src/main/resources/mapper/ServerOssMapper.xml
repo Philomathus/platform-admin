@@ -16,6 +16,7 @@
 		<result property="createTime" column="create_time"/>
 		<result property="updateBy" column="updator"/>
 		<result property="updateTime" column="update_time"/>
+		<result property="provider" column="provider"/>
 	</resultMap>
 
 	<sql id="selectServerOssVo">
@@ -30,7 +31,8 @@
 			   creator,
 			   create_time,
 			   updator,
-			   update_time
+			   update_time,
+		       provider
 		from ${dbLive}.server_oss
 	</sql>
 
@@ -84,6 +86,9 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
+			<if test="provider != null">
+				provider,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null and name != ''">
@@ -118,6 +123,9 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime},
+			</if>
+			<if test="provider != null">
+				#{provider},
 			</if>
 		</trim>
 	</insert>
@@ -167,6 +175,9 @@
 
 			<if test="updateTime != null">
 				update_time = #{updateTime},
+			</if>
+			<if test="provider != null">
+				provider = #{provider},
 			</if>
 		</trim>
 		where id = #{id}

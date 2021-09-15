@@ -204,6 +204,8 @@ public class LiveUserController extends BaseController {
 	public AjaxResult edit( @RequestBody LiveUser liveUser ) {
 		LiveUser newLiveUser = new LiveUser();
 		newLiveUser.setId( liveUser.getId() );
+		newLiveUser.setQqId(liveUser.getQqId());
+		newLiveUser.setQqToken(liveUser.getQqToken());
 		newLiveUser.setIsAuthentication( liveUser.getIsAuthentication() );
 		newLiveUser.setVExplain( liveUser.getVExplain() );
 		newLiveUser.setInvestorSendInfo( liveUser.getInvestorSendInfo() );

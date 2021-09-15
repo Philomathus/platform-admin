@@ -35,6 +35,7 @@ public interface IPayPlatformNewService {
 	 * @return 结果
 	 */
 	public int insertPayPlatformNew(PayPlatformNew payPlatformNew);
+	public int insertPayPlatformNewAll(PayPlatformNew payPlatformNew);
 
 	/**
 	 * 修改【请填写功能名称】

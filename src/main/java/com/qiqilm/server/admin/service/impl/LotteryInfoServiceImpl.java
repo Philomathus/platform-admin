@@ -3,7 +3,11 @@ package com.qiqilm.server.admin.service.impl;
 import java.util.List;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.domain.ActivityInfo;
+import com.qiqilm.server.admin.domain.LotteryPrizepool;
+import com.qiqilm.server.admin.domain.MemberBcode;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +24,25 @@ import org.springframework.util.CollectionUtils;
  */
 @Service
 public class LotteryInfoServiceImpl implements ILotteryInfoService {
+    public static final String PLATFORM_LOTTERY_KEY = "platform-lottery:list";
     @Autowired
     private LotteryInfoMapper lotteryInfoMapper;
 
     @Autowired
     private ConfigDomainCacheUtil configDomainCacheUtil;
+    @Autowired
+    private RedisUtil redisUtil;
+
+    /**
+     * 查询彩票名称数据
+     *
+     * @param id 彩票名称数据ID
+     * @return 彩票名称数据
+     */
+    @Override
+    public LotteryInfo selectLotteryInfoListById(String id ) {
+        return lotteryInfoMapper.selectLotteryInfoListById( id );
+    }
 
     /**
      * 查询彩票名称列表
@@ -44,5 +62,18 @@ public class LotteryInfoServiceImpl implements ILotteryInfoService {
             }
         }
         return lotteryInfos;
+    }
+
+    /**
+     * 修改彩票名称
+     *
+     * @param lotteryInfo 彩票名称
+     * @return 结果
+     */
+    @Override
+    public int updateLotteryInfo(LotteryInfo lotteryInfo) {
+        int i = lotteryInfoMapper.updateLotteryInfo(lotteryInfo);
+        redisUtil.unlink(PLATFORM_LOTTERY_KEY);
+        return i;
     }
 }
