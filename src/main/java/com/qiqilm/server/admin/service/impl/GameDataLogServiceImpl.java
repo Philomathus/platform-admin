@@ -165,7 +165,6 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			gameDataLog.setPlatformType( platformType.get( og.getPlatformId() ) );
 			gameDataLog.setPlatformId( og.getPlatformId() );
 			gameDataLog.setRevenue( og.getRevenue() );
-			log.info("测试:{}", JSON.toJSONString(gameDataLog));
 			if ( beatRateMap.containsKey( og.getPlatformId() ) ) {
 				BigDecimal beatAdd =
 						new BigDecimal( og.getCellScore() ).multiply( beatRateMap.get( og.getPlatformId() ) ).setScale( 4,
