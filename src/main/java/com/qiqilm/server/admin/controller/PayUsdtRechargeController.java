@@ -66,33 +66,33 @@ public class PayUsdtRechargeController extends BaseController {
 		return AjaxResult.success( payUsdtRechargeService.selectPayUsdtRechargeById(id) );
 	}
 
-	/**
-	 * 新增USDT充值提交记录
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:add')" )
-	@Log( title = "USDT充值提交记录", businessType = BusinessType.INSERT )
-	@PostMapping
-	public AjaxResult add( @RequestBody PayUsdtRecharge payUsdtRecharge) {
-		return toAjax( payUsdtRechargeService.insertPayUsdtRecharge(payUsdtRecharge) );
-	}
+//	/**
+//	 * 新增USDT充值提交记录
+//	 */
+//	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:add')" )
+//	@Log( title = "新增USDT充值提交记录", businessType = BusinessType.INSERT )
+//	@PostMapping
+//	public AjaxResult add( @RequestBody PayUsdtRecharge payUsdtRecharge) {
+//		return toAjax( payUsdtRechargeService.insertPayUsdtRecharge(payUsdtRecharge) );
+//	}
 
 	/**
 	 * 修改USDT充值提交记录
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:edit')" )
-	@Log( title = "USDT充值提交记录", businessType = BusinessType.UPDATE )
+	@Log( title = "修改USDT充值提交记录", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayUsdtRecharge payUsdtRecharge) {
-		return toAjax( payUsdtRechargeService.updatePayUsdtRecharge(payUsdtRecharge) );
+		return payUsdtRechargeService.updatePayUsdtRecharge(payUsdtRecharge);
 	}
 
-	/**
-	 * 删除USDT充值提交记录
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:remove')" )
-	@Log( title = "USDT充值提交记录", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{ids}" )
-	public AjaxResult remove( @PathVariable Long[] ids ) {
-		return toAjax( payUsdtRechargeService.deletePayUsdtRechargeByIds( ids ) );
-	}
+//	/**
+//	 * 删除USDT充值提交记录
+//	 */
+//	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:remove')" )
+//	@Log( title = "删除USDT充值提交记录", businessType = BusinessType.DELETE )
+//	@DeleteMapping( "/{ids}" )
+//	public AjaxResult remove( @PathVariable Long[] ids ) {
+//		return toAjax( payUsdtRechargeService.deletePayUsdtRechargeByIds( ids ) );
+//	}
 }
