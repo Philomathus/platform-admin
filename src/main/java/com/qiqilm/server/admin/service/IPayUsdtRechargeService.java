@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayUsdtRecharge;
 
 /**
@@ -41,7 +42,7 @@ public interface IPayUsdtRechargeService {
 	 * @param payUsdtRecharge USDT充值提交记录
 	 * @return 结果
 	 */
-	public int updatePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge);
+	public AjaxResult updatePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge);
 
 	/**
 	 * 批量删除USDT充值提交记录
