@@ -18,7 +18,7 @@ public class ConfigUsdtRecharge extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 系统编号 */
-    private String id;
+    private Long id;
 
     /** 渠道名称 */
     @Excel(name = "渠道名称")
