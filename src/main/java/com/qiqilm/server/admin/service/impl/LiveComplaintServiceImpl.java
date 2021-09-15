@@ -44,6 +44,11 @@ public class LiveComplaintServiceImpl implements ILiveComplaintService {
      */
     @Override
     public List<LiveComplaint> selectLiveComplaintList(LiveComplaint liveComplaint) {
+        String[] selectDate = liveComplaint.getSelectDate();
+        if ( selectDate != null && selectDate.length > 0 ) {
+            liveComplaint.setSelectStartDate( selectDate[ 0 ]+ " 00:00:00");
+            liveComplaint.setSelectEndDate( selectDate[ 1 ] + " 23:59:59" );
+        }
         return liveComplaintMapper.selectLiveComplaintList(liveComplaint);
     }
 
