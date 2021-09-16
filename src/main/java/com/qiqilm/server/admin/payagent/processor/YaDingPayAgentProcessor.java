@@ -79,6 +79,8 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
         String rspSign = requestMap.remove("sign").toString();
         requestMap.remove("code");
         requestMap.values().removeIf(value -> StringUtils.isBlank(value.toString()));
+        Double amount = (Double)requestMap.get("amount");
+        requestMap.put("amount",BigDecimal.valueOf(amount).setScale(2,BigDecimal.ROUND_HALF_UP));
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -87,7 +89,7 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
 
         log.info(payAgentPlatform.getName()+"回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
-            String order_num = requestMap.getOrDefault("orderId", "").toString();
+            String order_num = requestMap.getOrDefault("outOrderId", "").toString();
             String status = requestMap.getOrDefault("status", "").toString();
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_num);
@@ -153,7 +155,7 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
 
                 String code = resultMap.getOrDefault("code", "").toString();
                 if(!"1".equals(code)){
-                    statusCode = "FAIL";
+                    statusCode = "3";
                 }
 
                 Map<String,Object> map = (Map<String,Object>)resultMap.getOrDefault("data", "");
