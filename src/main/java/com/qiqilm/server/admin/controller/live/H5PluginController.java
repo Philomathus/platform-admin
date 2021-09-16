@@ -65,6 +65,10 @@ public class H5PluginController extends BaseController {
 	@Log( title = "h5插件", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody H5Plugin h5Plugin ) {
+		H5Plugin h5Plugin1 = h5PluginService.selectH5PluginById( h5Plugin.getId() );
+		if(h5Plugin1 != null){
+			return AjaxResult.error(0,"该编码已经存在,请更换编码,填写列表里不存在的编码");
+		}
 		return toAjax( h5PluginService.insertH5Plugin( h5Plugin ) );
 	}
 
