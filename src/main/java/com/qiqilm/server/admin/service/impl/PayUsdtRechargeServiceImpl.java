@@ -102,15 +102,6 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    userName  = loginUser.getUser().getUserName();
         PayUsdtRecharge payUsdtRecharge1 = this.selectPayUsdtRechargeById(payUsdtRecharge.getId());
-        payUsdtRecharge1.setOpName(userName);
-        payUsdtRecharge1.setUpdateTime(new Date());
-        payUsdtRecharge1.setRemark(payUsdtRecharge.getRemark());
-        payUsdtRecharge1.setStatus(payUsdtRecharge.getStatus());
-        //驳回
-        if(StringUtils.isNotBlank(payUsdtRecharge.getStatus()) && "2".equals(payUsdtRecharge.getStatus())){
-            return AjaxResult.success(payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge1));
-        }
-        //通过
         if ( payUsdtRecharge1 == null ) {
             return AjaxResult.error( "该充值记录不存在" );
         }
@@ -120,6 +111,15 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         if ( !redisUtil.lock( EnumLock.usdt, payUsdtRecharge1.getMemberId(), "1", 5 ) ) {
             return AjaxResult.error( "请勿重复提交" );
         }
+        payUsdtRecharge1.setOpName(userName);
+        payUsdtRecharge1.setUpdateTime(new Date());
+        payUsdtRecharge1.setRemark(payUsdtRecharge.getRemark());
+        payUsdtRecharge1.setStatus(payUsdtRecharge.getStatus());
+        //驳回
+        if(StringUtils.isNotBlank(payUsdtRecharge.getStatus()) && "2".equals(payUsdtRecharge.getStatus())){
+            return AjaxResult.success(payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge1));
+        }
+        //通过
         try {
             boolean isAudit = this.updatePayUsdtRechargeLogic( payUsdtRecharge1 );
             return isAudit ? AjaxResult.success( "审核通过成功" ) : AjaxResult.error( "审核通过失败" );
