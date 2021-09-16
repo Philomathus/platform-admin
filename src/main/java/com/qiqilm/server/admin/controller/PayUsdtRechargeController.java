@@ -77,13 +77,23 @@ public class PayUsdtRechargeController extends BaseController {
 //	}
 
 	/**
-	 * 修改USDT充值提交记录
+	 * 通过USDT充值提交记录
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:edit')" )
-	@Log( title = "修改USDT充值提交记录", businessType = BusinessType.UPDATE )
+	@Log( title = "通过USDT充值提交记录", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody PayUsdtRecharge payUsdtRecharge) {
 		return payUsdtRechargeService.updatePayUsdtRecharge(payUsdtRecharge);
+	}
+
+	/**
+	 * 拒绝USDT充值提交记录
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:edit')" )
+	@Log( title = "拒绝USDT充值提交记录", businessType = BusinessType.UPDATE )
+	@PutMapping("/refuse")
+	public int refuse( @RequestBody PayUsdtRecharge payUsdtRecharge) {
+		return payUsdtRechargeService.refusePayUsdtRecharge(payUsdtRecharge);
 	}
 
 //	/**

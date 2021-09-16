@@ -91,7 +91,24 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     }
 
     /**
-     * 修改USDT充值提交记录
+     * 拒绝USDT充值提交记录
+     *
+     * @param payUsdtRecharge USDT充值提交记录
+     * @return 结果
+     */
+    @Override
+    @Transactional( rollbackFor = Exception.class )
+    public int refusePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge) {
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        payUsdtRecharge.setOpName(userName);
+        payUsdtRecharge.setUpdateTime(new Date());
+        payUsdtRecharge.setStatus("2");
+        return payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge);
+    }
+
+    /**
+     * 通过USDT充值提交记录
      *
      * @param payUsdtRecharge USDT充值提交记录
      * @return 结果
@@ -114,12 +131,8 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         payUsdtRecharge1.setOpName(userName);
         payUsdtRecharge1.setUpdateTime(new Date());
         payUsdtRecharge1.setRemark(payUsdtRecharge.getRemark());
-        payUsdtRecharge1.setStatus(payUsdtRecharge.getStatus());
-        //驳回
-        if(StringUtils.isNotBlank(payUsdtRecharge.getStatus()) && "2".equals(payUsdtRecharge.getStatus())){
-            return AjaxResult.success(payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge1));
-        }
-        //通过
+        payUsdtRecharge1.setStatus("1");
+
         try {
             boolean isAudit = this.updatePayUsdtRechargeLogic( payUsdtRecharge1 );
             return isAudit ? AjaxResult.success( "审核通过成功" ) : AjaxResult.error( "审核通过失败" );
