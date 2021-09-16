@@ -50,7 +50,7 @@ public class ConfigUsdtRecharge extends BaseEntity {
 
     /** 状态(1启用0停用) */
     @Excel(name = "状态(1启用0停用)")
-    private Long status;
+    private String status;
 
     /** 开放层级最小 */
     @Excel(name = "开放层级最小")
