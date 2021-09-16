@@ -98,7 +98,7 @@ public class WheelDiceConfigController extends BaseController {
 	}
 
 	/**
-	 * 返现活动状态修改
+	 * 状态修改
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:wheelDiceConfig:edit')" )
 	@Log( title = "抽奖配置状态", businessType = BusinessType.UPDATE )
