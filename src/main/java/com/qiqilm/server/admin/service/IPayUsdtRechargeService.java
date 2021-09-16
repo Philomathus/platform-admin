@@ -42,6 +42,7 @@ public interface IPayUsdtRechargeService {
 	 * @param payUsdtRecharge USDT充值提交记录
 	 * @return 结果
 	 */
+	public int refusePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge);
 	public AjaxResult updatePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge);
 
 	/**
