@@ -72,8 +72,8 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     public List<PayUsdtRecharge> selectPayUsdtRechargeList(PayUsdtRecharge payUsdtRecharge) {
         String[] selectDate = payUsdtRecharge.getSelectDate();
         if ( selectDate != null && selectDate.length > 0 ) {
-            payUsdtRecharge.setSelectStartDate( selectDate[ 0 ]+ " 00:00:00");
-            payUsdtRecharge.setSelectEndDate( selectDate[ 1 ] + " 23:59:59" );
+            payUsdtRecharge.setSelectStartDate( selectDate[ 0 ] );
+            payUsdtRecharge.setSelectEndDate( selectDate[ 1 ] );
         }
         return payUsdtRechargeMapper.selectPayUsdtRechargeList(payUsdtRecharge);
     }
@@ -97,7 +97,6 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
      * @return 结果
      */
     @Override
-    @Transactional( rollbackFor = Exception.class )
     public int refusePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge) {
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    userName  = loginUser.getUser().getUserName();
@@ -165,7 +164,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
                     , memberInfo.getTotalAccount().add( payUsdtRecharge.getRechargeMoney() ), payUsdtRecharge.getRemark(), payUsdtRecharge.getTransactionId() );
         }
 
-        //充值日志
+        //usdt充值日志
         logService.logMoneyAdd( payUsdtRecharge.getTransactionId(), payUsdtRecharge.getMemberId(), memberInfo.getUserName(), EnumMoney.usdt,
                 payUsdtRecharge.getRechargeMoney(), memberInfo.getTotalAccount(), payUsdtRecharge.getRemark(), payUsdtRecharge.getTransactionId() );
 
@@ -174,17 +173,9 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
 
          //新增佣金记录
         this.recommendProcess( payUsdtRecharge, memberInfo );
-        try {
-            memberCacheManager.bankChargeMount(payUsdtRecharge.getMemberId());
-            if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
-                memberCacheManager.checkFirstChargeaddWheelTimes(payUsdtRecharge.getMemberId());
-            }
-        }catch (Exception e){
-            log.error("首充报错",e);
-        }
 
         //更新用户账户余额
-        return this.updateMemberCharge( memberInfo.getId(), add, "线下存款" );
+        return this.updateMemberCharge( memberInfo.getId(), add, "USDT充值" );
     }
 
     private void recommendProcess(PayUsdtRecharge payUsdtRecharge, MemberInfo memberInfo ) {

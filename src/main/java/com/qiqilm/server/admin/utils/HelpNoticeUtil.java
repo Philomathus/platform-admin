@@ -80,7 +80,7 @@ public class HelpNoticeUtil implements Serializable {
 
 		for ( String groupId : liveVideoService.selectOnlineLiveGroups() ) {
 			try {
-				imApi.sendGroupMessage( groupId, "admin", messageType );
+				imApi.sendGroupMessage( groupId, messageType );
 			} catch ( Exception e ) {
 				log.error( "小助手发消息失败", e );
 			}
@@ -126,7 +126,7 @@ public class HelpNoticeUtil implements Serializable {
 
 			MessageType messageType = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem ).setData( JsonUtil.object2Json( ext ) );
 
-			imApi.sendGroupMessage( groupId, "admin", messageType );
+			imApi.sendGroupMessage( groupId, messageType );
 			log.warn( "小助手消息发送成功" + groupId, JsonUtil.object2Json( ext ) );
 		} catch ( Exception e ) {
 			log.error( "小助手发消息失败", e );
