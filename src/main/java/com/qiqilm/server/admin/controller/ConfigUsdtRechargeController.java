@@ -95,4 +95,15 @@ public class ConfigUsdtRechargeController extends BaseController {
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( configUsdtRechargeService.deleteConfigUsdtRechargeByIds( ids ) );
 	}
+
+	/**
+	 * 支付状态修改
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:configUsdtRecharge:edit')" )
+	@Log( title = "支付类型", businessType = BusinessType.UPDATE )
+	@PutMapping( "/changeStatus" )
+	public AjaxResult changeStatus( @RequestBody ConfigUsdtRecharge configUsdtRecharge ) {
+		return toAjax( configUsdtRechargeService.updateConfigUsdtRecharge(configUsdtRecharge) );
+	}
+
 }
