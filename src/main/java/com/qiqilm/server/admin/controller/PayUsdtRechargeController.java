@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +41,9 @@ public class PayUsdtRechargeController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:list')" )
 	@GetMapping( "/list" )
-    	public TableDataInfo list(PayUsdtRecharge payUsdtRecharge) {
+    	public TableDataInfo list(ReqPayUsdtRecharge reqPayUsdtRecharge) {
 		startPage();
-		List<PayUsdtRecharge> list = payUsdtRechargeService.selectPayUsdtRechargeList(payUsdtRecharge);
+		List<PayUsdtRecharge> list = payUsdtRechargeService.selectPayUsdtRechargeList(reqPayUsdtRecharge);
 		return getDataTable( list );
 	}
     
@@ -52,8 +53,8 @@ public class PayUsdtRechargeController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:export')" )
 	@Log( title = "USDT充值提交记录", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
-	public void export(PayUsdtRecharge payUsdtRecharge, HttpServletResponse response) {
-		List<PayUsdtRecharge>      list = payUsdtRechargeService.selectPayUsdtRechargeList(payUsdtRecharge);
+	public void export(ReqPayUsdtRecharge reqPayUsdtRecharge, HttpServletResponse response) {
+		List<PayUsdtRecharge>      list = payUsdtRechargeService.selectPayUsdtRechargeList(reqPayUsdtRecharge);
 		ExportExcelUtil.exportExcel( list, "USDT充值提交记录", "USDT充值提交记录表", PayUsdtRecharge.class, response );
 	}
 
