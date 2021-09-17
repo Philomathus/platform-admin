@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.payagent.processor;
 
-import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -14,14 +13,12 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -51,27 +48,21 @@ public class FaCaiLePayAgentProcessor extends AbstractPayAgent {
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);
 
-        log.warn(payAgentPlatform.getName() + "下单请求参数{}", JsonUtil.object2Json(dataMap));
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(dataMap);
+        log.warn(payAgentPlatform.getName() + "下单请求参数:{}", JsonUtil.object2Json(requestMap));
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(dataMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
-                    restTemplate.httpEntityCallback(httpEntity), response -> {
-                        InputStream bodyStream = response.getBody();
-                        String text;
-                        try (Reader reader = new InputStreamReader(bodyStream)) {
-                            text = CharStreams.toString(reader);
-                        }
-                        return JsonUtil.json2Map(text);
-                    });
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info(payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json(resultMap));
 
+        log.info( payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("1".equals(resultMap.getOrDefault("code", "").toString())) {
                 log.info(payAgentPlatform.getName() + "订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
@@ -139,29 +130,26 @@ public class FaCaiLePayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> dataMap = new TreeMap<>();
         dataMap.put("store_id", payAgentPlatform.getMerId());
         dataMap.put("order_sn", withdrawLog.getOrderNo());
+        dataMap.put("time", System.currentTimeMillis() / 1000);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-        String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
+        StringBuilder sb = new StringBuilder();
+        dataMap.forEach((k, v) -> sb.append(v));
+        String tempStr = sb.substring(0, sb.length()) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);
 
-        log.warn(payAgentPlatform.getName() + "查询代付状态接口请求参数{}", JsonUtil.object2Json(dataMap));
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(dataMap);
+        log.warn(payAgentPlatform.getName() + "下单请求参数:{}", JsonUtil.object2Json(requestMap));
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(dataMap, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
-                    restTemplate.httpEntityCallback(httpEntity), response -> {
-                        InputStream bodyStream = response.getBody();
-                        String text;
-                        try (Reader reader = new InputStreamReader(bodyStream)) {
-                            text = CharStreams.toString(reader);
-                        }
-                        return JsonUtil.json2Map(text);
-                    });
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
             log.warn(payAgentPlatform.getName() + "查询结果 - result:{}", JsonUtil.object2Json(resultMap));
 
             if (!CollectionUtils.isEmpty(resultMap)) {
