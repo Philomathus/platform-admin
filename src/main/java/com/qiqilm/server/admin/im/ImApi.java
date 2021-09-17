@@ -46,7 +46,7 @@ public interface ImApi {
 
 	MsgRsp sendSystemNotify( String groupId, String content, String... userId );  //群通知
 
-	ImRsp sendGroupMessage( String groupId, String userId, MessageType... message ); //群消息
+	ImRsp sendGroupMessage( String groupId, MessageType... message ); //群消息
 
 	Object getGroupHistory( String groupId, Integer msgSeq, int size );  //消息历史
 

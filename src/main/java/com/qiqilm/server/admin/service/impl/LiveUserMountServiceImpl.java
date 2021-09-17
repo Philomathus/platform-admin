@@ -37,6 +37,11 @@ public class LiveUserMountServiceImpl implements ILiveUserMountService {
      */
     @Override
     public List<LiveUserMount> selectLiveUserMountList(LiveUserMount liveUserMount) {
+        String[] selectDate = liveUserMount.getSelectDate();
+        if ( selectDate != null && selectDate.length > 0 ) {
+            liveUserMount.setSelectStartDate( selectDate[ 0 ] );
+            liveUserMount.setSelectEndDate( selectDate[ 1 ] );
+        }
         return liveUserMountMapper.selectLiveUserMountList(liveUserMount);
     }
 

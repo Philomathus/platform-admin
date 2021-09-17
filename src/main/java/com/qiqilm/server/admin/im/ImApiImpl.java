@@ -286,11 +286,11 @@ public class ImApiImpl implements ImApi {
 
 	@Async
 	@Override
-	public ImRsp sendGroupMessage( String groupId, String userId, MessageType... message ) {
+	public ImRsp sendGroupMessage( String groupId, MessageType... message ) {
 		SendGroupMsg sendGroupMsg = new SendGroupMsg();
 		sendGroupMsg.setGroupId( groupId );
 		sendGroupMsg.setMsgBody( Arrays.asList( message ) );
-		sendGroupMsg.setFromAccount( userId );
+		sendGroupMsg.setFromAccount( "admin" );
 		return doPost( sendGroupMsg, ImRsp.class, 1 );
 	}
 

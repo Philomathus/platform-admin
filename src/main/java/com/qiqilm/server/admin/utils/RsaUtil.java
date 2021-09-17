@@ -18,7 +18,7 @@ package com.qiqilm.server.admin.utils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import sun.misc.BASE64Decoder;
+import org.springframework.util.Base64Utils;
 
 import javax.crypto.Cipher;
 import java.io.*;
@@ -28,10 +28,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * RSA 非对称、公钥加密,签名验签：基于数学函数
@@ -176,8 +174,7 @@ public class RsaUtil {
     }
 
     public static PublicKey getPublicKey(String key) throws Exception {
-        byte[] keyBytes;
-        keyBytes = (new BASE64Decoder()).decodeBuffer(key);
+        byte[] keyBytes = Base64Utils.decodeFromString(key);
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PublicKey publicKey = keyFactory.generatePublic(keySpec);
@@ -186,7 +183,7 @@ public class RsaUtil {
 
     public static PrivateKey getPrivateKey(String key) throws Exception {
         byte[] keyBytes;
-        keyBytes = (new BASE64Decoder()).decodeBuffer(key);
+        keyBytes = Base64Utils.decodeFromString(key);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PrivateKey privateKey = keyFactory.generatePrivate(keySpec);

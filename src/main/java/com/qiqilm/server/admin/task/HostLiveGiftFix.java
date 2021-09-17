@@ -31,6 +31,10 @@ public class HostLiveGiftFix {
             return;
         }
 
+        if(profile.equals("7705")){
+            return;
+        }
+
         liveVideoService.countHostGift(profile);
 
     }
