@@ -67,8 +67,8 @@
         m.nick_name as nickName,
         r.nick_name as hostName
         FROM
-        cx_live.live_black g
-        LEFT JOIN cx_live.live_user r ON g.host_id = r.id
+        7704_live.live_black g
+        LEFT JOIN 7704_live.live_user r ON g.host_id = r.id
         INNER JOIN 7705_main.member_info m ON g.black_user_id = m.id
         <where>
             <if test="hostId != null "> and host_id = #{hostId}</if>
