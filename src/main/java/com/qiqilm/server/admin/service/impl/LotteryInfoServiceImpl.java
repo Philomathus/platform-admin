@@ -3,9 +3,11 @@ package com.qiqilm.server.admin.service.impl;
 import java.util.List;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.domain.ActivityInfo;
 import com.qiqilm.server.admin.domain.LotteryPrizepool;
 import com.qiqilm.server.admin.domain.MemberBcode;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +24,14 @@ import org.springframework.util.CollectionUtils;
  */
 @Service
 public class LotteryInfoServiceImpl implements ILotteryInfoService {
+    public static final String PLATFORM_LOTTERY_KEY = "platform-lottery:list";
     @Autowired
     private LotteryInfoMapper lotteryInfoMapper;
 
     @Autowired
     private ConfigDomainCacheUtil configDomainCacheUtil;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 查询彩票名称数据
@@ -67,6 +72,8 @@ public class LotteryInfoServiceImpl implements ILotteryInfoService {
      */
     @Override
     public int updateLotteryInfo(LotteryInfo lotteryInfo) {
-        return lotteryInfoMapper.updateLotteryInfo(lotteryInfo);
+        int i = lotteryInfoMapper.updateLotteryInfo(lotteryInfo);
+        redisUtil.unlink(PLATFORM_LOTTERY_KEY);
+        return i;
     }
 }

@@ -1,7 +1,11 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.utils.DateUtils;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LiveComplaintMapper;
@@ -12,12 +16,14 @@ import com.qiqilm.server.admin.service.ILiveComplaintService;
  * 主播投诉记录Service业务层处理
  *
  * @author 77tv
- * @date 2021-08-14
+ * @date 2021-09-14
  */
 @Service
 public class LiveComplaintServiceImpl implements ILiveComplaintService {
     @Autowired
     private LiveComplaintMapper liveComplaintMapper;
+    @Autowired
+    private TokenService       tokenService;
 
     /**
      * 查询主播投诉记录
@@ -25,10 +31,10 @@ public class LiveComplaintServiceImpl implements ILiveComplaintService {
      * @param id 主播投诉记录ID
      * @return 主播投诉记录
      */
-//    @Override
-//    public LiveComplaint selectLiveComplaintById(Long id) {
-//        return liveComplaintMapper.selectLiveComplaintById(id);
-//    }
+    @Override
+    public LiveComplaint selectLiveComplaintById(Long id) {
+        return liveComplaintMapper.selectLiveComplaintById(id);
+    }
 
     /**
      * 查询主播投诉记录列表
@@ -38,6 +44,11 @@ public class LiveComplaintServiceImpl implements ILiveComplaintService {
      */
     @Override
     public List<LiveComplaint> selectLiveComplaintList(LiveComplaint liveComplaint) {
+        String[] selectDate = liveComplaint.getSelectDate();
+        if ( selectDate != null && selectDate.length > 0 ) {
+            liveComplaint.setSelectStartDate( selectDate[ 0 ]+ " 00:00:00");
+            liveComplaint.setSelectEndDate( selectDate[ 1 ] + " 23:59:59" );
+        }
         return liveComplaintMapper.selectLiveComplaintList(liveComplaint);
     }
 
@@ -47,11 +58,11 @@ public class LiveComplaintServiceImpl implements ILiveComplaintService {
      * @param liveComplaint 主播投诉记录
      * @return 结果
      */
-//    @Override
-//    public int insertLiveComplaint(LiveComplaint liveComplaint) {
-//        liveComplaint.setCreateTime(DateUtils.getNowDate());
-//        return liveComplaintMapper.insertLiveComplaint(liveComplaint);
-//    }
+    @Override
+    public int insertLiveComplaint(LiveComplaint liveComplaint) {
+        liveComplaint.setCreateTime(DateUtils.getNowDate());
+        return liveComplaintMapper.insertLiveComplaint(liveComplaint);
+    }
 
     /**
      * 修改主播投诉记录
@@ -59,10 +70,14 @@ public class LiveComplaintServiceImpl implements ILiveComplaintService {
      * @param liveComplaint 主播投诉记录
      * @return 结果
      */
-//    @Override
-//    public int updateLiveComplaint(LiveComplaint liveComplaint) {
-//        return liveComplaintMapper.updateLiveComplaint(liveComplaint);
-//    }
+    @Override
+    public int updateLiveComplaint(LiveComplaint liveComplaint) {
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        liveComplaint.setApprover(userName);
+        liveComplaint.setProcessingTime(new Date());
+        return liveComplaintMapper.updateLiveComplaint(liveComplaint);
+    }
 
     /**
      * 批量删除主播投诉记录
@@ -70,10 +85,10 @@ public class LiveComplaintServiceImpl implements ILiveComplaintService {
      * @param ids 需要删除的主播投诉记录ID
      * @return 结果
      */
-//    @Override
-//    public int deleteLiveComplaintByIds(Long[] ids) {
-//        return liveComplaintMapper.deleteLiveComplaintByIds(ids);
-//    }
+    @Override
+    public int deleteLiveComplaintByIds(Long[] ids) {
+        return liveComplaintMapper.deleteLiveComplaintByIds(ids);
+    }
 
     /**
      * 删除主播投诉记录信息
@@ -81,8 +96,8 @@ public class LiveComplaintServiceImpl implements ILiveComplaintService {
      * @param id 主播投诉记录ID
      * @return 结果
      */
-//    @Override
-//    public int deleteLiveComplaintById(Long id) {
-//        return liveComplaintMapper.deleteLiveComplaintById(id);
-//    }
+    @Override
+    public int deleteLiveComplaintById(Long id) {
+        return liveComplaintMapper.deleteLiveComplaintById(id);
+    }
 }

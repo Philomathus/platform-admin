@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelUserDiceMapper">
+
+    <resultMap type="WheelUserDice" id="WheelUserDiceResult">
+        <result property="id"    column="id"    />
+        <result property="times"    column="times"    />
+    </resultMap>
+
+    <sql id="selectWheelUserDiceVo">
+        select id, times from ${dbLive}.wheel_user_dice
+    </sql>
+
+    <select id="selectWheelUserDiceList" parameterType="WheelUserDice" resultMap="WheelUserDiceResult">
+        <include refid="selectWheelUserDiceVo"/>
+        <where>
+            <if test="times != null "> and times = #{times}</if>
+        </where>
+    </select>
+
+    <select id="selectWheelUserDiceById" parameterType="String" resultMap="WheelUserDiceResult">
+        <include refid="selectWheelUserDiceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWheelUserDice" parameterType="WheelUserDice">
+        insert into ${dbLive}.wheel_user_dice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="times != null">times,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="times != null">#{times},</if>
+             </trim>
+    </insert>
+
+    <update id="updateWheelUserDice" parameterType="WheelUserDice">
+        update ${dbLive}.wheel_user_dice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="times != null">times = #{times},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateWheelUserDiceTimes" parameterType="WheelUserDice">
+        update ${dbLive}.wheel_user_dice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="times != null">times =times+ #{times},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelUserDiceById" parameterType="String">
+        delete from ${dbLive}.wheel_user_dice where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelUserDiceByIds" parameterType="String">
+        delete from ${dbLive}.wheel_user_dice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

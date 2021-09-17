@@ -14,6 +14,7 @@ public enum EnumMoney {
 	charge(2,"线上充值"),//线上充值
 	withdrawauto(3,"会员取款"),
 	deposit(4,"银行卡充值"),//银行卡充值
+	usdt(4,"USDT充值"),//USDT充值
 	activity(5,"优惠活动"),
 	withdraw(6,"人工取款"),
 	codeclean(7,"洗码"),

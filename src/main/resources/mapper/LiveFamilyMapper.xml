@@ -36,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectLiveFamilyList" parameterType="LiveFamily" resultMap="LiveFamilyResult">
         <include refid="selectLiveFamilyVo"/>
         <where>
+            <if test="id != null"> and id = #{id}</if>
             <if test="logo != null  and logo != ''"> and logo = #{logo}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="notice != null  and notice != ''"> and notice = #{notice}</if>

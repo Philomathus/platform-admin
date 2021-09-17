@@ -43,6 +43,7 @@ public interface LiveVideoMapper {
 	public int updateLiveVideo(LiveVideo liveVideo);
 
 	public int updateLive7706Video(LiveVideo liveVideo);
+	public int updateLive7705Video(LiveVideo liveVideo);
 
 	/**
 	 * 修改直播,结束时间可以为null
@@ -76,7 +77,9 @@ public interface LiveVideoMapper {
 
 	Long getMaxSortInitLiveId();
 
-	Long getMaxSortInitShareLiveId();
+	Long getMaxSortInitShareLiveId7706();
+	Long getMaxSortInitShareLiveId7705();
 
-	LiveVideo getLiveVideoShare(@Param( "hostId" ) Long hostId);
+	LiveVideo getLiveVideoShare7706(@Param( "hostId" ) Long hostId);
+	LiveVideo getLiveVideoShare7705(@Param( "hostId" ) Long hostId);
 }

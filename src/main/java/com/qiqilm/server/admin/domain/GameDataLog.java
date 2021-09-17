@@ -23,6 +23,10 @@ public class GameDataLog extends BaseEntity {
     @Excel(name = "游戏局号")
     private String gameId;
 
+    /** 游戏局号 */
+    @Excel(name = "游戏局号")
+    private String gameRound;
+
     /** 崇轩代理号 */
     @Excel(name = "崇轩代理号")
     private String cxAgent;
@@ -84,6 +88,7 @@ public class GameDataLog extends BaseEntity {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("gameId", getGameId())
+                .append("gameRound", getGameRound())
             .append("cxAgent", getCxAgent())
             .append("account", getAccount())
             .append("serverId", getServerId())

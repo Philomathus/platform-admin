@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ChatComplaintMapper">
+
+    <resultMap type="ChatComplaint" id="ChatComplaintResult">
+        <result property="id"    column="id"    />
+        <result property="remark"    column="remark"    />
+        <result property="userId"    column="user_id"    />
+        <result property="kfId"    column="kf_id"    />
+        <result property="processingTime"    column="processing_time"    />
+        <result property="approver"    column="approver"    />
+        <result property="comments"    column="comments"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+        <result property="account"    column="account"    />
+    </resultMap>
+
+    <sql id="selectChatComplaintVo">
+        select id, remark, user_id, kf_id, account, processing_time, approver, comments, create_time, status from chat_complaint
+    </sql>
+
+    <select id="selectChatComplaintList" parameterType="ChatComplaint" resultMap="ChatComplaintResult">
+        <include refid="selectChatComplaintVo"/>
+        <where>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="kfId != null  and kfId != ''"> and kf_id = #{kfId}</if>
+            <if test="approver != null  and approver != ''"> and approver = #{approver}</if>
+            <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="account != null "> and account = #{account}</if>
+            <if test="selectDate != null and selectDate != ''"><!-- 开始时间检索 -->
+                and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="selectChatComplaintById" parameterType="Long" resultMap="ChatComplaintResult">
+        <include refid="selectChatComplaintVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertChatComplaint" parameterType="ChatComplaint" useGeneratedKeys="true" keyProperty="id">
+        insert into chat_complaint
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="remark != null">remark,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="kfId != null">kf_id,</if>
+            <if test="processingTime != null">processing_time,</if>
+            <if test="approver != null">approver,</if>
+            <if test="comments != null">comments,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+            <if test="account != null">account,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="remark != null">#{remark},</if>
+                    <if test="userId != null">#{userId},</if>
+                    <if test="kfId != null">#{kfId},</if>
+                    <if test="processingTime != null">#{processingTime},</if>
+                    <if test="approver != null">#{approver},</if>
+                    <if test="comments != null">#{comments},</if>
+                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="account != null">#{account},</if>
+             </trim>
+    </insert>
+
+    <update id="updateChatComplaint" parameterType="ChatComplaint">
+        update chat_complaint
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="remark != null">remark = #{remark},</if>
+    
+            <if test="userId != null">user_id = #{userId},</if>
+    
+            <if test="kfId != null">kf_id = #{kfId},</if>
+    
+            <if test="processingTime != null">processing_time = #{processingTime},</if>
+    
+            <if test="approver != null">approver = #{approver},</if>
+    
+            <if test="comments != null">comments = #{comments},</if>
+    
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+    
+            <if test="status != null">status = #{status},</if>
+
+            <if test="account != null">account = #{account},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteChatComplaintById" parameterType="Long">
+        delete from chat_complaint where id = #{id}
+    </delete>
+
+    <delete id="deleteChatComplaintByIds" parameterType="String">
+        delete from chat_complaint where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

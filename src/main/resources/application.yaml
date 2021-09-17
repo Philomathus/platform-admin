@@ -8,6 +8,12 @@ server:
 logging:
   level:
     root: info
+    com:
+      qiqilm:
+        server:
+          admin:
+            mapper:
+              MemberGameDataMapper: DEBUG
 spring:
   # 资源信息
   messages:

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelDiceConfigMapper">
+
+    <resultMap type="WheelDiceConfig" id="WheelDiceConfigResult">
+        <result property="id"    column="id"    />
+        <result property="depositTotalMin"    column="deposit_total_min"    />
+        <result property="depositTotalMax"    column="deposit_total_max"    />
+        <result property="lotteryTimes"    column="lottery_times"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectWheelDiceConfigVo">
+        select id, deposit_total_min, deposit_total_max, lottery_times, status from ${dbMain}.wheel_dice_config
+    </sql>
+
+    <select id="selectWheelDiceConfigList" parameterType="WheelDiceConfig" resultMap="WheelDiceConfigResult">
+        <include refid="selectWheelDiceConfigVo"/>
+        <where>
+            <if test="depositTotalMin != null "> and deposit_total_min = #{depositTotalMin}</if>
+            <if test="depositTotalMax != null "> and deposit_total_max = #{depositTotalMax}</if>
+            <if test="lotteryTimes != null "> and lottery_times = #{lotteryTimes}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectWheelDiceConfigById" parameterType="Long" resultMap="WheelDiceConfigResult">
+        <include refid="selectWheelDiceConfigVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectWheelDiceBycash" resultType="java.lang.Integer">
+        select lottery_times from wheel_dice_config
+        where status =1 and  deposit_total_min <![CDATA[ <= ]]> #{cash}
+        and deposit_total_max > #{cash}
+    </select>
+
+    <insert id="insertWheelDiceConfig" parameterType="WheelDiceConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into ${dbMain}.wheel_dice_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="depositTotalMin != null">deposit_total_min,</if>
+            <if test="depositTotalMax != null">deposit_total_max,</if>
+            <if test="lotteryTimes != null">lottery_times,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="depositTotalMin != null">#{depositTotalMin},</if>
+                    <if test="depositTotalMax != null">#{depositTotalMax},</if>
+                    <if test="lotteryTimes != null">#{lotteryTimes},</if>
+                    <if test="status != null">#{status},</if>
+             </trim>
+    </insert>
+
+    <update id="updateWheelDiceConfig" parameterType="WheelDiceConfig">
+        update ${dbMain}.wheel_dice_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="depositTotalMin != null">deposit_total_min = #{depositTotalMin},</if>
+    
+            <if test="depositTotalMax != null">deposit_total_max = #{depositTotalMax},</if>
+    
+            <if test="lotteryTimes != null">lottery_times = #{lotteryTimes},</if>
+    
+            <if test="status != null">status = #{status},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelDiceConfigById" parameterType="Long">
+        delete from ${dbMain}.wheel_dice_config where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelDiceConfigByIds" parameterType="String">
+        delete from ${dbMain}.wheel_dice_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
