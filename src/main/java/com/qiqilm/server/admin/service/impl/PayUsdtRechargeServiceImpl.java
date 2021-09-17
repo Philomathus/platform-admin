@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.*;
@@ -66,17 +67,17 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     /**
      * 查询USDT充值提交记录列表
      *
-     * @param payUsdtRecharge USDT充值提交记录
+     * @param reqPayUsdtRecharge USDT充值提交记录
      * @return USDT充值提交记录
      */
     @Override
-    public List<PayUsdtRecharge> selectPayUsdtRechargeList(PayUsdtRecharge payUsdtRecharge) {
-        String[] selectDate = payUsdtRecharge.getSelectDate();
+    public List<PayUsdtRecharge> selectPayUsdtRechargeList(ReqPayUsdtRecharge reqPayUsdtRecharge) {
+        String[] selectDate = reqPayUsdtRecharge.getSelectDate();
         if ( selectDate != null && selectDate.length > 0 ) {
-            payUsdtRecharge.setSelectStartDate( selectDate[ 0 ] );
-            payUsdtRecharge.setSelectEndDate( selectDate[ 1 ] );
+            reqPayUsdtRecharge.setSelectStartDate( selectDate[ 0 ] );
+            reqPayUsdtRecharge.setSelectEndDate( selectDate[ 1 ] );
         }
-        return payUsdtRechargeMapper.selectPayUsdtRechargeList(payUsdtRecharge);
+        return payUsdtRechargeMapper.selectPayUsdtRechargeList(reqPayUsdtRecharge);
     }
 
     /**
@@ -104,7 +105,6 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         PayUsdtRecharge payUsdtRecharge = new PayUsdtRecharge();
         payUsdtRecharge.setId(id);
         payUsdtRecharge.setOpName(userName);
-        payUsdtRecharge.setUpdateTime(new Date());
         payUsdtRecharge.setRemark("锁定人:"+userName);
         payUsdtRecharge.setStatus("0");
         return payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge);
@@ -130,7 +130,6 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         }
         payUsdtRecharge.setId(id);
         payUsdtRecharge.setOpName(userName);
-        payUsdtRecharge.setUpdateTime(new Date());
         payUsdtRecharge.setRemark("解锁人:"+userName);
         payUsdtRecharge.setStatus("1");
         return AjaxResult.success(payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge));
