@@ -78,23 +78,22 @@ public class FaCaiLePayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-
         String rspSign = requestMap.remove("sign").toString();
-        requestMap.values().removeIf(value -> !org.springframework.util.StringUtils.hasText(value.toString()));
+        String orderSn = requestMap.getOrDefault("order_sn", "").toString();
+        String orderNo = requestMap.getOrDefault("order_no", "").toString();
+        String createTime = requestMap.getOrDefault("create_time", "").toString();
+        String operationTime = requestMap.getOrDefault("operation_time", "").toString();
+        String status = requestMap.getOrDefault("status", "").toString();
+        String time = requestMap.getOrDefault("time", "").toString();
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-        StringBuilder sb = new StringBuilder();
-        requestMap.forEach((k, v) -> sb.append(v));
-        String tempStr = sb.substring(0, sb.length()) + signMd5;
+        String tempStr = orderSn + orderNo + createTime + operationTime + status + time + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
-        sign = DigestUtils.md5Hex(sign);
 
         log.info(payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
             String order_num = requestMap.getOrDefault("order_sn", "").toString();
-            String status = requestMap.getOrDefault("status", "").toString();
-
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_num);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", order_num);
