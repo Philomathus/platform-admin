@@ -147,7 +147,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         String    userName  = loginUser.getUser().getUserName();
         payUsdtRecharge.setOpName(userName);
         payUsdtRecharge.setUpdateTime(new Date());
-        payUsdtRecharge.setStatus("3");
+        payUsdtRecharge.setStatus("2");
         return payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge);
     }
 
@@ -175,7 +175,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         payUsdtRecharge1.setOpName(userName);
         payUsdtRecharge1.setUpdateTime(new Date());
         payUsdtRecharge1.setRemark(payUsdtRecharge.getRemark());
-        payUsdtRecharge1.setStatus("2");
+        payUsdtRecharge1.setStatus("3");
 
         try {
             boolean isAudit = this.updatePayUsdtRechargeLogic( payUsdtRecharge1 );
