@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ConfigUsdtRechargeMapper">
+
+    <resultMap type="ConfigUsdtRecharge" id="ConfigUsdtRechargeResult">
+        <result property="id"    column="id"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="chainName"    column="chain_name"    />
+        <result property="rechargeAddress"    column="recharge_address"    />
+        <result property="discountBill"    column="discount_bill"    />
+        <result property="exchangeRate"    column="exchange_rate"    />
+        <result property="indexs"    column="indexs"    />
+        <result property="icon"    column="icon"    />
+        <result property="status"    column="status"    />
+        <result property="openLevel"    column="open_level"    />
+        <result property="openLevelMax"    column="open_level_max"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectConfigUsdtRechargeVo">
+        select id, channel_name, chain_name, recharge_address, discount_bill, exchange_rate, indexs, icon, status, open_level, open_level_max, create_by, create_time ,  update_by, update_time ,  remark from 7700_main.config_usdt_recharge
+    </sql>
+
+    <select id="selectConfigUsdtRechargeList" parameterType="ConfigUsdtRecharge" resultMap="ConfigUsdtRechargeResult">
+        <include refid="selectConfigUsdtRechargeVo"/>
+        <where>
+            <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
+            <if test="chainName != null  and chainName != ''"> and chain_name like concat('%', #{chainName}, '%')</if>
+            <if test="rechargeAddress != null  and rechargeAddress != ''"> and recharge_address = #{rechargeAddress}</if>
+            <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
+            <if test="exchangeRate != null "> and exchange_rate = #{exchangeRate}</if>
+            <if test="indexs != null "> and indexs = #{indexs}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="openLevel != null "> and open_level = #{openLevel}</if>
+            <if test="openLevelMax != null "> and open_level_max = #{openLevelMax}</if>
+        </where>
+    </select>
+
+    <select id="selectConfigUsdtRechargeById" parameterType="String" resultMap="ConfigUsdtRechargeResult">
+        <include refid="selectConfigUsdtRechargeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertConfigUsdtRecharge" parameterType="ConfigUsdtRecharge">
+        insert into 7700_main.config_usdt_recharge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="channelName != null">channel_name,</if>
+            <if test="chainName != null">chain_name,</if>
+            <if test="rechargeAddress != null">recharge_address,</if>
+            <if test="discountBill != null">discount_bill,</if>
+            <if test="exchangeRate != null">exchange_rate,</if>
+            <if test="indexs != null">indexs,</if>
+            <if test="icon != null">icon,</if>
+            <if test="status != null">status,</if>
+            <if test="openLevel != null">open_level,</if>
+            <if test="openLevelMax != null">open_level_max,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                    <if test="channelName != null">#{channelName},</if>
+                    <if test="chainName != null">#{chainName},</if>
+                    <if test="rechargeAddress != null">#{rechargeAddress},</if>
+                    <if test="discountBill != null">#{discountBill},</if>
+                    <if test="exchangeRate != null">#{exchangeRate},</if>
+                    <if test="indexs != null">#{indexs},</if>
+                    <if test="icon != null">#{icon},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="openLevel != null">#{openLevel},</if>
+                    <if test="openLevelMax != null">#{openLevelMax},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                <if test="updateTime != null">#{updateTime},</if>
+                    <if test="remark != null">#{remark},</if>
+             </trim>
+    </insert>
+
+    <update id="updateConfigUsdtRecharge" parameterType="ConfigUsdtRecharge">
+        update 7700_main.config_usdt_recharge
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="channelName != null">channel_name = #{channelName},</if>
+    
+            <if test="chainName != null">chain_name = #{chainName},</if>
+    
+            <if test="rechargeAddress != null">recharge_address = #{rechargeAddress},</if>
+    
+            <if test="discountBill != null">discount_bill = #{discountBill},</if>
+    
+            <if test="exchangeRate != null">exchange_rate = #{exchangeRate},</if>
+    
+            <if test="indexs != null">indexs = #{indexs},</if>
+    
+            <if test="icon != null">icon = #{icon},</if>
+    
+            <if test="status != null">status = #{status},</if>
+    
+            <if test="openLevel != null">open_level = #{openLevel},</if>
+    
+            <if test="openLevelMax != null">open_level_max = #{openLevelMax},</if>
+    
+            <if test="createBy != null">create_by = #{createBy},</if>
+    
+            <if test="createTime != null">create_time = #{createTime},</if>
+    
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+    
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+    
+            <if test="remark != null">remark = #{remark},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteConfigUsdtRechargeById" parameterType="String">
+        delete from 7700_main.config_usdt_recharge where id = #{id}
+    </delete>
+
+    <delete id="deleteConfigUsdtRechargeByIds" parameterType="String">
+        delete from 7700_main.config_usdt_recharge where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
