@@ -133,7 +133,7 @@
 		select sum(total_diamonds) countTotal
 		from ${dbLive}.live_video_prop
 		<where>
-			and (prop_id > 0 or prop = -1)
+			and (prop_id > 0 or prop_id = -1)
 			<if test="pUserId != null and pUserId != ''">
 				and p_user_id = #{pUserId}
 			</if>
