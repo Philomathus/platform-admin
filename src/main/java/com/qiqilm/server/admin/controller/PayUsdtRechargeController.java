@@ -77,6 +77,24 @@ public class PayUsdtRechargeController extends BaseController {
 //	}
 
 	/**
+	 * 锁定USDT充值提交记录
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:edit')" )
+	@GetMapping( value = "/lock/{id}" )
+	public int lock( @PathVariable( "id" ) Long id) {
+		return payUsdtRechargeService.lock(id);
+	}
+
+	/**
+	 * 解锁USDT充值提交记录
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:edit')" )
+	@GetMapping( value = "/unLock/{id}" )
+	public AjaxResult unLock( @PathVariable( "id" ) Long id) {
+		return AjaxResult.success( payUsdtRechargeService.unLock(id) );
+	}
+
+	/**
 	 * 通过USDT充值提交记录
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:edit')" )

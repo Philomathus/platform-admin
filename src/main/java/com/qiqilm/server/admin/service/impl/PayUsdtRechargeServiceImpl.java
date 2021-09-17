@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.service.IPayUsdtRechargeService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * USDT充值提交记录Service业务层处理
@@ -91,6 +92,51 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     }
 
     /**
+     * 锁定USDT充值提交记录
+     *
+     * @param  id
+     * @return 结果
+     */
+    @Override
+    public int lock(Long id) {
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        PayUsdtRecharge payUsdtRecharge = new PayUsdtRecharge();
+        payUsdtRecharge.setId(id);
+        payUsdtRecharge.setOpName(userName);
+        payUsdtRecharge.setUpdateTime(new Date());
+        payUsdtRecharge.setRemark("锁定人:"+userName);
+        payUsdtRecharge.setStatus("3");
+        return payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge);
+    }
+
+    /**
+     * 解锁USDT充值提交记录
+     *
+     * @param  id
+     * @return 结果
+     */
+    @Override
+    public AjaxResult unLock(Long id) {
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        PayUsdtRecharge payUsdtRecharge = this.selectPayUsdtRechargeById(id);
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        boolean contains = roles.stream().anyMatch(m -> "common".equals(m.getRoleKey()));
+        if (!contains){
+            if(StringUtils.hasText( payUsdtRecharge.getOpName() ) && !userName.equals( payUsdtRecharge.getOpName() ) ){
+                return AjaxResult.error( "该订单只能由" + payUsdtRecharge.getOpName() + "处理" );
+            }
+        }
+        payUsdtRecharge.setId(id);
+        payUsdtRecharge.setOpName(userName);
+        payUsdtRecharge.setUpdateTime(new Date());
+        payUsdtRecharge.setRemark("解锁人:"+userName);
+        payUsdtRecharge.setStatus("0");
+        return AjaxResult.success(payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge));
+    }
+
+    /**
      * 拒绝USDT充值提交记录
      *
      * @param payUsdtRecharge USDT充值提交记录
@@ -121,7 +167,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         if ( payUsdtRecharge1 == null ) {
             return AjaxResult.error( "该充值记录不存在" );
         }
-        if ( !"0".equals(payUsdtRecharge1.getStatus()) ) {
+        if ( !"3".equals(payUsdtRecharge1.getStatus()) ) {
             return AjaxResult.error( "该充值记录状态有误，请刷新数据后重试" );
         }
         if ( !redisUtil.lock( EnumLock.usdt, payUsdtRecharge1.getMemberId(), "1", 5 ) ) {

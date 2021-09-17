@@ -44,6 +44,8 @@ public interface IPayUsdtRechargeService {
 	 */
 	public int refusePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge);
 	public AjaxResult updatePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge);
+	public int lock(Long id);
+	public AjaxResult unLock(Long id);
 
 	/**
 	 * 批量删除USDT充值提交记录
