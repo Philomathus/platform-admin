@@ -464,18 +464,18 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		newWithdrawLog.setUpdateTime( now );
 		String remark;
 		switch ( status ) {
-		case 4:
-			remark = "已交由【" + payAgentPlatform.getName() + "】出款";
-			break;
-		case 5:
-			remark = "【" + payAgentPlatform.getName() + "】代付失败";
-			break;
-		case 6:
-			remark = "【" + payAgentPlatform.getName() + "】代付成功";
-			break;
-		default:
-			remark = "";
-			break;
+			case 4:
+				remark = "已交由【" + payAgentPlatform.getName() + "】出款";
+				break;
+			case 5:
+				remark = "【" + payAgentPlatform.getName() + "】代付失败";
+				break;
+			case 6:
+				remark = "【" + payAgentPlatform.getName() + "】代付成功";
+				break;
+			default:
+				remark = "";
+				break;
 		}
 		newWithdrawLog.setRemark( remark );
 		log.warn( JsonUtil.object2Json( newWithdrawLog ) );
@@ -487,19 +487,19 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			newPayAgentLog.setPayAgentOrderNo( memberWithdrawLog.getPayAgentOrderNo() );
 		}
 		switch ( status ) {
-		case 4:
-			newPayAgentLog.setCallbackStatus( 0 );
-			break;
-		case 5:
-			newPayAgentLog.setCallbackTime( now );
-			newPayAgentLog.setCallbackStatus( 2 );
-			break;
-		case 6:
-			newPayAgentLog.setCallbackTime( now );
-			newPayAgentLog.setCallbackStatus( 1 );
-			break;
-		default:
-			break;
+			case 4:
+				newPayAgentLog.setCallbackStatus( 0 );
+				break;
+			case 5:
+				newPayAgentLog.setCallbackTime( now );
+				newPayAgentLog.setCallbackStatus( 2 );
+				break;
+			case 6:
+				newPayAgentLog.setCallbackTime( now );
+				newPayAgentLog.setCallbackStatus( 1 );
+				break;
+			default:
+				break;
 		}
 		if ( payAgentLog == null ) {
 			newPayAgentLog.setCreateTime( now );
