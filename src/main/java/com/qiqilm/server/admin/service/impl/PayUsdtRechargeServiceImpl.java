@@ -106,7 +106,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         payUsdtRecharge.setOpName(userName);
         payUsdtRecharge.setUpdateTime(new Date());
         payUsdtRecharge.setRemark("锁定人:"+userName);
-        payUsdtRecharge.setStatus("3");
+        payUsdtRecharge.setStatus("0");
         return payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge);
     }
 
@@ -132,7 +132,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         payUsdtRecharge.setOpName(userName);
         payUsdtRecharge.setUpdateTime(new Date());
         payUsdtRecharge.setRemark("解锁人:"+userName);
-        payUsdtRecharge.setStatus("0");
+        payUsdtRecharge.setStatus("1");
         return AjaxResult.success(payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge));
     }
 
@@ -148,7 +148,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         String    userName  = loginUser.getUser().getUserName();
         payUsdtRecharge.setOpName(userName);
         payUsdtRecharge.setUpdateTime(new Date());
-        payUsdtRecharge.setStatus("2");
+        payUsdtRecharge.setStatus("3");
         return payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge);
     }
 
@@ -167,7 +167,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         if ( payUsdtRecharge1 == null ) {
             return AjaxResult.error( "该充值记录不存在" );
         }
-        if ( !"3".equals(payUsdtRecharge1.getStatus()) ) {
+        if ( !"0".equals(payUsdtRecharge1.getStatus()) ) {
             return AjaxResult.error( "该充值记录状态有误，请刷新数据后重试" );
         }
         if ( !redisUtil.lock( EnumLock.usdt, payUsdtRecharge1.getMemberId(), "1", 5 ) ) {
@@ -176,7 +176,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         payUsdtRecharge1.setOpName(userName);
         payUsdtRecharge1.setUpdateTime(new Date());
         payUsdtRecharge1.setRemark(payUsdtRecharge.getRemark());
-        payUsdtRecharge1.setStatus("1");
+        payUsdtRecharge1.setStatus("2");
 
         try {
             boolean isAudit = this.updatePayUsdtRechargeLogic( payUsdtRecharge1 );
