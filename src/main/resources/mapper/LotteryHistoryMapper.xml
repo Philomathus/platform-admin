@@ -52,7 +52,7 @@
     </select>
 
     <update id="changeStatus">
-        update ${dbLottery}.lottery_history set status = 0 where id = #{id}
+        update ${dbLottery}.lottery_history set status = 1 where id = #{id}
     </update>
 
     <select id="selectBetweenByTimeList"  resultMap="LotteryHistoryResult">
