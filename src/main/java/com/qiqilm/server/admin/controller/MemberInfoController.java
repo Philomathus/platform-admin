@@ -146,7 +146,7 @@ public class MemberInfoController extends BaseController {
      * 批量会员ID查询手机号
      */
     @PostMapping(value = "/queryPhones")
-    public Object queryPhones(ReqSmallFeatures req) throws Exception {
+    public Object queryPhones(@RequestBody ReqSmallFeatures req) throws Exception {
         RspBase rspBase = new RspBase();
         if (req.getGoogleAuthCode() == null) {
             rspBase.setMsg("请输入google验证码");
