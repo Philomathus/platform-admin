@@ -5,9 +5,7 @@ import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ConfigUsdtRecharge;
-import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
-import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
 import com.qiqilm.server.admin.service.IConfigUsdtRechargeService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
