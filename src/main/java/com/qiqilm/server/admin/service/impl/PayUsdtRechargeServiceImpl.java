@@ -210,7 +210,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         }
 
         //usdt充值日志
-        logService.logMoneyAdd( payUsdtRecharge.getTransactionId(), payUsdtRecharge.getMemberId(), memberInfo.getUserName(), EnumMoney.usdt,
+        logService.logMoneyAdd( null, payUsdtRecharge.getMemberId(), memberInfo.getUserName(), EnumMoney.usdt,
                 payUsdtRecharge.getRechargeMoney(), memberInfo.getTotalAccount(), payUsdtRecharge.getRemark(), payUsdtRecharge.getTransactionId() );
 
         //更新usdt充值记录表状态

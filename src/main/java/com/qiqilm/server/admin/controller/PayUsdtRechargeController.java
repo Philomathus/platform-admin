@@ -2,7 +2,11 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
+import com.qiqilm.server.admin.service.ISysUserService;
+import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +23,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.PayUsdtRecharge;
 import com.qiqilm.server.admin.service.IPayUsdtRechargeService;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +38,10 @@ import javax.servlet.http.HttpServletResponse;
 public class PayUsdtRechargeController extends BaseController {
 	@Autowired
 	private IPayUsdtRechargeService payUsdtRechargeService;
+	@Autowired
+	private TokenService tokenService;
+	@Autowired
+	private ISysUserService sysUserService;
 
 	/**
 	 * 查询USDT充值提交记录列表
@@ -101,7 +108,23 @@ public class PayUsdtRechargeController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:edit')" )
 	@Log( title = "通过USDT充值提交记录", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit( @RequestBody PayUsdtRecharge payUsdtRecharge) {
+	public AjaxResult edit( @RequestBody PayUsdtRecharge payUsdtRecharge) throws Exception{
+		if (payUsdtRecharge.getGoogleAuthCode() == null) {
+			return AjaxResult.error(1,"请输入google验证码");
+		}
+		LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+		String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+		if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+			return AjaxResult.error(1,"未绑定google验证秘钥，无法审核");
+		}
+		if (googleAuthSecret.length() == 32) {
+			return AjaxResult.error(1,"google验证秘钥未加密，请重新登录");
+		}
+		String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+				"/googleAuthPrivateKey"));
+		if (!GoogleAuthUtil.verifyCode(googleAuthKey, payUsdtRecharge.getGoogleAuthCode())) {
+			return AjaxResult.error(1,"google验证码不正确，请检查");
+		}
 		return payUsdtRechargeService.updatePayUsdtRecharge(payUsdtRecharge);
 	}
 
