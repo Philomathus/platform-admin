@@ -1,9 +1,12 @@
 package com.qiqilm.server.admin.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.ConfigUsdtRecharge;
 import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
+import com.qiqilm.server.admin.service.IConfigUsdtRechargeService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
@@ -42,6 +45,8 @@ public class PayUsdtRechargeController extends BaseController {
 	private TokenService tokenService;
 	@Autowired
 	private ISysUserService sysUserService;
+	@Autowired
+	private IConfigUsdtRechargeService configUsdtRechargeService;
 
 	/**
 	 * 查询USDT充值提交记录列表
@@ -53,7 +58,23 @@ public class PayUsdtRechargeController extends BaseController {
 		List<PayUsdtRecharge> list = payUsdtRechargeService.selectPayUsdtRechargeList(reqPayUsdtRecharge);
 		return getDataTable( list );
 	}
-    
+
+	/**
+	 * 渠道名称选择列表
+	 *
+	 * @return
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:payUsdtRecharge:list')" )
+	@GetMapping( "/channelNames" )
+	public AjaxResult channelNames() {
+		ConfigUsdtRecharge configUsdtRecharge = new ConfigUsdtRecharge();
+		List<ConfigUsdtRecharge> data           = configUsdtRechargeService.selectConfigUsdtRechargeList( configUsdtRecharge );
+		if ( StringUtils.isNull( data ) ) {
+			data = new ArrayList<>();
+		}
+		return AjaxResult.success( data );
+	}
+
 	/**
 	 * 导出USDT充值提交记录列表
 	 */
