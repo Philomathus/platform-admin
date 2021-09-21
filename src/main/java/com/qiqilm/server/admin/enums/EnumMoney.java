@@ -25,6 +25,7 @@ public enum EnumMoney {
 	quest(13,"任务奖金"),
 	chargegive(14,"充值彩金"),
 	bohui(15,"取款驳回"),
+	usdt(16,"USDT充值"),//USDT充值
 	;
 	private int    type;
 	private String des;

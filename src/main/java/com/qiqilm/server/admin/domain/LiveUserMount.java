@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.domain;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -26,17 +27,26 @@ public class LiveUserMount extends BaseEntity {
     private String userId;
 
     /** 过期时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "过期时间", width = 30, exportFormat = "yyyy-MM-dd")
+    @JsonFormat( pattern = "yyyy-MM-dd" )
     private Date effectiveTime;
 
-    /** 用户层级 */
-    @Excel(name = "用户层级")
+    /** 坐骑id */
+    @Excel(name = "坐骑id")
     private Integer mountId;
 
     /** 0:禁用;1:启用;默认启用 */
     @Excel(name = "0:禁用;1:启用;默认启用")
-    private Integer isUse;
+    private String isUse;
+
+    /** 坐骑名称 */
+    private String mountName;
+
+    @JsonIgnore
+    private String[] selectDate;
+    @JsonIgnore
+    private String   selectStartDate;
+    @JsonIgnore
+    private String   selectEndDate;
 
     @Override
     public String toString() {

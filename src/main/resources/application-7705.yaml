@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://pc-j6ct6o187g7dis32y.rwlb.rds.aliyuncs.com:3306/7704_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://pc-j6ct6o187g7dis32y.rwlb.rds.aliyuncs.com:3306/7705_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: 77tv_web
       password: 77tvweb_oradba
     secondary:
@@ -9,16 +9,16 @@ spring:
       username: 77tv_web
       password: 77tvweb_oradba
   redis:
-    host: r-j6cb1mbfjcwv71jjur.redis.rds.aliyuncs.com
+    host: r-j6cnt93w512ool5yjo.redis.rds.aliyuncs.com
     port: 6379
-    password: fM5Sdksl@#W*MZZ!
+    password: o@zgCT0GD%PHQeif
 
 mybatis:
   configuration:
     variables:
-      dbMain: 7704_main
-      dbLive: 7704_live
-      dbLottery: 7704_lottery
+      dbMain: 7705_main
+      dbLive: 7705_live
+      dbLottery: 7705_lottery
 
 # 代付额度
 payAgentLimit: 50000
@@ -40,5 +40,3 @@ payAgentLimitNewMaxPay: 50000
 payAgentLimitLuBanPay: 50000
 # 银联代付额度
 payAgentLimitYinLianPay: 50000
-# 弗良代付额度
-payAgentLimitFuLiangPay: 50000

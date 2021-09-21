@@ -185,7 +185,7 @@ public class MemberCacheManager {
 		}
 		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList( query );
 		if ( list.size() == 0 ) {
-			query.setIsUse( 0 );
+			query.setIsUse( "0" );
 			Date d = new Date( System.currentTimeMillis() + day * 24 * 60 * 60 * 1000L );//过期时间
 			query.setEffectiveTime( d );
 			liveUserMountMapper.insertLiveUserMount( query );
@@ -218,7 +218,7 @@ public class MemberCacheManager {
 
 		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList( query );
 		if ( list.size() == 0 ) {
-			query.setIsUse( 0 );
+			query.setIsUse( "0" );
 			Date d = new Date( System.currentTimeMillis() + day * 24 * 60 * 60 * 1000L );//过期时间
 			query.setEffectiveTime( d );
 			liveUserMountMapper.insertLiveUserMount( query );

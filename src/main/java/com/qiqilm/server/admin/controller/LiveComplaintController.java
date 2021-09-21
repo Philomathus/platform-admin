@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * 主播投诉记录Controller
  *
  * @author 77tv
- * @date 2021-08-14
+ * @date 2021-09-14
  */
 @RestController
 @RequestMapping( "/admin/liveComplaint" )
@@ -40,59 +40,59 @@ public class LiveComplaintController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list(LiveComplaint liveComplaint) {
-	startPage();
-	List<LiveComplaint> list = liveComplaintService.selectLiveComplaintList(liveComplaint);
-	return getDataTable( list );
+    	public TableDataInfo list(LiveComplaint liveComplaint) {
+		startPage();
+		List<LiveComplaint> list = liveComplaintService.selectLiveComplaintList(liveComplaint);
+		return getDataTable( list );
 	}
     
 	/**
 	 * 导出主播投诉记录列表
 	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:export')" )
-//	@Log( title = "主播投诉记录", businessType = BusinessType.EXPORT )
-//	@GetMapping( "/export" )
-//	public void export(LiveComplaint liveComplaint, HttpServletResponse response) {
-//		List<LiveComplaint>      list = liveComplaintService.selectLiveComplaintList(liveComplaint);
-//		ExportExcelUtil.exportExcel( list, "主播投诉记录", "主播投诉记录表", LiveComplaint.class, response );
-//	}
+	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:export')" )
+	@Log( title = "主播投诉记录", businessType = BusinessType.EXPORT )
+	@GetMapping( "/export" )
+	public void export(LiveComplaint liveComplaint, HttpServletResponse response) {
+		List<LiveComplaint>      list = liveComplaintService.selectLiveComplaintList(liveComplaint);
+		ExportExcelUtil.exportExcel( list, "主播投诉记录", "主播投诉记录表", LiveComplaint.class, response );
+	}
 
-//	/**
-//	 * 获取主播投诉记录详细信息
-//	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:query')" )
-//	@GetMapping( value = "/{id}" )
-//	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
-//		return AjaxResult.success( liveComplaintService.selectLiveComplaintById(id) );
-//	}
+	/**
+	 * 获取主播投诉记录详细信息
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:query')" )
+	@GetMapping( value = "/{id}" )
+	public AjaxResult getInfo( @PathVariable( "id" ) Long id) {
+		return AjaxResult.success( liveComplaintService.selectLiveComplaintById(id) );
+	}
 
-//	/**
-//	 * 新增主播投诉记录
-//	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:add')" )
-//	@Log( title = "主播投诉记录", businessType = BusinessType.INSERT )
-//	@PostMapping
-//	public AjaxResult add( @RequestBody LiveComplaint liveComplaint) {
-//		return toAjax( liveComplaintService.insertLiveComplaint(liveComplaint) );
-//	}
-//
-//	/**
-//	 * 修改主播投诉记录
-//	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:edit')" )
-//	@Log( title = "主播投诉记录", businessType = BusinessType.UPDATE )
-//	@PutMapping
-//	public AjaxResult edit( @RequestBody LiveComplaint liveComplaint) {
-//		return toAjax( liveComplaintService.updateLiveComplaint(liveComplaint) );
-//	}
-//
-//	/**
-//	 * 删除主播投诉记录
-//	 */
-//	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:remove')" )
-//	@Log( title = "主播投诉记录", businessType = BusinessType.DELETE )
-//	@DeleteMapping( "/{ids}" )
-//	public AjaxResult remove( @PathVariable Long[] ids ) {
-//		return toAjax( liveComplaintService.deleteLiveComplaintByIds( ids ) );
-//	}
+	/**
+	 * 新增主播投诉记录
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:add')" )
+	@Log( title = "主播投诉记录", businessType = BusinessType.INSERT )
+	@PostMapping
+	public AjaxResult add( @RequestBody LiveComplaint liveComplaint) {
+		return toAjax( liveComplaintService.insertLiveComplaint(liveComplaint) );
+	}
+
+	/**
+	 * 修改主播投诉记录
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:edit')" )
+	@Log( title = "主播投诉记录", businessType = BusinessType.UPDATE )
+	@PutMapping
+	public AjaxResult edit( @RequestBody LiveComplaint liveComplaint) {
+		return toAjax( liveComplaintService.updateLiveComplaint(liveComplaint) );
+	}
+
+	/**
+	 * 删除主播投诉记录
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveComplaint:remove')" )
+	@Log( title = "主播投诉记录", businessType = BusinessType.DELETE )
+	@DeleteMapping( "/{ids}" )
+	public AjaxResult remove( @PathVariable Long[] ids ) {
+		return toAjax( liveComplaintService.deleteLiveComplaintByIds( ids ) );
+	}
 }

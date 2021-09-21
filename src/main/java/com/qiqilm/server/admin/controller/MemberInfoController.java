@@ -146,7 +146,7 @@ public class MemberInfoController extends BaseController {
      * 批量会员ID查询手机号
      */
     @PostMapping(value = "/queryPhones")
-    public Object queryPhones(ReqSmallFeatures req) throws Exception {
+    public Object queryPhones(@RequestBody ReqSmallFeatures req) throws Exception {
         RspBase rspBase = new RspBase();
         if (req.getGoogleAuthCode() == null) {
             rspBase.setMsg("请输入google验证码");
@@ -623,12 +623,23 @@ public class MemberInfoController extends BaseController {
     public Object updateVip(HttpServletRequest request,
                           MemberInfo memberInfo) throws Exception {
         RspBase rspBase = new RspBase();
+        if(memberInfo.getVip() > 50){
+            rspBase.setCode(1);
+            rspBase.setData("vip等级最大为50级");
+            return rspBase;
+        }
+        MemberInfo memberInfo1 = memberInfoService.selectMemberInfoById(memberInfo.getId());
+        if(memberInfo1 != null && memberInfo1.getVip() > memberInfo.getVip()) {
+            rspBase.setCode(1);
+            rspBase.setData("vip等级修改不能小于之前的等级");
+            return rspBase;
+        }
         String memberId = memberInfo.getId();
         Integer vip = memberInfo.getVip();
         String nickName = memberInfo.getNickName();
         memberInfoService.updateVip(memberId,vip,nickName);
         rspBase.setCode(Constants.URC_SUCCESS);
-        rspBase.setData("成功");
+        rspBase.setData("vip等级修改成功");
         return rspBase;
     }
     @Log(title = "解绑银行卡", businessType = BusinessType.UPDATE)
