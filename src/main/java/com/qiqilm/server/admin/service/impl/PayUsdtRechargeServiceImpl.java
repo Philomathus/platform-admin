@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.*;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.service.IPayUsdtRechargeService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * USDT充值提交记录Service业务层处理
@@ -65,17 +67,17 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     /**
      * 查询USDT充值提交记录列表
      *
-     * @param payUsdtRecharge USDT充值提交记录
+     * @param reqPayUsdtRecharge USDT充值提交记录
      * @return USDT充值提交记录
      */
     @Override
-    public List<PayUsdtRecharge> selectPayUsdtRechargeList(PayUsdtRecharge payUsdtRecharge) {
-        String[] selectDate = payUsdtRecharge.getSelectDate();
+    public List<PayUsdtRecharge> selectPayUsdtRechargeList(ReqPayUsdtRecharge reqPayUsdtRecharge) {
+        String[] selectDate = reqPayUsdtRecharge.getSelectDate();
         if ( selectDate != null && selectDate.length > 0 ) {
-            payUsdtRecharge.setSelectStartDate( selectDate[ 0 ] );
-            payUsdtRecharge.setSelectEndDate( selectDate[ 1 ] );
+            reqPayUsdtRecharge.setSelectStartDate( selectDate[ 0 ] );
+            reqPayUsdtRecharge.setSelectEndDate( selectDate[ 1 ] );
         }
-        return payUsdtRechargeMapper.selectPayUsdtRechargeList(payUsdtRecharge);
+        return payUsdtRechargeMapper.selectPayUsdtRechargeList(reqPayUsdtRecharge);
     }
 
     /**
@@ -88,6 +90,49 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     public int insertPayUsdtRecharge(PayUsdtRecharge payUsdtRecharge) {
         payUsdtRecharge.setCreateTime(DateUtils.getNowDate());
         return payUsdtRechargeMapper.insertPayUsdtRecharge(payUsdtRecharge);
+    }
+
+    /**
+     * 锁定USDT充值提交记录
+     *
+     * @param  id
+     * @return 结果
+     */
+    @Override
+    public int lock(Long id) {
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        PayUsdtRecharge payUsdtRecharge = new PayUsdtRecharge();
+        payUsdtRecharge.setId(id);
+        payUsdtRecharge.setOpName(userName);
+        payUsdtRecharge.setRemark("锁定人:"+userName);
+        payUsdtRecharge.setStatus("0");
+        return payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge);
+    }
+
+    /**
+     * 解锁USDT充值提交记录
+     *
+     * @param  id
+     * @return 结果
+     */
+    @Override
+    public AjaxResult unLock(Long id) {
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        PayUsdtRecharge payUsdtRecharge = this.selectPayUsdtRechargeById(id);
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        boolean contains = roles.stream().anyMatch(m -> "common".equals(m.getRoleKey()));
+        if (!contains){
+            if(StringUtils.hasText( payUsdtRecharge.getOpName() ) && !userName.equals( payUsdtRecharge.getOpName() ) ){
+                return AjaxResult.error( "该订单只能由" + payUsdtRecharge.getOpName() + "处理" );
+            }
+        }
+        payUsdtRecharge.setId(id);
+        payUsdtRecharge.setOpName(userName);
+        payUsdtRecharge.setRemark("解锁人:"+userName);
+        payUsdtRecharge.setStatus("1");
+        return AjaxResult.success(payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge));
     }
 
     /**
@@ -130,7 +175,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         payUsdtRecharge1.setOpName(userName);
         payUsdtRecharge1.setUpdateTime(new Date());
         payUsdtRecharge1.setRemark(payUsdtRecharge.getRemark());
-        payUsdtRecharge1.setStatus("1");
+        payUsdtRecharge1.setStatus("3");
 
         try {
             boolean isAudit = this.updatePayUsdtRechargeLogic( payUsdtRecharge1 );
@@ -165,7 +210,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         }
 
         //usdt充值日志
-        logService.logMoneyAdd( payUsdtRecharge.getTransactionId(), payUsdtRecharge.getMemberId(), memberInfo.getUserName(), EnumMoney.usdt,
+        logService.logMoneyAdd( null, payUsdtRecharge.getMemberId(), memberInfo.getUserName(), EnumMoney.usdt,
                 payUsdtRecharge.getRechargeMoney(), memberInfo.getTotalAccount(), payUsdtRecharge.getRemark(), payUsdtRecharge.getTransactionId() );
 
         //更新usdt充值记录表状态

@@ -24,7 +24,7 @@
         select id, member_id, user_name, channel_name, recharge_number, recharge_money, status, remark, discount_bill, chain_name, recharge_address, transaction_id, op_name, create_time, update_time from pay_usdt_recharge
     </sql>
 
-    <select id="selectPayUsdtRechargeList" parameterType="PayUsdtRecharge" resultMap="PayUsdtRechargeResult">
+    <select id="selectPayUsdtRechargeList" parameterType="ReqPayUsdtRecharge" resultMap="PayUsdtRechargeResult">
         <include refid="selectPayUsdtRechargeVo"/>
         <where>
             <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>

@@ -59,10 +59,15 @@ public class HelpNoticeUtil implements Serializable {
 		info.put( "agent", profile );
 		ext.put( "sender", info );
 
-		if(!profile.equals("7706")){
-			agent = "";
-		}else{
+//		if(!profile.equals("7706")){
+//			agent = "";
+//		}else{
+//			info.put( "agent", agent );
+//		}
+		if(profile.equals("7706")||profile.equals("7705")){
 			info.put( "agent", agent );
+		}else{
+			agent = "";
 		}
 
 		try {
