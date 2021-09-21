@@ -184,4 +184,10 @@ public abstract class ConstantsPayAgent {
 	public static final String YADING            = "yaDing";
 	//发财了代付
 	public static final String FACAILE           = "faCaiLe";
+	//18pay代付
+	public static final String EIGHTEEN          = "eighteen";
+	//汇元代付
+	public static final String HUICHAO          = "huiChao";
+	//汇元代付
+	public static final String HUIYUAN          = "huiYuan";
 }
