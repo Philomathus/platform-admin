@@ -56,7 +56,7 @@ public class HuiChaoPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("name", withdrawLog.getBankUserName());
         dataMap.put("cardNo", withdrawLog.getBankAccount());
         dataMap.put("idcard", "36522819610222364");
-        dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HUIYUAN);
+        dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
