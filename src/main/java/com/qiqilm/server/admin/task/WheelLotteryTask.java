@@ -29,7 +29,7 @@ public class WheelLotteryTask {
 	@Resource
 	private RedisUtil redisUtil;
 
-	@Scheduled(cron="0 07 18 * * ?")// 每天16:00点执行一次
+	@Scheduled(cron="0 30 18 * * ?")// 每天16:00点执行一次
 	public void cashBackTask() {
 		String lottery_wheel_switch = sysConfigCacheUtil.getConf("lottery_wheel_switch","0");
 		if(!("1").equals(lottery_wheel_switch)){
