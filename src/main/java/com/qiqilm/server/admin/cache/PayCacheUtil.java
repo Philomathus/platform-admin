@@ -22,6 +22,7 @@ import java.time.Duration;
 @Log4j2
 public class PayCacheUtil {
 	public static final String TYPE_LIST = "pay:typeList";
+	public static final String USDT_TYPE_LIST = "pay:usdtTypeList";
 	public static final String TYPE      = "pay:type:";
 	public static final String PLATFORM  = "pay:platform:";
 	public static final String CHANNEL   = "pay:channel:";
@@ -39,6 +40,7 @@ public class PayCacheUtil {
 
 	public void clearPayTypeList() {
 		redisUtil.unlink( TYPE_LIST );
+		redisUtil.unlink( USDT_TYPE_LIST );
 	}
 
 	public void existsPayType( String payTypeId ) {
