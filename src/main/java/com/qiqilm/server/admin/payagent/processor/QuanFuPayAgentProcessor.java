@@ -8,17 +8,12 @@ import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang.RandomStringUtils;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.security.MessageDigest;
@@ -50,7 +45,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("orderId", withdrawLog.getOrderNo());
         dataMap.put("tranDate", DateFormatUtils.formate(new Date(), "yyyyMMdd"));
         dataMap.put("nonceStr", RANDOM(16, "0"));
-        dataMap.put("txnAmt", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0,BigDecimal.ROUND_HALF_UP));
+        dataMap.put("txnAmt", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0, BigDecimal.ROUND_HALF_UP));
         dataMap.put("accountNo", withdrawLog.getBankAccount());
         dataMap.put("bankName", STR2HEX(withdrawLog.getBankName()));
         dataMap.put("accountName", STR2HEX(withdrawLog.getBankUserName()));
@@ -62,30 +57,31 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = encryption(tempStr).toUpperCase();
-        sign = sign(sign,payAgentPlatform.getSignPrivateKey(),true);
-        dataMap.put("sign", sign);
+        sign = sign(sign, payAgentPlatform.getSignPrivateKey(), true);
 
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(dataMap);
-        log.warn(payAgentPlatform.getName() + "下单请求参数:{}", JsonUtil.object2Json(requestMap));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(requestMap, httpHeaders);
+        Map<String, Object> hdata = new HashMap<>();
+        hdata.put("sign", sign);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("REQ_BODY", dataMap);
+        map.put("REQ_HEAD", hdata);
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), map, Map.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        log.info(payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json(resultMap));
 
-        log.info( payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
         if (!CollectionUtils.isEmpty(resultMap)) {
-            if ("000000".equals(resultMap.getOrDefault("rspcode", "").toString())) {
+            Map<String, Object> resMap = (Map<String, Object>) resultMap.getOrDefault("REP_BODY", "");
+            if ("000000".equals(resMap.getOrDefault("rspcode", "").toString())) {
                 log.info(payAgentPlatform.getName() + "订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
+                String msg = resMap.getOrDefault("submsg", "").toString();
+                reqPayAgent.setFailReason(HEX2STR(msg));
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
@@ -95,41 +91,40 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-        String rspSign = requestMap.remove("sign").toString();
-        String orderSn = requestMap.getOrDefault("order_sn", "").toString();
-        String orderNo = requestMap.getOrDefault("order_no", "").toString();
-        String createTime = requestMap.getOrDefault("create_time", "").toString();
-        String operationTime = requestMap.getOrDefault("operation_time", "").toString();
-        String status = requestMap.getOrDefault("status", "").toString();
-        String time = requestMap.getOrDefault("time", "").toString();
+        Map<String, Object> treeMap = new TreeMap<>(requestMap);
+        String rspSign = treeMap.remove("sign").toString();
+        treeMap.values().removeIf(value -> StringUtils.isBlank(value.toString()));
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-        String tempStr = orderSn + orderNo + createTime + operationTime + status + time + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr);
+        String tempStr = this.assemblyUrl(treeMap) + "&key=" + signMd5;
+        String sign = encryption(tempStr).toUpperCase();
+        boolean flag = verify(sign, rspSign, payAgentPlatform.getSignPublicKey(), true);
 
-        log.info(payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign);
-        if (rspSign.equalsIgnoreCase(sign)) {
-            String order_num = requestMap.getOrDefault("order_sn", "").toString();
+        log.info(payAgentPlatform.getName() + "回调签名:" + flag);
+        if (flag) {
+            String order_num = requestMap.getOrDefault("orderNo", "").toString();
+            String status = requestMap.getOrDefault("orderState", "").toString();
+
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_num);
             if (withdrawLog == null) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", order_num);
-                return "fail";
+                return "FAIL";
             }
             if (withdrawLog.getStatus() == 2) {
                 log.error("订单已拒绝，无需回调 - merOrderNo:{}", order_num);
-                return "success";
+                return "SUCCESS";
             }
             if (withdrawLog.getStatus() == 6) {
                 log.error("已有代付记录 - merOrderNo:{}", order_num);
-                return "success";
+                return "SUCCESS";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(order_num);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "1".equals(status));
-            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", order_num, "1".equals(status) ? "成功" : "失败");
-            return "success";
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "01".equals(status));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", order_num, "01".equals(status) ? "成功" : "失败");
+            return "SUCCESS";
         }
-        return "fail";
+        return "FAIL";
     }
 
     @Override
@@ -142,30 +137,29 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
     public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
-
         Map<String, Object> dataMap = new TreeMap<>();
-        dataMap.put("store_id", payAgentPlatform.getMerId());
-        dataMap.put("order_sn", withdrawLog.getOrderNo());
-        dataMap.put("time", System.currentTimeMillis() / 1000);
+        dataMap.put("agtId", payAgentPlatform.getMerId());
+        dataMap.put("tranCode", "2102");
+        dataMap.put("orderId", withdrawLog.getOrderNo());
+        dataMap.put("tranDate", DateFormatUtils.formate(new Date(), "yyyyMMdd"));
+        dataMap.put("nonceStr", RANDOM(16, "0"));
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-        StringBuilder sb = new StringBuilder();
-        dataMap.forEach((k, v) -> sb.append(v));
-        String tempStr = sb.substring(0, sb.length()) + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr);
-        dataMap.put("sign", sign);
+        String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
+        String sign = encryption(tempStr).toUpperCase();
+        sign = sign(sign, payAgentPlatform.getSignPrivateKey(), true);
 
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(dataMap);
-        log.warn(payAgentPlatform.getName() + "下单请求参数:{}", JsonUtil.object2Json(requestMap));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(requestMap, httpHeaders);
+        Map<String, Object> hdata = new HashMap<>();
+        hdata.put("sign", sign);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("REQ_BODY", dataMap);
+        map.put("REQ_HEAD", hdata);
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, Map.class);
+            resultMap = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), map, Map.class);
             log.warn(payAgentPlatform.getName() + "查询结果 - result:{}", JsonUtil.object2Json(resultMap));
 
             if (!CollectionUtils.isEmpty(resultMap)) {
@@ -174,28 +168,25 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
                 int status = 4;
 
                 //  statusCode
-                //  1=打款成功，2=待打款，3=打款失败
+                //  0000交易成功 T000未处理 T101 查无此交易 T006清算中 T010交易失败 T011交易结果未知
                 String statusCode = null;
-
-                String code = resultMap.getOrDefault("code", "").toString();
-                if (!"1".equals(code)) {
-                    statusCode = "3";
+                Map<String, Object> resMap = (Map<String, Object>) resultMap.getOrDefault("REP_BODY", "");
+                String code = resMap.getOrDefault("rspcode", "").toString();
+                if (!"000000".equals(code)) {
+                    statusCode = "T010";
                 }
 
-                Map<String, Object> map = (Map<String, Object>) resultMap.getOrDefault("data", "");
-                if (!CollectionUtils.isEmpty(map)) {
-                    statusCode = map.getOrDefault("status", "").toString();
-                }
+                statusCode = resMap.getOrDefault("subcode", "").toString();
 
-                if ("1".equals(statusCode) || "3".equals(statusCode)) {
-                    if ("1".equals(statusCode)) {
+                if ("0000".equals(statusCode) || "T101".equals(statusCode) || "T010".equals(statusCode)) {
+                    if ("0000".equals(statusCode)) {
                         status = 6;
                     } else {
                         status = 5;
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
-                return resultMap.getOrDefault("msg", "").toString();
+                return resMap.getOrDefault("submsg", "").toString();
             }
 
         } catch (Exception e) {
@@ -205,9 +196,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
     }
 
     /**
-     *
-     * @param plainText
-     *            明文
+     * @param plainText 明文
      * @return 32位密文
      */
     public static String encryption(String plainText) {
@@ -243,8 +232,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
      * </p>
      * STR2HEX(123456)返回结果为313233343536 <br>
      *
-     * @param args
-     *            [0] : 普通字符串
+     * @param args [0] : 普通字符串
      * @return 十六进制字符串 @
      */
     public static String STR2HEX(String args) {
@@ -254,12 +242,29 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
     }
 
     /**
+     * <p>
+     * 将十六进制字符串转换成普通字符串
+     * </p>
+     * HEX2STR(313233343536)返回结果为123456 <br>
+     *
+     * @param args [0] : 十六进制字符串
+     * @return 转换后的字符串 @
+     */
+    public static String HEX2STR(String args) {
+        if (StringUtils.isEmpty(args))
+            throw new RuntimeException("HEX2STR");
+        try {
+            return new String(Hex.decodeHex(args.toCharArray()));
+        } catch (DecoderException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    /**
      * 取随机字符串 <br>
      *
-     * @param args1
-     *            构造指定长度的随机字符串
-     * @param args2
-     *            指明是否包含字母，0-包含字母,数字和字母混合,默认是2 1-不包含数字,只有字母 2－不包含字母,只有数字
+     * @param args1 构造指定长度的随机字符串
+     * @param args2 指明是否包含字母，0-包含字母,数字和字母混合,默认是2 1-不包含数字,只有字母 2－不包含字母,只有数字
      * @return @
      */
     public static String RANDOM(int args1, String args2) {
@@ -280,19 +285,11 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
 
     /**
      * 私钥签名
+     *
      * @throws InvalidKeySpecException
      * @throws Exception
      */
     public static String sign(String content, String privateKey, boolean isRsa2) throws Exception {
-//        PrivateKey priKey = getPrivateKey(privateKey);
-//
-//        Signature signature = Signature.getInstance("SHA1withRSA");
-//        signature.initSign(priKey);
-//        signature.update(content.getBytes(DEFAULT_CHARSET));
-////        signature.sign();
-////        return  byte2hex(signature.sign());
-//        byte[] signed = signature.sign();
-//        return Base64.getEncoder().encodeToString(signed);
         PrivateKey priKey = getPrivateKey(privateKey);
         java.security.Signature signature = java.security.Signature.getInstance(getAlgorithms(isRsa2));
         signature.initSign(priKey);
@@ -304,7 +301,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
     /**
      * 公钥验签
      */
-    public static boolean verify(String content,String sign,String publicKey,boolean isRsa2) throws Exception {
+    public static boolean verify(String content, String sign, String publicKey, boolean isRsa2) throws Exception {
         PublicKey pubKey = getPublicKey(publicKey);
         java.security.Signature signature = java.security.Signature.getInstance(getAlgorithms(isRsa2));
         signature.initVerify(pubKey);
