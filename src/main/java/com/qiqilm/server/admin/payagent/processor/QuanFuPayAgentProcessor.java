@@ -33,6 +33,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
     private static final String ALGORITHMS_SHA1WithRSA = "SHA1WithRSA";
     private static final String ALGORITHMS_SHA256WithRSA = "SHA256WithRSA";
     private static final String DEFAULT_CHARSET = "UTF-8";
+
     private static String getAlgorithms(boolean isRsa2) {
         return isRsa2 ? ALGORITHMS_SHA256WithRSA : ALGORITHMS_SHA1WithRSA;
     }
@@ -91,20 +92,21 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-        Map<String, Object> treeMap = new TreeMap<>(requestMap);
-        String rspSign = treeMap.remove("sign").toString();
-        treeMap.values().removeIf(value -> StringUtils.isBlank(value.toString()));
+        Map<String, Object> signMap = (Map<String, Object>) requestMap.getOrDefault("REP_HEAD", "");
+        String sign = signMap.getOrDefault("sign", "").toString();
 
+        Map<String, Object> dataMap = (Map<String, Object>) requestMap.getOrDefault("REP_BODY", "");
+        Map<String, Object> treeMap = new TreeMap<>(dataMap);
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(treeMap) + "&key=" + signMd5;
-        String sign = encryption(tempStr).toUpperCase();
-        boolean flag = verify(sign, rspSign, payAgentPlatform.getSignPublicKey(), true);
+        String rspSign = encryption(tempStr).toUpperCase();
+        boolean flag = verify(rspSign, sign, payAgentPlatform.getSignPublicKey(), true);
 
-        log.info(payAgentPlatform.getName() + "回调签名:" + flag);
+        log.info(payAgentPlatform.getName() + "回调签名验签:" + flag);
         if (flag) {
-            String order_num = requestMap.getOrDefault("orderNo", "").toString();
-            String status = requestMap.getOrDefault("orderState", "").toString();
+            String order_num = dataMap.getOrDefault("orderId", "").toString();
+            String status = dataMap.getOrDefault("orderState", "").toString();
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_num);
             if (withdrawLog == null) {
@@ -186,7 +188,8 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
-                return resMap.getOrDefault("submsg", "").toString();
+                String msg = resMap.getOrDefault("submsg", "").toString();
+                return resMap.getOrDefault(HEX2STR(msg), "").toString();
             }
 
         } catch (Exception e) {
