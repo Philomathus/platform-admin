@@ -38,6 +38,10 @@ public class WheelHistoryDiceServiceImpl implements IWheelHistoryDiceService {
      */
     @Override
     public List<WheelHistoryDice> selectWheelHistoryDiceList(WheelHistoryDice wheelHistoryDice) {
+        if (wheelHistoryDice.getCTime() != null) {
+            wheelHistoryDice.setSelectStartDate(wheelHistoryDice.getCTime() + " 00:00:00");
+            wheelHistoryDice.setSelectEndDate(wheelHistoryDice.getCTime() + " 23:59:59");
+        }
         return wheelHistoryDiceMapper.selectWheelHistoryDiceList(wheelHistoryDice);
     }
 
