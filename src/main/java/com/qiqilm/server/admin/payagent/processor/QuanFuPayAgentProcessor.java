@@ -186,7 +186,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
                     } else {
                         status = 5;
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, status);
                 }
                 String msg = resMap.getOrDefault("submsg", "").toString();
                 return resMap.getOrDefault(HEX2STR(msg), "").toString();
