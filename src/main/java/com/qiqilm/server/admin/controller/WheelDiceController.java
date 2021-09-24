@@ -77,7 +77,7 @@ public class WheelDiceController extends BaseController {
 	@Log( title = "中秋博饼", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody WheelDice wheelDice) {
-		if (wheelDice.getType().equals(2)) {
+		if (wheelDice.getType().equals(Long.valueOf("2"))) {
 			LiveMount liveMount = liveMountService.selectLiveMountById(Long.valueOf(wheelDice.getPrize()));
 			if (liveMount==null){
 				return AjaxResult.error("请填写正确的坐骑id");
@@ -93,7 +93,7 @@ public class WheelDiceController extends BaseController {
 	@Log( title = "中秋博饼", businessType = BusinessType.UPDATE )
 	@PutMapping
 	public AjaxResult edit( @RequestBody WheelDice wheelDice) {
-		if (wheelDice.getType().equals(2)) {
+		if (wheelDice.getType().equals(Long.valueOf("2"))) {
 			LiveMount liveMount = liveMountService.selectLiveMountById(Long.valueOf(wheelDice.getPrize()));
 			if (liveMount==null){
 				return AjaxResult.error("请填写正确的坐骑id");

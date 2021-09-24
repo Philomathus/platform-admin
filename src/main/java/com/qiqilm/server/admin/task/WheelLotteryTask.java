@@ -62,13 +62,14 @@ public class WheelLotteryTask {
 
 	private boolean updateLotteryTimes(String userId,Integer times){
 		WheelUserDice wheelUserDice=wheelUserDiceMapper.selectWheelUserDiceById(userId);
-		WheelUserDice wheelDice=new WheelUserDice();
-		wheelDice.setTimes(times);
 		if ( wheelUserDice == null) {
+			WheelUserDice wheelDice=new WheelUserDice();
 			wheelDice.setId(userId);
+			wheelDice.setTimes(times);
 			return wheelUserDiceMapper.insertWheelUserDice(wheelDice)>0;
 		}
-		return wheelUserDiceMapper.updateWheelUserDiceTimes(wheelDice)>0;
+		wheelUserDice.setTimes(times);
+		return wheelUserDiceMapper.updateWheelUserDiceTimes(wheelUserDice)>0;
 	}
 
 }

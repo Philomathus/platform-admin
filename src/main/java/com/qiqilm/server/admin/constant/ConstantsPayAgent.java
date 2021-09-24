@@ -75,6 +75,8 @@ public abstract class ConstantsPayAgent {
 	public static final String NEWSHIJI              = "xinShiJi";
 	// 97代付
 	public static final String NINESEVEN             = "nineSeven";
+	// 黑马代付
+	public static final String HEIMA             = "heiMa";
 	// 顺通代付
 	public static final String SHUNTONG              = "shunTong";
 	// 福财运2代付
@@ -188,6 +190,8 @@ public abstract class ConstantsPayAgent {
 	public static final String EIGHTEEN          = "eighteen";
 	//汇元代付
 	public static final String HUIYUAN          = "huiYuan";
-	//汇元代付
+	//汇潮代付
 	public static final String HUICHAO          = "huiChao";
+	//权付代付
+	public static final String QUANFU          = "quanFu";
 }

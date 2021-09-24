@@ -145,7 +145,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 						|| channelNew.getPayRate().compareTo( new BigDecimal( "0.01" ) ) < 0 ) {
 					throw new BusinessException( "通道费率不得大于0.4或小于0.01" );
 				}
-				if(StringUtils.isNotBlank( channelNew.getDiscountBill() ) && new BigDecimal(payChannelNew.getDiscountBill()).compareTo(new BigDecimal("1")) > 0){
+				if(StringUtils.isNotBlank( channelNew.getDiscountBill() ) && new BigDecimal(channelNew.getDiscountBill()).compareTo(new BigDecimal("1")) > 0){
 					throw new BusinessException( "优惠比例为小数形式,不可大于1" );
 				}
 				payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( payChannelNew.getId() ) );
