@@ -19,8 +19,6 @@ import java.io.*;
 public class UploadOssController {
 	@Autowired
 	private IServerOssService  serverOssService;
-	@Autowired
-	private SysConfigCacheUtil sysConfigCacheUtil;
 
 	@PostMapping( "{path}" )
 	public AjaxResult upload( @RequestParam( "file" ) MultipartFile file, @PathVariable String path ) throws IOException {
@@ -30,7 +28,7 @@ public class UploadOssController {
 		File        newFile     = new File( System.getProperty( "java.io.tmpdir" ) + fileName );
 		IOUtils.copy( inputStream, new FileOutputStream( newFile ) );
 		String rFileName = DigestUtils.md5Hex( new FileInputStream( newFile ) );
-		String fileKey = sysConfigCacheUtil.getConf( "agent_id" ) + "/" + path + "/" + rFileName
+		String fileKey = "77lm/" + path + "/" + rFileName
 				+ FilenameUtils.EXTENSION_SEPARATOR + extension;
 		String url = serverOssService.uploadInputStream( new FileInputStream( newFile ), fileKey );
 		newFile.delete();

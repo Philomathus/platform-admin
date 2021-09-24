@@ -58,8 +58,7 @@ public class LiveVideoPropController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
 	@GetMapping( "/getCount" )
 	public AjaxResult getCount( LiveVideoProp liveVideoProp ) {
-		LiveVideoProp liveVideoProp1;
-		liveVideoProp1 = liveVideoPropService.getCount( liveVideoProp );
+		LiveVideoProp liveVideoProp1 = liveVideoPropService.getCount( liveVideoProp );
 		return AjaxResult.success( liveVideoProp1 );
 	}
 

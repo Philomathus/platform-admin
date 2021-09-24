@@ -15,12 +15,16 @@
     </sql>
 
     <select id="selectLiveUserMountList" parameterType="LiveUserMount" resultMap="LiveUserMountResult">
-        <include refid="selectLiveUserMountVo"/>
+        select u.id, u.user_id, u.effective_time, u.is_use, m.name mountName from ${dbLive}.live_user_mount u left join ${dbLive}.live_mount m on u.mount_id = m.id
         <where>
-            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
-            <if test="effectiveTime != null "> and effective_time = #{effectiveTime}</if>
-            <if test="mountId != null "> and mount_id = #{mountId}</if>
-            <if test="isUse != null "> and is_use = #{isUse}</if>
+            <if test="userId != null  and userId != ''"> and u.user_id = #{userId}</if>
+            <if test="mountId != null "> and u.mount_id = #{mountId}</if>
+            <if test="isUse != null "> and u.is_use = #{isUse}</if>
+            <if test="selectDate != null and selectDate != ''"><!-- 开始时间检索 -->
+                and u.effective_time <![CDATA[ >= ]]> #{selectStartDate} and u.effective_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 

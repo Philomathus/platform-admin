@@ -329,22 +329,23 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 		BasePayAgent basePayAgent = payAgentProcessorFactoryUtil.createPayProcessor( payAgentPlatform.getCode() );
 		String msg = null;
+		String msgStatus = null;
 		try {
-			basePayAgent.queryOrderPay( payAgentLog );
+			msg = basePayAgent.queryOrderPay( payAgentLog );
 			PayAgentLog payAgentLog1 = payAgentLogMapper.selectPayAgentLogOrderNo(req.getOrderNo());
 			Integer callbackStatus = payAgentLog1.getCallbackStatus();
 			//回调状态 0 代付处理中 1 代付成功 代付失败
 			if (callbackStatus==0){
-				msg="代付处理中";
+				msgStatus="代付处理中";
 			}else if (callbackStatus==1){
-				msg="代付成功";
+				msgStatus="代付成功";
 			}else {
-				msg="代付失败";
+				msgStatus="代付失败";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return AjaxResult.success(msg);
+		return AjaxResult.success(msgStatus + ",查询返回结果:" + msg);
 	}
 
 	@Override
@@ -476,8 +477,19 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( StringUtils.hasText( memberWithdrawLog.getOpName() ) && !userName.equals( memberWithdrawLog.getOpName() ) ) {
 			return AjaxResult.error( "该订单已被" + memberWithdrawLog.getOpName() + "锁定" );
 		}
+		//判断是代付成功还是出款成功
+		int status=3;
+		if (req.getPayAgentPlatId()!= null){
+			if ( memberWithdrawLog.getStatus() == 6 ) {
+				return AjaxResult.error( "该订单已被终审,请刷新界面" );
+			}
+           //设定状态为代付成功
+			status=6;
+			PayAgentPlatform    payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( req.getPayAgentPlatId() );
+            req.setRemark("人工代付:"+payAgentPlatform.getName());
+		}
 		memberWithdrawLog.setRemark( req.getRemark() );
-		memberWithdrawLog.setStatus( 3 );
+		memberWithdrawLog.setStatus( status );
 		memberWithdrawLog.setOpName( userName );
 		memberWithdrawLog.setUpdateTime( new Date() );
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
@@ -487,6 +499,15 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		}
 
 		return AjaxResult.error( "更新订单状态失败" );
+	}
+
+	@Override
+	public AjaxResult updateRemark( ReqMemberWithdrawLog req ) {
+		MemberWithdrawLog memberWithdrawLog = new MemberWithdrawLog();
+		memberWithdrawLog.setId(req.getId());
+		memberWithdrawLog.setRemark(req.getRemark());
+		memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
+		return AjaxResult.success();
 	}
 
 	@Override
@@ -573,7 +594,9 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	 */
 	@Override
 	public AjaxResult withdrawReport( String id ) {
-
+		if ( !redisUtil.lock( EnumLock.member, id, "1", 10 ) ) {
+			return AjaxResult.error( "请勿重复查询" );
+		}
 		//        memberInfoMapper.call_pro_useranalysis(id);
 		//        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
 

@@ -5,75 +5,122 @@
     <resultMap type="LiveComplaint" id="LiveComplaintResult">
         <result property="id"    column="id"    />
         <result property="content"    column="content"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="roomName"    column="room_name"    />
+        <result property="anchorNick"    column="anchor_nick"    />
         <result property="userId"    column="user_id"    />
         <result property="anchor"    column="anchor"    />
-        <result property="anchorNick"    column="anchor_nick"    />
-        <result property="roomName"    column="room_name"    />
-        <result property="mobile"    column="mobile"    />
+        <result property="comments"    column="comments"    />
+        <result property="approver"    column="approver"    />
+        <result property="processingTime"    column="processing_time"    />
         <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectLiveComplaintVo">
-        SELECT id, content, user_id,mobile,room_name,anchor_nick, anchor, create_time FROM ${dbLive}.live_complaint
+        select id, content, mobile, room_name, anchor_nick, user_id, anchor, comments, approver, processing_time, create_time,  status from ${dbLive}.live_complaint
     </sql>
 
     <select id="selectLiveComplaintList" parameterType="LiveComplaint" resultMap="LiveComplaintResult">
         <include refid="selectLiveComplaintVo"/>
         <where>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="roomName != null  and roomName != ''"> and room_name like concat('%', #{roomName}, '%')</if>
+            <if test="anchorNick != null  and anchorNick != ''"> and anchor_nick = #{anchorNick}</if>
             <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
             <if test="anchor != null  and anchor != ''"> and anchor = #{anchor}</if>
+            <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
+            <if test="approver != null  and approver != ''"> and approver = #{approver}</if>
+            <if test="processingTime != null "> and processing_time = #{processingTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="selectDate != null and selectDate != ''"><!-- 开始时间检索 -->
+                and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
-<!--
-    <select id="selectLiveComplaintById" parameterType="Long" resultMap="LiveComplaintResult">
-        <include refid="selectLiveComplaintVo"/>
-        where id = #{id}
-    </select>
 
-    <insert id="insertLiveComplaint" parameterType="LiveComplaint" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.live_complaint
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="content != null">content,</if>
-            <if test="userId != null">user_id,</if>
-            <if test="anchor != null">anchor,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="roomName != null">room_name,</if>
-            <if test="mobile != null">mobile,</if>
-            <if test="anchorNick != null">anchor_nick,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <select id="selectLiveComplaintById" parameterType="Long" resultMap="LiveComplaintResult">
+            <include refid="selectLiveComplaintVo"/>
+            where id = #{id}
+        </select>
+
+        <insert id="insertLiveComplaint" parameterType="LiveComplaint" useGeneratedKeys="true" keyProperty="id">
+            insert into ${dbLive}.live_complaint
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="content != null">content,</if>
+                <if test="mobile != null">mobile,</if>
+                <if test="roomName != null">room_name,</if>
+                <if test="anchorNick != null">anchor_nick,</if>
+                <if test="userId != null">user_id,</if>
+                <if test="anchor != null">anchor,</if>
+                <if test="comments != null">comments,</if>
+                <if test="approver != null">approver,</if>
+                <if test="processingTime != null">processing_time,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="status != null">status,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="content != null">#{content},</if>
+                <if test="mobile != null">#{mobile},</if>
+                <if test="roomName != null">#{roomName},</if>
+                <if test="anchorNick != null">#{anchorNick},</if>
                 <if test="userId != null">#{userId},</if>
                 <if test="anchor != null">#{anchor},</if>
-                <if test="createTime != null">#{createTime},</if>
-                <if test="roomName != null">#{roomName},</if>
-                <if test="mobile != null">#{mobile},</if>
-                <if test="anchorNick != null">#{anchorNick},</if>
-             </trim>
-    </insert>
+                <if test="comments != null">#{comments},</if>
+                <if test="approver != null">#{approver},</if>
+                <if test="processingTime != null">#{processingTime},</if>
+                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                <if test="status != null">#{status},</if>
+            </trim>
+        </insert>
 
     <update id="updateLiveComplaint" parameterType="LiveComplaint">
-        update 7700_live.live_complaint
+        update ${dbLive}.live_complaint
         <trim prefix="SET" suffixOverrides=",">
             <if test="content != null">content = #{content},</if>
-    
+
+            <if test="mobile != null">mobile = #{mobile},</if>
+
+            <if test="roomName != null">room_name = #{roomName},</if>
+
+            <if test="anchorNick != null">anchor_nick = #{anchorNick},</if>
+
             <if test="userId != null">user_id = #{userId},</if>
-    
+
             <if test="anchor != null">anchor = #{anchor},</if>
-    
-            <if test="createTime != null">create_time = #{createTime},</if>
+
+            <if test="comments != null">comments = #{comments},</if>
+
+            <if test="approver != null">approver = #{approver},</if>
+
+            <if test="processingTime != null">processing_time = #{processingTime},</if>
+
+            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
+
+            <if test="status != null">status = #{status},</if>
+
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteLiveComplaintById" parameterType="Long">
-        delete from ${dbLive}.live_complaint where id = #{id}
-    </delete>
+        <delete id="deleteLiveComplaintById" parameterType="Long">
+            delete from ${dbLive}.live_complaint where id = #{id}
+        </delete>
 
-    <delete id="deleteLiveComplaintByIds" parameterType="String">
-        delete from ${dbLive}.live_complaint where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>-->
+        <delete id="deleteLiveComplaintByIds" parameterType="String">
+            delete from ${dbLive}.live_complaint where id in
+            <foreach item="id" collection="array" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </delete>
 </mapper>
+
+
+
+
+
+
+

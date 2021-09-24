@@ -42,6 +42,7 @@ public class SysOperlogController extends BaseController {
 		ExportExcelUtil.exportExcel( list, "操作日志", "操作日志表", SysOperLog.class, response );
 	}
 
+	@Log( title = "操作日志", businessType = BusinessType.DELETE )
 	@PreAuthorize( "@ss.hasPermi('monitor:operlog:remove')" )
 	@DeleteMapping( "/{operIds}" )
 	public AjaxResult remove( @PathVariable Long[] operIds ) {

@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.service.impl.SysLoginService;
 import com.qiqilm.server.admin.service.impl.SysPermissionService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import java.util.Set;
  *
  * @author 77tv
  */
+@Log4j2
 @RestController
 public class SysLoginController {
 	@Autowired
@@ -51,11 +53,12 @@ public class SysLoginController {
 	 */
 	@PostMapping( "/login" )
 	public AjaxResult login( @RequestBody String data ) throws Exception {
-
 		String ip = UserDataUtil.getIp( ServletUtil.getHttpServletRequest() );
 
 		String    decryptStr = RSACoder.decryptByPrivateKey( data, AuthUtil.getSecurityKeyStr( "secretkey/loginPrivateKey" ) );
 		LoginBody loginBody  = JsonUtil.json2Object( decryptStr, LoginBody.class );
+		
+		log.warn( loginBody );
 		// 生成令牌
 		return loginService.login( ip, loginBody );
 	}

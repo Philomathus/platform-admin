@@ -1,0 +1,66 @@
+package com.qiqilm.server.admin.service;
+
+import java.util.List;
+
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.PayUsdtRecharge;
+import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
+
+/**
+ * USDT充值提交记录Service接口
+ *
+ * @author 77tv
+ * @date 2021-09-14
+ */
+public interface IPayUsdtRechargeService {
+	/**
+	 * 查询USDT充值提交记录
+	 *
+	 * @param id USDT充值提交记录ID
+	 * @return USDT充值提交记录
+	 */
+	public PayUsdtRecharge selectPayUsdtRechargeById(Long id);
+
+	/**
+	 * 查询USDT充值提交记录列表
+	 *
+	 * @param reqPayUsdtRecharge USDT充值提交记录
+	 * @return USDT充值提交记录集合
+	 */
+	public List<PayUsdtRecharge> selectPayUsdtRechargeList(ReqPayUsdtRecharge reqPayUsdtRecharge);
+
+	/**
+	 * 新增USDT充值提交记录
+	 *
+	 * @param payUsdtRecharge USDT充值提交记录
+	 * @return 结果
+	 */
+	public int insertPayUsdtRecharge(PayUsdtRecharge payUsdtRecharge);
+
+	/**
+	 * 修改USDT充值提交记录
+	 *
+	 * @param payUsdtRecharge USDT充值提交记录
+	 * @return 结果
+	 */
+	public int refusePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge);
+	public AjaxResult updatePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge);
+	public int lock(Long id);
+	public AjaxResult unLock(Long id);
+
+	/**
+	 * 批量删除USDT充值提交记录
+	 *
+	 * @param ids 需要删除的USDT充值提交记录ID
+	 * @return 结果
+	 */
+	public int deletePayUsdtRechargeByIds(Long[] ids );
+
+	/**
+	 * 删除USDT充值提交记录信息
+	 *
+	 * @param id USDT充值提交记录ID
+	 * @return 结果
+	 */
+	public int deletePayUsdtRechargeById(Long id);
+}
