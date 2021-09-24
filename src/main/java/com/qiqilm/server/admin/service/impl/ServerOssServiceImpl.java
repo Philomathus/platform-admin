@@ -10,6 +10,7 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.qiqilm.server.admin.cache.ServerOssCacheUtil;
@@ -190,14 +191,19 @@ public class ServerOssServiceImpl implements IServerOssService {
 			//设置加密  加密算法为  AES256
 			objectMetadata.setSSEAlgorithm(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
 			PutObjectRequest putObjectRequest =
-					new PutObjectRequest(serverOss.getBucket(), path, new ByteArrayInputStream(bytes), objectMetadata);
+					new PutObjectRequest(serverOss.getBucket(), path, new ByteArrayInputStream(bytes), objectMetadata)
+							.withCannedAcl(CannedAccessControlList.PublicRead);
+			//设置文件图片上传读写权限。访问继承桶的权限，不设置则单个图片无法显示。权限默认私有。
 			BasicAWSCredentials creds = new BasicAWSCredentials(serverOss.getAccessKey(), serverOss.getAccessSecret());
+			//创建安全证书注册
 			AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 					.withCredentials(new AWSStaticCredentialsProvider(creds))
 					.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
-							"https://oss-cn-quanzhou.kz.cc","oss-cn-quanzhou.kz.cc"))
+							serverOss.getEndpoint(),"oss-cn-quanzhou.kz.cc"))//上传地址和区域
 					.build();
+			//通过访问第三方，将文件上传到亚马逊
 			s3Client.putObject(putObjectRequest);
+			s3Client.shutdown();
 		} catch (AmazonServiceException e) {
 			e.printStackTrace();
 		}
