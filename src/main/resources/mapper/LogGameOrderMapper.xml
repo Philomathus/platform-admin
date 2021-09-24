@@ -51,7 +51,7 @@
 
 	<select id="selectUpLogGameScoreList" parameterType="LogGameOrder" resultMap="LogGameOrderResult">
 		SELECT lgo.id,lgo.type,lgo.member_id,lgo.platform_id,lgo.money FROM log_game_order lgo
-		WHERE lgo.type = 1 AND lgo.status =10 AND lgo.retry_count > 3 AND
+		WHERE lgo.type = 1 AND ((lgo.status =10 AND lgo.retry_count > 3) OR (lgo.status = 1 AND TIMESTAMPDIFF(MINUTE,b_time,NOW()) > 10)) AND
 		NOT EXISTS (SELECT transfer_id FROM member_game_transfer WHERE transfer_id = lgo.id)
 
 		<if test="searchValue != null  and searchValue != ''">
