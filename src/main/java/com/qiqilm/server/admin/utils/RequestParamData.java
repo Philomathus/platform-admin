@@ -96,7 +96,7 @@ public class RequestParamData {
                 lineCode,stringStartDate,stringEndDate,memberGameData.getKindId(),memberGameData.getGameRound(),key);
         String param = s1;
         //先写死，后续在处理 GY9
-        String apiUrl = "http://zd.mkecy.com/game-detail/";
+        String apiUrl = "http://yxzf.cxzbnb.com/game-detail/";
         String getURL = apiUrl.concat( url ).concat(param);
         getURL = getURL.replace(" ", "%20");
         log.info( "AG-视讯-对局列表-请求参数：{}",getURL );

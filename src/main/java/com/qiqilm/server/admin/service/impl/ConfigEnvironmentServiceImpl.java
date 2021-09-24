@@ -1,13 +1,16 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.ActivityInfo;
 import com.qiqilm.server.admin.domain.ConfigEnvironment;
 import com.qiqilm.server.admin.domain.SysDictData;
 import com.qiqilm.server.admin.mapper.ConfigEnvironmentMapper;
 import com.qiqilm.server.admin.mapper.SysDictDataMapper;
 import com.qiqilm.server.admin.service.IConfigEnvironmentService;
 import com.qiqilm.server.admin.utils.DictUtils;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,8 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
 	private SysConfigCacheUtil      sysConfigCacheUtil;
 	@Autowired
     private DictUtils dictUtils;
+	@Autowired
+	private ConfigDomainCacheUtil configDomainCacheUtil;
 
 	/**
 	 * 查询环境参数配置
@@ -41,6 +46,14 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
 		return configEnvironmentMapper.selectConfigEnvironmentById( envCode );
 	}
 
+	@Override
+	public ConfigEnvironment selectConfigEnvironmentByIdTwo( String envCode ) {
+		ConfigEnvironment configEnvironment = configEnvironmentMapper.selectConfigEnvironmentById( envCode );
+		String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+		configEnvironment.setEnvValue(configEnvironment.getEnvValue().replace("${domain.oss}",domainValue));
+		return configEnvironment;
+	}
+
 	/**
 	 * 查询环境参数配置列表
 	 *
@@ -50,6 +63,18 @@ public class ConfigEnvironmentServiceImpl implements IConfigEnvironmentService {
 	@Override
 	public List<ConfigEnvironment> selectConfigEnvironmentList( ConfigEnvironment configEnvironment ) {
 		return configEnvironmentMapper.selectConfigEnvironmentList( configEnvironment );
+	}
+
+	@Override
+	public List<ConfigEnvironment> selectConfigEnvironmentTwo( ConfigEnvironment configEnvironment ) {
+		List<ConfigEnvironment> configEnvironments = configEnvironmentMapper.selectConfigEnvironmentTwo( configEnvironment );
+		String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+		for ( ConfigEnvironment co : configEnvironments ) {
+			if ( StringUtils.isNotBlank( co.getEnvValue() ) && co.getEnvValue().startsWith( "${domain.oss}" ) && !co.getEnvValue().startsWith( "http" ) ) {
+				co.setEnvValue(co.getEnvValue().replace("${domain.oss}",domainValue));
+			}
+		}
+		return configEnvironments;
 	}
 
 	/**

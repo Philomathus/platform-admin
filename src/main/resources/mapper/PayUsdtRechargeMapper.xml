@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayUsdtRechargeMapper">
+
+    <resultMap type="PayUsdtRecharge" id="PayUsdtRechargeResult">
+        <result property="id"    column="id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="rechargeNumber"    column="recharge_number"    />
+        <result property="rechargeMoney"    column="recharge_money"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="discountBill"    column="discount_bill"    />
+        <result property="chainName"    column="chain_name"    />
+        <result property="rechargeAddress"    column="recharge_address"    />
+        <result property="transactionId"    column="transaction_id"    />
+        <result property="opName"    column="op_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPayUsdtRechargeVo">
+        select id, member_id, user_name, channel_name, recharge_number, recharge_money, status, remark, discount_bill, chain_name, recharge_address, transaction_id, op_name, create_time, update_time from pay_usdt_recharge
+    </sql>
+
+    <select id="selectPayUsdtRechargeList" parameterType="ReqPayUsdtRecharge" resultMap="PayUsdtRechargeResult">
+        <include refid="selectPayUsdtRechargeVo"/>
+        <where>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
+            <if test="rechargeNumber != null "> and recharge_number = #{rechargeNumber}</if>
+            <if test="rechargeMoney != null "> and recharge_money = #{rechargeMoney}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
+            <if test="chainName != null  and chainName != ''"> and chain_name like concat('%', #{chainName}, '%')</if>
+            <if test="rechargeAddress != null  and rechargeAddress != ''"> and recharge_address = #{rechargeAddress}</if>
+            <if test="transactionId != null  and transactionId != ''"> and transaction_id = #{transactionId}</if>
+            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="selectDate != null and selectDate != ''"><!-- 开始时间检索 -->
+                and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="selectPayUsdtRechargeById" parameterType="Long" resultMap="PayUsdtRechargeResult">
+        <include refid="selectPayUsdtRechargeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPayUsdtRecharge" parameterType="PayUsdtRecharge" useGeneratedKeys="true" keyProperty="id">
+        insert into pay_usdt_recharge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">member_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="channelName != null">channel_name,</if>
+            <if test="rechargeNumber != null">recharge_number,</if>
+            <if test="rechargeMoney != null">recharge_money,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="discountBill != null">discount_bill,</if>
+            <if test="chainName != null">chain_name,</if>
+            <if test="rechargeAddress != null">recharge_address,</if>
+            <if test="transactionId != null">transaction_id,</if>
+            <if test="opName != null">op_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="memberId != null">#{memberId},</if>
+                    <if test="userName != null">#{userName},</if>
+                    <if test="channelName != null">#{channelName},</if>
+                    <if test="rechargeNumber != null">#{rechargeNumber},</if>
+                    <if test="rechargeMoney != null">#{rechargeMoney},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="discountBill != null">#{discountBill},</if>
+                    <if test="chainName != null">#{chainName},</if>
+                    <if test="rechargeAddress != null">#{rechargeAddress},</if>
+                    <if test="transactionId != null">#{transactionId},</if>
+                    <if test="opName != null">#{opName},</if>
+                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+                <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+             </trim>
+    </insert>
+
+    <update id="updatePayUsdtRecharge" parameterType="PayUsdtRecharge">
+        update pay_usdt_recharge
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null">member_id = #{memberId},</if>
+    
+            <if test="userName != null">user_name = #{userName},</if>
+    
+            <if test="channelName != null">channel_name = #{channelName},</if>
+    
+            <if test="rechargeNumber != null">recharge_number = #{rechargeNumber},</if>
+    
+            <if test="rechargeMoney != null">recharge_money = #{rechargeMoney},</if>
+    
+            <if test="status != null">status = #{status},</if>
+    
+            <if test="remark != null">remark = #{remark},</if>
+    
+            <if test="discountBill != null">discount_bill = #{discountBill},</if>
+    
+            <if test="chainName != null">chain_name = #{chainName},</if>
+    
+            <if test="rechargeAddress != null">recharge_address = #{rechargeAddress},</if>
+    
+            <if test="transactionId != null">transaction_id = #{transactionId},</if>
+    
+            <if test="opName != null">op_name = #{opName},</if>
+    
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayUsdtRechargeById" parameterType="Long">
+        delete from pay_usdt_recharge where id = #{id}
+    </delete>
+
+    <delete id="deletePayUsdtRechargeByIds" parameterType="String">
+        delete from pay_usdt_recharge where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -55,6 +55,9 @@ public class RspPayJour  {
 			return BigDecimal.ZERO;
 		}
 		if (channelPayRate.compareTo(BigDecimal.ZERO)> 0 ){
+			if (subMoney==null){
+				subMoney=money;
+			}
 			return subMoney.multiply(channelPayRate).setScale( 2,
 					RoundingMode.HALF_UP );
 		}
@@ -66,6 +69,9 @@ public class RspPayJour  {
 			return subMoney;
 		}
 		if (channelPayRate.compareTo(BigDecimal.ZERO)> 0 ){
+			if (subMoney==null){
+				subMoney=money;
+			}
 			return subMoney.subtract(subMoney.multiply(channelPayRate)).setScale( 2,
 					RoundingMode.HALF_UP );
 		}

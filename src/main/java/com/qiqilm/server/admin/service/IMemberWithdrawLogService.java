@@ -51,6 +51,8 @@ public interface IMemberWithdrawLogService {
 
 	AjaxResult artificial( ReqMemberWithdrawLog req );
 
+	AjaxResult updateRemark( ReqMemberWithdrawLog req );
+
 	AjaxResult abnormalWithdrawal( ReqMemberWithdrawLog req );
 
 	AjaxResult manualWithdrawal( ReqMemberWithdrawLog req );

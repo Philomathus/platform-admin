@@ -10,6 +10,7 @@ public enum EnumLock {
     loginUser("loginUserName:"),
 
     member("member:"),
+    usdt("usdt:"),
     adminUser("adminUser:"),
     Anchor("Anchor"),
     payAgent("payAgent:"),

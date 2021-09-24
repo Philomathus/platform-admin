@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelDiceMapper">
+
+    <resultMap type="WheelDice" id="WheelDiceResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="prize"    column="prize"    />
+        <result property="weight"    column="weight"    />
+        <result property="odr"    column="odr"    />
+        <result property="type"    column="type"    />
+        <result property="des"    column="des"    />
+        <result property="diceValue"    column="dice_value"    />
+    </resultMap>
+
+    <sql id="selectWheelDiceVo">
+        select id, name, prize, weight, odr, type, des, dice_value from ${dbLive}.wheel_dice
+    </sql>
+
+    <select id="selectWheelDiceList" parameterType="WheelDice" resultMap="WheelDiceResult">
+        <include refid="selectWheelDiceVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+
+    <select id="selectWheelDiceById" parameterType="Long" resultMap="WheelDiceResult">
+        <include refid="selectWheelDiceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWheelDice" parameterType="WheelDice" useGeneratedKeys="true" keyProperty="id">
+        insert into ${dbLive}.wheel_dice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="prize != null">prize,</if>
+            <if test="weight != null">weight,</if>
+            <if test="odr != null">odr,</if>
+            <if test="type != null">type,</if>
+            <if test="des != null">des,</if>
+            <if test="diceValue != null">dice_value,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="prize != null">#{prize},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="odr != null">#{odr},</if>
+            <if test="type != null">#{type},</if>
+            <if test="des != null">#{des},</if>
+            <if test="diceValue != null">#{diceValue},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWheelDice" parameterType="WheelDice">
+        update ${dbLive}.wheel_dice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+
+            <if test="prize != null">prize = #{prize},</if>
+
+            <if test="weight != null">weight = #{weight},</if>
+
+            <if test="odr != null">odr = #{odr},</if>
+
+            <if test="type != null">type = #{type},</if>
+
+            <if test="des != null">des = #{des},</if>
+
+            <if test="diceValue != null">dice_value = #{diceValue},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWheelDiceById" parameterType="Long">
+        delete from ${dbLive}.wheel_dice where id = #{id}
+    </delete>
+
+    <delete id="deleteWheelDiceByIds" parameterType="String">
+        delete from ${dbLive}.wheel_dice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -101,6 +101,12 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 				|| payChannelNew.getPayRate().compareTo( new BigDecimal( "0.01" ) ) < 0 ) {
 			throw new BusinessException( "通道费率不得大于0.4或小于0.01" );
 		}
+		if ( !StringUtils.isNotBlank(payChannelNew.getDiscountBill()) || payChannelNew.getDiscountBill() == null ) {
+			payChannelNew.setDiscountBill( "0" );
+		}
+		if(new BigDecimal(payChannelNew.getDiscountBill()).compareTo(new BigDecimal("1")) > 0){
+			throw new BusinessException( "优惠比例请填写小数形式,不可大于1" );
+		}
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String    username  = loginUser.getUsername();
 		payChannelNew.setCreator( username );
@@ -138,6 +144,9 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
 				if ( channelNew.getPayRate().compareTo( new BigDecimal( "0.4" ) ) > 0
 						|| channelNew.getPayRate().compareTo( new BigDecimal( "0.01" ) ) < 0 ) {
 					throw new BusinessException( "通道费率不得大于0.4或小于0.01" );
+				}
+				if(StringUtils.isNotBlank( channelNew.getDiscountBill() ) && new BigDecimal(channelNew.getDiscountBill()).compareTo(new BigDecimal("1")) > 0){
+					throw new BusinessException( "优惠比例为小数形式,不可大于1" );
 				}
 				payChannelMoneyMapper.deleteByChannelIds( Collections.singletonList( payChannelNew.getId() ) );
 				Integer  typeCode = payTypeMapper.selectCodeById( channelNew.getPayTypeId() );

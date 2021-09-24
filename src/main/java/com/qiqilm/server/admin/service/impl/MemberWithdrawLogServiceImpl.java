@@ -502,6 +502,15 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	}
 
 	@Override
+	public AjaxResult updateRemark( ReqMemberWithdrawLog req ) {
+		MemberWithdrawLog memberWithdrawLog = new MemberWithdrawLog();
+		memberWithdrawLog.setId(req.getId());
+		memberWithdrawLog.setRemark(req.getRemark());
+		memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
+		return AjaxResult.success();
+	}
+
+	@Override
 	public AjaxResult abnormalWithdrawal( ReqMemberWithdrawLog req ) {
 		MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById( req.getId() );
 		if ( memberWithdrawLog == null ) {
@@ -586,7 +595,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	@Override
 	public AjaxResult withdrawReport( String id ) {
 		if ( !redisUtil.lock( EnumLock.member, id, "1", 10 ) ) {
-			return AjaxResult.error( "请勿重复提交" );
+			return AjaxResult.error( "请勿重复查询" );
 		}
 		//        memberInfoMapper.call_pro_useranalysis(id);
 		//        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
