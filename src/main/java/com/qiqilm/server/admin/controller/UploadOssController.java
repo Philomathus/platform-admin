@@ -30,6 +30,7 @@ public class UploadOssController {
 										  MultipartFile file, @PathVariable String path )
 			throws IOException {
 		ServerOss serverOss = serverOssCacheUtil.getEffect();
+		serverOss.setProvider(2);
 		String      fileName    = file.getOriginalFilename();
 		String url = null;
 		String      extension   = FilenameUtils.getExtension( fileName );
@@ -47,6 +48,9 @@ public class UploadOssController {
 		if (serverOss.getProvider()==1){//亚马逊
 			serverOssService.amazonawsUpload(file,fileKey,serverOss,newFile);
 			url=serverOss.getEndpoint()+ fileKey;
+		}
+		if(serverOss.getProvider()==2){
+			serverOssService.kuaiKuaiYun(file,fileKey,serverOss,newFile);
 		}
 		return AjaxResult.success( "上传成功",url);
 	}

@@ -6,21 +6,27 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.qiqilm.server.admin.cache.ServerOssCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ServerOss;
 import com.qiqilm.server.admin.mapper.ServerOssMapper;
 import com.qiqilm.server.admin.service.IServerOssService;
 import com.qiqilm.server.admin.utils.DateUtils;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -167,6 +173,32 @@ public class ServerOssServiceImpl implements IServerOssService {
 		} catch (AmazonServiceException e) {
 			e.printStackTrace();
 		} catch (SdkClientException e) {
+			e.printStackTrace();
+		}
+	}
+	public void kuaiKuaiYun(MultipartFile file, String path, ServerOss serverOss,File newFile){
+
+		try {
+			byte[]   bytes = new byte[0];
+			try {
+				bytes = FileUtils.readFileToByteArray(newFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			ObjectMetadata objectMetadata = new ObjectMetadata();
+			objectMetadata.setContentLength(bytes.length);
+			//设置加密  加密算法为  AES256
+			objectMetadata.setSSEAlgorithm(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
+			PutObjectRequest putObjectRequest =
+					new PutObjectRequest(serverOss.getBucket(), path, new ByteArrayInputStream(bytes), objectMetadata);
+			BasicAWSCredentials creds = new BasicAWSCredentials(serverOss.getAccessKey(), serverOss.getAccessSecret());
+			AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+					.withCredentials(new AWSStaticCredentialsProvider(creds))
+					.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
+							"https://oss-cn-quanzhou.kz.cc","oss-cn-quanzhou.kz.cc"))
+					.build();
+			s3Client.putObject(putObjectRequest);
+		} catch (AmazonServiceException e) {
 			e.printStackTrace();
 		}
 	}
