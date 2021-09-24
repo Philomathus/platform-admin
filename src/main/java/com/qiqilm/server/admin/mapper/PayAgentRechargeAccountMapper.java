@@ -29,6 +29,8 @@ public interface PayAgentRechargeAccountMapper {
 	 */
 	public List<PayAgentRechargeAccount> selectPayAgentRechargeAccountList(Map<String,Object> map);
 
+	List<PayAgentRechargeAccount> selectPayAgentRechargeAccountAllList();
+
 	/**
 	 * 新增【请填写功能名称】
 	 *

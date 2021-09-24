@@ -22,7 +22,9 @@
             <if test="pUserId != null  and pUserId != ''"> and p_user_id = #{pUserId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="diceName != null  and diceName != ''"> and dice_name like concat('%', #{diceName}, '%')</if>
-            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="cTime != null and cTime != ''">
+                and c_time <![CDATA[ >= ]]> #{selectStartDate} and c_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
             <if test="diceId != null "> and dice_id = #{diceId}</if>
         </where>
         ORDER BY c_time DESC

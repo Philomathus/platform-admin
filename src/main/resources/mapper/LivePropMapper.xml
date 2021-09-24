@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pcGif != null  and pcGif != ''"> and pc_gif = #{pcGif}</if>
             <if test="gifGiftShowStyle != null "> and gif_gift_show_style = #{gifGiftShowStyle}</if>
             <if test="animatedUrl != null  and animatedUrl != ''"> and animated_url = #{animatedUrl}</if>
-            <if test="type != null "> and type = #{type}</if>
+            <if test="type != null and type != ''"> and type = #{type}</if>
         </where>
     </select>
 

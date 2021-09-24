@@ -59,6 +59,9 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
 		return payAgentRechargeAccountMapper.selectPayAgentRechargeAccountList( map );
 	}
 
+	//all代充账号
+
+
 	/**
 	 * 新增【代充人】
 	 *
