@@ -84,7 +84,7 @@ public class PayChannelNew extends BaseEntity {
 
     /** 优惠比例 */
     @Excel(name = "优惠比例")
-    private BigDecimal discountBill;
+    private String discountBill;
 
     /** 快捷金额 */
     @Excel(name = "快捷金额")
