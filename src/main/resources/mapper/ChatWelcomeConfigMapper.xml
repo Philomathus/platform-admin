@@ -76,7 +76,7 @@
     
             <if test="sort != null">sort = #{sort},</if>
 
-            <if test="status != null">sort = #{status},</if>
+            <if test="status != null">status = #{status},</if>
 
         </trim>
         where id = #{id}
