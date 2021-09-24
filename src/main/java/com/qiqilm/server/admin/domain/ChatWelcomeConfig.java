@@ -42,6 +42,8 @@ public class ChatWelcomeConfig extends BaseEntity {
     @Excel(name = "排序")
     private Long sort;
 
+    private String status;
+
     private String nickName;
 
     @Override

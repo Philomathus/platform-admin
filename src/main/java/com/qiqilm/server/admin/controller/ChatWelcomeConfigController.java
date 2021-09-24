@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
+import com.qiqilm.server.admin.domain.PayType;
+import com.qiqilm.server.admin.mapper.PayAgentRechargeAccountMapper;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ServletUtil;
@@ -43,7 +45,7 @@ public class ChatWelcomeConfigController extends BaseController {
 	@Autowired
 	private TokenService tokenService;
 	@Autowired
-	private IPayAgentRechargeAccountService payAgentRechargeAccountService;
+	private PayAgentRechargeAccountMapper payAgentRechargeAccountMapper;
 
 	/**
 	 * 查询代充人欢迎语配置列表
@@ -80,10 +82,9 @@ public class ChatWelcomeConfigController extends BaseController {
 	 * 获取代充人账号列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:chatWelcomeConfig:list')" )
-	@GetMapping( value = "/account" )
-	public AjaxResult getInfoAccount() {
-		PayAgentRechargeAccount payAgentRechargeAccount = new PayAgentRechargeAccount();
-		return AjaxResult.success(payAgentRechargeAccountService.selectPayAgentRechargeAccountList( payAgentRechargeAccount ) );
+	@GetMapping( value = "/accounts" )
+	public AjaxResult getInfoAccounts() {
+		return AjaxResult.success(payAgentRechargeAccountMapper.selectPayAgentRechargeAccountAllList( ) );
 	}
 
 
@@ -98,6 +99,7 @@ public class ChatWelcomeConfigController extends BaseController {
 		String    username  = loginUser.getUsername();
 		chatWelcomeConfig.setCreateBy(username);
 		chatWelcomeConfig.setCreateTime(new Date());
+		chatWelcomeConfig.setStatus("0");
 		return toAjax( chatWelcomeConfigService.insertChatWelcomeConfig(chatWelcomeConfig) );
 	}
 
