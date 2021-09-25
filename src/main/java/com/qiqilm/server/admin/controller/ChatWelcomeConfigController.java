@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.mapper.PayAgentRechargeAccountMapper;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,7 +85,11 @@ public class ChatWelcomeConfigController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:chatWelcomeConfig:list')" )
 	@GetMapping( value = "/accounts" )
 	public AjaxResult getInfoAccounts() {
-		return AjaxResult.success(payAgentRechargeAccountMapper.selectPayAgentRechargeAccountAllList( ) );
+		List<PayAgentRechargeAccount> payAgentRechargeAccounts = payAgentRechargeAccountMapper.selectPayAgentRechargeAccountAllList();
+		for(PayAgentRechargeAccount pa:payAgentRechargeAccounts){
+			pa.setNickName(pa.getAccount() + "-" + pa.getNickName());
+		}
+		return AjaxResult.success(payAgentRechargeAccounts);
 	}
 
 
@@ -95,12 +100,21 @@ public class ChatWelcomeConfigController extends BaseController {
 	@Log( title = "代充人欢迎语配置", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ChatWelcomeConfig chatWelcomeConfig) {
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String    username  = loginUser.getUsername();
-		chatWelcomeConfig.setCreateBy(username);
-		chatWelcomeConfig.setCreateTime(new Date());
-		chatWelcomeConfig.setStatus("0");
-		return toAjax( chatWelcomeConfigService.insertChatWelcomeConfig(chatWelcomeConfig) );
+		if(chatWelcomeConfig.getAgentId() != null) {
+			ChatWelcomeConfig chatWelcomeConfig1 = new ChatWelcomeConfig();
+			chatWelcomeConfig1.setAgentId(chatWelcomeConfig.getAgentId());
+			List<ChatWelcomeConfig> list = chatWelcomeConfigService.selectChatWelcomeConfigList(chatWelcomeConfig1);
+			if(list.size() > 0 || list != null){
+				return AjaxResult.error(0,"此代充人的欢迎语已存在");
+			}
+			LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+			String    username  = loginUser.getUsername();
+			chatWelcomeConfig.setCreateBy(username);
+			chatWelcomeConfig.setCreateTime(new Date());
+			chatWelcomeConfig.setStatus("0");
+			return toAjax( chatWelcomeConfigService.insertChatWelcomeConfig(chatWelcomeConfig) );
+		}
+		return AjaxResult.error(0,"请填写代充人id");
 	}
 
 	/**
