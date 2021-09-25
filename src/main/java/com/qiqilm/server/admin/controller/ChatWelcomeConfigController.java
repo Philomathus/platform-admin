@@ -105,7 +105,7 @@ public class ChatWelcomeConfigController extends BaseController {
 			chatWelcomeConfig1.setAgentId(chatWelcomeConfig.getAgentId());
 			List<ChatWelcomeConfig> list = chatWelcomeConfigService.selectChatWelcomeConfigList(chatWelcomeConfig1);
 			if(list.size() > 0 || list != null){
-				return AjaxResult.error(0,"此代充人的欢迎语已存在");
+				return AjaxResult.error(0,"此代充人已有欢迎语");
 			}
 			LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 			String    username  = loginUser.getUsername();
