@@ -30,27 +30,29 @@ public class HeiMaPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
-        Map<String, Object> dataMap = new TreeMap<>();
-        dataMap.put("mchid", payAgentPlatform.getMerId());
-        dataMap.put("addtime", System.currentTimeMillis() / 1000);
-        dataMap.put("bankcode", "unionpay");
 
-        Map<String, Object> map = new LinkedHashMap<>();
+
+
+        SortedMap<String, Object> map = new TreeMap<>();
         map.put("out_trade_no", withdrawLog.getOrderNo());
         map.put("amount", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP));
         map.put("accountname", withdrawLog.getBankUserName());
         map.put("bankname", withdrawLog.getBankName());
         map.put("cardnumber", withdrawLog.getBankAccount());
-        map.put("subbranch", "朝阳区支行");
-        map.put("province", "北京市");
-        map.put("city", "北京市");
-        map.put("mobile", "18092780735");
-        map.put("attach", "备注");
-        List<Map<String, Object>> mapList = new LinkedList<>();
-        mapList.add(map);
+        map.put("subbranch", "");
+        map.put("province", "");
+        map.put("city", "");
+        map.put("mobile", "");
+        map.put("attach", "");
 
-        dataMap.put("list", mapList);
-        dataMap.put("callback_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HEIMA);
+        String list = JsonUtil.object2Json(map);
+
+        SortedMap<String, Object> dataMap = new TreeMap<>();
+        dataMap.put("mchid", payAgentPlatform.getMerId());
+        dataMap.put("addtime", System.currentTimeMillis() / 1000);
+        dataMap.put("bankcode", "unionpay");
+        dataMap.put("list", list);
+        dataMap.put("callback_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -71,12 +73,15 @@ public class HeiMaPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
         log.info(payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("success".equals(resultMap.getOrDefault("status", "").toString())) {
-                log.info(payAgentPlatform.getName() + "订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
-                return true;
+                Map listMap = (Map)resultMap.get("list");
+                if("1".equals(listMap.getOrDefault("status", "").toString())) {
+                    log.info(payAgentPlatform.getName() + "订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
+                    return true;
+                }
+                reqPayAgent.setFailReason(listMap.getOrDefault("msg", "").toString() + resultMap.getOrDefault("msg", "").toString());
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
