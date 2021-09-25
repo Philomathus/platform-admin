@@ -5,9 +5,12 @@ import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
+import com.qiqilm.server.admin.domain.PayType;
+import com.qiqilm.server.admin.mapper.PayAgentRechargeAccountMapper;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +46,7 @@ public class ChatWelcomeConfigController extends BaseController {
 	@Autowired
 	private TokenService tokenService;
 	@Autowired
-	private IPayAgentRechargeAccountService payAgentRechargeAccountService;
+	private PayAgentRechargeAccountMapper payAgentRechargeAccountMapper;
 
 	/**
 	 * 查询代充人欢迎语配置列表
@@ -80,10 +83,13 @@ public class ChatWelcomeConfigController extends BaseController {
 	 * 获取代充人账号列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:chatWelcomeConfig:list')" )
-	@GetMapping( value = "/account" )
-	public AjaxResult getInfoAccount() {
-		PayAgentRechargeAccount payAgentRechargeAccount = new PayAgentRechargeAccount();
-		return AjaxResult.success(payAgentRechargeAccountService.selectPayAgentRechargeAccountList( payAgentRechargeAccount ) );
+	@GetMapping( value = "/accounts" )
+	public AjaxResult getInfoAccounts() {
+		List<PayAgentRechargeAccount> payAgentRechargeAccounts = payAgentRechargeAccountMapper.selectPayAgentRechargeAccountAllList();
+		for(PayAgentRechargeAccount pa:payAgentRechargeAccounts){
+			pa.setNickName(pa.getAccount() + "-" + pa.getNickName());
+		}
+		return AjaxResult.success(payAgentRechargeAccounts);
 	}
 
 
@@ -94,11 +100,21 @@ public class ChatWelcomeConfigController extends BaseController {
 	@Log( title = "代充人欢迎语配置", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ChatWelcomeConfig chatWelcomeConfig) {
-		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-		String    username  = loginUser.getUsername();
-		chatWelcomeConfig.setCreateBy(username);
-		chatWelcomeConfig.setCreateTime(new Date());
-		return toAjax( chatWelcomeConfigService.insertChatWelcomeConfig(chatWelcomeConfig) );
+		if(chatWelcomeConfig.getAgentId() != null) {
+			ChatWelcomeConfig chatWelcomeConfig1 = new ChatWelcomeConfig();
+			chatWelcomeConfig1.setAgentId(chatWelcomeConfig.getAgentId());
+			List<ChatWelcomeConfig> list = chatWelcomeConfigService.selectChatWelcomeConfigList(chatWelcomeConfig1);
+			if(list.size() > 0 || list != null){
+				return AjaxResult.error(0,"此代充人的欢迎语已存在");
+			}
+			LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+			String    username  = loginUser.getUsername();
+			chatWelcomeConfig.setCreateBy(username);
+			chatWelcomeConfig.setCreateTime(new Date());
+			chatWelcomeConfig.setStatus("0");
+			return toAjax( chatWelcomeConfigService.insertChatWelcomeConfig(chatWelcomeConfig) );
+		}
+		return AjaxResult.error(0,"请填写代充人id");
 	}
 
 	/**
