@@ -39,7 +39,6 @@ public class UploadOssController {
 		String rFileName = DigestUtils.md5Hex( new FileInputStream( newFile ) );
 		String fileKey = sysConfigCacheUtil.getConf( "agent_id" ) + "/" + path + "/" + rFileName
 				+ FilenameUtils.EXTENSION_SEPARATOR + extension;
-
 		if (serverOss.getProvider()==0){//阿里云
 			url = serverOssService.uploadInputStream( new FileInputStream( newFile ), fileKey );
 			newFile.delete();
@@ -47,6 +46,10 @@ public class UploadOssController {
 		if (serverOss.getProvider()==1){//亚马逊
 			serverOssService.amazonawsUpload(file,fileKey,serverOss,newFile);
 			url=serverOss.getEndpoint()+ fileKey;
+		}
+		if(serverOss.getProvider()==2){
+			serverOssService.kuaiKuaiYun(file,fileKey,serverOss,newFile);
+			url="https://"+serverOss.getBucket()+FilenameUtils.EXTENSION_SEPARATOR+"oss-cn-quanzhou.kz.cc/"+fileKey;
 		}
 		return AjaxResult.success( "上传成功",url);
 	}
