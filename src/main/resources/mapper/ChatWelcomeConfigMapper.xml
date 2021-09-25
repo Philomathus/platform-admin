@@ -32,7 +32,7 @@
 
     <select id="selectChatWelcomeConfigById" parameterType="Long" resultMap="ChatWelcomeConfigResult">
         <include refid="selectChatWelcomeConfigVo"/>
-        where id = #{id}
+        where c.id = #{id}
     </select>
 
     <insert id="insertChatWelcomeConfig" parameterType="ChatWelcomeConfig" useGeneratedKeys="true" keyProperty="id">
