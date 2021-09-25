@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.PayAgentCardMapper">
+
+    <resultMap type="PayAgentCard" id="PayAgentCardResult">
+        <result property="id"    column="id"    />
+        <result property="agentId"    column="agent_id"    />
+        <result property="account"    column="account"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="bankAccount"    column="bank_account"    />
+        <result property="openSite"    column="open_site"    />
+        <result property="accountName"    column="account_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="operator"    column="operator"    />
+        <result property="operatorTime"    column="operator_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectPayAgentCardVo">
+        select pac.id, pac.agent_id, para.account, para.nick_name, pac.bank_name, pac.bank_account, pac.open_site, pac.account_name,  pac.create_time,   pac.create_by,  pac.operator, pac.operator_time, pac.status
+        from 7700_main.pay_agent_card pac left join pay_agent_recharge_account para on pac.agent_id = para.id
+    </sql>
+
+    <select id="selectPayAgentCardList" parameterType="PayAgentCard" resultMap="PayAgentCardResult">
+        <include refid="selectPayAgentCardVo"/>
+        <where>
+            <if test="agentId != null "> and agent_id = #{agentId}</if>
+            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
+            <if test="openSite != null  and openSite != ''"> and open_site = #{openSite}</if>
+            <if test="accountName != null  and accountName != ''"> and account_name like concat('%', #{accountName}, '%')</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="operatorTime != null "> and operator_time = #{operatorTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPayAgentCardById" parameterType="Long" resultMap="PayAgentCardResult">
+        <include refid="selectPayAgentCardVo"/>
+        where pac.id = #{id}
+    </select>
+
+    <insert id="insertPayAgentCard" parameterType="PayAgentCard" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_main.pay_agent_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="agentId != null">agent_id,</if>
+            <if test="bankName != null">bank_name,</if>
+            <if test="bankAccount != null">bank_account,</if>
+            <if test="openSite != null">open_site,</if>
+            <if test="accountName != null">account_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="operator != null">operator,</if>
+            <if test="operatorTime != null">operator_time,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="agentId != null">#{agentId},</if>
+                    <if test="bankName != null">#{bankName},</if>
+                    <if test="bankAccount != null">#{bankAccount},</if>
+                    <if test="openSite != null">#{openSite},</if>
+                    <if test="accountName != null">#{accountName},</if>
+                <if test="createTime != null">#{createTime},</if>
+                <if test="updateTime != null">#{updateTime},</if>
+                    <if test="operator != null">#{operator},</if>
+                    <if test="operatorTime != null">#{operatorTime},</if>
+                    <if test="status != null">#{status},</if>
+             </trim>
+    </insert>
+
+    <update id="updatePayAgentCard" parameterType="PayAgentCard">
+        update 7700_main.pay_agent_card
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="agentId != null">agent_id = #{agentId},</if>
+
+            <if test="bankName != null">bank_name = #{bankName},</if>
+    
+            <if test="bankAccount != null">bank_account = #{bankAccount},</if>
+    
+            <if test="openSite != null">open_site = #{openSite},</if>
+    
+            <if test="accountName != null">account_name = #{accountName},</if>
+    
+            <if test="createTime != null">create_time = #{createTime},</if>
+
+            <if test="createBy != null">create_by = #{createBy},</if>
+
+            <if test="operator != null">operator = #{operator},</if>
+    
+            <if test="operatorTime != null">operator_time = #{operatorTime},</if>
+    
+            <if test="status != null">status = #{status},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayAgentCardById" parameterType="Long">
+        delete from 7700_main.pay_agent_card where id = #{id}
+    </delete>
+
+    <delete id="deletePayAgentCardByIds" parameterType="String">
+        delete from 7700_main.pay_agent_card where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
