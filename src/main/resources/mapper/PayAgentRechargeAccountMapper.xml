@@ -54,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectPayAgentRechargeAccountAllList" parameterType="java.util.Map" resultMap="PayAgentRechargeAccountResult">
-        select id,nick_name from pay_agent_recharge_account where status = 1
+        select id, account, nick_name from pay_agent_recharge_account where status = 1
     </select>
 
     <select id="selectPayAgentRechargeAccountById" parameterType="Long" resultMap="PayAgentRechargeAccountResult">
