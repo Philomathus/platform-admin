@@ -27,6 +27,8 @@ public interface PayAgentCardMapper {
 	 */
 	public List<PayAgentCard> selectPayAgentCardList(PayAgentCard payAgentCard);
 
+	public List<PayAgentCard> selectOtherPayAgentCardsById(PayAgentCard payAgentCard);
+
 	/**
 	 * 新增代充人银行卡列表
 	 *
