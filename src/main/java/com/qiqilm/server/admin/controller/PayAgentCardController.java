@@ -37,6 +37,7 @@ public class PayAgentCardController extends BaseController {
     private IPayAgentCardService payAgentCardService;
     @Autowired
     private TokenService tokenService;
+
     /**
      * 查询代充人银行卡列表
      */
@@ -75,7 +76,11 @@ public class PayAgentCardController extends BaseController {
     @Log(title = "代充人银行卡列表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PayAgentCard payAgentCard) {
-        return toAjax(payAgentCardService.insertPayAgentCard(payAgentCard));
+        int num = payAgentCardService.insertPayAgentCard(payAgentCard);
+        if (num == 0) {
+            return AjaxResult.error(0, "当前代充人的该收款账号已经添加过");
+        }
+        return AjaxResult.success();
     }
 
     /**
@@ -85,7 +90,11 @@ public class PayAgentCardController extends BaseController {
     @Log(title = "代充人银行卡列表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PayAgentCard payAgentCard) {
-        return toAjax(payAgentCardService.updatePayAgentCard(payAgentCard));
+        int num = payAgentCardService.updatePayAgentCard(payAgentCard);
+        if (num == 0) {
+            return AjaxResult.error(0, "当前代充人的该收款账号已经添加过");
+        }
+        return AjaxResult.success();
     }
 
     /**

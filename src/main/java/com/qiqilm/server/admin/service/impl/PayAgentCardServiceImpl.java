@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.PayAgentCardMapper;
 import com.qiqilm.server.admin.domain.PayAgentCard;
 import com.qiqilm.server.admin.service.IPayAgentCardService;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 代充人银行卡列表Service业务层处理
@@ -53,6 +54,13 @@ public class PayAgentCardServiceImpl implements IPayAgentCardService {
      */
     @Override
     public int insertPayAgentCard(PayAgentCard payAgentCard) {
+        PayAgentCard payAgentCards = new PayAgentCard();
+        payAgentCards.setAgentId(payAgentCard.getAgentId());
+        payAgentCards.setBankAccount(payAgentCard.getBankAccount());
+        List<PayAgentCard> list = payAgentCardMapper.selectPayAgentCardList(payAgentCards);
+        if(!CollectionUtils.isEmpty(list)){
+            return 0;
+        }
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String userName = loginUser.getUser().getUserName();
         payAgentCard.setCreateBy(userName);
@@ -69,6 +77,14 @@ public class PayAgentCardServiceImpl implements IPayAgentCardService {
      */
     @Override
     public int updatePayAgentCard(PayAgentCard payAgentCard) {
+        PayAgentCard payAgentCards = new PayAgentCard();
+        payAgentCards.setId(payAgentCard.getId());
+        payAgentCards.setAgentId(payAgentCard.getAgentId());
+        payAgentCards.setBankAccount(payAgentCard.getBankAccount());
+        List<PayAgentCard> list = payAgentCardMapper.selectOtherPayAgentCardsById(payAgentCard);
+        if(!CollectionUtils.isEmpty(list)){
+            return 0;
+        }
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String userName = loginUser.getUser().getUserName();
         payAgentCard.setOperator(userName);

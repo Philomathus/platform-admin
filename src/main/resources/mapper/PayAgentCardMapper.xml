@@ -26,14 +26,14 @@
     <select id="selectPayAgentCardList" parameterType="PayAgentCard" resultMap="PayAgentCardResult">
         <include refid="selectPayAgentCardVo"/>
         <where>
-            <if test="agentId != null "> and agent_id = #{agentId}</if>
-            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
-            <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
-            <if test="openSite != null  and openSite != ''"> and open_site = #{openSite}</if>
-            <if test="accountName != null  and accountName != ''"> and account_name like concat('%', #{accountName}, '%')</if>
-            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
-            <if test="operatorTime != null "> and operator_time = #{operatorTime}</if>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="agentId != null "> and pac.agent_id = #{agentId}</if>
+            <if test="bankName != null  and bankName != ''"> and pac.bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="bankAccount != null  and bankAccount != ''"> and pac.bank_account = #{bankAccount}</if>
+            <if test="openSite != null  and openSite != ''"> and pac.open_site = #{openSite}</if>
+            <if test="accountName != null  and accountName != ''"> and pac.account_name like concat('%', #{accountName}, '%')</if>
+            <if test="operator != null  and operator != ''"> and pac.operator = #{operator}</if>
+            <if test="operatorTime != null "> and pac.operator_time = #{operatorTime}</if>
+            <if test="status != null "> and pac.status = #{status}</if>
         </where>
     </select>
 
@@ -42,9 +42,15 @@
         where pac.id = #{id}
     </select>
 
+    <select id="selectOtherPayAgentCardsById" parameterType="Long" resultMap="PayAgentCardResult">
+        <include refid="selectPayAgentCardVo"/>
+        where pac.agent_id = #{agentId} and pac.bank_account = #{bankAccount} and pac.id != #{id}
+    </select>
+
     <insert id="insertPayAgentCard" parameterType="PayAgentCard" useGeneratedKeys="true" keyProperty="id">
         insert into 7700_main.pay_agent_card
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
             <if test="agentId != null">agent_id,</if>
             <if test="bankName != null">bank_name,</if>
             <if test="bankAccount != null">bank_account,</if>
@@ -57,13 +63,14 @@
             <if test="status != null">status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
                 <if test="agentId != null">#{agentId},</if>
                     <if test="bankName != null">#{bankName},</if>
                     <if test="bankAccount != null">#{bankAccount},</if>
                     <if test="openSite != null">#{openSite},</if>
                     <if test="accountName != null">#{accountName},</if>
-                <if test="createTime != null">#{createTime},</if>
-                <if test="updateTime != null">#{updateTime},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="createBy != null">create_by,</if>
                     <if test="operator != null">#{operator},</if>
                     <if test="operatorTime != null">#{operatorTime},</if>
                     <if test="status != null">#{status},</if>
