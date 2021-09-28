@@ -52,7 +52,7 @@ public class HuiYuanPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("merchantNo", payAgentPlatform.getMerId());
         dataMap.put("money", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0, BigDecimal.ROUND_HALF_UP));
         dataMap.put("orderNo", withdrawLog.getOrderNo());
-        dataMap.put("channel", "HYBDAIFU");
+        dataMap.put("channel", "HCPYYC");
         dataMap.put("name", withdrawLog.getBankUserName());
         dataMap.put("cardNo", withdrawLog.getBankAccount());
         dataMap.put("idcard", "36522819610223364");
@@ -197,7 +197,7 @@ public class HuiYuanPayAgentProcessor extends AbstractPayAgent {
                     } else {
                         status = 5;
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, status);
                 }
                 return resultMap.getOrDefault("msg", "").toString();
             }
