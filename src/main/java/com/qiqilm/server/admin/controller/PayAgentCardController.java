@@ -2,6 +2,9 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.PayAgentRechargeAccountMapper;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,10 @@ public class PayAgentCardController extends BaseController {
     private IPayAgentCardService payAgentCardService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private MemberInfoMapper memberInfoMapper;
+    @Autowired
+    private PayAgentRechargeAccountMapper payAgentRechargeAccountMapper;
 
     /**
      * 查询代充人银行卡列表
@@ -76,10 +83,25 @@ public class PayAgentCardController extends BaseController {
     @Log(title = "代充人银行卡列表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PayAgentCard payAgentCard) {
+        if (payAgentCard.getAccount() == null) {
+            return AjaxResult.error(0, "请填写代充人账号");
+        }
+        MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(payAgentCard.getAccount());
+        if (memberInfo == null) {
+            return AjaxResult.error(0, "该会员ID不存在");
+        }
+        Integer id = payAgentRechargeAccountMapper.idSearchByMemberId(payAgentCard.getAccount());
+        if (id == null) {
+            return AjaxResult.error(0, "该代充人账号不存在");
+        } else {
+            payAgentCard.setAgentId(Long.valueOf(id));
+        }
+
         int num = payAgentCardService.insertPayAgentCard(payAgentCard);
         if (num == 0) {
             return AjaxResult.error(0, "当前代充人的该收款账号已经添加过");
         }
+
         return AjaxResult.success();
     }
 
