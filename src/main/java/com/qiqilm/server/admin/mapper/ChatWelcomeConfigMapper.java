@@ -18,6 +18,7 @@ public interface ChatWelcomeConfigMapper {
 	 * @return 代充人欢迎语配置
 	 */
 	public ChatWelcomeConfig selectChatWelcomeConfigById(Long id);
+	public ChatWelcomeConfig selectChatWelcomeConfigByAgentId(Long id);
 
 	/**
 	 * 查询代充人欢迎语配置列表

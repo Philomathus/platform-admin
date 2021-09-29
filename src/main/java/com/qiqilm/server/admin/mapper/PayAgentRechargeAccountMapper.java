@@ -63,7 +63,7 @@ public interface PayAgentRechargeAccountMapper {
 	 */
 	public int deletePayAgentRechargeAccountByIds(Long[] ids );
 
-	int memberIdSearchRepeat(@Param("account") String account);
+	Integer idSearchByMemberId(@Param("account") String account);
 
     void updateGoogle(PayAgentRechargeAccount payAgentRechargeAccount);
 
