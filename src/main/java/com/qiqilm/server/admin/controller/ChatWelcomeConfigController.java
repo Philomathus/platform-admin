@@ -104,21 +104,19 @@ public class ChatWelcomeConfigController extends BaseController {
 	@Log( title = "代充人欢迎语配置", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ChatWelcomeConfig chatWelcomeConfig) {
-		if(chatWelcomeConfig.getAgentId() != null) {
+		if(chatWelcomeConfig.getAccount() != null) {
 			MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( chatWelcomeConfig.getAccount() );
 			if ( memberInfo == null ) {
-				return AjaxResult.error( "该会员ID不存在" );
+				return AjaxResult.error( 0,"该会员ID不存在" );
 			}
 			Integer id = payAgentRechargeAccountMapper.idSearchByMemberId( chatWelcomeConfig.getAccount() );
 			if ( id == null ) {
-				return AjaxResult.error( "该代充人账号已存在" );
+				return AjaxResult.error( 0,"该代充人账号不存在," );
 			} else {
 				chatWelcomeConfig.setAgentId(Long.valueOf(id));
 			}
-			ChatWelcomeConfig chatWelcomeConfig1 = new ChatWelcomeConfig();
-			chatWelcomeConfig1.setAgentId(chatWelcomeConfig.getAgentId());
-			List<ChatWelcomeConfig> list = chatWelcomeConfigService.selectChatWelcomeConfigList(chatWelcomeConfig1);
-			if(list.size() > 0 || list != null){
+			ChatWelcomeConfig chatWelcomeConfig1 = chatWelcomeConfigService.selectChatWelcomeConfigByAgentId(chatWelcomeConfig.getAgentId());
+			if(chatWelcomeConfig1 != null){
 				return AjaxResult.error(0,"此代充人已有欢迎语");
 			}
 			LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
@@ -128,7 +126,7 @@ public class ChatWelcomeConfigController extends BaseController {
 			chatWelcomeConfig.setStatus("0");
 			return toAjax( chatWelcomeConfigService.insertChatWelcomeConfig(chatWelcomeConfig) );
 		}
-		return AjaxResult.error(0,"请填写代充人id");
+		return AjaxResult.error(0,"请填写代充人账号");
 	}
 
 	/**

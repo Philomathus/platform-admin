@@ -35,6 +35,11 @@
         where c.id = #{id}
     </select>
 
+    <select id="selectChatWelcomeConfigByAgentId" parameterType="Long" resultMap="ChatWelcomeConfigResult">
+        <include refid="selectChatWelcomeConfigVo"/>
+        where c.agent_id = #{agentId}
+    </select>
+
     <insert id="insertChatWelcomeConfig" parameterType="ChatWelcomeConfig" useGeneratedKeys="true" keyProperty="id">
         insert into chat_welcome_config
         <trim prefix="(" suffix=")" suffixOverrides=",">

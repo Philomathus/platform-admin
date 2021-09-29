@@ -30,6 +30,11 @@ public class ChatWelcomeConfigServiceImpl implements IChatWelcomeConfigService {
         return chatWelcomeConfigMapper.selectChatWelcomeConfigById(id);
     }
 
+    @Override
+    public ChatWelcomeConfig selectChatWelcomeConfigByAgentId(Long agentId) {
+        return chatWelcomeConfigMapper.selectChatWelcomeConfigByAgentId(agentId);
+    }
+
     /**
      * 查询代充人欢迎语配置列表
      *
