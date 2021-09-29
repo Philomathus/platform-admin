@@ -95,7 +95,10 @@ public class ConfigBankController extends BaseController {
 		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, configBank.getGoogleAuthCode() ) ) {
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
-		if((configBank.getOpenLevel() != null && configBank.getOpenLevel() < 1) || (configBank.getOpenLevelMax() != null && configBank.getOpenLevelMax() > 50)){
+		if((configBank.getOpenLevel() != null && configBank.getOpenLevel() < 1) || (configBank.getOpenLevel() != null && configBank.getOpenLevel() > 50)){
+			return AjaxResult.error( "开放层级最小为1，最大为50" );
+		}
+		if((configBank.getOpenLevelMax() != null && configBank.getOpenLevelMax() < 1) || (configBank.getOpenLevelMax() != null && configBank.getOpenLevelMax() > 50)){
 			return AjaxResult.error( "开放层级最小为1，最大为50" );
 		}
 		configBank.setId( UuidUtil.getRandomUuidWithoutSeparator() );
@@ -147,7 +150,10 @@ public class ConfigBankController extends BaseController {
 		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, configBank.getGoogleAuthCode() ) ) {
 			return AjaxResult.error( "google验证码不正确，请检查" );
 		}
-		if((configBank.getOpenLevel() != null && configBank.getOpenLevel() < 1) || (configBank.getOpenLevelMax() != null && configBank.getOpenLevelMax() > 50)){
+		if((configBank.getOpenLevel() != null && configBank.getOpenLevel() < 1) || (configBank.getOpenLevel() != null && configBank.getOpenLevel() > 50)){
+			return AjaxResult.error( "开放层级最小为1，最大为50" );
+		}
+		if((configBank.getOpenLevelMax() != null && configBank.getOpenLevelMax() < 1) || (configBank.getOpenLevelMax() != null && configBank.getOpenLevelMax() > 50)){
 			return AjaxResult.error( "开放层级最小为1，最大为50" );
 		}
 		configBank.setAccountName(configBank.getAccountName().trim());
