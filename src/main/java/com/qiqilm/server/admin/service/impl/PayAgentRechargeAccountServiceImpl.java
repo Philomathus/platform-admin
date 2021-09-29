@@ -80,8 +80,8 @@ public class PayAgentRechargeAccountServiceImpl implements IPayAgentRechargeAcco
 		if ( memberInfo == null ) {
 			return AjaxResult.error( "该会员ID不存在" );
 		}
-		int i = payAgentRechargeAccountMapper.memberIdSearchRepeat( payAgentRechargeAccount.getAccount() );
-		if ( i != 0 ) {
+		Integer id = payAgentRechargeAccountMapper.idSearchByMemberId( payAgentRechargeAccount.getAccount() );
+		if ( id != null ) {
 			return AjaxResult.error( "该代充人账号已存在" );
 		}
 		payAgentRechargeAccount.setNickName( memberInfo.getNickName() );
