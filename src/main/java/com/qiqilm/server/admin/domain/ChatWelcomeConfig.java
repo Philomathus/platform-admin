@@ -26,6 +26,10 @@ public class ChatWelcomeConfig extends BaseEntity {
     @Excel(name = "内容")
     private String content;
 
+    /** 代充人账号 */
+    @Excel(name = "代充人账号")
+    private String account;
+
     /** 代充人id */
     @Excel(name = "代充人id")
     private Long agentId;
