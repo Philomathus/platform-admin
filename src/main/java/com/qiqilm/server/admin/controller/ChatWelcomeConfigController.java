@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.LoginUser;
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.PayAgentRechargeAccount;
 import com.qiqilm.server.admin.domain.PayType;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.mapper.PayAgentRechargeAccountMapper;
 import com.qiqilm.server.admin.service.IPayAgentRechargeAccountService;
 import com.qiqilm.server.admin.service.impl.TokenService;
@@ -47,6 +49,8 @@ public class ChatWelcomeConfigController extends BaseController {
 	private TokenService tokenService;
 	@Autowired
 	private PayAgentRechargeAccountMapper payAgentRechargeAccountMapper;
+	@Autowired
+	private MemberInfoMapper memberInfoMapper;
 
 	/**
 	 * 查询代充人欢迎语配置列表
@@ -101,6 +105,16 @@ public class ChatWelcomeConfigController extends BaseController {
 	@PostMapping
 	public AjaxResult add( @RequestBody ChatWelcomeConfig chatWelcomeConfig) {
 		if(chatWelcomeConfig.getAgentId() != null) {
+			MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( chatWelcomeConfig.getAccount() );
+			if ( memberInfo == null ) {
+				return AjaxResult.error( "该会员ID不存在" );
+			}
+			Integer id = payAgentRechargeAccountMapper.idSearchByMemberId( chatWelcomeConfig.getAccount() );
+			if ( id == null ) {
+				return AjaxResult.error( "该代充人账号已存在" );
+			} else {
+				chatWelcomeConfig.setAgentId(Long.valueOf(id));
+			}
 			ChatWelcomeConfig chatWelcomeConfig1 = new ChatWelcomeConfig();
 			chatWelcomeConfig1.setAgentId(chatWelcomeConfig.getAgentId());
 			List<ChatWelcomeConfig> list = chatWelcomeConfigService.selectChatWelcomeConfigList(chatWelcomeConfig1);
