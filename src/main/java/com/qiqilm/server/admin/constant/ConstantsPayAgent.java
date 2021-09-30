@@ -195,3 +195,4 @@ public abstract class ConstantsPayAgent {
 	//权付代付
 	public static final String QUANFU          = "quanFu";
 }
+

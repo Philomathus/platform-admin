@@ -37,18 +37,16 @@ public class UploadOssController {
 		File        newFile     = new File( System.getProperty( "java.io.tmpdir" ) + fileName );
 		IOUtils.copy( inputStream, new FileOutputStream( newFile ) );
 		String rFileName = DigestUtils.md5Hex( new FileInputStream( newFile ) );
-		String fileKey = "77lm/" + path + "/" + rFileName + FilenameUtils.EXTENSION_SEPARATOR + extension;
-		if (serverOss.getProvider()==0){ // 阿里云
+		String fileKey = sysConfigCacheUtil.getConf( "agent_id" ) + "/" + path + "/" + rFileName
+				+ FilenameUtils.EXTENSION_SEPARATOR + extension;
+
+		if (serverOss.getProvider()==0){//阿里云
 			url = serverOssService.uploadInputStream( new FileInputStream( newFile ), fileKey );
 			newFile.delete();
 		}
-		if (serverOss.getProvider()==1){ // 亚马逊
+		if (serverOss.getProvider()==1){//亚马逊
 			serverOssService.amazonawsUpload(file,fileKey,serverOss,newFile);
-			url="/"+ fileKey;
-		}
-		if(serverOss.getProvider()==2){ // 快快云
-			serverOssService.kuaiKuaiYun(file,fileKey,serverOss,newFile);
-			url="/"+ fileKey;
+			url=serverOss.getEndpoint()+ fileKey;
 		}
 		return AjaxResult.success( "上传成功",url);
 	}
