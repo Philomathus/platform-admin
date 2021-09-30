@@ -18,7 +18,7 @@ public interface IChatWelcomeConfigService {
 	 * @return 代充人欢迎语配置
 	 */
 	public ChatWelcomeConfig selectChatWelcomeConfigById(Long id);
-	public ChatWelcomeConfig selectChatWelcomeConfigByAgentId(Long agentId);
+	public int selectChatWelcomeConfigByAgentId(Long agentId);
 
 	/**
 	 * 查询代充人欢迎语配置列表
