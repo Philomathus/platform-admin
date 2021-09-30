@@ -20,7 +20,7 @@
 
     <sql id="selectPayAgentCardVo">
         select pac.id, pac.agent_id, para.account, para.nick_name, pac.bank_name, pac.bank_account, pac.open_site, pac.account_name,  pac.create_time,   pac.create_by,  pac.operator, pac.operator_time, pac.status
-        from 7700_main.pay_agent_card pac left join pay_agent_recharge_account para on pac.agent_id = para.id
+        from 7700_main.pay_agent_card pac left join 7700_main.pay_agent_recharge_account para on pac.agent_id = para.id
     </sql>
 
     <select id="selectPayAgentCardList" parameterType="PayAgentCard" resultMap="PayAgentCardResult">
@@ -42,7 +42,7 @@
         where pac.id = #{id}
     </select>
 
-    <select id="selectOtherPayAgentCardsById" parameterType="Long" resultMap="PayAgentCardResult">
+    <select id="selectOtherPayAgentCardsById" resultMap="PayAgentCardResult">
         <include refid="selectPayAgentCardVo"/>
         where pac.agent_id = #{agentId} and pac.bank_account = #{bankAccount} and pac.id != #{id}
     </select>

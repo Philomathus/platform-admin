@@ -35,9 +35,8 @@
         where c.id = #{id}
     </select>
 
-    <select id="selectChatWelcomeConfigByAgentId" parameterType="Long" resultMap="ChatWelcomeConfigResult">
-        <include refid="selectChatWelcomeConfigVo"/>
-        where c.agent_id = #{agentId}
+    <select id="selectChatWelcomeConfigByAgentId" parameterType="Long" resultType="java.lang.Integer">
+        select count(0) from chat_welcome_config where agent_id = #{agentId}
     </select>
 
     <insert id="insertChatWelcomeConfig" parameterType="ChatWelcomeConfig" useGeneratedKeys="true" keyProperty="id">

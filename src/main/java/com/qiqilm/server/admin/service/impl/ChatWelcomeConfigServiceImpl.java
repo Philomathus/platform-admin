@@ -31,7 +31,7 @@ public class ChatWelcomeConfigServiceImpl implements IChatWelcomeConfigService {
     }
 
     @Override
-    public ChatWelcomeConfig selectChatWelcomeConfigByAgentId(Long agentId) {
+    public int selectChatWelcomeConfigByAgentId(Long agentId) {
         return chatWelcomeConfigMapper.selectChatWelcomeConfigByAgentId(agentId);
     }
 

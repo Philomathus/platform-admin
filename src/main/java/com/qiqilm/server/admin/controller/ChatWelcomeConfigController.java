@@ -115,9 +115,9 @@ public class ChatWelcomeConfigController extends BaseController {
 			} else {
 				chatWelcomeConfig.setAgentId(Long.valueOf(id));
 			}
-			ChatWelcomeConfig chatWelcomeConfig1 = chatWelcomeConfigService.selectChatWelcomeConfigByAgentId(chatWelcomeConfig.getAgentId());
-			if(chatWelcomeConfig1 != null){
-				return AjaxResult.error(0,"此代充人已有欢迎语");
+			int i = chatWelcomeConfigService.selectChatWelcomeConfigByAgentId(chatWelcomeConfig.getAgentId());
+			if(i > 4){
+				return AjaxResult.error(0,"一个代充人最多添加5个欢迎语");
 			}
 			LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 			String    username  = loginUser.getUsername();
