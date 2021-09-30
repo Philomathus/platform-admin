@@ -42,7 +42,7 @@
         where pac.id = #{id}
     </select>
 
-    <select id="selectOtherPayAgentCardsById" parameterType="Long" resultMap="PayAgentCardResult">
+    <select id="selectOtherPayAgentCardsById" resultMap="PayAgentCardResult">
         <include refid="selectPayAgentCardVo"/>
         where pac.agent_id = #{agentId} and pac.bank_account = #{bankAccount} and pac.id != #{id}
     </select>
