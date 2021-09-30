@@ -334,6 +334,19 @@
 			<artifactId>tencentcloud-sdk-java</artifactId>
 			<version>3.1.76</version>
 		</dependency>
+
+		<!-- 亚马逊云s3 sdk -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.57</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -11,10 +11,11 @@
         <result property="operator"    column="operator"    />
         <result property="operatorTime"    column="operator_time"    />
         <result property="sort"    column="sort"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectChatWelcomeConfigVo">
-        select c.id, c.content, c.agent_id, c.create_by, c.create_time, c.operator, c.operator_time, c.sort, p.nick_name from chat_welcome_config c left join pay_agent_recharge_account p on c.agent_id = p.id
+        select c.id, c.content, c.agent_id, c.create_by, c.create_time, c.operator, c.operator_time, c.sort,c.status, p.nick_name nickName, p.account from chat_welcome_config c left join pay_agent_recharge_account p on c.agent_id = p.id
     </sql>
 
     <select id="selectChatWelcomeConfigList" parameterType="ChatWelcomeConfig" resultMap="ChatWelcomeConfigResult">
@@ -25,12 +26,18 @@
             <if test="operator != null  and operator != ''"> and c.operator = #{operator}</if>
             <if test="operatorTime != null "> and c.operator_time = #{operatorTime}</if>
             <if test="sort != null "> and c.sort = #{sort}</if>
+            <if test="status != null "> and c.status = #{status}</if>
         </where>
     </select>
 
     <select id="selectChatWelcomeConfigById" parameterType="Long" resultMap="ChatWelcomeConfigResult">
         <include refid="selectChatWelcomeConfigVo"/>
-        where id = #{id}
+        where c.id = #{id}
+    </select>
+
+    <select id="selectChatWelcomeConfigByAgentId" parameterType="Long" resultMap="ChatWelcomeConfigResult">
+        <include refid="selectChatWelcomeConfigVo"/>
+        where c.agent_id = #{agentId}
     </select>
 
     <insert id="insertChatWelcomeConfig" parameterType="ChatWelcomeConfig" useGeneratedKeys="true" keyProperty="id">
@@ -43,6 +50,7 @@
             <if test="operator != null">operator,</if>
             <if test="operatorTime != null">operator_time,</if>
             <if test="sort != null">sort,</if>
+            <if test="status != null">status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="content != null">#{content},</if>
@@ -52,6 +60,7 @@
                     <if test="operator != null">#{operator},</if>
                     <if test="operatorTime != null">#{operatorTime},</if>
                     <if test="sort != null">#{sort},</if>
+                    <if test="status != null">#{status},</if>
              </trim>
     </insert>
 
@@ -71,7 +80,9 @@
             <if test="operatorTime != null">operator_time = #{operatorTime},</if>
     
             <if test="sort != null">sort = #{sort},</if>
-    
+
+            <if test="status != null">status = #{status},</if>
+
         </trim>
         where id = #{id}
     </update>
