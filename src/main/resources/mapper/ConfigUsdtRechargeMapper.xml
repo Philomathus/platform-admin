@@ -22,7 +22,7 @@
     </resultMap>
 
     <sql id="selectConfigUsdtRechargeVo">
-        select id, channel_name, chain_name, recharge_address, discount_bill, exchange_rate, indexs, icon, status, open_level, open_level_max, create_by, create_time ,  update_by, update_time ,  remark from 7700_main.config_usdt_recharge
+        select id, channel_name, chain_name, recharge_address, discount_bill, exchange_rate, indexs, icon, status, open_level, open_level_max, create_by, create_time ,  update_by, update_time ,  remark from config_usdt_recharge
     </sql>
 
     <select id="selectConfigUsdtRechargeList" parameterType="ConfigUsdtRecharge" resultMap="ConfigUsdtRechargeResult">
@@ -47,7 +47,7 @@
     </select>
 
     <insert id="insertConfigUsdtRecharge" parameterType="ConfigUsdtRecharge">
-        insert into 7700_main.config_usdt_recharge
+        insert into config_usdt_recharge
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="channelName != null">channel_name,</if>
@@ -87,7 +87,7 @@
     </insert>
 
     <update id="updateConfigUsdtRecharge" parameterType="ConfigUsdtRecharge">
-        update 7700_main.config_usdt_recharge
+        update config_usdt_recharge
         <trim prefix="SET" suffixOverrides=",">
             <if test="channelName != null">channel_name = #{channelName},</if>
     
@@ -124,11 +124,11 @@
     </update>
 
     <delete id="deleteConfigUsdtRechargeById" parameterType="String">
-        delete from 7700_main.config_usdt_recharge where id = #{id}
+        delete from config_usdt_recharge where id = #{id}
     </delete>
 
     <delete id="deleteConfigUsdtRechargeByIds" parameterType="String">
-        delete from 7700_main.config_usdt_recharge where id in
+        delete from config_usdt_recharge where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

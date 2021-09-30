@@ -191,7 +191,7 @@ public class SmsApi {
 		request.setTemplate( serverSms.getTemplate() );
 		Map<String, String> contentVar = new HashMap<>();
 		contentVar.put( "msg", msg );
-		contentVar.put( "minute", "1" );
+		//contentVar.put( "minute", "1" );
 		request.setContentVar( contentVar );
 		try {
 			SendMessageV3Response sendSmsResponse = client.sendMessage( request );

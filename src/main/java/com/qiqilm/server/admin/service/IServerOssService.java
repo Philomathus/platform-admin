@@ -70,4 +70,6 @@ public interface IServerOssService {
 
 
 	void amazonawsUpload(MultipartFile file, String path, ServerOss serverOss, File newFile);
+
+	void kuaiKuaiYun(MultipartFile file, String fileKey, ServerOss serverOss, File newFile);
 }

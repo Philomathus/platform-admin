@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.ChatWelcomeConfigMapper">
+
+    <resultMap type="ChatWelcomeConfig" id="ChatWelcomeConfigResult">
+        <result property="id"    column="id"    />
+        <result property="content"    column="content"    />
+        <result property="agentId"    column="agent_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="operator"    column="operator"    />
+        <result property="operatorTime"    column="operator_time"    />
+        <result property="sort"    column="sort"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectChatWelcomeConfigVo">
+        select c.id, c.content, c.agent_id, c.create_by, c.create_time, c.operator, c.operator_time, c.sort,c.status, p.nick_name nickName, p.account from chat_welcome_config c left join pay_agent_recharge_account p on c.agent_id = p.id
+    </sql>
+
+    <select id="selectChatWelcomeConfigList" parameterType="ChatWelcomeConfig" resultMap="ChatWelcomeConfigResult">
+        <include refid="selectChatWelcomeConfigVo"/>
+        <where>
+            <if test="content != null  and content != ''"> and c.content = #{content}</if>
+            <if test="agentId != null "> and c.agent_id = #{agentId}</if>
+            <if test="operator != null  and operator != ''"> and c.operator = #{operator}</if>
+            <if test="operatorTime != null "> and c.operator_time = #{operatorTime}</if>
+            <if test="sort != null "> and c.sort = #{sort}</if>
+            <if test="status != null "> and c.status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectChatWelcomeConfigById" parameterType="Long" resultMap="ChatWelcomeConfigResult">
+        <include refid="selectChatWelcomeConfigVo"/>
+        where c.id = #{id}
+    </select>
+
+    <select id="selectChatWelcomeConfigByAgentId" parameterType="Long" resultMap="ChatWelcomeConfigResult">
+        <include refid="selectChatWelcomeConfigVo"/>
+        where c.agent_id = #{agentId}
+    </select>
+
+    <insert id="insertChatWelcomeConfig" parameterType="ChatWelcomeConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into chat_welcome_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content != null">content,</if>
+            <if test="agentId != null">agent_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="operator != null">operator,</if>
+            <if test="operatorTime != null">operator_time,</if>
+            <if test="sort != null">sort,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="content != null">#{content},</if>
+                    <if test="agentId != null">#{agentId},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="operator != null">#{operator},</if>
+                    <if test="operatorTime != null">#{operatorTime},</if>
+                    <if test="sort != null">#{sort},</if>
+                    <if test="status != null">#{status},</if>
+             </trim>
+    </insert>
+
+    <update id="updateChatWelcomeConfig" parameterType="ChatWelcomeConfig">
+        update chat_welcome_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null">content = #{content},</if>
+    
+            <if test="agentId != null">agent_id = #{agentId},</if>
+
+            <if test="createBy != null">create_by = #{createBy},</if>
+
+            <if test="createTime != null">create_time = #{createTime},</if>
+
+            <if test="operator != null">operator = #{operator},</if>
+    
+            <if test="operatorTime != null">operator_time = #{operatorTime},</if>
+    
+            <if test="sort != null">sort = #{sort},</if>
+
+            <if test="status != null">status = #{status},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteChatWelcomeConfigById" parameterType="Long">
+        delete from chat_welcome_config where id = #{id}
+    </delete>
+
+    <delete id="deleteChatWelcomeConfigByIds" parameterType="String">
+        delete from chat_welcome_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

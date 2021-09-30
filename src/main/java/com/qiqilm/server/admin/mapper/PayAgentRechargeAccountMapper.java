@@ -29,6 +29,8 @@ public interface PayAgentRechargeAccountMapper {
 	 */
 	public List<PayAgentRechargeAccount> selectPayAgentRechargeAccountList(Map<String,Object> map);
 
+	List<PayAgentRechargeAccount> selectPayAgentRechargeAccountAllList();
+
 	/**
 	 * 新增【请填写功能名称】
 	 *
@@ -61,7 +63,7 @@ public interface PayAgentRechargeAccountMapper {
 	 */
 	public int deletePayAgentRechargeAccountByIds(Long[] ids );
 
-	int memberIdSearchRepeat(@Param("account") String account);
+	Integer idSearchByMemberId(@Param("account") String account);
 
     void updateGoogle(PayAgentRechargeAccount payAgentRechargeAccount);
 
