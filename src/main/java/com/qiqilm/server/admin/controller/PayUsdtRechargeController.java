@@ -2,9 +2,11 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ConfigUsdtRecharge;
+import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
 import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
 import com.qiqilm.server.admin.service.IConfigUsdtRechargeService;
 import com.qiqilm.server.admin.service.ISysUserService;
@@ -57,6 +59,15 @@ public class PayUsdtRechargeController extends BaseController {
 		startPage();
 		List<PayUsdtRecharge> list = payUsdtRechargeService.selectPayUsdtRechargeList(reqPayUsdtRecharge);
 		return getDataTable( list );
+	}
+
+	/**
+	 * 查询USDT充值提交记录列表统计
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:memberRechargeLog:list')" )
+	@GetMapping( "/listCount" )
+	public Map listCount(ReqPayUsdtRecharge req ) {
+		return payUsdtRechargeService.listCount( req );
 	}
 
 	/**

@@ -1,9 +1,12 @@
 package com.qiqilm.server.admin.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.domain.PayUsdtRecharge;
+import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
 import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * USDT充值提交记录Mapper接口
@@ -27,6 +30,8 @@ public interface PayUsdtRechargeMapper {
 	 * @return USDT充值提交记录集合
 	 */
 	public List<PayUsdtRecharge> selectPayUsdtRechargeList(ReqPayUsdtRecharge reqPayUsdtRecharge);
+
+	public Map listCount(ReqPayUsdtRecharge reqPayUsdtRecharge );
 
 	/**
 	 * 新增USDT充值提交记录
