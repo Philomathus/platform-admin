@@ -62,13 +62,13 @@ public class PayAgentRechargeAccount extends BaseEntity {
     /** 开店时间 */
     /*@JsonFormat(pattern = "HH:mm:ss")
     */
-    @Excel(name = "开店时间", width = 30, exportFormat = "HH:mm:ss")
+    @Excel(name = "开店时间", width = 30)
     private String businessBeginTime;
 
     /** 关店时间 */
    /* @JsonFormat(pattern = "HH:mm:ss")
     */
-    @Excel(name = "关店时间", width = 30, exportFormat = "HH:mm:ss")
+    @Excel(name = "关店时间", width = 30)
     private String businessEndTime;
 
     /** 充值优惠比例 */
