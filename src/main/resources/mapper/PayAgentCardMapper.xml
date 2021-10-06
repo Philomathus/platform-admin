@@ -35,6 +35,7 @@
             <if test="operatorTime != null "> and pac.operator_time = #{operatorTime}</if>
             <if test="status != null "> and pac.status = #{status}</if>
         </where>
+        order by pac.create_time desc
     </select>
 
     <select id="selectPayAgentCardById" parameterType="Long" resultMap="PayAgentCardResult">
