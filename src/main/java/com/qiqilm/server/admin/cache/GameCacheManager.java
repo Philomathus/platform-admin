@@ -71,9 +71,9 @@ public class GameCacheManager {
 	public void init(){
 		log.info("初始化游戏redis高速缓存开始");
 		long bTime = System.currentTimeMillis();
-		//reSetGames();
+		reSetGames();
 		log.info("初始化游戏redis缓存结束,用时 {}毫秒",System.currentTimeMillis()-bTime);
-		//initGamePlatforms();
+		initGamePlatforms();
 		initVip();
 
 	}
