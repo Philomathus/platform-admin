@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
+import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
 import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
@@ -78,6 +79,16 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
             reqPayUsdtRecharge.setSelectEndDate( selectDate[ 1 ] );
         }
         return payUsdtRechargeMapper.selectPayUsdtRechargeList(reqPayUsdtRecharge);
+    }
+
+    @Override
+    public Map listCount( ReqPayUsdtRecharge req ) {
+        String[] selectDate = req.getSelectDate();
+        if ( selectDate != null && selectDate.length > 0 ) {
+            req.setSelectStartDate( selectDate[ 0 ] );
+            req.setSelectEndDate( selectDate[ 1 ] );
+        }
+        return payUsdtRechargeMapper.listCount( req );
     }
 
     /**

@@ -1,9 +1,11 @@
 package com.qiqilm.server.admin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.PayUsdtRecharge;
+import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
 import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
 
 /**
@@ -20,6 +22,8 @@ public interface IPayUsdtRechargeService {
 	 * @return USDT充值提交记录
 	 */
 	public PayUsdtRecharge selectPayUsdtRechargeById(Long id);
+
+	public Map listCount(ReqPayUsdtRecharge req );
 
 	/**
 	 * 查询USDT充值提交记录列表

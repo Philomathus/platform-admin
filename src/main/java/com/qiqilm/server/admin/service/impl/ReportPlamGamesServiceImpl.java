@@ -132,7 +132,7 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 			if ( rsplist.getPaicai() != null ) {
 				countPaiCai = countPaiCai.add( rsplist.getPaicai() );
 			}
-			if ( rsplist.getGameprofit() != null ) {
+			if ( rsplist.getGameprofit() != null && rsplist.getGameprofit().compareTo(new BigDecimal(0)) > 0) {
 				countGameProfit = countGameProfit.add( rsplist.getGameprofit() );
 			}
 		}
