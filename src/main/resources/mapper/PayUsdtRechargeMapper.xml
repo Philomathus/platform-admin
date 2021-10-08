@@ -27,8 +27,7 @@
     <select id="selectPayUsdtRechargeList" parameterType="ReqPayUsdtRecharge" resultMap="PayUsdtRechargeResult">
         <include refid="selectPayUsdtRechargeVo"/>
         <where>
-            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="searchValue != null  and searchValue != ''"> and (member_id = #{searchValue} or user_name = #{searchValue})</if>
             <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
             <if test="rechargeNumber != null "> and recharge_number = #{rechargeNumber}</if>
             <if test="rechargeMoney != null "> and recharge_money = #{rechargeMoney}</if>
