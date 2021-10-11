@@ -275,8 +275,8 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 		request.setSignatureId( serverSms.getSignature() );
 		request.setTemplate( serverSms.getTemplate() );
 		Map<String, String> contentVar = new HashMap<>();
-		contentVar.put( "code", code );
-		contentVar.put( "minute", "1" );
+		contentVar.put( "msg", code );
+		//contentVar.put( "minute", "1" );
 		request.setContentVar( contentVar );
 		try {
 			SendMessageV3Response sendSmsResponse = client.sendMessage( request );

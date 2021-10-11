@@ -89,6 +89,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentLimitLaoXiangPay;
 	@Value( "${payAgentLimitFuLiangPay:5000}" )
 	private Integer payAgentLimitFuLiangPay;
+	@Value( "${payAgentLimitHuiYuanPay:5000}" )
+	private Integer payAgentLimitHuiYuanPay;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -265,6 +267,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitFuLiangPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitFuLiangPay + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitHuiYuanPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitHuiYuanPay + "元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG )
@@ -318,7 +323,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YINLIAN )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 )
-				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG ) ) {
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN )) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
 		}
 

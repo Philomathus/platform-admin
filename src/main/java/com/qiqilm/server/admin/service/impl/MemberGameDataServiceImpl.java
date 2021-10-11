@@ -79,7 +79,13 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             reqMemberGameData.setEndTime(reqMemberGameData.getSelectDate()[1] + " 23:59:59");
         }
         String tableLast = reqMemberGameData.getAccount().substring(reqMemberGameData.getAccount().length() - 1);
-        reqMemberGameData.setTableLast(tableLast);
+        //判断是否为数字
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        if (pattern.matcher(tableLast).matches()) {
+            reqMemberGameData.setTableLast(tableLast);
+        } else {
+            reqMemberGameData.setTableLast("0");
+        }
         return memberGameDataMapper.getCountMemberGameDataList(reqMemberGameData);
     }
 

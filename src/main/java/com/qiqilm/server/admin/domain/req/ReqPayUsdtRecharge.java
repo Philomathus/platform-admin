@@ -21,6 +21,7 @@ public class ReqPayUsdtRecharge extends BaseEntity {
     private String rechargeAddress;
     private String transactionId;
     private String opName;
+    private String searchValue;
 
     @JsonIgnore
     private String[] selectDate;

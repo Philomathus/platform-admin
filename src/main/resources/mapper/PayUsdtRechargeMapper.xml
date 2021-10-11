@@ -27,8 +27,7 @@
     <select id="selectPayUsdtRechargeList" parameterType="ReqPayUsdtRecharge" resultMap="PayUsdtRechargeResult">
         <include refid="selectPayUsdtRechargeVo"/>
         <where>
-            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="searchValue != null  and searchValue != ''"> and (member_id = #{searchValue} or user_name = #{searchValue})</if>
             <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
             <if test="rechargeNumber != null "> and recharge_number = #{rechargeNumber}</if>
             <if test="rechargeMoney != null "> and recharge_money = #{rechargeMoney}</if>
@@ -45,6 +44,55 @@
             ${params.dataScope}
         </where>
     </select>
+
+    <select id="listCount" parameterType="PayUsdtRecharge" resultType="java.util.Map">
+        select a.total, b.successMoney, totalSuccess / total successRate from (<include refid="totalCount"/>)a
+        left join (<include refid="successMoney"/>)b on 1 = 1
+    </select>
+
+    <sql id="totalCount">
+        SELECT COUNT(*) total,SUM(recharge_money) totalMoney FROM `pay_usdt_recharge`
+        <where>
+        <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+        <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+        <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
+        <if test="rechargeNumber != null "> and recharge_number = #{rechargeNumber}</if>
+        <if test="rechargeMoney != null "> and recharge_money = #{rechargeMoney}</if>
+        <if test="status != null "> and status = #{status}</if>
+        <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
+        <if test="chainName != null  and chainName != ''"> and chain_name like concat('%', #{chainName}, '%')</if>
+        <if test="rechargeAddress != null  and rechargeAddress != ''"> and recharge_address = #{rechargeAddress}</if>
+        <if test="transactionId != null  and transactionId != ''"> and transaction_id = #{transactionId}</if>
+        <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+        <if test="selectDate != null and selectDate != ''"><!-- 开始时间检索 -->
+            and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
+        </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        </where>
+    </sql>
+
+    <sql id="successMoney">
+        SELECT COUNT(*) totalSuccess,SUM(recharge_money) successMoney FROM `pay_usdt_recharge`
+        <where>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
+            <if test="rechargeNumber != null "> and recharge_number = #{rechargeNumber}</if>
+            <if test="rechargeMoney != null "> and recharge_money = #{rechargeMoney}</if>
+            <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
+            <if test="chainName != null  and chainName != ''"> and chain_name like concat('%', #{chainName}, '%')</if>
+            <if test="rechargeAddress != null  and rechargeAddress != ''"> and recharge_address = #{rechargeAddress}</if>
+            <if test="transactionId != null  and transactionId != ''"> and transaction_id = #{transactionId}</if>
+            <if test="opName != null  and opName != ''"> and op_name like concat('%', #{opName}, '%')</if>
+            <if test="selectDate != null and selectDate != ''"><!-- 开始时间检索 -->
+                and create_time <![CDATA[ >= ]]> #{selectStartDate} and create_time <![CDATA[ <= ]]> #{selectEndDate}
+            </if>
+            and status = 3
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </sql>
 
     <select id="selectPayUsdtRechargeById" parameterType="Long" resultMap="PayUsdtRechargeResult">
         <include refid="selectPayUsdtRechargeVo"/>

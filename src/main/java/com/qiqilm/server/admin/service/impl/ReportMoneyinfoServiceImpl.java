@@ -60,10 +60,10 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
 //				return new AjaxResult( 900, "报表正在生成，请稍后..." );
 //			}
 //		}
-		if(dateNowStr.equals(beginTime) || dateNowStr.equals(endTime)){
+//		if(dateNowStr.equals(beginTime) || dateNowStr.equals(endTime)){
 			reportMoneyinfoMapper.calldataProrepPlamcom( dateNowStr, dateNowStr );
 
-		}
+//		}
 		List<ReportMoneyinfo> allList = reportMoneyinfoMapper.selectReportMoneyinfoList( reportMoneyinfo );
 		resultMap.put( "rows", allList );
 		return resultMap;
