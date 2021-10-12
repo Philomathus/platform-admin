@@ -52,7 +52,7 @@ public class HuiYuan2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("merchantNo", payAgentPlatform.getMerId());
         dataMap.put("money", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0, BigDecimal.ROUND_HALF_UP));
         dataMap.put("orderNo", withdrawLog.getOrderNo());
-        dataMap.put("channel", "HCPYYC");
+        dataMap.put("channel", "HCNBHX");
         dataMap.put("name", withdrawLog.getBankUserName());
         dataMap.put("cardNo", withdrawLog.getBankAccount());
         dataMap.put("idcard", "36522819610223364");
