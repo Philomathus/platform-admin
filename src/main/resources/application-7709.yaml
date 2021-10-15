@@ -43,8 +43,6 @@ payAgentLimitYangGuangPay: 50000
 payAgentLimitDaFengChePay: 50000
 # 魯班代付额度
 payAgentLimitLuBanPay: 50000
-# 鼎丰代付额度
-payAgentLimitDingFengPay: 50000
 # 宏博代付额度
 payAgentLimitHongBoPay: 50000
 # 小月代付额度
@@ -53,3 +51,11 @@ payAgentLimitXiaoYuePay: 50000
 payAgentLimitYinLianPay: 50000
 # 弗良代付额度
 payAgentLimitFuLiangPay: 50000
+# 爱农代付额度
+payAgentLimitAiNongPay: 50000
+# 众家代付额度
+payAgentLimitZhongJiaPay: 50000
+# 老乡代付额度
+payAgentLimitLaoXiangPay: 50000
+# 东东汇潮代付额度
+payAgentLimitHuiYuanPay: 30000
