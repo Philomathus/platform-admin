@@ -40,3 +40,5 @@ payAgentLimitNewMaxPay: 50000
 payAgentLimitLuBanPay: 50000
 # 银联代付额度
 payAgentLimitYinLianPay: 50000
+# 弗良代付额度
+payAgentLimitFuLiangPay: 50000

@@ -188,8 +188,9 @@ public abstract class ConstantsPayAgent {
 	public static final String FACAILE           = "faCaiLe";
 	//18pay代付
 	public static final String EIGHTEEN          = "eighteen";
-	//汇元代付
+	//汇元代付/东东汇潮
 	public static final String HUIYUAN          = "huiYuan";
+	public static final String HUIYUAN2          = "huiYuan2";
 	//汇潮代付
 	public static final String HUICHAO          = "huiChao";
 	//权付代付

@@ -176,7 +176,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "审核流程非法" );
 		}
 
-		if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO )
+		if ( ( payAgentPlatform.getCode().contains( ConstantsPayAgent.LIAN_FU_BAO )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO2 )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO3 )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO4 )
@@ -206,7 +206,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 ) )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitBinLi ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitBinLi + "元以上出款" );
-		} else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI )
+		} else if ( ( payAgentPlatform.getCode().contains( ConstantsPayAgent.SHUN_WEI )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI2 )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI3 )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.SHUN_WEI4 )
