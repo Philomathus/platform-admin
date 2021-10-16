@@ -75,7 +75,6 @@ public class LiveVideoController extends BaseController {
 	 */
 	@Log( title = "关播", businessType = BusinessType.CLOSE )
 	@GetMapping( value = "close/{ids}" )
-	@PreAuthorize( "@ss.hasPermi('admin:chatWelcomeConfig:list')" )
 	public AjaxResult close( @PathVariable( "ids" ) String ids ) {
 		String[] allId = ids.split( "," );
 		for ( String id : allId ) {
