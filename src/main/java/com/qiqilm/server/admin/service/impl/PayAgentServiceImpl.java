@@ -267,7 +267,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitFuLiangPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitFuLiangPay + "元以上出款" );
-		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN )
+		} else if ( (payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN )
+				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN2 ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitHuiYuanPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitHuiYuanPay + "元以上出款" );
 		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
@@ -324,7 +325,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )
-				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN )) {
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN2 )) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
 		}
 

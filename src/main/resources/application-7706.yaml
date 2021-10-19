@@ -60,3 +60,5 @@ payAgentLimitZhongJiaPay: 50000
 payAgentLimitLaoXiangPay: 50000
 # 弗良代付额度
 payAgentLimitFuLiangPay: 50000
+# 东东汇潮代付额度
+payAgentLimitHuiYuanPay: 50000
