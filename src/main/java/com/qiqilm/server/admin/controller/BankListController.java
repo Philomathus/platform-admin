@@ -70,7 +70,7 @@ public class BankListController extends BaseController {
 	/**
 	 * 出款银行状态修改
 	 */
-	@PreAuthorize( "@ss.hasPermi('pay:configBank:edit')" )
+	@PreAuthorize( "@ss.hasPermi('admin:bankList:edit')" )
 	@Log( title = "出款银行状态", businessType = BusinessType.UPDATE )
 	@PutMapping( "/changeStatus" )
 	public AjaxResult changeStatus( @RequestBody BankList bankList ) {
