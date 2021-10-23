@@ -128,7 +128,7 @@ public class GameInfoServiceImpl implements IGameInfoService {
 	/**
 	 * 批量删除游戏信息
 	 *
-	 * @param ids 需要删除的游戏信息ID
+	 * @param id 需要删除的游戏信息ID
 	 * @return 结果
 	 */
 	@Override

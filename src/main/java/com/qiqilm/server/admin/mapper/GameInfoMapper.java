@@ -62,7 +62,7 @@ public interface GameInfoMapper {
 	/**
 	 * 批量删除【请填写功能名称】
 	 *
-	 * @param ids 需要删除的数据ID
+	 * @param id 需要删除的数据ID
 	 * @return 结果
 	 */
 	public int deleteGameInfoByIds(String id);

@@ -25,11 +25,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectPayLogList" parameterType="PayLog" resultMap="PayLogResult">
         select l.id, l.member_id, l.member_account, l.platform_id, l.platform_name, c.pay_method channel_id, l.channel_name, l.money, l.success, l.fail_reason, l.create_time from pay_log l left join pay_channel_new c on l.channel_id = c.id
         <where>
+            <if test="channelId != null  and channelId != ''"> and c.pay_method = #{channelId}</if>
             <if test="memberId != null  and memberId != ''"> and l.member_id = #{memberId}</if>
             <if test="memberAccount != null  and memberAccount != ''"> and l.member_account = #{memberAccount}</if>
             <if test="platformId != null  and platformId != ''"> and l.platform_id = #{platformId}</if>
             <if test="platformName != null  and platformName != ''"> and l.platform_name like concat('%', #{platformName}, '%')</if>
-            <if test="channelId != null  and channelId != ''"> and l.channel_id = #{channelId}</if>
             <if test="channelName != null  and channelName != ''"> and l.channel_name like concat('%', #{channelName}, '%')</if>
             <if test="money != null "> and l.money = #{money}</if>
             <if test="success != null "> and l.success = #{success}</if>
