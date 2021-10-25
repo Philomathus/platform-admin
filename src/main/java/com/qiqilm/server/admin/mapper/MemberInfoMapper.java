@@ -101,6 +101,7 @@ public interface MemberInfoMapper {
     RspMemberInfo selectMemberInfoWithdrawByIdj(@Param("userid") String id, @Param("tableLast") String tableLast);
     RspMemberInfo selectMemberInfoWithdrawByIdk(@Param("userid") String id, @Param("tableLast") String tableLast);
     List<RspMemberInfo> selectMemberInfoWithdrawByIdl(@Param("userid") String id, @Param("tableLast") String tableLast);
+    RspMemberInfo selectMemberInfoWithdrawByIdz(@Param("userid") String id, @Param("tableLast") String tableLast);
 
     void changeEmail(MemberInfo memberInfo);
 
