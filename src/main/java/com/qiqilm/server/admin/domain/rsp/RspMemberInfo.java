@@ -23,6 +23,8 @@ public class RspMemberInfo {
     private String ipaddress;
     //线下充值金额
     private String rechargemoney;
+    //线下充值金额
+    private String usdtrechargemoney;
     //线上金额(一月)
     private String submoney;
     //人工代充金额

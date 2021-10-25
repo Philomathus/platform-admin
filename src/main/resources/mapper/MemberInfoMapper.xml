@@ -649,6 +649,10 @@
 		SELECT IFNULL(SUM(recharge_money),0) rechargemoney from member_recharge_log where type = '1' and status = '3' and member_id = #{userid}
 	</select>
 
+	<select id="selectMemberInfoWithdrawByIdz" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT IFNULL(SUM(recharge_money),0) usdtrechargemoney from pay_usdt_recharge where status = '3' and member_id = #{userid}
+	</select>
+
 	<select id="selectMemberInfoWithdrawByIdc" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
 		SELECT IFNULL(SUM(sub_money),0) submoney from member_pay_jour where status='1' and member_id = #{userid} and pay_time <![CDATA[ >= ]]> DATE_SUB(NOW(),INTERVAL 30 DAY)
 	</select>

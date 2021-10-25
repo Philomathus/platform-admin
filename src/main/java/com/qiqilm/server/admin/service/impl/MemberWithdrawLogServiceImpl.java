@@ -616,6 +616,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		RspMemberInfo rspMemberInfo11 = memberInfoMapper.selectMemberInfoWithdrawByIdk( id, tableLast );
 		//游戏投注详细
 		List<RspMemberInfo> rspMemberInfo12 = memberInfoMapper.selectMemberInfoWithdrawByIdl( id, tableLast );
+		RspMemberInfo rspMemberInfo13 = memberInfoMapper.selectMemberInfoWithdrawByIdz( id, tableLast );
 
 		List<WithdrawReport> withdrawReports = new LinkedList<>();
 		WithdrawReport       withdrawReporta = new WithdrawReport();
@@ -696,6 +697,11 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		withdrawReportk.setClass_twoname( "线下充值金额" );
 		withdrawReportk.setT_value( rspMemberInfo2.getRechargemoney() );
 		withdrawReports.add( withdrawReportk );
+
+		WithdrawReport withdrawReportz = new WithdrawReport();
+		withdrawReportz.setClass_twoname( "USDT充值金额" );
+		withdrawReportz.setT_value( rspMemberInfo13.getUsdtrechargemoney() );
+		withdrawReports.add( withdrawReportz );
 
 		WithdrawReport withdrawReportl = new WithdrawReport();
 		withdrawReportl.setClass_twoname( "线上金额" );
