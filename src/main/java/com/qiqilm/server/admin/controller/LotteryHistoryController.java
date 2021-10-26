@@ -102,7 +102,7 @@ public class LotteryHistoryController extends BaseController {
 				return AjaxResult.error("彩种名称["+lotName+"]已禁用!");
 			}
 			lotteryHistory.setIssue(lotteryHistory.getStartIssue());
-			lotteryHistory.setStatus(null);
+			lotteryHistory.setStatus(0L);
 			List<LotteryHistory> histories = lotteryHistoryService.selectLotteryHistoryList(lotteryHistory);
 			if (histories == null || histories.size() == 0){
 				return AjaxResult.error("彩种["+lotName+"]开始期数["+lotteryHistory.getStartIssue()+"]不存在!");
@@ -123,6 +123,7 @@ public class LotteryHistoryController extends BaseController {
 					return AjaxResult.error("彩种名称["+lotName+"]开始期数或结束期数不存在,补开奖失败!");
 				}
 				for (LotteryHistory storeHistory : storeLists){
+					storeHistory.setStatus(0L);
 					treeMap.remove(storeHistory.getIssue());
 				}
 				if (StringUtils.isNotEmpty(treeMap)){
