@@ -102,6 +102,7 @@ public class LotteryHistoryController extends BaseController {
 				return AjaxResult.error("彩种名称["+lotName+"]已禁用!");
 			}
 			lotteryHistory.setIssue(lotteryHistory.getStartIssue());
+			lotteryHistory.setStatus(null);
 			List<LotteryHistory> histories = lotteryHistoryService.selectLotteryHistoryList(lotteryHistory);
 			if (histories == null || histories.size() == 0){
 				return AjaxResult.error("彩种["+lotName+"]开始期数["+lotteryHistory.getStartIssue()+"]不存在!");
