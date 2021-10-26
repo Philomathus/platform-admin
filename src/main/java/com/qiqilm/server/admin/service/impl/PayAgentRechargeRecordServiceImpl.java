@@ -150,7 +150,7 @@ public class PayAgentRechargeRecordServiceImpl implements IPayAgentRechargeRecor
 		PayAgentRechargeRecord Record        = new PayAgentRechargeRecord();
 		Record.setOrderNo( orderNo );
 		Record.setRechargeAcount( rechargeAcount );
-		Record.setRechargeNickName( memberInfo.getNickName() );
+		Record.setRechargeNickName( payAgentRechargeAccount.getNickName() );
 		Record.setType( dto.getType() );
 		Record.setRemark( dto.getRemark() );
 		Record.setMoney( BalanceAmount );

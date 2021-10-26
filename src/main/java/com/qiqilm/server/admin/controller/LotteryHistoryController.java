@@ -127,6 +127,9 @@ public class LotteryHistoryController extends BaseController {
 				}
 				if (StringUtils.isNotEmpty(treeMap)){
 					histories = treeMap.values().stream().collect(Collectors.toList());
+					for (LotteryHistory insertHistory: histories){
+						insertHistory.setStatus(0L);
+					}
 					lotteryHistoryService.batchLotteryHistory(histories);
 				}
 			}
