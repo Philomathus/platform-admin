@@ -86,6 +86,9 @@ public class PayTypeServiceImpl implements IPayTypeService {
 		if ( payType.getCode() == null ) {
 			throw new BusinessException( "支付类型编码不能为空" );
 		}
+		if ( payType.getOpenLevel() == null ) {
+			payType.setOpenLevel(0L);
+		}
 		if ( payType.getCode() > 0 ) {
 			throw new BusinessException( "支付类型编码必须为负数" );
 		}
