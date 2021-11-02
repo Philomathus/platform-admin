@@ -294,7 +294,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 	private  String createCode() {
 		StringBuilder code = new StringBuilder();
 		for ( int i = 1; i <= 6; i++ ) {
-			code.append( RandomUtils.randomIntWithMax( 0, 9 ) );
+			code.append( RandomUtils.randomIntWithMax( 1, 9 ) );
 		}
 		return code.toString();
 	}
