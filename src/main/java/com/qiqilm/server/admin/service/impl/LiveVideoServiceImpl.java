@@ -17,9 +17,7 @@ import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.util.Strings;
-import org.bouncycastle.crypto.digests.MD5Digest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,7 +28,6 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 直播Service业务层处理
@@ -307,31 +304,30 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 			updateVideo.setCateId( 4 );// 设置主题ID为收费直播
 			updateVideo.setIsLivePay( true );
 			liveVideoMapper.updateLiveVideo( updateVideo );
-			RedisCacheUtil.me.clear( video.getId(), LiveVideo.class );
 			if(profile.equals("7701")){
 				liveVideoMapper.updateLive7706Video(updateVideo);
 			} else if(profile.equals("7704")){
 				liveVideoMapper.updateLive7705Video(updateVideo);
 			}
+			if( RedisCacheUtil.me.clear( video.getId(), LiveVideo.class ) ){
+				//im
+				HashMap<String, Object> ext = new HashMap<>();
+				ext.put( "type", live_pay_type == 0 ? 32 : 40 );
+				ext.put( "room_id", room_id );
+				ext.put( "live_fee", live_fee );
 
+				try {
+					long time = System.currentTimeMillis();
+					ext.put( "systemtime", time );
+					String signData = room_id.toString() + live_fee + time;
+					ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
+				} catch ( Exception e ) {
+					e.printStackTrace();
+				}
 
-			//im
-			HashMap<String, Object> ext = new HashMap<>();
-			ext.put( "type", live_pay_type == 0 ? 32 : 40 );
-			ext.put( "room_id", room_id );
-			ext.put( "live_fee", live_fee );
-
-			try {
-				long time = System.currentTimeMillis();
-				ext.put( "systemtime", time );
-				String signData = room_id.toString() + live_fee + time;
-				ext.put( "userinfomat", RSA8SignUtils.sign( signData, liveRsaPrivateKey ) );
-			} catch ( Exception e ) {
-				e.printStackTrace();
+				MessageType message = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem ).setData( JsonUtil.object2Json( ext ) );
+				imApi.sendGroupMessage( video.getGroupId(), message );
 			}
-
-			MessageType message = MessageType.setMsgEnmu( MessageEnum.TIMCustomElem ).setData( JsonUtil.object2Json( ext ) );
-			imApi.sendGroupMessage( video.getGroupId(), message );
 			return msg;
 		}
 		throw new RuntimeException( "切换失败" );
