@@ -15,48 +15,45 @@ import java.util.function.Supplier;
 @Log4j2
 @Component
 public class RedisCacheUtil {
-	public static RedisCacheUtil me;
+    public static RedisCacheUtil me;
 
-	@Autowired
-	private RedisUtil redisUtil;
+    @Autowired
+    private RedisUtil redisUtil;
 
-	@PostConstruct
-	void init() {
-		me = this;
-	}
+    @PostConstruct
+    void init() {
+        me = this;
+    }
 
-	public <T> T get( Serializable cacheId, Supplier<T> supplier ) {
-		Class<?> tClass = supplier.get().getClass();
-		String keyM = "autoCache:" + tClass.getSimpleName() + ":" + cacheId;
-		String s = redisUtil.strGet( keyM );
-		if ( Objects.isNull( s ) ) {
-			return this.update( keyM, supplier );
-		} else {
-			try {
-				return JsonUtil.json2Object( s, JsonUtil.getJavaType( tClass.getName() ) );
-			} catch ( Exception e ) {
-				return this.update( keyM, supplier );
-			}
-		}
-	}
+    public <T> T get( Serializable cacheId, Supplier<T> supplier ) {
+        Class<?> tClass = supplier.get().getClass();
+        String   keyM   = "autoCache:" + tClass.getSimpleName() + ":" + cacheId;
+        String   s      = redisUtil.strGet( keyM );
+        if ( Objects.isNull( s ) ) {
+            return this.update( keyM, supplier );
+        } else {
+            try {
+                return JsonUtil.json2Object( s, JsonUtil.getJavaType( tClass.getName() ) );
+            } catch ( Exception e ) {
+                return this.update( keyM, supplier );
+            }
+        }
+    }
 
-	private <T> T update( String keyM, Supplier<T> supplier ) {
-		T apply = supplier.get();
-		if ( Objects.isNull( apply ) ) {
-			return null;
-		}
-		String valStr;
-		if ( apply instanceof String ) {
-			valStr = ( String ) apply;
-		} else {
-			valStr = JsonUtil.object2Json( apply );
-		}
-		redisUtil.strSet( keyM, valStr, Duration.ofDays( 1 ) );
-		return apply;
-	}
+    private <T> T update( String keyM, Supplier<T> supplier ) {
+        T      apply = supplier.get();
+        String valStr;
+        if ( apply instanceof String ) {
+            valStr = (String) apply;
+        } else {
+            valStr = JsonUtil.object2Json( apply );
+        }
+        redisUtil.strSet( keyM, valStr, Duration.ofMinutes( 5 ) );
+        return apply;
+    }
 
-	public <T> void clear( Serializable cacheId, T t ) {
-		String keyM = "autoCache:" + t.getClass().getSimpleName() + ":" + cacheId;
-		redisUtil.unlink( keyM );
-	}
+    public <T> boolean clear( Serializable cacheId, T t ) {
+        String keyM = "autoCache:" + t.getClass().getSimpleName() + ":" + cacheId;
+        return redisUtil.unlink( keyM );
+    }
 }
