@@ -54,6 +54,6 @@ public class RedisCacheUtil {
 
     public <T> boolean clear( Serializable cacheId, T t ) {
         String keyM = "autoCache:" + t.getClass().getSimpleName() + ":" + cacheId;
-        return redisUtil.unlink( keyM );
+        return redisUtil.delete( keyM );
     }
 }
