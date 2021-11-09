@@ -737,4 +737,47 @@
             id = #{id}
         </where>
     </update>
+
+	<select id="listCount" resultType="java.util.Map">
+		select count(1) peopledTotal,
+		SUM(total_account) totalMoney,
+		SUM(box_account) safeBalanceTotalMoney
+		from member_info
+		<where>
+			<if test="bankAccount != null  and bankAccount != ''">
+				and id in (select member_id from member_card where bank_account = #{bankAccount})
+			</if>
+			<if test="searchValue != null  and searchValue != ''">
+				and (id = #{searchValue} or phone = #{searchValue} or user_name = #{searchValue})
+			</if>
+			<if test="email != null and email != ''">
+				and email like concat('%', #{email}, '%')
+			</if>
+			<if test="registIp != null  and registIp != ''">
+				and regist_ip = #{registIp}
+			</if>
+			<if test="loginIp != null  and loginIp != ''">
+				and login_ip = #{loginIp}
+			</if>
+			<if test="nickName != null  and nickName != ''">
+				and id in (select id from member_info where nick_name like concat('%', #{nickName}, '%'))
+			</if>
+			<if test="inviterCode != null  and inviterCode != ''">
+				and inviter_code = #{inviterCode}
+			</if>
+			<if test="channelcode != null  and channelcode != ''">
+				and channelCode = #{channelcode}
+			</if>
+<!--			<if test="params.beginTime != null and params.beginTime != ''">&lt;!&ndash; 开始时间检索 &ndash;&gt;-->
+<!--				AND reg_time <![CDATA[ >= ]]> STR_TO_DATE(#{params.beginTime},'%Y-%m-%d %H:%i:%s')-->
+<!--			</if>-->
+<!--			<if test="params.endTime != null and params.endTime != ''">&lt;!&ndash; 结束时间检索 &ndash;&gt;-->
+<!--				AND reg_time <![CDATA[ <= ]]> STR_TO_DATE(#{params.endTime},'%Y-%m-%d %H:%i:%s')-->
+<!--			</if>-->
+<!--			<if test="downLoadDate[0] != null "> and reg_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>-->
+<!--			<if test="downLoadDate[1] != null "> and reg_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>-->
+			and `status` in ("0","1","3","4","5","6","7")
+		</where>
+
+	</select>
 </mapper>

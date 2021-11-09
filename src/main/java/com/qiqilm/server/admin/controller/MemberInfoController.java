@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.vo.*;
@@ -96,6 +97,15 @@ public class MemberInfoController extends BaseController {
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(memberInfoService.selectMemberInfoById(id));
+    }
+
+    /**
+     * 统计会员余额
+     */
+    @PreAuthorize("@ss.hasPermi('member:memberInfo:query')")
+    @GetMapping("/listCount")
+    public Map listCount(MemberInfo memberInfo) {
+        return memberInfoService.listCount(memberInfo);
     }
 
     /**
