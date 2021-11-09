@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
@@ -9,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员信息Mapper接口
@@ -110,4 +112,6 @@ public interface MemberInfoMapper {
     String selectMemberInfoHistoryRechargeById(@Param("userid") String id);
 
     List<RspMemberChannel> memberstatistics(MemberInfo memberInfo);
+
+    public Map listCount(MemberInfo req );
 }

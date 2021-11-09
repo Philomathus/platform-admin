@@ -13,6 +13,7 @@ import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员信息Service接口
@@ -87,4 +88,7 @@ public interface IMemberInfoService {
     String getHistoryRecharge(String id);
 
 	List<RspMemberChannel> memberstatistics(MemberInfo memberInfo);
+
+	Map listCount(MemberInfo memberInfo);
+
 }
