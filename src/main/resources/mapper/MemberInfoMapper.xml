@@ -776,7 +776,7 @@
 <!--			</if>-->
 <!--			<if test="downLoadDate[0] != null "> and reg_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>-->
 <!--			<if test="downLoadDate[1] != null "> and reg_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>-->
-			and `status` in ("0","1","3","4","5","6","7")
+			and `status` in ("0","1","3","4","6","7")
 		</where>
 
 	</select>
