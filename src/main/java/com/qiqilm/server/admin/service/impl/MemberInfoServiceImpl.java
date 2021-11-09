@@ -493,4 +493,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			memberInfoMapper.updateMemberInfo( memberInfo );
 		}
 	}
+
+	@Override
+	public Map listCount( MemberInfo memberInfo ) {
+		return memberInfoMapper.listCount( memberInfo );
+	}
 }
