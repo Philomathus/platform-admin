@@ -83,6 +83,7 @@ public class ActivityQuestInfoController extends BaseController {
 	@PostMapping
 	public AjaxResult add( @RequestBody ActivityQuestInfo activityQuestInfo ) {
 		activityQuestInfo.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+		activityQuestInfo.setTaskMode(0);
 		activityQuestInfo.setCtime( new Date() );
 		return toAjax( activityQuestInfoService.insertActivityQuestInfo( activityQuestInfo ) );
 	}
