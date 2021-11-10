@@ -68,7 +68,7 @@
 
 <!--    重置每日任务状态、打码量、有效时间-->
     <update id="resetDayTaskStatus">
-        update member_quest set status = 0,curNum = 0 where task_mode=1
+        delete from member_quest where task_mode=1
     </update>
 
     <delete id="deleteMemberQuestById" parameterType="String">
