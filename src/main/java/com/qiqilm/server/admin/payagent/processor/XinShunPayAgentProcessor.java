@@ -76,12 +76,16 @@ public class XinShunPayAgentProcessor extends AbstractPayAgent {
 				if("1".equals(result.getOrDefault( "success", "" ).toString())){
 					log.info( payAgentPlatform.getName() + "订单提交成功 - listResult:{}", JsonUtil.object2Json( resultMap ) );
 					return true;
+				} else {
+					reqPayAgent.setFailReason( JsonUtil.object2Json( result ) );
 				}
-			} else {
-				reqPayAgent.setFailReason( resultMap.getOrDefault( "message", "" ).toString() );
-				payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
 			}
+			if(StringUtils.isNotBlank( resultMap.getOrDefault( "message", "" ).toString() )){
+				reqPayAgent.setFailReason( resultMap.getOrDefault( "message", "" ).toString() );
+			}
+			payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
 		}
+
 		log.warn( payAgentPlatform.getName() + "订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
 		return false;
 	}
