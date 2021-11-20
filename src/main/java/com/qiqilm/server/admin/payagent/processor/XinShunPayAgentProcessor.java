@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -171,28 +172,29 @@ public class XinShunPayAgentProcessor extends AbstractPayAgent {
 				//  ⽆需审核、审核中、审核通过、审核成功、审核驳回、审核失败
 				String statusCode = null;
 
-				String code = resultMap.getOrDefault( "error", "" ).toString();
-				if ( !"0".equals( code ) ) {
+				String code = resultMap.getOrDefault("error", "").toString();
+				if (!"0".equals(code)) {
 					statusCode = "审核失败";
 				}
-
-				Map<String, Object> map = ( Map<String, Object> ) resultMap.getOrDefault( "result", "" );
-				if ( !CollectionUtils.isEmpty( map ) ) {
-					statusCode = map.getOrDefault( "status", "" ).toString();
-				}
-
-				if ( "审核通过".equals( statusCode ) || "审核成功".equals( statusCode ) || "审核驳回".equals( statusCode ) || "审核失败".equals( statusCode ) ) {
-					if ( "审核通过".equals( statusCode ) || "审核成功".equals( statusCode ) ) {
-						status = 6;
-					} else {
-						status = 5;
+				String result = resultMap.getOrDefault("result", "").toString();
+				if (StringUtils.isNotBlank(result)) {
+					Map<String, Object> map = (Map<String, Object>) resultMap.getOrDefault("result", "");
+					if (!CollectionUtils.isEmpty(map)) {
+						statusCode = map.getOrDefault("status", "").toString();
 					}
-					payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
-							status );
-				}
-				return resultMap.getOrDefault( "message", "" ).toString();
-			}
 
+					if ("审核通过".equals(statusCode) || "审核成功".equals(statusCode) || "审核驳回".equals(statusCode) || "审核失败".equals(statusCode)) {
+						if ("审核通过".equals(statusCode) || "审核成功".equals(statusCode)) {
+							status = 6;
+						} else {
+							status = 5;
+						}
+						payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
+								status);
+					}
+					return resultMap.getOrDefault("message", "").toString();
+				}
+			}
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 		}
