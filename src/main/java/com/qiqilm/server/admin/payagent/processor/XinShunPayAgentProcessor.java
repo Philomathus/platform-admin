@@ -80,7 +80,9 @@ public class XinShunPayAgentProcessor extends AbstractPayAgent {
 					reqPayAgent.setFailReason( JsonUtil.object2Json( result ) );
 				}
 			}
-			reqPayAgent.setFailReason( resultMap.getOrDefault( "message", "" ).toString() );
+			if(StringUtils.isNotBlank( resultMap.getOrDefault( "message", "" ).toString() )){
+				reqPayAgent.setFailReason( resultMap.getOrDefault( "message", "" ).toString() );
+			}
 			payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
 		}
 
