@@ -114,4 +114,6 @@ public interface MemberInfoMapper {
     List<RspMemberChannel> memberstatistics(MemberInfo memberInfo);
 
     public Map listCount(MemberInfo req );
+
+    List<MemberInfo> selectRegisterByMemberIds(String memberIds);
 }
