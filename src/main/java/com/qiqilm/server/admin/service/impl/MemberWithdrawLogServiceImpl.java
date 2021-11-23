@@ -153,23 +153,26 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			m.setMultipleCode(multipleCode);
 		}
 		//注册48小时内,显示颜色
+		if(!CollectionUtils.isEmpty(memberWithdrawLogList)) {
 		Date date = null;
 		try {
 			date = DateFormatUtils.addHour(new Date(), -48);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String memberIds = "";
-		for(MemberWithdrawLog m:memberWithdrawLogList){
-			memberIds = "\"" + m.getMemberId() + "\"," + memberIds;
-		}
-		memberIds = memberIds.substring(0,memberIds.length()-1 );
-		List<MemberInfo> memberInfos = memberInfoMapper.selectRegisterByMemberIds(memberIds);
-		for(MemberWithdrawLog m:memberWithdrawLogList){
-			for(MemberInfo me:memberInfos) {
-				if (m.getMemberId().equals(me.getId())){
-					if(date.before(me.getRegTime())){
-						m.setRegisterColor(1);
+		StringBuilder sb = new StringBuilder();
+			for (MemberWithdrawLog m : memberWithdrawLogList) {
+				sb = sb.append("\"").append(m.getMemberId()).append("\",");
+			}
+			String memberIds = String.valueOf(sb);
+			memberIds = memberIds.substring(0, memberIds.length() - 1);
+			List<MemberInfo> memberInfos = memberInfoMapper.selectRegisterByMemberIds(memberIds);
+			for (MemberWithdrawLog m : memberWithdrawLogList) {
+				for (MemberInfo me : memberInfos) {
+					if (m.getMemberId().equals(me.getId())) {
+						if (date.before(me.getRegTime())) {
+							m.setRegisterColor(1);
+						}
 					}
 				}
 			}
