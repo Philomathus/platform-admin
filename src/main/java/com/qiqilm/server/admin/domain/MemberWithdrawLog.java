@@ -138,6 +138,11 @@ public class MemberWithdrawLog extends BaseEntity {
     private Integer times;
     private BigDecimal money;
     private String statusName;
+    //风控打码倍数环境变量
+    private String multipleCode;
+    //新会员在注册48个小时内申请提现，传到前端为1，整行显示颜色
+    private Integer registerColor;
+
     //公司入款姓名与提现姓名状态
     private Integer rechargeUserNameStatus;
 

@@ -780,4 +780,9 @@
 		</where>
 
 	</select>
+
+	<select id="selectRegisterByMemberIds" parameterType="java.lang.String" resultMap="MemberInfoResult">
+		select id, reg_time from member_info where id = (${memberIds})
+
+	</select>
 </mapper>

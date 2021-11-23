@@ -107,7 +107,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		List<BankCardAddress> bankCardAddresses = bankCardAddressMapper.selectBankCardAddressList( bankCardAddress );
 		if ( !CollectionUtils.isEmpty( memberWithdrawLogList ) && !CollectionUtils.isEmpty( bankCardAddresses ) ) {
 			for ( MemberWithdrawLog me : memberWithdrawLogList ) {
-				if ( !StringUtils.isEmpty( me.getRealBankAddress() ) ) {
+				if ( StringUtils.hasText( me.getRealBankAddress() ) ) {
 					String[] arr = me.getRealBankAddress().split( "/" );
 					if ( arr.length > 1 ) {
 						me.setProvince( arr[ 0 ] );
@@ -129,7 +129,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			}
 		}
 		//银行卡黑名单搜索
-		if ( !StringUtils.isEmpty( memberWithdrawLog.getSearchCardBlack() ) ) {
+		if ( StringUtils.hasText( memberWithdrawLog.getSearchCardBlack() ) ) {
 			if ( !CollectionUtils.isEmpty( memberWithdrawLogList ) ) {
 				Iterator<MemberWithdrawLog> it = memberWithdrawLogList.iterator();
 				if ( "1".equals( memberWithdrawLog.getSearchCardBlack() ) ) {
@@ -143,6 +143,37 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 						if ( "1".equals( it.next().getCardBlack() ) ) {
 							it.remove();
 						}
+					}
+				}
+			}
+		}
+		//风控打码倍数
+		String multipleCode =  sysConfigCacheUtil.getConf( "multiple_code" );
+		for(MemberWithdrawLog m:memberWithdrawLogList){
+			m.setMultipleCode(multipleCode);
+		}
+		//注册48小时内,显示颜色
+		Date date = null;
+		try {
+			date = DateFormatUtils.addHour(new Date(), -48);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String memberIds = "";
+		Set <String> strs=new HashSet<>();
+		for(MemberWithdrawLog m:memberWithdrawLogList){
+			strs.add(m.getMemberId());
+		}
+		for(String s:strs){
+			memberIds = "\"" + s + "\"," + memberIds;
+		}
+		memberIds = memberIds.substring(0,memberIds.length()-1 );
+		List<MemberInfo> memberInfos = memberInfoMapper.selectRegisterByMemberIds(memberIds);
+		for(MemberWithdrawLog m:memberWithdrawLogList){
+			for(MemberInfo me:memberInfos) {
+				if (m.getMemberId().equals(me.getId())){
+					if(date.before(me.getRegTime())){
+						m.setRegisterColor(1);
 					}
 				}
 			}
