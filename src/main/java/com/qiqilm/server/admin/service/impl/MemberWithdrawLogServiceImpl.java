@@ -160,12 +160,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			e.printStackTrace();
 		}
 		String memberIds = "";
-		Set <String> strs=new HashSet<>();
 		for(MemberWithdrawLog m:memberWithdrawLogList){
-			strs.add(m.getMemberId());
-		}
-		for(String s:strs){
-			memberIds = "\"" + s + "\"," + memberIds;
+			memberIds = "\"" + m.getMemberId() + "\"," + memberIds;
 		}
 		memberIds = memberIds.substring(0,memberIds.length()-1 );
 		List<MemberInfo> memberInfos = memberInfoMapper.selectRegisterByMemberIds(memberIds);
