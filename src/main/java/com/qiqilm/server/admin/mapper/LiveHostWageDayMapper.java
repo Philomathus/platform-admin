@@ -1,14 +1,13 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-import java.util.Map;
-
-import com.qiqilm.server.admin.domain.LiveHostWageDay;
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDays;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -55,6 +54,8 @@ public interface LiveHostWageDayMapper {
 	 */
 	public int insertLiveHostWageDay7705( LiveHostWageDay liveHostWageDay );
 
+	public int insertLiveHostWageDay7710( LiveHostWageDay updateLiveDay );
+
 	/**
 	 * 修改主播时长
 	 *
@@ -69,6 +70,7 @@ public interface LiveHostWageDayMapper {
 
 	public List<RspLiveHostWageDayFamily> familyPage_7706(@Param( "dto" ) LiveHostWageDay dto );
 	public List<RspLiveHostWageDayFamily> familyPage_7705(@Param( "dto" ) LiveHostWageDay dto );
+	public List<RspLiveHostWageDayFamily> familyPage_7710(@Param( "dto" ) LiveHostWageDay dto );
 
 	public List<Map<String, Object>> selectFamilyName();
 
@@ -76,6 +78,7 @@ public interface LiveHostWageDayMapper {
 
 	public List<RspLiveHostWageDayList> hostPage_7706(@Param( "dto" ) LiveHostWageDay dto );
 	public List<RspLiveHostWageDayList> hostPage_7705(@Param( "dto" ) LiveHostWageDay dto );
+	public List<RspLiveHostWageDayList> hostPage_7710(@Param( "dto" ) LiveHostWageDay dto );
 
 	List<String> getliveHostWageDay( @Param( "createTime" ) String createTime, @Param( "familyId" ) Long familyId);
 
