@@ -1,10 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
+import com.qiqilm.server.admin.domain.LiveBlack;
+
 import java.util.List;
 import java.util.Set;
-
-import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.LiveBlack;
 
 /**
  * 拉黑Mapper接口
@@ -26,11 +25,13 @@ public interface LiveBlackMapper {
 
 	List<LiveBlack> selectLiveBlackList7706(LiveBlack liveBlack);
 	List<LiveBlack> selectLiveBlackList7705(LiveBlack liveBlack);
+	List<LiveBlack> selectLiveBlackList7710( LiveBlack liveBlack );
 
 	int deleteLiveBlackById(Long id);
 
 	int deleteLiveBlackById7706(Long id);
 	int deleteLiveBlackById7705(Long id);
+	int deleteLiveBlackById7710( Long id );
 
 	Set userBlackList(Long host_id);
 }

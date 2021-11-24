@@ -3,11 +3,9 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.ManageCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveBlack;
-import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.mapper.LiveBlackMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILiveBlackService;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -59,6 +57,15 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
                 }
             }
             return liveBlackList7705;
+        } else if (profile.equals("7710")) {
+            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7710(liveBlack);
+            List<LiveBlack> liveBlackList7710 = new ArrayList<>();
+            for (LiveBlack liveBlack1 : liveBlackAllList) {
+                if (liveBlack1.getBlackUserId().startsWith("7710")) {
+                    liveBlackList7710.add(liveBlack1);
+                }
+            }
+            return liveBlackList7710;
         } else if (profile.equals("7701")) {
             List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
             List<LiveBlack> liveBlackList7701 = new ArrayList<>();
@@ -77,6 +84,15 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
                 }
             }
             return liveBlackList7704;
+        } else if (profile.equals("7708")) {
+            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
+            List<LiveBlack> liveBlackList7708 = new ArrayList<>();
+            for (LiveBlack liveBlack1 : liveBlackAllList) {
+                if (liveBlack1.getBlackUserId().startsWith("7708")) {
+                    liveBlackList7708.add(liveBlack1);
+                }
+            }
+            return liveBlackList7708;
         } else {
             liveBlackList = liveBlackMapper.selectLiveBlackList(liveBlack);
         }
@@ -90,6 +106,8 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
             num = liveBlackMapper.deleteLiveBlackById7706(liveBlack.getId());
         } else if (liveBlack.getBlackUserId().startsWith("7705")) {
             num = liveBlackMapper.deleteLiveBlackById7705(liveBlack.getId());
+        } else if (liveBlack.getBlackUserId().startsWith("7710")) {
+            num = liveBlackMapper.deleteLiveBlackById7710(liveBlack.getId());
         } else {
             num = liveBlackMapper.deleteLiveBlackById(liveBlack.getId());
         }

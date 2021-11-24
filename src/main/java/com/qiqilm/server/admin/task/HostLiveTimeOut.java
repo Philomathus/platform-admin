@@ -37,6 +37,9 @@ public class HostLiveTimeOut {
         if(profile.equals("7705")){
             return;
         }
+        if(profile.equals("7710")){
+            return;
+        }
 
         try {
             Set<String> liveVideos = videoCacheUtil.getAbortVideoByMonitorTime();
