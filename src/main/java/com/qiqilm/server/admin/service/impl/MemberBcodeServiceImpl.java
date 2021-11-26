@@ -69,4 +69,9 @@ public class MemberBcodeServiceImpl implements IMemberBcodeService {
 		}
 		return AjaxResult.success( memberBcode1 );
 	}
+
+	@Override
+	public int updateMemberBcode(MemberBcode memberBcode) {
+		return memberBcodeMapper.updateMemberBcode(memberBcode);
+	}
 }
