@@ -306,13 +306,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             updateVideo.setLivePayTime( (int) ( System.currentTimeMillis() / 1000 ) );
             updateVideo.setCateId( 4 );// 设置主题ID为收费直播
             updateVideo.setIsLivePay( true );
-            liveVideoMapper.updateLiveVideo( updateVideo );
-            RedisCacheUtil.me.clear( video.getId(), LiveVideo.class );
-            if ( profile.equals( "7701" ) ) {
-                liveVideoMapper.updateLive7706Video( updateVideo );
-            } else if ( profile.equals( "7704" ) ) {
-                liveVideoMapper.updateLive7705Video( updateVideo );
-            }
+            this.updateVideo( updateVideo );
             //im
             HashMap<String, Object> ext = new HashMap<>();
             ext.put( "type", live_pay_type == 0 ? 32 : 40 );
@@ -333,6 +327,25 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             return msg;
         }
         throw new RuntimeException( "切换失败" );
+    }
+
+    @Override
+    public void updateVideo( LiveVideo entity ) {
+        int updateCount = liveVideoMapper.updateLiveVideo( entity );
+        if ( updateCount > 0 ) {
+            RedisCacheUtil.me.clear( entity.getId(), LiveVideo.class );
+        }
+        switch (profile) {
+            case "7701":
+                liveVideoMapper.updateLive7706Video(entity);
+                break;
+            case "7704":
+                liveVideoMapper.updateLive7705Video(entity);
+                break;
+            case "7708":
+                liveVideoMapper.updateLive7710Video(entity);
+                break;
+        }
     }
 
     @Override
