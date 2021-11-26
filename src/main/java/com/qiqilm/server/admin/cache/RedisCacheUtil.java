@@ -25,15 +25,14 @@ public class RedisCacheUtil {
         me = this;
     }
 
-    public <T> T get( Serializable cacheId, Supplier<T> supplier ) {
-        Class<?> tClass = supplier.get().getClass();
-        String   keyM   = "autoCache:" + tClass.getSimpleName() + ":" + cacheId;
+    public <T> T get( Serializable cacheId, Class<T> clazz, Supplier<T> supplier ) {
+        String   keyM   = "autoCache:" + clazz.getSimpleName() + ":" + cacheId;
         String   s      = redisUtil.strGet( keyM );
         if ( Objects.isNull( s ) ) {
             return this.update( keyM, supplier );
         } else {
             try {
-                return JsonUtil.json2Object( s, JsonUtil.getJavaType( tClass.getName() ) );
+                return JsonUtil.json2Object( s, JsonUtil.getJavaType( clazz.getName() ) );
             } catch ( Exception e ) {
                 return this.update( keyM, supplier );
             }
@@ -41,6 +40,9 @@ public class RedisCacheUtil {
     }
 
     private <T> T update( String keyM, Supplier<T> supplier ) {
+        if ( supplier == null || supplier.get() == null ) {
+            return null;
+        }
         T      apply = supplier.get();
         String valStr;
         if ( apply instanceof String ) {
@@ -52,8 +54,8 @@ public class RedisCacheUtil {
         return apply;
     }
 
-    public <T> boolean clear( Serializable cacheId, T t ) {
-        String keyM = "autoCache:" + t.getClass().getSimpleName() + ":" + cacheId;
+    public <T> boolean clear( Serializable cacheId, Class<T> clazz ) {
+        String keyM = "autoCache:" + clazz.getSimpleName() + ":" + cacheId;
         return redisUtil.delete( keyM );
     }
 }
