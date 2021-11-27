@@ -289,7 +289,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( memberWithdrawLog.getStatus() != 4 ) {
 			return AjaxResult.error( "该订单状态不是代付中" );
 		}
-		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
+		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
 		if ( payAgentLog != null ) {
 			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
 			if ( i < 1 ) {
@@ -323,7 +323,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( memberWithdrawLog.getStatus() != 5 ) {
 			return AjaxResult.error( "该订单状态不是代付失败" );
 		}
-		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
+		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
 		if ( payAgentLog != null ) {
 			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
 			if ( i < 1 ) {
