@@ -292,8 +292,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
 		if ( payAgentLog != null ) {
 			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
-			if ( i <= 0 ) {
-				throw new BusinessException( "代付记录删除失败，请重试!" );
+			if ( i < 1 ) {
+				return AjaxResult.error( "代付记录删除失败，请重试!" );
 			}
 		}
 
@@ -307,10 +307,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		newMemberWithdrawLog.setOpName( userName );
 
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( newMemberWithdrawLog );
-		if ( i > 0 ) {
-			return AjaxResult.success();
+		if ( i < 1 ) {
+			return AjaxResult.error( "回退订单状态失败" );
 		}
-		throw new BusinessException( "回退订单状态失败" );
+		return AjaxResult.success();
 	}
 
 	@Override
@@ -326,8 +326,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
 		if ( payAgentLog != null ) {
 			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
-			if ( i <= 0 ) {
-				throw new BusinessException( "代付记录删除失败，请重试!" );
+			if ( i < 1 ) {
+				return AjaxResult.error( "代付记录删除失败，请重试!" );
 			}
 		}
 
@@ -341,10 +341,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		newMemberWithdrawLog.setOpName( userName );
 
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( newMemberWithdrawLog );
-		if ( i > 0 ) {
-			return AjaxResult.success();
+		if ( i < 1 ) {
+			return AjaxResult.error( "回退订单状态失败" );
 		}
-		throw new BusinessException( "回退订单状态失败" );
+		return AjaxResult.success();
 	}
 
 	@Override
