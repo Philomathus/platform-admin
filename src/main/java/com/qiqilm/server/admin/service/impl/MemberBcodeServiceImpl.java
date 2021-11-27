@@ -3,10 +3,12 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberBcode;
 import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.IMemberBcodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,11 @@ import java.util.Objects;
  */
 @Service
 public class MemberBcodeServiceImpl implements IMemberBcodeService {
-	@Autowired
+	@Resource
 	private MemberBcodeMapper memberBcodeMapper;
+
+	@Resource
+	private MemberInfoMapper memberInfoMapper;
 
 	/**
 	 * 查询会员打码数据
@@ -68,5 +73,19 @@ public class MemberBcodeServiceImpl implements IMemberBcodeService {
 			return AjaxResult.success(memberBcode2);
 		}
 		return AjaxResult.success( memberBcode1 );
+	}
+
+	@Override
+	public int updateMemberBcode(MemberBcode memberBcode) {
+		MemberBcode db = memberBcodeMapper.selectMemberBcodeById(memberBcode.getId());
+		int c = memberBcodeMapper.updateMemberBcode(memberBcode);
+		if(c>0){
+			BigDecimal addCode = memberBcode.getIncome().subtract(db.getIncome());
+			if(addCode.compareTo(BigDecimal.ZERO)<0){
+				addCode = BigDecimal.ZERO;
+			}
+			memberInfoMapper.updateBeatCode( db.getUserId(), addCode, addCode );
+		}
+		return c;
 	}
 }

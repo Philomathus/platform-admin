@@ -35,4 +35,6 @@ public interface IMemberBcodeService {
 	 */
 	AjaxResult getTotalData(MemberBcode memberBcode);
 
+	int updateMemberBcode(MemberBcode memberBcode);
+
 }

@@ -10,10 +10,7 @@ import com.qiqilm.server.admin.service.IMemberBcodeService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -69,4 +66,15 @@ public class MemberBcodeController extends BaseController {
 	public AjaxResult getInfo( @PathVariable( "id" ) String id ) {
 		return AjaxResult.success( memberBcodeService.selectMemberBcodeById( id ) );
 	}
+
+	/**
+	 * 修改会员打码数据
+	 */
+	@PreAuthorize( "@ss.hasPermi('member:memberBcode:edit')" )
+	@Log( title = "修改会员打码数据", businessType = BusinessType.UPDATE )
+	@PutMapping
+	public AjaxResult edit(@RequestBody MemberBcode memberBcode) {
+		return toAjax( memberBcodeService.updateMemberBcode(memberBcode) );
+	}
+
 }

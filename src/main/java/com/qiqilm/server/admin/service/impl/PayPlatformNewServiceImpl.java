@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.PayCacheUtil;
-import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.domain.rsp.RspPayPlatformNew;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -85,6 +83,7 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
         agentPlatform.add("7707_main");
         agentPlatform.add("7708_main");
         agentPlatform.add("7709_main");
+        agentPlatform.add("7710_main");
         String sqlConfig = "(`id`, `name`, `code`, mer_id, plat_pay_url, plat_query_url, plat_white_ip_list, creator, create_time) VALUES ("
                 + "\"" + payPlatformNew.getId() + "\","
                 + "\"" + payPlatformNew.getName() + "\","
