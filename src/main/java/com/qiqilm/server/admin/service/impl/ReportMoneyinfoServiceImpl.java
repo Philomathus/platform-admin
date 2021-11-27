@@ -1,21 +1,17 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ReportMoneyinfo;
 import com.qiqilm.server.admin.mapper.ReportMoneyinfoMapper;
 import com.qiqilm.server.admin.service.IReportMoneyinfoService;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.*;
 
 
@@ -104,7 +100,9 @@ public class ReportMoneyinfoServiceImpl implements IReportMoneyinfoService {
 		ReportMoneyinfo reportMoneyinfo1 = reportMoneyinfoMapper.countMoneyInfoData( reportMoneyinfo );
 		if ( !ObjectUtils.isEmpty( reportMoneyinfo1 ) ) {
 			BigDecimal paymentAmount = reportMoneyinfo1.getPaymentAmount();//入款总金额
+			paymentAmount = paymentAmount == null ? BigDecimal.ZERO : paymentAmount;
 			BigDecimal outMoney      = reportMoneyinfo1.getOutMoney();//出款总金额
+			outMoney = outMoney == null ? BigDecimal.ZERO : outMoney;
 			reportMoneyinfo1.setCountMoney( paymentAmount.subtract( outMoney ) );
 			return reportMoneyinfo1;
 		} else {
