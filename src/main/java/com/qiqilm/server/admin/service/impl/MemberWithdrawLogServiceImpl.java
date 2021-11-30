@@ -792,6 +792,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 				withdrawReports.add( withdrawReportTwo );
 			}
 		}
+		log.info("会员资金明细"+withdrawReports+"会员id"+id);
 
 		return AjaxResult.success( withdrawReports );
 	}
