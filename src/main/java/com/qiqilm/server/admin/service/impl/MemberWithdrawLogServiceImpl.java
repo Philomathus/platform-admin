@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
@@ -794,8 +795,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			}
 		}
 		log.info("会员资金明细"+withdrawReports+"会员id"+id);
-
-		return AjaxResult.success( "会员资金明细"+withdrawReports.get(0)+"会员id"+id );
+		return AjaxResult.success(JSON.toJSONString(withdrawReports) );
 	}
 
 	@Override
