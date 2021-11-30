@@ -795,7 +795,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			}
 		}
 		log.info("会员资金明细"+withdrawReports+"会员id"+id);
-		return AjaxResult.success(JSON.toJSONString(withdrawReports) );
+		return AjaxResult.success(withdrawReports );
 	}
 
 	@Override
