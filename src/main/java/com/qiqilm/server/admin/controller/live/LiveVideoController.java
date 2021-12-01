@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.HelpNoticeUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
@@ -121,7 +122,13 @@ public class LiveVideoController extends BaseController {
 //			if ( Objects.isNull( liveUser ) ) {
 //				return AjaxResult.success( "主播id有误" );
 //			}
+			if(liveVideo.getId()==null){
+				return AjaxResult.success( "error-input" );
+			}
 			LiveVideo liveVideo1 = liveVideoService.selectLiveVideoById( liveVideo.getId() );
+			if(liveVideo1==null){
+				return AjaxResult.success( "主播不存在" );
+			}
 			if ( liveVideo1.getLiveIn() == 1 ) {
 				helpNoticeUtil.sendMsg( liveVideo.getInfo(), liveVideo1.getGroupId() );
 				log.warn( "小助手发言消息" + liveVideo.getInfo(), liveVideo1.getGroupId() );
