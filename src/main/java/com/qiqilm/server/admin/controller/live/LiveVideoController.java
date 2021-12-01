@@ -117,10 +117,10 @@ public class LiveVideoController extends BaseController {
 		if ( Objects.isNull( liveVideo.getId() ) ) {
 			helpNoticeUtil.sendMsg( liveVideo.getInfo() );
 		} else {
-			LiveUser liveUser = liveUserService.selectLiveUserById( liveVideo.getId() );
-			if ( Objects.isNull( liveUser ) ) {
-				return AjaxResult.success( "主播id有误" );
-			}
+//			LiveUser liveUser = liveUserService.selectLiveUserById( liveVideo.getId() );
+//			if ( Objects.isNull( liveUser ) ) {
+//				return AjaxResult.success( "主播id有误" );
+//			}
 			LiveVideo liveVideo1 = liveVideoService.selectLiveVideoById( liveVideo.getId() );
 			if ( liveVideo1.getLiveIn() == 1 ) {
 				helpNoticeUtil.sendMsg( liveVideo.getInfo(), liveVideo1.getGroupId() );
