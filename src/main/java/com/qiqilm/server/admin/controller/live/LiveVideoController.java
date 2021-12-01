@@ -136,7 +136,7 @@ public class LiveVideoController extends BaseController {
 				return AjaxResult.success( "主播未在线" );
 			}
 		}
-		return AjaxResult.success( "正在发送中" );
+		return AjaxResult.success( "发送成功" );
 	}
 
 }
