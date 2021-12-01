@@ -133,10 +133,17 @@ public class ShanDe2PayAgentProcessor extends AbstractPayAgent {
             log.warn(payAgentPlatform.getName()+"查询结果 - result:{}", JsonUtil.object2Json(resultMap));
 
             if (!CollectionUtils.isEmpty(resultMap)) {
+                String code = resultMap.getOrDefault("err", "").toString();
+                Map msgMap = (Map)resultMap.get("msg");
+
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
                 //  statusCode 1成功，2失败，3取消，4未支付，5打款中，7队列提交
-                String statusCode = resultMap.getOrDefault("status", "").toString();
+                String statusCode = msgMap.getOrDefault("pay_status", "").toString();
+
+                if(!"1".equals(code)){
+                    statusCode = "2";
+                }
 
                 if("1".equals(statusCode) || "2".equals(statusCode) || "3".equals(statusCode)){
                     if ("1".equals(statusCode)) {
@@ -146,7 +153,22 @@ public class ShanDe2PayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
-                return resultMap.getOrDefault("msg", "").toString();
+
+                String msg = null;
+                if("1".equals(statusCode)){
+                    msg = "成功";
+                }else if("2".equals(statusCode)){
+                    msg = "失败";
+                }else if("3".equals(statusCode)){
+                    msg = "取消";
+                } else if("4".equals(statusCode)){
+                    msg = "未支付";
+                } else if("5".equals(statusCode)){
+                    msg = "打款中";
+                } else if("7".equals(statusCode)){
+                    msg = "队列提交";
+                }
+                return msg;
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
