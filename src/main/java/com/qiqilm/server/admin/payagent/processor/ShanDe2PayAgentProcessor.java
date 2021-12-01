@@ -155,18 +155,22 @@ public class ShanDe2PayAgentProcessor extends AbstractPayAgent {
                 }
 
                 String msg = null;
-                if("1".equals(statusCode)){
-                    msg = "成功";
-                }else if("2".equals(statusCode)){
-                    msg = "失败";
-                }else if("3".equals(statusCode)){
-                    msg = "取消";
-                } else if("4".equals(statusCode)){
-                    msg = "未支付";
-                } else if("5".equals(statusCode)){
-                    msg = "打款中";
-                } else if("7".equals(statusCode)){
-                    msg = "队列提交";
+                if("1".equals(code)){
+                    if("1".equals(statusCode)){
+                        msg = "成功";
+                    }else if("2".equals(statusCode)){
+                        msg = "失败";
+                    }else if("3".equals(statusCode)){
+                        msg = "取消";
+                    } else if("4".equals(statusCode)){
+                        msg = "未支付";
+                    } else if("5".equals(statusCode)){
+                        msg = "打款中";
+                    } else if("7".equals(statusCode)){
+                        msg = "队列提交";
+                    }
+                }else if("2".equals(code)){
+                    msg = resultMap.getOrDefault("msg", "").toString();
                 }
                 return msg;
             }
