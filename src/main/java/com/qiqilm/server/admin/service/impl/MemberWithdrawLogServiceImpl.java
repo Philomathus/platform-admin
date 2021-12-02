@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
@@ -635,6 +636,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		//取会员id最后一个字符
 		String tableLast = id.substring( id.length() - 1 );
 
+
 		RspMemberInfo rspMemberInfo1  = memberInfoMapper.selectMemberInfoWithdrawByIda( id, tableLast );
 		RspMemberInfo rspMemberInfo2  = memberInfoMapper.selectMemberInfoWithdrawByIdb( id, tableLast );
 		RspMemberInfo rspMemberInfo3  = memberInfoMapper.selectMemberInfoWithdrawByIdc( id, tableLast );
@@ -793,8 +795,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			}
 		}
 		log.info("会员资金明细"+withdrawReports+"会员id"+id);
-
-		return AjaxResult.success( withdrawReports );
+		return AjaxResult.success(withdrawReports );
 	}
 
 	@Override
