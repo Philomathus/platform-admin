@@ -265,7 +265,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LAOXIANG )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitLaoXiangPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitLaoXiangPay + "元以上出款" );
-		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHANDE )
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHANDE2 )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitShanDePay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitShanDePay + "元以上出款" );
 		} else if ( (payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG )
@@ -326,7 +326,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().contains( ConstantsPayAgent.AINONG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.ZHONGJIA )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.LAOXIANG )
-				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHANDE )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.SHANDE2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YINLIAN )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 )
