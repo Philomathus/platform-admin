@@ -62,3 +62,5 @@ payAgentLimitLaoXiangPay: 30000
 payAgentLimitFuLiangPay: 30000
 # 东东汇潮代付额度
 payAgentLimitHuiYuanPay: 30000
+# 杉德代付额度
+payAgentLimitShanDePay: 30000
