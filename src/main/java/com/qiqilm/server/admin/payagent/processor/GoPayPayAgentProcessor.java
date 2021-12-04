@@ -35,7 +35,7 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("sendid", payAgentPlatform.getMerId());
         dataMap.put("orderid", withdrawLog.getOrderNo());
         dataMap.put("amount", withdrawLog.getWithdrawMoney());
-        dataMap.put("address", payAgentPlatform.getHeaderKey());
+        dataMap.put("address", withdrawLog.getBankAccount().trim());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -74,7 +74,7 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
                 log.info(payAgentPlatform.getName()+"订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("retMsg", "").toString());
+                reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
