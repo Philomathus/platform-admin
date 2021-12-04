@@ -17,6 +17,7 @@ import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +52,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	private VideoCacheUtil videoCacheUtil;
 	@Resource
 	private BankListMapper  bankListMapper;
-
+	@Value( "${spring.profiles.active}" )
+	private String profile;
 	/**
 	 * 查询主播用户信息
 	 *
@@ -161,7 +163,15 @@ public class LiveUserServiceImpl implements ILiveUserService {
 				liveUser.setCreateTime( new Date() );
 				liveUser.setUpdateTime( new Date() );
 				liveUser.setRoboter( 1 );
-				liveUserMapper.insertLiveUser( liveUser );
+				if (profile.equals("7706")){
+					liveUserMapper.insertLiveUser7701(liveUser);
+				}else if (profile.equals("7705")){
+					liveUserMapper.insertLiveUser7704(liveUser);
+				}else if (profile.equals("7710")){
+					liveUserMapper.insertLiveUser7708(liveUser);
+				}else {
+					liveUserMapper.insertLiveUser( liveUser );
+				}
 				return AjaxResult.success( "添加成功" );
 			} else {
 				return AjaxResult.error( "手机号格式错误" );

@@ -237,4 +237,187 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="delLiveUserBankById">
         delete from ${dbLive}.live_user_bank where bank_account = #{bankAccount}
     </delete>
+    <insert id="insertLiveUser7701" parameterType="LiveUser" useGeneratedKeys="true" keyProperty="id">
+        insert into cx_live.live_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">nick_name,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isAuthentication != null">is_authentication,</if>
+            <if test="loginIp != null">login_ip,</if>
+            <if test="focusCount != null">focus_count,</if>
+            <if test="mobile != null and mobile != ''">mobile,</if>
+            <if test="headImage != null and headImage != ''">head_image,</if>
+            <if test="authenticationType != null">authentication_type,</if>
+            <if test="authenticationName != null">authentication_name,</if>
+            <if test="identifyHoldImage != null">identify_hold_image,</if>
+            <if test="identifyPositiveImage != null">identify_positive_image,</if>
+            <if test="identifyNagativeImage != null">identify_nagative_image,</if>
+            <if test="investorSendInfo != null">investor_send_info,</if>
+            <if test="vExplain != null">v_explain,</if>
+            <if test="fansCount != null">fans_count,</if>
+            <if test="ticket != null">ticket,</if>
+            <if test="roboter != null">roboter,</if>
+            <if test="refundTicket != null">refund_ticket,</if>
+            <if test="isBan != null">is_ban,</if>
+            <if test="identifyNumber != null">identify_number,</if>
+            <if test="familyId != null">family_id,</if>
+            <if test="coin != null">coin,</if>
+            <if test="ticketCattyRatio != null">ticket_catty_ratio,</if>
+            <if test="openPay != null">open_pay,</if>
+            <if test="banRemark != null">ban_remark,</if>
+            <if test="familyChieftain != null">family_chieftain,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="isAuthentication != null">#{isAuthentication},</if>
+            <if test="loginIp != null">#{loginIp},</if>
+            <if test="focusCount != null">#{focusCount},</if>
+            <if test="vExplain != null">#{vExplain},</if>
+            <if test="mobile != null and mobile != ''">#{mobile},</if>
+            <if test="headImage != null and headImage != ''">#{headImage},</if>
+            <if test="authenticationType != null">#{authenticationType},</if>
+            <if test="authenticationName != null">#{authenticationName},</if>
+            <if test="identifyHoldImage != null">#{identifyHoldImage},</if>
+            <if test="identifyPositiveImage != null">#{identifyPositiveImage},</if>
+            <if test="identifyNagativeImage != null">#{identifyNagativeImage},</if>
+            <if test="investorSendInfo != null">#{investorSendInfo},</if>
+            <if test="fansCount != null">#{fansCount},</if>
+            <if test="ticket != null">#{ticket},</if>
+            <if test="roboter != null">#{roboter},</if>
+            <if test="refundTicket != null">#{refundTicket},</if>
+            <if test="isBan != null">#{isBan},</if>
+            <if test="identifyNumber != null">#{identifyNumber},</if>
+            <if test="familyId != null">#{familyId},</if>
+            <if test="coin != null">#{coin},</if>
+            <if test="ticketCattyRatio != null and ticketCattyRatio != ''">#{ticketCattyRatio},</if>
+            <if test="openPay != null">#{openPay},</if>
+            <if test="banRemark != null">#{banRemark},</if>
+            <if test="familyChieftain != null">#{familyChieftain},</if>
+        </trim>
+    </insert>
+    <insert id="insertLiveUser7704" parameterType="LiveUser" useGeneratedKeys="true" keyProperty="id">
+        insert into 7704_live.live_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">nick_name,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isAuthentication != null">is_authentication,</if>
+            <if test="loginIp != null">login_ip,</if>
+            <if test="focusCount != null">focus_count,</if>
+            <if test="mobile != null and mobile != ''">mobile,</if>
+            <if test="headImage != null and headImage != ''">head_image,</if>
+            <if test="authenticationType != null">authentication_type,</if>
+            <if test="authenticationName != null">authentication_name,</if>
+            <if test="identifyHoldImage != null">identify_hold_image,</if>
+            <if test="identifyPositiveImage != null">identify_positive_image,</if>
+            <if test="identifyNagativeImage != null">identify_nagative_image,</if>
+            <if test="investorSendInfo != null">investor_send_info,</if>
+            <if test="vExplain != null">v_explain,</if>
+            <if test="fansCount != null">fans_count,</if>
+            <if test="ticket != null">ticket,</if>
+            <if test="roboter != null">roboter,</if>
+            <if test="refundTicket != null">refund_ticket,</if>
+            <if test="isBan != null">is_ban,</if>
+            <if test="identifyNumber != null">identify_number,</if>
+            <if test="familyId != null">family_id,</if>
+            <if test="coin != null">coin,</if>
+            <if test="ticketCattyRatio != null">ticket_catty_ratio,</if>
+            <if test="openPay != null">open_pay,</if>
+            <if test="banRemark != null">ban_remark,</if>
+            <if test="familyChieftain != null">family_chieftain,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="isAuthentication != null">#{isAuthentication},</if>
+            <if test="loginIp != null">#{loginIp},</if>
+            <if test="focusCount != null">#{focusCount},</if>
+            <if test="vExplain != null">#{vExplain},</if>
+            <if test="mobile != null and mobile != ''">#{mobile},</if>
+            <if test="headImage != null and headImage != ''">#{headImage},</if>
+            <if test="authenticationType != null">#{authenticationType},</if>
+            <if test="authenticationName != null">#{authenticationName},</if>
+            <if test="identifyHoldImage != null">#{identifyHoldImage},</if>
+            <if test="identifyPositiveImage != null">#{identifyPositiveImage},</if>
+            <if test="identifyNagativeImage != null">#{identifyNagativeImage},</if>
+            <if test="investorSendInfo != null">#{investorSendInfo},</if>
+            <if test="fansCount != null">#{fansCount},</if>
+            <if test="ticket != null">#{ticket},</if>
+            <if test="roboter != null">#{roboter},</if>
+            <if test="refundTicket != null">#{refundTicket},</if>
+            <if test="isBan != null">#{isBan},</if>
+            <if test="identifyNumber != null">#{identifyNumber},</if>
+            <if test="familyId != null">#{familyId},</if>
+            <if test="coin != null">#{coin},</if>
+            <if test="ticketCattyRatio != null and ticketCattyRatio != ''">#{ticketCattyRatio},</if>
+            <if test="openPay != null">#{openPay},</if>
+            <if test="banRemark != null">#{banRemark},</if>
+            <if test="familyChieftain != null">#{familyChieftain},</if>
+        </trim>
+    </insert>
+    <insert id="insertLiveUser7708" parameterType="LiveUser" useGeneratedKeys="true" keyProperty="id">
+        insert into 7708_live.live_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">nick_name,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isAuthentication != null">is_authentication,</if>
+            <if test="loginIp != null">login_ip,</if>
+            <if test="focusCount != null">focus_count,</if>
+            <if test="mobile != null and mobile != ''">mobile,</if>
+            <if test="headImage != null and headImage != ''">head_image,</if>
+            <if test="authenticationType != null">authentication_type,</if>
+            <if test="authenticationName != null">authentication_name,</if>
+            <if test="identifyHoldImage != null">identify_hold_image,</if>
+            <if test="identifyPositiveImage != null">identify_positive_image,</if>
+            <if test="identifyNagativeImage != null">identify_nagative_image,</if>
+            <if test="investorSendInfo != null">investor_send_info,</if>
+            <if test="vExplain != null">v_explain,</if>
+            <if test="fansCount != null">fans_count,</if>
+            <if test="ticket != null">ticket,</if>
+            <if test="roboter != null">roboter,</if>
+            <if test="refundTicket != null">refund_ticket,</if>
+            <if test="isBan != null">is_ban,</if>
+            <if test="identifyNumber != null">identify_number,</if>
+            <if test="familyId != null">family_id,</if>
+            <if test="coin != null">coin,</if>
+            <if test="ticketCattyRatio != null">ticket_catty_ratio,</if>
+            <if test="openPay != null">open_pay,</if>
+            <if test="banRemark != null">ban_remark,</if>
+            <if test="familyChieftain != null">family_chieftain,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
+            <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
+            <if test="isAuthentication != null">#{isAuthentication},</if>
+            <if test="loginIp != null">#{loginIp},</if>
+            <if test="focusCount != null">#{focusCount},</if>
+            <if test="vExplain != null">#{vExplain},</if>
+            <if test="mobile != null and mobile != ''">#{mobile},</if>
+            <if test="headImage != null and headImage != ''">#{headImage},</if>
+            <if test="authenticationType != null">#{authenticationType},</if>
+            <if test="authenticationName != null">#{authenticationName},</if>
+            <if test="identifyHoldImage != null">#{identifyHoldImage},</if>
+            <if test="identifyPositiveImage != null">#{identifyPositiveImage},</if>
+            <if test="identifyNagativeImage != null">#{identifyNagativeImage},</if>
+            <if test="investorSendInfo != null">#{investorSendInfo},</if>
+            <if test="fansCount != null">#{fansCount},</if>
+            <if test="ticket != null">#{ticket},</if>
+            <if test="roboter != null">#{roboter},</if>
+            <if test="refundTicket != null">#{refundTicket},</if>
+            <if test="isBan != null">#{isBan},</if>
+            <if test="identifyNumber != null">#{identifyNumber},</if>
+            <if test="familyId != null">#{familyId},</if>
+            <if test="coin != null">#{coin},</if>
+            <if test="ticketCattyRatio != null and ticketCattyRatio != ''">#{ticketCattyRatio},</if>
+            <if test="openPay != null">#{openPay},</if>
+            <if test="banRemark != null">#{banRemark},</if>
+            <if test="familyChieftain != null">#{familyChieftain},</if>
+        </trim>
+    </insert>
 </mapper>
