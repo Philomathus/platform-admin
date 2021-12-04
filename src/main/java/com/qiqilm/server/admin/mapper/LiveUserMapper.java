@@ -73,10 +73,4 @@ public interface LiveUserMapper {
 	List<LiveUser> selectLiveUserBankById(Integer userId);
 	int updateLiveUserBank(LiveUser liveUser);
 	int delLiveUserBankById(String bankAccount);
-
-	void insertLiveUser7701(LiveUser liveUser);
-
-	void insertLiveUser7704(LiveUser liveUser);
-
-	void insertLiveUser7708(LiveUser liveUser);
 }

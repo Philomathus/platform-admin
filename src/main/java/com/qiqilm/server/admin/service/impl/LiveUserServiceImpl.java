@@ -163,15 +163,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
 				liveUser.setCreateTime( new Date() );
 				liveUser.setUpdateTime( new Date() );
 				liveUser.setRoboter( 1 );
-				if (profile.equals("7706")){
-					liveUserMapper.insertLiveUser7701(liveUser);
-				}else if (profile.equals("7705")){
-					liveUserMapper.insertLiveUser7704(liveUser);
-				}else if (profile.equals("7710")){
-					liveUserMapper.insertLiveUser7708(liveUser);
-				}else {
-					liveUserMapper.insertLiveUser( liveUser );
-				}
+				liveUserMapper.insertLiveUser( liveUser );
 				return AjaxResult.success( "添加成功" );
 			} else {
 				return AjaxResult.error( "手机号格式错误" );
@@ -264,6 +256,15 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			liveVideo.setPlayUrl( flv );
 			setIms( liveVideo, id, title );
 			liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
+			if(profile.equals("7701")){
+				liveVideoMapper.insertLiveVideo7706( liveVideo );
+			}
+			if(profile.equals("7704")){
+				liveVideoMapper.insertLiveVideo7705( liveVideo );
+			}
+			if(profile.equals("7708")){
+				liveVideoMapper.insertLiveVideo7710( liveVideo );
+			}
 			liveVideoMapper.insertLiveVideo( liveVideo );
 		}
 		RedisCacheUtil.me.clear( id, LiveVideo.class );
