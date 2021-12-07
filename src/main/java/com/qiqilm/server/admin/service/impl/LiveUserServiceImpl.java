@@ -17,6 +17,7 @@ import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +52,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
 	private VideoCacheUtil videoCacheUtil;
 	@Resource
 	private BankListMapper  bankListMapper;
-
+	@Value( "${spring.profiles.active}" )
+	private String profile;
 	/**
 	 * 查询主播用户信息
 	 *
@@ -254,6 +256,15 @@ public class LiveUserServiceImpl implements ILiveUserService {
 			liveVideo.setPlayUrl( flv );
 			setIms( liveVideo, id, title );
 			liveVideo.setNPlayFlv( AesUtil.aesEncrypt( flv, "qwertyui12345678" ) );
+			if(profile.equals("7701")){
+				liveVideoMapper.insertLiveVideo7706( liveVideo );
+			}
+			if(profile.equals("7704")){
+				liveVideoMapper.insertLiveVideo7705( liveVideo );
+			}
+			if(profile.equals("7708")){
+				liveVideoMapper.insertLiveVideo7710( liveVideo );
+			}
 			liveVideoMapper.insertLiveVideo( liveVideo );
 		}
 		RedisCacheUtil.me.clear( id, LiveVideo.class );

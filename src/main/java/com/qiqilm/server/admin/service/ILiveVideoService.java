@@ -32,7 +32,9 @@ public interface ILiveVideoService {
 
 	public String livePay( Long room_id, Integer live_fee, Integer live_pay_type );
 
-	AjaxResult updateVideoSort( LiveVideo liveVideo );
+    void updateVideo(LiveVideo entity);
+
+    AjaxResult updateVideoSort(LiveVideo liveVideo );
 
 	public void processVideoSort();
 

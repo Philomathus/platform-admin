@@ -83,4 +83,10 @@ public interface LiveVideoMapper {
 
 	LiveVideo getLiveVideoShare7706(@Param( "hostId" ) Long hostId);
 	LiveVideo getLiveVideoShare7705(@Param( "hostId" ) Long hostId);
+
+    void insertLiveVideo7706(LiveVideo liveVideo);
+
+	void insertLiveVideo7705(LiveVideo liveVideo);
+
+	void insertLiveVideo7710(LiveVideo liveVideo);
 }

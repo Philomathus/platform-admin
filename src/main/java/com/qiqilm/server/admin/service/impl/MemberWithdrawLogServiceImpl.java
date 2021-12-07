@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
@@ -16,6 +17,7 @@ import com.qiqilm.server.admin.payagent.PayAgentProcessorFactoryUtil;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberWithdrawLogService;
 import com.qiqilm.server.admin.utils.*;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ import java.util.*;
  * @date 2021-01-30
  */
 @Service
+@Log4j2
 public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	@Autowired
 	private MemberWithdrawLogMapper memberWithdrawLogMapper;
@@ -289,11 +292,11 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( memberWithdrawLog.getStatus() != 4 ) {
 			return AjaxResult.error( "该订单状态不是代付中" );
 		}
-		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
+		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
 		if ( payAgentLog != null ) {
 			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
-			if ( i <= 0 ) {
-				throw new BusinessException( "代付记录删除失败，请重试!" );
+			if ( i < 1 ) {
+				return AjaxResult.error( "代付记录删除失败，请重试!" );
 			}
 		}
 
@@ -307,10 +310,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		newMemberWithdrawLog.setOpName( userName );
 
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( newMemberWithdrawLog );
-		if ( i > 0 ) {
-			return AjaxResult.success();
+		if ( i < 1 ) {
+			return AjaxResult.error( "回退订单状态失败" );
 		}
-		throw new BusinessException( "回退订单状态失败" );
+		return AjaxResult.success();
 	}
 
 	@Override
@@ -323,11 +326,11 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		if ( memberWithdrawLog.getStatus() != 5 ) {
 			return AjaxResult.error( "该订单状态不是代付失败" );
 		}
-		PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
+		PayAgentLog payAgentLog = payAgentLogMapper.selectPayAgentLogByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
 		if ( payAgentLog != null ) {
 			int i = payAgentLogMapper.deletePayAgentLogById( payAgentLog.getId() );
-			if ( i <= 0 ) {
-				throw new BusinessException( "代付记录删除失败，请重试!" );
+			if ( i < 1 ) {
+				return AjaxResult.error( "代付记录删除失败，请重试!" );
 			}
 		}
 
@@ -341,10 +344,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		newMemberWithdrawLog.setOpName( userName );
 
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( newMemberWithdrawLog );
-		if ( i > 0 ) {
-			return AjaxResult.success();
+		if ( i < 1 ) {
+			return AjaxResult.error( "回退订单状态失败" );
 		}
-		throw new BusinessException( "回退订单状态失败" );
+		return AjaxResult.success();
 	}
 
 	@Override
@@ -633,6 +636,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		//取会员id最后一个字符
 		String tableLast = id.substring( id.length() - 1 );
 
+
 		RspMemberInfo rspMemberInfo1  = memberInfoMapper.selectMemberInfoWithdrawByIda( id, tableLast );
 		RspMemberInfo rspMemberInfo2  = memberInfoMapper.selectMemberInfoWithdrawByIdb( id, tableLast );
 		RspMemberInfo rspMemberInfo3  = memberInfoMapper.selectMemberInfoWithdrawByIdc( id, tableLast );
@@ -647,6 +651,9 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		//游戏投注详细
 		List<RspMemberInfo> rspMemberInfo12 = memberInfoMapper.selectMemberInfoWithdrawByIdl( id, tableLast );
 		RspMemberInfo rspMemberInfo13 = memberInfoMapper.selectMemberInfoWithdrawByIdz( id, tableLast );
+
+		log.info("查询资金明细,会员ID:"+id+"1:"+rspMemberInfo1 + "2:"+rspMemberInfo2+"3:"+rspMemberInfo3+"4:"+rspMemberInfo4+"5:"+rspMemberInfo5+"6:"+rspMemberInfo6+"7:"+rspMemberInfo7+"8:"+rspMemberInfo8
+				+"9:"+rspMemberInfo9+"10:"+rspMemberInfo10+"11:"+rspMemberInfo11+"12:"+rspMemberInfo12+"13:"+rspMemberInfo13);
 
 		List<WithdrawReport> withdrawReports = new LinkedList<>();
 		WithdrawReport       withdrawReporta = new WithdrawReport();
@@ -787,8 +794,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 				withdrawReports.add( withdrawReportTwo );
 			}
 		}
-
-		return AjaxResult.success( withdrawReports );
+		log.info("会员资金明细"+withdrawReports+"会员id"+id);
+		return AjaxResult.success(withdrawReports );
 	}
 
 	@Override

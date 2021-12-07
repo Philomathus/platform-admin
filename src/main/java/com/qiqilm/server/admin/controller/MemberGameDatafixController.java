@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberGameDatafixService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,7 +54,7 @@ public class MemberGameDatafixController extends BaseController {
 	public AjaxResult add( @RequestBody MemberGameDatafix memberGameDatafix ) {
 		memberGameDatafix.setId( UuidUtil.getRandomUuidWithoutSeparator() );
 		memberGameDatafix.setStatus( 0 );
-		if ( memberGameDatafix.getUserId() != null ) {
+		if (!StringUtils.isEmpty(memberGameDatafix.getUserId())) {
 			MemberInfo memberInfo = memberInfoService.selectMemberInfoById( memberGameDatafix.getUserId() );
 			if ( memberInfo == null )
 				return AjaxResult.error( "用户不存在" );

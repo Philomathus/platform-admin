@@ -100,11 +100,12 @@ public class AiNong2PayAgentProcessor extends AbstractPayAgent {
                 if (!orderStatus.equals("02") && !orderStatus.equals("06")) {
                     log.info(payAgentPlatform.getName()+"订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                     return true;
+                } else {
+                    reqPayAgent.setFailReason(resultMap.getOrDefault("retMsg", "").toString());
+                    payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
                 }
             }
         }
-        reqPayAgent.setFailReason(resultMap.getOrDefault("retMsg", "").toString());
-        payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
         log.warn(payAgentPlatform.getName()+"订单提交失败 - result:{}", JsonUtil.object2Json(resultMap));
         return false;
     }

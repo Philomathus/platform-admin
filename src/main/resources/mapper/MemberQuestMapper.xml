@@ -32,7 +32,7 @@
     </select>
 
     <insert id="insertMemberQuest" parameterType="MemberQuest">
-        insert into member_quest
+        insert ignore into member_quest
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="memberId != null">member_id,</if>
