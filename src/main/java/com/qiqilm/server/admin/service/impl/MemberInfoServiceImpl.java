@@ -258,7 +258,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
 	@Override
 	public PageBO<WithdrawReport> withdrawReport( String memberid, Integer pageNum, Integer pageSize ) {
-		memberInfoMapper.call_pro_useranalysis( memberid );
+//		memberInfoMapper.call_pro_useranalysis( memberid );
 		PageBO<WithdrawReport> pageBO = new PageBO<>();
 		pageNum = 1;
 		pageSize = 100;
