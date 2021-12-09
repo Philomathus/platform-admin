@@ -133,7 +133,7 @@
 				status = #{status},
 			</if>
 			<if test="cur != null">
-				cur = #{cur},
+				cur = cur+#{cur},
 			</if>
 		</trim>
 		where id = #{id}
