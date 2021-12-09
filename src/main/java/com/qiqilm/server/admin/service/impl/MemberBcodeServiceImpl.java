@@ -80,11 +80,7 @@ public class MemberBcodeServiceImpl implements IMemberBcodeService {
 		MemberBcode db = memberBcodeMapper.selectMemberBcodeById(memberBcode.getId());
 		int c = memberBcodeMapper.updateMemberBcode(memberBcode);
 		if(c>0){
-			BigDecimal addCode = memberBcode.getIncome().subtract(db.getIncome());
-			if(addCode.compareTo(BigDecimal.ZERO)<0){
-				addCode = BigDecimal.ZERO;
-			}
-			memberInfoMapper.updateBeatCode( db.getUserId(), addCode, addCode );
+			memberInfoMapper.updateBeatCode( db.getUserId(), memberBcode.getCur(), memberBcode.getCur() );
 		}
 		return c;
 	}

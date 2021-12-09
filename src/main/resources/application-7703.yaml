@@ -30,3 +30,5 @@ payAgentLimitLianFuBao: 30000
 payAgentLimitZhongJiaPay: 50000
 # 老乡代付额度
 payAgentLimitLaoXiangPay: 50000
+# GoPay代付额度
+payAgentLimitGoPayPay: 50000

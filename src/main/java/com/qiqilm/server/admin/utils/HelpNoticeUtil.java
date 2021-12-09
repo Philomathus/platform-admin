@@ -64,7 +64,7 @@ public class HelpNoticeUtil implements Serializable {
 //		}else{
 //			info.put( "agent", agent );
 //		}
-		if(profile.equals("7706")||profile.equals("7705")){
+		if(profile.equals("7706")||profile.equals("7705")||profile.equals("7710")){
 			info.put( "agent", agent );
 		}else{
 			agent = "";
@@ -115,7 +115,7 @@ public class HelpNoticeUtil implements Serializable {
 		info.put( "guardType", "2" );
 		info.put( "agent", profile );
 		ext.put( "sender", info );
-		if(profile.equals("7706")||profile.equals("7705")){
+		if(profile.equals("7706")||profile.equals("7705")||profile.equals("7710")){
 			info.put( "agent", agent );
 		}else{
 			agent = "";
