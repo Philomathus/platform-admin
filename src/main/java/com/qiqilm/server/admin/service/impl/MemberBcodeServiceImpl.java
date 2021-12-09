@@ -82,6 +82,10 @@ public class MemberBcodeServiceImpl implements IMemberBcodeService {
 			add = BigDecimal.ZERO;
 		}
 		MemberBcode db = memberBcodeMapper.selectMemberBcodeById(memberBcode.getId());
+		if(add.compareTo(db.getIncome())>0){
+			add = db.getIncome();
+			memberBcode.setCur(add);
+		}
 		if(add.compareTo(db.getIncome())<0){
 			memberBcode.setStatus(0);
 		}else{
