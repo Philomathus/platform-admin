@@ -53,6 +53,14 @@ public interface MemberBcodeMapper {
 	public int updateMemberBcode(MemberBcode memberBcode);
 
 	/**
+	 * 修改MemberBcode
+	 *
+	 * @param memberBcode MemberBcode
+	 * @return 结果
+	 */
+	public int updateBcode(MemberBcode memberBcode);
+
+	/**
 	 * 删除MemberBcode
 	 *
 	 * @param id MemberBcodeID

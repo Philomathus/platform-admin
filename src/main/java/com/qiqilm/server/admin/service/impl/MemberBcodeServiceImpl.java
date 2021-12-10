@@ -91,7 +91,7 @@ public class MemberBcodeServiceImpl implements IMemberBcodeService {
 		}else{
 			memberBcode.setStatus(1);
 		}
-		int c = memberBcodeMapper.updateMemberBcode(memberBcode);
+		int c = memberBcodeMapper.updateBcode(memberBcode);
 		if(c>0){
 			BigDecimal addCode = add.subtract(db.getCur());
 			memberInfoMapper.updateBeatCode( db.getUserId(), addCode, addCode );
