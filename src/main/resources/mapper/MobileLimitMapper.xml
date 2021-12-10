@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.MobileLimitMapper">
+
+    <resultMap type="MobileLimit" id="MobileLimitResult">
+        <result property="id"    column="id"    />
+        <result property="mobile"    column="mobile"    />
+    </resultMap>
+
+    <sql id="selectMobileLimitVo">
+        select id, mobile from 7700_main.mobile_limit
+    </sql>
+
+    <select id="selectMobileLimitList" parameterType="MobileLimit" resultMap="MobileLimitResult">
+        <include refid="selectMobileLimitVo"/>
+        <where>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+        </where>
+    </select>
+
+    <select id="selectMobileLimitById" parameterType="Long" resultMap="MobileLimitResult">
+        <include refid="selectMobileLimitVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMobileLimit" parameterType="MobileLimit" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_main.mobile_limit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mobile != null">mobile,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="mobile != null">#{mobile},</if>
+             </trim>
+    </insert>
+
+    <update id="updateMobileLimit" parameterType="MobileLimit">
+        update 7700_main.mobile_limit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mobile != null">mobile = #{mobile},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMobileLimitById" parameterType="Long">
+        delete from 7700_main.mobile_limit where id = #{id}
+    </delete>
+
+    <delete id="deleteMobileLimitByIds" parameterType="String">
+        delete from 7700_main.mobile_limit where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
