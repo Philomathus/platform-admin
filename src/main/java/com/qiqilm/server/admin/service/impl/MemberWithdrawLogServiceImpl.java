@@ -188,11 +188,17 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		String memberIds = String.valueOf(sb);
 		memberIds = memberIds.substring(0, memberIds.length() - 1);
 		List<MemberWithdrawLog> memberWithdrawLogs = memberWithdrawLogMapper.selectRegisterByMemberIds(memberIds);
-		for (MemberWithdrawLog m : memberWithdrawLogList) {
-			for (MemberWithdrawLog me : memberWithdrawLogs) {
-				if (m.getMemberId().equals(me.getMemberId())) {
-					if (me.getCount()<3) {
-						m.setRegisterColor(1);
+		if(memberWithdrawLogs.size() == 0 || CollectionUtils.isEmpty(memberWithdrawLogs)){
+			for (MemberWithdrawLog m : memberWithdrawLogList) {
+				m.setRegisterColor(1);
+			}
+		} else {
+			for (MemberWithdrawLog m : memberWithdrawLogList) {
+				for (MemberWithdrawLog me : memberWithdrawLogs) {
+					if (m.getMemberId().equals(me.getMemberId())) {
+						if (me.getCount() < 3) {
+							m.setRegisterColor(1);
+						}
 					}
 				}
 			}
