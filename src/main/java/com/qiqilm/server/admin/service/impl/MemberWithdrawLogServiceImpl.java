@@ -155,54 +155,54 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		for(MemberWithdrawLog m:memberWithdrawLogList){
 			m.setMultipleCode(multipleCode);
 		}
-//		//注册48小时内,显示颜色
-//		if(!CollectionUtils.isEmpty(memberWithdrawLogList)) {
-//		Date date = null;
-//		try {
-//			date = DateFormatUtils.addHour(new Date(), -48);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		StringBuilder sb = new StringBuilder();
-//			for (MemberWithdrawLog m : memberWithdrawLogList) {
-//				sb = sb.append("\"").append(m.getMemberId()).append("\",");
-//			}
-//			String memberIds = String.valueOf(sb);
-//			memberIds = memberIds.substring(0, memberIds.length() - 1);
-//			List<MemberInfo> memberInfos = memberInfoMapper.selectRegisterByMemberIds(memberIds);
-//			for (MemberWithdrawLog m : memberWithdrawLogList) {
-//				for (MemberInfo me : memberInfos) {
-//					if (m.getMemberId().equals(me.getId())) {
-//						if (date.before(me.getRegTime())) {
-//							m.setRegisterColor(1);
-//						}
-//					}
-//				}
-//			}
-//		}
-		//提款第一次和第二次，显示颜色
-		StringBuilder sb = new StringBuilder();
-		for (MemberWithdrawLog m : memberWithdrawLogList) {
-			sb = sb.append("\"").append(m.getMemberId()).append("\",");
+		//注册48小时内,显示颜色
+		if(!CollectionUtils.isEmpty(memberWithdrawLogList)) {
+		Date date = null;
+		try {
+			date = DateFormatUtils.addHour(new Date(), -48);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		String memberIds = String.valueOf(sb);
-		memberIds = memberIds.substring(0, memberIds.length() - 1);
-		List<MemberWithdrawLog> memberWithdrawLogs = memberWithdrawLogMapper.selectRegisterByMemberIds(memberIds);
-		if(memberWithdrawLogs.size() == 0 || CollectionUtils.isEmpty(memberWithdrawLogs)){
+		StringBuilder sb = new StringBuilder();
 			for (MemberWithdrawLog m : memberWithdrawLogList) {
-				m.setRegisterColor(1);
+				sb = sb.append("\"").append(m.getMemberId()).append("\",");
 			}
-		} else {
+			String memberIds = String.valueOf(sb);
+			memberIds = memberIds.substring(0, memberIds.length() - 1);
+			List<MemberInfo> memberInfos = memberInfoMapper.selectRegisterByMemberIds(memberIds);
 			for (MemberWithdrawLog m : memberWithdrawLogList) {
-				for (MemberWithdrawLog me : memberWithdrawLogs) {
-					if (m.getMemberId().equals(me.getMemberId())) {
-						if (me.getCount() < 3) {
+				for (MemberInfo me : memberInfos) {
+					if (m.getMemberId().equals(me.getId())) {
+						if (date.before(me.getRegTime())) {
 							m.setRegisterColor(1);
 						}
 					}
 				}
 			}
 		}
+		//提款第一次和第二次，显示颜色
+//		StringBuilder sb = new StringBuilder();
+//		for (MemberWithdrawLog m : memberWithdrawLogList) {
+//			sb = sb.append("\"").append(m.getMemberId()).append("\",");
+//		}
+//		String memberIds = String.valueOf(sb);
+//		memberIds = memberIds.substring(0, memberIds.length() - 1);
+//		List<MemberWithdrawLog> memberWithdrawLogs = memberWithdrawLogMapper.selectRegisterByMemberIds(memberIds);
+//		if(memberWithdrawLogs.size() == 0 || CollectionUtils.isEmpty(memberWithdrawLogs)){
+//			for (MemberWithdrawLog m : memberWithdrawLogList) {
+//				m.setRegisterColor(1);
+//			}
+//		} else {
+//			for (MemberWithdrawLog m : memberWithdrawLogList) {
+//				for (MemberWithdrawLog me : memberWithdrawLogs) {
+//					if (m.getMemberId().equals(me.getMemberId())) {
+//						if (me.getCount() < 3) {
+//							m.setRegisterColor(1);
+//						}
+//					}
+//				}
+//			}
+//		}
 		return memberWithdrawLogList;
 	}
 
