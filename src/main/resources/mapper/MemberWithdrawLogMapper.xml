@@ -387,7 +387,7 @@
     </select>
 
     <select id="selectRegisterByMemberIds" resultType="com.qiqilm.server.admin.domain.MemberWithdrawLog">
-        select member_id,count(member_id) count FROM member_withdraw_log where member_id in (${memberIds}) GROUP BY member_id
+        select member_id,count(member_id) count FROM member_withdraw_log where status in ('3','6') and member_id in (${memberIds}) GROUP BY member_id
     </select>
 
     <select id="selectPayAgentOrder" resultMap="MemberWithdrawLogResult">
