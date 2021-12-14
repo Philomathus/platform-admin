@@ -94,7 +94,7 @@ public class MemberBcodeServiceImpl implements IMemberBcodeService {
 		int c = memberBcodeMapper.updateBcode(memberBcode);
 		if(c>0){
 			BigDecimal addCode = add.subtract(db.getCur());
-			memberInfoMapper.updateBeatCode( db.getUserId(), addCode, addCode );
+			memberInfoMapper.updateBeatCode( db.getUserId(), addCode, new BigDecimal(0) );
 		}
 		return c;
 	}
