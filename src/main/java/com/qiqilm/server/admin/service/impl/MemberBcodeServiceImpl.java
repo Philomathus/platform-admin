@@ -79,7 +79,6 @@ public class MemberBcodeServiceImpl implements IMemberBcodeService {
 
 	@Override
 	public int updateMemberBcode(MemberBcode memberBcode) {
-		log.error("memberBcode:{}",memberBcode.toString());
 		BigDecimal add = memberBcode.getCur();
 		if(add.compareTo(BigDecimal.ZERO)<0){
 			add = BigDecimal.ZERO;
