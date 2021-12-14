@@ -383,7 +383,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		}
 
 		redisUtil.unLock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo() );
-		return AjaxResult.error( StringUtils.hasText( reqPayAgent.getFailReason() ) ? reqPayAgent.getFailReason() : "代付失败" );
+		return AjaxResult.error( StringUtils.hasText( reqPayAgent.getFailReason() ) ? reqPayAgent.getFailReason() + ",请咨询三方" : "代付失败" );
 	}
 
 	@Override
