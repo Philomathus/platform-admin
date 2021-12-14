@@ -19,7 +19,7 @@ public interface LotteryBetMapper {
 	 * @param id 用户投资行为ID
 	 * @return 用户投资行为
 	 */
-	public LotteryBet selectLotteryBetById(String id);
+	public LotteryBet selectLotteryBetById(@Param( "id" )String start,@Param( "dbNodes" ) String dbNodes);
 
 	/**
 	 * 查询用户投资行为列表
