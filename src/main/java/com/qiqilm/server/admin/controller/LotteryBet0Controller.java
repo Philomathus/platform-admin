@@ -4,18 +4,24 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.domain.LotteryBet0;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.enums.EnumGamePlatform;
+import com.qiqilm.server.admin.service.IGameDataLogService;
+import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.service.ILotteryBet0Service;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -27,8 +33,13 @@ import java.util.List;
 @RestController
 @RequestMapping( "/admin/lotteryBet0" )
 public class LotteryBet0Controller extends BaseController {
+
 	@Autowired
 	private ILotteryBet0Service lotteryBet0Service;
+	@Autowired
+	private IGameDataLogService gameDataLogService;
+	@Autowired
+	private IGamePlatformService gamePlatformService;
 
 	/**
 	 * 查询用户投资行为列表
@@ -58,6 +69,18 @@ public class LotteryBet0Controller extends BaseController {
 	public void export(LotteryBet0 lotteryBet0, HttpServletResponse response ) {
 		List<LotteryBet0> list = lotteryBet0Service.selectLotteryBet0List( lotteryBet0 );
 		ExportExcelUtil.exportExcel( list, "投注記錄", "投注記錄表", LotteryBet0.class, response );
+	}
+
+	/**
+	 * 导出用户投资行为
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:lotteryBet:repairOrder')" )
+	@GetMapping( "/repairOrder" )
+	public void repairOrder(LotteryBet0 lotteryBet0) {
+		GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LOTTERY.getType());
+		String platformTypeId = gamePlatform.getGameTypeid();
+		BigDecimal beatRate= gamePlatform.getRateBeat();
+		gameDataLogService.beatLotteryCode2(platformTypeId,beatRate,lotteryBet0);
 	}
 
 }

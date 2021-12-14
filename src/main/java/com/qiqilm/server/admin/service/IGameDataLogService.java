@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.qiqilm.server.admin.domain.GameDataLog;
 import com.qiqilm.server.admin.domain.LiveNote;
+import com.qiqilm.server.admin.domain.LotteryBet0;
 
 /**
  * 总代理游戏注单Service接口
@@ -49,6 +50,8 @@ public interface IGameDataLogService {
 	 * @return 结果
 	 */
 	public int deleteGameDataLogByIds(String[] ids );
+
+	void beatLotteryCode2(String platformTypeId, BigDecimal beatRate, LotteryBet0 lotteryBet0 );
 
 
 }
