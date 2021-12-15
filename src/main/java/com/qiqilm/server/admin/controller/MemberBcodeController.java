@@ -4,15 +4,21 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.MemberBcode;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.mapper.SysUserMapper;
 import com.qiqilm.server.admin.service.IMemberBcodeService;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,6 +32,10 @@ import java.util.List;
 public class MemberBcodeController extends BaseController {
 	@Autowired
 	private IMemberBcodeService memberBcodeService;
+	@Autowired
+	private TokenService tokenService;
+	@Resource
+	private SysUserMapper sysUserMapper;
 
 	/**
 	 * 查询会员打码数据列表
@@ -73,7 +83,27 @@ public class MemberBcodeController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('member:memberBcode:edit')" )
 	@Log( title = "修改会员打码数据", businessType = BusinessType.UPDATE )
 	@PutMapping
-	public AjaxResult edit(@RequestBody MemberBcode memberBcode) {
+	public AjaxResult edit(@RequestBody MemberBcode memberBcode) throws Exception {
+		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+		String userName = loginUser.getUser().getUserName();
+		memberBcode.setUpdateBy(userName);
+		memberBcode.setUpdateTime(new Date());
+
+		if ( memberBcode.getGoogleAuthCode() == null ) {
+			return AjaxResult.error( "请输入google验证码" );
+		}
+
+		String googleAuthSecret = sysUserMapper.selectGoogleAuthKeyByUserName( userName );
+		if ( !StringUtils.hasText( googleAuthSecret ) ) {
+			return AjaxResult.error( "未绑定google验证秘钥，无法审核" );
+		}
+
+		String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret,
+				AuthUtil.getSecurityKeyStr( "secretkey/googleAuthPrivateKey" ) );
+		if ( !GoogleAuthUtil.verifyCode( googleAuthKey, memberBcode.getGoogleAuthCode() ) ) {
+			return AjaxResult.error( "google验证码不正确，请检查" );
+		}
+
 		return toAjax( memberBcodeService.updateMemberBcode(memberBcode) );
 	}
 
