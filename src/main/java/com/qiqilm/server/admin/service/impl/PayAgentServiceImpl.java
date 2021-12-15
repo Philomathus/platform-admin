@@ -145,31 +145,29 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	public void gopayWithdraw( MemberWithdrawLog withdrawLog,boolean isSuccess) {
 		//gopay的提现彩金
 		if (withdrawLog.getBankName().contains("GOPAY")) {
-			if (isSuccess) {
-				String gopayWithdraw = sysConfigCacheUtil.getConf("gopayWithdraw", "");
-				BigDecimal chargeGive = null;
-				if (StringUtils.hasText(gopayWithdraw)) {
-					chargeGive = new BigDecimal(gopayWithdraw).multiply(withdrawLog.getWithdrawMoney()).setScale(2, BigDecimal.ROUND_HALF_UP);
-				} else {
-					chargeGive = new BigDecimal(0);
-				}
-				MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( withdrawLog.getMemberId() );
-				if (chargeGive.compareTo(BigDecimal.ZERO) > 0) {
-					logService.logMoneyAll(withdrawLog.getMemberId(), memberInfo.getUserName(), EnumMoney.chargegive,
-							memberInfo.getTotalAccount().add(chargeGive), chargeGive, null, "gopay提现彩金", withdrawLog.getOrderNo() + "_" + EnumMoney.chargegive.name());
-				}
-				MemberBcode codeFlow = new MemberBcode();
-				codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-				codeFlow.setIncome( chargeGive );
-				codeFlow.setCreateTime( new Date() );
-				codeFlow.setStatus( 0 );
-				codeFlow.setCur( BigDecimal.ZERO );
-				codeFlow.setUserId( memberInfo.getId() );
-				codeFlow.setDes( "gopay提现彩金" );
-				memberBcodeMapper.insertMemberBcode( codeFlow );
-				memberInfoMapper.updateMoneySelect( memberInfo.getId(), chargeGive, null, chargeGive, null,null );
-			}
-		}
+            if (isSuccess) {
+                String gopayWithdraw = sysConfigCacheUtil.getConf("gopayWithdraw", "");
+                BigDecimal chargeGive = null;
+                if (StringUtils.hasText(gopayWithdraw)) {
+                    chargeGive = new BigDecimal(gopayWithdraw).multiply(withdrawLog.getWithdrawMoney()).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(withdrawLog.getMemberId());
+                    if (chargeGive.compareTo(BigDecimal.ZERO) > 0) {
+                        logService.logMoneyAll(withdrawLog.getMemberId(), memberInfo.getUserName(), EnumMoney.chargegive,
+                                memberInfo.getTotalAccount().add(chargeGive), chargeGive, null, "gopay提现彩金", withdrawLog.getOrderNo() + "_" + EnumMoney.chargegive.name());
+                    }
+                    MemberBcode codeFlow = new MemberBcode();
+                    codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
+                    codeFlow.setIncome(chargeGive);
+                    codeFlow.setCreateTime(new Date());
+                    codeFlow.setStatus(0);
+                    codeFlow.setCur(BigDecimal.ZERO);
+                    codeFlow.setUserId(memberInfo.getId());
+                    codeFlow.setDes("gopay提现彩金");
+                    memberBcodeMapper.insertMemberBcode(codeFlow);
+                    memberInfoMapper.updateMoneySelect(memberInfo.getId(), chargeGive, null, chargeGive, null, null);
+                }
+            }
+        }
 	}
 
 	@Override
