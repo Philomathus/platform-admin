@@ -60,6 +60,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
+	@Autowired
+	private PayAgentServiceImpl payAgentServiceImpl;
 
 	/**
 	 * 查询会员提现信息
@@ -156,30 +158,30 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 			m.setMultipleCode(multipleCode);
 		}
 		//注册48小时内,显示颜色
-//		if(!CollectionUtils.isEmpty(memberWithdrawLogList)) {
-//		Date date = null;
-//		try {
-//			date = DateFormatUtils.addHour(new Date(), -48);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		StringBuilder sb = new StringBuilder();
-//			for (MemberWithdrawLog m : memberWithdrawLogList) {
-//				sb = sb.append("\"").append(m.getMemberId()).append("\",");
-//			}
-//			String memberIds = String.valueOf(sb);
-//			memberIds = memberIds.substring(0, memberIds.length() - 1);
-//			List<MemberInfo> memberInfos = memberInfoMapper.selectRegisterByMemberIds(memberIds);
-//			for (MemberWithdrawLog m : memberWithdrawLogList) {
-//				for (MemberInfo me : memberInfos) {
-//					if (m.getMemberId().equals(me.getId())) {
-//						if (date.before(me.getRegTime())) {
-//							m.setRegisterColor(1);
-//						}
-//					}
-//				}
-//			}
-//		}
+		if(!CollectionUtils.isEmpty(memberWithdrawLogList)) {
+		Date date = null;
+		try {
+			date = DateFormatUtils.addHour(new Date(), -48);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		StringBuilder sb = new StringBuilder();
+			for (MemberWithdrawLog m : memberWithdrawLogList) {
+				sb = sb.append("\"").append(m.getMemberId()).append("\",");
+			}
+			String memberIds = String.valueOf(sb);
+			memberIds = memberIds.substring(0, memberIds.length() - 1);
+			List<MemberInfo> memberInfos = memberInfoMapper.selectRegisterByMemberIds(memberIds);
+			for (MemberWithdrawLog m : memberWithdrawLogList) {
+				for (MemberInfo me : memberInfos) {
+					if (m.getMemberId().equals(me.getId())) {
+						if (date.before(me.getRegTime())) {
+							m.setRegisterColor(1);
+						}
+					}
+				}
+			}
+		}
 		//提款第一次和第二次，显示颜色
 //		StringBuilder sb = new StringBuilder();
 //		for (MemberWithdrawLog m : memberWithdrawLogList) {
@@ -549,6 +551,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		memberWithdrawLog.setOpName( userName );
 		memberWithdrawLog.setUpdateTime( new Date() );
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
+
+		//gopay提现彩金
+		payAgentServiceImpl.gopayWithdraw(memberWithdrawLog,status == 6);
+
 		if ( i>0 ) {
 			redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
 			return AjaxResult.success();
