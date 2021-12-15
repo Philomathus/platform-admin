@@ -95,6 +95,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentLimitShanDePay;
 	@Value( "${payAgentLimitGoPayPay:5000}" )
 	private Integer payAgentLimitGoPayPay;
+	@Value( "${payAgentMiaoDaoFuPay:5000}" )
+	private Integer payAgentMiaoDaoFuPay;
 
 
 	@Override
@@ -271,6 +273,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHANDE2 )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitShanDePay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitShanDePay + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.MIAODAOFU )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentMiaoDaoFuPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentMiaoDaoFuPay + "元以上出款" );
 		} else if ( (payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitFuLiangPay ) ) > 0 ) {
@@ -338,6 +343,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.GOPAY )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.MIAODAOFU )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN2 )) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
@@ -383,7 +389,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		}
 
 		redisUtil.unLock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo() );
-		return AjaxResult.error( StringUtils.hasText( reqPayAgent.getFailReason() ) ? reqPayAgent.getFailReason() : "代付失败" );
+		return AjaxResult.error( StringUtils.hasText( reqPayAgent.getFailReason() ) ? reqPayAgent.getFailReason() + ",请咨询三方" : "代付失败" );
 	}
 
 	@Override
