@@ -27,9 +27,9 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-@Repository( value = ConstantsPayAgent.XINSHUN + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.XINHUI + "PayAgentProcessor" )
 @Log4j2
-public class XinShunPayAgentProcessor extends AbstractPayAgent {
+public class XinHuiPayAgentProcessor extends AbstractPayAgent {
 
 	@Override
 	public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
