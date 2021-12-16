@@ -86,8 +86,6 @@ public class MemberBcodeController extends BaseController {
 	public AjaxResult edit(@RequestBody MemberBcode memberBcode) throws Exception {
 		LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
 		String userName = loginUser.getUser().getUserName();
-		memberBcode.setUpdateBy(userName);
-		memberBcode.setUpdateTime(new Date());
 
 		if ( memberBcode.getGoogleAuthCode() == null ) {
 			return AjaxResult.error( "请输入google验证码" );
