@@ -9,14 +9,12 @@
 		<result property="des" column="des"/>
 		<result property="income" column="income"/>
 		<result property="createTime" column="create_time"/>
-		<result property="updateBy" column="update_by"/>
-		<result property="updateTime" column="update_time"/>
 		<result property="status" column="status"/>
 		<result property="cur" column="cur"/>
 	</resultMap>
 
 	<sql id="selectMemberBcodeVo">
-		select id, user_id, des, income, create_time, update_by, update_time, status, cur
+		select id, user_id, des, income, create_time, status, cur
 		from member_bcode
 	</sql>
 
@@ -155,12 +153,6 @@
 			</if>
 			<if test="createTime != null">
 				create_time = #{createTime},
-			</if>
-			<if test="updateBy != null">
-				update_by = #{updateBy},
-			</if>
-			<if test="updateTime != null">
-				update_time = #{updateTime},
 			</if>
 			<if test="status != null">
 				status = #{status},
