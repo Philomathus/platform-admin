@@ -95,11 +95,10 @@ public class XinShunPayAgentProcessor extends AbstractPayAgent {
 
 		String rspSign = requestMap.remove( "sign" ).toString();
 		String timestamp = requestMap.remove( "timestamp" ).toString();
-		requestMap.values().removeIf( value -> !org.springframework.util.StringUtils.hasText( value.toString() ) );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
 				"secretkey/payAgentPrivateKey" ) );
-		String temStr = this.assemblyUrl(requestMap)+"&key="+signMd5+"&timestamp="+timestamp;
+		String temStr = JsonUtil.object2Json( requestMap )+"&key="+signMd5+"&timestamp="+timestamp;
 		String sign = DigestUtils.md5Hex( temStr );
 
 		log.info( payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign );
