@@ -326,7 +326,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
             case "浦发银行" :
                 return "SPDB";
             default :
-                return "ABC1";
+                return "ABC";
         }
     }
 
