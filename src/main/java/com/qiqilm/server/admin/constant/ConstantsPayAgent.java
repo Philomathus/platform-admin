@@ -207,4 +207,6 @@ public abstract class ConstantsPayAgent {
 	public static final String GOPAY          = "GoPay";
 	//新汇代付
 	public static final String XINHUI          = "xinHui";
+	//众邦代付
+	public static final String ZHONGBANG        = "zhongBang";
 }
