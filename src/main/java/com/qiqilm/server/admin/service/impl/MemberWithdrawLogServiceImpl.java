@@ -60,6 +60,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
+	@Autowired
+	private PayAgentServiceImpl payAgentServiceImpl;
 
 	/**
 	 * 查询会员提现信息
@@ -123,7 +125,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 								} else {
 									me.setCardBlack( "0" );
 								}
-							}	
+							}
 						}
 					} else {
 						me.setCardBlack( "1" );
@@ -180,6 +182,29 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 				}
 			}
 		}
+		//提款第一次和第二次，显示颜色
+//		StringBuilder sb = new StringBuilder();
+//		for (MemberWithdrawLog m : memberWithdrawLogList) {
+//			sb = sb.append("\"").append(m.getMemberId()).append("\",");
+//		}
+//		String memberIds = String.valueOf(sb);
+//		memberIds = memberIds.substring(0, memberIds.length() - 1);
+//		List<MemberWithdrawLog> memberWithdrawLogs = memberWithdrawLogMapper.selectRegisterByMemberIds(memberIds);
+//		if(memberWithdrawLogs.size() == 0 || CollectionUtils.isEmpty(memberWithdrawLogs)){
+//			for (MemberWithdrawLog m : memberWithdrawLogList) {
+//				m.setRegisterColor(1);
+//			}
+//		} else {
+//			for (MemberWithdrawLog m : memberWithdrawLogList) {
+//				for (MemberWithdrawLog me : memberWithdrawLogs) {
+//					if (m.getMemberId().equals(me.getMemberId())) {
+//						if (me.getCount() < 3) {
+//							m.setRegisterColor(1);
+//						}
+//					}
+//				}
+//			}
+//		}
 		return memberWithdrawLogList;
 	}
 
@@ -526,6 +551,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		memberWithdrawLog.setOpName( userName );
 		memberWithdrawLog.setUpdateTime( new Date() );
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
+
+		//gopay提现彩金
+		payAgentServiceImpl.gopayWithdraw(memberWithdrawLog,true);
+
 		if ( i>0 ) {
 			redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
 			return AjaxResult.success();
