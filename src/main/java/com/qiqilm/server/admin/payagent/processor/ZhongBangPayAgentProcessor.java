@@ -6,12 +6,13 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
+import com.qiqilm.server.admin.enums.BankCodeZhongBangType;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.hadoop.hbase.io.crypto.aes.AES;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.CollectionUtils;
+import sun.misc.BASE64Decoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -58,6 +60,14 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
+        BankCodeZhongBangType bankCodeType = BankCodeZhongBangType.getCodeByDesc( withdrawLog.getBankName() );
+        if ( bankCodeType == null ) {
+            payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
+            log.warn( payAgentPlatform.getName()+"无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
+            throw new BusinessException( payAgentPlatform.getName()+"无法支持的银行类型：" + withdrawLog.getBankName() );
+        }
+        withdrawLog.setBankCode( bankCodeType.name() );
+
         Map<String, Object> dataMap = new TreeMap<>();
         dataMap.put("merchantId", payAgentPlatform.getMerId());
         dataMap.put("orderId", withdrawLog.getOrderNo());
@@ -65,7 +75,8 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("callbackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.ZHONGBANG);
         dataMap.put("accountName", withdrawLog.getBankUserName());
         dataMap.put("bankCardNo", withdrawLog.getBankAccount());
-        dataMap.put("ebankEnName", getBankCode(withdrawLog.getBankName()));
+        dataMap.put("ebankEnName", withdrawLog.getBankCode());
+        dataMap.put("payInfo", "payInfo");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -74,7 +85,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("sign", sign);
 
         String jsonStr = JsonUtil.object2Json(dataMap);
-        String requestContent = encrypts(jsonStr,signMd5);
+        String requestContent = encrypt(jsonStr,signMd5);
 
         Map<String, Object> hashMap = new HashMap<>();
         hashMap.put("merchantId",payAgentPlatform.getMerId());
@@ -118,37 +129,47 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
 
-        String rspSign = requestMap.remove("sign").toString();
-        requestMap.values().removeIf(value -> !org.springframework.util.StringUtils.hasText(value.toString()));
-
+        String requestContent = requestMap.getOrDefault("responseContent", "").toString();
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-        StringBuilder sb = new StringBuilder();
-        requestMap.forEach((k, v) -> sb.append(v).append("&"));
-        String sign = signMd5 + "&" + sb.substring(0, sb.length() - 1);
-        sign = DigestUtils.md5Hex(sign);
+        String content = decrypt(requestContent,signMd5);
+
+        Map<String,Object> dataMap = JsonUtil.json2Map(content);
+        String submitAmount = dataMap.getOrDefault("submitAmount", "").toString();
+        String orderAmount = dataMap.getOrDefault("orderAmount", "").toString();
+        String orderCost = dataMap.getOrDefault("orderCost", "").toString();
+
+        String sign = dataMap.remove("sign").toString();
+        String status = dataMap.remove("status").toString();
+        dataMap.remove("message");
+
+        Map<String, Object> treeMap = new TreeMap<>(dataMap);
+        treeMap.put("submitAmount",new BigDecimal(submitAmount).setScale(2,BigDecimal.ROUND_HALF_UP));
+        treeMap.put("orderAmount",new BigDecimal(orderAmount).setScale(2,BigDecimal.ROUND_HALF_UP));
+        treeMap.put("orderCost",new BigDecimal(orderCost).setScale(2,BigDecimal.ROUND_HALF_UP));
+
+        String tempStr = this.assemblyUrl(treeMap);
+        String rspSign = sign(tempStr, payAgentPlatform.getSignPrivateKey(), false);
 
         log.info(payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
-            String order_num = requestMap.getOrDefault("orderNo", "").toString();
-            String status = requestMap.getOrDefault("status", "").toString();
-
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_num);
+            String orderId = requestMap.getOrDefault("orderId", "").toString();
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderId);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", order_num);
+                log.error("提现相关记录丢失 - merOrderNo:{}", orderId);
                 return "fail";
             }
             if (withdrawLog.getStatus() == 2) {
-                log.error("订单已拒绝，无需回调 - merOrderNo:{}", order_num);
+                log.error("订单已拒绝，无需回调 - merOrderNo:{}", orderId);
                 return "SUCCESS";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", order_num);
+                log.error("已有代付记录 - merOrderNo:{}", orderId);
                 return "SUCCESS";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(order_num);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "SUCCESS".equals(status));
-            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", order_num, "SUCCESS".equals(status) ? "成功" : "失败");
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(orderId);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "4".equals(status));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", orderId, "4".equals(status) ? "成功" : "失败");
             return "SUCCESS";
         }
         return "fail";
@@ -222,24 +243,6 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
     }
 
     /**
-     * 加密
-     *
-     * @return
-     */
-    public static String encrypt(String cleartext, String aesKey) {
-        try {
-            SecretKeySpec key = new SecretKeySpec(aesKey.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance(AES_TYPE);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] encryptedData = cipher.doFinal(cleartext.getBytes(CODE_TYPE));
-            return Base64Utils.encodeToString(encryptedData);
-        } catch (Exception e) {
-            logger.warn(e);
-            return cleartext;
-        }
-    }
-
-    /**
      * 私钥签名
      *
      * @throws
@@ -257,9 +260,10 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
     /**
      * 加密
      *
-     * @return
+     * @param cleartext,aesKey
+     * @return String
      */
-    private static String encrypts( String cleartext, String aesKey ) {
+    private static String encrypt( String cleartext, String aesKey ) {
         try {
             SecretKeySpec key    = new SecretKeySpec( aesKey.getBytes(), "AES" );
             Cipher        cipher = Cipher.getInstance( AES_TYPE );
@@ -269,6 +273,26 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         } catch ( Exception e ) {
             logger.warn( e );
             return cleartext;
+        }
+    }
+
+    /**
+     * 解密
+     *
+     * @param encrypted
+     * @return String
+     */
+    public static String decrypt(String encrypted, String aesKey) {
+        try {
+            byte[] byteMi = new BASE64Decoder().decodeBuffer(encrypted);
+            SecretKeySpec key = new SecretKeySpec(aesKey.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance(AES_TYPE);
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            byte[] decryptedData = cipher.doFinal(byteMi);
+            return new String(decryptedData, CODE_TYPE);
+        } catch (Exception e) {
+            logger.warn(e);
+            return encrypted;
         }
     }
 
