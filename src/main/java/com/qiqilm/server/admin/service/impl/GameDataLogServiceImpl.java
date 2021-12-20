@@ -373,6 +373,51 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 		}
 	}
 
+
+	@Override
+	public void beatLotteryCode2(String platformTypeId, BigDecimal beatRate,LotteryBet0 lotteryBet0) {
+		String tableLast = lotteryBet0.getPuserId().substring( lotteryBet0.getPuserId().length() - 1 );
+		LotteryBet lotteryBet = lotteryBetMapper.selectLotteryBetById( lotteryBet0.getId(),tableLast);
+		if ( lotteryBet == null ) {
+			return;
+		}
+		Map<String, BigDecimal> willCodeMap  = new HashMap<>();
+		List<MemberGameData>    willCodeList = new ArrayList<>();
+		SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH,
+				false );
+		MemberGameDataMapper mapper = session.getMapper( MemberGameDataMapper.class );
+
+		if ( mapper.findExist( lotteryBet.getPuserId().substring( lotteryBet.getPuserId().length() - 1 ), lotteryBet.getId() ) == null ) {
+			MemberGameData gameDataLog = new MemberGameData();
+			gameDataLog.setId( lotteryBet.getId() );
+			gameDataLog.setGameId( lotteryBet.getId() );
+			gameDataLog.setAccount( lotteryBet.getPuserId() );
+			gameDataLog.setKindId( lotteryBet.getLotteryId() );
+			gameDataLog.setCellScore( String.valueOf( lotteryBet.getCost() ) );
+			gameDataLog.setAllBet( gameDataLog.getCellScore() );
+			gameDataLog.setProfit( String.valueOf( lotteryBet.getPrize().subtract( lotteryBet.getCost() ) ) );
+			gameDataLog.setGameStartTime( lotteryBet.getBetTime() );
+			gameDataLog.setGameEndTime( lotteryBet.getUpdateTime() );
+			gameDataLog.setAgent( lotteryBet.getAnchor() > 0 ? "80000" : "10000" );
+			gameDataLog.setStatus( 0 );
+			gameDataLog.setPlatformType( platformTypeId );
+			gameDataLog.setPlatformId( 4 );
+
+			BigDecimal beatAdd = lotteryBet.getCost().multiply( beatRate ).setScale( 4 );
+			willCodeMap.putIfAbsent( lotteryBet.getPuserId(), BigDecimal.ZERO );
+			willCodeMap.put( lotteryBet.getPuserId(), willCodeMap.get( lotteryBet.getPuserId() ).add( beatAdd ) );
+
+			willCodeList.add( gameDataLog );
+
+			insertBatch( session, mapper, willCodeList );
+
+			doBeatCode( willCodeMap );
+
+			deQuestCheck( willCodeList, willCodeMap );
+		}
+	}
+
+
 	@Async
 	public void noticeRobotMessage( String lottery_telegram, List<MemberGameData> willCodeList ) {
 		RobotMessage robotMessage = new RobotMessage();

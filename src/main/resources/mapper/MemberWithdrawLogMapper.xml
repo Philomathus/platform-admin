@@ -386,6 +386,10 @@
         </foreach>
     </select>
 
+    <select id="selectRegisterByMemberIds" resultType="com.qiqilm.server.admin.domain.MemberWithdrawLog">
+        select member_id,count(member_id) count FROM member_withdraw_log where status in ('3','6') and member_id in (${memberIds}) GROUP BY member_id
+    </select>
+
     <select id="selectPayAgentOrder" resultMap="MemberWithdrawLogResult">
         <include refid="selectMemberWithdrawLogVo" />
         where `status` = 1 and op_name = #{userName} and withdraw_money > 0 and withdraw_money <![CDATA[ <= ]]> 5000

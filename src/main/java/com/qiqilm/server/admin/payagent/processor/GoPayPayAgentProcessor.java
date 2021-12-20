@@ -23,7 +23,9 @@ import org.springframework.util.CollectionUtils;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 @Repository(value = ConstantsPayAgent.GOPAY + "PayAgentProcessor")
@@ -90,7 +92,45 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
     @Override
     public Map<String, Object> reverseCheckOrderPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap,
                                                     String realIp) throws Exception {
-        return null;
+        if (this.checkWhiteIp(payAgentPlatform.getPlatWhiteIpList(), realIp)) {
+            log.warn("请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json(requestMap));
+            return null;
+        }
+
+        SortedMap<String, Object> requestSignMap = new TreeMap<>(requestMap);
+        String sign = requestSignMap.remove("sign").toString();
+
+        String merId = requestSignMap.getOrDefault("sendid", "").toString();
+        String merOrderNo = requestSignMap.getOrDefault("orderid", "").toString();
+        BigDecimal amount = new BigDecimal(requestSignMap.getOrDefault("amount", "0").toString());
+        String address = requestSignMap.getOrDefault("address", "").toString();
+
+        String tempSign = merId+merOrderNo+amount+address+payAgentPlatform.getSignPublicKey();
+        String mySign = DigestUtils.md5Hex(tempSign);
+
+        SortedMap<String, Object> signMap = new TreeMap<>();
+
+        if (org.apache.commons.lang3.StringUtils.equalsIgnoreCase(sign, mySign)) {
+            MemberWithdrawLog memberWithdrawLog = withdrawLogMapper.selectByOrderNo(merOrderNo);
+            if (memberWithdrawLog == null) {
+                signMap.put("code", 1002);
+                signMap.put("msg", "订单不存在");
+                return signMap;
+            } else if (amount.compareTo(memberWithdrawLog.getWithdrawMoney()) != 0) {
+                signMap.put("code", 1004);
+                signMap.put("msg", "充币数量不匹配");
+                return signMap;
+            } else if (!merId.equals(payAgentPlatform.getMerId())) {
+                signMap.put("code", 9999);
+                signMap.put("msg", "商户号错误");
+            } else {
+                signMap.put("code", 1);
+                signMap.put("msg", "success");
+            }
+        }
+        String resultSignStr = sign+payAgentPlatform.getSignPrivateKey();
+        signMap.put("retsign", DigestUtils.md5Hex(resultSignStr));
+        return signMap;
     }
 
     @Override
