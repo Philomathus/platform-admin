@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sort != null">sort,</if>
             <if test="isRedEnvelope != null">is_red_envelope,</if>
             <if test="isAnimated != null">is_animated,</if>
-            <if test="isSpecial != null  and isSpecial != ''">is_special,</if>
+            <if test="isSpecial != null">is_special,</if>
             <if test="isEffect != null">is_effect,</if>
             <if test="animType != null and animType != ''">anim_type,</if>
             <if test="robotDiamonds != null">robot_diamonds,</if>
@@ -90,8 +90,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isMuch != null">#{isMuch},</if>
             <if test="sort != null">#{sort},</if>
             <if test="isRedEnvelope != null">#{isRedEnvelope},</if>
-            <if test="isSpecial != null  and isSpecial != ''">#{isSpecial},</if>
             <if test="isAnimated != null">#{isAnimated},</if>
+            <if test="isSpecial != null ">#{isSpecial},</if>
             <if test="isEffect != null">#{isEffect},</if>
             <if test="animType != null and animType != ''">#{animType},</if>
             <if test="robotDiamonds != null">#{robotDiamonds},</if>
