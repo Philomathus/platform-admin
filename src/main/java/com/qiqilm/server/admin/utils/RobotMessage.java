@@ -19,13 +19,14 @@ public class RobotMessage extends TelegramLongPollingBot {
 	@Override
 	public String getBotUsername() {
 		// 填写username
-		return "chengziBot";
+		return "yanQin";
 	}
 
 	@Override
 	public String getBotToken() {
+		String robot_message_token = sysConfigCacheUtil.getConf("robot_message_token");
 		// 填写token
-		return "1647949061:AAG0bkLgSZNTnL8KI3EQcMIwx79D-Jd6dVk";
+		return robot_message_token;
 	}
 
 	@Override
