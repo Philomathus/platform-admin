@@ -79,6 +79,7 @@ public class RobotMessage extends TelegramLongPollingBot {
 
 	public void sendByChatId(String tex,String chatId){
 
+		log.info("纸飞机3id"+chatId+"內容+"+tex);
 		SendMessage message = new SendMessage()
 				.setChatId( chatId )
 				.setText( tex);
