@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.utils;
 
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
+@Log4j2
 public class RobotMessage extends TelegramLongPollingBot {
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
@@ -63,6 +65,8 @@ public class RobotMessage extends TelegramLongPollingBot {
 		if (Strings.isBlank(withdraw_log_telegram)){
 			return;
 		}
+		log.info("彩票纸飞机id:"+withdraw_log_telegram,"纸飞机Token:"+sysConfigCacheUtil.getConf("robot_message_token"));
+
 		SendMessage message = new SendMessage()
 				.setChatId( withdraw_log_telegram )
 				.setText( tex);
