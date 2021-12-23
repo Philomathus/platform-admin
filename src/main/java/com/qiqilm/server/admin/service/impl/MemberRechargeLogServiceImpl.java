@@ -221,7 +221,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 
 			memberCacheManager.bankChargeMount(memberRechargeLog.getMemberId());
 			if(memberInfo.getLevelIntegral().compareTo(BigDecimal.ZERO)==0||memberInfo.getLevelIntegral().compareTo(memberInfo.getInviteMoney())<=0){
-				if(memberInfo.getStatus() != 4 && memberInfo.getStatus() != 6 && memberInfo.getStatus() != 7) {
+				if(memberInfo.getStatus() != 4 && memberInfo.getStatus() != 7) {
 					memberCacheManager.checkFirstChargeaddWheelTimes(memberRechargeLog.getMemberId());
 				}
 			}
