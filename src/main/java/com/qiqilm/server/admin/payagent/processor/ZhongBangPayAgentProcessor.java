@@ -161,16 +161,16 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
             }
             if (withdrawLog.getStatus() == 2) {
                 log.error("订单已拒绝，无需回调 - merOrderNo:{}", orderId);
-                return "SUCCESS";
+                return "success";
             }
             if (withdrawLog.getStatus() == 6) {
                 log.error("已有代付记录 - merOrderNo:{}", orderId);
-                return "SUCCESS";
+                return "success";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(orderId);
             payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "4".equals(status));
             log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", orderId, "4".equals(status) ? "成功" : "失败");
-            return "SUCCESS";
+            return "success";
         }
         return "fail";
     }
@@ -279,7 +279,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
     /**
      * 解密
      *
-     * @param encrypted
+     * @param encrypted,aesKey
      * @return String
      */
     public static String decrypt(String encrypted, String aesKey) {
@@ -293,64 +293,6 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             logger.warn(e);
             return encrypted;
-        }
-    }
-
-    private String getBankCode(String bankName){
-        switch(bankName)
-        {
-            case "中国农业银行" :
-                return "ABC";
-            case "北京银行" :
-                return "BCCB";
-            case "东亚银行" :
-                return "BEAI";
-            case "中国银行" :
-                return "BOC";
-            case "交通银行" :
-                return "BOCOM";
-            case "渤海银行" :
-                return "BOHC";
-            case "上海银行" :
-                return "BOS";
-            case "中国建设银行" :
-                return "CCB";
-            case "光大银行" :
-                return "CEB";
-            case "兴业银行" :
-                return "CIB";
-            case "中国招商银行" :
-                return "CMB";
-            case "中国民生银行" :
-                return "CMBC";
-            case "浙商银行" :
-                return "CZSB";
-            case "中信银行" :
-                return "ECITIC";
-            case "广发银行" :
-                return "GDB";
-            case "徽商银行" :
-                return "HSCB";
-            case "华夏银行" :
-                return "HXB";
-            case "杭州银行" :
-                return "HZCB";
-            case "中国工商银行" :
-                return "ICBC";
-            case "宁波银行" :
-                return "NBCB";
-            case "南京银行" :
-                return "NJCB";
-            case "平安银行" :
-                return "PAB";
-            case "中国邮政银行" :
-                return "PSBC";
-            case "深圳发展银行" :
-                return "SDB";
-            case "浦发银行" :
-                return "SPDB";
-            default :
-                return "ABC";
         }
     }
 
