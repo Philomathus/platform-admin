@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Log4j2
@@ -25,7 +26,7 @@ public class MessageSendTask {
 	private RedisUtil          redisUtil;
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
-	@Autowired
+	@Resource
 	private RobotMessage       robotMessage;
 
 	@Scheduled( fixedDelay = 300000, initialDelay = 1 )
@@ -39,6 +40,7 @@ public class MessageSendTask {
 			return;
 		}
 		List<MemberWithdrawLog> list = memberWithdrawLogService.getWithdrawLogList();
+		log.info("10分钟未處理:"+list.size());
 		if ( list.size() > 0 ) {
 			StringBuffer bf = new StringBuffer( "超过10分钟未处理的出款总数:" );
 			bf.append( list.size() + "\n" );
@@ -48,6 +50,7 @@ public class MessageSendTask {
 						+ " 金额:" + memberWithdrawLog.getWithdrawMoney() + "\n" );
 				i++;
 			}
+			log.info("10分钟未處理2:"+bf.toString());
 			robotMessage.send( bf.toString() );
 		}
 	}
