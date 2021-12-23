@@ -368,6 +368,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 		doBeatCode( willCodeMap );
 
 		deQuestCheck( willCodeList, willCodeMap );
+		log.info("纸飞机2id"+lottery_telegram);
 		if ( lottery_telegram != null ) {
 			noticeRobotMessage( lottery_telegram, willCodeList );
 		}
@@ -427,6 +428,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 				if ( new BigDecimal( og.getProfit() ).compareTo( temProfit ) < 0 ) {
 					continue;
 				}
+				log.info("纸飞机1id"+lottery_telegram);
 				robotMessage.sendByChatId( og.getAccount() + ( og.getAgent().equals( "80000" ) ? "在直播间内" : "在直播间外" ) + og.getKindId() + "盈利了:" + og.getProfit() + "元", lottery_telegram );
 			} catch ( Exception e ) {
 				log.error( "彩票消息推送异常" + e.getMessage() );

@@ -144,7 +144,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	@Transactional( rollbackFor = Exception.class )
 	public void gopayWithdraw( MemberWithdrawLog withdrawLog,boolean isSuccess) {
 		//gopay的提现彩金
-		if (withdrawLog.getBankName().contains("GOPAY")) {
+		if (StringUtils.hasText(withdrawLog.getBankName()) && withdrawLog.getBankName().contains("GOPAY")) {
             if (isSuccess) {
                 String gopayWithdraw = sysConfigCacheUtil.getConf("gopayWithdraw", "");
                 BigDecimal chargeGive = null;

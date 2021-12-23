@@ -8,7 +8,7 @@
     </resultMap>
 
     <sql id="selectMobileLimitVo">
-        select id, mobile from 7700_main.mobile_limit
+        select id, mobile from mobile_limit
     </sql>
 
     <select id="selectMobileLimitList" parameterType="MobileLimit" resultMap="MobileLimitResult">
@@ -24,7 +24,7 @@
     </select>
 
     <insert id="insertMobileLimit" parameterType="MobileLimit" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_main.mobile_limit
+        insert into mobile_limit
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="mobile != null">mobile,</if>
          </trim>
@@ -34,7 +34,7 @@
     </insert>
 
     <update id="updateMobileLimit" parameterType="MobileLimit">
-        update 7700_main.mobile_limit
+        update mobile_limit
         <trim prefix="SET" suffixOverrides=",">
             <if test="mobile != null">mobile = #{mobile},</if>
     
@@ -43,11 +43,11 @@
     </update>
 
     <delete id="deleteMobileLimitById" parameterType="Long">
-        delete from 7700_main.mobile_limit where id = #{id}
+        delete from mobile_limit where id = #{id}
     </delete>
 
     <delete id="deleteMobileLimitByIds" parameterType="String">
-        delete from 7700_main.mobile_limit where id in
+        delete from mobile_limit where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
