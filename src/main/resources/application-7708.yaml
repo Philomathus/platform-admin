@@ -25,3 +25,5 @@ payAgentLimitBinLi: 50000
 payAgentLimitLianFuBao: 30000
 # 杉德代付额度
 payAgentLimitShanDePay: 30000
+# GoPay代付额度
+payAgentLimitGoPayPay: 10000
