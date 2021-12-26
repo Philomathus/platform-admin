@@ -60,3 +60,5 @@ payAgentLimitFuLiangPay: 50000
 payAgentLimitHuiYuanPay: 30000
 # 银联代付额度
 payAgentLimitYinLianPay: 50000
+# GoPay代付额度
+payAgentLimitGoPayPay: 50000
