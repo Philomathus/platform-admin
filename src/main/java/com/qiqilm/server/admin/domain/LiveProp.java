@@ -81,7 +81,7 @@ public class LiveProp extends BaseEntity {
 	/**
 	 * 0:正常礼物；1:特殊礼物
 	 */
-	@Excel( name = "0:普通礼物 1:gif礼物 2:大型动画礼物" )
+	@Excel( name = "0:正常礼物；1:特殊礼物" )
 	private String isSpecial;
 
 	/**
