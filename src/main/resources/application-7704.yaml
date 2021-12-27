@@ -42,3 +42,5 @@ payAgentLimitLuBanPay: 50000
 payAgentLimitYinLianPay: 50000
 # 弗良代付额度
 payAgentLimitFuLiangPay: 50000
+# GoPay代付额度
+payAgentLimitGoPayPay: 50000
