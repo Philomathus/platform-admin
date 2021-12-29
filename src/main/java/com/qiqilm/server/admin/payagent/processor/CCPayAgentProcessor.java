@@ -92,6 +92,7 @@ public class CCPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
+        requestMap.remove("mchId");
         //状态： W（审核中）、Y(成功)、N(驳回)
         String payStatus = requestMap.getOrDefault("payStatus", "").toString();
         //商户订单号
