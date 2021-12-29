@@ -65,3 +65,5 @@ payAgentLimitFuLiangPay: 30000
 payAgentLimitHuiYuanPay: 30000
 # 杉德代付额度
 payAgentLimitShanDePay: 30000
+# 新汇代付额度
+payAgentXinHuiPay: 50000
