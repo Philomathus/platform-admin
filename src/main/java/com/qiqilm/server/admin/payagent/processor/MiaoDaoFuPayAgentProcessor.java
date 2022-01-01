@@ -157,6 +157,8 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
         String notify_time = bodyMap.remove("notify_time").toString();
         bodyMap.put("notify_time", URLEncoder.encode(notify_time, "utf-8"));
+        bodyMap.put("bank_name", URLEncoder.encode(requestMap.remove("bank_name").toString(), "utf-8"));
+        bodyMap.put("payee_name", URLEncoder.encode(requestMap.remove("payee_name").toString(), "utf-8"));
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
