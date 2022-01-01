@@ -83,8 +83,8 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("order_no", withdrawLog.getOrderNo());
 
         if (!StringUtils.isNotBlank(bank_id)) {
-            log.warn("秒到付代付订单提交失败,{}银行不支持,请联系技术", withdrawLog.getBankName());
-            reqPayAgent.setFailReason("秒到付代付订单提交失败," + withdrawLog.getBankName() + "不支持,请联系技术");
+            log.warn(payAgentPlatform.getName()+"代付订单提交失败,{}银行不支持,请联系技术", withdrawLog.getBankName());
+            reqPayAgent.setFailReason(payAgentPlatform.getName()+"代付订单提交失败," + withdrawLog.getBankName() + "不支持,请联系技术");
             return false;
         } else {
             bodyMap.put("bank_id", bank_id);
@@ -97,19 +97,20 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
 //        bodyMap.put("bank_sub_branch_name", "bank_sub_branch_name");
 //        bodyMap.put("province", "province");
 //        bodyMap.put("city", "city");
-        bodyMap.put("sign_type", "MD5");
+        bodyMap.put("sign_type", "SHA");
         bodyMap.put("sign_ts", System.currentTimeMillis() / 1000);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr);
+        String sign = DigestUtils.sha1Hex(tempStr);
         bodyMap.put("sign", sign);
         bodyMap.remove("bank_name");
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
         bodyMap.remove("payee_name");
         bodyMap.put("payee_name", withdrawLog.getBankUserName().trim());
+        log.warn(payAgentPlatform.getName()+"下单请求参数{}", JsonUtil.object2Json(bodyMap));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -129,7 +130,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
                     } );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason("秒到付代付下单报错原因:" + e);
+            reqPayAgent.setFailReason(payAgentPlatform.getName()+"代付下单报错原因:" + e);
         }
         log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
@@ -139,13 +140,13 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
             //FAILURE 处理失败
             String state = resultMap.getOrDefault("state", "").toString();
             if ("WAITING".equals(state) || "PROCESSING".equals(state)) {
-                log.info("秒到付代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                log.info(payAgentPlatform.getName()+"代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.info("秒到付代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.info(payAgentPlatform.getName()+"代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -161,9 +162,9 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
-        String signStr = DigestUtils.md5Hex(tempStr);
+        String signStr = DigestUtils.sha1Hex(tempStr);
 
-        log.info("秒到付代付回调签名字符串:" + sign + "_" + signStr);
+        log.info(payAgentPlatform.getName()+"代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String order_no = (String) requestMap.get("order_no");
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_no);
@@ -195,14 +196,14 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put("merchant_no", payAgentPlatform.getMerId());
         bodyMap.put("order_no", withdrawLog.getOrderNo());
-        bodyMap.put("sign_type", "MD5");
+        bodyMap.put("sign_type", "SHA");
         bodyMap.put("sign_ts", System.currentTimeMillis() / 1000);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr);
+        String sign = DigestUtils.sha1Hex(tempStr);
         bodyMap.put("sign", sign);
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -221,7 +222,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map( text );
                     } );
-            log.info("秒到付代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName()+"代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String state = resultMap.getOrDefault("state", "").toString();
                 // status 4代付中 5代付失败 6代付成功
@@ -239,8 +240,8 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return "秒到付代付查询失败" + e;
+            return payAgentPlatform.getName()+"代付查询失败" + e;
         }
-        return "秒到付代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName()+"代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }
