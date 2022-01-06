@@ -37,7 +37,7 @@ public class OKPayPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("sendid", payAgentPlatform.getMerId());
         dataMap.put("orderid", withdrawLog.getOrderNo());
         dataMap.put("amount", withdrawLog.getWithdrawMoney());
-        dataMap.put("address", "6430d859eb4ac381");
+        dataMap.put("address", withdrawLog.getBankAccount().trim());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
