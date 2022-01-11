@@ -18,7 +18,7 @@ public abstract class ConstantsPayAgent {
 	public static final String SHUN_WEI6             = "shunWei6";
 	public static final String SHUN_WEI7             = "shunWei7";
 	public static final String SHUN_WEI8             = "shunWei8";
-	public static final String SHUN_WEI9             = "shunWe9";
+	public static final String SHUN_WEI9             = "shunWei9";
 	public static final String SHUN_WEI10            = "shunWei10";
 	public static final String SHUN_WEI11            = "shunWei11";
 	public static final String SHUN_WEI12            = "shunWei12";

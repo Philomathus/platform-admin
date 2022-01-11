@@ -54,6 +54,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplate;
+	@Resource
+	private RobotMessage robotMessage;
 
 	/**
 	 * 查询总代理游戏注单
@@ -421,7 +423,6 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
 	@Async
 	public void noticeRobotMessage( String lottery_telegram, List<MemberGameData> willCodeList ) {
-		RobotMessage robotMessage = new RobotMessage();
 		BigDecimal   temProfit    = new BigDecimal( 1000 );
 		for ( MemberGameData og : willCodeList ) {
 			try {
