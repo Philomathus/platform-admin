@@ -216,7 +216,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			} else {
 				beatNum = new BigDecimal( 0 );
 			}
-			memberInfoMapper.updateMoneySelect( userId, money, null, money, money.multiply( beatNum ).setScale( 2 ).negate(), null );
+			memberInfoMapper.updateMoneySelect( userId, money, null, money.multiply( beatNum ).setScale( 2 ), null, null );
 			MemberActionLogs log = new MemberActionLogs();
 			log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
 			log.setUserId( userId );
