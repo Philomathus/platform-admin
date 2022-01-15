@@ -76,8 +76,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="discountBill != null">discount_bill,</if>
             <if test="openLevel != null">open_level,</if>
             <if test="openLevelMax != null">open_level_max,</if>
-            <if test="rechargeLimitMin != null">recharge_limit_min,</if>
-            <if test="rechargeLimitMax != null">recharge_limit_max,</if>
+            <if test="rechargeLimitMin != null and rechargeLimitMin != ''">recharge_limit_min,</if>
+            <if test="rechargeLimitMax != null and rechargeLimitMax != ''">recharge_limit_max,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -98,8 +98,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="discountBill != null">#{discountBill},</if>
             <if test="openLevel != null">#{openLevel},</if>
             <if test="openLevelMax != null">#{openLevelMax},</if>
-            <if test="rechargeLimitMin != null">#{rechargeLimitMin},</if>
-            <if test="rechargeLimitMax != null">#{rechargeLimitMax},</if>
+            <if test="rechargeLimitMin != null and rechargeLimitMin != ''">#{rechargeLimitMin},</if>
+            <if test="rechargeLimitMax != null and rechargeLimitMax != ''">#{rechargeLimitMax},</if>
          </trim>
     </insert>
 
@@ -123,8 +123,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="discountBill != null">discount_bill = #{discountBill},</if>
             <if test="openLevel != null">open_level = #{openLevel},</if>
             <if test="openLevelMax != null">open_level_max= #{openLevelMax},</if>
-            <if test="rechargeLimitMin != null">recharge_limit_min= #{rechargeLimitMin},</if>
-            <if test="rechargeLimitMax != null">recharge_limit_max= #{rechargeLimitMax},</if>
+            <if test="rechargeLimitMin != null and rechargeLimitMin != ''">recharge_limit_min= #{rechargeLimitMin},</if>
+            <if test="rechargeLimitMax != null and rechargeLimitMax != ''">recharge_limit_max= #{rechargeLimitMax},</if>
         </trim>
         where id = #{id}
     </update>
