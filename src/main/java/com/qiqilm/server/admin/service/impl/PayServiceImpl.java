@@ -132,6 +132,11 @@ public class PayServiceImpl implements IPayService {
 		// 充值彩金
 		BigDecimal chargeGive = payjourDiscountRate.multiply( payJourMoney ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
+		//套利号无优惠
+		if(memberInfo.getStatus()==4){
+			chargeGive = new BigDecimal(0);
+		}
+
 		BigDecimal money = payJourMoney.add( chargeGive );
 
 		BigDecimal nowmoney = memberInfo.getTotalAccount().add( payJourMoney );
