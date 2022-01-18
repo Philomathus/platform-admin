@@ -384,9 +384,6 @@ public class MemberInfoController extends BaseController {
     @RequestMapping(value = "/addScore", method = RequestMethod.POST)
     @Log(title = "加分", businessType = BusinessType.UPDATE)
     public Object addScore(HttpServletRequest request, ReqAddScore req) throws Exception {
-        if (!redisUtil.lock(EnumLock.member, "addScore"+req.getId(), "1", 15)) {
-            throw new BusinessException("请勿重复提交");
-        }
         RspBase rspBase = new RspBase();
         if (req.getGoogleAuthCode() == null) {
             rspBase.setMsg("请输入google验证码");
@@ -415,6 +412,9 @@ public class MemberInfoController extends BaseController {
             return rspBase;
         }
 
+        if (!redisUtil.lock(EnumLock.member, "addScore"+req.getId(), "1", 15)) {
+            throw new BusinessException("请勿重复提交");
+        }
         String ip = UserDataUtil.getIp(request);
         rspBase = memberInfoService.addMemberMoneyOnly(ip, loginUser, req);
         redisUtil.unLock(EnumLock.member, "addScore"+req.getId());
