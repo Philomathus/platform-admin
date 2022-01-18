@@ -412,14 +412,18 @@ public class MemberInfoController extends BaseController {
             return rspBase;
         }
 
-        String ip = UserDataUtil.getIp(request);
         if (!redisUtil.lock(EnumLock.member, "addScore"+req.getId(), "1", 15)) {
-            throw new BusinessException("请勿重复提交");
+            rspBase.setMsg("请勿重复提交");
+            rspBase.setCode(1);
+            return rspBase;
         }
+        String ip = UserDataUtil.getIp(request);
         rspBase = memberInfoService.addMemberMoneyOnly(ip, loginUser, req);
+        redisUtil.unLock(EnumLock.member, "addScore"+req.getId());
         if(rspBase.getCode() == 2){
-            redisUtil.unLock(EnumLock.member, "addScore"+req.getId());
+            return rspBase;
         }
+        rspBase.setCode(0);
         return rspBase;
     }
 
