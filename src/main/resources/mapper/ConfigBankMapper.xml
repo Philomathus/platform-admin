@@ -23,10 +23,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="discountBill"    column="discount_bill"    />
         <result property="openLevel"    column="open_level"    />
         <result property="openLevelMax"    column="open_level_max"    />
+        <result property="rechargeLimitMin"    column="recharge_limit_min"    />
+        <result property="rechargeLimitMax"    column="recharge_limit_max"    />
     </resultMap>
 
     <sql id="selectConfigBankVo">
-        select id, code, name, icon, create_by, create_time, update_by, update_time, url, indexs, bank_account, remark, status, account_name, bank_address, discount_bill, open_level,open_level_max from config_bank
+        select id, code, name, icon, create_by, create_time, update_by, update_time, url,
+               indexs, bank_account, remark, status, account_name, bank_address, discount_bill,
+               open_level,open_level_max,recharge_limit_min,recharge_limit_max from config_bank
     </sql>
 
     <select id="selectConfigBankList" parameterType="ConfigBank" resultMap="ConfigBankResult">
@@ -72,6 +76,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="discountBill != null">discount_bill,</if>
             <if test="openLevel != null">open_level,</if>
             <if test="openLevelMax != null">open_level_max,</if>
+            <if test="rechargeLimitMin != null and rechargeLimitMin != ''">recharge_limit_min,</if>
+            <if test="rechargeLimitMax != null and rechargeLimitMax != ''">recharge_limit_max,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -92,6 +98,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="discountBill != null">#{discountBill},</if>
             <if test="openLevel != null">#{openLevel},</if>
             <if test="openLevelMax != null">#{openLevelMax},</if>
+            <if test="rechargeLimitMin != null and rechargeLimitMin != ''">#{rechargeLimitMin},</if>
+            <if test="rechargeLimitMax != null and rechargeLimitMax != ''">#{rechargeLimitMax},</if>
          </trim>
     </insert>
 
@@ -115,6 +123,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="discountBill != null">discount_bill = #{discountBill},</if>
             <if test="openLevel != null">open_level = #{openLevel},</if>
             <if test="openLevelMax != null">open_level_max= #{openLevelMax},</if>
+            <if test="rechargeLimitMin != null and rechargeLimitMin != ''">recharge_limit_min= #{rechargeLimitMin},</if>
+            <if test="rechargeLimitMax != null and rechargeLimitMax != ''">recharge_limit_max= #{rechargeLimitMax},</if>
         </trim>
         where id = #{id}
     </update>

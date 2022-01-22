@@ -54,6 +54,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplate;
+	@Resource
+	private RobotMessage robotMessage;
 
 	/**
 	 * 查询总代理游戏注单
@@ -368,6 +370,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 		doBeatCode( willCodeMap );
 
 		deQuestCheck( willCodeList, willCodeMap );
+		log.info("纸飞机2id"+lottery_telegram);
 		if ( lottery_telegram != null ) {
 			noticeRobotMessage( lottery_telegram, willCodeList );
 		}
@@ -420,13 +423,13 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
 	@Async
 	public void noticeRobotMessage( String lottery_telegram, List<MemberGameData> willCodeList ) {
-		RobotMessage robotMessage = new RobotMessage();
 		BigDecimal   temProfit    = new BigDecimal( 1000 );
 		for ( MemberGameData og : willCodeList ) {
 			try {
 				if ( new BigDecimal( og.getProfit() ).compareTo( temProfit ) < 0 ) {
 					continue;
 				}
+				log.info("纸飞机1id"+lottery_telegram);
 				robotMessage.sendByChatId( og.getAccount() + ( og.getAgent().equals( "80000" ) ? "在直播间内" : "在直播间外" ) + og.getKindId() + "盈利了:" + og.getProfit() + "元", lottery_telegram );
 			} catch ( Exception e ) {
 				log.error( "彩票消息推送异常" + e.getMessage() );

@@ -60,6 +60,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
+	@Autowired
+	private PayAgentServiceImpl payAgentServiceImpl;
 
 	/**
 	 * 查询会员提现信息
@@ -549,6 +551,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		memberWithdrawLog.setOpName( userName );
 		memberWithdrawLog.setUpdateTime( new Date() );
 		int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
+
+		//gopay提现彩金
+		payAgentServiceImpl.gopayWithdraw(memberWithdrawLog,true);
+
 		if ( i>0 ) {
 			redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
 			return AjaxResult.success();

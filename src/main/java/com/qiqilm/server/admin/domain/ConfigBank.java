@@ -67,6 +67,11 @@ public class ConfigBank extends BaseEntity {
     @Excel(name = "开放层级最大")
     private Integer openLevelMax;
 
+    @Excel(name = "充值金额最小")
+    private String rechargeLimitMin;
+    @Excel(name = "充值金额最大")
+    private String rechargeLimitMax;
+
     private Integer googleAuthCode;
 
     @Override

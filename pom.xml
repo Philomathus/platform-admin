@@ -15,11 +15,11 @@
 		<jdk.version>1.8</jdk.version>
 		<jdk.encoding>UTF-8</jdk.encoding>
 
-		<spring-boot.version>2.5.3</spring-boot.version>
+		<spring-boot.version>2.5.7</spring-boot.version>
 
 		<mysql-connector-java.version>8.0.26</mysql-connector-java.version>
 		<mybatis-spring-boot-starter.version>2.2.0</mybatis-spring-boot-starter.version>
-		<pagehelper.starter.version>1.4.0</pagehelper.starter.version>
+		<pagehelper.starter.version>1.4.1</pagehelper.starter.version>
 
 		<springfox-swagger2.version>2.7.0</springfox-swagger2.version>
 
