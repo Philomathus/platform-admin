@@ -58,7 +58,7 @@ public class ServerLiveController extends BaseController {
 			serverLive1.setName(serverLive.getName());
 			List<ServerLive> list = serverLiveService.selectServerLiveList(serverLive1);
 			if(list != null && list.size() > 0){
-				return AjaxResult.error("改直播流服务名称已存在");
+				return AjaxResult.error("该直播流服务名称已存在");
 			}
 		}
 		return toAjax( serverLiveService.insertServerLive( serverLive ) );
