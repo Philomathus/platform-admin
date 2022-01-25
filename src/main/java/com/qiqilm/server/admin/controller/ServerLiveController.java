@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IServerLiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +53,14 @@ public class ServerLiveController extends BaseController {
 	@Log( title = "直播流服务配置", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody ServerLive serverLive ) {
+		if(StringUtils.hasText(serverLive.getName())) {
+			ServerLive serverLive1 = new ServerLive();
+			serverLive1.setName(serverLive.getName());
+			List<ServerLive> list = serverLiveService.selectServerLiveList(serverLive1);
+			if(list != null && list.size() > 0){
+				return AjaxResult.error("改直播流服务名称已存在");
+			}
+		}
 		return toAjax( serverLiveService.insertServerLive( serverLive ) );
 	}
 
