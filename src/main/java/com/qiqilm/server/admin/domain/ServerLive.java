@@ -280,6 +280,8 @@ public class ServerLive extends BaseEntity {
 				return "3";
 			case 3:
 				return "4";
+			case 4:
+				return "5";
 			default:
 				return null;
 			}
