@@ -432,6 +432,7 @@
         <where>
             <if test="dto.hostId!=null">and lh.host_id = #{dto.hostId}</if>
             <if test="dto.nickName!=null and dto.nickName!=''">and lh.nick_name like concat('%',#{dto.nickName},'%')</if>
+            <if test="dto.familyName!=null and dto.familyName!=''">and lf.name like concat('%',#{dto.familyName},'%')</if>
         </where>
         order by lh.host_id
     </select>
