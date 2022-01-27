@@ -236,7 +236,9 @@ public class ServerLive extends BaseEntity {
 			return new String[]{ "c163_app_key", "c163_app_secret", "video_type" };
 		case 3:
 			// 百度
-			return new String[]{ "tpush_domain", "tpull_domain", "video_type", "qcloud_secret_id", "qcloud_secret_key" };
+			 return new String[]{ "tpush_domain", "tpull_domain", "video_type", "qcloud_secret_id", "qcloud_secret_key" };
+		case 4:
+			 return new String[]{ "tpush_domain", "tpull_domain", "video_type"};
 		default:
 			return null;
 		}
