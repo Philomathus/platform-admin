@@ -132,6 +132,11 @@ public class PayServiceImpl implements IPayService {
 		// 充值彩金
 		BigDecimal chargeGive = payjourDiscountRate.multiply( payJourMoney ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
+		//套利号无优惠
+		if(memberInfo.getStatus()==4){
+			chargeGive = new BigDecimal(0);
+		}
+
 		BigDecimal money = payJourMoney.add( chargeGive );
 
 		BigDecimal nowmoney = memberInfo.getTotalAccount().add( payJourMoney );
@@ -162,7 +167,9 @@ public class PayServiceImpl implements IPayService {
 			log.warn( "会员线上充值上分成功 - orderNo:{}", payJour.getOrderNo() );
 			try {
 				if ( memberInfo.getLevelIntegral().compareTo( BigDecimal.ZERO ) == 0 || memberInfo.getLevelIntegral().compareTo( memberInfo.getInviteMoney() ) <= 0 ) {
-					memberCacheManager.checkFirstChargeaddWheelTimes( memberInfo.getId() );
+					if(memberInfo.getStatus() != 4 && memberInfo.getStatus() != 7) {
+						memberCacheManager.checkFirstChargeaddWheelTimes(memberInfo.getId());
+					}
 				}
 			} catch ( Exception e ) {
 				log.error( "首充报错", e );

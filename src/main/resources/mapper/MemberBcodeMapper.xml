@@ -133,7 +133,33 @@
 				status = #{status},
 			</if>
 			<if test="cur != null">
-				cur = cur+#{cur},
+				cur = #{cur},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+
+	<update id="updateBcode" parameterType="com.qiqilm.server.admin.domain.MemberBcode">
+		update member_bcode
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="userId != null">
+				user_id = #{userId},
+			</if>
+			<if test="des != null">
+				des = #{des},
+			</if>
+			<if test="income != null">
+				income = #{income},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="cur != null">
+				cur = #{cur},
 			</if>
 		</trim>
 		where id = #{id}

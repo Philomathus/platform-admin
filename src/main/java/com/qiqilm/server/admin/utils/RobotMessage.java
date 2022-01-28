@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.utils;
 
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,19 +14,21 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
+@Log4j2
 public class RobotMessage extends TelegramLongPollingBot {
 	@Autowired
 	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Override
 	public String getBotUsername() {
 		// 填写username
-		return "chengziBot";
+		return "yanQin";
 	}
 
 	@Override
 	public String getBotToken() {
+		String robot_message_token = sysConfigCacheUtil.getConf("robot_message_token");
 		// 填写token
-		return "1647949061:AAG0bkLgSZNTnL8KI3EQcMIwx79D-Jd6dVk";
+		return robot_message_token;
 	}
 
 	@Override
@@ -62,6 +65,8 @@ public class RobotMessage extends TelegramLongPollingBot {
 		if (Strings.isBlank(withdraw_log_telegram)){
 			return;
 		}
+		log.info("彩票纸飞机id:"+withdraw_log_telegram,"纸飞机Token:"+sysConfigCacheUtil.getConf("robot_message_token"));
+
 		SendMessage message = new SendMessage()
 				.setChatId( withdraw_log_telegram )
 				.setText( tex);
@@ -74,6 +79,7 @@ public class RobotMessage extends TelegramLongPollingBot {
 
 	public void sendByChatId(String tex,String chatId){
 
+		log.info("纸飞机3id"+chatId+"內容+"+tex);
 		SendMessage message = new SendMessage()
 				.setChatId( chatId )
 				.setText( tex);

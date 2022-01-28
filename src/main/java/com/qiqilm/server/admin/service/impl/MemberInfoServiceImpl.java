@@ -173,14 +173,14 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 		if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
 			if ( money.compareTo( new BigDecimal( 1000000 ) ) > 0 ) {
 				rspBase.setMsg( "最大金额为1000000" );
-				rspBase.setCode( 2 );
+				rspBase.setCode( 1 );
 				return rspBase;
 			}
 		} else if ( money.compareTo( BigDecimal.ZERO ) < 0 ) {
 			BigDecimal lat = total.add( money );
 			if ( lat.compareTo( BigDecimal.ZERO ) < 0 ) {
 				rspBase.setMsg( "余额" + money + "不足扣除" );
-				rspBase.setCode( 2 );
+				rspBase.setCode( 1 );
 				return rspBase;
 			}
 			beatNum = new BigDecimal( 0 );
@@ -196,7 +196,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			}
 			if ( markList.size() > 0 ) {
 				rspBase.setMsg( "请查看此笔金额是否已经入款过，如否请输入其他订单备注" );
-				rspBase.setCode( 2 );
+				rspBase.setCode( 1 );
 				return rspBase;
 			}
 		}
@@ -233,7 +233,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			logService.logmarkMoney( userId, oldmemberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder );
 		} else {
 			rspBase.setMsg( "该成员redis未初始化金额，或者您输入的金额有误" );
-			rspBase.setCode( 2 );
+			rspBase.setCode( 1 );
 			return rspBase;
 		}
 

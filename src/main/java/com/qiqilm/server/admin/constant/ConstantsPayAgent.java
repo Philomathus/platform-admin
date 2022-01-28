@@ -18,7 +18,7 @@ public abstract class ConstantsPayAgent {
 	public static final String SHUN_WEI6             = "shunWei6";
 	public static final String SHUN_WEI7             = "shunWei7";
 	public static final String SHUN_WEI8             = "shunWei8";
-	public static final String SHUN_WEI9             = "shunWe9";
+	public static final String SHUN_WEI9             = "shunWei9";
 	public static final String SHUN_WEI10            = "shunWei10";
 	public static final String SHUN_WEI11            = "shunWei11";
 	public static final String SHUN_WEI12            = "shunWei12";
@@ -131,7 +131,7 @@ public abstract class ConstantsPayAgent {
 	public static final String QIPILANG            = "qiPiLang";
 	//功付代付
 	public static final String GONGFU            = "gongFu";
-	//秒到付代付
+	//秒到富代付
 	public static final String MIAODAOFU            = "miaoDaoFu";
 	//阳光代付
 	public static final String YANGGUANG            = "yangGuang";
@@ -205,5 +205,13 @@ public abstract class ConstantsPayAgent {
 	public static final String SHANDE2          = "shanDe2";
 	//GoPay代付
 	public static final String GOPAY          = "GoPay";
+	//新汇代付
+	public static final String XINHUI          = "xinHui";
+	//众邦代付
+	public static final String ZHONGBANG        = "zhongBang";
+	//CC代付
+	public static final String CC        = "Cc";
+	//okpay代付
+	public static final String OK        = "ok";
 }
 

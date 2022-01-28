@@ -25,6 +25,7 @@ import org.springframework.util.MultiValueMap;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 import java.util.SortedMap;
@@ -129,7 +130,51 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
     @Override
     public Map<String, Object> reverseCheckOrderPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap,
                                                     String realIp) throws Exception {
-        return null;
+        if (this.checkWhiteIp(payAgentPlatform.getPlatWhiteIpList(), realIp)) {
+            log.warn("请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json(requestMap));
+            return null;
+        }
+
+        SortedMap<String, Object> requestSignMap = new TreeMap<>(requestMap);
+        String sign = requestSignMap.remove("sign").toString();
+
+        String merId = requestSignMap.getOrDefault("mchno", "").toString();
+        BigDecimal amount = new BigDecimal(requestSignMap.getOrDefault("amount", "0").toString());
+        String bankAccountNo = requestSignMap.getOrDefault("accno", "").toString();
+
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
+        String tempSign = this.assemblyUrl(requestSignMap)+"&key="+signMd5;
+        String mySign = DigestUtils.md5Hex(tempSign);
+
+        SortedMap<String, Object> signMap = new TreeMap<>();
+
+        if (StringUtils.equalsIgnoreCase(sign, mySign)) {
+            String merOrderNo = requestSignMap.getOrDefault("obid", "").toString();
+            MemberWithdrawLog memberWithdrawLog = withdrawLogMapper.selectByOrderNo(merOrderNo);
+            if (memberWithdrawLog == null) {
+                signMap.put("code", "1002");
+                signMap.put("message", "订单不存在");
+                return signMap;
+            } else if (amount.compareTo(memberWithdrawLog.getWithdrawMoney()) != 0) {
+                signMap.put("code", "1004");
+                signMap.put("message", "金额不匹配");
+                return signMap;
+            } else if (!bankAccountNo.equals(memberWithdrawLog.getBankAccount())) {
+                signMap.put("code", "1003");
+                signMap.put("message", "银行卡号不匹配");
+                return signMap;
+            } else if (!merId.equals(payAgentPlatform.getMerId())) {
+                signMap.put("code", "9999");
+                signMap.put("message", "商户号错误");
+            } else {
+                signMap.put("code", "0");
+                signMap.put("message", "成功");
+            }
+        }
+        String resultSignStr = this.assemblyUrl(signMap) + "&key=" + signMd5;
+        signMap.put("sign", DigestUtils.md5Hex(resultSignStr));
+        return signMap;
     }
 
     @Override

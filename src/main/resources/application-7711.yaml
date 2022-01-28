@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://pc-j6ct6o187g7dis32y.rwlb.rds.aliyuncs.com:3306/7705_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://pc-j6cl0q817p22l0z6p.rwlb.rds.aliyuncs.com:3306/7711_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: 77tv_web
       password: 77tvweb_oradba
     secondary:
@@ -9,19 +9,19 @@ spring:
       username: 77tv_web
       password: 77tvweb_oradba
   redis:
-    host: r-j6cnt93w512ool5yjo.redis.rds.aliyuncs.com
+    host: r-j6co73znk3bbnuns57.redis.rds.aliyuncs.com
     port: 6379
-    password: o@zgCT0GD%PHQeif
+    password: T^JoNHR^!iH$XUrv#Ui
 
 mybatis:
   configuration:
     variables:
-      dbMain: 7705_main
-      dbLive: 7705_live
-      dbLottery: 7705_lottery
+      dbMain: 7711_main
+      dbLive: 7711_live
+      dbLottery: 7711_lottery
 
 # 代付额度
-payAgentLimit: 50000
+payAgentLimit: 30000
 # 顺为代付额度
 payAgentLimitShunWei: 50000
 # 宾利代付额度
@@ -44,10 +44,14 @@ payAgentLimitYangGuangPay: 50000
 payAgentLimitDaFengChePay: 50000
 # 魯班代付额度
 payAgentLimitLuBanPay: 50000
+# 鼎丰代付额度
+payAgentLimitDingFengPay: 50000
 # 宏博代付额度
 payAgentLimitHongBoPay: 50000
 # 小月代付额度
 payAgentLimitXiaoYuePay: 50000
+# 银联代付额度
+payAgentLimitYinLianPay: 50000
 # 爱农代付额度
 payAgentLimitAiNongPay: 50000
 # 众家代付额度
@@ -57,8 +61,8 @@ payAgentLimitLaoXiangPay: 50000
 # 弗良代付额度
 payAgentLimitFuLiangPay: 50000
 # 东东汇潮代付额度
-payAgentLimitHuiYuanPay: 30000
-# 银联代付额度
-payAgentLimitYinLianPay: 50000
+payAgentLimitHuiYuanPay: 50000
+# 杉德代付额度
+payAgentLimitShanDePay: 30000
 # GoPay代付额度
-payAgentLimitGoPayPay: 50000
+payAgentLimitGoPayPay: 10000

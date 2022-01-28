@@ -22,4 +22,6 @@ public interface IPayAgentService {
 					   Date now, int status, int orderState );
 
 	void callBackOrder( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform );
+
+	void gopayWithdraw(MemberWithdrawLog withdrawLog,boolean isSuccess);
 }

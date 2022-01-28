@@ -1,22 +1,20 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.google.common.collect.ImmutableMap;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.domain.MemberWithdrawLog;
-import com.qiqilm.server.admin.domain.PayAgentLog;
-import com.qiqilm.server.admin.domain.PayAgentPlatform;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.EnumLock;
+import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.exception.BusinessException;
-import com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper;
-import com.qiqilm.server.admin.mapper.PayAgentLogMapper;
-import com.qiqilm.server.admin.mapper.PayAgentPlatformMapper;
-import com.qiqilm.server.admin.mapper.SysUserMapper;
+import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.payagent.BasePayAgent;
 import com.qiqilm.server.admin.payagent.PayAgentProcessorFactoryUtil;
+import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IPayAgentService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -48,6 +47,14 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private PayAgentProcessorFactoryUtil payAgentProcessorFactoryUtil;
 	@Autowired
 	private RedisUtil                    redisUtil;
+	@Autowired
+	private SysConfigCacheUtil sysConfigCacheUtil;
+	@Autowired
+	private ILogService logService;
+	@Autowired
+	private MemberInfoMapper memberInfoMapper;
+	@Autowired
+	private MemberBcodeMapper memberBcodeMapper;
 
 	@Value( "${payAgentLimit:5000}" )
 	private Integer payAgentLimit;
@@ -95,7 +102,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentLimitShanDePay;
 	@Value( "${payAgentLimitGoPayPay:5000}" )
 	private Integer payAgentLimitGoPayPay;
-
+	@Value( "${payAgentMiaoDaoFuPay:5000}" )
+	private Integer payAgentMiaoDaoFuPay;
+	@Value( "${payAgentXinHuiPay:5000}" )
+	private Integer payAgentXinHuiPay;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -108,6 +118,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		newWithdrawLog.setUpdateTime( now );
 		newWithdrawLog.setRemark( "【" + payAgentPlatform.getName() + "】代付" + ( isSuccess ? "成功" : "失败" ) );
 		withdrawLogMapper.updateMemberWithdrawLog( newWithdrawLog );
+
+		//gopay提现彩金
+		gopayWithdraw(withdrawLog,isSuccess);
 
 		PayAgentLog newPayAgentLog = new PayAgentLog();
 		newPayAgentLog.setPayAgentOrderNo( orderNo );
@@ -126,6 +139,36 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			newPayAgentLog.setId( payAgentLog.getId() );
 			payAgentLogMapper.updatePayAgentLog( newPayAgentLog );
 		}
+	}
+
+	@Override
+	@Transactional( rollbackFor = Exception.class )
+	public void gopayWithdraw( MemberWithdrawLog withdrawLog,boolean isSuccess) {
+		//gopay的提现彩金
+		if (StringUtils.hasText(withdrawLog.getBankName()) && withdrawLog.getBankName().contains("GOPAY")) {
+            if (isSuccess) {
+                String gopayWithdraw = sysConfigCacheUtil.getConf("gopayWithdraw", "");
+                BigDecimal chargeGive = null;
+                if (StringUtils.hasText(gopayWithdraw)) {
+                    chargeGive = new BigDecimal(gopayWithdraw).multiply(withdrawLog.getWithdrawMoney()).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(withdrawLog.getMemberId());
+                    if (chargeGive.compareTo(BigDecimal.ZERO) > 0) {
+                        logService.logMoneyAll(withdrawLog.getMemberId(), memberInfo.getUserName(), EnumMoney.chargegive,
+                                memberInfo.getTotalAccount().add(chargeGive), chargeGive, null, "gopay提现彩金", withdrawLog.getOrderNo() + "_" + EnumMoney.chargegive.name());
+                    }
+                    MemberBcode codeFlow = new MemberBcode();
+                    codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
+                    codeFlow.setIncome(chargeGive);
+                    codeFlow.setCreateTime(new Date());
+                    codeFlow.setStatus(0);
+                    codeFlow.setCur(BigDecimal.ZERO);
+                    codeFlow.setUserId(memberInfo.getId());
+                    codeFlow.setDes("gopay提现彩金");
+                    memberBcodeMapper.insertMemberBcode(codeFlow);
+                    memberInfoMapper.updateMoneySelect(memberInfo.getId(), chargeGive, null, chargeGive, null, null);
+                }
+            }
+        }
 	}
 
 	@Override
@@ -271,6 +314,12 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.SHANDE2 )
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitShanDePay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitShanDePay + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.MIAODAOFU )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentMiaoDaoFuPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentMiaoDaoFuPay + "元以上出款" );
+		} else if ( payAgentPlatform.getCode().equals( ConstantsPayAgent.XINHUI )
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentXinHuiPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentXinHuiPay + "元以上出款" );
 		} else if ( (payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG )
 				|| payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitFuLiangPay ) ) > 0 ) {
@@ -338,6 +387,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.GOPAY )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.MIAODAOFU )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.XINHUI )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN2 )) {
 			return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
@@ -383,7 +434,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		}
 
 		redisUtil.unLock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo() );
-		return AjaxResult.error( StringUtils.hasText( reqPayAgent.getFailReason() ) ? reqPayAgent.getFailReason() : "代付失败" );
+		return AjaxResult.error( StringUtils.hasText( reqPayAgent.getFailReason() ) ? reqPayAgent.getFailReason() + ",请咨询三方" : "代付失败" );
 	}
 
 	@Override
@@ -476,6 +527,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		if ( !( withdrawLog.getStatus() == 1 || withdrawLog.getStatus() == 4 ) ) {
 			throw new BaseException( "审核流程非法" );
 		}
+
+		//gopay提现彩金
+		gopayWithdraw(withdrawLog,status == 6);
+
 		// 更改withdrawLog状态
 		MemberWithdrawLog newWithdrawLog = new MemberWithdrawLog();
 		newWithdrawLog.setId( withdrawLog.getId() );
@@ -501,6 +556,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		newWithdrawLog.setRemark( remark );
 		log.warn( JsonUtil.object2Json( newWithdrawLog ) );
 		withdrawLogMapper.updateMemberWithdrawLog( newWithdrawLog );
+
+
 
 		// 保存代付信息日志
 		PayAgentLog newPayAgentLog = new PayAgentLog();

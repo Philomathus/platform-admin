@@ -59,6 +59,8 @@ public class MemberBcode extends BaseEntity {
 	private BigDecimal total;
 	private BigDecimal countCur;
 
+	private Integer googleAuthCode;
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
