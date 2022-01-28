@@ -35,8 +35,8 @@ public class LotteryHistoryDice extends BaseEntity {
     private String headImg;
 
     /** 时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "时间", width = 30, databaseFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "时间", width = 30, exportFormat = "yyyy-MM-dd HH:mm:ss")
     private Date cTime;
 
     /** 奖励 */

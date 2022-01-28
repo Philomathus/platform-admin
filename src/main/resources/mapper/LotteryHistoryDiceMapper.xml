@@ -26,6 +26,7 @@
             <if test="award != null "> and award = #{award}</if>
             <if test="type != null "> and type = #{type}</if>
         </where>
+        order by c_time desc
     </select>
 
     <select id="selectLotteryHistoryDiceById" parameterType="Long" resultMap="LotteryHistoryDiceResult">
