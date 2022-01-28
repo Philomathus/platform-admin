@@ -70,7 +70,7 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-        String tempStr = outTradeNo + totalFee + bankAccount + accountHolder + depositBank + mchId + signMd5;
+        String tempStr = outTradeNo + totalFee + bankAccount + accountHolder + depositBank + accountHolderMobile + mchId + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);
 
@@ -114,15 +114,15 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-        String out_trade_no   = requestMap.getOrDefault( "out_trade_no", "" ).toString();
-        String transaction_id = requestMap.getOrDefault( "transaction_id", "" ).toString();
-        String time_end       = requestMap.getOrDefault( "time_end", "" ).toString();
-        String mch_id         = requestMap.getOrDefault( "mch_id", "" ).toString();
+        String out_trade_no = requestMap.getOrDefault("out_trade_no", "").toString();
+        String transaction_id = requestMap.getOrDefault("transaction_id", "").toString();
+        String time_end = requestMap.getOrDefault("time_end", "").toString();
+        String mch_id = requestMap.getOrDefault("mch_id", "").toString();
 
         String rspSign = requestMap.remove("sign").toString();
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-        String tempStr = out_trade_no + transaction_id + time_end  + mch_id + signMd5;
+        String tempStr = out_trade_no + transaction_id + time_end + mch_id + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
 
         log.info(payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign);
@@ -207,7 +207,35 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
                 }
-                return resultMap.getOrDefault("err_msg", "").toString();
+
+                if("-1".equals(resultMap.getOrDefault("result_code", "").toString())){
+                    return resultMap.getOrDefault("err_msg", "").toString();
+                }else {
+                    switch(resultCode)
+                    {
+                        case "0" :
+                            return "审核中";
+                        case "1" :
+                            return "审核完成";
+                        case "2" :
+                            return "打款进行中";
+                        case "3" :
+                            return "打款成功";
+                        case "4" :
+                            return "订单关闭";
+                        case "5" :
+                            return "打款失败";
+                        case "6" :
+                            return "订单不存在";
+                        case "-1" :
+                            return "签名验证失败,查询失败";
+                        case "-2" :
+                            return "提交上游中";
+                        case "-3" :
+                            return "代付异常,联系管理员";
+                    }
+                }
+
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
