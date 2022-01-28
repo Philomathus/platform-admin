@@ -213,4 +213,6 @@ public abstract class ConstantsPayAgent {
 	public static final String CC        = "Cc";
 	//okpay代付
 	public static final String OK        = "ok";
+	//宇宙代付
+	public static final String YUZHOU        = "yuZhou";
 }
