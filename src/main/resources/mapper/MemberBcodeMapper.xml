@@ -139,7 +139,6 @@
 		where id = #{id}
 	</update>
 
-
 	<update id="updateBcode" parameterType="com.qiqilm.server.admin.domain.MemberBcode">
 		update member_bcode
 		<trim prefix="SET" suffixOverrides=",">
@@ -164,6 +163,7 @@
 		</trim>
 		where id = #{id}
 	</update>
+
 
 	<delete id="deleteMemberBcodeById" parameterType="String">
 		delete
