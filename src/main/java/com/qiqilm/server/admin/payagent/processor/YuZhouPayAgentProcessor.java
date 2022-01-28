@@ -6,9 +6,10 @@ import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
+import com.qiqilm.server.admin.enums.BankCodeYuZhouType;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
@@ -33,6 +34,14 @@ import java.util.*;
 public class YuZhouPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
+        BankCodeYuZhouType bankCodeType = BankCodeYuZhouType.getCodeByDesc(withdrawLog.getBankName());
+        if (bankCodeType == null) {
+            payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+            log.warn(payAgentPlatform.getName() + "无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
+            throw new BusinessException(payAgentPlatform.getName() + "无法支持的银行类型：" + withdrawLog.getBankName());
+        }
+        withdrawLog.setBankCode(bankCodeType.name());
+
         String outTradeNo = withdrawLog.getOrderNo();
         String totalFee = withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
         String bankAccount = withdrawLog.getBankAccount();
@@ -105,12 +114,16 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
+        String out_trade_no   = requestMap.getOrDefault( "out_trade_no", "" ).toString();
+        String transaction_id = requestMap.getOrDefault( "transaction_id", "" ).toString();
+        String time_end       = requestMap.getOrDefault( "time_end", "" ).toString();
+        String mch_id         = requestMap.getOrDefault( "mch_id", "" ).toString();
 
         String rspSign = requestMap.remove("sign").toString();
-        SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-        String signMd5 = payAgentPlatform.getHeaderKey();
-        String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
+        String tempStr = out_trade_no + transaction_id + time_end  + mch_id + signMd5;
+        String sign = DigestUtils.md5Hex(tempStr);
 
         log.info(payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
@@ -148,13 +161,15 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
     public String queryOrderPay(PayAgentLog payAgentLog) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
+
         Map<String, Object> dataMap = new TreeMap<>();
-        dataMap.put("mchId", payAgentPlatform.getMerId());
-        dataMap.put("mchOrderNo", withdrawLog.getOrderNo());
-        dataMap.put("reqTime", DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
-        String signMd5 = payAgentPlatform.getHeaderKey();
-        String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+        dataMap.put("mch_id", payAgentPlatform.getMerId());
+        dataMap.put("out_trade_no", withdrawLog.getOrderNo());
+
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
+                "secretkey/payAgentPrivateKey"));
+        String tempStr = withdrawLog.getOrderNo() + payAgentPlatform.getMerId() + signMd5;
+        String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
@@ -180,18 +195,19 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
             if (!CollectionUtils.isEmpty(resultMap)) {
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
-                //  statusCode 0-待处理,1-处理中,2-成功,3-失败
-                String statusCode = resultMap.getOrDefault("status", "").toString();
+                //  statusCode
+                //  0:审核中; 1:审核完成; 2:打款进行中; 3:打款成功; 4:订单关闭; 5:打款失败; 6:订单不存在;
+                String resultCode = resultMap.getOrDefault("result_code", "").toString();
 
-                if ("2".equals(statusCode) || "3".equals(statusCode)) {
-                    if ("2".equals(statusCode)) {
+                if ("3".equals(resultCode) || "5".equals(resultCode)) {
+                    if ("3".equals(resultCode)) {
                         status = 6;
                     } else {
                         status = 5;
                     }
-                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, 1);
                 }
-                return resultMap.getOrDefault("transMsg", "").toString();
+                return resultMap.getOrDefault("err_msg", "").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
