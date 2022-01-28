@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryHistoryDiceMapper">
+
+    <resultMap type="com.qiqilm.server.admin.domain.LotteryHistoryDice" id="LotteryHistoryDiceResult">
+        <result property="id"    column="id"    />
+        <result property="pUserId"    column="p_user_id"    />
+        <result property="name"    column="name"    />
+        <result property="headImg"    column="head_img"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="award"    column="award"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectLotteryHistoryDiceVo">
+        select id, p_user_id, name, head_img, c_time, award, type from 7700_live.lottery_history_dice
+    </sql>
+
+    <select id="selectLotteryHistoryDiceList" parameterType="com.qiqilm.server.admin.domain.LotteryHistoryDice" resultMap="LotteryHistoryDiceResult">
+        <include refid="selectLotteryHistoryDiceVo"/>
+        <where>
+            <if test="pUserId != null  and pUserId != ''"> and p_user_id = #{pUserId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="headImg != null  and headImg != ''"> and head_img = #{headImg}</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="award != null "> and award = #{award}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+
+    <select id="selectLotteryHistoryDiceById" parameterType="Long" resultMap="LotteryHistoryDiceResult">
+        <include refid="selectLotteryHistoryDiceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLotteryHistoryDice" parameterType="com.qiqilm.server.admin.domain.LotteryHistoryDice" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.lottery_history_dice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pUserId != null">p_user_id,</if>
+            <if test="name != null">name,</if>
+            <if test="headImg != null">head_img,</if>
+            <if test="cTime != null">c_time,</if>
+            <if test="award != null">award,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="pUserId != null">#{pUserId},</if>
+                    <if test="name != null">#{name},</if>
+                    <if test="headImg != null">#{headImg},</if>
+                    <if test="cTime != null">#{cTime},</if>
+                    <if test="award != null">#{award},</if>
+                    <if test="type != null">#{type},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLotteryHistoryDice" parameterType="com.qiqilm.server.admin.domain.LotteryHistoryDice">
+        update 7700_live.lottery_history_dice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pUserId != null">p_user_id = #{pUserId},</if>
+    
+            <if test="name != null">name = #{name},</if>
+    
+            <if test="headImg != null">head_img = #{headImg},</if>
+    
+            <if test="cTime != null">c_time = #{cTime},</if>
+    
+            <if test="award != null">award = #{award},</if>
+    
+            <if test="type != null">type = #{type},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLotteryHistoryDiceById" parameterType="Long">
+        delete from 7700_live.lottery_history_dice where id = #{id}
+    </delete>
+
+    <delete id="deleteLotteryHistoryDiceByIds" parameterType="String">
+        delete from 7700_live.lottery_history_dice where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

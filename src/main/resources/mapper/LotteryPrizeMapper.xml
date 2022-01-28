@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryPrizeMapper">
+
+    <resultMap type="com.qiqilm.server.admin.domain.LotteryPrize" id="LotteryPrizeResult">
+        <result property="id"    column="id"    />
+        <result property="prizeName"    column="prize_name"    />
+        <result property="prize"    column="prize"    />
+        <result property="prizeWeight"    column="prize_weight"    />
+        <result property="type"    column="type"    />
+        <result property="prizeAmount"    column="prize_amount"    />
+    </resultMap>
+
+    <sql id="selectLotteryPrizeVo">
+        select id, prize_name, prize, prize_weight, type, prize_amount from 7700_live.lottery_prize
+    </sql>
+
+    <select id="selectLotteryPrizeList" parameterType="com.qiqilm.server.admin.domain.LotteryPrize" resultMap="LotteryPrizeResult">
+        <include refid="selectLotteryPrizeVo"/>
+        <where>
+            <if test="prizeName != null  and prizeName != ''"> and prize_name like concat('%', #{prizeName}, '%')</if>
+            <if test="prize != null  and prize != ''"> and prize = #{prize}</if>
+            <if test="prizeWeight != null "> and prize_weight = #{prizeWeight}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="prizeAmount != null "> and prize_amount = #{prizeAmount}</if>
+        </where>
+    </select>
+
+    <select id="selectLotteryPrizeById" parameterType="Long" resultMap="LotteryPrizeResult">
+        <include refid="selectLotteryPrizeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLotteryPrize" parameterType="com.qiqilm.server.admin.domain.LotteryPrize" useGeneratedKeys="true" keyProperty="id">
+        insert into 7700_live.lottery_prize
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prizeName != null">prize_name,</if>
+            <if test="prize != null">prize,</if>
+            <if test="prizeWeight != null">prize_weight,</if>
+            <if test="type != null">type,</if>
+            <if test="prizeAmount != null">prize_amount,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="prizeName != null">#{prizeName},</if>
+                    <if test="prize != null">#{prize},</if>
+                    <if test="prizeWeight != null">#{prizeWeight},</if>
+                    <if test="type != null">#{type},</if>
+                    <if test="prizeAmount != null">#{prizeAmount},</if>
+             </trim>
+    </insert>
+
+    <update id="updateLotteryPrize" parameterType="com.qiqilm.server.admin.domain.LotteryPrize">
+        update 7700_live.lottery_prize
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="prizeName != null">prize_name = #{prizeName},</if>
+    
+            <if test="prize != null">prize = #{prize},</if>
+    
+            <if test="prizeWeight != null">prize_weight = #{prizeWeight},</if>
+    
+            <if test="type != null">type = #{type},</if>
+    
+            <if test="prizeAmount != null">prize_amount = #{prizeAmount},</if>
+    
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLotteryPrizeById" parameterType="Long">
+        delete from 7700_live.lottery_prize where id = #{id}
+    </delete>
+
+    <delete id="deleteLotteryPrizeByIds" parameterType="String">
+        delete from 7700_live.lottery_prize where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
