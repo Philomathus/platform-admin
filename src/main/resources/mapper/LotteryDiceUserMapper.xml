@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryDiceUserMapper">
+
+    <resultMap type="com.qiqilm.server.admin.domain.LotteryDiceUser" id="LotteryDiceUserResult">
+        <result property="id"    column="id"    />
+        <result property="times"    column="times"    />
+        <result property="type"    column="type"    />
+        <result property="rechargeMoney"    column="recharge_money"    />
+    </resultMap>
+
+    <sql id="selectLotteryDiceUserVo">
+        select id, times, recharge_money,type from ${dbLive}.lottery_dice_user
+    </sql>
+
+    <select id="selectLotteryDiceUserList" parameterType="com.qiqilm.server.admin.domain.LotteryDiceUser" resultMap="LotteryDiceUserResult">
+        <include refid="selectLotteryDiceUserVo"/>
+        <where>
+            <if test="times != null "> and times = #{times}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+
+    <select id="selectLotteryDiceUserById" parameterType="String" resultMap="LotteryDiceUserResult">
+        <include refid="selectLotteryDiceUserVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLotteryDiceUser" parameterType="com.qiqilm.server.admin.domain.LotteryDiceUser">
+        insert into ${dbLive}.lottery_dice_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="times != null">times,</if>
+            <if test="type != null">type,</if>
+            <if test="rechargeMoney != null">recharge_money,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="times != null">#{times},</if>
+                <if test="type != null">#{type},</if>
+                <if test="rechargeMoney != null">#{rechargeMoney},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLotteryDiceUser" parameterType="com.qiqilm.server.admin.domain.LotteryDiceUser">
+        update ${dbLive}.lottery_dice_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="times != null">times =times+ #{times},</if>
+            <if test="rechargeMoney != null ">recharge_money = #{rechargeMoney}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLotteryDiceUserById" parameterType="String">
+        delete from ${dbLive}.lottery_dice_user where id = #{id}
+    </delete>
+
+    <delete id="deleteLotteryDiceUserByIds" parameterType="String">
+        delete from ${dbLive}.lottery_dice_user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

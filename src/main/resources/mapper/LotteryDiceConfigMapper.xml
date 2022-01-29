@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.LotteryDiceConfigMapper">
 
-    <resultMap type="com.qiqilm.server.admin.domain.LotteryDiceConfig" id="LotteryDiceConfigResult">
+    <resultMap type="LotteryDiceConfig" id="LotteryDiceConfigResult">
         <result property="id"    column="id"    />
         <result property="depositTotalMin"    column="deposit_total_min"    />
         <result property="depositTotalMax"    column="deposit_total_max"    />
@@ -15,7 +15,7 @@
         select id, deposit_total_min, deposit_total_max, lottery_times, status, type from ${dbMain}.lottery_dice_config
     </sql>
 
-    <select id="selectLotteryDiceConfigList" parameterType="com.qiqilm.server.admin.domain.LotteryDiceConfig" resultMap="LotteryDiceConfigResult">
+    <select id="selectLotteryDiceConfigList" parameterType="LotteryDiceConfig" resultMap="LotteryDiceConfigResult">
         <include refid="selectLotteryDiceConfigVo"/>
         <where>
             <if test="depositTotalMin != null "> and deposit_total_min = #{depositTotalMin}</if>
@@ -31,7 +31,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertLotteryDiceConfig" parameterType="com.qiqilm.server.admin.domain.LotteryDiceConfig" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertLotteryDiceConfig" parameterType="LotteryDiceConfig" useGeneratedKeys="true" keyProperty="id">
         insert into ${dbMain}.lottery_dice_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="depositTotalMin != null">deposit_total_min,</if>
@@ -49,7 +49,7 @@
              </trim>
     </insert>
 
-    <update id="updateLotteryDiceConfig" parameterType="com.qiqilm.server.admin.domain.LotteryDiceConfig">
+    <update id="updateLotteryDiceConfig" parameterType="LotteryDiceConfig">
         update ${dbMain}.lottery_dice_config
         <trim prefix="SET" suffixOverrides=",">
             <if test="depositTotalMin != null">deposit_total_min = #{depositTotalMin},</if>
@@ -76,4 +76,10 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectWheelDiceBycash" resultType="java.lang.Integer">
+        select lottery_times from ${dbMain}.lottery_dice_config
+        where status =1 and type =1 and deposit_total_min <![CDATA[ <= ]]> #{cash}
+        and deposit_total_max > #{cash}
+    </select>
 </mapper>
