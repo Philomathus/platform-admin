@@ -114,38 +114,36 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
-        String out_trade_no = requestMap.getOrDefault("out_trade_no", "").toString();
-        String transaction_id = requestMap.getOrDefault("transaction_id", "").toString();
-        String time_end = requestMap.getOrDefault("time_end", "").toString();
-        String mch_id = requestMap.getOrDefault("mch_id", "").toString();
+        String orderNo = requestMap.getOrDefault("out_trade_no", "").toString();
+        String transactionId = requestMap.getOrDefault("transaction_id", "").toString();
+        String timeEnd = requestMap.getOrDefault("time_end", "").toString();
+        String mchId = requestMap.getOrDefault("mch_id", "").toString();
+        String status = requestMap.getOrDefault("status", "").toString();
 
         String rspSign = requestMap.remove("sign").toString();
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-        String tempStr = out_trade_no + transaction_id + time_end + mch_id + signMd5;
+        String tempStr = orderNo + transactionId + timeEnd + mchId + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
 
         log.info(payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
-            String order_num = requestMap.getOrDefault("mchOrderNo", "").toString();
-            String status = requestMap.getOrDefault("status", "").toString();
-
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_num);
+            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderNo);
             if (withdrawLog == null) {
-                log.error("提现相关记录丢失 - merOrderNo:{}", order_num);
+                log.error("提现相关记录丢失 - merOrderNo:{}", orderNo);
                 return "fail";
             }
             if (withdrawLog.getStatus() == 2) {
-                log.error("订单已拒绝，无需回调 - merOrderNo:{}", order_num);
+                log.error("订单已拒绝，无需回调 - merOrderNo:{}", orderNo);
                 return "success";
             }
             if (withdrawLog.getStatus() == 6) {
-                log.error("已有代付记录 - merOrderNo:{}", order_num);
+                log.error("已有代付记录 - merOrderNo:{}", orderNo);
                 return "success";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(order_num);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "2".equals(status));
-            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", order_num, "2".equals(status) ? "成功" : "失败");
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(orderNo);
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "3".equals(status));
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", orderNo, "3".equals(status) ? "成功" : "失败");
             return "success";
         }
         return "fail";
