@@ -12,7 +12,7 @@
     </resultMap>
 
     <sql id="selectLotteryDiceConfigVo">
-        select id, deposit_total_min, deposit_total_max, lottery_times, status, type from 7700_main.lottery_dice_config
+        select id, deposit_total_min, deposit_total_max, lottery_times, status, type from ${dbMain}.lottery_dice_config
     </sql>
 
     <select id="selectLotteryDiceConfigList" parameterType="com.qiqilm.server.admin.domain.LotteryDiceConfig" resultMap="LotteryDiceConfigResult">
@@ -32,7 +32,7 @@
     </select>
 
     <insert id="insertLotteryDiceConfig" parameterType="com.qiqilm.server.admin.domain.LotteryDiceConfig" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_main.lottery_dice_config
+        insert into ${dbMain}.lottery_dice_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="depositTotalMin != null">deposit_total_min,</if>
             <if test="depositTotalMax != null">deposit_total_max,</if>
@@ -50,7 +50,7 @@
     </insert>
 
     <update id="updateLotteryDiceConfig" parameterType="com.qiqilm.server.admin.domain.LotteryDiceConfig">
-        update 7700_main.lottery_dice_config
+        update ${dbMain}.lottery_dice_config
         <trim prefix="SET" suffixOverrides=",">
             <if test="depositTotalMin != null">deposit_total_min = #{depositTotalMin},</if>
     
@@ -67,11 +67,11 @@
     </update>
 
     <delete id="deleteLotteryDiceConfigById" parameterType="Long">
-        delete from 7700_main.lottery_dice_config where id = #{id}
+        delete from ${dbMain}.lottery_dice_config where id = #{id}
     </delete>
 
     <delete id="deleteLotteryDiceConfigByIds" parameterType="String">
-        delete from 7700_main.lottery_dice_config where id in
+        delete from ${dbMain}.lottery_dice_config where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

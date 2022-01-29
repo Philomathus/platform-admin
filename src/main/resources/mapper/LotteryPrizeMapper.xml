@@ -12,7 +12,7 @@
     </resultMap>
 
     <sql id="selectLotteryPrizeVo">
-        select id, prize_name, prize, prize_weight, type, prize_amount from 7700_live.lottery_prize
+        select id, prize_name, prize, prize_weight, type, prize_amount from ${dbLive}.lottery_prize
     </sql>
 
     <select id="selectLotteryPrizeList" parameterType="com.qiqilm.server.admin.domain.LotteryPrize" resultMap="LotteryPrizeResult">
@@ -32,7 +32,7 @@
     </select>
 
     <insert id="insertLotteryPrize" parameterType="com.qiqilm.server.admin.domain.LotteryPrize" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.lottery_prize
+        insert into ${dbLive}.lottery_prize
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="prizeName != null">prize_name,</if>
             <if test="prize != null">prize,</if>
@@ -50,7 +50,7 @@
     </insert>
 
     <update id="updateLotteryPrize" parameterType="com.qiqilm.server.admin.domain.LotteryPrize">
-        update 7700_live.lottery_prize
+        update ${dbLive}.lottery_prize
         <trim prefix="SET" suffixOverrides=",">
             <if test="prizeName != null">prize_name = #{prizeName},</if>
     
@@ -67,11 +67,11 @@
     </update>
 
     <delete id="deleteLotteryPrizeById" parameterType="Long">
-        delete from 7700_live.lottery_prize where id = #{id}
+        delete from ${dbLive}.lottery_prize where id = #{id}
     </delete>
 
     <delete id="deleteLotteryPrizeByIds" parameterType="String">
-        delete from 7700_live.lottery_prize where id in
+        delete from ${dbLive}.lottery_prize where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
