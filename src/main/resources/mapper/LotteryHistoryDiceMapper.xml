@@ -26,6 +26,7 @@
             <if test="award != null "> and award = #{award}</if>
             <if test="type != null "> and type = #{type}</if>
         </where>
+        order by c_time desc
     </select>
 
     <select id="selectLotteryHistoryDiceById" parameterType="Long" resultMap="LotteryHistoryDiceResult">
@@ -42,32 +43,32 @@
             <if test="cTime != null">c_time,</if>
             <if test="award != null">award,</if>
             <if test="type != null">type,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="pUserId != null">#{pUserId},</if>
-                    <if test="name != null">#{name},</if>
-                    <if test="headImg != null">#{headImg},</if>
-                    <if test="cTime != null">#{cTime},</if>
-                    <if test="award != null">#{award},</if>
-                    <if test="type != null">#{type},</if>
-             </trim>
+            <if test="pUserId != null">#{pUserId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="headImg != null">#{headImg},</if>
+            <if test="cTime != null">#{cTime},</if>
+            <if test="award != null">#{award},</if>
+            <if test="type != null">#{type},</if>
+        </trim>
     </insert>
 
     <update id="updateLotteryHistoryDice" parameterType="com.qiqilm.server.admin.domain.LotteryHistoryDice">
         update 7700_live.lottery_history_dice
         <trim prefix="SET" suffixOverrides=",">
             <if test="pUserId != null">p_user_id = #{pUserId},</if>
-    
+
             <if test="name != null">name = #{name},</if>
-    
+
             <if test="headImg != null">head_img = #{headImg},</if>
-    
+
             <if test="cTime != null">c_time = #{cTime},</if>
-    
+
             <if test="award != null">award = #{award},</if>
-    
+
             <if test="type != null">type = #{type},</if>
-    
+
         </trim>
         where id = #{id}
     </update>

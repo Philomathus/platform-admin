@@ -35,8 +35,8 @@ public class LotteryHistoryDice extends BaseEntity {
     private String headImg;
 
     /** 时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "时间", width = 30, databaseFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "时间", width = 30, exportFormat = "yyyy-MM-dd HH:mm:ss")
     private Date cTime;
 
     /** 奖励 */
@@ -50,13 +50,13 @@ public class LotteryHistoryDice extends BaseEntity {
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("pUserId", getPUserId())
-            .append("name", getName())
-            .append("headImg", getHeadImg())
-            .append("cTime", getCTime())
-            .append("award", getAward())
-            .append("type", getType())
-            .toString();
+                .append("id", getId())
+                .append("pUserId", getPUserId())
+                .append("name", getName())
+                .append("headImg", getHeadImg())
+                .append("cTime", getCTime())
+                .append("award", getAward())
+                .append("type", getType())
+                .toString();
     }
 }

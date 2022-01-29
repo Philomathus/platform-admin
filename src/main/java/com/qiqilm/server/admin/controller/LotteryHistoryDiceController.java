@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -73,6 +74,7 @@ public class LotteryHistoryDiceController extends BaseController {
 	@Log( title = "【请填写功能名称】", businessType = BusinessType.INSERT )
 	@PostMapping
 	public AjaxResult add( @RequestBody LotteryHistoryDice lotteryHistoryDice) {
+		lotteryHistoryDice.setCTime(new Date());
 		return toAjax( lotteryHistoryDiceService.insertLotteryHistoryDice(lotteryHistoryDice) );
 	}
 
