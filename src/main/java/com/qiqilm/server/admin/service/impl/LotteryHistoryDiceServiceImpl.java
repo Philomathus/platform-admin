@@ -1,10 +1,15 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+
+import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LotteryHistoryDiceMapper;
 import com.qiqilm.server.admin.domain.LotteryHistoryDice;
 import com.qiqilm.server.admin.service.ILotteryHistoryDiceService;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 
@@ -18,6 +23,8 @@ import javax.annotation.Resource;
 public class LotteryHistoryDiceServiceImpl implements ILotteryHistoryDiceService {
     @Resource
     private LotteryHistoryDiceMapper lotteryHistoryDiceMapper;
+    @Autowired
+    private ConfigDomainCacheUtil configDomainCacheUtil;
 
     /**
      * 查询【请填写功能名称】
@@ -38,7 +45,16 @@ public class LotteryHistoryDiceServiceImpl implements ILotteryHistoryDiceService
      */
     @Override
     public List<LotteryHistoryDice> selectLotteryHistoryDiceList(LotteryHistoryDice lotteryHistoryDice) {
-        return lotteryHistoryDiceMapper.selectLotteryHistoryDiceList(lotteryHistoryDice);
+        List<LotteryHistoryDice> lotteryHistoryDiceList = lotteryHistoryDiceMapper.selectLotteryHistoryDiceList( lotteryHistoryDice );
+        if ( !CollectionUtils.isEmpty( lotteryHistoryDiceList ) ) {
+            String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
+            for ( LotteryHistoryDice info : lotteryHistoryDiceList ) {
+                if ( StringUtils.isNotBlank( info.getHeadImg() ) && !info.getHeadImg().startsWith( "http" ) ) {
+                    info.setHeadImg( domainValue + info.getHeadImg() );
+                }
+            }
+        }
+        return lotteryHistoryDiceList;
     }
 
     /**
