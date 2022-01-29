@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 lottery_history_dice
+ * 抽奖结果对象 lottery_history_dice
  *
  * @author 77tv
  * @date 2022-01-27
@@ -47,11 +47,15 @@ public class LotteryHistoryDice extends BaseEntity {
     @Excel(name = "活动类型")
     private Long type;
 
+    public String getpUserId() {
+        return pUserId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
-                .append("pUserId", getPUserId())
+                .append("pUserId", getpUserId())
                 .append("name", getName())
                 .append("headImg", getHeadImg())
                 .append("cTime", getCTime())

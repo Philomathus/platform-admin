@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 lottery_dice_config
+ * 抽奖次数设置对象 lottery_dice_config
  *
  * @author 77tv
  * @date 2022-01-27
@@ -33,7 +33,7 @@ public class LotteryDiceConfig extends BaseEntity {
 
     /** 状态(1 启用 0 停用 ) */
     @Excel(name = "状态(1 启用 0 停用 )")
-    private String status;
+    private Long status;
 
     /** 活动类型 */
     @Excel(name = "活动类型")
