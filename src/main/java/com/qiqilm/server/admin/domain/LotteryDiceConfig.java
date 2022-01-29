@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 【请填写功能名称】对象 lottery_dice_config
+ * 抽奖次数设置对象 lottery_dice_config
  *
  * @author 77tv
  * @date 2022-01-26
