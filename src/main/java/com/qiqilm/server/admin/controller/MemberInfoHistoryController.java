@@ -18,13 +18,11 @@ import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.vo.*;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.vo.ForbidItem;
 import com.qiqilm.server.admin.im.vo.UserForbid;
 import com.qiqilm.server.admin.mapper.MemberInfoHistoryMapper;
 import com.qiqilm.server.admin.service.IMemberInfoHistoryService;
-import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
@@ -378,7 +376,9 @@ public class MemberInfoHistoryController extends BaseController {
 
         String ip = UserDataUtil.getIp(request);
         if (!redisUtil.lock(EnumLock.member, "addScore"+req.getId(), "1", 15)) {
-            throw new BusinessException("请勿重复提交");
+            rspBase.setMsg("请勿重复提交");
+            rspBase.setCode(1);
+            return rspBase;
         }
         String username = loginUser.getUser().getUserName();
         rspBase = memberInfoHistoryService.addMemberMoneyOnly(ip, req.getId(), req.getScore(), req.getBeatNum(), req.getMk()+",操作人:"+username,
