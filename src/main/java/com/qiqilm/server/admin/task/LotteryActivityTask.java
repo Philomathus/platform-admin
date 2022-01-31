@@ -30,7 +30,7 @@ public class LotteryActivityTask {
 	@Resource
 	private RedisUtil redisUtil;
 
-	@Scheduled(cron="0 0 5 * * ?")// 每天1:00点执行一次
+	@Scheduled(cron="0 0 1 * * ?")// 每天1:00点执行一次
 	public void cashBackTask() {
 		String lottery_activity_switch = sysConfigCacheUtil.getConf("lottery_activity_switch","0");
 		if(!("1").equals(lottery_activity_switch)){
