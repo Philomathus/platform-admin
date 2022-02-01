@@ -68,6 +68,7 @@
 	</Appenders>
 
 	<Loggers>
+		<Logger name="com.github.pagehelper.parser.OrderByParser" level="ERROR"/>
 		<Root level="INFO">
 			<AppenderRef ref="Console"/>
 			<AppenderRef ref="RollingFile"/>
