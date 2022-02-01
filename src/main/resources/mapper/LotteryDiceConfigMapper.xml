@@ -79,7 +79,7 @@
 
     <select id="selectWheelDiceBycash" resultType="java.lang.Integer">
         select lottery_times from ${dbMain}.lottery_dice_config
-        where status =1 and type =2 and deposit_total_min <![CDATA[ <= ]]> #{cash}
+        where status =1 and type =1 and deposit_total_min <![CDATA[ <= ]]> #{cash}
         and deposit_total_max > #{cash}
     </select>
 </mapper>
