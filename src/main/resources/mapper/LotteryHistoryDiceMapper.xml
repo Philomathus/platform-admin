@@ -13,7 +13,7 @@
     </resultMap>
 
     <sql id="selectLotteryHistoryDiceVo">
-        select id, p_user_id, name, head_img, c_time, award, type from 7700_live.lottery_history_dice
+        select id, p_user_id, name, head_img, c_time, award, type from ${dbLive}.lottery_history_dice
     </sql>
 
     <select id="selectLotteryHistoryDiceList" parameterType="com.qiqilm.server.admin.domain.LotteryHistoryDice" resultMap="LotteryHistoryDiceResult">
@@ -35,7 +35,7 @@
     </select>
 
     <insert id="insertLotteryHistoryDice" parameterType="com.qiqilm.server.admin.domain.LotteryHistoryDice" useGeneratedKeys="true" keyProperty="id">
-        insert into 7700_live.lottery_history_dice
+        insert into ${dbLive}.lottery_history_dice
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pUserId != null">p_user_id,</if>
             <if test="name != null">name,</if>
@@ -55,7 +55,7 @@
     </insert>
 
     <update id="updateLotteryHistoryDice" parameterType="com.qiqilm.server.admin.domain.LotteryHistoryDice">
-        update 7700_live.lottery_history_dice
+        update ${dbLive}.lottery_history_dice
         <trim prefix="SET" suffixOverrides=",">
             <if test="pUserId != null">p_user_id = #{pUserId},</if>
 
@@ -74,11 +74,11 @@
     </update>
 
     <delete id="deleteLotteryHistoryDiceById" parameterType="Long">
-        delete from 7700_live.lottery_history_dice where id = #{id}
+        delete from ${dbLive}.lottery_history_dice where id = #{id}
     </delete>
 
     <delete id="deleteLotteryHistoryDiceByIds" parameterType="String">
-        delete from 7700_live.lottery_history_dice where id in
+        delete from ${dbLive}.lottery_history_dice where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

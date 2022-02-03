@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * 抽奖次数设置对象 lottery_dice_config
  *
  * @author 77tv
- * @date 2022-01-26
+ * @date 2022-01-27
  */
 @Data
 public class LotteryDiceConfig extends BaseEntity {
