@@ -11,13 +11,11 @@ import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
-import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.vo.*;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.ISysUserService;
@@ -419,8 +417,8 @@ public class MemberInfoController extends BaseController {
         }
         String ip = UserDataUtil.getIp(request);
         rspBase = memberInfoService.addMemberMoneyOnly(ip, loginUser, req);
-        redisUtil.unLock(EnumLock.member, "addScore"+req.getId());
         if(rspBase.getCode() == 2){
+            redisUtil.unLock(EnumLock.member, "addScore"+req.getId());
             return rspBase;
         }
         rspBase.setCode(0);
