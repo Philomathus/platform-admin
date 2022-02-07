@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -206,7 +207,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			if ( beatNum != null && beatNum.compareTo( BigDecimal.ZERO ) > 0 ) {
 				MemberBcode codeFlow = new MemberBcode();
 				codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-				codeFlow.setIncome( money.multiply( beatNum ).setScale( 2 ) );
+				codeFlow.setIncome( money.multiply( beatNum ).setScale( 2, RoundingMode.HALF_UP) );
 				codeFlow.setCreateTime( new Date() );
 				codeFlow.setStatus( 0 );
 				codeFlow.setCur( BigDecimal.ZERO );
@@ -216,7 +217,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			} else {
 				beatNum = new BigDecimal( 0 );
 			}
-			memberInfoMapper.updateMoneySelect( userId, money, null, money.multiply( beatNum ).setScale( 2 ), null, null );
+			memberInfoMapper.updateMoneySelect( userId, money, null, money.multiply( beatNum ).setScale( 2, RoundingMode.HALF_UP ), null, null );
 			MemberActionLogs log = new MemberActionLogs();
 			log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
 			log.setUserId( userId );
