@@ -116,4 +116,7 @@ public interface MemberInfoMapper {
     public Map listCount(MemberInfo req );
 
     List<MemberInfo> selectRegisterByMemberIds(String memberIds);
+
+    Integer clear();
+    Integer insertPaiSong(@Param("userIds") String userIds);
 }

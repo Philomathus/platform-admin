@@ -8,5 +8,7 @@ public class ReqSmallFeatures {
     private String password;
     private String userIds;
     private String phonesByIds;
+    private String memberIds;
+    private String money;
     private Integer googleAuthCode;
 }
