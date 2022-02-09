@@ -30,7 +30,7 @@ public interface IReportAgentcountService {
 
     int existsPromotionCode(ReportAgentcount reportAgentcount);
 
-	void addPromotionCode(ReportAgentcount reportAgentcount);
+	boolean addPromotionCode(ReportAgentcount reportAgentcount);
 
 	void delPromotionCode(ReportAgentcount reportAgentcount);
 

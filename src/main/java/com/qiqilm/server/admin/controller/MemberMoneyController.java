@@ -72,7 +72,7 @@ public class MemberMoneyController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:memberMoney:edit')" )
 	@Log( title = "开始派送彩金", businessType = BusinessType.INSERT )
 	@PostMapping("/starSend")
-	public AjaxResult starSend( @RequestBody MemberMoney memberMoney) {
+	public AjaxResult starSend( @RequestBody MemberMoney memberMoney) throws Exception{
 		return memberMoneyService.starSend(memberMoney);
 	}
 
