@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -206,7 +207,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			if ( beatNum != null && beatNum.compareTo( BigDecimal.ZERO ) > 0 ) {
 				MemberBcode codeFlow = new MemberBcode();
 				codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-				codeFlow.setIncome( money.multiply( beatNum ).setScale( 2 ) );
+				codeFlow.setIncome( money.multiply( beatNum ).setScale( 2, RoundingMode.HALF_UP) );
 				codeFlow.setCreateTime( new Date() );
 				codeFlow.setStatus( 0 );
 				codeFlow.setCur( BigDecimal.ZERO );
@@ -216,7 +217,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 			} else {
 				beatNum = new BigDecimal( 0 );
 			}
-			memberInfoMapper.updateMoneySelect( userId, money, null, money.multiply( beatNum ).setScale( 2 ), null, null );
+			memberInfoMapper.updateMoneySelect( userId, money, null, money.multiply( beatNum ).setScale( 2, RoundingMode.HALF_UP ), null, null );
 			MemberActionLogs log = new MemberActionLogs();
 			log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
 			log.setUserId( userId );
@@ -388,6 +389,34 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 				phonesByIds.add(ph.getUserIds() + ":" + ph.getPhonesByIds());
 			}
 			return AjaxResult.success(phonesByIds);
+		}
+		return AjaxResult.error(0,"请输入批量会员ID");
+	}
+
+	@Override
+	@Transactional
+	public AjaxResult commitMoney( ReqSmallFeatures req ) {
+		if ( StringUtils.hasText( req.getMemberIds() ) ) {
+			String[] userIds = null;
+			if ( req.getMemberIds().contains( "\n" ) ) {
+				try {
+					userIds = req.getMemberIds().split( "\n" );
+					StringBuilder userId  = new StringBuilder();
+					for ( int i = 0; i < userIds.length; i++ ) {
+						userId.append( "\"" ).append( userIds[ i ] ).append( "\"" ).append( "," ).append(req.getMoney()).append( "),(" );
+					}
+					userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
+					req.setUserIds( userId.toString() );
+				} catch ( Exception e ) {
+					return AjaxResult.error( 0, "分割会员ID出错,请检查格式" );
+				}
+			} else {
+				req.setUserIds( "\"" + req.getMemberIds() + "\"" + "," + req.getMoney() );
+			}
+			//清除表中数据
+			memberInfoMapper.clear();
+			memberInfoMapper.insertPaiSong(req.getUserIds());
+			return AjaxResult.success();
 		}
 		return AjaxResult.error(0,"请输入批量会员ID");
 	}

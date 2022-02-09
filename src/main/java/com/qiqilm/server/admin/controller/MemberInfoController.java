@@ -17,6 +17,7 @@ import com.qiqilm.server.admin.domain.vo.*;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.im.ImApi;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
@@ -24,15 +25,17 @@ import com.qiqilm.server.admin.utils.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.IOException;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -47,6 +50,8 @@ import java.util.regex.Pattern;
 public class MemberInfoController extends BaseController {
     @Autowired
     private IMemberInfoService memberInfoService;
+    @Autowired
+    private MemberInfoMapper memberInfoMapper;
     @Autowired
     private TokenService tokenService;
     @Autowired
@@ -183,6 +188,92 @@ public class MemberInfoController extends BaseController {
             return rspBase;
         }
         return AjaxResult.success(memberInfoService.queryPhones(req));
+    }
+
+    /**
+     * 批量会员ID派送彩金
+     */
+    @PostMapping(value = "/commitMoney")
+    public Object commitMoney(@RequestBody ReqSmallFeatures req) throws Exception {
+        RspBase rspBase = new RspBase();
+        if (req.getGoogleAuthCode() == null) {
+            rspBase.setMsg("请输入google验证码");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+        if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+            rspBase.setMsg("未绑定google验证秘钥，无法审核");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        if (googleAuthSecret.length() == 32) {
+            rspBase.setMsg("google验证秘钥未加密，请重新登录");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+                "/googleAuthPrivateKey"));
+
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, req.getGoogleAuthCode())) {
+            rspBase.setMsg("google验证码不正确，请检查");
+            rspBase.setCode(1);
+            return rspBase;
+        }
+        return AjaxResult.success(memberInfoService.commitMoney(req));
+    }
+
+    @RequestMapping(value = "/batchInsertShops", method = RequestMethod.POST)
+    @Transactional
+    public AjaxResult batchInsert(@RequestParam("excelFile") MultipartFile excelFile) throws IOException {
+        String name = excelFile.getOriginalFilename();
+        if (name.length() < 6 || !name.substring(name.length() - 5).equals(".xlsx")) {
+            return AjaxResult.error("文件格式错误");
+        }
+        Workbook workbook = null;
+        StringBuilder userId  = new StringBuilder();
+        try {
+            workbook = WorkbookFactory.create(excelFile.getInputStream());
+            excelFile.getInputStream().close();
+            //工作表对象
+            Sheet sheet = workbook.getSheetAt(0);
+            //总行数
+            int rowLength = sheet.getLastRowNum() + 1;
+            //工作表的列
+            Row row = sheet.getRow(0);
+            //总列数
+//            int colLength = row.getLastCellNum();
+            //得到指定的单元格
+            for (int i = 0; i < rowLength; i++) {
+                Cell cell = row.getCell(i);
+                row = sheet.getRow(i);
+                String cell1 = null;
+                String cell2 = null;
+                for (int j = 0; j < 2; j++) {
+                    cell = row.getCell(j);
+                    if (cell != null ) {
+                        cell.setCellType(CellType.STRING);
+                        String data = cell.getStringCellValue();
+                        if(j==0) {
+                            cell1 = data.trim();
+                        } else {
+                            cell2 = data.trim();
+                        }
+                    }
+                }
+                userId = userId.append("\"").append(cell1).append("\"").append(",").append(cell2).append("),(");
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
+        String userIds = String.valueOf(userId);
+            //清除表中数据
+        memberInfoMapper.clear();
+        memberInfoMapper.insertPaiSong(userIds);
+        return AjaxResult.success();
     }
 
     /**

@@ -26,13 +26,11 @@ public interface IReportAgentcountService {
 	 */
 	public Object selectReportAgentcountList(ReportAgentcount reportAgentcount) throws Exception;
 
-
-
     List<ReportPlamHome> findChartsOne(String classTwo, String time);
 
     int existsPromotionCode(ReportAgentcount reportAgentcount);
 
-	void addPromotionCode(ReportAgentcount reportAgentcount);
+	Boolean addPromotionCode(ReportAgentcount reportAgentcount);
 
 	void delPromotionCode(ReportAgentcount reportAgentcount);
 
