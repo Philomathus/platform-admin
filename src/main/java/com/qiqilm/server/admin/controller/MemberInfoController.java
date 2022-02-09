@@ -226,7 +226,7 @@ public class MemberInfoController extends BaseController {
     }
 
     @RequestMapping(value = "/batchInsertShops", method = RequestMethod.POST)
-    @Transactional
+    @Transactional( rollbackFor = Exception.class )
     public AjaxResult batchInsert(@RequestParam("excelFile") MultipartFile excelFile) throws IOException {
         String name = excelFile.getOriginalFilename();
         if (name.length() < 6 || !name.substring(name.length() - 5).equals(".xlsx")) {

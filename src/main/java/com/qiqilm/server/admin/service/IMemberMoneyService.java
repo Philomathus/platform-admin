@@ -36,7 +36,7 @@ public interface IMemberMoneyService {
 	 * @return 结果
 	 */
 	public int insertMemberMoney(MemberMoney memberMoney);
-	AjaxResult starSend(MemberMoney memberMoney);
+	AjaxResult starSend(MemberMoney memberMoney) throws Exception;
 
 	/**
 	 * 修改派送彩金暂存表

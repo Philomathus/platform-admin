@@ -394,7 +394,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional( rollbackFor = Exception.class )
 	public AjaxResult commitMoney( ReqSmallFeatures req ) {
 		if ( StringUtils.hasText( req.getMemberIds() ) ) {
 			String[] userIds = null;

@@ -15,6 +15,7 @@ import com.qiqilm.server.admin.domain.MemberBcode;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LogMoneyMapper;
 import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
@@ -87,10 +88,10 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
     }
 
     @Override
-    @Transactional
-    public AjaxResult starSend(MemberMoney memberMoney) {
+    @Transactional( rollbackFor = Exception.class )
+    public AjaxResult starSend(MemberMoney memberMoney) throws Exception{
         if (!redisUtil.lock(EnumLock.member, "paiSong" + memberMoney.getMoneydes(), "1", 50)) {
-            return new AjaxResult(1, "请勿重复提交");
+            throw new BusinessException( "请勿重复提交" );
         }
         LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
         String admin_name = loginUser.getUsername();
@@ -100,7 +101,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
             String userId = li.getMemberId();
             MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(userId);
             if(memberInfo == null){
-                return new AjaxResult(1,"会员id不存在:"+userId);
+                throw new BusinessException( "会员id不存在:"+userId);
             }
             BigDecimal money = li.getMoney();
             String chinese = null;
@@ -119,7 +120,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                 markList = logMoneyMapper.findMark(userId, markorder, null, negate, userId.substring(userId.length() - 1));
             }
             if (markList.size() > 0) {
-                return new AjaxResult(1, "请查看此笔金额是否已经入款过，如否请输入其他入款备注." + "会员id:" + userId + "入款金额" + money + "入款备注" + memberMoney.getMoneydes());
+                throw new BusinessException( "请查看此笔金额是否已经入款过，如否请输入其他入款备注." + "会员id:" + userId + "入款金额" + money + "入款备注" + memberMoney.getMoneydes());
             }
             BigDecimal total = memberInfo.getTotalAccount();
             BigDecimal now = total.add(money);
