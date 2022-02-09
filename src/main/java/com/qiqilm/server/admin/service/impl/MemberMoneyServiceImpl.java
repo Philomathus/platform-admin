@@ -101,6 +101,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
             String userId = li.getMemberId();
             MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(userId);
             if(memberInfo == null){
+                redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
                 throw new BusinessException( "会员id不存在:"+userId);
             }
             BigDecimal money = li.getMoney();
@@ -120,6 +121,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                 markList = logMoneyMapper.findMark(userId, markorder, null, negate, userId.substring(userId.length() - 1));
             }
             if (markList.size() > 0) {
+                redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
                 throw new BusinessException( "请查看此笔金额是否已经入款过，如否请输入其他入款备注." + "会员id:" + userId + "入款金额" + money + "入款备注" + memberMoney.getMoneydes());
             }
             BigDecimal total = memberInfo.getTotalAccount();
