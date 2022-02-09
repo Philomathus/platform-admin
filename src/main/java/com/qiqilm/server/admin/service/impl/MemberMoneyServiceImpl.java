@@ -1,7 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -97,9 +99,18 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
         for (MemberMoney li : list) {
             String userId = li.getMemberId();
             MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(userId);
+            if(memberInfo == null){
+                return new AjaxResult(1,"会员id不存在:"+userId);
+            }
             BigDecimal money = li.getMoney();
+            String chinese = null;
+            try {
+                chinese = URLEncoder.encode(memberMoney.getMoneydes(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             //资金日志
-            String markorder = "CJ" + DateFormatUtils.formate(new Date(), "yyyyMMddHHmmssSSS") + userId;
+            String markorder = "CJ" + userId + money.setScale(0,BigDecimal.ROUND_HALF_UP) + chinese; ;
             List<LogMoney> markList = null;
             if (money.compareTo(BigDecimal.ZERO) > 0) {
                 markList = logMoneyMapper.findMark(userId, markorder, money, null, userId.substring(userId.length() - 1));
