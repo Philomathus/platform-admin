@@ -14,7 +14,7 @@
     <select id="selectMemberMoneyList" parameterType="MemberMoney" resultMap="MemberMoneyResult">
         <include refid="selectMemberMoneyVo"/>
         <where>
-            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="memberId != null and memberId != ''"> and member_id = #{memberId}</if>
             <if test="money != null "> and money = #{money}</if>
         </where>
     </select>
