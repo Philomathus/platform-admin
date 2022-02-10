@@ -144,7 +144,7 @@ public class LogServiceImpl implements ILogService {
 		log.setTotal( totalNow );
 		log.setTotalBefore( totalNow.subtract( change ) );
 		log.setType( enumTrans.getType() );
-		log.setDes( enumTrans.getDes() );
+		log.setDes( des );
 		log.setMark( name );
 		log.setMarkorder( orderId );
 		int insertM = logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
