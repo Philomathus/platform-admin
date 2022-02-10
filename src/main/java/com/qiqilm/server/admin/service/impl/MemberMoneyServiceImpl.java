@@ -143,6 +143,8 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
             //加钱
             memberInfoMapper.updateMoneySelect(userId, money, null, money, null, null);
         }
+        //完成派送清除表中数据
+        memberInfoMapper.clear();
         redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
         return new AjaxResult(0, "操作成功");
     }
