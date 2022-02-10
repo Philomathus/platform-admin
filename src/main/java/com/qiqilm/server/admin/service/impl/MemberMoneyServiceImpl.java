@@ -129,15 +129,17 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
             String Mk = memberMoney.getMoneydes() + ",操作人:" + admin_name;
             logService.logmarkMoney(userId, memberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder);
             //打码
-            MemberBcode codeFlow = new MemberBcode();
-            codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
-            codeFlow.setIncome(money);
-            codeFlow.setCreateTime(new Date());
-            codeFlow.setStatus(0);
-            codeFlow.setCur(BigDecimal.ZERO);
-            codeFlow.setUserId(userId);
-            codeFlow.setDes("人工入款");
-            codeFlowMapper.insertMemberBcode(codeFlow);
+            if (money.compareTo(BigDecimal.ZERO) > 0) {
+                MemberBcode codeFlow = new MemberBcode();
+                codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
+                codeFlow.setIncome(money);
+                codeFlow.setCreateTime(new Date());
+                codeFlow.setStatus(0);
+                codeFlow.setCur(BigDecimal.ZERO);
+                codeFlow.setUserId(userId);
+                codeFlow.setDes("人工入款");
+                codeFlowMapper.insertMemberBcode(codeFlow);
+            }
             //加钱
             memberInfoMapper.updateMoneySelect(userId, money, null, money, null, null);
         }
