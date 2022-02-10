@@ -2,14 +2,12 @@ package com.qiqilm.server.admin.service.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
-import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.LogMoney;
 import com.qiqilm.server.admin.domain.MemberBcode;
 import com.qiqilm.server.admin.domain.MemberInfo;
@@ -20,7 +18,6 @@ import com.qiqilm.server.admin.mapper.LogMoneyMapper;
 import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILogService;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
@@ -106,14 +103,14 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                     throw new BusinessException("会员id不存在:" + userId);
                 }
                 BigDecimal money = li.getMoney();
-                String chinese = null;
-                try {
-                    chinese = URLEncoder.encode(memberMoney.getMoneydes(), "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+//                String chinese = null;
+//                try {
+//                    chinese = URLEncoder.encode(memberMoney.getMoneydes(), "utf-8");
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
                 //资金日志
-                String markorder = "CJ" + userId + money.setScale(0, BigDecimal.ROUND_HALF_UP) + chinese;
+                String markorder = "CJ" + userId + money.setScale(0, BigDecimal.ROUND_HALF_UP) + memberMoney.getMoneydes();
                 ;
                 List<LogMoney> markList = null;
                 if (money.compareTo(BigDecimal.ZERO) > 0) {
@@ -128,8 +125,8 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                 }
                 BigDecimal total = memberInfo.getTotalAccount();
                 BigDecimal now = total.add(money);
-                String Mk = memberMoney.getMoneydes() + ",操作人:" + admin_name;
-                logService.logmarkMoney(userId, memberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder);
+                logService.logMoneyAllPaiSong(userId, memberInfo.getUserName(), EnumMoney.wongive, now, total,
+                        memberMoney.getMoneydes(), memberMoney.getMoneydes()+",操作人："+admin_name, markorder);
                 //打码
                 if (money.compareTo(BigDecimal.ZERO) > 0) {
                     MemberBcode codeFlow = new MemberBcode();

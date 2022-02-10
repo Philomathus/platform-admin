@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 public class MemberMoneyController extends BaseController {
 	@Autowired
 	private IMemberMoneyService memberMoneyService;
+	@Autowired
+	private MemberInfoMapper memberInfoMapper;
 
 	/**
 	 * 查询派送彩金暂存表列表
@@ -44,6 +47,17 @@ public class MemberMoneyController extends BaseController {
 		startPage();
 		List<MemberMoney> list = memberMoneyService.selectMemberMoneyList(memberMoney);
 		return getDataTable( list );
+	}
+
+	/**
+	 * 查询派送彩金暂存表列表
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:memberMoney:remove')" )
+	@GetMapping( "/handleClean" )
+	public AjaxResult handleClean() {
+		//清除表中数据
+		memberInfoMapper.clear();
+		return AjaxResult.success();
 	}
     
 	/**
