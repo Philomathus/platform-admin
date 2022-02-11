@@ -123,7 +123,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                 }
                 if (markList.size() > 0) {
                     redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
-                    throw new BusinessException("请查看此笔金额是否已经入款过，如否请输入其他入款备注." + "会员id:" + userId + "入款金额" + money + "入款备注" + memberMoney.getMoneydes());
+                    throw new BusinessException("派送失败.请查看此笔金额是否今日已经入款过.如否请输入其他入款备注." + "会员id:" + userId + "入款金额" + money + "入款备注" + memberMoney.getMoneydes());
                 }
                 BigDecimal total = memberInfo.getTotalAccount();
                 BigDecimal now = total.add(money);
