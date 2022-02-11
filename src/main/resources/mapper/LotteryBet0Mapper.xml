@@ -137,39 +137,39 @@
 	</sql>
 
 	<select id="getCountLotteryBet0List" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
-		select Sum(cost) totalCost,Sum(prize) totalPrize from (
-		select cost,prize from ${dbLottery}.lottery_bet0
+		select Sum(cost) totalCost,Sum(prize) totalPrize from (select cost,prize from (
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet0
 		<where><include refid="whereSelect"/></where> UNION ALL
-		select cost,prize from ${dbLottery}.lottery_bet1
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet1
 		<where><include refid="whereSelect"/></where> UNION ALL
-		select cost,prize from ${dbLottery}.lottery_bet2
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet2
 		<where><include refid="whereSelect"/></where> UNION ALL
-		select cost,prize from ${dbLottery}.lottery_bet3
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet3
 		<where><include refid="whereSelect"/></where> UNION ALL
-		select cost,prize from ${dbLottery}.lottery_bet4
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet4
 		<where><include refid="whereSelect"/></where> UNION ALL
-		select cost,prize from ${dbLottery}.lottery_bet5
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet5
 		<where><include refid="whereSelect"/></where> UNION ALL
-		select cost,prize from ${dbLottery}.lottery_bet6
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet6
 		<where><include refid="whereSelect"/></where> UNION ALL
-		select cost,prize from ${dbLottery}.lottery_bet7
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet7
 		<where><include refid="whereSelect"/></where> UNION ALL
-		select cost,prize from ${dbLottery}.lottery_bet8
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet8
 		<where><include refid="whereSelect"/></where> UNION ALL
-		select cost,prize from ${dbLottery}.lottery_bet9
+		select cost,prize,puser_id from ${dbLottery}.lottery_bet9
 		<where><include refid="whereSelect"/></where>
-		) a
+		) b left join ${dbMain}.member_info m on b.puser_id = m.id where m.status in (1,4) ) a
 	</select>
 
 	<select id="getCountLotteryBet0SingleList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
 		select Sum(cost) totalCost,Sum(prize) totalPrize
-		from ${dbLottery}.lottery_bet${tableLast} a
+		from (select cost,prize from (select cost,prize,puser_id from ${dbLottery}.lottery_bet${tableLast}
 		<where>
 			<if test="puserId != null  and puserId != ''">
 				and puser_id = #{puserId}
 			</if>
 			<include refid="whereSelect"/>
-		</where>
+		</where>) b left join ${dbMain}.member_info m on b.puser_id = m.id where m.status in (1,4) ) a
 	</select>
 
 	<select id="getCountLotteryBet0AbnormalList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
