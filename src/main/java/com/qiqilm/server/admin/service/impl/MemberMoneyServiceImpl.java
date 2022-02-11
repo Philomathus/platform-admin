@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -96,6 +97,8 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
         MemberMoney memberMoney1 = new MemberMoney();
         List<MemberMoney> list = memberMoneyMapper.selectMemberMoneyList(memberMoney1);
         String startFirstTime = DateFormatUtils.formate(DateFormatUtils.getTodayMorning());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        String today = df.format(new Date());// new Date()为获取当前系统时间
         if(list.size() > 0) {
             for (MemberMoney li : list) {
                 String userId = li.getMemberId();
@@ -105,14 +108,8 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                     throw new BusinessException("会员id不存在:" + userId);
                 }
                 BigDecimal money = li.getMoney();
-//                String chinese = null;
-//                try {
-//                    chinese = URLEncoder.encode(memberMoney.getMoneydes(), "utf-8");
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                }
                 //资金日志
-                String markorder = "CJ" + userId + money.setScale(0, BigDecimal.ROUND_HALF_UP) + memberMoney.getMoneydes();
+                String markorder = "CJ" + today + userId + money.setScale(0, BigDecimal.ROUND_HALF_UP) + memberMoney.getMoneydes();
                 ;
                 List<LogMoney> markList = null;
                 if (money.compareTo(BigDecimal.ZERO) > 0) {
