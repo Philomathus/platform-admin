@@ -87,11 +87,6 @@ public class MemberMoneyController extends BaseController {
 		return AjaxResult.success( memberMoneyService.selectMemberMoneyById(memberId) );
 	}
 
-	public static void main(String[] args) {
-		String startFirstTime = DateFormatUtils.formate(DateFormatUtils.getTodayMorning());
-		System.out.println(startFirstTime);
-	}
-
 	/**
 	 * 开始派送彩金
 	 */
