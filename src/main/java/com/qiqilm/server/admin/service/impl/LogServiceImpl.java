@@ -72,6 +72,47 @@ public class LogServiceImpl implements ILogService {
 		}
 	}
 
+	@Override
+	@Transactional( rollbackFor = Exception.class )
+	public void logmarkMoneyPaiSong( String userid, String username, EnumMoney enumTrans, BigDecimal totalNow, BigDecimal totalold,
+							  String mark, String markorder ) {
+		BigDecimal trade = totalNow.subtract( totalold );
+		int        i     = trade.compareTo( BigDecimal.ZERO );
+		if ( i == 0 ) {
+			return;
+		}
+
+		LogMoney log = new LogMoney();
+		log.setId( markorder );
+		log.setUserId( userid );
+		log.setUserName( username );
+		log.setCreateTime( new Date() );
+		log.setIncome( BigDecimal.ZERO );
+		log.setPay( BigDecimal.ZERO );
+		if ( i > 0 ) {
+			log.setIncome( trade );
+		} else if ( i < 0 ) {
+			log.setPay( trade.negate() );
+		}
+		log.setTotalBefore( totalold );
+		log.setTotal( totalNow );
+		log.setType( enumTrans.getType() );
+		log.setDes( mark );
+		log.setMark( mark );
+		log.setMarkorder( markorder );
+		int insertM = logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );
+		if ( insertM <= 0 ) {
+			throw new BusinessException( "资金日志插入失败" );
+		}
+		if ( enumTrans == EnumMoney.chargegive || enumTrans == EnumMoney.gm
+				|| enumTrans == EnumMoney.codeclean || enumTrans == EnumMoney.wongive ) {
+			int insertM2 = logMoneyMapper.insertLogMoney( log, "" );
+			if ( insertM2 <= 0 ) {
+				throw new BusinessException( "资金日志插入失败" );
+			}
+		}
+	}
+
 	//备注行为enumTrans 现在金额totalNow   变动金额change  游戏agent  订单备注 name    变动订单号orderId
 	@Override
 	@Transactional( rollbackFor = Exception.class )

@@ -26,6 +26,7 @@ public class MemberMoney extends BaseEntity {
     private BigDecimal money;
 
     private String moneydes;
+    private Integer googleAuthCode;
 
     @Override
     public String toString() {

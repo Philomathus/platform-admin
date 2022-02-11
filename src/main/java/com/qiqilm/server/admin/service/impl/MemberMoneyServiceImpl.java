@@ -125,8 +125,8 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                 }
                 BigDecimal total = memberInfo.getTotalAccount();
                 BigDecimal now = total.add(money);
-                logService.logMoneyAllPaiSong(userId, memberInfo.getUserName(), EnumMoney.wongive, now, total,
-                        memberMoney.getMoneydes(), memberMoney.getMoneydes()+",操作人："+admin_name, markorder);
+                logService.logmarkMoneyPaiSong(userId, memberInfo.getUserName(), EnumMoney.wongive, now, total,
+                        memberMoney.getMoneydes(), markorder);
                 //打码
                 if (money.compareTo(BigDecimal.ZERO) > 0) {
                     MemberBcode codeFlow = new MemberBcode();
