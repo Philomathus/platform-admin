@@ -158,7 +158,7 @@
 		<where><include refid="whereSelect"/></where> UNION ALL
 		select cost,prize,puser_id from ${dbLottery}.lottery_bet9
 		<where><include refid="whereSelect"/></where>
-		) b left join ${dbMain}.member_info m on b.puser_id = m.id where m.status in (1,4) ) a
+		) b inner join ${dbMain}.member_info m on b.puser_id = m.id where m.status in (1,4) ) a
 	</select>
 
 	<select id="getCountLotteryBet0SingleList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
@@ -169,7 +169,7 @@
 				and puser_id = #{puserId}
 			</if>
 			<include refid="whereSelect"/>
-		</where>) b left join ${dbMain}.member_info m on b.puser_id = m.id where m.status in (1,4) ) a
+		</where>) b inner join ${dbMain}.member_info m on b.puser_id = m.id where m.status in (1,4) ) a
 	</select>
 
 	<select id="getCountLotteryBet0AbnormalList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
