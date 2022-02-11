@@ -75,7 +75,7 @@ public class LogServiceImpl implements ILogService {
 	@Override
 	@Transactional( rollbackFor = Exception.class )
 	public void logmarkMoneyPaiSong( String userid, String username, EnumMoney enumTrans, BigDecimal totalNow, BigDecimal totalold,
-							  String mark, String markorder ) {
+							  String des, String mark, String markorder ) {
 		BigDecimal trade = totalNow.subtract( totalold );
 		int        i     = trade.compareTo( BigDecimal.ZERO );
 		if ( i == 0 ) {
@@ -97,7 +97,7 @@ public class LogServiceImpl implements ILogService {
 		log.setTotalBefore( totalold );
 		log.setTotal( totalNow );
 		log.setType( enumTrans.getType() );
-		log.setDes( mark );
+		log.setDes( des );
 		log.setMark( mark );
 		log.setMarkorder( markorder );
 		int insertM = logMoneyMapper.insertLogMoney( log, log.getUserId().substring( log.getUserId().length() - 1 ) );

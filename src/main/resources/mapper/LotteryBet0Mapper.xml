@@ -163,13 +163,13 @@
 
 	<select id="getCountLotteryBet0SingleList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
 		select Sum(cost) totalCost,Sum(prize) totalPrize
-		from (select cost,prize from (select cost,prize,puser_id from ${dbLottery}.lottery_bet${tableLast}
+		from ${dbLottery}.lottery_bet${tableLast} a
 		<where>
 			<if test="puserId != null  and puserId != ''">
 				and puser_id = #{puserId}
 			</if>
 			<include refid="whereSelect"/>
-		</where>) b inner join ${dbMain}.member_info m on b.puser_id = m.id where m.status in (1,4) ) a
+		</where>
 	</select>
 
 	<select id="getCountLotteryBet0AbnormalList" parameterType="LotteryBet0" resultMap="LotteryBet0Result">

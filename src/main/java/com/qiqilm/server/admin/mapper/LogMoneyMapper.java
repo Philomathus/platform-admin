@@ -43,6 +43,10 @@ public interface LogMoneyMapper {
 							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay,
 							 @Param( "dbNodes" ) String dbNodes );
 
+	List<LogMoney> findMarkStartTime( @Param( "userId" ) String userId, @Param( "mark" ) String mark,
+							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay,
+							 @Param( "dbNodes" ) String dbNodes, @Param( "startTime" ) String startTime );
+
 	Map totalCount( LogMoney logMoney );
 	Map listCount( LogMoney logMoney );
 

@@ -18,6 +18,7 @@ import com.qiqilm.server.admin.mapper.LogMoneyMapper;
 import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILogService;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
@@ -94,6 +95,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
         String admin_name = loginUser.getUsername();
         MemberMoney memberMoney1 = new MemberMoney();
         List<MemberMoney> list = memberMoneyMapper.selectMemberMoneyList(memberMoney1);
+        String startFirstTime = DateFormatUtils.formate(DateFormatUtils.getTodayMorning());
         if(list.size() > 0) {
             for (MemberMoney li : list) {
                 String userId = li.getMemberId();
@@ -114,10 +116,10 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                 ;
                 List<LogMoney> markList = null;
                 if (money.compareTo(BigDecimal.ZERO) > 0) {
-                    markList = logMoneyMapper.findMark(userId, markorder, money, null, userId.substring(userId.length() - 1));
+                    markList = logMoneyMapper.findMarkStartTime(userId, markorder, money, null, userId.substring(userId.length() - 1), startFirstTime);
                 } else {
                     BigDecimal negate = money.negate();
-                    markList = logMoneyMapper.findMark(userId, markorder, null, negate, userId.substring(userId.length() - 1));
+                    markList = logMoneyMapper.findMarkStartTime(userId, markorder, null, negate, userId.substring(userId.length() - 1), startFirstTime);
                 }
                 if (markList.size() > 0) {
                     redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
@@ -126,7 +128,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                 BigDecimal total = memberInfo.getTotalAccount();
                 BigDecimal now = total.add(money);
                 logService.logmarkMoneyPaiSong(userId, memberInfo.getUserName(), EnumMoney.wongive, now, total,
-                        memberMoney.getMoneydes(), markorder);
+                        memberMoney.getMoneydes(), memberMoney.getMoneydes() + ",操作人:" + admin_name, markorder);
                 //打码
                 if (money.compareTo(BigDecimal.ZERO) > 0) {
                     MemberBcode codeFlow = new MemberBcode();

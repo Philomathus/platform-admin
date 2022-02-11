@@ -2,7 +2,11 @@ package com.qiqilm.server.admin.controller;
 
 import java.util.List;
 
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.service.ISysUserService;
+import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +23,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.domain.MemberMoney;
 import com.qiqilm.server.admin.service.IMemberMoneyService;
-import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +40,10 @@ public class MemberMoneyController extends BaseController {
 	private IMemberMoneyService memberMoneyService;
 	@Autowired
 	private MemberInfoMapper memberInfoMapper;
+	@Autowired
+	private TokenService tokenService;
+	@Autowired
+	private ISysUserService sysUserService;
 
 	/**
 	 * 查询派送彩金暂存表列表
@@ -80,6 +87,11 @@ public class MemberMoneyController extends BaseController {
 		return AjaxResult.success( memberMoneyService.selectMemberMoneyById(memberId) );
 	}
 
+	public static void main(String[] args) {
+		String startFirstTime = DateFormatUtils.formate(DateFormatUtils.getTodayMorning());
+		System.out.println(startFirstTime);
+	}
+
 	/**
 	 * 开始派送彩金
 	 */
@@ -87,6 +99,24 @@ public class MemberMoneyController extends BaseController {
 	@Log( title = "开始派送彩金", businessType = BusinessType.INSERT )
 	@PostMapping("/starSend")
 	public AjaxResult starSend( @RequestBody MemberMoney memberMoney) throws Exception{
+		if (memberMoney.getGoogleAuthCode() == null) {
+			return AjaxResult.error("请输入google验证码");
+		}
+		LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+		String googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
+
+		if (!org.springframework.util.StringUtils.hasText(googleAuthSecret)) {
+			return AjaxResult.error("未绑定google验证秘钥，无法审核");
+		}
+		if (googleAuthSecret.length() == 32) {
+			return AjaxResult.error("google验证秘钥未加密，请重新登录");
+		}
+		String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr("secretkey" +
+				"/googleAuthPrivateKey"));
+
+		if (!GoogleAuthUtil.verifyCode(googleAuthKey, memberMoney.getGoogleAuthCode())) {
+			return AjaxResult.error("google验证码不正确，请检查");
+		}
 		return memberMoneyService.starSend(memberMoney);
 	}
 
