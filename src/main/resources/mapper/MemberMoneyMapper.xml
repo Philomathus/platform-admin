@@ -5,10 +5,11 @@
     <resultMap type="MemberMoney" id="MemberMoneyResult">
         <result property="memberId"    column="member_id"    />
         <result property="money"    column="money"    />
+        <result property="beat"    column="beat"    />
     </resultMap>
 
     <sql id="selectMemberMoneyVo">
-        select member_id, money from member_money
+        select member_id, money, beat from member_money
     </sql>
 
     <select id="selectMemberMoneyList" parameterType="MemberMoney" resultMap="MemberMoneyResult">
@@ -16,6 +17,7 @@
         <where>
             <if test="memberId != null and memberId != ''"> and member_id = #{memberId}</if>
             <if test="money != null "> and money = #{money}</if>
+            <if test="beat != null "> and beat = #{beat}</if>
         </where>
     </select>
 
@@ -29,10 +31,12 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="memberId != null">member_id,</if>
             <if test="money != null">money,</if>
+            <if test="beat != null">beat,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="memberId != null">#{memberId},</if>
-                    <if test="money != null">#{money},</if>
+                <if test="money != null">#{money},</if>
+                <if test="beat != null">#{beat},</if>
              </trim>
     </insert>
 
@@ -40,7 +44,7 @@
         update member_money
         <trim prefix="SET" suffixOverrides=",">
             <if test="money != null">money = #{money},</if>
-    
+            <if test="beat != null">beat = #{beat},</if>
         </trim>
         where member_id = #{memberId}
     </update>

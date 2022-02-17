@@ -251,19 +251,22 @@ public class MemberInfoController extends BaseController {
                 row = sheet.getRow(i);
                 String cell1 = null;
                 String cell2 = null;
-                for (int j = 0; j < 2; j++) {
+                String cell3 = null;
+                for (int j = 0; j < 3; j++) {
                     cell = row.getCell(j);
                     if (cell != null ) {
                         cell.setCellType(CellType.STRING);
                         String data = cell.getStringCellValue();
                         if(j==0) {
                             cell1 = data.trim();
-                        } else {
+                        } else if(j==1){
                             cell2 = data.trim();
+                        } else {
+                            cell3 = data.trim();
                         }
                     }
                 }
-                userId = userId.append("\"").append(cell1).append("\"").append(",").append(cell2).append("),(");
+                userId = userId.append("\"").append(cell1).append("\"").append(",").append(cell2).append(",").append(cell3).append("),(");
             }
         } catch (Exception e) {
             e.getMessage();

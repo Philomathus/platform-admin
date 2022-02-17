@@ -90,7 +90,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 	 */
 	@Override
 	public List<MemberInfo> selectMemberInfoList( MemberInfo memberInfo ) {
-		if ( StringUtils.hasText( memberInfo.getSearchValue() ) || StringUtils.hasText( memberInfo.getLoginIp() ) || StringUtils.hasText( memberInfo.getPhone() ) ) {
+		if ( StringUtils.hasText( memberInfo.getSearchValue() ) || StringUtils.hasText( memberInfo.getLoginIp() ) || StringUtils.hasText( memberInfo.getPhone() ) || StringUtils.hasText( memberInfo.getNickName() )) {
 			memberInfo.setParams( null );
 		}
 		List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList( memberInfo );
