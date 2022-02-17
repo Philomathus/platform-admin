@@ -102,12 +102,14 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
         if(list.size() > 0) {
             for (MemberMoney li : list) {
                 String userId = li.getMemberId();
+
                 MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(userId);
                 if (memberInfo == null) {
                     redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
                     throw new BusinessException("会员id不存在:" + userId);
                 }
                 BigDecimal money = li.getMoney();
+                BigDecimal beat = li.getBeat();
                 //资金日志
                 String markorder = "CJ" + today + userId + money.setScale(0, BigDecimal.ROUND_HALF_UP) + memberMoney.getMoneydes();
                 ;
@@ -130,7 +132,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                 if (money.compareTo(BigDecimal.ZERO) > 0) {
                     MemberBcode codeFlow = new MemberBcode();
                     codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
-                    codeFlow.setIncome(money);
+                    codeFlow.setIncome(money.multiply(beat).setScale(2));
                     codeFlow.setCreateTime(new Date());
                     codeFlow.setStatus(0);
                     codeFlow.setCur(BigDecimal.ZERO);

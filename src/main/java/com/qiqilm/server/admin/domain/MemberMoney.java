@@ -25,6 +25,10 @@ public class MemberMoney extends BaseEntity {
     @Excel(name = "派送金额")
     private BigDecimal money;
 
+    /** 打码倍数 */
+    @Excel(name = "打码倍数")
+    private BigDecimal beat;
+
     private String moneydes;
     private Integer googleAuthCode;
 

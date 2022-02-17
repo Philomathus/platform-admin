@@ -791,7 +791,7 @@
 	</delete>
 
 	<insert id="insertPaiSong" parameterType="String">
-		insert into member_money(member_id,money)
+		insert into member_money(member_id,money,beat)
 		values
 		(${userIds})
 	</insert>
