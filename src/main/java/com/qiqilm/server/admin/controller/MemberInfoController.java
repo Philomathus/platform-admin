@@ -266,6 +266,9 @@ public class MemberInfoController extends BaseController {
                         }
                     }
                 }
+                if(cell3 == null){
+                    cell3 = "1";
+                }
                 userId = userId.append("\"").append(cell1).append("\"").append(",").append(cell2).append(",").append(cell3).append("),(");
             }
         } catch (Exception e) {
