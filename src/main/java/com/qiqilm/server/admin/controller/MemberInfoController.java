@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.MemberMoney;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.vo.*;
@@ -18,6 +19,7 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.MemberMoneyMapper;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
@@ -66,6 +68,8 @@ public class MemberInfoController extends BaseController {
     private ISysUserService userService;
     @Autowired
     private ImApi imApi;
+    @Autowired
+    private MemberMoneyMapper memberMoneyMapper;
     /**
      * 查询用户信息列表
      */
@@ -279,6 +283,11 @@ public class MemberInfoController extends BaseController {
             //清除表中数据
         memberInfoMapper.clear();
         memberInfoMapper.insertPaiSong(userIds);
+        MemberMoney memberMoney1 = new MemberMoney();
+        List<MemberMoney> list = memberMoneyMapper.selectMemberMoneyList(memberMoney1);
+        if(list == null || list.size() == 0){
+            return AjaxResult.error("会员id不允许有重复的");
+        }
         return AjaxResult.success();
     }
 
