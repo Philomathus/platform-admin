@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMessageOnSiteVo">
-        select id, title, content, receiver_type, receiver, action, pubDateTime from message_on_site
+        select id, title, content, receiver_type, receiver, action, pubDateTime, to_user_id from message_on_site
     </sql>
 
     <select id="selectMessageOnSiteList" parameterType="MessageOnSite" resultMap="MessageOnSiteResult">
@@ -33,7 +33,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
                 and date_format(pubDateTime,'%y%m%d') <![CDATA[ <= ]]> date_format(#{params.endTime},'%y%m%d')
             </if>
-            and to_user_id is null
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
