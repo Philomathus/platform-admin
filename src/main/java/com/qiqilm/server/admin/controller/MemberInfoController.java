@@ -261,18 +261,15 @@ public class MemberInfoController extends BaseController {
                         String data = cell.getStringCellValue();
                         if(j==0) {
                             cell1 = data.trim();
-                            if(StringUtils.isBlank(cell1)){
-                                break;
-                            }
                         } else if(j==1){
                             cell2 = data.trim();
-                            if(StringUtils.isBlank(cell2)){
-                                break;
-                            }
                         } else {
                             cell3 = data.trim();
                         }
                     }
+                }
+                if(StringUtils.isBlank(cell1) || StringUtils.isBlank(cell2)){
+                    break;
                 }
                 if(StringUtils.isBlank(cell3)){
                     cell3 = "1";
