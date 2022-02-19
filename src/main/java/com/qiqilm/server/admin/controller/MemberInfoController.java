@@ -16,6 +16,7 @@ import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.vo.*;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.IMemberInfoService;
@@ -26,6 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
+import org.bouncycastle.jce.exception.ExtIOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -227,11 +229,7 @@ public class MemberInfoController extends BaseController {
 
     @RequestMapping(value = "/batchInsertShops", method = RequestMethod.POST)
     @Transactional( rollbackFor = Exception.class )
-    public AjaxResult batchInsert(@RequestParam("excelFile") MultipartFile excelFile) throws IOException {
-        String name = excelFile.getOriginalFilename();
-        if (name.length() < 6 || !name.substring(name.length() - 5).equals(".xlsx")) {
-            return AjaxResult.error("文件格式错误");
-        }
+    public AjaxResult batchInsert(@RequestParam("excelFile") MultipartFile excelFile) throws Exception {
         Workbook workbook = null;
         StringBuilder userId  = new StringBuilder();
         try {
