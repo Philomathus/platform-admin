@@ -256,19 +256,25 @@ public class MemberInfoController extends BaseController {
                 String cell3 = null;
                 for (int j = 0; j < 3; j++) {
                     cell = row.getCell(j);
-                    if (cell != null ) {
+                    if (cell != null) {
                         cell.setCellType(CellType.STRING);
                         String data = cell.getStringCellValue();
                         if(j==0) {
                             cell1 = data.trim();
+                            if(StringUtils.isBlank(cell1)){
+                                break;
+                            }
                         } else if(j==1){
                             cell2 = data.trim();
+                            if(StringUtils.isBlank(cell2)){
+                                break;
+                            }
                         } else {
                             cell3 = data.trim();
                         }
                     }
                 }
-                if(cell3 == null){
+                if(StringUtils.isBlank(cell3)){
                     cell3 = "1";
                 }
                 userId = userId.append("\"").append(cell1).append("\"").append(",").append(cell2).append(",").append(cell3).append("),(");
@@ -281,11 +287,6 @@ public class MemberInfoController extends BaseController {
             //清除表中数据
         memberInfoMapper.clear();
         memberInfoMapper.insertPaiSong(userIds);
-        MemberMoney memberMoney1 = new MemberMoney();
-        List<MemberMoney> list = memberMoneyMapper.selectMemberMoneyList(memberMoney1);
-        if(list == null || list.size() == 0){
-            return AjaxResult.error("会员id不允许有重复的");
-        }
         return AjaxResult.success();
     }
 
