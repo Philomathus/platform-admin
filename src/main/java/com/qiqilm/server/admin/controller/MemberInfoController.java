@@ -281,11 +281,6 @@ public class MemberInfoController extends BaseController {
             //清除表中数据
         memberInfoMapper.clear();
         memberInfoMapper.insertPaiSong(userIds);
-        MemberMoney memberMoney1 = new MemberMoney();
-        List<MemberMoney> list = memberMoneyMapper.selectMemberMoneyList(memberMoney1);
-        if(list == null || list.size() == 0){
-            return AjaxResult.error("会员id不允许有重复的");
-        }
         return AjaxResult.success();
     }
 
