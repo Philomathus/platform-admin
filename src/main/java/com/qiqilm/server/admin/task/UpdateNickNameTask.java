@@ -102,6 +102,8 @@ public class UpdateNickNameTask {
                 String key = scanMap.get(memberInfo.getId());
                 stringRedisTemplate.opsForHash().put(key, "nickName", memberInfo.getNickName());
             }
+
+            log.warn(memberInfos.size());
         }
         log.warn("缓存更新结束");
     }
