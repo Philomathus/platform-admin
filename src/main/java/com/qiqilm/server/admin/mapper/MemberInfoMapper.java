@@ -120,5 +120,5 @@ public interface MemberInfoMapper {
     Integer clear();
     Integer insertPaiSong(@Param("userIds") String userIds);
 
-    List<MemberInfo> selectNikeNameById(List<String> memberIds);
+    List<MemberInfo> selectNikeNameById( @Param( "array" ) List<String> memberIds );
 }
