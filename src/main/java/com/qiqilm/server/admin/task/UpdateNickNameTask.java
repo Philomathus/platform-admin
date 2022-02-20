@@ -71,9 +71,10 @@ public class UpdateNickNameTask {
                     Object userId = multiGet.get(1);
 
                     if (nickName == null || userId == null) {
-                        log.warn(scanResult + " === " + JsonUtil.object2Json(multiGet));
                         if( stringRedisTemplate.opsForHash().size(scanResult) == 1 ){
                             stringRedisTemplate.unlink(scanResult);
+                        } else {
+                            log.warn(scanResult + " === " + JsonUtil.object2Json(multiGet));
                         }
                         continue;
                     }
