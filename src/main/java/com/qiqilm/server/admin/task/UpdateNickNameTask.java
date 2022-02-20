@@ -72,6 +72,9 @@ public class UpdateNickNameTask {
 
                     if (nickName == null || userId == null) {
                         log.warn(scanResult + " === " + JsonUtil.object2Json(multiGet));
+                        if( stringRedisTemplate.opsForHash().size(scanResult) == 1 ){
+                            stringRedisTemplate.unlink(scanResult);
+                        }
                         continue;
                     }
 
