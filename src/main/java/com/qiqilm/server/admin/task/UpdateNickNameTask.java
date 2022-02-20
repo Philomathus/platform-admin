@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.task;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.PageUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
@@ -38,6 +39,10 @@ public class UpdateNickNameTask {
     @Value("${spring.profiles.active}")
     private String profile;
 
+    public static void main(String[] args) {
+        System.out.println(StringUtils.indexOfAny("花儿Zzjzs", "花儿", "奶昔", "初见", "密爱"));
+    }
+
     @Async
     public void updateNickNameCache() throws Exception {
 
@@ -66,7 +71,12 @@ public class UpdateNickNameTask {
                     Object nikeName = resultMap.get("nikeName");
                     Object userId = resultMap.get("userId");
 
-                    log.warn("userId:{},nikeName:{}", userId.toString(), nikeName.toString() );
+                    if (nikeName == null || userId == null) {
+                        log.warn(scanResult + " === " + JsonUtil.object2Json(resultMap));
+                        continue;
+                    }
+
+                    log.warn("userId:{},nikeName:{}", userId.toString(), nikeName.toString());
 
                     if (StringUtils.indexOfAny(nikeName.toString(), "花儿", "奶昔", "初见", "密爱") >= 0) {
                         resultMaps.put(userId.toString(), scanResult);
@@ -92,14 +102,10 @@ public class UpdateNickNameTask {
             List<MemberInfo> memberInfos = memberInfoMapper.selectNikeNameById(subList);
             for (MemberInfo memberInfo : memberInfos) {
                 String key = scanMap.get(memberInfo.getId());
-                log.warn("key:{},nikeName:{}", key, memberInfo.getNickName() );
+                log.warn("key:{},nikeName:{}", key, memberInfo.getNickName());
                 stringRedisTemplate.opsForHash().put(key, "nikeName", memberInfo.getNickName());
             }
         }
         log.warn("缓存更新结束");
-    }
-
-    public static void main(String[] args) {
-        System.out.println(StringUtils.indexOfAny("花儿Zzjzs", "花儿", "奶昔", "初见", "密爱"));
     }
 }
