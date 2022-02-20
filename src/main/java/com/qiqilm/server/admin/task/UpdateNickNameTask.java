@@ -20,6 +20,7 @@ import redis.clients.jedis.ScanResult;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.commands.MultiKeyCommands;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,17 +63,16 @@ public class UpdateNickNameTask {
 
             ScanParams scanParams = new ScanParams();
             scanParams.match("CX:platform:token-user:*");
-            scanParams.count(500);
+            scanParams.count(1000);
             ScanResult<String> scan = multiKeyCommands.scan("0", scanParams);
             while (null != scan.getCursor()) {
-                log.warn("扫描到了{}", scan.getResult().size());
                 for (String scanResult : scan.getResult()) {
-                    Map<Object, Object> resultMap = stringRedisTemplate.opsForHash().entries(scanResult);
-                    Object nickName = resultMap.get("nickName");
-                    Object userId = resultMap.get("userId");
+                    List<Object> multiGet = stringRedisTemplate.opsForHash().multiGet(scanResult, Arrays.asList("nickName", "userId"));
+                    Object nickName = multiGet.get(0);
+                    Object userId = multiGet.get(1);
 
                     if (nickName == null || userId == null) {
-                        log.warn(scanResult + " === " + JsonUtil.object2Json(resultMap));
+                        log.warn(scanResult + " === " + JsonUtil.object2Json(multiGet));
                         continue;
                     }
 
@@ -94,7 +94,7 @@ public class UpdateNickNameTask {
         log.warn("共扫描数量：{}", scanMapList.size());
 
         int pagesize = 200;
-        int totalpage = scanMapList.size() % pagesize;
+        int totalpage = (scanMapList.size() - 1) / pagesize + 1;
         for (int i = 0; i < totalpage; i++) {
             List<String> subList = PageUtil.pageBySubList(scanMapList, pagesize, i);
             List<MemberInfo> memberInfos = memberInfoMapper.selectNikeNameById(subList);
