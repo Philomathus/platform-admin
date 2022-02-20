@@ -4,7 +4,6 @@ import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.PageUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
@@ -40,8 +39,8 @@ public class UpdateNickNameTask {
     @Value("${spring.profiles.active}")
     private String profile;
 
-    public static void main(String[] args) {
-        System.out.println(StringUtils.indexOfAny("花儿Zzjzs", "花儿", "奶昔", "初见", "密爱"));
+    private static <T> List<T> pageSubList(List<T> list, int pagesize, int currentPage) {
+        return list.stream().skip((long) pagesize * (currentPage - 1)).limit(pagesize).collect(Collectors.toList());
     }
 
     @Async
@@ -95,8 +94,8 @@ public class UpdateNickNameTask {
 
         int pagesize = 200;
         int totalpage = (scanMapList.size() - 1) / pagesize + 1;
-        for (int i = 0; i < totalpage; i++) {
-            List<String> subList = PageUtil.pageBySubList(scanMapList, pagesize, i);
+        for (int i = 1; i <= totalpage; i++) {
+            List<String> subList = pageSubList(scanMapList, pagesize, i);
             List<MemberInfo> memberInfos = memberInfoMapper.selectNikeNameById(subList);
             for (MemberInfo memberInfo : memberInfos) {
                 String key = scanMap.get(memberInfo.getId());
