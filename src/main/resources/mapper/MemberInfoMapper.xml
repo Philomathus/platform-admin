@@ -795,4 +795,8 @@
 		values
 		(${userIds})
 	</insert>
+
+	<select id="selectNikeNameById" resultType="MemberInfoResult">
+		select nike_name, id from member_info where id in (${memberIds})
+    </select>
 </mapper>

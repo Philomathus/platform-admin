@@ -8,10 +8,10 @@ public class PageUtil implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static List<?> pageBySubList( List<?> list, int pagesize, int currentPage ) {
+	public static <T> List<T> pageBySubList( List<T> list, int pagesize, int currentPage ) {
 		int     totalcount = list.size();
 		int     pagecount  = 0;
-		List<?> subList    = new ArrayList<>();
+		List<T> subList    = new ArrayList<>();
 		int     m          = totalcount % pagesize;
 		if ( m > 0 ) {
 			pagecount = totalcount / pagesize + 1;
