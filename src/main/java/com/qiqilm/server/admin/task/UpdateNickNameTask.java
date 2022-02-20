@@ -75,7 +75,7 @@ public class UpdateNickNameTask {
                         continue;
                     }
 
-                    if (StringUtils.indexOfAny(nickName.toString(), "花儿", "奶昔", "初见", "密爱") >= 0) {
+                    if (StringUtils.indexOfAny(nickName.toString(), "花儿", "奶昔", "初见", "蜜爱") >= 0) {
                         resultMaps.put(userId.toString(), scanResult);
                     }
                 }
