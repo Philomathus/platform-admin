@@ -100,7 +100,7 @@ public class UpdateNickNameTask {
             List<MemberInfo> memberInfos = memberInfoMapper.selectNikeNameById(subList);
             for (MemberInfo memberInfo : memberInfos) {
                 String key = scanMap.get(memberInfo.getId());
-                stringRedisTemplate.opsForHash().put(key, "nikeName", memberInfo.getNickName());
+                stringRedisTemplate.opsForHash().put(key, "nickName", memberInfo.getNickName());
             }
         }
         log.warn("缓存更新结束");
