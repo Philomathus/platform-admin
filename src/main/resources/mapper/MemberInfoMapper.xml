@@ -797,7 +797,7 @@
 	</insert>
 
 	<select id="selectNikeNameById" resultMap="MemberInfoResult">
-		select nike_name, id from member_info where id in
+		select nick_name, id from member_info where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>
