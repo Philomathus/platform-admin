@@ -796,7 +796,7 @@
 		(${userIds})
 	</insert>
 
-	<select id="selectNikeNameById" resultType="MemberInfoResult">
+	<select id="selectNikeNameById" resultMap="MemberInfoResult">
 		select nike_name, id from member_info where id in (${memberIds})
     </select>
 </mapper>
