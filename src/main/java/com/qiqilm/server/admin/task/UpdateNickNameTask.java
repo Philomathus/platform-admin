@@ -60,11 +60,15 @@ public class UpdateNickNameTask {
             scanParams.count(500);
             ScanResult<String> scan = multiKeyCommands.scan("0", scanParams);
             while (null != scan.getCursor()) {
+                log.warn("扫描到了{}", scan.getResult().size());
                 for (String scanResult : scan.getResult()) {
                     Map<Object, Object> resultMap = stringRedisTemplate.opsForHash().entries(scanResult);
                     Object nikeName = resultMap.get("nikeName");
                     Object userId = resultMap.get("userId");
-                    if (nikeName != null && StringUtils.indexOfAny(nikeName.toString(), "花儿", "奶昔", "初见", "密爱") >= 0) {
+
+                    log.warn("userId:{},nikeName:{}", userId.toString(), nikeName.toString() );
+
+                    if (StringUtils.indexOfAny(nikeName.toString(), "花儿", "奶昔", "初见", "密爱") >= 0) {
                         resultMaps.put(userId.toString(), scanResult);
                     }
                 }
@@ -93,5 +97,9 @@ public class UpdateNickNameTask {
             }
         }
         log.warn("缓存更新结束");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(StringUtils.indexOfAny("花儿Zzjzs", "花儿", "奶昔", "初见", "密爱"));
     }
 }
