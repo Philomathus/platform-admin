@@ -68,17 +68,15 @@ public class UpdateNickNameTask {
                 log.warn("扫描到了{}", scan.getResult().size());
                 for (String scanResult : scan.getResult()) {
                     Map<Object, Object> resultMap = stringRedisTemplate.opsForHash().entries(scanResult);
-                    Object nikeName = resultMap.get("nikeName");
+                    Object nickName = resultMap.get("nickName");
                     Object userId = resultMap.get("userId");
 
-                    if (nikeName == null || userId == null) {
+                    if (nickName == null || userId == null) {
                         log.warn(scanResult + " === " + JsonUtil.object2Json(resultMap));
                         continue;
                     }
 
-                    log.warn("userId:{},nikeName:{}", userId.toString(), nikeName.toString());
-
-                    if (StringUtils.indexOfAny(nikeName.toString(), "花儿", "奶昔", "初见", "密爱") >= 0) {
+                    if (StringUtils.indexOfAny(nickName.toString(), "花儿", "奶昔", "初见", "密爱") >= 0) {
                         resultMaps.put(userId.toString(), scanResult);
                     }
                 }
@@ -102,7 +100,6 @@ public class UpdateNickNameTask {
             List<MemberInfo> memberInfos = memberInfoMapper.selectNikeNameById(subList);
             for (MemberInfo memberInfo : memberInfos) {
                 String key = scanMap.get(memberInfo.getId());
-                log.warn("key:{},nikeName:{}", key, memberInfo.getNickName());
                 stringRedisTemplate.opsForHash().put(key, "nikeName", memberInfo.getNickName());
             }
         }
