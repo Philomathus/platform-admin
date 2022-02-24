@@ -67,3 +67,5 @@ payAgentLimitHuiYuanPay: 30000
 payAgentLimitShanDePay: 30000
 # 新汇代付额度
 payAgentXinHuiPay: 50000
+# GoPay代付额度
+payAgentLimitGoPayPay: 100000
