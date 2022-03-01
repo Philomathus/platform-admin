@@ -83,6 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertLiveUser" parameterType="LiveUser" useGeneratedKeys="true" keyProperty="id">
         insert into ${dbLive}.live_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">id,</if>
             <if test="nickName != null and nickName != ''">nick_name,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createTime != null">create_time,</if>
@@ -112,6 +113,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="familyChieftain != null">family_chieftain,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">#{id},</if>
             <if test="nickName != null and nickName != ''">#{nickName},</if>
 			<if test="updateTime != null">UNIX_TIMESTAMP(#{updateTime}),</if>
             <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
