@@ -52,4 +52,5 @@ public interface LogMoneyMapper {
 
 	int updateByIdSelective(@Param("req") LogMoney reqLogMoney, @Param( "dbNodes" ) String dbNodes);
 
+    int findExistActivityCashBack(@Param( "userId" ) String memberId, @Param( "dbNodes" ) String dbNodes);
 }

@@ -265,4 +265,9 @@
 		</set>
 		where id = #{req.id}
 	</update>
+
+	<select id="findExistActivityCashBack" resultType="int">
+		select count(0) from log_money${dbNodes} where type = 5 and user_id = #{userId} and mark = '充值返现活动'
+		and date_format(create_time,'%y%m%d') =  DATE_ADD(CURDATE(), INTERVAL -0 DAY)
+    </select>
 </mapper>
