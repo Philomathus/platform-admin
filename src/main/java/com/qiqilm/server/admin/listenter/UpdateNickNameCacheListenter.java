@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Log4j2
-@Component
+//@Component
 public class UpdateNickNameCacheListenter implements ApplicationListener<ApplicationReadyEvent> {
     @Autowired
     private UpdateNickNameTask updateNickNameTask;
