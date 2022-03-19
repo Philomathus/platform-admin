@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.utils;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.util.Base64Utils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -312,39 +313,28 @@ public class RSACoder {
         return encryptedData;
     }
 
-    /**
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-        //初始化密钥
-        //生成密钥对
-        Map<String, Object> keyMap = RSACoder.initKey();
-        String merchant_public_key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUujRem7Hy9ll3ue3" +
-                "+OgCQa3NPeX897rYbYKNKMXjS7bif1M+1OKSoD5HsBADkXWST78ok1RV8f/OtNrEFXxKhcr8uPs2RpheKgjPrBIFxTn54oUmAxARXem1k5KO" +
-                "+uo" +
-                "+cQtpRJsk+YMDssHdy6MSFHHdtlGaJPKy9k+3ApjxWAQIDAQAB";
-        //公钥
-        //byte[] publicKey=RSACoder.getPublicKey(keyMap);
-        byte[] publicKey = Base64.decodeBase64(merchant_public_key);
-        //私钥
-        //byte[] privateKey=RSACoder.getPrivateKey(keyMap);
-        String merchant_private_key = "MIICdgIBAdANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANX5GMeHwd" +
-                "+ZrpZQ9aKKaD2rrXDXVlh53fOcu5prqQ+ZZ6BzB+0nrARU+Y8pmZdsUxMZ1mYLcDTRbRXh8idkjFUhIfrFrwUKBpu" +
-                "/G5HLZ2k4w03BS1pYz9CYKwyKrQ0cTfVot0k61EQZ8WlYNyaGD96pGUwwDNIgaUspSVutSKnvAgMBAAECgYAuMgJEia20nZRQxZfSiLkqn1bppsPwhBcEElF6bEXqpT73J/6NF+SOZt4eJ2gOhgeFdy2PiGaoMJKxh79k+9ND5LHnkASjOtp5Cqa3/CSHCQxEaFNOabYBZUpm4XqomxeJn5lMv/a9qNNY28Gx3g0dRRpRn0g+c7OPEicqOHjyyQJBAPERjAHN2ZIIRhzHgRhIBEm07M0w6wo+tDn6LEluQbCrU2sV02VblP88RfkIToxafjByAfX+cQlnN8zq2u56DNMCQQDjOeplpZWmByEyqWrOXJUD1vghEeZJguM+FEkknLbxikQ2IxLE46OyBT4FabB7kDnNZCIV1grAFqIxgJDITYz1AkANaUp+tzMJeshbxYWbEjaa2yPpbnVFBqQELbTVCPtCluV3KamvE99AK9xAtIOaL1ah31XYl6U2PrXOAqrXZZbdAkEAoBeH/AHEA+v2CdmvdKFqJABrZfFUjOp47J4iQndftaIzGOlxKeMwzBZBclLaktQ0xW8NTNE3Vcscj0ADwfxRmQJAImSU9H4TGrDFcdGpmd6M+4+SsyUBf35keX/DWZkBqlc9o4lDraC1WSfshEvM6GOzkyd2hJc38OrPqllprI7OeQ==";
-        byte[] privateKey = Base64.decodeBase64(merchant_private_key);
-        System.out.println("公钥：/n" + Base64.encodeBase64String(publicKey));
-        System.out.println("私钥：/n" + Base64.encodeBase64String(privateKey));
+    public static String decryptMD5withRSA(String data, String privateKey) throws Exception {
+        byte[] keyBytes = Base64Utils.decode(privateKey.getBytes());
+        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new
+                PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        PrivateKey priKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
+        Signature signature = Signature.getInstance("MD5withRSA");
+        signature.initSign(priKey);
+        signature.update(data.getBytes(StandardCharsets.UTF_8));
+        return new String(Base64Utils.encode(signature.sign()));
+    }
 
-        System.out.println("================密钥对构造完毕，开始进行加密数据的传输=============");
-        String str = "RSA数字签名算法";
-        System.out.println("原文:" + str);
-        //甲方进行数据的加密
-        byte[] sign = RSACoder.sign(str.getBytes(), privateKey);
-        System.out.println("产生签名：" + Base64.encodeBase64String(sign));
-        //验证签名
-        boolean status = RSACoder.verify(str.getBytes(), publicKey, sign);
-        System.out.println("状态：" + status + "/n/n");
-
-
+    public static boolean verifyMD5withRSA(String data, String publicKey, String sign) throws Exception {
+        byte[] keyBytes = Base64Utils.decode(publicKey.getBytes());
+        X509EncodedKeySpec x509EncodedKeySpec = new
+                X509EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        PublicKey publicKey2 =
+                keyFactory.generatePublic(x509EncodedKeySpec);
+        Signature signature = Signature.getInstance("MD5withRSA");
+        signature.initVerify(publicKey2);
+        signature.update(data.getBytes(StandardCharsets.UTF_8));
+        return signature.verify(Base64Utils.decodeFromString(sign));
     }
 }
