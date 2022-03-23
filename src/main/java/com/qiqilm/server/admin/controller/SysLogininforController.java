@@ -42,18 +42,18 @@ public class SysLogininforController extends BaseController {
 		ExportExcelUtil.exportExcel( list, "登录日志", "登录日志表", SysLogininfor.class, response );
 	}
 
-	@PreAuthorize( "@ss.hasPermi('monitor:logininfor:remove')" )
-	@Log( title = "登录日志", businessType = BusinessType.DELETE )
-	@DeleteMapping( "/{infoIds}" )
-	public AjaxResult remove( @PathVariable Long[] infoIds ) {
-		return toAjax( logininforService.deleteLogininforByIds( infoIds ) );
-	}
-
-	@PreAuthorize( "@ss.hasPermi('monitor:logininfor:remove')" )
-	@Log( title = "登录日志", businessType = BusinessType.CLEAN )
-	@DeleteMapping( "/clean" )
-	public AjaxResult clean() {
-		logininforService.cleanLogininfor();
-		return AjaxResult.success();
-	}
+//	@PreAuthorize( "@ss.hasPermi('monitor:logininfor:remove')" )
+//	@Log( title = "登录日志", businessType = BusinessType.DELETE )
+//	@DeleteMapping( "/{infoIds}" )
+//	public AjaxResult remove( @PathVariable Long[] infoIds ) {
+//		return toAjax( logininforService.deleteLogininforByIds( infoIds ) );
+//	}
+//
+//	@PreAuthorize( "@ss.hasPermi('monitor:logininfor:remove')" )
+//	@Log( title = "登录日志", businessType = BusinessType.CLEAN )
+//	@DeleteMapping( "/clean" )
+//	public AjaxResult clean() {
+//		logininforService.cleanLogininfor();
+//		return AjaxResult.success();
+//	}
 }

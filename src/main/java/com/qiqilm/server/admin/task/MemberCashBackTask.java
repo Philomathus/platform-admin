@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.domain.MemberRechargeLog;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.ActivityCashBackMapper;
+import com.qiqilm.server.admin.mapper.LogMoneyMapper;
 import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILogService;
@@ -16,6 +17,7 @@ import com.qiqilm.server.admin.utils.UuidUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -33,6 +35,8 @@ public class MemberCashBackTask {
 	private MemberBcodeMapper memberBcodeMapper;
 	@Resource
 	private MemberInfoMapper memberInfoMapper;
+	@Resource
+	private LogMoneyMapper logMoneyMapper;
 	@Resource
 	private SysConfigCacheUtil sysConfigCacheUtil;
 	@Resource
@@ -56,6 +60,11 @@ public class MemberCashBackTask {
 			//要返现金额
 			Integer bycash = activityCashBackMapper.selectActivityCashBackBycash(memberRechargeLog.getRechargeMoney());
 			if (bycash!=null){
+				int count = logMoneyMapper.findExistActivityCashBack(memberRechargeLog.getMemberId(), memberRechargeLog.getMemberId()
+						.substring( memberRechargeLog.getMemberId().length() - 1 ));
+				if (count > 0) {
+					continue;
+				}
 				//会员返现
 				try {
 					this.updateMemberCharge(memberRechargeLog.getMemberId(),new BigDecimal(bycash),EnumMoney.activity.getDes(),memberRechargeLog.getOrderNo());
@@ -67,7 +76,8 @@ public class MemberCashBackTask {
 		log.info("充值返现活动任务执行时间:{}ms", System.currentTimeMillis() - now);
 	}
 
-	private boolean updateMemberCharge( String userId, BigDecimal money, String chargeType ,String orderNo ) {
+	@Transactional(rollbackFor = Exception.class)
+	public boolean updateMemberCharge( String userId, BigDecimal money, String chargeType ,String orderNo ) {
 		MemberBcode codeFlow = new MemberBcode();
 		codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
 		codeFlow.setIncome( money );//

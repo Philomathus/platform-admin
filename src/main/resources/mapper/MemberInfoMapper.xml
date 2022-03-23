@@ -795,4 +795,11 @@
 		values
 		(${userIds})
 	</insert>
+
+	<select id="selectNikeNameById" resultMap="MemberInfoResult">
+		select nick_name, id from member_info where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+    </select>
 </mapper>

@@ -256,7 +256,7 @@ public class MemberInfoController extends BaseController {
                 String cell3 = null;
                 for (int j = 0; j < 3; j++) {
                     cell = row.getCell(j);
-                    if (cell != null ) {
+                    if (cell != null) {
                         cell.setCellType(CellType.STRING);
                         String data = cell.getStringCellValue();
                         if(j==0) {
@@ -268,7 +268,10 @@ public class MemberInfoController extends BaseController {
                         }
                     }
                 }
-                if(cell3 == null){
+                if(StringUtils.isBlank(cell1) || StringUtils.isBlank(cell2)){
+                    break;
+                }
+                if(StringUtils.isBlank(cell3)){
                     cell3 = "1";
                 }
                 userId = userId.append("\"").append(cell1).append("\"").append(",").append(cell2).append(",").append(cell3).append("),(");

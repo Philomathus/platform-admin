@@ -42,18 +42,18 @@ public class SysOperlogController extends BaseController {
 		ExportExcelUtil.exportExcel( list, "操作日志", "操作日志表", SysOperLog.class, response );
 	}
 
-	@Log( title = "操作日志", businessType = BusinessType.DELETE )
-	@PreAuthorize( "@ss.hasPermi('monitor:operlog:remove')" )
-	@DeleteMapping( "/{operIds}" )
-	public AjaxResult remove( @PathVariable Long[] operIds ) {
-		return toAjax( operLogService.deleteOperLogByIds( operIds ) );
-	}
-
-	@Log( title = "操作日志", businessType = BusinessType.CLEAN )
-	@PreAuthorize( "@ss.hasPermi('monitor:operlog:remove')" )
-	@DeleteMapping( "/clean" )
-	public AjaxResult clean() {
-		operLogService.cleanOperLog();
-		return AjaxResult.success();
-	}
+//	@Log( title = "操作日志", businessType = BusinessType.DELETE )
+//	@PreAuthorize( "@ss.hasPermi('monitor:operlog:remove')" )
+//	@DeleteMapping( "/{operIds}" )
+//	public AjaxResult remove( @PathVariable Long[] operIds ) {
+//		return toAjax( operLogService.deleteOperLogByIds( operIds ) );
+//	}
+//
+//	@Log( title = "操作日志", businessType = BusinessType.CLEAN )
+//	@PreAuthorize( "@ss.hasPermi('monitor:operlog:remove')" )
+//	@DeleteMapping( "/clean" )
+//	public AjaxResult clean() {
+//		operLogService.cleanOperLog();
+//		return AjaxResult.success();
+//	}
 }

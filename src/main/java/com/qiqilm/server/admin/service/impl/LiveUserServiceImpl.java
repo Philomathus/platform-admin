@@ -156,21 +156,29 @@ public class LiveUserServiceImpl implements ILiveUserService {
 
 	@Override
 	public AjaxResult insertLiveUser( LiveUser liveUser ) {
-		//	    查询手机号是否存在
-		List<LiveUser> list = liveUserMapper.selectLiveUsersByMobile( liveUser.getMobile() );
-		if ( list.isEmpty() ) {
-			if ( ValidatorUtil.isNumber11( liveUser.getMobile() ) ) {
+		if ( ValidatorUtil.isNumber11( liveUser.getMobile() ) ){
+			//	    查询手机号是否存在
+			List<LiveUser> list = liveUserMapper.selectLiveUsersByMobile( liveUser.getMobile() );
+			if ( list.isEmpty() ) {
+				if (profile.equals( "7706" ) ||profile.equals( "7705" ) ||profile.equals( "7710" ) ){
+					Long firstId = liveUserMapper.selectFirstId();
+					if ( firstId > 0 ) {
+						firstId = 0L;
+					} else {
+						firstId += -1;
+					}
+					liveUser.setId( firstId );
+				}
 				liveUser.setCreateTime( new Date() );
 				liveUser.setUpdateTime( new Date() );
 				liveUser.setRoboter( 1 );
 				liveUserMapper.insertLiveUser( liveUser );
 				return AjaxResult.success( "添加成功" );
 			} else {
-				return AjaxResult.error( "手机号格式错误" );
+				return AjaxResult.error( "手机号已存在" );
 			}
-
 		} else {
-			return AjaxResult.error( "手机号已存在" );
+			return AjaxResult.error( "手机号格式错误" );
 		}
 	}
 
