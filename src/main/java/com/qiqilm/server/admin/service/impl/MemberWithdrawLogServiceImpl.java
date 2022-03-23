@@ -681,8 +681,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 		List<RspMemberInfo> rspMemberInfo12 = memberInfoMapper.selectMemberInfoWithdrawByIdl( id, tableLast );
 		RspMemberInfo rspMemberInfo13 = memberInfoMapper.selectMemberInfoWithdrawByIdz( id, tableLast );
 
-		log.info("查询资金明细,会员ID:"+id+"1:"+rspMemberInfo1 + "2:"+rspMemberInfo2+"3:"+rspMemberInfo3+"4:"+rspMemberInfo4+"5:"+rspMemberInfo5+"6:"+rspMemberInfo6+"7:"+rspMemberInfo7+"8:"+rspMemberInfo8
-				+"9:"+rspMemberInfo9+"10:"+rspMemberInfo10+"11:"+rspMemberInfo11+"12:"+rspMemberInfo12+"13:"+rspMemberInfo13);
+		log.info("查询资金明细,会员ID:"+id);
 
 		List<WithdrawReport> withdrawReports = new LinkedList<>();
 		WithdrawReport       withdrawReporta = new WithdrawReport();
@@ -823,7 +822,6 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 				withdrawReports.add( withdrawReportTwo );
 			}
 		}
-		log.info("会员资金明细"+withdrawReports+"会员id"+id);
 		return AjaxResult.success(withdrawReports );
 	}
 
