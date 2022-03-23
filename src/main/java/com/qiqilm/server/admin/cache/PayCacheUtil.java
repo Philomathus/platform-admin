@@ -140,7 +140,7 @@ public class PayCacheUtil {
 	}
 
 	public boolean setPayChannelSuccessRateLock(Long id) {
-		return redisUtil.strSetIfAbsent( CHANNELSUCCESSRATE_LOCK + id, "0", Duration.ofMinutes( 10 ));
+		return redisUtil.strSetIfAbsent( CHANNELSUCCESSRATE_LOCK + id, "0", Duration.ofMinutes( 3 ));
 	}
 
 	public boolean delPayChannelSuccessRateLock(Long id) {
@@ -148,7 +148,7 @@ public class PayCacheUtil {
 	}
 
     public void setPayChannelSuccessRate(Long id,String successRate) {
-		redisUtil.strSet( CHANNELSUCCESSRATE + id, successRate, Duration.ofMinutes( 10 ));
+		redisUtil.strSet( CHANNELSUCCESSRATE + id, successRate, Duration.ofMinutes( 3 ));
     }
 
 	public String getPayChannelSuccessRate(Long id) {
