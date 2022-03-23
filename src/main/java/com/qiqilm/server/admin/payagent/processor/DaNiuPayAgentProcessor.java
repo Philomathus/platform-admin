@@ -58,6 +58,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
+        log.warn(tempStr);
         String sign = RSACoder.decryptMD5withRSA(tempStr, payAgentPlatform.getSignPrivateKey());
         dataMap.put("Sign", sign);
         dataMap.put("BackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DANIU);
