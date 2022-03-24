@@ -1,15 +1,15 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://pc-j6c1ah19tg2g51r3u.rwlb.rds.aliyuncs.com:3306/7703_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
-      username: 77tv_web
-      password: 77tvweb_oradba
+      jdbc-url: jdbc:mysql://r-j6cu2dxo1k4ry81lzrpd.redis.rds.aliyuncs.com:3306/7703_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: ex_read_77tv
+      password: p6y%!!Db68Pw69uf
     secondary:
       jdbc-url: jdbc:mysql://pc-j6cj935598h4lz6r5.rwlb.rds.aliyuncs.com:3306/db_data?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
       username: 77tv_web
       password: 77tvweb_oradba
   redis:
-    host: r-j6cu2dxo1k4ry81lzr.redis.rds.aliyuncs.com
+    host: tv7777tv.rwlb.rds.aliyuncs.com
     port: 6379
     password: c#E80MCbasOd#f1j
 
