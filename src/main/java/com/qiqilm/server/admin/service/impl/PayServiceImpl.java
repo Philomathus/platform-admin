@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -13,12 +14,22 @@ import com.qiqilm.server.admin.service.IPayService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -50,7 +61,8 @@ public class PayServiceImpl implements IPayService {
 	private MemberCacheManager      memberCacheManager;
 	@Autowired
 	private SysConfigCacheUtil      sysConfigCacheUtil;
-
+	@Autowired
+	protected RestTemplate restTemplate;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -174,10 +186,41 @@ public class PayServiceImpl implements IPayService {
 			} catch ( Exception e ) {
 				log.error( "首充报错", e );
 			}
+			this.paySendIm(memberInfo.getId(), payJourMoney);
 		}
 		return isUpdate;
 	}
 
+	@Async
+	public void paySendIm(String userId, BigDecimal orderAmount) {
+		String pay_seccess_im_url = sysConfigCacheUtil.getConf("pay_seccess_im_url");
+		if (!StringUtils.hasText(pay_seccess_im_url)) {
+			return;
+		}
+
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", userId);
+		params.put("orderAmount", String.valueOf(orderAmount));
+
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(params, httpHeaders);
+
+		Map<String, Object> resultMap = null;
+		try {
+			resultMap = restTemplate.execute(pay_seccess_im_url, HttpMethod.POST,
+					restTemplate.httpEntityCallback(httpEntity), response -> {
+						InputStream bodyStream = response.getBody();
+						String text;
+						try (Reader reader = new InputStreamReader(bodyStream)) {
+							text = CharStreams.toString(reader);
+						}
+						return JsonUtil.json2Map(text);
+					});
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
 
 	private boolean updateMemberCharge( String userId, BigDecimal money, String chargeType ) {
 		MemberBcode codeFlow = new MemberBcode();

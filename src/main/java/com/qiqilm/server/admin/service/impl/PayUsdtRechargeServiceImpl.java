@@ -1,13 +1,19 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
@@ -20,10 +26,16 @@ import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.service.IPayUsdtRechargeService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * USDT充值提交记录Service业务层处理
@@ -38,7 +50,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     @Autowired
     private PayUsdtRechargeMapper payUsdtRechargeMapper;
     @Autowired
-    private TokenService       tokenService;
+    private TokenService tokenService;
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
@@ -50,9 +62,11 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     @Autowired
     private MemberRecommendMapper recommendMapper;
     @Autowired
-    private MemberCacheManager memberCacheManager;
-    @Autowired
     private MemberBcodeMapper memberBcodeMapper;
+    @Autowired
+    protected RestTemplate restTemplate;
+    @Autowired
+    private SysConfigCacheUtil sysConfigCacheUtil;
 
     /**
      * 查询USDT充值提交记录
@@ -74,21 +88,21 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     @Override
     public List<PayUsdtRecharge> selectPayUsdtRechargeList(ReqPayUsdtRecharge reqPayUsdtRecharge) {
         String[] selectDate = reqPayUsdtRecharge.getSelectDate();
-        if ( selectDate != null && selectDate.length > 0 ) {
-            reqPayUsdtRecharge.setSelectStartDate( selectDate[ 0 ] );
-            reqPayUsdtRecharge.setSelectEndDate( selectDate[ 1 ] );
+        if (selectDate != null && selectDate.length > 0) {
+            reqPayUsdtRecharge.setSelectStartDate(selectDate[0]);
+            reqPayUsdtRecharge.setSelectEndDate(selectDate[1]);
         }
         return payUsdtRechargeMapper.selectPayUsdtRechargeList(reqPayUsdtRecharge);
     }
 
     @Override
-    public Map listCount( ReqPayUsdtRecharge req ) {
+    public Map listCount(ReqPayUsdtRecharge req) {
         String[] selectDate = req.getSelectDate();
-        if ( selectDate != null && selectDate.length > 0 ) {
-            req.setSelectStartDate( selectDate[ 0 ] );
-            req.setSelectEndDate( selectDate[ 1 ] );
+        if (selectDate != null && selectDate.length > 0) {
+            req.setSelectStartDate(selectDate[0]);
+            req.setSelectEndDate(selectDate[1]);
         }
-        return payUsdtRechargeMapper.listCount( req );
+        return payUsdtRechargeMapper.listCount(req);
     }
 
     /**
@@ -106,17 +120,17 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     /**
      * 锁定USDT充值提交记录
      *
-     * @param  id
+     * @param id
      * @return 结果
      */
     @Override
     public int lock(Long id) {
-        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-        String    userName  = loginUser.getUser().getUserName();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
         PayUsdtRecharge payUsdtRecharge = new PayUsdtRecharge();
         payUsdtRecharge.setId(id);
         payUsdtRecharge.setOpName(userName);
-        payUsdtRecharge.setRemark("锁定人:"+userName);
+        payUsdtRecharge.setRemark("锁定人:" + userName);
         payUsdtRecharge.setStatus("0");
         return payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge);
     }
@@ -124,24 +138,24 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     /**
      * 解锁USDT充值提交记录
      *
-     * @param  id
+     * @param id
      * @return 结果
      */
     @Override
     public AjaxResult unLock(Long id) {
-        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-        String    userName  = loginUser.getUser().getUserName();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
         PayUsdtRecharge payUsdtRecharge = this.selectPayUsdtRechargeById(id);
         List<SysRole> roles = loginUser.getUser().getRoles();
         boolean contains = roles.stream().anyMatch(m -> "common".equals(m.getRoleKey()));
-        if (!contains){
-            if(StringUtils.hasText( payUsdtRecharge.getOpName() ) && !userName.equals( payUsdtRecharge.getOpName() ) ){
-                return AjaxResult.error( "该订单只能由" + payUsdtRecharge.getOpName() + "处理" );
+        if (!contains) {
+            if (StringUtils.hasText(payUsdtRecharge.getOpName()) && !userName.equals(payUsdtRecharge.getOpName())) {
+                return AjaxResult.error("该订单只能由" + payUsdtRecharge.getOpName() + "处理");
             }
         }
         payUsdtRecharge.setId(id);
         payUsdtRecharge.setOpName(userName);
-        payUsdtRecharge.setRemark("解锁人:"+userName);
+        payUsdtRecharge.setRemark("解锁人:" + userName);
         payUsdtRecharge.setStatus("1");
         return AjaxResult.success(payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge));
     }
@@ -154,8 +168,8 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
      */
     @Override
     public int refusePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge) {
-        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-        String    userName  = loginUser.getUser().getUserName();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
         payUsdtRecharge.setOpName(userName);
         payUsdtRecharge.setUpdateTime(new Date());
         payUsdtRecharge.setStatus("2");
@@ -169,19 +183,19 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
      * @return 结果
      */
     @Override
-    @Transactional( rollbackFor = Exception.class )
+    @Transactional(rollbackFor = Exception.class)
     public AjaxResult updatePayUsdtRecharge(PayUsdtRecharge payUsdtRecharge) {
-        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-        String    userName  = loginUser.getUser().getUserName();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
         PayUsdtRecharge payUsdtRecharge1 = this.selectPayUsdtRechargeById(payUsdtRecharge.getId());
-        if ( payUsdtRecharge1 == null ) {
-            return AjaxResult.error( "该充值记录不存在" );
+        if (payUsdtRecharge1 == null) {
+            return AjaxResult.error("该充值记录不存在");
         }
-        if ( !"0".equals(payUsdtRecharge1.getStatus()) ) {
-            return AjaxResult.error( "该充值记录状态有误，请刷新数据后重试" );
+        if (!"0".equals(payUsdtRecharge1.getStatus())) {
+            return AjaxResult.error("该充值记录状态有误，请刷新数据后重试");
         }
-        if ( !redisUtil.lock( EnumLock.usdt, payUsdtRecharge1.getMemberId(), "1", 5 ) ) {
-            return AjaxResult.error( "请勿重复提交" );
+        if (!redisUtil.lock(EnumLock.usdt, payUsdtRecharge1.getMemberId(), "1", 5)) {
+            return AjaxResult.error("请勿重复提交");
         }
         payUsdtRecharge1.setOpName(userName);
         payUsdtRecharge1.setUpdateTime(new Date());
@@ -189,110 +203,145 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         payUsdtRecharge1.setStatus("3");
 
         try {
-            boolean isAudit = this.updatePayUsdtRechargeLogic( payUsdtRecharge1 );
-            return isAudit ? AjaxResult.success( "审核通过成功" ) : AjaxResult.error( "审核通过失败" );
-        } catch ( Exception e ) {
-            log.error( e.getMessage(), e );
-            return AjaxResult.error( "订单审核通过有误" );
+            boolean isAudit = this.updatePayUsdtRechargeLogic(payUsdtRecharge1);
+            return isAudit ? AjaxResult.success("审核通过成功") : AjaxResult.error("审核通过失败");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return AjaxResult.error("订单审核通过有误");
         } finally {
-            redisUtil.unLock( EnumLock.usdt, payUsdtRecharge1.getMemberId() );
+            redisUtil.unLock(EnumLock.usdt, payUsdtRecharge1.getMemberId());
         }
     }
 
-    @Transactional( rollbackFor = Exception.class )
-    public boolean updatePayUsdtRechargeLogic(PayUsdtRecharge payUsdtRecharge){
-        MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( payUsdtRecharge.getMemberId() );
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updatePayUsdtRechargeLogic(PayUsdtRecharge payUsdtRecharge) {
+        MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(payUsdtRecharge.getMemberId());
 
-        BigDecimal chargeGive = payUsdtRecharge.getDiscountBill().multiply( payUsdtRecharge.getRechargeMoney() )
-                .setScale( 2, BigDecimal.ROUND_HALF_UP ); // 充值彩金
+        BigDecimal chargeGive = payUsdtRecharge.getDiscountBill().multiply(payUsdtRecharge.getRechargeMoney())
+                .setScale(2, BigDecimal.ROUND_HALF_UP); // 充值彩金
 
         //套利号无优惠
-        if(memberInfo.getStatus()==4){
+        if (memberInfo.getStatus() == 4) {
             chargeGive = BigDecimal.ZERO;
         }
 
         //优惠钱+充值金额
-        BigDecimal add = payUsdtRecharge.getRechargeMoney().add( chargeGive );
+        BigDecimal add = payUsdtRecharge.getRechargeMoney().add(chargeGive);
 
         //充值彩金日志
-        if ( chargeGive.compareTo( BigDecimal.ZERO ) > 0 ) {
-            logService.logMoneyAdd( null, memberInfo.getId(), memberInfo.getUserName(), EnumMoney.chargegive, chargeGive
-                    , memberInfo.getTotalAccount().add( payUsdtRecharge.getRechargeMoney() ), payUsdtRecharge.getRemark(), payUsdtRecharge.getTransactionId() );
+        if (chargeGive.compareTo(BigDecimal.ZERO) > 0) {
+            logService.logMoneyAdd(null, memberInfo.getId(), memberInfo.getUserName(), EnumMoney.chargegive, chargeGive
+                    , memberInfo.getTotalAccount().add(payUsdtRecharge.getRechargeMoney()), payUsdtRecharge.getRemark(), payUsdtRecharge.getTransactionId());
         }
 
         //usdt充值日志
-        logService.logMoneyAdd( null, payUsdtRecharge.getMemberId(), memberInfo.getUserName(), EnumMoney.usdt,
-                payUsdtRecharge.getRechargeMoney(), memberInfo.getTotalAccount(), payUsdtRecharge.getRemark(), payUsdtRecharge.getTransactionId() );
+        logService.logMoneyAdd(null, payUsdtRecharge.getMemberId(), memberInfo.getUserName(), EnumMoney.usdt,
+                payUsdtRecharge.getRechargeMoney(), memberInfo.getTotalAccount(), payUsdtRecharge.getRemark(), payUsdtRecharge.getTransactionId());
 
         //更新usdt充值记录表状态
         payUsdtRechargeMapper.updatePayUsdtRecharge(payUsdtRecharge);
 
-         //新增佣金记录
-        this.recommendProcess( payUsdtRecharge, memberInfo );
+        //新增佣金记录
+        this.recommendProcess(payUsdtRecharge, memberInfo);
 
         //更新用户账户余额
-        return this.updateMemberCharge( memberInfo.getId(), add, "USDT充值" );
+        boolean updateMemberCharge = this.updateMemberCharge(memberInfo.getId(), add, "USDT充值");
+        if (updateMemberCharge) {
+            this.paySendIm(memberInfo.getId(), payUsdtRecharge.getRechargeMoney());
+        }
+        return updateMemberCharge;
     }
 
-    private void recommendProcess(PayUsdtRecharge payUsdtRecharge, MemberInfo memberInfo ) {
-        //新增佣金记录
-        if ( org.apache.commons.lang3.StringUtils.isNotBlank( memberInfo.getInviterCode() ) ) {
-            Map<Integer, ConfigRecommend> billMap = configRecommendMapper.selectConfigRecommendList( null )
-                    .stream()
-                    .collect( Collectors.toMap( ConfigRecommend::getLevel, Function.identity() ) );
+    @Async
+    public void paySendIm(String userId, BigDecimal orderAmount) {
+        String pay_seccess_im_url = sysConfigCacheUtil.getConf("pay_seccess_im_url");
+        if (!StringUtils.hasText(pay_seccess_im_url)) {
+            return;
+        }
 
-            MemberInfo rd1 = memberInfoMapper.findRecommendByInviterCode( memberInfo.getInviterCode() );
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("orderAmount", String.valueOf(orderAmount));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(params, httpHeaders);
+
+        Map<String, Object> resultMap = null;
+        try {
+            resultMap = restTemplate.execute(pay_seccess_im_url, HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
+                        }
+                        return JsonUtil.json2Map(text);
+                    });
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private void recommendProcess(PayUsdtRecharge payUsdtRecharge, MemberInfo memberInfo) {
+        //新增佣金记录
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(memberInfo.getInviterCode())) {
+            Map<Integer, ConfigRecommend> billMap = configRecommendMapper.selectConfigRecommendList(null)
+                    .stream()
+                    .collect(Collectors.toMap(ConfigRecommend::getLevel, Function.identity()));
+
+            MemberInfo rd1 = memberInfoMapper.findRecommendByInviterCode(memberInfo.getInviterCode());
             MemberInfo rd2 = null;
-            if ( rd1 != null ) {
-                BigDecimal      commission       = payUsdtRecharge.getRechargeMoney().multiply( billMap.get( 1 ).getBill() );
+            if (rd1 != null) {
+                BigDecimal commission = payUsdtRecharge.getRechargeMoney().multiply(billMap.get(1).getBill());
                 MemberRecommend recommendUserLog = new MemberRecommend();
-                recommendUserLog.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-                recommendUserLog.setLevel( 1 );
-                recommendUserLog.setMemberId( payUsdtRecharge.getMemberId() );
-                recommendUserLog.setMemberName( memberInfo.getUserName() );
-                recommendUserLog.setInviterId( rd1.getId() );
-                recommendUserLog.setInviter( rd1.getUserName() );
-                recommendUserLog.setCreateTime( new Date() );
-                recommendUserLog.setCommission( commission );
-                recommendUserLog.setStatus( 0 );
-                recommendUserLog.setCode( memberInfo.getMemberCode() );
-                recommendUserLog.setOrderMoney( payUsdtRecharge.getRechargeMoney() );
-                recommendMapper.insertMemberRecommend( recommendUserLog );
-                if ( org.apache.commons.lang3.StringUtils.isNotBlank( rd1.getInviterCode() ) ) {
-                    rd2 = memberInfoMapper.findRecommendByInviterCode( rd1.getInviterCode() );
+                recommendUserLog.setId(UuidUtil.getRandomUuidWithoutSeparator());
+                recommendUserLog.setLevel(1);
+                recommendUserLog.setMemberId(payUsdtRecharge.getMemberId());
+                recommendUserLog.setMemberName(memberInfo.getUserName());
+                recommendUserLog.setInviterId(rd1.getId());
+                recommendUserLog.setInviter(rd1.getUserName());
+                recommendUserLog.setCreateTime(new Date());
+                recommendUserLog.setCommission(commission);
+                recommendUserLog.setStatus(0);
+                recommendUserLog.setCode(memberInfo.getMemberCode());
+                recommendUserLog.setOrderMoney(payUsdtRecharge.getRechargeMoney());
+                recommendMapper.insertMemberRecommend(recommendUserLog);
+                if (org.apache.commons.lang3.StringUtils.isNotBlank(rd1.getInviterCode())) {
+                    rd2 = memberInfoMapper.findRecommendByInviterCode(rd1.getInviterCode());
                 }
             }
 
-            if ( rd2 != null ) {
-                BigDecimal      commission       = payUsdtRecharge.getRechargeMoney().multiply( billMap.get( 2 ).getBill() );
+            if (rd2 != null) {
+                BigDecimal commission = payUsdtRecharge.getRechargeMoney().multiply(billMap.get(2).getBill());
                 MemberRecommend recommendUserLog = new MemberRecommend();
-                recommendUserLog.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-                recommendUserLog.setLevel( 2 );
-                recommendUserLog.setMemberId( payUsdtRecharge.getMemberId() );
-                recommendUserLog.setMemberName( memberInfo.getUserName() );
-                recommendUserLog.setInviterId( rd2.getId() );
-                recommendUserLog.setInviter( rd2.getUserName() );
-                recommendUserLog.setCreateTime( new Date() );
-                recommendUserLog.setCommission( commission );
-                recommendUserLog.setStatus( 0 );
-                recommendUserLog.setCode( memberInfo.getMemberCode() );
-                recommendUserLog.setOrderMoney( payUsdtRecharge.getRechargeMoney() );
-                recommendMapper.insertMemberRecommend( recommendUserLog );
+                recommendUserLog.setId(UuidUtil.getRandomUuidWithoutSeparator());
+                recommendUserLog.setLevel(2);
+                recommendUserLog.setMemberId(payUsdtRecharge.getMemberId());
+                recommendUserLog.setMemberName(memberInfo.getUserName());
+                recommendUserLog.setInviterId(rd2.getId());
+                recommendUserLog.setInviter(rd2.getUserName());
+                recommendUserLog.setCreateTime(new Date());
+                recommendUserLog.setCommission(commission);
+                recommendUserLog.setStatus(0);
+                recommendUserLog.setCode(memberInfo.getMemberCode());
+                recommendUserLog.setOrderMoney(payUsdtRecharge.getRechargeMoney());
+                recommendMapper.insertMemberRecommend(recommendUserLog);
             }
         }
     }
 
-    private boolean updateMemberCharge( String userId, BigDecimal money, String chargeType ) {
+    private boolean updateMemberCharge(String userId, BigDecimal money, String chargeType) {
         MemberBcode codeFlow = new MemberBcode();
-        codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-        codeFlow.setIncome( money );//
-        codeFlow.setCreateTime( new Date() );
-        codeFlow.setStatus( 0 );
-        codeFlow.setCur( BigDecimal.ZERO );
-        codeFlow.setUserId( userId );
-        codeFlow.setDes( chargeType );
-        return memberBcodeMapper.insertMemberBcode( codeFlow ) > 0
-                && memberInfoMapper.updateMoneySelect( userId, money, null, money, null, null ) > 0;
+        codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
+        codeFlow.setIncome(money);//
+        codeFlow.setCreateTime(new Date());
+        codeFlow.setStatus(0);
+        codeFlow.setCur(BigDecimal.ZERO);
+        codeFlow.setUserId(userId);
+        codeFlow.setDes(chargeType);
+        return memberBcodeMapper.insertMemberBcode(codeFlow) > 0
+                && memberInfoMapper.updateMoneySelect(userId, money, null, money, null, null) > 0;
     }
 
     /**
