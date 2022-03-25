@@ -276,8 +276,9 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
                         }
                         return JsonUtil.json2Map(text);
                     });
+            log.warn("{}发送充值成功IM回调：{}", userId, JsonUtil.object2Json(resultMap));
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("{}发送充值成功IM回调失败：{}", e.getMessage(), e);
         }
     }
 
