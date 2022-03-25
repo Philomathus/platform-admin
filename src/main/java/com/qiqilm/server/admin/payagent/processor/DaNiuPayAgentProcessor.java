@@ -90,6 +90,8 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("Msg", "").toString());
+
+                payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
             }
         }
         log.warn(payAgentPlatform.getName() + "订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
