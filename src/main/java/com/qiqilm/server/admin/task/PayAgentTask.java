@@ -17,7 +17,7 @@ public class PayAgentTask {
 	@Autowired
 	private IPayAgentService payAgentService;
 
-	@Scheduled( cron = "0 0/3 * * * ?" ) // 每3分钟执行一次
+	//@Scheduled( cron = "0 0/3 * * * ?" ) // 每3分钟执行一次
 	public void confirmPayAgentOrder() {
 		try {
 			Boolean lock = redisUtil.strSetIfAbsent( "confirmPayAgentOrder", "1", Duration.ofSeconds( 30 ) );
