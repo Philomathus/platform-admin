@@ -105,16 +105,17 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
             return "{\"Data\": false,\"Code\": 0,\"Msg\": null}";
         }
 
-        Map<String, Object> resultMap = (Map<String, Object>) requestMap.getOrDefault("data", new HashMap<>());
+        Map<String, Object> resultMap = (Map<String, Object>) requestMap.getOrDefault("Data", new HashMap<>());
 
         String BillNo = resultMap.getOrDefault("BillNo", "").toString();
         String OrderNo = resultMap.getOrDefault("OrderNo", "").toString();
+        BigDecimal Amount = new BigDecimal(resultMap.getOrDefault("Amount", "0").toString()).setScale(2, RoundingMode.HALF_UP);
 
         // 解密后对签名验证
         SortedMap<String, Object> signMap = new TreeMap<>();
         signMap.put("BillNo", BillNo);
         signMap.put("OrderNo", OrderNo);
-        signMap.put("Amount", resultMap.get("Amount"));
+        signMap.put("Amount", Amount);
         signMap.put("Account", resultMap.get("Account"));
         signMap.put("ToAccount", resultMap.get("ToAccount"));
 
@@ -123,7 +124,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
 
         String signStr = this.assemblyUrl(signMap) + "&SecretKey=" + signMd5;
 
-        if (RSACoder.verifyMD5withRSA(signStr, payAgentPlatform.getSignPublicKey(), requestMap.get("sign").toString())) {
+        if (RSACoder.verifyMD5withRSA(signStr, payAgentPlatform.getSignPublicKey(), requestMap.get("Sign").toString())) {
             int Status = Integer.parseInt(resultMap.getOrDefault("Status", -1).toString());
             if (Status >= 2 && Status <= 4) {
                 MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(OrderNo);
