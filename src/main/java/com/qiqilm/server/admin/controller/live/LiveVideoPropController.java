@@ -34,7 +34,7 @@ public class LiveVideoPropController extends BaseController {
 	 * 查询送礼物列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
-	@GetMapping( "/list" )
+	//@GetMapping( "/list" )
 	public TableDataInfo list( LiveVideoProp liveVideoProp ) {
 		startPage();
 		List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
@@ -46,7 +46,7 @@ public class LiveVideoPropController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
 	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
+	//@GetMapping( "/export" )
 	public void export( LiveVideoProp liveVideoProp, HttpServletResponse response ) {
 		List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
 		ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", LiveVideoProp.class, response );
