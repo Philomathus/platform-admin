@@ -164,6 +164,9 @@ public class LiveVideoChatServiceImpl implements ILiveVideoChatService {
             if (memberInfo.getStatus()==0){
 				return AjaxResult.error( "状态已更新，请刷新" );
 			}
+			if (memberInfo.getStatus()==2){
+				return AjaxResult.error( "测试号不可禁用" );
+			}
             SpeakIpBlackList speakIpBlackList = new SpeakIpBlackList();
 			speakIpBlackList.setUserId( pUserId );
 			speakIpBlackList.setUserIp( userIp );
