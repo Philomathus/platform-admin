@@ -8,7 +8,10 @@ import com.qiqilm.server.admin.domain.LiveVideoProp;
 import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoPropService;
+import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,21 +27,26 @@ import java.util.List;
  * @author 77tv
  * @date 2021-01-26
  */
+@Log4j2
 @RestController
 @RequestMapping( "/admin/liveVideoProp" )
 public class LiveVideoPropController extends BaseController {
 	@Autowired
 	private ILiveVideoPropService liveVideoPropService;
+	@Autowired
+	private TokenService tokenService;
 
 	/**
 	 * 查询送礼物列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
-	//@GetMapping( "/list" )
+	@GetMapping( "/list" )
 	public TableDataInfo list( LiveVideoProp liveVideoProp ) {
-		startPage();
-		List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
-		return getDataTable( list );
+		//startPage();
+		//List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
+		//return getDataTable( list );
+		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
+		return null;
 	}
 
 	/**
@@ -46,45 +54,50 @@ public class LiveVideoPropController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
 	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
-	//@GetMapping( "/export" )
+	@GetMapping( "/export" )
 	public void export( LiveVideoProp liveVideoProp, HttpServletResponse response ) {
-		List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
-		ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", LiveVideoProp.class, response );
+		//List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
+		//ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", LiveVideoProp.class, response );
+		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
 	}
 
 	/**
 	 * 统计礼物金额
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
-	//@GetMapping( "/getCount" )
+	@GetMapping( "/getCount" )
 	public AjaxResult getCount( LiveVideoProp liveVideoProp ) {
-		LiveVideoProp liveVideoProp1 = liveVideoPropService.getCount( liveVideoProp );
-		return AjaxResult.success( liveVideoProp1 );
+		//LiveVideoProp liveVideoProp1 = liveVideoPropService.getCount( liveVideoProp );
+		//return AjaxResult.success( liveVideoProp1 );
+		return null;
 	}
 
 	/**
 	 * 查询送礼物列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
-	//@GetMapping( "/testAccountPorpList" )
+	@GetMapping( "/testAccountPorpList" )
 	public TableDataInfo testAccountPorpList( LiveVideoProp liveVideoProp ) {
-		startPage();
-		List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
-		return getDataTable( list );
+		//startPage();
+		//List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
+		//return getDataTable( list );
+		return null;
 	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
-	//@Log( title = "送礼物", businessType = BusinessType.EXPORT )
+	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/exportTestAccountProplog" )
 	public void exportTestAccountProplog( LiveVideoProp liveVideoProp, HttpServletResponse response ) {
-		List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
-		ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", RspTestAccountProp.class, response );
+		//List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
+		//ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", RspTestAccountProp.class, response );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
-	//@GetMapping( "/testAccountCount" )
+	@GetMapping( "/testAccountCount" )
 	public AjaxResult testAccountCount( LiveVideoProp liveVideoProp ) {
-		RspTestAccountProp liveVideoProp1 = liveVideoPropService.testAccountCount( liveVideoProp );
-		return AjaxResult.success( liveVideoProp1 );
+		//RspTestAccountProp liveVideoProp1 = liveVideoPropService.testAccountCount( liveVideoProp );
+		//return AjaxResult.success( liveVideoProp1 );
+		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
+		return null;
 	}
 }
