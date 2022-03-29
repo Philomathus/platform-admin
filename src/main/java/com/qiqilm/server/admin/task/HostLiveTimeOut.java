@@ -18,42 +18,36 @@ import java.util.Set;
 public class HostLiveTimeOut {
     @Autowired
     private RedisUtil redisUtil;
-
     @Autowired
     private VideoCacheUtil videoCacheUtil;
     @Autowired
     private ILiveVideoService liveVideoService;
-    @Value( "${spring.profiles.active}" )
+
+    @Value("${spring.profiles.active}")
     private String profile;
 
-    @Scheduled( fixedDelay = 120000, initialDelay = 120000 )
+    @Scheduled(fixedDelay = 120000, initialDelay = 120000)
     public void listenerMonitor() {
-        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),100)){
+        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 100)) {
             return;
         }
-        if(profile.equals("7706")){
-            return;
-        }
-        if(profile.equals("7705")){
-            return;
-        }
-        if(profile.equals("7710")){
+        if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711") || profile.equals("7712")) {
             return;
         }
 
         try {
             Set<String> liveVideos = videoCacheUtil.getAbortVideoByMonitorTime();
-            liveVideos.forEach( videoId -> {
-                if(!redisUtil.exists( Constants.LIVE_PREX + "lock:host:" + videoId)){
-                    liveVideoService.close( Long.valueOf(videoId), "timeOut" );
+            liveVideos.forEach(videoId -> {
+                if (!redisUtil.exists(Constants.LIVE_PREX + "lock:host:" + videoId)) {
+                    liveVideoService.close(Long.valueOf(videoId), "timeOut");
                     videoCacheUtil.delAbortVideoByMonitorTime(videoId);
                 }
 
-            } );
+            });
 
             liveVideoService.updateNowLine();
-        } catch ( Exception e ) {
-            log.error( e.getMessage(), e );
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
 
     }

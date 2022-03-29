@@ -45,6 +45,8 @@ public interface LiveVideoMapper {
 	public int updateLive7706Video(LiveVideo liveVideo);
 	public int updateLive7705Video(LiveVideo liveVideo);
 	public int updateLive7710Video(LiveVideo updateVideo);
+	public int updateLive7711Video(LiveVideo updateVideo);
+	public int updateLive7712Video(LiveVideo updateVideo);
 
 	/**
 	 * 修改直播,结束时间可以为null
@@ -53,13 +55,7 @@ public interface LiveVideoMapper {
 	 * @return 结果
 	 */
 	public int updateLiveVideo2(LiveVideo liveVideo);
-    /**
-     * 新增直播
-     *
-     * @param liveVideo 直播
-     * @return 结果
-     */
-    public int insertLiveVideo(LiveVideo liveVideo);
+
 	LiveVideo selectLiveVideoSortById( Long id );
 
 	List<LiveVideo> selectLiveInVideoSort();
@@ -76,17 +72,16 @@ public interface LiveVideoMapper {
 
 	LiveVideo liveInStatus(Long userId);
 
-	Long getMaxSortInitLiveId();
-
-	Long getMaxSortInitShareLiveId7706();
-	Long getMaxSortInitShareLiveId7705();
-
-	LiveVideo getLiveVideoShare7706(@Param( "hostId" ) Long hostId);
-	LiveVideo getLiveVideoShare7705(@Param( "hostId" ) Long hostId);
-
+	/**
+	 * 新增直播
+	 *
+	 * @param liveVideo 直播
+	 * @return 结果
+	 */
+	public int insertLiveVideo(LiveVideo liveVideo);
     void insertLiveVideo7706(LiveVideo liveVideo);
-
 	void insertLiveVideo7705(LiveVideo liveVideo);
-
 	void insertLiveVideo7710(LiveVideo liveVideo);
+	void insertLiveVideo7711(LiveVideo liveVideo);
+	void insertLiveVideo7712(LiveVideo liveVideo);
 }

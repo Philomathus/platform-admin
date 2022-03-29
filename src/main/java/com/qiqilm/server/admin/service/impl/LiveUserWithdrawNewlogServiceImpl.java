@@ -5,7 +5,6 @@ import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.LiveFamilyMapper;
-import com.qiqilm.server.admin.mapper.LiveHostWageDayMapper;
 import com.qiqilm.server.admin.mapper.LiveUserWithdrawNewlogMapper;
 import com.qiqilm.server.admin.service.IBankCardAddressService;
 import com.qiqilm.server.admin.service.ILiveUserWithdrawNewlogService;
@@ -34,8 +33,6 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 	private TokenService                 tokenService;
 	@Resource
 	private RedisUtil                    redisUtil;
-	@Resource
-	private LiveHostWageDayMapper        liveHostWageDayMapper;
 	@Resource
 	private LiveFamilyMapper             liveFamilyMapper;
 	@Resource
@@ -180,7 +177,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 		update.setId( liveUserWithdrawNewlog.getId() );
 		update.setRemark( "取消锁定人：" + userName );
 		update.setOpName( "" );
-		update.setWstatus( Long.valueOf( 3 ) );//审核通过
+		update.setWstatus(3L);//审核通过
 		update.setUpdateTime( new Date() );
 		int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
 		return i > 0 ? AjaxResult.success() : AjaxResult.error( "解锁订单状态失败" );
@@ -209,7 +206,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 		LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
 		update.setId( liveUserWithdrawNewlog.getId() );
 		update.setRemark( req.getRemark() );
-		update.setWstatus( Long.valueOf( 2 ) );//审核不通过
+		update.setWstatus(2L);//审核不通过
 		update.setOpName( "" );
 		update.setUpdateTime( new Date() );
 		int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
@@ -244,7 +241,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 
 		LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
 		update.setId( liveUserWithdrawNewlog.getId() );
-		update.setWstatus( Long.valueOf( 4 ) );//出款
+		update.setWstatus(4L);//出款
 		update.setOpName( userName );
 		update.setUpdateTime( new Date() );
 		int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
@@ -274,7 +271,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 
 		LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
 		update.setId( liveUserWithdrawNewlog.getId() );
-		update.setWstatus( Long.valueOf( 1 ) );
+		update.setWstatus(1L);
 		update.setOpName( userName );
 		update.setUpdateTime( new Date() );
 		int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
@@ -301,7 +298,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 		}
 		LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
 		update.setId( liveUserWithdrawNewlog.getId() );
-		update.setWstatus( Long.valueOf( 3 ) );//审核通过
+		update.setWstatus(3L);//审核通过
 		update.setOpName( "" );
 		update.setRemark( "" );
 		update.setUpdateTime( new Date() );
@@ -345,7 +342,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 
 		LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
 		update.setId( liveUserWithdrawNewlog.getId() );
-		update.setWstatus( Long.valueOf( 5 ) );//出款
+		update.setWstatus(5L);//出款
 		update.setOpName( userName );
 		update.setUpdateTime( new Date() );
 		int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
@@ -374,7 +371,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 		LiveUserWithdrawNewlog update = new LiveUserWithdrawNewlog();
 		update.setId( liveUserWithdrawNewlog.getId() );
 		update.setRemark( req.getRemark() );
-		update.setWstatus( Long.valueOf( 1 ) );//审核不通过
+		update.setWstatus(1L);//审核不通过
 		update.setOpName( userName );
 		update.setUpdateTime( new Date() );
 		int i = liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( update );
@@ -424,19 +421,18 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 	@Transactional( rollbackFor = Exception.class )
 	public AjaxResult fixOrder( String[] ids ) {
 		List<LiveUserWithdrawNewlog> lists = new ArrayList<>();
-		for ( int i = 0; i < ids.length; i++ ) {
-			String                 id                     = ids[ i ];
-			LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById( id );
-			if ( liveUserWithdrawNewlog.getWstatus() != 1 ) {
-				return AjaxResult.error( liveUserWithdrawNewlog.getOrderNo() + "状态有误不能合并订单" );
+		for (String id : ids) {
+			LiveUserWithdrawNewlog liveUserWithdrawNewlog = liveUserWithdrawNewlogMapper.selectLiveUserWithdrawNewlogById(id);
+			if (liveUserWithdrawNewlog.getWstatus() != 1) {
+				return AjaxResult.error(liveUserWithdrawNewlog.getOrderNo() + "状态有误不能合并订单");
 			}
-			lists.add( liveUserWithdrawNewlog );
+			lists.add(liveUserWithdrawNewlog);
 		}
 		if ( !redisUtil.lock( EnumLock.Anchor, lists.get( 0 ).getUserId().toString(), "1", 5 ) ) {
 			return AjaxResult.error( "请勿重复提交" );
 		}
 		//时间倒序
-		Collections.sort( lists, ( a, b ) -> b.getCreateTime().compareTo( a.getCreateTime() ) );
+		lists.sort((a, b) -> b.getCreateTime().compareTo(a.getCreateTime()));
 		BigDecimal sumMoney = lists.stream()
 				// 将user对象的age取出来map为Bigdecimal
 				.map( LiveUserWithdrawNewlog::getWithdrawMoney )
@@ -460,7 +456,7 @@ public class LiveUserWithdrawNewlogServiceImpl implements ILiveUserWithdrawNewlo
 			} else {
 				LiveUserWithdrawNewlog WithdrawNewlog = new LiveUserWithdrawNewlog();
 				WithdrawNewlog.setId( log.getId() );
-				WithdrawNewlog.setWstatus( Long.valueOf( 5 ) );//订单合并已销毁
+				WithdrawNewlog.setWstatus(5L);//订单合并已销毁
 				WithdrawNewlog.setRemark( "订单合并到：" + lists.get( 0 ).getOrderNo() );
 				liveUserWithdrawNewlogMapper.updateLiveUserWithdrawNewlog( WithdrawNewlog );
 			}

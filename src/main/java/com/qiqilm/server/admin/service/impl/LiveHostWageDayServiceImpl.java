@@ -56,15 +56,8 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     @Override
     public List<RspLiveHostWageDayFamily> familyPage(LiveHostWageDay dto ) throws ParseException {
         this.setTime( dto );
-        List<RspLiveHostWageDayFamily> liveHostWageDays;
-        if(profile.equals("7706")){
-            liveHostWageDays = liveHostWageDayMapper.familyPage_7706(dto);
-        } else if(profile.equals("7705")){
-            liveHostWageDays = liveHostWageDayMapper.familyPage_7705(dto);
-        } else {
-            liveHostWageDays = liveHostWageDayMapper.familyPage( dto );
-        }
-        if (liveHostWageDays.size()>0 && liveHostWageDays!=null){
+        List<RspLiveHostWageDayFamily> liveHostWageDays = liveHostWageDayMapper.familyPage( dto );
+        if (liveHostWageDays.size()>0){
             for ( RspLiveHostWageDayFamily liveHostWageDay : liveHostWageDays ) {
                 if ( liveHostWageDay.getLiwu() != null ) {
 //                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getAllticket() );
@@ -89,15 +82,8 @@ public class LiveHostWageDayServiceImpl implements ILiveHostWageDayService {
     @Override
     public List<RspLiveHostWageDayList> hostPage(LiveHostWageDay dto ) throws ParseException {
         this.setTime( dto );
-        List<RspLiveHostWageDayList> liveHostWageDays;
-        if(profile.equals("7706")){
-            liveHostWageDays = liveHostWageDayMapper.hostPage_7706(dto);
-        } else if(profile.equals("7705")){
-            liveHostWageDays = liveHostWageDayMapper.hostPage_7705(dto);
-        } else{
-            liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
-        }
-        if (liveHostWageDays.size()>0 && liveHostWageDays!=null){
+        List<RspLiveHostWageDayList> liveHostWageDays = liveHostWageDayMapper.hostPage(  dto );
+        if (liveHostWageDays.size()>0){
             for ( RspLiveHostWageDayList liveHostWageDay : liveHostWageDays ) {
                 if ( liveHostWageDay.getTicket() != null ) {
 //                BigDecimal allTicket = new BigDecimal( liveHostWageDay.getTicket() );

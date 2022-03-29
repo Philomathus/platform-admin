@@ -22,7 +22,7 @@ import com.qiqilm.server.admin.service.ILiveVideoPropService;
 public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     @Autowired
     private LiveVideoPropMapper liveVideoPropMapper;
-    @Value( "${spring.profiles.active}" )
+    @Value("${spring.profiles.active}")
     private String profile;
 
 
@@ -36,10 +36,12 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     public List<LiveVideoProp> selectLiveVideoPropList(LiveVideoProp liveVideoProp) {
         LiveVideoProp liveVideoProp1 = setTime(liveVideoProp);
         List<LiveVideoProp> liveVideoProps = null;
-        if("7706".equals(profile)) {
+        if ("7706".equals(profile) || "7711".equals(profile)) {
             liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7706(liveVideoProp1);
-        } else if("7705".equals(profile)) {
+        } else if ("7705".equals(profile)) {
             liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7705(liveVideoProp1);
+        } else if ("7710".equals(profile) || "7712".equals(profile)) {
+            liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7710(liveVideoProp1);
         } else {
             liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
         }
@@ -63,10 +65,10 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     }
 
 
-    private LiveVideoProp setTime(LiveVideoProp liveVideoProp){
-        if ( liveVideoProp.getSelectDate() != null && liveVideoProp.getSelectDate().length > 0 ) {
-            liveVideoProp.setStartTime( liveVideoProp.getSelectDate()[ 0 ] + " 00:00:00");
-            liveVideoProp.setEndTime( liveVideoProp.getSelectDate()[ 1 ] + " 23:59:59");
+    private LiveVideoProp setTime(LiveVideoProp liveVideoProp) {
+        if (liveVideoProp.getSelectDate() != null && liveVideoProp.getSelectDate().length > 0) {
+            liveVideoProp.setStartTime(liveVideoProp.getSelectDate()[0] + " 00:00:00");
+            liveVideoProp.setEndTime(liveVideoProp.getSelectDate()[1] + " 23:59:59");
         }
         return liveVideoProp;
     }

@@ -39,62 +39,90 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
     @Override
     public List<LiveBlack> selectLiveBlackList(LiveBlack liveBlack) {
         List<LiveBlack> liveBlackList = null;
-        if (profile.equals("7706")) {
-            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7706(liveBlack);
-            List<LiveBlack> liveBlackList7706 = new ArrayList<>();
-            for (LiveBlack liveBlack1 : liveBlackAllList) {
-                if (liveBlack1.getBlackUserId().startsWith("7706")) {
-                    liveBlackList7706.add(liveBlack1);
+        switch (profile) {
+            case "7706": {
+                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7706(liveBlack);
+                List<LiveBlack> liveBlackList7706 = new ArrayList<>();
+                for (LiveBlack liveBlack1 : liveBlackAllList) {
+                    if (liveBlack1.getBlackUserId().startsWith("7706")) {
+                        liveBlackList7706.add(liveBlack1);
+                    }
                 }
+                return liveBlackList7706;
             }
-            return liveBlackList7706;
-        } else if (profile.equals("7705")) {
-            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7705(liveBlack);
-            List<LiveBlack> liveBlackList7705 = new ArrayList<>();
-            for (LiveBlack liveBlack1 : liveBlackAllList) {
-                if (liveBlack1.getBlackUserId().startsWith("7705")) {
-                    liveBlackList7705.add(liveBlack1);
+            case "7705": {
+                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7705(liveBlack);
+                List<LiveBlack> liveBlackList7705 = new ArrayList<>();
+                for (LiveBlack liveBlack1 : liveBlackAllList) {
+                    if (liveBlack1.getBlackUserId().startsWith("7705")) {
+                        liveBlackList7705.add(liveBlack1);
+                    }
                 }
+                return liveBlackList7705;
             }
-            return liveBlackList7705;
-        } else if (profile.equals("7710")) {
-            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7710(liveBlack);
-            List<LiveBlack> liveBlackList7710 = new ArrayList<>();
-            for (LiveBlack liveBlack1 : liveBlackAllList) {
-                if (liveBlack1.getBlackUserId().startsWith("7710")) {
-                    liveBlackList7710.add(liveBlack1);
+            case "7710": {
+                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7710(liveBlack);
+                List<LiveBlack> liveBlackList7710 = new ArrayList<>();
+                for (LiveBlack liveBlack1 : liveBlackAllList) {
+                    if (liveBlack1.getBlackUserId().startsWith("7710")) {
+                        liveBlackList7710.add(liveBlack1);
+                    }
                 }
+                return liveBlackList7710;
             }
-            return liveBlackList7710;
-        } else if (profile.equals("7701")) {
-            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
-            List<LiveBlack> liveBlackList7701 = new ArrayList<>();
-            for (LiveBlack liveBlack1 : liveBlackAllList) {
-                if (liveBlack1.getBlackUserId().startsWith("7701")) {
-                    liveBlackList7701.add(liveBlack1);
+            case "7701": {
+                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
+                List<LiveBlack> liveBlackList7701 = new ArrayList<>();
+                for (LiveBlack liveBlack1 : liveBlackAllList) {
+                    if (liveBlack1.getBlackUserId().startsWith("7701")) {
+                        liveBlackList7701.add(liveBlack1);
+                    }
                 }
+                return liveBlackList7701;
             }
-            return liveBlackList7701;
-        } else if (profile.equals("7704")) {
-            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
-            List<LiveBlack> liveBlackList7704 = new ArrayList<>();
-            for (LiveBlack liveBlack1 : liveBlackAllList) {
-                if (liveBlack1.getBlackUserId().startsWith("7704")) {
-                    liveBlackList7704.add(liveBlack1);
+            case "7704": {
+                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
+                List<LiveBlack> liveBlackList7704 = new ArrayList<>();
+                for (LiveBlack liveBlack1 : liveBlackAllList) {
+                    if (liveBlack1.getBlackUserId().startsWith("7704")) {
+                        liveBlackList7704.add(liveBlack1);
+                    }
                 }
+                return liveBlackList7704;
             }
-            return liveBlackList7704;
-        } else if (profile.equals("7708")) {
-            List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
-            List<LiveBlack> liveBlackList7708 = new ArrayList<>();
-            for (LiveBlack liveBlack1 : liveBlackAllList) {
-                if (liveBlack1.getBlackUserId().startsWith("7708")) {
-                    liveBlackList7708.add(liveBlack1);
+            case "7708": {
+                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack);
+                List<LiveBlack> liveBlackList7708 = new ArrayList<>();
+                for (LiveBlack liveBlack1 : liveBlackAllList) {
+                    if (liveBlack1.getBlackUserId().startsWith("7708")) {
+                        liveBlackList7708.add(liveBlack1);
+                    }
                 }
+                return liveBlackList7708;
             }
-            return liveBlackList7708;
-        } else {
-            liveBlackList = liveBlackMapper.selectLiveBlackList(liveBlack);
+            case "7711": {
+                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7711(liveBlack);
+                List<LiveBlack> liveBlackList7711 = new ArrayList<>();
+                for (LiveBlack liveBlack1 : liveBlackAllList) {
+                    if (liveBlack1.getBlackUserId().startsWith("7711")) {
+                        liveBlackList7711.add(liveBlack1);
+                    }
+                }
+                return liveBlackList7711;
+            }
+            case "7712": {
+                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7712(liveBlack);
+                List<LiveBlack> liveBlackList7712 = new ArrayList<>();
+                for (LiveBlack liveBlack1 : liveBlackAllList) {
+                    if (liveBlack1.getBlackUserId().startsWith("7712")) {
+                        liveBlackList7712.add(liveBlack1);
+                    }
+                }
+                return liveBlackList7712;
+            }
+            default:
+                liveBlackList = liveBlackMapper.selectLiveBlackList(liveBlack);
+                break;
         }
         return liveBlackList;
     }
@@ -102,11 +130,11 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
     @Override
     public AjaxResult deleteLiveBlackById(LiveBlack liveBlack) {
         int num;
-        if (liveBlack.getBlackUserId().startsWith("7706")) {
+        if (liveBlack.getBlackUserId().startsWith("7706") || liveBlack.getBlackUserId().startsWith("7711")) {
             num = liveBlackMapper.deleteLiveBlackById7706(liveBlack.getId());
         } else if (liveBlack.getBlackUserId().startsWith("7705")) {
             num = liveBlackMapper.deleteLiveBlackById7705(liveBlack.getId());
-        } else if (liveBlack.getBlackUserId().startsWith("7710")) {
+        } else if (liveBlack.getBlackUserId().startsWith("7710") || liveBlack.getBlackUserId().startsWith("7712")) {
             num = liveBlackMapper.deleteLiveBlackById7710(liveBlack.getId());
         } else {
             num = liveBlackMapper.deleteLiveBlackById(liveBlack.getId());
@@ -115,7 +143,7 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
             return AjaxResult.error("移除黑名单失败");
         }
         manageCacheUtil.refreshBlack(liveBlack.getHostId());
-        memberInfoMapper.updateSpeak(liveBlack.getBlackUserId(),0);
+        memberInfoMapper.updateSpeak(liveBlack.getBlackUserId(), 0);
         return AjaxResult.success("移除黑名单成功");
     }
 
