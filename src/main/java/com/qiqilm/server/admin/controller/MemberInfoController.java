@@ -72,6 +72,7 @@ public class MemberInfoController extends BaseController {
     private ImApi imApi;
     @Autowired
     private MemberMoneyMapper memberMoneyMapper;
+
     /**
      * 查询用户信息列表
      */
@@ -91,10 +92,10 @@ public class MemberInfoController extends BaseController {
     @GetMapping("/export")
     public AjaxResult export(MemberInfo memberInfo, HttpServletResponse response) {
         List<MemberInfo> list = memberInfoService.selectMemberInfoList(memberInfo);
-        if (list.size()<= DownLoadTime.downLoadLimit) {
-            ExportExcelUtil.exportExcel( list, "用户信息", "用户信息表", MemberInfo.class, response );
+        if (list.size() <= DownLoadTime.downLoadLimit) {
+            ExportExcelUtil.exportExcel(list, "用户信息", "用户信息表", MemberInfo.class, response);
             return AjaxResult.success("下载成功");
-        }else {
+        } else {
             return AjaxResult.error("导出条数超过20万条");
         }
     }
@@ -232,10 +233,10 @@ public class MemberInfoController extends BaseController {
     }
 
     @RequestMapping(value = "/batchInsertShops", method = RequestMethod.POST)
-    @Transactional( rollbackFor = Exception.class )
+    @Transactional(rollbackFor = Exception.class)
     public AjaxResult batchInsert(@RequestParam("excelFile") MultipartFile excelFile) throws Exception {
         Workbook workbook = null;
-        StringBuilder userId  = new StringBuilder();
+        StringBuilder userId = new StringBuilder();
         try {
             workbook = WorkbookFactory.create(excelFile.getInputStream());
             excelFile.getInputStream().close();
@@ -259,19 +260,19 @@ public class MemberInfoController extends BaseController {
                     if (cell != null) {
                         cell.setCellType(CellType.STRING);
                         String data = cell.getStringCellValue();
-                        if(j==0) {
+                        if (j == 0) {
                             cell1 = data.trim();
-                        } else if(j==1){
+                        } else if (j == 1) {
                             cell2 = data.trim();
                         } else {
                             cell3 = data.trim();
                         }
                     }
                 }
-                if(StringUtils.isBlank(cell1) || StringUtils.isBlank(cell2)){
+                if (StringUtils.isBlank(cell1) || StringUtils.isBlank(cell2)) {
                     break;
                 }
-                if(StringUtils.isBlank(cell3)){
+                if (StringUtils.isBlank(cell3)) {
                     cell3 = "1";
                 }
                 userId = userId.append("\"").append(cell1).append("\"").append(",").append(cell2).append(",").append(cell3).append("),(");
@@ -279,9 +280,9 @@ public class MemberInfoController extends BaseController {
         } catch (Exception e) {
             e.getMessage();
         }
-        userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
+        userId = new StringBuilder(userId.substring(0, userId.length() - 3));
         String userIds = String.valueOf(userId);
-            //清除表中数据
+        //清除表中数据
         memberInfoMapper.clear();
         memberInfoMapper.insertPaiSong(userIds);
         return AjaxResult.success();
@@ -393,7 +394,7 @@ public class MemberInfoController extends BaseController {
         MemberInfo newMemberInfo = new MemberInfo();
         MemberInfo memberInfo = memberInfoService.selectMemberInfoById(req.getId());
         newMemberInfo.setStatus(req.getStatus());
-        memberForbidUtil.setPlatformUserStatus(memberInfo.getId(),req.getStatus());
+        memberForbidUtil.setPlatformUserStatus(memberInfo.getId(), req.getStatus());
 
         if (1 == req.getStatus()) {
             newMemberInfo.setLoginNum(0);
@@ -414,7 +415,7 @@ public class MemberInfoController extends BaseController {
         MemberInfo newMemberInfo = new MemberInfo();
         MemberInfo memberInfo = memberInfoService.selectMemberInfoById(req.getId());
         newMemberInfo.setStatus(req.getStatus());
-        memberForbidUtil.setPlatformUserStatus(memberInfo.getId(),req.getStatus());
+        memberForbidUtil.setPlatformUserStatus(memberInfo.getId(), req.getStatus());
         //备注禁用原因
         if (req.getRemark() != null) {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
@@ -471,7 +472,10 @@ public class MemberInfoController extends BaseController {
         MemberInfo memberInfo = new MemberInfo();
         memberInfo.setId(req.getId());
         memberInfo.setPassword(req.getPassword());
-        memberInfoService.updateMemberInfo(memberInfo);
+        int i = memberInfoService.updateMemberInfo(memberInfo);
+        if (i > 0) {
+            memberCacheManager.delToken(memberInfo.getId());
+        }
         return new RspBase();
     }
 
@@ -512,15 +516,15 @@ public class MemberInfoController extends BaseController {
             return rspBase;
         }
 
-        if (!redisUtil.lock(EnumLock.member, "addScore"+req.getId(), "1", 15)) {
+        if (!redisUtil.lock(EnumLock.member, "addScore" + req.getId(), "1", 15)) {
             rspBase.setMsg("请勿重复提交");
             rspBase.setCode(1);
             return rspBase;
         }
         String ip = UserDataUtil.getIp(request);
         rspBase = memberInfoService.addMemberMoneyOnly(ip, loginUser, req);
-        if(rspBase.getCode() == 2){
-            redisUtil.unLock(EnumLock.member, "addScore"+req.getId());
+        if (rspBase.getCode() == 2) {
+            redisUtil.unLock(EnumLock.member, "addScore" + req.getId());
             return rspBase;
         }
         rspBase.setCode(0);
@@ -537,12 +541,12 @@ public class MemberInfoController extends BaseController {
     @Log(title = "会员发送短信", businessType = BusinessType.UPDATE)
     public RspBase sendMsg(@RequestBody Map map) throws Exception {
         RspBase rspBase = new RspBase();
-        String msg = (String)map.get("msg");
-        String memberId = (String)map.get("memberId");
+        String msg = (String) map.get("msg");
+        String memberId = (String) map.get("memberId");
         if (StringUtils.isNotBlank(msg) && StringUtils.isNotBlank(memberId)) {
-            sysUserService.sendMsg(msg,memberId);
+            sysUserService.sendMsg(msg, memberId);
             rspBase.setMsg("发送成功");
-        }else {
+        } else {
             rspBase.setMsg("发送失败");
         }
         return rspBase;
@@ -557,9 +561,9 @@ public class MemberInfoController extends BaseController {
     @RequestMapping(value = "/updateInviterCode", method = RequestMethod.POST)
     @Log(title = "会员修改邀请码", businessType = BusinessType.UPDATE)
     public AjaxResult updateInviterCode(@RequestBody Map map) throws Exception {
-        String memberId = (String)map.getOrDefault("memberId", "");
-        String inviterCode = (String)map.getOrDefault("inviterCode", "");
-        String googleAuthCode = (String)map.getOrDefault("googleAuthCode", "");
+        String memberId = (String) map.getOrDefault("memberId", "");
+        String inviterCode = (String) map.getOrDefault("inviterCode", "");
+        String googleAuthCode = (String) map.getOrDefault("googleAuthCode", "");
         if (StringUtils.isEmpty(inviterCode)) {
             return AjaxResult.error("邀请不能为空");
         }
@@ -569,7 +573,7 @@ public class MemberInfoController extends BaseController {
 
         AjaxResult x = checkGoogle(googleAuthCode);
         if (x != null) return x;
-        return memberInfoService.updateInviterCode(inviterCode,memberId);
+        return memberInfoService.updateInviterCode(inviterCode, memberId);
     }
 
     private AjaxResult checkGoogle(String googleAuthCode) throws Exception {
@@ -601,10 +605,10 @@ public class MemberInfoController extends BaseController {
     @RequestMapping(value = "/updateMobile", method = RequestMethod.POST)
     @Log(title = "会员发送短信", businessType = BusinessType.UPDATE)
     public AjaxResult updateMobile(@RequestBody Map map) throws Exception {
-        String memberId = (String)map.get("memberId");
-        String newMobile = (String)map.get("newMobile");
-        String oldMobile = (String)map.get("oldMobile");
-        String googleAuthCode = (String)map.get("googleAuthCode");
+        String memberId = (String) map.get("memberId");
+        String newMobile = (String) map.get("newMobile");
+        String oldMobile = (String) map.get("oldMobile");
+        String googleAuthCode = (String) map.get("googleAuthCode");
         if (!ValidatorUtil.isNumber11(newMobile)) {
             return AjaxResult.error("新手机号格式错误: 11位数字");
         }
@@ -616,7 +620,7 @@ public class MemberInfoController extends BaseController {
         String googleAuthSecret = userService.selectGoogleAuthKeyByUserName(loginUser.getUsername());
         AjaxResult x = userService.checkGoogleAuthCode(Integer.parseInt(googleAuthCode), googleAuthSecret);
         if (x != null) return x;
-        return sysUserService.updateMobile(newMobile,oldMobile,memberId);
+        return sysUserService.updateMobile(newMobile, oldMobile, memberId);
     }
 
 
@@ -694,10 +698,11 @@ public class MemberInfoController extends BaseController {
         rspBase.setData("成功");
         return rspBase;
     }
+
     @ApiOperation(value = "修復打碼", notes = "修復打碼")
     @PostMapping("/memberBcodeRepair")
     public Object memberBcodeRepair(HttpServletRequest request,
-                          MemberInfo memberInfo) throws Exception {
+                                    MemberInfo memberInfo) throws Exception {
         RspBase rspBase = new RspBase();
         if (memberInfo.getGoogleAuthCode() == null) {
             rspBase.setMsg("请输入google验证码");
@@ -735,15 +740,15 @@ public class MemberInfoController extends BaseController {
     @ApiOperation(value = "修改vip等级", notes = "修改vip等级")
     @PostMapping("/updateVip")
     public Object updateVip(HttpServletRequest request,
-                          MemberInfo memberInfo) throws Exception {
+                            MemberInfo memberInfo) throws Exception {
         RspBase rspBase = new RspBase();
-        if(memberInfo.getVip() > 50){
+        if (memberInfo.getVip() > 50) {
             rspBase.setCode(1);
             rspBase.setData("vip等级最大为50级");
             return rspBase;
         }
         MemberInfo memberInfo1 = memberInfoService.selectMemberInfoById(memberInfo.getId());
-        if(memberInfo1 != null && memberInfo1.getVip() > memberInfo.getVip()) {
+        if (memberInfo1 != null && memberInfo1.getVip() > memberInfo.getVip()) {
             rspBase.setCode(1);
             rspBase.setData("vip等级修改不能小于之前的等级");
             return rspBase;
@@ -751,17 +756,19 @@ public class MemberInfoController extends BaseController {
         String memberId = memberInfo.getId();
         Integer vip = memberInfo.getVip();
         String nickName = memberInfo.getNickName();
-        memberInfoService.updateVip(memberId,vip,nickName);
+        memberInfoService.updateVip(memberId, vip, nickName);
         rspBase.setCode(Constants.URC_SUCCESS);
         rspBase.setData("vip等级修改成功");
         return rspBase;
     }
+
     @Log(title = "解绑银行卡", businessType = BusinessType.UPDATE)
     @PutMapping("/unbindCard")
     public Object unbindCard(@RequestBody MemberCard memberCard) {
         AjaxResult ajaxResult = memberInfoService.unbindCard(memberCard);
         return (ajaxResult);
     }
+
     @Log(title = "修改用户银行卡信息", businessType = BusinessType.UPDATE)
     @PutMapping("/changeBank")
     public Object changeBank(@RequestBody MemberCard memberCard) {
@@ -778,16 +785,16 @@ public class MemberInfoController extends BaseController {
 
     @ApiOperation(value = "禁言用户IM", notes = "禁言用户IM")
     @PostMapping("/imDealBan")
-    public Object imDealBan( MemberInfo memberInfo) {
-        if (Objects.isNull(memberInfo.getBanSpeakTime())){
+    public Object imDealBan(MemberInfo memberInfo) {
+        if (Objects.isNull(memberInfo.getBanSpeakTime())) {
             return AjaxResult.success("禁言时间不能为空");
         }
         //im禁言备注
-        if(StringUtils.isNotBlank(memberInfo.getEmail())){
+        if (StringUtils.isNotBlank(memberInfo.getEmail())) {
             memberInfoService.updateMemberInfo(memberInfo);
         }
         memberInfoService.updataStatus(memberInfo);
-        if(imApi.nospeakingT(memberInfo.getId(),memberInfo.getBanSpeakTime())){
+        if (imApi.nospeakingT(memberInfo.getId(), memberInfo.getBanSpeakTime())) {
             log.info("IM禁言成功");
             return AjaxResult.success("IM禁言成功");
         }
