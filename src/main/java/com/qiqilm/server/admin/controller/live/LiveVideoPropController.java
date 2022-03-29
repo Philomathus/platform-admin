@@ -56,7 +56,7 @@ public class LiveVideoPropController extends BaseController {
 	 * 统计礼物金额
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
-	@GetMapping( "/getCount" )
+	//@GetMapping( "/getCount" )
 	public AjaxResult getCount( LiveVideoProp liveVideoProp ) {
 		LiveVideoProp liveVideoProp1 = liveVideoPropService.getCount( liveVideoProp );
 		return AjaxResult.success( liveVideoProp1 );
@@ -66,7 +66,7 @@ public class LiveVideoPropController extends BaseController {
 	 * 查询送礼物列表
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
-	@GetMapping( "/testAccountPorpList" )
+	//@GetMapping( "/testAccountPorpList" )
 	public TableDataInfo testAccountPorpList( LiveVideoProp liveVideoProp ) {
 		startPage();
 		List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
@@ -74,7 +74,7 @@ public class LiveVideoPropController extends BaseController {
 	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
-	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
+	//@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/exportTestAccountProplog" )
 	public void exportTestAccountProplog( LiveVideoProp liveVideoProp, HttpServletResponse response ) {
 		List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
@@ -82,7 +82,7 @@ public class LiveVideoPropController extends BaseController {
 	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
-	@GetMapping( "/testAccountCount" )
+	//@GetMapping( "/testAccountCount" )
 	public AjaxResult testAccountCount( LiveVideoProp liveVideoProp ) {
 		RspTestAccountProp liveVideoProp1 = liveVideoPropService.testAccountCount( liveVideoProp );
 		return AjaxResult.success( liveVideoProp1 );
