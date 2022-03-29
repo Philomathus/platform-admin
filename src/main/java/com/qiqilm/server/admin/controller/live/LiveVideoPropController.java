@@ -94,6 +94,6 @@ public class LiveVideoPropController extends BaseController {
 	public AjaxResult testAccountCount( LiveVideoProp liveVideoProp ) {
 		RspTestAccountProp liveVideoProp1 = liveVideoPropService.testAccountCount( liveVideoProp );
 		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
-		return AjaxResult.success( liveVideoProp1 );;
+		return AjaxResult.success( liveVideoProp1 );
 	}
 }
