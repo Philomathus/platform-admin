@@ -42,11 +42,10 @@ public class LiveVideoPropController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
 	@GetMapping( "/list" )
 	public TableDataInfo list( LiveVideoProp liveVideoProp ) {
-		//startPage();
-		//List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
-		//return getDataTable( list );
+		startPage();
+		List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
 		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
-		return null;
+		return getDataTable( list );
 	}
 
 	/**
@@ -56,9 +55,9 @@ public class LiveVideoPropController extends BaseController {
 	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/export" )
 	public void export( LiveVideoProp liveVideoProp, HttpServletResponse response ) {
-		//List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
-		//ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", LiveVideoProp.class, response );
+		List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
 		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
+		ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", LiveVideoProp.class, response );
 	}
 
 	/**
@@ -67,9 +66,8 @@ public class LiveVideoPropController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
 	@GetMapping( "/getCount" )
 	public AjaxResult getCount( LiveVideoProp liveVideoProp ) {
-		//LiveVideoProp liveVideoProp1 = liveVideoPropService.getCount( liveVideoProp );
-		//return AjaxResult.success( liveVideoProp1 );
-		return null;
+		LiveVideoProp liveVideoProp1 = liveVideoPropService.getCount( liveVideoProp );
+		return AjaxResult.success( liveVideoProp1 );
 	}
 
 	/**
@@ -78,26 +76,24 @@ public class LiveVideoPropController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
 	@GetMapping( "/testAccountPorpList" )
 	public TableDataInfo testAccountPorpList( LiveVideoProp liveVideoProp ) {
-		//startPage();
-		//List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
-		//return getDataTable( list );
-		return null;
+		startPage();
+		List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
+		return getDataTable( list );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:export')" )
 	@Log( title = "送礼物", businessType = BusinessType.EXPORT )
 	@GetMapping( "/exportTestAccountProplog" )
 	public void exportTestAccountProplog( LiveVideoProp liveVideoProp, HttpServletResponse response ) {
-		//List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
-		//ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", RspTestAccountProp.class, response );
+		List<RspTestAccountProp> list = liveVideoPropService.testAccountPorpList( liveVideoProp );
+		ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", RspTestAccountProp.class, response );
 	}
 
 	@PreAuthorize( "@ss.hasPermi('admin:liveVideoProp:list')" )
 	@GetMapping( "/testAccountCount" )
 	public AjaxResult testAccountCount( LiveVideoProp liveVideoProp ) {
-		//RspTestAccountProp liveVideoProp1 = liveVideoPropService.testAccountCount( liveVideoProp );
-		//return AjaxResult.success( liveVideoProp1 );
+		RspTestAccountProp liveVideoProp1 = liveVideoPropService.testAccountCount( liveVideoProp );
 		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
-		return null;
+		return AjaxResult.success( liveVideoProp1 );;
 	}
 }
