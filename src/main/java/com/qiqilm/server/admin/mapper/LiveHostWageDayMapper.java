@@ -40,21 +40,11 @@ public interface LiveHostWageDayMapper {
 	 */
 	public int insertLiveHostWageDay( LiveHostWageDay liveHostWageDay );
 
-
-	/**
-	 * 新增主播时长7706
-	 * @param liveHostWageDay 主播时长
-	 * @return 结果
-	 */
 	public int insertLiveHostWageDay7706( LiveHostWageDay liveHostWageDay );
-	/**
-	 * 新增主播时长7705
-	 * @param liveHostWageDay 主播时长
-	 * @return 结果
-	 */
 	public int insertLiveHostWageDay7705( LiveHostWageDay liveHostWageDay );
-
 	public int insertLiveHostWageDay7710( LiveHostWageDay updateLiveDay );
+	public int insertLiveHostWageDay7711( LiveHostWageDay updateLiveDay );
+	public int insertLiveHostWageDay7712( LiveHostWageDay updateLiveDay );
 
 	/**
 	 * 修改主播时长
@@ -68,17 +58,9 @@ public interface LiveHostWageDayMapper {
 
 	public List<RspLiveHostWageDayFamily> familyPage(@Param( "dto" ) LiveHostWageDay dto );
 
-	public List<RspLiveHostWageDayFamily> familyPage_7706(@Param( "dto" ) LiveHostWageDay dto );
-	public List<RspLiveHostWageDayFamily> familyPage_7705(@Param( "dto" ) LiveHostWageDay dto );
-	public List<RspLiveHostWageDayFamily> familyPage_7710(@Param( "dto" ) LiveHostWageDay dto );
-
 	public List<Map<String, Object>> selectFamilyName();
 
 	public List<RspLiveHostWageDayList> hostPage(@Param( "dto" ) LiveHostWageDay dto );
-
-	public List<RspLiveHostWageDayList> hostPage_7706(@Param( "dto" ) LiveHostWageDay dto );
-	public List<RspLiveHostWageDayList> hostPage_7705(@Param( "dto" ) LiveHostWageDay dto );
-	public List<RspLiveHostWageDayList> hostPage_7710(@Param( "dto" ) LiveHostWageDay dto );
 
 	List<String> getliveHostWageDay( @Param( "createTime" ) String createTime, @Param( "familyId" ) Long familyId);
 

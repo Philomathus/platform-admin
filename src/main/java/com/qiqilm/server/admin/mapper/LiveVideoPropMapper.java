@@ -27,6 +27,7 @@ public interface LiveVideoPropMapper {
 
 	public List<LiveVideoProp> selectLiveVideoPropList7706( LiveVideoProp liveVideoProp );
 	public List<LiveVideoProp> selectLiveVideoPropList7705( LiveVideoProp liveVideoProp );
+	public List<LiveVideoProp> selectLiveVideoPropList7710( LiveVideoProp liveVideoProp );
 
 	public List<LiveVideoPropVo> findVideoPropList( @Param( "start" ) long start, @Param( "end" ) long end );
 
@@ -37,16 +38,18 @@ public interface LiveVideoPropMapper {
 	BigDecimal sumHostPropDay( @Param( "userId" ) Integer userId, @Param( "dayTime" ) String dayTime );
 
 	List<HostPropDayVo> sumHostPropDayList( @Param( "dayTime" ) String dayTime );
-
 	List<HostPropDayVo> sumHostPropDay7706List( @Param( "dayTime" ) String dayTime );
 	List<HostPropDayVo> sumHostPropDay7705List( @Param( "dayTime" ) String dayTime );
 	List<HostPropDayVo> sumHostPropDay7710List( @Param( "dayTime" ) String dayTime );
+	List<HostPropDayVo> sumHostPropDay7711List( @Param( "dayTime" ) String dayTime );
+	List<HostPropDayVo> sumHostPropDay7712List( @Param( "dayTime" ) String dayTime );
 
 	List<HostPropDayVo> sumHostLotteryDayList( @Param( "begin" ) String begin, @Param( "end" ) String end);
-
 	List<HostPropDayVo> sumHostLotteryDay7706List( @Param( "begin" ) String begin, @Param( "end" ) String end);
 	List<HostPropDayVo> sumHostLotteryDay7705List( @Param( "begin" ) String begin, @Param( "end" ) String end);
 	List<HostPropDayVo> sumHostLotteryDay7710List( @Param( "begin" ) String begin, @Param( "end" ) String end );
+	List<HostPropDayVo> sumHostLotteryDay7711List( @Param( "begin" ) String begin, @Param( "end" ) String end );
+	List<HostPropDayVo> sumHostLotteryDay7712List( @Param( "begin" ) String begin, @Param( "end" ) String end );
 
     List<RspTestAccountProp> testAccountPorpList(LiveVideoProp liveVideoProp1);
 

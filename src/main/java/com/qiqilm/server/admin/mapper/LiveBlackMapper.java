@@ -20,15 +20,14 @@ public interface LiveBlackMapper {
 	 * @param liveBlack 拉黑
 	 * @return 拉黑集合
 	 */
-	public List<LiveBlack> selectLiveBlackList(LiveBlack liveBlack);
-
-
+	List<LiveBlack> selectLiveBlackList(LiveBlack liveBlack);
 	List<LiveBlack> selectLiveBlackList7706(LiveBlack liveBlack);
 	List<LiveBlack> selectLiveBlackList7705(LiveBlack liveBlack);
 	List<LiveBlack> selectLiveBlackList7710( LiveBlack liveBlack );
+	List<LiveBlack> selectLiveBlackList7711( LiveBlack liveBlack );
+	List<LiveBlack> selectLiveBlackList7712( LiveBlack liveBlack );
 
 	int deleteLiveBlackById(Long id);
-
 	int deleteLiveBlackById7706(Long id);
 	int deleteLiveBlackById7705(Long id);
 	int deleteLiveBlackById7710( Long id );
