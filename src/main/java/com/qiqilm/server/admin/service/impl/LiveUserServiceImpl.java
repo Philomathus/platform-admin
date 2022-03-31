@@ -164,7 +164,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             if (list.isEmpty()) {
                 if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711") || profile.equals("7712")) {
                     Long firstId = liveUserMapper.selectFirstId();
-                    if (firstId > 0) {
+                    if (firstId == null || firstId > 0) {
                         firstId = 0L;
                     } else {
                         firstId += -1;
