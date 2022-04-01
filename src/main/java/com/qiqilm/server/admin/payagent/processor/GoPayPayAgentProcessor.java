@@ -178,6 +178,7 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        log.error(withdrawLog.getOrderNo());
         return payAgentPlatform.getName()+"查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 
