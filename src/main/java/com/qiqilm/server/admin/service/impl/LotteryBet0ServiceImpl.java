@@ -5,10 +5,14 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LotteryBet0;
 import com.qiqilm.server.admin.mapper.LotteryBet0Mapper;
 import com.qiqilm.server.admin.service.ILotteryBet0Service;
+import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -17,12 +21,13 @@ import java.util.List;
  * @author 77tv
  * @date 2021-03-03
  */
+@Log4j2
 @Service
 public class LotteryBet0ServiceImpl implements ILotteryBet0Service {
 	@Autowired
 	private LotteryBet0Mapper lotteryBet0Mapper;
-
-
+	@Autowired
+	private TokenService tokenService;
 
 	/**
 	 * 查询用户投资行为列表
@@ -41,6 +46,9 @@ public class LotteryBet0ServiceImpl implements ILotteryBet0Service {
 			lotteryBet0.setTableLast( tableLast );
 			return lotteryBet0Mapper.selectLotteryBet0SingleList( lotteryBet0 );
 		}else if (StringUtils.isNotBlank( lotteryBet0.getIssue() )){
+			HttpServletRequest httpServletRequest = ServletUtil.getHttpServletRequest();
+			String username = tokenService.getLoginUser(httpServletRequest).getUsername();
+			log.warn("管理员{}访问投注接口:{}", username, JsonUtil.object2Json(lotteryBet0));
             return lotteryBet0Mapper.selectLotteryBet0List( lotteryBet0 );
         }else {
             return lotteryBet0Mapper.selectLotteryBetViewlList(lotteryBet0);
