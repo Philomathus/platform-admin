@@ -162,15 +162,13 @@ public class LiveUserServiceImpl implements ILiveUserService {
             //	    查询手机号是否存在
             List<LiveUser> list = liveUserMapper.selectLiveUsersByMobile(liveUser.getMobile());
             if (list.isEmpty()) {
-                if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711") || profile.equals("7712")) {
-                    Long firstId = liveUserMapper.selectFirstId();
-                    if (firstId == null || firstId > 0) {
-                        firstId = 0L;
-                    } else {
-                        firstId += -1;
-                    }
-                    liveUser.setId(firstId);
+                Long firstId = liveUserMapper.selectFirstId();
+                if (firstId == null || firstId > 0) {
+                    firstId = 0L;
+                } else {
+                    firstId += -1;
                 }
+                liveUser.setId(firstId);
                 liveUser.setCreateTime(new Date());
                 liveUser.setUpdateTime(new Date());
                 liveUser.setRoboter(1);

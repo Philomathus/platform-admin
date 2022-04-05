@@ -144,7 +144,7 @@ public class LiveUserController extends BaseController {
      * 新增用户信息
      */
     @PreAuthorize( "@ss.hasPermi('admin:liveUser:add')" )
-    @Log( title = "//用户信息", businessType = BusinessType.INSERT )
+    @Log( title = "新增虚拟主播", businessType = BusinessType.INSERT )
     @PostMapping
     public AjaxResult add(@RequestBody LiveUser liveUser) {
         return liveUserService.insertLiveUser(liveUser) ;
