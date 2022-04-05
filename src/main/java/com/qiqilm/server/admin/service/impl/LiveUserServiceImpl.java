@@ -172,6 +172,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
                 liveUser.setCreateTime(new Date());
                 liveUser.setUpdateTime(new Date());
                 liveUser.setRoboter(1);
+                log.warn(JsonUtil.object2Json(liveUser));
                 liveUserMapper.insertLiveUser(liveUser);
                 return AjaxResult.success("添加成功");
             } else {
