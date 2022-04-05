@@ -164,7 +164,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             if (list.isEmpty()) {
                 Long firstId = liveUserMapper.selectFirstId();
                 if (firstId == null || firstId > 0) {
-                    firstId = 0L;
+                    firstId = -2L;
                 } else {
                     firstId += -1;
                 }
