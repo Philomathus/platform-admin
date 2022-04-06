@@ -80,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where u.id = #{id}
     </select>
 
-    <insert id="insertLiveUser" parameterType="LiveUser" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertLiveUser" parameterType="LiveUser">
         insert into ${dbLive}.live_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null and id != ''">id,</if>
