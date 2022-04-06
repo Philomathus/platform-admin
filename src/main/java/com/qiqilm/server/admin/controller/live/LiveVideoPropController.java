@@ -8,7 +8,10 @@ import com.qiqilm.server.admin.domain.LiveVideoProp;
 import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoPropService;
+import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +27,14 @@ import java.util.List;
  * @author 77tv
  * @date 2021-01-26
  */
+@Log4j2
 @RestController
 @RequestMapping( "/admin/liveVideoProp" )
 public class LiveVideoPropController extends BaseController {
 	@Autowired
 	private ILiveVideoPropService liveVideoPropService;
+	@Autowired
+	private TokenService tokenService;
 
 	/**
 	 * 查询送礼物列表
@@ -38,6 +44,7 @@ public class LiveVideoPropController extends BaseController {
 	public TableDataInfo list( LiveVideoProp liveVideoProp ) {
 		startPage();
 		List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
+		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
 		return getDataTable( list );
 	}
 
@@ -49,6 +56,7 @@ public class LiveVideoPropController extends BaseController {
 	@GetMapping( "/export" )
 	public void export( LiveVideoProp liveVideoProp, HttpServletResponse response ) {
 		List<LiveVideoProp> list = liveVideoPropService.selectLiveVideoPropList( liveVideoProp );
+		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
 		ExportExcelUtil.exportExcel( list, "送礼物", "送礼物表", LiveVideoProp.class, response );
 	}
 
@@ -85,6 +93,7 @@ public class LiveVideoPropController extends BaseController {
 	@GetMapping( "/testAccountCount" )
 	public AjaxResult testAccountCount( LiveVideoProp liveVideoProp ) {
 		RspTestAccountProp liveVideoProp1 = liveVideoPropService.testAccountCount( liveVideoProp );
+		log.error(tokenService.getLoginUser(ServletUtil.getHttpServletRequest()).getUsername());
 		return AjaxResult.success( liveVideoProp1 );
 	}
 }
