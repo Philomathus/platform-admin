@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LiveVideoPropMapper;
 import com.qiqilm.server.admin.domain.LiveVideoProp;
 import com.qiqilm.server.admin.service.ILiveVideoPropService;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 送礼物Service业务层处理
@@ -43,11 +45,13 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
         LiveVideoProp liveVideoProp1 = setTime(liveVideoProp);
         List<LiveVideoProp> liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
         Set<Long> liveUserId = liveVideoProps.stream().map(LiveVideoProp::getToUserId).filter(toUserId -> toUserId != -1).collect(Collectors.toSet());
-        List<LiveUser> liveUsers = liveUserMapper.selectLiveUserInId(liveUserId);
-        for (LiveVideoProp videoProp : liveVideoProps) {
-            for (LiveUser liveUser : liveUsers) {
-                if (videoProp.getToUserId() == liveUser.getId()) {
-                    videoProp.setNickName(liveUser.getNickName());
+        if (!CollectionUtils.isEmpty(liveUserId)) {
+            List<LiveUser> liveUsers = liveUserMapper.selectLiveUserInId(liveUserId);
+            for (LiveVideoProp videoProp : liveVideoProps) {
+                for (LiveUser liveUser : liveUsers) {
+                    if (videoProp.getToUserId() == liveUser.getId()) {
+                        videoProp.setNickName(liveUser.getNickName());
+                    }
                 }
             }
         }
