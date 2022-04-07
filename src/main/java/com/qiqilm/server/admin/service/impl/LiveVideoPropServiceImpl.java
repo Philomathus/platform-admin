@@ -48,10 +48,8 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
         LiveVideoProp liveVideoProp1 = setTime(liveVideoProp);
         List<LiveVideoProp> liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
         Set<Long> liveUserId = liveVideoProps.stream().map(LiveVideoProp::getToUserId).filter(toUserId -> toUserId != -1).collect(Collectors.toSet());
-        log.warn(liveUserId);
         if (!CollectionUtils.isEmpty(liveUserId)) {
             List<LiveUser> liveUsers = liveUserMapper.selectLiveUserInId(liveUserId);
-            log.warn(liveUsers.size());
             for (LiveVideoProp videoProp : liveVideoProps) {
                 for (LiveUser liveUser : liveUsers) {
                     if (Objects.equals(videoProp.getToUserId(), liveUser.getId())) {
