@@ -113,7 +113,7 @@
             and game_id = #{gameId}
         </if>
         <if test="platformId != null and platformId != ''">
-            and platform_id = #{platformId}
+            and m.platform_id = #{platformId}
         </if>
     </sql>
 
