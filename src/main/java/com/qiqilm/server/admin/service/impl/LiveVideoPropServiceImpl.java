@@ -1,9 +1,13 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
+import com.qiqilm.server.admin.mapper.LiveUserMapper;
 import com.qiqilm.server.admin.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +26,8 @@ import com.qiqilm.server.admin.service.ILiveVideoPropService;
 public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     @Autowired
     private LiveVideoPropMapper liveVideoPropMapper;
+    @Autowired
+    private LiveUserMapper liveUserMapper;
     @Value("${spring.profiles.active}")
     private String profile;
 
@@ -35,15 +41,15 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     @Override
     public List<LiveVideoProp> selectLiveVideoPropList(LiveVideoProp liveVideoProp) {
         LiveVideoProp liveVideoProp1 = setTime(liveVideoProp);
-        List<LiveVideoProp> liveVideoProps = null;
-        if ("7706".equals(profile) || "7711".equals(profile)) {
-            liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7706(liveVideoProp1);
-        } else if ("7705".equals(profile)) {
-            liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7705(liveVideoProp1);
-        } else if ("7710".equals(profile) || "7712".equals(profile)) {
-            liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList7710(liveVideoProp1);
-        } else {
-            liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
+        List<LiveVideoProp> liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
+        Set<Long> liveUserId = liveVideoProps.stream().map(LiveVideoProp::getToUserId).filter(toUserId -> toUserId != -1).collect(Collectors.toSet());
+        List<LiveUser> liveUsers = liveUserMapper.selectLiveUserInId(liveUserId);
+        for (LiveVideoProp videoProp : liveVideoProps) {
+            for (LiveUser liveUser : liveUsers) {
+                if (videoProp.getToUserId() == liveUser.getId()) {
+                    videoProp.setNickName(liveUser.getNickName());
+                }
+            }
         }
         return liveVideoProps;
     }

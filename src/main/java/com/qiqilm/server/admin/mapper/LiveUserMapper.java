@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Update;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 主播用户信息Mapper接口
@@ -75,4 +76,6 @@ public interface LiveUserMapper {
 	int delLiveUserBankById(String bankAccount);
 
     Long selectFirstId();
+
+    List<LiveUser> selectLiveUserInId(@Param("array") Set<Long> liveUserId);
 }

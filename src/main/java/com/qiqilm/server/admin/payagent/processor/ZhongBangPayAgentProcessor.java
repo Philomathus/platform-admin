@@ -23,7 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.CollectionUtils;
-import sun.misc.BASE64Decoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -32,7 +31,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.security.PrivateKey;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -254,7 +252,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         signature.initSign(priKey);
         signature.update(content.getBytes(DEFAULT_CHARSET));
         byte[] signed = signature.sign();
-        return Base64.getEncoder().encodeToString(signed);
+        return Base64Utils.encodeToString(signed);
     }
 
     /**
@@ -284,11 +282,10 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
      */
     public static String decrypt(String encrypted, String aesKey) {
         try {
-            byte[] byteMi = new BASE64Decoder().decodeBuffer(encrypted);
             SecretKeySpec key = new SecretKeySpec(aesKey.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance(AES_TYPE);
             cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] decryptedData = cipher.doFinal(byteMi);
+            byte[] decryptedData = cipher.doFinal(Base64Utils.decodeFromString(encrypted));
             return new String(decryptedData, CODE_TYPE);
         } catch (Exception e) {
             logger.warn(e);
