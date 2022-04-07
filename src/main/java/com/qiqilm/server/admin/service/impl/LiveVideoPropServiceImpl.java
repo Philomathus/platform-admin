@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,7 @@ import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
 import com.qiqilm.server.admin.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import org.springframework.util.CollectionUtils;
  * @author 77tv
  * @date 2021-01-26
  */
+@Log4j2
 @Service
 public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     @Autowired
@@ -45,11 +48,13 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
         LiveVideoProp liveVideoProp1 = setTime(liveVideoProp);
         List<LiveVideoProp> liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
         Set<Long> liveUserId = liveVideoProps.stream().map(LiveVideoProp::getToUserId).filter(toUserId -> toUserId != -1).collect(Collectors.toSet());
+        log.warn(liveUserId);
         if (!CollectionUtils.isEmpty(liveUserId)) {
             List<LiveUser> liveUsers = liveUserMapper.selectLiveUserInId(liveUserId);
+            log.warn(liveUsers.size());
             for (LiveVideoProp videoProp : liveVideoProps) {
                 for (LiveUser liveUser : liveUsers) {
-                    if (videoProp.getToUserId() == liveUser.getId()) {
+                    if (Objects.equals(videoProp.getToUserId(), liveUser.getId())) {
                         videoProp.setNickName(liveUser.getNickName());
                     }
                 }
