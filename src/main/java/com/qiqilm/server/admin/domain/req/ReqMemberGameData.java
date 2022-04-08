@@ -25,4 +25,6 @@ public class ReqMemberGameData {
     private String sonPlatformName;
 
     private String gameId;
+
+    private Integer platformId;
 }

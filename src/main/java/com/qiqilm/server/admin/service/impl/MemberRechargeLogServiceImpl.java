@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,6 +64,8 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
     private MemberRecommendMapper recommendMapper;
     @Autowired
     private ConfigRecommendMapper configRecommendMapper;
+    @Autowired
+    private ActivityCashBackFirstRechargeMapper cashBackFirstRechargeMapper;
     @Autowired
     private MemberCacheManager memberCacheManager;
     @Autowired
@@ -186,7 +189,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(memberRechargeLog.getMemberId());
 
         BigDecimal chargeGive = memberRechargeLog.getDiscountBill().multiply(memberRechargeLog.getRechargeMoney())
-                .setScale(2, BigDecimal.ROUND_HALF_UP); // 充值彩金
+                .setScale(2, RoundingMode.HALF_UP); // 充值彩金
 
         BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd("recharge_day_first_rate");
 
@@ -194,27 +197,40 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
 
         if (daySucess == 0) {
             chargeGive = chargeGive.add(memberRechargeLog.getRechargeMoney().multiply(ticketCattyRatio)// 单日首次彩金
-                    .setScale(2, BigDecimal.ROUND_HALF_UP));
+                    .setScale(2, RoundingMode.HALF_UP));
         }
         // 单日第二次彩金
         if (daySucess == 1) {
             //每日公司入款第二次优惠比例
             BigDecimal ticketCattyRatioSnd = sysConfigCacheUtil.getConfBd("recharge_day_second_rate");
             chargeGive = chargeGive.add(memberRechargeLog.getRechargeMoney().multiply(ticketCattyRatioSnd)
-                    .setScale(2, BigDecimal.ROUND_HALF_UP));
+                    .setScale(2, RoundingMode.HALF_UP));
         }
         //套利号无优惠
         if (memberInfo.getStatus() == 4) {
             chargeGive = BigDecimal.ZERO;
         }
 
-        BigDecimal add = memberRechargeLog.getRechargeMoney().add(chargeGive);
+        BigDecimal firstRechargeCashBack = BigDecimal.ZERO; // 首冲赠送彩金
+        if (memberRechargeLog.getFirst() == 1 && sysConfigCacheUtil.getConfBool("is_first_recharge_cash_back")) {
+            BigDecimal rebate = cashBackFirstRechargeMapper.selectByRechargeMoney(memberRechargeLog.getRechargeMoney());
+            if (rebate != null && rebate.compareTo(BigDecimal.ZERO) > 0) {
+                firstRechargeCashBack = rebate;
+            }
+        }
+
+        BigDecimal add = memberRechargeLog.getRechargeMoney().add(chargeGive).add(firstRechargeCashBack);
 
         String orderId = memberRechargeLog.getOrderNo();
 
         if (chargeGive.compareTo(BigDecimal.ZERO) > 0) {
             logService.logMoneyAdd(null, memberInfo.getId(), memberInfo.getUserName(), EnumMoney.chargegive, chargeGive
                     , memberInfo.getTotalAccount().add(memberRechargeLog.getRechargeMoney()), mark, orderId);
+        }
+
+        if (firstRechargeCashBack.compareTo(BigDecimal.ZERO) > 0) {
+            logService.logMoneyAdd(null, memberInfo.getId(), memberInfo.getUserName(), EnumMoney.wongive, firstRechargeCashBack
+                    , memberInfo.getTotalAccount().add(memberRechargeLog.getRechargeMoney()).add(chargeGive), "首冲赠送彩金；" + mark, orderId);
         }
 
         logService.logMoneyAdd(orderId, memberRechargeLog.getMemberId(), memberInfo.getUserName(), EnumMoney.deposit,

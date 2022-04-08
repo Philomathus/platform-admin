@@ -112,6 +112,9 @@
         <if test="gameId != null and gameId != ''">
             and game_id = #{gameId}
         </if>
+        <if test="platformId != null and platformId != ''">
+            and m.platform_id = #{platformId}
+        </if>
     </sql>
 
     <sql id="whereCount">
