@@ -228,7 +228,7 @@
 		<dependency>
 			<groupId>org.telegram</groupId>
 			<artifactId>telegrambots</artifactId>
-			<version>4.1</version>
+			<version>5.7.1</version>
 		</dependency>
 
 		<!-- swagger2 -->

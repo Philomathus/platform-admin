@@ -28,10 +28,10 @@ public class HostLiveTimeOut {
 
     @Scheduled(fixedDelay = 120000, initialDelay = 120000)
     public void listenerMonitor() {
-        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 100)) {
+        if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711") || profile.equals("7712")) {
             return;
         }
-        if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711") || profile.equals("7712")) {
+        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 100)) {
             return;
         }
 
