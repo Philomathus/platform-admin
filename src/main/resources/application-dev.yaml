@@ -1,15 +1,15 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://192.168.1.168:3306/7700_main?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      jdbc-url: jdbc:mysql://47.57.3.228:3306/7700_main?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
       username: root
-      password: chongXuan@2020034
+      password: 77lm@20210107
     secondary:
-      jdbc-url: jdbc:mysql://192.168.1.168:3306/db_data?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-      username: root
-      password: chongXuan@2020034
+      jdbc-url: jdbc:mysql://seventry.rwlb.rds.aliyuncs.com:3306/db_data?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      username: 77tv_webcs
+      password: 77tvwebcs_oradba
   redis:
-    host: 192.168.1.168
+    host: 47.57.3.228
     port: 6379
     password: 75a2-4e0e-9897-0347cc
 
