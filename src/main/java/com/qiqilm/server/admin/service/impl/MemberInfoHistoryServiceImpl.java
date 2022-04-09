@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
@@ -19,6 +20,7 @@ import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberInfoHistoryService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.NameUtil;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import com.qiqilm.server.admin.utils.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -68,6 +70,8 @@ public class MemberInfoHistoryServiceImpl implements IMemberInfoHistoryService {
     private MemberBcodeMapper memberBcodeMapper;
     @Autowired
     private NameUtil nameUtil;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询会员信息

@@ -11,5 +11,6 @@ CMD ["java", \
 	"-Djava.library.path=/usr/local/lib/", \
 	"-Djava.security.egd=file:/dev/./urandom", \
 	"-Dfile.encoding=UTF-8", \
+	"-DJASYPT_ENCRYPTOR_PASSWORD=F09gUNJx:Gu(ZoCc8Itple,v/`?.ka6+", \
 	"-jar", "/opt/platform-admin/app.jar" \
 ]
