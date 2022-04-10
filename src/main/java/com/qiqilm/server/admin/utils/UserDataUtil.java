@@ -42,7 +42,7 @@ public class UserDataUtil {
 	}
 
 	//得到所有的消息头
-	private static Map<String, String> getRequestInfo( HttpServletRequest request ) {
+	public static Map<String, String> getRequestInfo( HttpServletRequest request ) {
 		Enumeration<String> e         = request.getHeaderNames();
 		Map<String, String> resultMap = new HashMap<>();
 		while ( e.hasMoreElements() ) {

@@ -684,7 +684,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
         String userName = loginUser.getUser().getUserName();
 
-        log.info("{}查询资金明细,会员ID:",userName , id);
+        log.info("{}查询资金明细,会员ID:{}, 请求头：{}",userName , id, JsonUtil.object2Json( UserDataUtil.getRequestInfo( ServletUtil.getHttpServletRequest() ) ));
 
         List<WithdrawReport> withdrawReports = new LinkedList<>();
         WithdrawReport withdrawReporta = new WithdrawReport();
