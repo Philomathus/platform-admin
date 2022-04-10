@@ -5,7 +5,7 @@ spring:
       username: ENC(v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==)
       password: ENC(BcGcqamgY/2aUcGdrr7PoyPJPWgvHNChl4tQojazzxSlJ0bfbqbTpXIBa0rLMxiu1WfdmGMzT8EHvqX5OpNWHQ==)
     secondary:
-      jdbc-url: ENC(1as8RRBZhLmSubn6wpDHJQ/fojlWS8zFTFUTQiHAXa6PgfiepDYa+2tA57KkxKDBmOvysFDgN8DIezUbE8qNzo1xgnPeAHKJcx+8EVZxBfqcQul4NNTdd++a1kb53pCfj3MxeC2HtjK0wRR5a8caTLFjNrTC5M1VsmPhs5W3n5mdfpVUAwu/asH12Cg7200f5U/88m8eYlsYPQ6o7siz7Q==)
+      jdbc-url: ENC(rQSm78M8lGPyB7F8JHr6ZDTtVYv4diNGJwz8PfKv2nZs4c4uFKFrLYNhoRqihhG07ieXgibrX0zyiT5JolgpOEzB1s7ub5lMyeX1revCZ1A6EzHk+dBUoHFfb2KTprxE6dbhwTN5R+Lw17vahYP3AN7/PaGiacPEvM0aFkTY/CAEPzBWENSzqp/eXISprAEfuOZFEpKp1w3hCPzaKkSL2VlSBLSx2SvutDUbGmOhrJw=)
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
