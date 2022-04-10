@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(+uGthM/AHtprERMz/O0sqhYk9vo/udqlAiWor3/5vLhKbFrOINMQHUQJfAfbfVsVbtQssqgeVKYALVMwwXTRZBsq3WnfD9ceeTJjt66Q2TxaQ7HAVgw6MKVlox/+Q33yNf9DtuZCT4/GnUYdpOS2dzmOZCHDYnGid2T9JiMxigPTtbl9OR0PCXENyw/nZAsTj95jlMKOqojLJcA+ZxMp11xkkFuUVr3uZXWJAQopC7aB164wdQHXbYbZUOEYc4zKFodeNm6Lj5ZPWIC2MBHkjg==)
+      jdbc-url: jdbc:mysql://pc-j6c1ah19tg2g51r3u.rwlb.rds.aliyuncs.com:3306/7703_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: ENC(v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==)
       password: ENC(BcGcqamgY/2aUcGdrr7PoyPJPWgvHNChl4tQojazzxSlJ0bfbqbTpXIBa0rLMxiu1WfdmGMzT8EHvqX5OpNWHQ==)
     secondary:
