@@ -1,17 +1,17 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://pc-j6c1ah19tg2g51r3u.rwlb.rds.aliyuncs.com:3306/7711_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
-      username: 77tv_web
-      password: 77tvweb_oradba
+      jdbc-url: ENC(6rDd6DG59esK4w7l7gXnnsSr6ARLR6v3Mi+sG5Jq16QiuuO5M7ts0fjQBdDruqyzJaRNGjEqNgQS3TWW9HYA6S3iG/beLr4ObtUICwfmQhn7GlxyLYd9eSn/jul1kL36urnigNx4T2m7yYru6toDC1EPzto77PvVdiM+b63ETQ3sNuPGtyuHz/JrSEqmWqh6PkqpqdYFbvKiAdUBarIq6rombPveCxbmrVbxKRGcuXO0mVAUH17g2ePAZKBRK+oV+34XyE+thWsYYqyoms4pwQ==)
+      username: ENC(v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==)
+      password: ENC(BcGcqamgY/2aUcGdrr7PoyPJPWgvHNChl4tQojazzxSlJ0bfbqbTpXIBa0rLMxiu1WfdmGMzT8EHvqX5OpNWHQ==)
     secondary:
-      jdbc-url: jdbc:mysql://pc-j6cj935598h4lz6r5.rwlb.rds.aliyuncs.com:3306/db_data?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-      username: 77tv_web
-      password: 77tvweb_oradba
+      jdbc-url: ENC(1as8RRBZhLmSubn6wpDHJQ/fojlWS8zFTFUTQiHAXa6PgfiepDYa+2tA57KkxKDBmOvysFDgN8DIezUbE8qNzo1xgnPeAHKJcx+8EVZxBfqcQul4NNTdd++a1kb53pCfj3MxeC2HtjK0wRR5a8caTLFjNrTC5M1VsmPhs5W3n5mdfpVUAwu/asH12Cg7200f5U/88m8eYlsYPQ6o7siz7Q==)
+      username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
+      password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: r-j6c3xrzzdcwsrr2ohs.redis.rds.aliyuncs.com
+    host: ENC(pDPNL4um6XboBUOrhx1oEUcXk1KAHuOPW6Opcu0mUD9Jx2EBASdvDmoTP49e9ssRLfoVJ3v/79QN2WFFqeAwb6Q57Xc4tmJTp+jZeDh57I8=)
     port: 6379
-    password: ^ogf^A#RxXfMLl0t
+    password: ENC(SeWVUtEqVZ/hovYP7l9p+ZrQPyYq/zl6J5kqHSA9BBiVSh/fYwH23hyqklgQDkoBQGSca4w4MuOpzYBWj4z3XQ==)
 
 mybatis:
   configuration:
