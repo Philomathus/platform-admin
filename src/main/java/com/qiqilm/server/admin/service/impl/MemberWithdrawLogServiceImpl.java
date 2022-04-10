@@ -681,7 +681,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         List<RspMemberInfo> rspMemberInfo12 = memberInfoMapper.selectMemberInfoWithdrawByIdl(id, tableLast);
         RspMemberInfo rspMemberInfo13 = memberInfoMapper.selectMemberInfoWithdrawByIdz(id, tableLast);
 
-        log.info("查询资金明细,会员ID:" + id);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
+
+        log.info("{}查询资金明细,会员ID:",userName , id);
 
         List<WithdrawReport> withdrawReports = new LinkedList<>();
         WithdrawReport withdrawReporta = new WithdrawReport();
