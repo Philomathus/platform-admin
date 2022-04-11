@@ -44,7 +44,7 @@ public class MemberCashBackTask {
 	@Resource
 	private RedisUtil redisUtil;
 
-	@Scheduled(cron="0 25 18 * * ?")// 每天16:00点执行一次
+	@Scheduled(cron="0 20 16 * * ?")// 每天16:20点执行一次
 	public void cashBackTask() {
 		String cash_back_switch = sysConfigCacheUtil.getConf("cash_back_switch");
 		if(!("1").equals(cash_back_switch)){
