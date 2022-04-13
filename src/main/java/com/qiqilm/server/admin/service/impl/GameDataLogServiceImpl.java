@@ -291,13 +291,9 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             }
             int add = new BigDecimal(data.getCellScore()).intValue();
             for (ActivityQuestInfo confQuest : listConfQuet) {
-                log.warn("hasjdh - {} - {}", confQuest.getPlatformId(), data.getPlatformId());
-                if (confQuest.getPlatformId() == 4 && data.getPlatformId() == 3) {
-                    //
-                } else if (!Objects.equals(confQuest.getPlatformId(), data.getPlatformId())) {
+                if (!Objects.equals(confQuest.getPlatformId(), data.getPlatformId())) {
                     continue;
                 }
-                log.warn("adasda - {} - {}", confQuest.getPlatformId(), data.getPlatformId());
                 if (!confQuest.getKindId().equals("0") && !confQuest.getKindId().equals(data.getKindId())) {
                     continue;
                 }
@@ -358,7 +354,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             gameDataLog.setAgent(og.getAnchor() > 0 ? "80000" : "10000");
             gameDataLog.setStatus(0);
             gameDataLog.setPlatformType(platformTypeId);
-            gameDataLog.setPlatformId(og.getAnchor() > 0 ? 3 : 4);
+            gameDataLog.setPlatformId(4);
 
             BigDecimal beatAdd = og.getCost().multiply(beatRate).setScale(4);
             willCodeMap.putIfAbsent(og.getPuserId(), BigDecimal.ZERO);
