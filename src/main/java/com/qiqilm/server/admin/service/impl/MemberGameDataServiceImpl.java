@@ -53,7 +53,7 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             reqMemberGameData.setStartTime(reqMemberGameData.getSelectDate()[0] + " 00:00:00");
             reqMemberGameData.setEndTime(reqMemberGameData.getSelectDate()[1] + " 23:59:59");
         }
-        if (reqMemberGameData.getPlatformId() == 3 || reqMemberGameData.getPlatformId() == 4) {
+        if (reqMemberGameData.getPlatformId() != null && (reqMemberGameData.getPlatformId() == 3 || reqMemberGameData.getPlatformId() == 4)) {
             if (reqMemberGameData.getPlatformId() == 3) {
                 reqMemberGameData.setAgent("80000");
             } else {
@@ -86,7 +86,7 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             reqMemberGameData.setStartTime(reqMemberGameData.getSelectDate()[0] + " 00:00:00");
             reqMemberGameData.setEndTime(reqMemberGameData.getSelectDate()[1] + " 23:59:59");
         }
-        if (reqMemberGameData.getPlatformId() == 3 || reqMemberGameData.getPlatformId() == 4) {
+        if (reqMemberGameData.getPlatformId() != null && (reqMemberGameData.getPlatformId() == 3 || reqMemberGameData.getPlatformId() == 4)) {
             if (reqMemberGameData.getPlatformId() == 3) {
                 reqMemberGameData.setAgent("80000");
             } else {
