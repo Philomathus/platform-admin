@@ -356,7 +356,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			gameDataLog.setAgent( og.getAnchor() > 0 ? "80000" : "10000" );
 			gameDataLog.setStatus( 0 );
 			gameDataLog.setPlatformType( platformTypeId );
-			gameDataLog.setPlatformId( 4 );
+			gameDataLog.setPlatformId( og.getAnchor() > 0 ? 3 : 4 );
 
 			BigDecimal beatAdd = og.getCost().multiply( beatRate ).setScale( 4 );
 			willCodeMap.putIfAbsent( og.getPuserId(), BigDecimal.ZERO );
