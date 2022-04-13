@@ -283,8 +283,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 	public void deQuestCheck( final List<MemberGameData> list, Map<String, BigDecimal> willCodeMap ) {
 		//查找全部任务
 		List<ActivityQuestInfo> listConfQuet = questInfoMapper.selectAllQuestList();
-		Set<Integer> questSet =
-				listConfQuet.stream().map( ActivityQuestInfo::getPlatformId ).collect( Collectors.toSet() );
+		Set<Integer> questSet = listConfQuet.stream().map( ActivityQuestInfo::getPlatformId ).collect( Collectors.toSet() );
 		for ( MemberGameData data : list ) {
 			//过滤没参加活动的游戏平台
 			if ( !questSet.contains( data.getPlatformId() ) ) {
@@ -292,14 +291,15 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 			}
 			int add = new BigDecimal( data.getCellScore() ).intValue();
 			for ( ActivityQuestInfo confQuest : listConfQuet ) {
-				if ( confQuest.getPlatformId() != data.getPlatformId() ) {
+				if ( confQuest.getPlatformId() == 4 && data.getPlatformId() == 3 ){
+					// 
+				} else if (!Objects.equals(confQuest.getPlatformId(), data.getPlatformId())) {
 					continue;
 				}
 				if ( !confQuest.getKindId().equals( "0" ) && !confQuest.getKindId().equals( data.getKindId() ) ) {
 					continue;
 				}
-				MemberQuest memberQuest =
-						memberQuestMapper.selectMemberQuestById( data.getAccount().concat( "_" ).concat( confQuest.getId() ) );
+				MemberQuest memberQuest = memberQuestMapper.selectMemberQuestById( data.getAccount().concat( "_" ).concat( confQuest.getId() ) );
 				if ( memberQuest == null ) {
 					memberQuest = new MemberQuest();
 					memberQuest.setMemberId( data.getAccount() );
