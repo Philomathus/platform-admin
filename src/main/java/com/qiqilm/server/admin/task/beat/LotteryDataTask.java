@@ -27,7 +27,6 @@ import java.util.Date;
 @Component
 public class LotteryDataTask {
 
-
     @Autowired
     private IGameDataLogService gameDataLogService;
     @Autowired
@@ -37,12 +36,11 @@ public class LotteryDataTask {
 
     @Autowired
     private SysConfigCacheUtil sysConfigCacheUtil;
-    @Value( "${spring.profiles.active}" )
+    @Value("${spring.profiles.active}")
     private String profile;
 
-    private String platformTypeId;
+    /*private String platformTypeId;
     private BigDecimal beatRate ;
-
 
     @PostConstruct
     public void init() {
@@ -51,27 +49,34 @@ public class LotteryDataTask {
         platformTypeId = gamePlatform.getGameTypeid();
         beatRate= gamePlatform.getRateBeat();
         DynamicDataSourceContextHolder.clearDataSourceKey();
-    }
-    @Scheduled( fixedDelay = 60000, initialDelay=5000 )
+    }*/
+
+    @Scheduled(fixedDelay = 60000, initialDelay = 5000)
     public void runTask() throws Exception {
-        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName())){
+        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName())) {
             return;
         }
 
-        if(!profile.startsWith("77")){
+        if (!profile.startsWith("77")) {
             return;
         }
 
-        String lottery_telegram = sysConfigCacheUtil.getConf( "lottery_telegram" );
+        String lottery_telegram = sysConfigCacheUtil.getConf("lottery_telegram");
 
-        Date endDay  = new Date();
-        Date starDay = DateFormatUtils.addMin( endDay, -2);
-        String start = DateFormatUtils.formate( starDay );
-        String end = DateFormatUtils.formate( endDay );
+        Date endDay = new Date();
+        Date starDay = DateFormatUtils.addMin(endDay, -2);
+        String start = DateFormatUtils.formate(starDay);
+        String end = DateFormatUtils.formate(endDay);
         try {
-            gameDataLogService.beatLotteryCode(lottery_telegram,platformTypeId,beatRate,start,end);
-        }catch (Exception e){
-            log.error("彩票拉取注单异常,",e);
+            DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
+            GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LOTTERY.getType());
+            String platformTypeId = gamePlatform.getGameTypeid();
+            BigDecimal beatRate = gamePlatform.getRateBeat();
+            DynamicDataSourceContextHolder.clearDataSourceKey();
+
+            gameDataLogService.beatLotteryCode(lottery_telegram, platformTypeId, beatRate, start, end);
+        } catch (Exception e) {
+            log.error("彩票拉取注单异常,", e);
         }
 
     }
