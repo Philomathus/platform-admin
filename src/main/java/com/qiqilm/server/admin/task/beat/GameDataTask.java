@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.task.beat;
 
+import com.qiqilm.server.admin.config.dds.DynamicDataSourceContextHolder;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IGameDataLogService;
@@ -39,10 +40,12 @@ public class GameDataTask {
 
     @PostConstruct
     public void init() {
+        DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
         for(GamePlatform gm: gamePlatformService.selectGamePlatformList(new GamePlatform())){
             platformType.put(gm.getId(),gm.getGameTypeid());
             beatRateMap.put(gm.getId(),gm.getRateBeat());
         }
+        DynamicDataSourceContextHolder.clearDataSourceKey();
     }
 
 
