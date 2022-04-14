@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.task.beat;
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.config.dds.DynamicDataSourceContextHolder;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.enums.EnumLock;
@@ -45,10 +46,11 @@ public class LotteryDataTask {
 
     @PostConstruct
     public void init() {
+        DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
         GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LOTTERY.getType());
         platformTypeId = gamePlatform.getGameTypeid();
         beatRate= gamePlatform.getRateBeat();
-
+        DynamicDataSourceContextHolder.clearDataSourceKey();
     }
     @Scheduled( fixedDelay = 60000, initialDelay=5000 )
     public void runTask() throws Exception {
