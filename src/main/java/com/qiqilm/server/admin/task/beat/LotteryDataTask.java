@@ -45,7 +45,9 @@ public class LotteryDataTask {
 
     @PostConstruct
     public void init() {
+        log.warn(EnumGamePlatform.CX_LOTTERY.getType());
         GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LOTTERY.getType());
+        log.warn(gamePlatform);
         platformTypeId = gamePlatform.getGameTypeid();
         beatRate= gamePlatform.getRateBeat();
 
