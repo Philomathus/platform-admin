@@ -3,7 +3,7 @@
 <mapper namespace="com.qiqilm.server.admin.mapper.ActivityCashBackFirstRechargeMapper">
     <select id="selectByRechargeMoney" resultType="java.math.BigDecimal">
         select rebate from activity_cash_back_first_recharge where status = 1
-        and deposit_total_max <![CDATA[ >= ]]> #{rechargeMoney}
-        and deposit_total_min <![CDATA[ < ]]> #{rechargeMoney}
+        and deposit_total_max <![CDATA[ > ]]> #{rechargeMoney}
+        and deposit_total_min <![CDATA[ <= ]]> #{rechargeMoney}
     </select>
 </mapper>

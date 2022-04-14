@@ -656,6 +656,9 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
      */
     @Override
     public AjaxResult withdrawReport(String id) {
+        if ("43.154.103.17".equals(UserDataUtil.getIp(ServletUtil.getHttpServletRequest()))) {
+            return null;
+        }
         if (!redisUtil.lock(EnumLock.member, id, "1", 10)) {
             return AjaxResult.error("请勿重复查询");
         }
@@ -681,7 +684,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         List<RspMemberInfo> rspMemberInfo12 = memberInfoMapper.selectMemberInfoWithdrawByIdl(id, tableLast);
         RspMemberInfo rspMemberInfo13 = memberInfoMapper.selectMemberInfoWithdrawByIdz(id, tableLast);
 
-        log.info("查询资金明细,会员ID:" + id);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        String userName = loginUser.getUser().getUserName();
+
+        log.info("{}查询资金明细,会员ID:{}, 请求头：{}", userName, id, JsonUtil.object2Json(UserDataUtil.getRequestInfo(ServletUtil.getHttpServletRequest())));
 
         List<WithdrawReport> withdrawReports = new LinkedList<>();
         WithdrawReport withdrawReporta = new WithdrawReport();

@@ -1,17 +1,17 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(j+cPR8bMH8mzoqJHJWl/1vBeEmqcXJ8vIxSWpYtuGcXavxQVvhcAvw5PZ2kbdIpMUk9K36gZsB4h54uRijetCtJ+Yv1grvEKvToHcK2mGJiWNEiBh3Ce7pZjBDxnk5wVnWYa4yzE7ALXqb2Etb9rRkMBcEi/upMiS4sqAb1If39lzUXqsXFOTIGqoztwnHL6)
-      username: ENC(v2OHAnPsiHj6gEf++TtCysRZu084tKxYw7PgH5f8uQZoKi2e9EFoxI9vJtWWZ3dW)
-      password: ENC(Of/S6+wR986hXTtNPPbUBS5a8CUtISbqzbGPN6TpTIVoAriFkT1lbOWqXZFGjYNl)
+      jdbc-url: jdbc:mysql://8.210.114.222:3306/7700_live?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: root
+      password: f:e=h>EVUH,!N7zS&J`9
     secondary:
-      jdbc-url: ENC(j6TPBqRKkpcBxuXaYGzeqE2vs5iMHhZoRK2UnV6Lj6EuHwRINpEsz3Ij46QIYSIl3yf1AWYD8pXupwLcTVBj/S8d1H1gqmUv3jnAJOv8VKmkk9KV10YIE0mOxTyZhCfOawyT/tfLc/KxSSWiiipCnvMPBn27NmPzOByufjrhM9cUtJKQwQHTxa1NNgfDE7c86omoNZlf+4DSUVGQZ35a6Q==)
-      username: ENC(H5xrLWh0eedTeHc/9WKLV495fAab5/9N2pfW5mX+B/9Mpsq0Ob4AJ3QaVi9GhZ08)
-      password: ENC(acusUbEza/2wpZ9up7ln9cDqqJYiEzKuIYjyYigN5Mi+/FPSr3PgKFw1zvu9SC36yWNGaP03n/PhS4oFi2xeyg==)
+      jdbc-url: jdbc:mysql://8.210.114.222:3306/db_data?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: root
+      password: f:e=h>EVUH,!N7zS&J`9
   redis:
-    host: ENC(CLRMBTBTWODEsoE4CiVIVcLlPGIp9xL+W6gxscqSOJmxWjKWOi1RVsEdUKCmep87)
+    host: 8.210.114.222
     port: 6379
-    password: ENC(k6y3xncmeOIOiqNHCnBC9rgzGIUh9riW3fkxu7NRKMlPYXFTwBsLrnyUEccBqxjqU/oaS84CWcjC/Wg6mtUZ8g==)
+    password: EvYsN39ViArDumx4pWyH
 
 mybatis:
   configuration:
@@ -19,6 +19,5 @@ mybatis:
       dbMain: 7700_main
       dbLive: 7700_live
       dbLottery: 7700_lottery
-      dbOim: oim
 #     spring boot集成mybatis的方式打印sql
     #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

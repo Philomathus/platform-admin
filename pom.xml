@@ -15,10 +15,10 @@
 		<jdk.version>1.8</jdk.version>
 		<jdk.encoding>UTF-8</jdk.encoding>
 
-		<spring-boot.version>2.5.7</spring-boot.version>
+		<spring-boot.version>2.5.12</spring-boot.version>
 
-		<mysql-connector-java.version>8.0.26</mysql-connector-java.version>
-		<mybatis-spring-boot-starter.version>2.2.0</mybatis-spring-boot-starter.version>
+		<mysql-connector-java.version>8.0.28</mysql-connector-java.version>
+		<mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
 		<pagehelper.starter.version>1.4.1</pagehelper.starter.version>
 
 		<springfox-swagger2.version>2.7.0</springfox-swagger2.version>
@@ -31,8 +31,6 @@
 		<commons-pool2.version>2.10.0</commons-pool2.version>
 		<bitwalker.version>1.21</bitwalker.version>
 		<jwt.version>0.9.1</jwt.version>
-
-		<log4j2.version>2.16.0</log4j2.version>
 
 		<!-- plugins -->
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -94,36 +92,9 @@
 			<version>3.17</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>2.4</version>
-			<classifier>jdk15</classifier>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>${log4j2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>${log4j2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-jul</artifactId>
-			<version>${log4j2.version}</version>
 		</dependency>
 
 		<dependency>
@@ -253,7 +224,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.76</version>
+			<version>1.2.80</version>
 		</dependency>
 
 		<!-- google验证码工具 -->
