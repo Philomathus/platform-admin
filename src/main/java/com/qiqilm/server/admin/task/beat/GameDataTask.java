@@ -40,12 +40,12 @@ public class GameDataTask {
 
     @PostConstruct
     public void init() {
-        DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
+        //DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
         for(GamePlatform gm: gamePlatformService.selectGamePlatformList(new GamePlatform())){
             platformType.put(gm.getId(),gm.getGameTypeid());
             beatRateMap.put(gm.getId(),gm.getRateBeat());
         }
-        DynamicDataSourceContextHolder.clearDataSourceKey();
+        //DynamicDataSourceContextHolder.clearDataSourceKey();
     }
 
 

@@ -39,7 +39,7 @@ public class LotteryDataTask {
     @Value("${spring.profiles.active}")
     private String profile;
 
-    /*private String platformTypeId;
+    private String platformTypeId;
     private BigDecimal beatRate ;
 
     @PostConstruct
@@ -49,7 +49,7 @@ public class LotteryDataTask {
         platformTypeId = gamePlatform.getGameTypeid();
         beatRate= gamePlatform.getRateBeat();
         DynamicDataSourceContextHolder.clearDataSourceKey();
-    }*/
+    }
 
     @Scheduled(fixedDelay = 60000, initialDelay = 5000)
     public void runTask() throws Exception {
@@ -68,11 +68,11 @@ public class LotteryDataTask {
         String start = DateFormatUtils.formate(starDay);
         String end = DateFormatUtils.formate(endDay);
         try {
-            DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
+            /*DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
             GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LOTTERY.getType());
             String platformTypeId = gamePlatform.getGameTypeid();
             BigDecimal beatRate = gamePlatform.getRateBeat();
-            DynamicDataSourceContextHolder.clearDataSourceKey();
+            DynamicDataSourceContextHolder.clearDataSourceKey();*/
 
             gameDataLogService.beatLotteryCode(lottery_telegram, platformTypeId, beatRate, start, end);
         } catch (Exception e) {
