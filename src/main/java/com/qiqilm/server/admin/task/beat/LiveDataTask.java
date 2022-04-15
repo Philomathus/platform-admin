@@ -34,7 +34,7 @@ public class LiveDataTask {
     @Autowired
     private RedisUtil redisUtil;
 
-    /*private String platformTypeId;
+    private String platformTypeId;
     private BigDecimal beatRate ;
 
     @PostConstruct
@@ -42,7 +42,7 @@ public class LiveDataTask {
         GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LIVE.getType());
         platformTypeId = gamePlatform.getGameTypeid();
         beatRate= gamePlatform.getRateBeat();
-    }*/
+    }
 
     @Scheduled( fixedDelay = 50000, initialDelay=2000  )
     public void runPropTask() throws Exception {
@@ -53,11 +53,11 @@ public class LiveDataTask {
         Date starDay = DateFormatUtils.addMin( endDay, -2);
 
         try {
-            DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
+            /*//DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
             GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LIVE.getType());
             String platformTypeId = gamePlatform.getGameTypeid();
             BigDecimal beatRate = gamePlatform.getRateBeat();
-            DynamicDataSourceContextHolder.clearDataSourceKey();
+            //DynamicDataSourceContextHolder.clearDataSourceKey();*/
             gameDataLogService.beatLiveProp(platformTypeId,beatRate,starDay.getTime()/1000,endDay.getTime()/1000);
         }catch (Exception e){
             log.error("礼物拉取注单异常,",e);
