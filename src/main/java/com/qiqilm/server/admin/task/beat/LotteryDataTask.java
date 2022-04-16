@@ -44,11 +44,9 @@ public class LotteryDataTask {
 
     @PostConstruct
     public void init() {
-        DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
         GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LOTTERY.getType());
         platformTypeId = gamePlatform.getGameTypeid();
         beatRate= gamePlatform.getRateBeat();
-        DynamicDataSourceContextHolder.clearDataSourceKey();
     }
 
     @Scheduled(fixedDelay = 60000, initialDelay = 5000)
