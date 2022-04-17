@@ -155,7 +155,7 @@ public enum BankCodeDaNiuType {
     a145(Arrays.asList("广州农村商业银行")),
     a146(Arrays.asList("贵阳花溪建设村镇银行")),
     a147(Arrays.asList("贵阳市商业银行")),
-    a148(Arrays.asList("贵州省农村信用社")),
+    a148(Arrays.asList("贵州省农村信用社","贵州农信")),
     a149(Arrays.asList("贵州银行")),
     a150(Arrays.asList("桂林银行")),
     a151(Arrays.asList("国家开发银行")),
