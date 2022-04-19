@@ -38,6 +38,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
         BankCodeDaNiuType bankCodeType = BankCodeDaNiuType.getCodeByDesc(withdrawLog.getBankName());
         if (bankCodeType == null) {
             log.warn("大牛银联代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
+            payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
             throw new BusinessException("此代付无法支持的银行类型：" + withdrawLog.getBankName());
         }
         withdrawLog.setBankCode(bankCodeType.name().substring(1));
