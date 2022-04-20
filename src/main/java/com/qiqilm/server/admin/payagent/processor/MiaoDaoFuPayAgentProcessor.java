@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeLangYaType;
+import com.qiqilm.server.admin.enums.BankCodeMiaoDaoFuType;
 import com.qiqilm.server.admin.enums.BankCodeYinLianType;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
@@ -39,64 +40,23 @@ import java.util.*;
 public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
-        //工商银行、农业银行、中国银行、建设银行、中信银行、上海银行、中国邮政、平安银行、浙商银行、渤海银行，光大银行，
-        Map<String, String> typeMap = new HashMap<>();
-        typeMap.put("工商银行", "2");
-        typeMap.put("中国工商银行", "2");
-        typeMap.put("农业银行", "3");
-        typeMap.put("中国农业银行", "3");
-        typeMap.put("交通银行", "7");
-        typeMap.put("中国交通银行", "7");
-        typeMap.put("中国银行", "4");
-        typeMap.put("建设银行", "5");
-        typeMap.put("中国建设银行", "5");
-        typeMap.put("民生银行", "11");
-        typeMap.put("中国民生银行", "11");
-        typeMap.put("中信银行", "8");
-        typeMap.put("上海银行", "48");
-        typeMap.put("中国邮政储蓄银行", "1");
-        typeMap.put("中国邮政银行", "1");
-        typeMap.put("邮政储蓄银行", "1");
-        typeMap.put("邮政银行", "1");
-        typeMap.put("广发银行", "12");
-        typeMap.put("平安银行", "13");
-        typeMap.put("招商银行", "14");
-        typeMap.put("兴业银行", "15");
-        typeMap.put("上海浦东发展银行", "16");
-        typeMap.put("浦东发展银行", "16");
-        typeMap.put("浦发银行", "16");
-        typeMap.put("浙商银行", "18");
-        typeMap.put("渤海银行", "19");
-        typeMap.put("光大银行", "9");
-        typeMap.put("中国光大银行", "9");
-
-        if(!withdrawLog.getBankName().contains("银行")){
-            withdrawLog.setBankName(withdrawLog.getBankName() + "银行");
+        BankCodeMiaoDaoFuType bankCodeType = BankCodeMiaoDaoFuType.getCodeByDesc(withdrawLog.getBankName());
+        if (bankCodeType == null) {
+            log.warn(payAgentPlatform.getName() + "代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
+            payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+            throw new BusinessException("此代付无法支持的银行类型：" + withdrawLog.getBankName());
         }
-
-        String bank_id = typeMap.getOrDefault(withdrawLog.getBankName(), "");
+        withdrawLog.setBankCode(bankCodeType.name().substring(1));
 
         SortedMap<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put("merchant_no", payAgentPlatform.getMerId());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0,
-                BigDecimal.ROUND_HALF_UP));
+                RoundingMode.HALF_UP));
         bodyMap.put("order_no", withdrawLog.getOrderNo());
-
-        if (!StringUtils.isNotBlank(bank_id)) {
-            log.warn(payAgentPlatform.getName()+"代付订单提交失败,{}银行不支持,请联系技术", withdrawLog.getBankName());
-            reqPayAgent.setFailReason(payAgentPlatform.getName()+"代付订单提交失败," + withdrawLog.getBankName() + "不支持,请联系技术");
-            return false;
-        } else {
-            bodyMap.put("bank_id", bank_id);
-        }
-
+        bodyMap.put("bank_id", withdrawLog.getBankCode());
         bodyMap.put("payee_name", URLEncoder.encode(withdrawLog.getBankUserName().trim(), "utf-8"));
         bodyMap.put("bank_name", URLEncoder.encode(withdrawLog.getBankName().trim(), "utf-8"));
         bodyMap.put("bank_account", withdrawLog.getBankAccount().trim());
-//        bodyMap.put("bank_branch_name", "bank_branch_name");
-//        bodyMap.put("bank_sub_branch_name", "bank_sub_branch_name");
-//        bodyMap.put("province", "province");
-//        bodyMap.put("city", "city");
         bodyMap.put("sign_type", "SHA");
         bodyMap.put("sign_ts", System.currentTimeMillis() / 1000);
 
@@ -110,7 +70,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
         bodyMap.remove("payee_name");
         bodyMap.put("payee_name", withdrawLog.getBankUserName().trim());
-        log.warn(payAgentPlatform.getName()+"下单请求参数{}", JsonUtil.object2Json(bodyMap));
+        log.warn(payAgentPlatform.getName() + "下单请求参数{}", JsonUtil.object2Json(bodyMap));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -119,20 +79,20 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         String url = payAgentPlatform.getPayOrderAddr() + payAgentPlatform.getMerId();
         try {
-            resultMap = restTemplate.execute( url, HttpMethod.POST,
-                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+            resultMap = restTemplate.execute(url, HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
                         InputStream bodyStream = response.getBody();
-                        String      text;
-                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
-                            text = CharStreams.toString( reader );
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
                         }
-                        return JsonUtil.json2Map( text );
-                    } );
+                        return JsonUtil.json2Map(text);
+                    });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            reqPayAgent.setFailReason(payAgentPlatform.getName()+"代付下单报错原因:" + e);
+            reqPayAgent.setFailReason(payAgentPlatform.getName() + "代付下单报错原因:" + e);
         }
-        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
+        log.info(payAgentPlatform.getName() + "下单结果{},订单号:{}", JsonUtil.object2Json(resultMap), withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             //WAITING 等待处理
             //PROCESSING 处理中
@@ -140,13 +100,13 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
             //FAILURE 处理失败
             String state = resultMap.getOrDefault("state", "").toString();
             if ("WAITING".equals(state) || "PROCESSING".equals(state)) {
-                log.info(payAgentPlatform.getName()+"代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                log.info(payAgentPlatform.getName() + "代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.info(payAgentPlatform.getName()+"代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.info(payAgentPlatform.getName() + "代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -166,7 +126,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String signStr = DigestUtils.sha1Hex(tempStr);
 
-        log.info(payAgentPlatform.getName()+"代付回调签名字符串:" + sign + "_" + signStr);
+        log.info(payAgentPlatform.getName() + "代付回调签名字符串:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
             String order_no = (String) requestMap.get("order_no");
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(order_no);
@@ -215,16 +175,16 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> resultMap = null;
         String url = payAgentPlatform.getPayOrderQueryAddr() + payAgentPlatform.getMerId() + "/" + withdrawLog.getOrderNo();
         try {
-            resultMap = restTemplate.execute( url, HttpMethod.POST,
-                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+            resultMap = restTemplate.execute(url, HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
                         InputStream bodyStream = response.getBody();
-                        String      text;
-                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
-                            text = CharStreams.toString( reader );
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
                         }
-                        return JsonUtil.json2Map( text );
-                    } );
-            log.info(payAgentPlatform.getName()+"代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+                        return JsonUtil.json2Map(text);
+                    });
+            log.info(payAgentPlatform.getName() + "代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String state = resultMap.getOrDefault("state", "").toString();
                 // status 4代付中 5代付失败 6代付成功
@@ -242,8 +202,8 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return payAgentPlatform.getName()+"代付查询失败" + e;
+            return payAgentPlatform.getName() + "代付查询失败" + e;
         }
-        return payAgentPlatform.getName()+"代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName() + "代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }

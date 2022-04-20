@@ -96,7 +96,7 @@
 		<include refid="selectMemberInfoVo"/>
 		<where>
 			<if test="bankAccount != null  and bankAccount != ''">
-				and id in (select member_id from member_card where bank_account = #{bankAccount})
+				and id in (select member_id from member_card where bank_account = #{bankAccount} or real_name = #{bankAccount})
 			</if>
 			<if test="searchValue != null  and searchValue != ''">
 				and (id = #{searchValue} or phone = #{searchValue} or user_name = #{searchValue})
