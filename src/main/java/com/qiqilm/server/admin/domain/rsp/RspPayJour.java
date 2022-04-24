@@ -37,8 +37,7 @@ public class RspPayJour  {
 	@Excel( name = "支付通道名称", orderNum = "4" )
 	private String channelName;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@Excel(name = "回调时间",  exportFormat = "yyyy-MM-dd")
+	@Excel(name = "回调时间",  databaseFormat = "yyyy-MM-dd HH:mm:ss", exportFormat = "yyyy-MM-dd")
 	private String updateTime;
 
 	@Excel(name = "通道费率",orderNum = "5")
