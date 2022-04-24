@@ -205,11 +205,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
     }
 
     /**
-     * 开放的生活
-     *
-     * @param map 地图
-     * @return {@link AjaxResult}
-     * @throws Exception 异常
+     * 开播
      */
     @Override
     public AjaxResult openLive(Map map) throws Exception {
