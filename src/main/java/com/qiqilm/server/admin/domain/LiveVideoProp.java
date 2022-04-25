@@ -33,15 +33,15 @@ public class LiveVideoProp extends BaseEntity {
     private String propName;
 
     /** 积分（from_user_id可获得的积分）合计 */
-    @Excel(name = "积分", suffix = "f=rom_user_id可获得的积分")
+    @Excel(name = "积分")
     private Long totalScore;
 
     /** 钻石（from_user_id减少的钻石）合计 */
-    @Excel(name = "钻石", suffix = "f=rom_user_id减少的钻石")
+    @Excel(name = "钻石")
     private BigDecimal totalDiamonds;
 
     /** 印票(to_user_id增加的印票）合计;is_red_envelope=1时,为主播获得的：钻石 数量 */
-    @Excel(name = "印票(to_user_id增加的印票）合计;is_red_envelope=1时,为主播获得的：钻石 数量")
+    @Excel(name = "印票")
     private BigDecimal totalTicket;
 
     /** 平台用户当前余额 */
@@ -53,21 +53,19 @@ public class LiveVideoProp extends BaseEntity {
     private BigDecimal beforeTicket;
 
     /** 送 */
-    @Excel(name = "送")
     private Long fromUserId;
 
     /** 送礼平台用户ID */
-    @Excel(name = "送礼平台用户ID")
     private String pUserId;
 
+    @Excel(name = "送礼会员ID")
     private String perUserId;
 
     /** 送礼平台用户登录名 */
-    @Excel(name = "送礼平台用户登录名")
     private String pUserName;
 
     /** 收 */
-    @Excel(name = "收")
+    @Excel(name = "主播ID")
     private Long toUserId;
 
     /** 主播昵称 */
@@ -76,27 +74,22 @@ public class LiveVideoProp extends BaseEntity {
 
     /** 日期字段,按日期归档；要不然数据量太大了；不好维护 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "日期字段,按日期归档；要不然数据量太大了；不好维护", width = 30, exportFormat = "yyyy-MM-dd")
+    @Excel(name = "送礼时间", width = 30, exportFormat = "yyyy-MM-dd")
     private Date createDate;
 
     /** 年 */
-    @Excel(name = "年")
     private Long createY;
 
     /** 月 */
-    @Excel(name = "月")
     private Long createM;
 
     /** 日 */
-    @Excel(name = "日")
     private Long createD;
 
     /** 周 */
-    @Excel(name = "周")
     private Long createW;
 
     /** 送的数量 */
-    @Excel(name = "送的数量")
     private Long num;
 
     /** 直播ID */
@@ -108,7 +101,6 @@ public class LiveVideoProp extends BaseEntity {
     private String groupId;
 
     /** 1:红包 */
-    @Excel(name = "1:红包")
     private Integer isRedEnvelope;
 
     /** 弹幕内容 */
@@ -116,23 +108,18 @@ public class LiveVideoProp extends BaseEntity {
     private String msg;
 
     /** 消息发送，请求处理的结果，OK表示处理成功，FAIL表示失败。 */
-    @Excel(name = "消息发送，请求处理的结果，OK表示处理成功，FAIL表示失败。")
     private String actionstatus;
 
     /** 消息发送，错误信息 */
-    @Excel(name = "消息发送，错误信息")
     private String errorinfo;
 
     /** 错误码 */
-    @Excel(name = "错误码")
     private Long errorcode;
 
     /** 年月 如:201610 */
-    @Excel(name = "年月 如:201610")
     private String createYm;
 
     /** 判断是否为私信送礼 1表示私信 2表示不是私信 */
-    @Excel(name = "判断是否为私信送礼 1表示私信 2表示不是私信")
     private Long isPrivate;
 
     /** 送礼物人IP */
@@ -140,7 +127,6 @@ public class LiveVideoProp extends BaseEntity {
     private String fromIp;
 
     /** 双币礼物，0是钻石，1是游戏币 */
-    @Excel(name = "双币礼物，0是钻石，1是游戏币")
     private Long isCoin;
 
     @JsonIgnore
