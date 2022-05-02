@@ -48,6 +48,7 @@ public class Ju8PayAgentProcessor extends AbstractPayAgent {
 
         String signMd5 = payAgentPlatform.getHeaderKey();
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
+        log.warn(tempStr);
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
 
