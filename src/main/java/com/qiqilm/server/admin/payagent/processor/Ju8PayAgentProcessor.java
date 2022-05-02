@@ -43,7 +43,7 @@ public class Ju8PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("accountNo", withdrawLog.getBankAccount().trim());
         dataMap.put("bankName", withdrawLog.getBankName());
         dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JU8);
-        dataMap.put("remark", withdrawLog.getBankName());
+        dataMap.put("version", "1.0");
         dataMap.put("reqTime", DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
 
         String signMd5 = payAgentPlatform.getHeaderKey();
