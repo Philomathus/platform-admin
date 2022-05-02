@@ -38,11 +38,11 @@ public class LiveProplog extends BaseEntity {
     private String propName;
 
     /** 钻石（from_user_id减少的钻石）合计 */
-    @Excel(name = "钻石", suffix = "f=rom_user_id减少的钻石")
+    @Excel(name = "钻石")
     private BigDecimal totalDiamonds;
 
     /** 印票(to_user_id增加的印票）合计;is_red_envelope=1时,为主播获得的：钻石 数量 */
-    @Excel(name = "印票(to_user_id增加的印票）合计;is_red_envelope=1时,为主播获得的：钻石 数量")
+    @Excel(name = "印票")
     private BigDecimal totalTicket;
 
     /** 平台用户当前余额 */
