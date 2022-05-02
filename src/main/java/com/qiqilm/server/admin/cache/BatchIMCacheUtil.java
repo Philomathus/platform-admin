@@ -36,7 +36,7 @@ public class BatchIMCacheUtil {
             stringRedisConn.watch(key);
             stringRedisConn.multi();
             List<byte[]> result = stringRedisConn.lRange(key, 0, size);
-            stringRedisConn.lTrim(key, size + 1, -1);
+            stringRedisConn.lTrim(key, size, 0);
             //stringRedisConn.unwatch();
             stringRedisConn.exec();
             return result;
