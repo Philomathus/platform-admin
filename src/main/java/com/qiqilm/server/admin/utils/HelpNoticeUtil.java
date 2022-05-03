@@ -37,6 +37,9 @@ public class HelpNoticeUtil implements Serializable {
     @Value("${spring.profiles.active}")
     private String profile;
 
+    @Autowired
+    private ImApi imApi;
+
     /**
      * 所有直播间发送消息
      *
@@ -84,8 +87,10 @@ public class HelpNoticeUtil implements Serializable {
 
         for (String groupId : liveVideoService.selectOnlineLiveGroups()) {
             try {
-                ext.put("groupId", groupId);
-                batchIMCacheUtil.push(JsonUtil.object2Json(ext));
+                // ext.put("groupId", groupId);
+                // batchIMCacheUtil.push(JsonUtil.object2Json(ext));
+
+                imApi.sendSystemNotify(groupId, JsonUtil.object2Json(ext));
             } catch (Exception e) {
                 log.error("小助手发消息失败", e);
             }
@@ -130,7 +135,10 @@ public class HelpNoticeUtil implements Serializable {
             ext.put("userinfomat", RSA8SignUtils.sign(data, liveRsaPrivateKey));
 
             ext.put("groupId", groupId);
-            batchIMCacheUtil.push(JsonUtil.object2Json(ext));
+
+            imApi.sendSystemNotify(groupId, JsonUtil.object2Json(ext));
+
+            //batchIMCacheUtil.push(JsonUtil.object2Json(ext));
 
             //MessageType messageType = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
             //imApi.sendGroupMessage(groupId, messageType);
