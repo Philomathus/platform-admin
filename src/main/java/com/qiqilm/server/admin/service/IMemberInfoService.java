@@ -92,4 +92,5 @@ public interface IMemberInfoService {
 
 	Map listCount(MemberInfo memberInfo);
 
+	AjaxResult findMemberFollowList(String id);
 }

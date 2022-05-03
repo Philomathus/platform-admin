@@ -801,4 +801,14 @@ public class MemberInfoController extends BaseController {
         return AjaxResult.success("正在禁言中");
     }
 
+    /**
+     * 会员银行卡列表
+     *
+     * @return
+     */
+    @ApiOperation(value = "会员关注主播列表", notes = "会员关注主播列表")
+    @RequestMapping(value = "/follow-list", method = RequestMethod.GET)
+    public AjaxResult findMemberFollowList(ReqMemberInfo req) {
+        return memberInfoService.findMemberFollowList(req.getId());
+    }
 }
