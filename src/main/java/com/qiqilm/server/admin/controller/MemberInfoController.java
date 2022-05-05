@@ -737,6 +737,7 @@ public class MemberInfoController extends BaseController {
         return rspBase;
     }
 
+    @Log(title = "修改vip等级", businessType = BusinessType.UPDATE)
     @ApiOperation(value = "修改vip等级", notes = "修改vip等级")
     @PostMapping("/updateVip")
     public Object updateVip(HttpServletRequest request,
