@@ -324,6 +324,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             //MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
             //imApi.sendGroupMessage(video.getGroupId(), message);
             imApi.sendSystemNotify(video.getGroupId(), JsonUtil.object2Json(ext));
+            imApi.sendSystemNotify(video.getGroupId(), JsonUtil.object2Json(ext));
             return msg;
         }
         throw new RuntimeException("切换失败");
