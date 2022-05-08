@@ -111,10 +111,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
     @Override
     public int updateLiveUser(LiveUser liveUser) {
         liveUser.setUpdateTime(DateUtils.getNowDate());
-        LiveUser update = new LiveUser();
-        update.setId(liveUser.getId());
-        update.setIsBan(liveUser.getIsBan());
-        int i = liveUserMapper.updateLiveUser(update);
+        int i = liveUserMapper.updateLiveUser(liveUser);
         if (i > 0) {
             RedisCacheUtil.me.clear(liveUser.getId(), LiveUser.class);
         }
