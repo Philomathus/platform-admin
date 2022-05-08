@@ -87,10 +87,9 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
     }
 
     @Override
-    @Transactional( rollbackFor = Exception.class )
-    public AjaxResult starSend(MemberMoney memberMoney) throws Exception{
+    public AjaxResult starSend(MemberMoney memberMoney) throws Exception {
         if (!redisUtil.lock(EnumLock.member, "paiSong" + memberMoney.getMoneydes(), "1", 50)) {
-            throw new BusinessException( "请勿重复提交" );
+            throw new BusinessException("请勿重复提交");
         }
         LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
         String admin_name = loginUser.getUsername();
@@ -99,49 +98,14 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
         String startFirstTime = DateFormatUtils.formate(DateFormatUtils.getTodayMorning());
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
         String today = df.format(new Date());// new Date()为获取当前系统时间
-        if(list.size() > 0) {
+        if (list.size() > 0) {
             for (MemberMoney li : list) {
-                String userId = li.getMemberId();
-
-                MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(userId);
+                MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(li.getMemberId());
                 if (memberInfo == null) {
                     redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
-                    throw new BusinessException("会员id不存在:" + userId);
+                    throw new BusinessException("会员id不存在:" + li.getMemberId());
                 }
-                BigDecimal money = li.getMoney();
-                BigDecimal beat = li.getBeat();
-                //资金日志
-                String markorder = "CJ" + today + userId + money.setScale(0, BigDecimal.ROUND_HALF_UP) + memberMoney.getMoneydes();
-                ;
-                List<LogMoney> markList = null;
-                if (money.compareTo(BigDecimal.ZERO) > 0) {
-                    markList = logMoneyMapper.findMarkStartTime(userId, markorder, money, null, userId.substring(userId.length() - 1), startFirstTime);
-                } else {
-                    BigDecimal negate = money.negate();
-                    markList = logMoneyMapper.findMarkStartTime(userId, markorder, null, negate, userId.substring(userId.length() - 1), startFirstTime);
-                }
-                if (markList.size() > 0) {
-                    redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
-                    throw new BusinessException("派送失败.请查看此笔金额是否今日已经入款过.如否请输入其他入款备注." + "会员id:" + userId + "入款金额" + money + "入款备注" + memberMoney.getMoneydes());
-                }
-                BigDecimal total = memberInfo.getTotalAccount();
-                BigDecimal now = total.add(money);
-                logService.logmarkMoneyPaiSong(userId, memberInfo.getUserName(), EnumMoney.wongive, now, total,
-                        memberMoney.getMoneydes(), memberMoney.getMoneydes() + ",操作人:" + admin_name, markorder);
-                //打码
-                if (money.compareTo(BigDecimal.ZERO) > 0) {
-                    MemberBcode codeFlow = new MemberBcode();
-                    codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
-                    codeFlow.setIncome(money.multiply(beat).setScale(2));
-                    codeFlow.setCreateTime(new Date());
-                    codeFlow.setStatus(0);
-                    codeFlow.setCur(BigDecimal.ZERO);
-                    codeFlow.setUserId(userId);
-                    codeFlow.setDes("人工入款");
-                    codeFlowMapper.insertMemberBcode(codeFlow);
-                }
-                //加钱
-                memberInfoMapper.updateMoneySelect(userId, money, null, money, null, null);
+                this.processMoney(li, memberInfo, memberMoney.getMoneydes(), startFirstTime, today, admin_name);
             }
         } else {
             redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
@@ -151,6 +115,45 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
         memberInfoMapper.clear();
         redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
         return new AjaxResult(0, "操作成功");
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void processMoney(MemberMoney li, MemberInfo memberInfo, String moneydes, String startFirstTime, String today, String admin_name) {
+        String userId = li.getMemberId();
+        BigDecimal money = li.getMoney();
+        BigDecimal beat = li.getBeat();
+        //资金日志
+        String markorder = "CJ" + today + userId + money.setScale(0, BigDecimal.ROUND_HALF_UP) + moneydes;
+        ;
+        List<LogMoney> markList = null;
+        if (money.compareTo(BigDecimal.ZERO) > 0) {
+            markList = logMoneyMapper.findMarkStartTime(userId, markorder, money, null, userId.substring(userId.length() - 1), startFirstTime);
+        } else {
+            BigDecimal negate = money.negate();
+            markList = logMoneyMapper.findMarkStartTime(userId, markorder, null, negate, userId.substring(userId.length() - 1), startFirstTime);
+        }
+        if (markList.size() > 0) {
+            redisUtil.unLock(EnumLock.member, "paiSong" + moneydes);
+            throw new BusinessException("派送失败.请查看此笔金额是否今日已经入款过.如否请输入其他入款备注." + "会员id:" + userId + "入款金额" + money + "入款备注" + moneydes);
+        }
+        BigDecimal total = memberInfo.getTotalAccount();
+        BigDecimal now = total.add(money);
+        logService.logmarkMoneyPaiSong(userId, memberInfo.getUserName(), EnumMoney.wongive, now, total,
+                moneydes, moneydes + ",操作人:" + admin_name, markorder);
+        //打码
+        if (money.compareTo(BigDecimal.ZERO) > 0) {
+            MemberBcode codeFlow = new MemberBcode();
+            codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
+            codeFlow.setIncome(money.multiply(beat).setScale(2));
+            codeFlow.setCreateTime(new Date());
+            codeFlow.setStatus(0);
+            codeFlow.setCur(BigDecimal.ZERO);
+            codeFlow.setUserId(userId);
+            codeFlow.setDes("人工入款");
+            codeFlowMapper.insertMemberBcode(codeFlow);
+        }
+        //加钱
+        memberInfoMapper.updateMoneySelect(userId, money, null, money, null, null);
     }
 
     /**
