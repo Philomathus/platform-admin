@@ -44,4 +44,15 @@
         </trim>
         where id = #{id}
     </update>
+
+<!--    writing update status live -->
+    <update id="updateLiveLotterySetStatus" parameterType="LotteryInfo">
+        update ${dbLottery}.lottery_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null ">status = #{status}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
 </mapper>

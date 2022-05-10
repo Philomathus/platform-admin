@@ -5,6 +5,7 @@ import java.util.List;
 import com.qiqilm.server.admin.domain.LotteryInfo;
 import com.qiqilm.server.admin.domain.LotteryPrizepool;
 import com.qiqilm.server.admin.domain.MemberBcode;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 彩票名称Mapper接口
@@ -36,4 +37,22 @@ public interface LotteryInfoMapper {
 	 * @return 结果
 	 */
 	public int updateLotteryInfo(LotteryInfo lotteryInfo);
+
+	int updateLiveLotterySetStatus(LotteryInfo lotteryInfoSetStatus);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

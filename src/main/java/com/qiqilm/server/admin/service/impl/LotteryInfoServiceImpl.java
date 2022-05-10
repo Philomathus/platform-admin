@@ -1,18 +1,18 @@
 package com.qiqilm.server.admin.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.constant.Constants;
-import com.qiqilm.server.admin.domain.ActivityInfo;
-import com.qiqilm.server.admin.domain.LotteryPrizepool;
-import com.qiqilm.server.admin.domain.MemberBcode;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.LotteryInfoMapper;
-import com.qiqilm.server.admin.domain.LotteryInfo;
 import com.qiqilm.server.admin.service.ILotteryInfoService;
 import org.springframework.util.CollectionUtils;
 
@@ -76,4 +76,10 @@ public class LotteryInfoServiceImpl implements ILotteryInfoService {
         redisUtil.unlink(PLATFORM_LOTTERY_KEY);
         return i;
     }
+
+    @Override
+    public int updateLiveLotterySetStatus(LotteryInfo lotteryInfoSetStatus) {
+       return lotteryInfoMapper.updateLiveLotterySetStatus(lotteryInfoSetStatus);
+    }
+
 }
