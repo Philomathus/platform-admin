@@ -947,7 +947,6 @@ public class HttpClientTools {
         try {
             String text = getSignStr(sourceObj,md5Key);
             String sign = md5(text);
-            System.out.println("参与签名生成的明文:"+text+"，所生成的签名sign:"+sign);
             return sign;
         } catch (Exception e) {
             System.out.println("根据字母排序验签异常");

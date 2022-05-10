@@ -254,8 +254,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
                 log.warn("关播通知：{}", JsonUtil.object2Json(ext));
 
-                MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
-                imApi.sendGroupMessage(video.getGroupId(), message);
+                //MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
+                //imApi.sendGroupMessage(video.getGroupId(), message);
+                imApi.sendSystemNotify(video.getGroupId(), JsonUtil.object2Json(ext));
             } catch (Exception e) {
                 log.error("房间号不存在或无法发送直播结束通知 - videoId:{};groupId:{}", video.getId(), video.getGroupId(), e);
             }
@@ -320,8 +321,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 e.printStackTrace();
             }
 
-            MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
-            imApi.sendGroupMessage(video.getGroupId(), message);
+            //MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
+            //imApi.sendGroupMessage(video.getGroupId(), message);
+            imApi.sendSystemNotify(video.getGroupId(), JsonUtil.object2Json(ext));
+            imApi.sendSystemNotify(video.getGroupId(), JsonUtil.object2Json(ext));
             return msg;
         }
         throw new RuntimeException("切换失败");

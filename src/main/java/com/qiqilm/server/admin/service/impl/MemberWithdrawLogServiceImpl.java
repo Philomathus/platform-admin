@@ -656,9 +656,6 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
      */
     @Override
     public AjaxResult withdrawReport(String id) {
-        if ("43.154.103.17".equals(UserDataUtil.getIp(ServletUtil.getHttpServletRequest()))) {
-            return null;
-        }
         if (!redisUtil.lock(EnumLock.member, id, "1", 10)) {
             return AjaxResult.error("请勿重复查询");
         }

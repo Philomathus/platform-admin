@@ -737,6 +737,7 @@ public class MemberInfoController extends BaseController {
         return rspBase;
     }
 
+    @Log(title = "修改vip等级", businessType = BusinessType.UPDATE)
     @ApiOperation(value = "修改vip等级", notes = "修改vip等级")
     @PostMapping("/updateVip")
     public Object updateVip(HttpServletRequest request,
@@ -801,4 +802,14 @@ public class MemberInfoController extends BaseController {
         return AjaxResult.success("正在禁言中");
     }
 
+    /**
+     * 会员银行卡列表
+     *
+     * @return
+     */
+    @ApiOperation(value = "会员关注主播列表", notes = "会员关注主播列表")
+    @RequestMapping(value = "/follow-list", method = RequestMethod.GET)
+    public AjaxResult findMemberFollowList(ReqMemberInfo req) {
+        return memberInfoService.findMemberFollowList(req.getId());
+    }
 }

@@ -65,6 +65,9 @@ public abstract class Constants {
 
 	public static final String  LIVE_HOST_LOCK                 = LIVE_PREX + "lock:";
 
+	public static final String PAY_AGENT_TOKEN_USER = "Pay:agentAccount:token-user:";
+	public static final String PAY_AGENT_USER_TOKEN = "Pay:agentAccount:user-token:";
+
 	private Constants() {
 		throw new RuntimeException( "Constants.class can't be instantiated" );
 	}

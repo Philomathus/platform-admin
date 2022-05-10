@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.utils;
 
+import com.qiqilm.server.admin.cache.BatchIMCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageEnum;
@@ -24,17 +25,20 @@ import java.util.Map;
 @Component
 public class HelpNoticeUtil implements Serializable {
     @Autowired
-    private ImApi imApi;
-    @Autowired
     private ILiveVideoService liveVideoService;
     @Autowired
     private SysConfigCacheUtil sysConfigCacheUtil;
+    @Autowired
+    private BatchIMCacheUtil batchIMCacheUtil;
 
     @Value("${live.encrypt.privateKey}")
     private String liveRsaPrivateKey;
 
     @Value("${spring.profiles.active}")
     private String profile;
+
+    @Autowired
+    private ImApi imApi;
 
     /**
      * 所有直播间发送消息
@@ -81,11 +85,12 @@ public class HelpNoticeUtil implements Serializable {
             log.error(e.getMessage(), e);
         }
 
-        MessageType messageType = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
-
         for (String groupId : liveVideoService.selectOnlineLiveGroups()) {
             try {
-                imApi.sendGroupMessage(groupId, messageType);
+                // ext.put("groupId", groupId);
+                // batchIMCacheUtil.push(JsonUtil.object2Json(ext));
+
+                imApi.sendSystemNotify(groupId, JsonUtil.object2Json(ext));
             } catch (Exception e) {
                 log.error("小助手发消息失败", e);
             }
@@ -129,9 +134,14 @@ public class HelpNoticeUtil implements Serializable {
             log.error("管理后台给主播发通知data:{}", data);
             ext.put("userinfomat", RSA8SignUtils.sign(data, liveRsaPrivateKey));
 
-            MessageType messageType = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
+            ext.put("groupId", groupId);
 
-            imApi.sendGroupMessage(groupId, messageType);
+            imApi.sendSystemNotify(groupId, JsonUtil.object2Json(ext));
+
+            //batchIMCacheUtil.push(JsonUtil.object2Json(ext));
+
+            //MessageType messageType = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
+            //imApi.sendGroupMessage(groupId, messageType);
             log.warn("小助手消息发送成功" + groupId, JsonUtil.object2Json(ext));
         } catch (Exception e) {
             log.error("小助手发消息失败", e);

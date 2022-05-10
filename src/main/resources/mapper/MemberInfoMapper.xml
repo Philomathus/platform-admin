@@ -629,12 +629,6 @@
 		where id = #{memberId}
     </update>
 
-	<select id="selectMemberInfoWithdrawByIda" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
-		SELECT email,id,user_name,phone,login_time,vip,reg_time,total_account,code_account,code_total,login_ip,channelCode
-		from member_info where id = #{userid}
-	</select>
-
-
     <select id="selectMemberInfoAddressById" parameterType="String" resultType="java.lang.String">
 		SELECT fun_getaddress(login_ip) ipaddress
 		from member_info where id = #{userid}
@@ -645,12 +639,13 @@
 		where STATUS = '1' and member_id = #{userid}
 	</select>
 
-	<select id="selectMemberInfoWithdrawByIdb" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
-		SELECT IFNULL(SUM(recharge_money),0) rechargemoney from member_recharge_log where type = '1' and status = '3' and member_id = #{userid}
+	<select id="selectMemberInfoWithdrawByIda" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT email,id,user_name,phone,login_time,vip,reg_time,total_account,code_account,code_total,login_ip,channelCode
+		from member_info where id = #{userid}
 	</select>
 
-	<select id="selectMemberInfoWithdrawByIdz" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
-		SELECT IFNULL(SUM(recharge_money),0) usdtrechargemoney from pay_usdt_recharge where status = '3' and member_id = #{userid}
+	<select id="selectMemberInfoWithdrawByIdb" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT IFNULL(SUM(recharge_money),0) rechargemoney from member_recharge_log where type = '1' and status = '3' and member_id = #{userid}
 	</select>
 
 	<select id="selectMemberInfoWithdrawByIdc" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
@@ -700,11 +695,25 @@
 	</select>
 
 	<select id="selectMemberInfoWithdrawByIdl" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
-		select p.name as class_twoname,convert(sum(g.cell_score),decimal(10,2)) touZhu,convert(sum(g.profit),decimal(10,2)) yingLi
-		FROM member_game_data${tableLast} g
-		LEFT JOIN game_platform p on g.platform_id = p.id
-		WHERE account = #{userid} GROUP BY g.platform_id
+		SELECT p.NAME AS class_twoname, a.* FROM (
+			SELECT g.platform_id,
+			CONVERT ( sum( g.cell_score ), DECIMAL ( 10, 2 )) touZhu,
+			CONVERT ( sum( g.profit ), DECIMAL ( 10, 2 )) yingLi
+			FROM member_game_data${tableLast} g
+			WHERE account = #{userid}
+			GROUP BY g.platform_id
+		) a
+		LEFT JOIN game_platform p ON a.platform_id = p.id
 	</select>
+
+	<select id="selectMemberInfoWithdrawByIdz" parameterType="String" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberInfo">
+		SELECT IFNULL(SUM(recharge_money),0) usdtrechargemoney from pay_usdt_recharge where status = '3' and member_id = #{userid}
+	</select>
+
+	<select id="selectRegisterByMemberIds" parameterType="java.lang.String" resultMap="MemberInfoResult">
+		select id, reg_time from member_info where id in (${memberIds})
+	</select>
+
 	<select id="memberstatistics" resultType="com.qiqilm.server.admin.domain.rsp.RspMemberChannel">
 		select ifnull((count(*)),0) number,channelCode as  channelcode,email,inviter_code as inviterCode from member_info
 		<where>
@@ -778,11 +787,6 @@
 <!--			<if test="downLoadDate[1] != null "> and reg_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>-->
 			and `status` NOT in ("2","5")
 		</where>
-
-	</select>
-
-	<select id="selectRegisterByMemberIds" parameterType="java.lang.String" resultMap="MemberInfoResult">
-		select id, reg_time from member_info where id in (${memberIds})
 
 	</select>
 
