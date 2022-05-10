@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.LotteryInfo;
 import com.qiqilm.server.admin.domain.LotteryPrizepool;
 import com.qiqilm.server.admin.enums.BusinessType;
@@ -52,4 +53,13 @@ public class LotteryInfoController extends BaseController {
 	public AjaxResult edit( @RequestBody LotteryInfo lotteryInfo) {
 		return toAjax( lotteryInfoService.updateLotteryInfo(lotteryInfo) );
 	}
+
+	/**
+	 * Update Status controller
+	 */
+	@PutMapping( "/statusDetail" )
+	public AjaxResult statusDetail(LotteryInfo lotteryInfoSetStatus ) {
+		return toAjax( lotteryInfoService.updateLiveLotterySetStatus(lotteryInfoSetStatus) );
+	}
+
 }

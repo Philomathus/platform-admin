@@ -50,7 +50,7 @@ public class LogServiceImpl implements ILogService {
 		log.setPay( BigDecimal.ZERO );
 		if ( i > 0 ) {
 			log.setIncome( trade );
-		} else if ( i < 0 ) {
+		} else{
 			log.setPay( trade.negate() );
 		}
 		log.setTotalBefore( totalold );
@@ -91,7 +91,7 @@ public class LogServiceImpl implements ILogService {
 		log.setPay( BigDecimal.ZERO );
 		if ( i > 0 ) {
 			log.setIncome( trade );
-		} else if ( i < 0 ) {
+		} else {
 			log.setPay( trade.negate() );
 		}
 		log.setTotalBefore( totalold );

@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.cache;
 
 import com.qiqilm.server.admin.constant.Constants;
-import com.qiqilm.server.admin.constant.ConstantsWeb;
 import com.qiqilm.server.admin.domain.LiveUserMount;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.WheelUser;

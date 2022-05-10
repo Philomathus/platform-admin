@@ -2,9 +2,9 @@ package com.qiqilm.server.admin.service;
 
 import java.util.List;
 
-import com.qiqilm.server.admin.domain.LotteryInfo;
-import com.qiqilm.server.admin.domain.LotteryPrizepool;
-import com.qiqilm.server.admin.domain.MemberBcode;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.domain.*;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 彩票名称Service接口
@@ -37,5 +37,15 @@ public interface ILotteryInfoService {
 	 * @return 结果
 	 */
 	public int updateLotteryInfo(LotteryInfo lotteryInfo);
+
+
+	/**
+	 * Update Lottery Status Service InterFace
+	 *
+	 * @param lotteryInfoSetStatus Update Lottery Status Service InterFace
+	 * @return 结果
+	 */
+  int updateLiveLotterySetStatus(LotteryInfo lotteryInfoSetStatus);
+
 
 }
