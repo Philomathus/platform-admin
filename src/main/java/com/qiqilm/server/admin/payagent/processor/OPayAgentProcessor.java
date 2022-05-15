@@ -45,6 +45,7 @@ public class OPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl2(bodyMap) + signMd5;
+        log.warn(tempStr);
         String sign = DigestUtils.md5Hex(tempStr);
         bodyMap.put("sign", sign);
         bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.OPay);
