@@ -223,4 +223,8 @@ public abstract class ConstantsPayAgent {
     public static final String NEWYIDA = "newYiDa";
     //聚8代付
     public static final String JU8 = "ju8";
+    //cgPay代付
+    public static final String CG = "cg";
+    //OPay代付
+    public static final String OPay = "oPay";
 }
