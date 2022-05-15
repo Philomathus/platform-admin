@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.RoundingMode;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -34,17 +35,16 @@ import java.util.TreeMap;
 public class OPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
+        Map<String, Object> bodyMap = new LinkedHashMap<>();
         bodyMap.put("merchantId", payAgentPlatform.getMerId());
+        bodyMap.put("address", withdrawLog.getBankAccount().trim());
         bodyMap.put("outTradeId", withdrawLog.getOrderNo());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
-        bodyMap.put("address", withdrawLog.getBankAccount().trim());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl2(bodyMap) + signMd5;
-        log.warn(tempStr);
         String sign = DigestUtils.md5Hex(tempStr);
         bodyMap.put("sign", sign);
         bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.OPay);
@@ -96,7 +96,12 @@ public class OPayAgentProcessor extends AbstractPayAgent {
 
         String sign = requestMap.remove("sign").toString();
         String state = requestMap.getOrDefault("state", "").toString();
-        SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
+        String shOrderId = (String) requestMap.get("outTradeId");
+        Map<String, Object> bodyMap = new LinkedHashMap<>();
+        bodyMap.put("merchantId", requestMap.get("merchantId"));
+        bodyMap.put("outTradeId", shOrderId);
+        bodyMap.put("amount", requestMap.get("amount"));
+        bodyMap.put("state", state);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -106,7 +111,6 @@ public class OPayAgentProcessor extends AbstractPayAgent {
 
         log.info(payAgentPlatform.getName() + "回调签名:" + sign + "_" + signStr);
         if (sign.equalsIgnoreCase(signStr)) {
-            String shOrderId = (String) requestMap.get("outTradeId");
 
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(shOrderId);
             if (withdrawLog == null) {
@@ -135,11 +139,11 @@ public class OPayAgentProcessor extends AbstractPayAgent {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform =
                 payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
+        Map<String, Object> bodyMap = new LinkedHashMap<>();
         bodyMap.put("merchantId", payAgentPlatform.getMerId());
+        bodyMap.put("address", withdrawLog.getBankAccount().trim());
         bodyMap.put("outTradeId", withdrawLog.getOrderNo());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
-        bodyMap.put("address", withdrawLog.getBankAccount().trim());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
