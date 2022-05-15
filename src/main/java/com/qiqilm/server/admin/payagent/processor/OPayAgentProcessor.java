@@ -39,7 +39,7 @@ public class OPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("merchantId", payAgentPlatform.getMerId());
         bodyMap.put("address", withdrawLog.getBankAccount().trim());
         bodyMap.put("outTradeId", withdrawLog.getOrderNo());
-        bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
+        bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP).toString());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
