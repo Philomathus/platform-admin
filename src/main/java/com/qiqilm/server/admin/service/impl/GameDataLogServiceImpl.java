@@ -130,7 +130,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
         doBeatCode(willCodeMap);
 
-        deQuestCheck(willCodeList, willCodeMap);
+        deQuestCheck(willCodeList);
 
     }
 
@@ -182,7 +182,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
         doBeatCode(willCodeMap);
 
-        deQuestCheck(willCodeList, willCodeMap);
+        deQuestCheck(willCodeList);
 
         log.info("新拉单拉取条数：{},实际插入:{}", list.size(), willCodeList.size());
     }
@@ -280,13 +280,17 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
     //做任务
     @Async
-    public void deQuestCheck(final List<MemberGameData> list, Map<String, BigDecimal> willCodeMap) {
+    public void deQuestCheck(final List<MemberGameData> list) {
         //查找全部任务
         List<ActivityQuestInfo> listConfQuet = questInfoMapper.selectAllQuestList();
         Set<Integer> questSet = listConfQuet.stream().map(ActivityQuestInfo::getPlatformId).collect(Collectors.toSet());
         for (MemberGameData data : list) {
             //过滤没参加活动的游戏平台
             if (!questSet.contains(data.getPlatformId())) {
+                continue;
+            }
+            // 过滤百家乐和局庄闲下注，不计入打码和任务
+            if (new BigDecimal(data.getProfit()).compareTo(BigDecimal.ZERO) == 0 && data.getKindId().equals("2001")) {
                 continue;
             }
             int add = new BigDecimal(data.getCellScore()).intValue();
@@ -356,9 +360,12 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             gameDataLog.setPlatformType(platformTypeId);
             gameDataLog.setPlatformId(4);
 
-            BigDecimal beatAdd = og.getCost().multiply(beatRate).setScale(4);
-            willCodeMap.putIfAbsent(og.getPuserId(), BigDecimal.ZERO);
-            willCodeMap.put(og.getPuserId(), willCodeMap.get(og.getPuserId()).add(beatAdd));
+            // 百家乐和局中庄闲下注退款不计打码
+            if (!(og.getLotteryId().equals("2001") && new BigDecimal(gameDataLog.getProfit()).compareTo(BigDecimal.ZERO) == 0)) {
+                BigDecimal beatAdd = og.getCost().multiply(beatRate).setScale(4);
+                willCodeMap.putIfAbsent(og.getPuserId(), BigDecimal.ZERO);
+                willCodeMap.put(og.getPuserId(), willCodeMap.get(og.getPuserId()).add(beatAdd));
+            }
 
             willCodeList.add(gameDataLog);
         }
@@ -367,7 +374,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
         doBeatCode(willCodeMap);
 
-        deQuestCheck(willCodeList, willCodeMap);
+        deQuestCheck(willCodeList);
         log.info("纸飞机2id" + lottery_telegram);
         if (lottery_telegram != null) {
             noticeRobotMessage(lottery_telegram, willCodeList);
@@ -404,9 +411,12 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             gameDataLog.setPlatformType(platformTypeId);
             gameDataLog.setPlatformId(4);
 
-            BigDecimal beatAdd = lotteryBet.getCost().multiply(beatRate).setScale(4);
-            willCodeMap.putIfAbsent(lotteryBet.getPuserId(), BigDecimal.ZERO);
-            willCodeMap.put(lotteryBet.getPuserId(), willCodeMap.get(lotteryBet.getPuserId()).add(beatAdd));
+            // 百家乐和局中庄闲下注退款不计打码
+            if (!(lotteryBet.getLotteryId().equals("2001") && new BigDecimal(gameDataLog.getProfit()).compareTo(BigDecimal.ZERO) == 0)) {
+                BigDecimal beatAdd = lotteryBet.getCost().multiply(beatRate).setScale(4);
+                willCodeMap.putIfAbsent(lotteryBet.getPuserId(), BigDecimal.ZERO);
+                willCodeMap.put(lotteryBet.getPuserId(), willCodeMap.get(lotteryBet.getPuserId()).add(beatAdd));
+            }
 
             willCodeList.add(gameDataLog);
 
@@ -414,7 +424,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
             doBeatCode(willCodeMap);
 
-            deQuestCheck(willCodeList, willCodeMap);
+            deQuestCheck(willCodeList);
         }
     }
 
