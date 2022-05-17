@@ -77,9 +77,14 @@ public class LotteryInfoServiceImpl implements ILotteryInfoService {
         return i;
     }
 
+    /**
+     * Update Lottery Status Service InterFaceImpl
+     *
+     * @param lotteryInfoSetStatus Update Lottery Status Service InterFace Impl
+     * @return 结果
+     */
     @Override
     public int updateLiveLotterySetStatus(LotteryInfo lotteryInfoSetStatus) {
-       return lotteryInfoMapper.updateLiveLotterySetStatus(lotteryInfoSetStatus);
+        return lotteryInfoMapper.updateLiveLotterySetStatus(lotteryInfoSetStatus);
     }
-
 }

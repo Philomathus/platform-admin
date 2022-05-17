@@ -38,8 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 public class MemberMoneyController extends BaseController {
 	@Autowired
 	private IMemberMoneyService memberMoneyService;
-	@Autowired
-	private MemberInfoMapper memberInfoMapper;
+
 	@Autowired
 	private TokenService tokenService;
 	@Autowired
@@ -63,7 +62,7 @@ public class MemberMoneyController extends BaseController {
 	@GetMapping( "/handleClean" )
 	public AjaxResult handleClean() {
 		//清除表中数据
-		memberInfoMapper.clear();
+		memberMoneyService.clear();
 		return AjaxResult.success();
 	}
     
