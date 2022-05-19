@@ -223,7 +223,7 @@ public enum BankCodeDaNiuType {
     a213(Arrays.asList("清徐惠民村镇银行")),
     a214(Arrays.asList("曲靖市商业银行")),
     a215(Arrays.asList("瑞士银行")),
-    a216(Arrays.asList("山东省农村信用社", "山东农信")),
+    a216(Arrays.asList("山东省农村信用社", "山东农信", "山东省农村信用社联合社")),
     a217(Arrays.asList("陕西省农村信用社", "陕西农信")),
     a218(Arrays.asList("上海华瑞银行")),
     a219(Arrays.asList("上海农村商业银行", "上海农商")),
