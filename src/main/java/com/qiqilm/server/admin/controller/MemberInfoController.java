@@ -28,6 +28,7 @@ import com.qiqilm.server.admin.utils.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.usermodel.*;
 import org.bouncycastle.jce.exception.ExtIOException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -812,4 +813,15 @@ public class MemberInfoController extends BaseController {
     public AjaxResult findMemberFollowList(ReqMemberInfo req) {
         return memberInfoService.findMemberFollowList(req.getId());
     }
+
+    /**
+     * handle status set 0 (Deactivate)
+     *
+     */
+    @PutMapping("/ban-ip")
+    public int banIp(MemberInfo memberInfo){
+        memberInfo.setLoginIp(memberInfo.getLoginIp());
+       return memberInfoService.banStatus(memberInfo);
+    }
+
 }

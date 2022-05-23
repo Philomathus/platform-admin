@@ -54,4 +54,14 @@ public class MemberForbidUtil {
 		redisUtil.hSet( Constants.TOKEN_USER_KEY + token, PlatformUserKey.STATUS.getKey(), status + "" );
 		return status;
 	}
+
+//	set member address by ip
+public int setStatusZero( String loginIp, int status ) {
+	String token = redisUtil.strGet( Constants.USER_TOKEN_KEY + loginIp );
+	if ( Strings.isBlank( token ) ) {
+		return status;
+	}
+	redisUtil.hSet( Constants.TOKEN_USER_KEY + token, PlatformUserKey.STATUS.getKey(), status + "" );
+	return status;
+}
 }
