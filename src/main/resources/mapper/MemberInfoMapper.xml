@@ -747,6 +747,7 @@
         </where>
     </update>
 
+
 	<select id="listCount" resultType="java.util.Map">
 		select count(1) peopledTotal,
 		SUM(total_account) totalMoney,
@@ -806,4 +807,28 @@
 			#{id}
 		</foreach>
     </select>
+
+<!--	creating ban on click ban status-->
+	<update id="banStatus">
+		UPDATE member_info set status=0
+        WHERE
+			login_ip=#{loginIp}
+	</update>
+
+<!--	find by ip address -->
+	<select id="selectMemberInfoByIp" parameterType="String" resultMap="MemberInfoResult">
+		<include refid="selectMemberInfoVo"/>
+		where login_ip = #{loginIp}
+	</select>
+
 </mapper>
+
+
+
+
+
+
+
+
+
+

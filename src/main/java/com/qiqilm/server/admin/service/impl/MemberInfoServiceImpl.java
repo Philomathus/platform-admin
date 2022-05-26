@@ -540,4 +540,15 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         }
         return AjaxResult.success();
     }
+
+    @Override
+    public int banStatus(MemberInfo memberInfo) {
+        return memberInfoMapper.banStatus(memberInfo);
+    }
+
+    @Override
+    public MemberInfo selectMemberInfoByIp(String id) {
+            return memberInfoMapper.selectMemberInfoByIp(id);
+    }
+
 }

@@ -38,6 +38,12 @@ public interface LotteryInfoMapper {
 	 */
 	public int updateLotteryInfo(LotteryInfo lotteryInfo);
 
+	/**
+	 * Update Lottery Status Mapper
+	 *
+	 * @param lotteryInfoSetStatus Update Lottery Status Mapper
+	 * @return 结果
+	 */
 	int updateLiveLotterySetStatus(LotteryInfo lotteryInfoSetStatus);
 }
 
