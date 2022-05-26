@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
 import com.qiqilm.server.admin.domain.vo.ReqAddScore;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -93,4 +94,10 @@ public interface IMemberInfoService {
 	Map listCount(MemberInfo memberInfo);
 
 	AjaxResult findMemberFollowList(String id);
+
+	public int banStatus(MemberInfo memberInfo);
+
+
+	public MemberInfo selectMemberInfoByIp(String id);
+
 }

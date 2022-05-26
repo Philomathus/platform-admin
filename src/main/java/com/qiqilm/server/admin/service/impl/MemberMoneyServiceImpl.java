@@ -188,4 +188,13 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
     public int deleteMemberMoneyById(String memberId) {
         return memberMoneyMapper.deleteMemberMoneyById(memberId);
     }
+
+
+    /**
+     *批量清理临时支付表 clear the temporary payout table in batches
+     */
+    @Override
+    public Integer clear() {
+        return memberInfoMapper.clear();
+    }
 }
