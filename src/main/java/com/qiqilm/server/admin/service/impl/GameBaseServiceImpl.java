@@ -108,6 +108,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 		if (lists.contains(EnumGamePlatform.ICG_DIANZI.getType())) forkJoinTasks.add( this.icgBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.MEITIAN_CHESS.getType())) forkJoinTasks.add( this.mtBalanceTask( userId ) );
 		if (lists.contains(EnumGamePlatform.KAIXUAN_CHESS.getType())) forkJoinTasks.add( this.kxBalanceTask( userId, date ) );
+		if (lists.contains(EnumGamePlatform.KAIXUAN_CHESS_NEW.getType())) forkJoinTasks.add( this.kxNewBalanceTask( userId, date ) );
 		if (lists.contains(EnumGamePlatform.NEWWORLD_CHESS.getType())) forkJoinTasks.add( this.newWorldBalanceTask( userId, date ) );
 		if (lists.contains(EnumGamePlatform.AFB.getType())) forkJoinTasks.add( this.afbBalanceTask( userId, date ) );
 		if (lists.contains(EnumGamePlatform.FANY_SPORT.getType())) forkJoinTasks.add( this.fanyBalanceTask( userId, date ) );
@@ -234,6 +235,25 @@ public class GameBaseServiceImpl implements IGameBaseService {
 				RspGameBalance rspGameBalance = new RspGameBalance();
 				rspGameBalance.setType( EnumGamePlatform.KAIXUAN_CHESS.getType() );
 				rspGameBalance.setName( EnumGamePlatform.KAIXUAN_CHESS.getName() );
+				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+				return rspGameBalance;
+			} catch ( Exception e ) {
+				log.error( e.getMessage(), e );
+			}
+			return null;
+		};
+	}
+
+	private Callable<RspGameBalance> kxNewBalanceTask( final String userId, final Date date ) {
+		return () -> {
+			try {
+				GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById(
+						EnumGamePlatform.KAIXUAN_CHESS_NEW.getType() );
+				BigDecimal backMoney = kaiXuanService.queryCoin( gamePlatform, userId, date );
+
+				RspGameBalance rspGameBalance = new RspGameBalance();
+				rspGameBalance.setType( EnumGamePlatform.KAIXUAN_CHESS_NEW.getType() );
+				rspGameBalance.setName( EnumGamePlatform.KAIXUAN_CHESS_NEW.getName() );
 				rspGameBalance.setValue( backMoney.setScale( 2, BigDecimal.ROUND_HALF_UP ) );
 				return rspGameBalance;
 			} catch ( Exception e ) {
