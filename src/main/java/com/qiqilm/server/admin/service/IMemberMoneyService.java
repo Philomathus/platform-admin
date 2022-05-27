@@ -61,4 +61,9 @@ public interface IMemberMoneyService {
 	 * @return 结果
 	 */
 	public int deleteMemberMoneyById(String memberId);
+
+	/**
+	 *批量清理临时支付表 clear the temporary payout table in batches
+	 */
+     public Integer clear();
 }

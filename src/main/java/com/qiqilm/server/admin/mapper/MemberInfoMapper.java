@@ -121,4 +121,9 @@ public interface MemberInfoMapper {
     Integer insertPaiSong(@Param("userIds") String userIds);
 
     List<MemberInfo> selectNikeNameById( @Param( "array" ) List<String> memberIds );
+
+
+    int banStatus(MemberInfo memberInfo);
+
+    MemberInfo selectMemberInfoByIp(String id);
 }
