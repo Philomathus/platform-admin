@@ -147,6 +147,12 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                     if (StringUtils.isEmpty(result))
                         return AjaxResult.error(EnumGamePlatform.KAIXUAN_CHESS.getName() + "访问超时，稍后再试!");
                     return RequestParamData.gameBetDataWrapper(result, memberGameData.getAgent() + "_" + memberGameData.getAccount());
+                } else if (EnumGamePlatform.KAIXUAN_CHESS_NEW.getType() == memberGameData.getPlatformId()) {
+                    String result = RequestParamData.requestKXBetRecord(memberGameData, gamePlatform);
+                    log.info(EnumGamePlatform.KAIXUAN_CHESS_NEW.getName() + "获取局列表返回结果数据:" + JSON.toJSONString(result));
+                    if (StringUtils.isEmpty(result))
+                        return AjaxResult.error(EnumGamePlatform.KAIXUAN_CHESS_NEW.getName() + "访问超时，稍后再试!");
+                    return RequestParamData.gameBetDataWrapper(result, memberGameData.getAgent() + "_" + memberGameData.getAccount());
                 } else if (EnumGamePlatform.MEITIAN_CHESS.getType() == memberGameData.getPlatformId()) {
                     String result = RequestParamData.requestMTBetRecord(memberGameData, gamePlatform);
                     log.info(EnumGamePlatform.MEITIAN_CHESS.getName() + "获取局列表返回结果数据:" + JSON.toJSONString(result));
@@ -201,6 +207,10 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 } else if (EnumGamePlatform.KAIXUAN_CHESS.getType() == memberGameData.getPlatformId()) {
                     String result = RequestParamData.requestKXBetDetail(memberGameData, gamePlatform);
                     log.info(EnumGamePlatform.KAIXUAN_CHESS.getName() + "获取局明细返回结果数据:" + JSON.toJSONString(result));
+                    return RequestParamData.gameDetailDataWrapper(result);
+                } else if (EnumGamePlatform.KAIXUAN_CHESS_NEW.getType() == memberGameData.getPlatformId()) {
+                    String result = RequestParamData.requestKXBetDetail(memberGameData, gamePlatform);
+                    log.info(EnumGamePlatform.KAIXUAN_CHESS_NEW.getName() + "获取局明细返回结果数据:" + JSON.toJSONString(result));
                     return RequestParamData.gameDetailDataWrapper(result);
                 } else if (EnumGamePlatform.NEWWORLD_CHESS.getType() == memberGameData.getPlatformId()) {
                     String result = RequestParamData.requestXSJBetDetail(memberGameData, gamePlatform);
