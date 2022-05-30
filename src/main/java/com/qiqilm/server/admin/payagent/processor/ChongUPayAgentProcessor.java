@@ -63,7 +63,7 @@ public class ChongUPayAgentProcessor extends AbstractPayAgent {
         requestMap.setAll(bodyMap);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity(requestMap, httpHeaders);
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(requestMap, httpHeaders);
 
         Map<String, Object> resultMap = null;
         try {
