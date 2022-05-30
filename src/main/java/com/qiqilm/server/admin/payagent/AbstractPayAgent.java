@@ -35,6 +35,12 @@ public abstract class AbstractPayAgent implements BasePayAgent {
 		return sb.substring( 0, sb.length() - 1 );
 	}
 
+	protected String assemblyUrl2( Map<String, ?> bodyMap ) {
+		StringBuilder sb = new StringBuilder();
+		bodyMap.forEach( ( k, v ) -> sb.append( v ) );
+		return sb.toString();
+	}
+
 	protected boolean checkWhiteIp( String platWhiteIpList, String realIp ) {
 		if ( StringUtils.hasText( platWhiteIpList ) ) {
 			Set<String> whiteIpSet = Sets.newHashSet( platWhiteIpList.split( "," ) );

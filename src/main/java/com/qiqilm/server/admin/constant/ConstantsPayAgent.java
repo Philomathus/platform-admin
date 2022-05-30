@@ -203,6 +203,12 @@ public abstract class ConstantsPayAgent {
     public static final String XINSHUN = "xinShun";
     //杉德2代付
     public static final String SHANDE2 = "shanDe2";
+    //杉德2代付
+    public static final String SHANDE21 = "shanDe21";
+    //杉德2代付
+    public static final String SHANDE22 = "shanDe22";
+    //杉德2代付
+    public static final String SHANDE23 = "shanDe23";
     //GoPay代付
     public static final String GOPAY = "GoPay";
     //新汇代付
@@ -223,7 +229,12 @@ public abstract class ConstantsPayAgent {
     public static final String NEWYIDA = "newYiDa";
     //聚8代付
     public static final String JU8 = "ju8";
-
-    //chongU
+    //cgPay代付
+    public static final String CG = "cg";
+    //OPay代付
+    public static final String OPay = "oPay";
+    //麒麟代付
+    public static final String QILIN = "qiLin";
+    //新银联 充U代付
     public static final String CHONGU = "chongU";
 }
