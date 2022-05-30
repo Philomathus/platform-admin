@@ -51,8 +51,13 @@ public class ChongUPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
+
+        log.warn(tempStr);
+
         String sign = DigestUtils.md5Hex(tempStr);
         bodyMap.put("Sign", sign);
+
+        log.warn(JsonUtil.object2Json(bodyMap));
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(bodyMap);
@@ -142,7 +147,7 @@ public class ChongUPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(dataMap) + signMd5;
-        String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
+        String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("Sign", sign);
         log.warn(payAgentPlatform.getName() + "查询代付状态接口请求参数{}", JsonUtil.object2Json(dataMap));
 
