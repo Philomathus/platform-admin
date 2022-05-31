@@ -139,7 +139,7 @@ public class ChongUPayAgentProcessor extends AbstractPayAgent {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
 
-        Map<String, Object> dataMap = new LinkedHashMap<>();
+        Map<String, Object> dataMap = new TreeMap<>();
         dataMap.put("MerchantId", payAgentPlatform.getMerId());
         dataMap.put("Timestamp", DateFormatUtils.formate(new Date(), DateFormatUtils.TIGHT_PATTERN_DATETIME));
         dataMap.put("MerchantUniqueOrderId", withdrawLog.getOrderNo());
