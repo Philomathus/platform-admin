@@ -132,9 +132,9 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
         int num;
         if (liveBlack.getBlackUserId().startsWith("7706") || liveBlack.getBlackUserId().startsWith("7711")) {
             num = liveBlackMapper.deleteLiveBlackById7706(liveBlack.getId());
-        } else if (liveBlack.getBlackUserId().startsWith("7705")) {
+        } else if (liveBlack.getBlackUserId().startsWith("7705") || liveBlack.getBlackUserId().startsWith("7712")) {
             num = liveBlackMapper.deleteLiveBlackById7705(liveBlack.getId());
-        } else if (liveBlack.getBlackUserId().startsWith("7710") || liveBlack.getBlackUserId().startsWith("7712")) {
+        } else if (liveBlack.getBlackUserId().startsWith("7710")) {
             num = liveBlackMapper.deleteLiveBlackById7710(liveBlack.getId());
         } else {
             num = liveBlackMapper.deleteLiveBlackById(liveBlack.getId());
