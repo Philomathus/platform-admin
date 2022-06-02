@@ -27,7 +27,7 @@ public class HostLiveGiftFix {
             return;
         }
 
-        if(profile.equals("7706")||profile.equals("7705")||profile.equals("7710")||profile.equals("7711")||profile.equals("7712")){
+        if(profile.equals("7706")||profile.equals("7705")||profile.equals("7710")||profile.equals("7711")||profile.equals("77mm")){
             return;
         }
 
