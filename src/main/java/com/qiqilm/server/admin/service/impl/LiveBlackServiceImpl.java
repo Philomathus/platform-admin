@@ -110,15 +110,15 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
                 }
                 return liveBlackList7711;
             }
-            case "7712": {
-                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList7712(liveBlack);
-                List<LiveBlack> liveBlackList7712 = new ArrayList<>();
+            case "77mm": {
+                List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList77mm(liveBlack);
+                List<LiveBlack> liveBlackList77mm = new ArrayList<>();
                 for (LiveBlack liveBlack1 : liveBlackAllList) {
-                    if (liveBlack1.getBlackUserId().startsWith("7712")) {
-                        liveBlackList7712.add(liveBlack1);
+                    if (liveBlack1.getBlackUserId().startsWith("77mm")) {
+                        liveBlackList77mm.add(liveBlack1);
                     }
                 }
-                return liveBlackList7712;
+                return liveBlackList77mm;
             }
             default:
                 liveBlackList = liveBlackMapper.selectLiveBlackList(liveBlack);
@@ -132,7 +132,7 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
         int num;
         if (liveBlack.getBlackUserId().startsWith("7706") || liveBlack.getBlackUserId().startsWith("7711")) {
             num = liveBlackMapper.deleteLiveBlackById7706(liveBlack.getId());
-        } else if (liveBlack.getBlackUserId().startsWith("7705") || liveBlack.getBlackUserId().startsWith("7712")) {
+        } else if (liveBlack.getBlackUserId().startsWith("7705") || liveBlack.getBlackUserId().startsWith("77mm")) {
             num = liveBlackMapper.deleteLiveBlackById7705(liveBlack.getId());
         } else if (liveBlack.getBlackUserId().startsWith("7710")) {
             num = liveBlackMapper.deleteLiveBlackById7710(liveBlack.getId());

@@ -172,8 +172,8 @@
         </trim>
     </insert>
 
-    <insert id="insertLiveHostWageDay7712">
-        insert ignore into 7712_live.live_host_wage_day
+    <insert id="insertLiveHostWageDay77mm">
+        insert ignore into 77mm_live.live_host_wage_day
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="familyId != null">family_id,</if>

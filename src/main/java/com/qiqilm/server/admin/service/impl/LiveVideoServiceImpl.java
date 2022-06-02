@@ -202,7 +202,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 break;
             case "7704":
                 liveVideoMapper.updateLive7705Video(updateVideo);
-                liveVideoMapper.updateLive7712Video(updateVideo);
+                liveVideoMapper.updateLive77mmVideo(updateVideo);
                 break;
             case "7708":
                 liveVideoMapper.updateLive7710Video(updateVideo);
@@ -347,7 +347,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 break;
             case "7704":
                 liveVideoMapper.updateLive7705Video(entity);
-                liveVideoMapper.updateLive7712Video(entity);
+                liveVideoMapper.updateLive77mmVideo(entity);
                 break;
             case "7708":
                 liveVideoMapper.updateLive7710Video(entity);
@@ -714,37 +714,37 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                     }
                 }
 
-                //先收集7712
-                Map<String, LiveHostWageDay> update7712Map = new HashMap<>();
-                propDayVos = liveVideoPropMapper.sumHostPropDay7712List(dayTime);
+                //先收集77mm
+                Map<String, LiveHostWageDay> update77mmMap = new HashMap<>();
+                propDayVos = liveVideoPropMapper.sumHostPropDay77mmList(dayTime);
 
                 for (HostPropDayVo v : propDayVos) {
                     id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7712Map.get(id);
+                    LiveHostWageDay updateLiveDay = update77mmMap.get(id);
                     if (updateLiveDay == null) {
                         updateLiveDay = new LiveHostWageDay();
                         updateLiveDay.setId(id);
-                        update7712Map.put(updateLiveDay.getId(), updateLiveDay);
+                        update77mmMap.put(updateLiveDay.getId(), updateLiveDay);
                     }
                     updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp()));
 
                 }
-                log.error("7712主播收礼物数：{}", propDayVos.size());
+                log.error("77mm主播收礼物数：{}", propDayVos.size());
 
-                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay7712List(begin, end);
+                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay77mmList(begin, end);
                 for (HostPropDayVo v : lotteryDayVos) {
                     id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7712Map.get(id);
+                    LiveHostWageDay updateLiveDay = update77mmMap.get(id);
                     if (updateLiveDay == null) {
                         updateLiveDay = new LiveHostWageDay();
                         updateLiveDay.setId(id);
-                        update7712Map.put(updateLiveDay.getId(), updateLiveDay);
+                        update77mmMap.put(updateLiveDay.getId(), updateLiveDay);
                     }
                     updateLiveDay.setLotteryCost(updateLiveDay.getLotteryCost().add(v.getSumHostProp()));
 
                 }
-                log.error("7712主播投注数：{}", lotteryDayVos.size());
-                for (LiveHostWageDay updateLiveDay : update7712Map.values()) {
+                log.error("77mm主播投注数：{}", lotteryDayVos.size());
+                for (LiveHostWageDay updateLiveDay : update77mmMap.values()) {
                     LiveHostWageDay db = liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
                     if (db == null) {
                         continue;
@@ -755,11 +755,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                     updateLiveDay.setFamilyId(db.getFamilyId());
                     updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
                     updateLiveDay.setTimes(db.getTimes());
-                    liveHostWageDayMapper.insertLiveHostWageDay7712(updateLiveDay);
+                    liveHostWageDayMapper.insertLiveHostWageDay77mm(updateLiveDay);
                 }
 
                 //合并到7704
-                for (LiveHostWageDay v : update7712Map.values()) {
+                for (LiveHostWageDay v : update77mmMap.values()) {
                     if (updateMap.containsKey(v.getId())) {
                         LiveHostWageDay tem = updateMap.get(v.getId());
                         tem.setTicket(tem.getTicket().add(v.getTicket()));
@@ -770,7 +770,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                     }
                 }
             } catch (Exception e) {
-                log.error("7705 7712 主播结算异常", e);
+                log.error("7705 77mm 主播结算异常", e);
             }
 
         }

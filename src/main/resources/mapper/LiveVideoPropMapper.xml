@@ -233,8 +233,8 @@
 	<select id="sumHostPropDay7711List" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
 		select to_user_id hostId, IFNULL(SUM(total_ticket),0) sumHostProp from 7711_live.live_video_prop  where to_user_id > 0 and  p_user_id not in (select id from 7711_main.member_info where  status = 2) and create_date = #{dayTime} GROUP BY to_user_id
 	</select>
-	<select id="sumHostPropDay7712List" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
-		select to_user_id hostId, IFNULL(SUM(total_ticket),0) sumHostProp from 7712_live.live_video_prop  where to_user_id > 0 and  p_user_id not in (select id from 7712_main.member_info where  status = 2) and create_date = #{dayTime} GROUP BY to_user_id
+	<select id="sumHostPropDay77mmList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
+		select to_user_id hostId, IFNULL(SUM(total_ticket),0) sumHostProp from 77mm_live.live_video_prop  where to_user_id > 0 and  p_user_id not in (select id from 77mm_main.member_info where  status = 2) and create_date = #{dayTime} GROUP BY to_user_id
 	</select>
 
 	<select id="sumHostLotteryDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
@@ -252,7 +252,7 @@
 	<select id="sumHostLotteryDay7711List" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
 		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from 7711_lottery.lottery_bet_bb_view  where  update_time <![CDATA[ >= ]]> #{begin} and update_time <![CDATA[ <= ]]> #{end} and anchor >0 and puser_id not in (select id from 7711_main.member_info where  status = 2)   GROUP BY anchor
 	</select>
-	<select id="sumHostLotteryDay7712List" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
-		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from 7712_lottery.lottery_bet_bb_view  where  update_time <![CDATA[ >= ]]> #{begin} and update_time <![CDATA[ <= ]]> #{end} and anchor >0 and puser_id not in (select id from 7712_main.member_info where  status = 2)   GROUP BY anchor
+	<select id="sumHostLotteryDay77mmList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
+		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from 77mm_lottery.lottery_bet_bb_view  where  update_time <![CDATA[ >= ]]> #{begin} and update_time <![CDATA[ <= ]]> #{end} and anchor >0 and puser_id not in (select id from 77mm_main.member_info where  status = 2)   GROUP BY anchor
 	</select>
 </mapper>
