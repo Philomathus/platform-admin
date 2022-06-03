@@ -38,7 +38,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
         BankCodeDaNiuType bankCodeType = BankCodeDaNiuType.getCodeByDesc(withdrawLog.getBankName());
         if (bankCodeType == null) {
             log.warn("大牛银联代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
-            payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
+            payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             throw new BusinessException("此代付无法支持的银行类型：" + withdrawLog.getBankName());
         }
         withdrawLog.setBankCode(bankCodeType.name().substring(1));
@@ -69,16 +69,16 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
-                    restTemplate.httpEntityCallback( httpEntity ), response -> {
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
                         InputStream bodyStream = response.getBody();
-                        String      text;
-                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
-                            text = CharStreams.toString( reader );
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
                         }
                         log.warn(text);
-                        return JsonUtil.json2Map( text );
-                    } );
+                        return JsonUtil.json2Map(text);
+                    });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             reqPayAgent.setFailReason(payAgentPlatform.getName() + "下单报错原因:" + e.getMessage());
@@ -92,7 +92,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("Msg", "").toString());
 
-                payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
         log.warn(payAgentPlatform.getName() + "订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
@@ -244,6 +244,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
                         break;
                 }
                 payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
+                return resultDataMap.getOrDefault("ProcessRemark", "").toString();
             }
             return resultMap.getOrDefault("Msg", "").toString();
         }
