@@ -14,6 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="price"    column="price"    />
         <result property="disPrice"    column="dis_price"    />
         <result property="vday"    column="vday"    />
+        <result property="oder" column="oder"/>
     </resultMap>
 
     <sql id="selectLiveMountVo">
