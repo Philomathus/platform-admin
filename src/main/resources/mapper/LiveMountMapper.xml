@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectLiveMountVo">
-        select id, gvip, name, status, icon_url, svg_url, price, dis_price, vday from ${dbLive}.live_mount
+        select id, gvip, name, status, icon_url, svg_url, price, dis_price, vday,oder from ${dbLive}.live_mount
     </sql>
 
     <select id="selectLiveMountList" parameterType="LiveMount" resultMap="LiveMountResult">
@@ -31,7 +31,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="price != null "> and price = #{price}</if>
             <if test="disPrice != null "> and dis_price = #{disPrice}</if>
             <if test="vday != null "> and vday = #{vday}</if>
+            <if test="oder != null  and oder != ''"> and oder = #{oder}</if>
         </where>
+        order by oder ASC
     </select>
 
     <select id="selectLiveMountById" parameterType="Long" resultMap="LiveMountResult">
@@ -50,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="price != null">price,</if>
             <if test="disPrice != null">dis_price,</if>
             <if test="vday != null">vday,</if>
+            <if test="oder != null and name != ''">oder,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gvip != null">#{gvip},</if>
@@ -60,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="price != null">#{price},</if>
             <if test="disPrice != null">#{disPrice},</if>
             <if test="vday != null">#{vday},</if>
+            <if test="oder != null and oder != ''">#{oder},</if>
          </trim>
     </insert>
 
@@ -74,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="price != null">price = #{price},</if>
             <if test="disPrice != null">dis_price = #{disPrice},</if>
             <if test="vday != null">vday = #{vday},</if>
+            <if test="oder != null and oder != ''">oder = #{oder},</if>
         </trim>
         where id = #{id}
     </update>

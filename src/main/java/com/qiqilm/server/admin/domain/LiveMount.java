@@ -50,6 +50,9 @@ public class LiveMount extends BaseEntity {
     @Excel(name = "有效天数")
     private Long vday;
 
+    @Excel(name = "排序字段")
+    private String oder;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -114,6 +117,14 @@ public class LiveMount extends BaseEntity {
         return vday;
     }
 
+    public String getOder() {
+        return oder;
+    }
+
+    public void setOder(String oder) {
+        this.oder = oder;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -126,6 +137,9 @@ public class LiveMount extends BaseEntity {
             .append("price", getPrice())
             .append("disPrice", getDisPrice())
             .append("vday", getVday())
+            .append("oder", getOder())
             .toString();
     }
+
+
 }
