@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -43,7 +44,7 @@ public class ShanDe2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("province", "广东省");
         dataMap.put("city", "深圳市");
         dataMap.put("branchbank", withdrawLog.getBankName());
-        dataMap.put("wallet_id", "2");
+        dataMap.put("wallet_id", StringUtils.isEmpty(payAgentPlatform.getHeaderKey()) ? "2" : payAgentPlatform.getHeaderKey());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));

@@ -817,8 +817,8 @@
         </trim>
         where id = #{id}
     </update>
-    <update id="updateLive7712Video">
-        update 7712_live.live_video
+    <update id="updateLive77mmVideo">
+        update 77mm_live.live_video
         <trim prefix="SET" suffixOverrides=",">
             <if test="title != null and title != ''">
                 title = #{title},
@@ -1663,8 +1663,8 @@
             <if test="lotteryName != null">#{lotteryName},</if>
         </trim>
     </insert>
-    <insert id="insertLiveVideo7712" parameterType="LiveVideo">
-        insert into 7712_live.live_video
+    <insert id="insertLiveVideo77mm" parameterType="LiveVideo">
+        insert into 77mm_live.live_video
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="title != null and title != ''">title,</if>

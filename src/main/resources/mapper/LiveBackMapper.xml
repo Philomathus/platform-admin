@@ -116,7 +116,7 @@
         </where>
         ORDER BY g.create_time desc
     </select>
-    <select id="selectLiveBlackList7712" resultType="com.qiqilm.server.admin.domain.LiveBlack">
+    <select id="selectLiveBlackList77mm" resultType="com.qiqilm.server.admin.domain.LiveBlack">
         SELECT
         g.id,
         g.remark,
@@ -127,9 +127,9 @@
         m.nick_name as nickName,
         r.nick_name as hostName
         FROM
-        7708_live.live_black g
-        LEFT JOIN 7708_live.live_user r ON g.host_id = r.id
-        INNER JOIN 7712_main.member_info m ON g.black_user_id = m.id
+        7704_live.live_black g
+        LEFT JOIN 7704_live.live_user r ON g.host_id = r.id
+        INNER JOIN 77mm_main.member_info m ON g.black_user_id = m.id
         <where>
             <if test="hostId != null "> and host_id = #{hostId}</if>
             <if test="blackUserId != null  and blackUserId != ''"> and black_user_id = #{blackUserId}</if>

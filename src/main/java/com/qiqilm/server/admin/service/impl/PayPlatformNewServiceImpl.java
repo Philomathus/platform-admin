@@ -85,7 +85,7 @@ public class PayPlatformNewServiceImpl implements IPayPlatformNewService {
         agentPlatform.add("7709_main");
         agentPlatform.add("7710_main");
         agentPlatform.add("7711_main");
-        agentPlatform.add("7712_main");
+        agentPlatform.add("77mm_main");
         String sqlConfig = "(`id`, `name`, `code`, mer_id, plat_pay_url, plat_query_url, plat_white_ip_list, creator, create_time) VALUES ("
                 + "\"" + payPlatformNew.getId() + "\","
                 + "\"" + payPlatformNew.getName() + "\","
