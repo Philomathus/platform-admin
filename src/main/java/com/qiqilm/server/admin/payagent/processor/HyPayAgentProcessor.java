@@ -25,10 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 @Repository(value = ConstantsPayAgent.HY + "PayAgentProcessor")
 @Log4j2
@@ -93,14 +90,14 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
         }
         log.info(payAgentPlatform.getName() + "下单结果{},订单号:{}", JsonUtil.object2Json(resultMap), withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
-            String error_code = resultMap.getOrDefault("ErrorCode", "").toString();
-            String error_message = resultMap.getOrDefault("ErrorMessage", "").toString();
+            Object error_code = resultMap.get("ErrorCode");
+            Object error_message = resultMap.get("ErrorMessage");
 
-            if (StringUtils.isEmpty(error_message) && StringUtils.isEmpty(error_code)) {
+            if (Objects.isNull(error_message) && Objects.isNull(error_code)) {
                 log.info(payAgentPlatform.getName() + "代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(resultMap.getOrDefault("ErrorMessage", "").toString());
+                reqPayAgent.setFailReason(error_message.toString());
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
