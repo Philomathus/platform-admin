@@ -261,6 +261,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 //MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
                 //imApi.sendGroupMessage(video.getGroupId(), message);
                 imApi.sendSystemNotify(video.getGroupId(), JsonUtil.object2Json(ext));
+                imApi.sendSystemNotify(video.getGroupId(), JsonUtil.object2Json(ext));
             } catch (Exception e) {
                 log.error("房间号不存在或无法发送直播结束通知 - videoId:{};groupId:{}", video.getId(), video.getGroupId(), e);
             }
