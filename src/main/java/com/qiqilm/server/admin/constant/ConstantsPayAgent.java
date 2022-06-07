@@ -241,4 +241,6 @@ public abstract class ConstantsPayAgent {
     public static final String BAIDAFU = "baiDaFu";
     //MT代付
     public static final String MT = "mt";
+
+    public static final String HY = "hy";
 }
