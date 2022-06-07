@@ -9,9 +9,7 @@ import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeHyType;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
-import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpEntity;
@@ -27,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -41,23 +40,22 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
 
         if (bankType == null) {
             payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
-            log.warn(payAgentPlatform.getName()+"代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
-            throw new BusinessException(payAgentPlatform.getName()+"代付无法支持的银行类型：" + withdrawLog.getBankName());
+            log.warn(payAgentPlatform.getName() + "代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName());
+            throw new BusinessException(payAgentPlatform.getName() + "代付无法支持的银行类型：" + withdrawLog.getBankName());
         }
 
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
+        Map<String, Object> bodyMap = new LinkedHashMap<>();
 
         bodyMap.put("merchantId", payAgentPlatform.getMerId());
         bodyMap.put("merchantOrderId", withdrawLog.getOrderNo());
         bodyMap.put("orderAmount", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP));
-        bodyMap.put("payType","payType");
-        bodyMap.put("accountHolderName",withdrawLog.getBankUserName());
-        bodyMap.put("accountNumber",withdrawLog.getBankAccount());
-        bodyMap.put("bankType",bankType);
+        bodyMap.put("payType", "1");
+        bodyMap.put("accountHolderName", withdrawLog.getBankUserName().trim());
+        bodyMap.put("accountNumber", withdrawLog.getBankAccount().trim());
+        bodyMap.put("bankType", bankType.name().substring(1));
         bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HY);
-        bodyMap.put("reverseUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl")+ ConstantsPayAgent.HY);
-        bodyMap.put("submitIp","ip");
-        bodyMap.put("subBranch", withdrawLog.getBankName());
+        bodyMap.put("reverseUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HY);
+        bodyMap.put("submitIp", "192.168.0.1");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -67,6 +65,8 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
 
         String sign = DigestUtils.md5Hex(tempStr).toLowerCase();
         bodyMap.put("sign", sign);
+
+        bodyMap.put("subBranch", withdrawLog.getBankName());
 
         log.warn(JsonUtil.object2Json(bodyMap));
 
@@ -94,9 +94,9 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
         log.info(payAgentPlatform.getName() + "下单结果{},订单号:{}", JsonUtil.object2Json(resultMap), withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String error_code = resultMap.getOrDefault("ErrorCode", "").toString();
-            String error_message = resultMap.getOrDefault("ErrorMessage","").toString();
+            String error_message = resultMap.getOrDefault("ErrorMessage", "").toString();
 
-            if (error_message ==null && error_code==null) {
+            if (StringUtils.isEmpty(error_message) && StringUtils.isEmpty(error_code)) {
                 log.info(payAgentPlatform.getName() + "代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
@@ -114,12 +114,20 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
         String sign = requestMap.remove("sign").toString();
         String merchantOrderId = requestMap.getOrDefault("merchantOrderId", "").toString();
 
-        String status = requestMap.getOrDefault("Status", "").toString();
+        String status = requestMap.getOrDefault("status", "").toString();
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
+        Map<String, Object> bodyMap = new LinkedHashMap<>();
+        bodyMap.put("merchantId", requestMap.get("merchantId"));
+        bodyMap.put("merchantOrderId", merchantOrderId);
+        bodyMap.put("status", status);
+        bodyMap.put("orderType", requestMap.get("orderType"));
+        bodyMap.put("orderAmount", requestMap.get("orderAmount"));
+        bodyMap.put("systemOrderId", requestMap.get("systemOrderId"));
+        bodyMap.put("remark", requestMap.get("remark"));
+        bodyMap.put("submitIp", requestMap.get("submitIp"));
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
@@ -132,19 +140,19 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
                 return "fail";
             }
             if (withdrawLog.getStatus() == 1) {
-                if(withdrawLog.getStatus()==2){
-                    if(withdrawLog.getStatus()==3){
+                if (withdrawLog.getStatus() == 2) {
+                    if (withdrawLog.getStatus() == 3) {
                         log.error("已有代付记录 - merOrderNo:{}", merchantOrderId);
                         return "OK";
                     }
-                    if(withdrawLog.getStatus()==4){
+                    if (withdrawLog.getStatus() == 4) {
                         log.error("提现相关记录丢失 - merOrderNo:{}", merchantOrderId);
                         return "fail";
                     }
                 }
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merchantOrderId);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, requestMap.getOrDefault("MerchantOrderId", "").toString(),
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, requestMap.getOrDefault("systemOrderId", "").toString(),
                     payAgentPlatform, "3".equals(status));
             return "OK";
         }
@@ -161,7 +169,7 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
 
-        Map<String, Object> dataMap = new TreeMap<>();
+        Map<String, Object> dataMap = new LinkedHashMap<>();
         dataMap.put("merchantId", payAgentPlatform.getMerId());
         dataMap.put("merchantOrderId", withdrawLog.getOrderNo());
         dataMap.put("orderAmount", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -197,7 +205,8 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
 
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String errorCode = resultMap.getOrDefault("ErrorCode", "").toString();
-                if ("50001".equals(errorCode)) {
+                String errorMessage = resultMap.getOrDefault("ErrorMessage", "").toString();
+                if (StringUtils.isEmpty(errorCode) && StringUtils.isEmpty(errorMessage)) {
                     String trade_state = resultMap.getOrDefault("Status", "").toString();
                     if ("1".equals(trade_state) || "2".equals(trade_state) || "3".equals(trade_state) || "4".equals(trade_state)) {
                         // status 4代付中 5代付失败 6代付成功
@@ -207,7 +216,7 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
                         if ("3".equals(trade_state)) {
                             status = 6;
                             orderStatus = 1;
-                        } else if("4".equals(trade_state)) {
+                        } else if ("4".equals(trade_state)) {
                             status = 5;
                             orderStatus = 2;
                         }
