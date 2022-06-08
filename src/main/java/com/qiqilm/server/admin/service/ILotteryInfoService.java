@@ -45,7 +45,7 @@ public interface ILotteryInfoService {
 	 * @param lotteryInfoSetStatus Update Lottery Status Service InterFace
 	 * @return 结果
 	 */
-  int updateLiveLotterySetStatus(LotteryInfo lotteryInfoSetStatus);
+     int updateLiveLotterySetStatus(LotteryInfo lotteryInfoSetStatus);
 
 
 }
