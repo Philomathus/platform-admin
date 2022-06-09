@@ -340,6 +340,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         if (list.size() == 0) {
             return;
         }
+        log.warn("彩票拉取注单数量" + list.size());
         Map<String, BigDecimal> willCodeMap = new HashMap<>();
         List<MemberGameData> willCodeList = new ArrayList<>();
         SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH,

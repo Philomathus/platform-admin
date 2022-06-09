@@ -59,6 +59,7 @@ public class LotteryDataTask {
         if (memberGameDatafix == null) {
             return;
         }
+        log.error("修复彩票注定数据开始");
         try {
 
             gameDataLogService.beatLotteryCode(platformTypeId, beatRate, memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime());
@@ -68,7 +69,7 @@ public class LotteryDataTask {
             data.setStatus(1);
             memberGameDatafixMapper.updateMemberGameDatafix(data);
         } catch (Exception e) {
-            log.error("修复游戏注定数据失败,", e);
+            log.error("修复彩票注定数据失败,", e);
         }
 
 
@@ -88,6 +89,8 @@ public class LotteryDataTask {
         Date starDay = DateFormatUtils.addMin(endDay, -2);
         String start = DateFormatUtils.formate(starDay);
         String end = DateFormatUtils.formate(endDay);
+
+        log.warn("彩票拉取注单时间 - startTime:{}; endTime:{}", start, end);
         try {
             /*DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
             GamePlatform gamePlatform = gamePlatformService.selectGamePlatformById(EnumGamePlatform.CX_LOTTERY.getType());
