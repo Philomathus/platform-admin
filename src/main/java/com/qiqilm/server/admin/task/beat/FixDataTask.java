@@ -62,7 +62,7 @@ public class FixDataTask {
             return;
         }
         Long platformId = memberGameDatafix.getPlatformId();
-        if (platformId == 80000 || platformId == 10000) {
+        if (platformId == 3 || platformId == 4) {
             return;
         }
         String platformid = platformId.toString();

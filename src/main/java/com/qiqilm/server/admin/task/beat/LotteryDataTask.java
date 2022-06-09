@@ -52,7 +52,7 @@ public class LotteryDataTask {
 
     @Scheduled(fixedDelay = 600000, initialDelay = 1)
     public void runTask2() throws Exception {
-        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName() + "Fix")) {
+        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName() + "Fix", 500)) {
             return;
         }
         MemberGameDatafix memberGameDatafix = memberGameDatafixMapper.getgameDatafixLottery();
