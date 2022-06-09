@@ -3,8 +3,10 @@ package com.qiqilm.server.admin.task.beat;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.config.dds.DynamicDataSourceContextHolder;
 import com.qiqilm.server.admin.domain.GamePlatform;
+import com.qiqilm.server.admin.domain.MemberGameDatafix;
 import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.enums.EnumLock;
+import com.qiqilm.server.admin.mapper.MemberGameDatafixMapper;
 import com.qiqilm.server.admin.service.IGameDataLogService;
 import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
@@ -32,10 +34,9 @@ public class LotteryDataTask {
     @Autowired
     private IGamePlatformService gamePlatformService;
     @Autowired
-    private RedisUtil redisUtil;
-
+    private MemberGameDatafixMapper memberGameDatafixMapper;
     @Autowired
-    private SysConfigCacheUtil sysConfigCacheUtil;
+    private RedisUtil redisUtil;
     @Value("${spring.profiles.active}")
     private String profile;
 
@@ -49,6 +50,30 @@ public class LotteryDataTask {
         beatRate= gamePlatform.getRateBeat();
     }
 
+    @Scheduled(fixedDelay = 600000, initialDelay = 1)
+    public void runTask2() throws Exception {
+        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName() + "Fix")) {
+            return;
+        }
+        MemberGameDatafix memberGameDatafix = memberGameDatafixMapper.getgameDatafixLottery();
+        if (memberGameDatafix == null) {
+            return;
+        }
+        try {
+
+            gameDataLogService.beatLotteryCode(platformTypeId, beatRate, memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime());
+
+            MemberGameDatafix data = new MemberGameDatafix();
+            data.setId(memberGameDatafix.getId());
+            data.setStatus(1);
+            memberGameDatafixMapper.updateMemberGameDatafix(data);
+        } catch (Exception e) {
+            log.error("修复游戏注定数据失败,", e);
+        }
+
+
+    }
+
     @Scheduled(fixedDelay = 60000, initialDelay = 5000)
     public void runTask() throws Exception {
         if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName())) {
@@ -58,8 +83,6 @@ public class LotteryDataTask {
         if (!profile.startsWith("77")) {
             return;
         }
-
-        String lottery_telegram = sysConfigCacheUtil.getConf("lottery_telegram");
 
         Date endDay = new Date();
         Date starDay = DateFormatUtils.addMin(endDay, -2);
@@ -72,7 +95,7 @@ public class LotteryDataTask {
             BigDecimal beatRate = gamePlatform.getRateBeat();
             DynamicDataSourceContextHolder.clearDataSourceKey();*/
 
-            gameDataLogService.beatLotteryCode(lottery_telegram, platformTypeId, beatRate, start, end);
+            gameDataLogService.beatLotteryCode(platformTypeId, beatRate, start, end);
         } catch (Exception e) {
             log.error("彩票拉取注单异常,", e);
         }

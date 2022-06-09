@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.task.beat;
 
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.config.dds.DynamicDataSourceContextHolder;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.MemberGameDatafix;
@@ -30,46 +31,49 @@ public class FixDataTask {
     @Autowired
     private IGamePlatformService gamePlatformService;
     @Autowired
-    private MemberGameDatafixMapper  memberGameDatafixMapper;
+    private MemberGameDatafixMapper memberGameDatafixMapper;
 
     @Autowired
     private RedisUtil redisUtil;
 
-    @Value( "${spring.profiles.active}" )
+    @Value("${spring.profiles.active}")
     private String profile;
-    private Map<Integer,String> platformType = new HashMap<>();
+    private Map<Integer, String> platformType = new HashMap<>();
     private Map<Integer, BigDecimal> beatRateMap = new HashMap<>();
 
     @PostConstruct
     public void init() {
         //DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
-        for(GamePlatform gm: gamePlatformService.selectGamePlatformList(new GamePlatform())){
-            platformType.put(gm.getId(),gm.getGameTypeid());
-            beatRateMap.put(gm.getId(),gm.getRateBeat());
+        for (GamePlatform gm : gamePlatformService.selectGamePlatformList(new GamePlatform())) {
+            platformType.put(gm.getId(), gm.getGameTypeid());
+            beatRateMap.put(gm.getId(), gm.getRateBeat());
         }
         //DynamicDataSourceContextHolder.clearDataSourceKey();
     }
 
 
-    @Scheduled( fixedDelay = 600000, initialDelay=1 )
+    @Scheduled(fixedDelay = 600000, initialDelay = 1)
     public void runTask() throws Exception {
-        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName())){
+        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName())) {
             return;
         }
         MemberGameDatafix memberGameDatafix = memberGameDatafixMapper.getgameDatafix();
-        if (memberGameDatafix==null){
+        if (memberGameDatafix == null) {
             return;
         }
         Long platformId = memberGameDatafix.getPlatformId();
-        String platformid=platformId==null?null:platformId.toString();
+        if (platformId == 80000 || platformId == 10000) {
+            return;
+        }
+        String platformid = platformId.toString();
         try {
-            gameDataLogService.beatGameCodeAgent(memberGameDatafix.getGameStartTime(),platformType,beatRateMap,profile, memberGameDatafix.getGameStartTime(),memberGameDatafix.getGameEndTime(),memberGameDatafix.getUserId(),platformid);
-            MemberGameDatafix data= new MemberGameDatafix();
+            gameDataLogService.beatGameCodeAgent(memberGameDatafix.getGameStartTime(), platformType, beatRateMap, profile, memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime(), memberGameDatafix.getUserId(), platformid);
+            MemberGameDatafix data = new MemberGameDatafix();
             data.setId(memberGameDatafix.getId());
             data.setStatus(1);
             memberGameDatafixMapper.updateMemberGameDatafix(data);
-        }catch (Exception e){
-            log.error("修复游戏注定数据失败,",e);
+        } catch (Exception e) {
+            log.error("修复游戏注定数据失败,", e);
         }
 
 
