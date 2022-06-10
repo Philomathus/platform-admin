@@ -11,11 +11,12 @@
         <result property="official"    column="official"    />
         <result property="killRate"    column="kill_rate"    />
         <result property="minCost"    column="min_cost"    />
+        <result property="order"    column="order"    />
         <result property="cycle"    column="cycle"    />
     </resultMap>
 
     <sql id="selectLotteryInfoVo">
-        select id, name, type, status, icon, official, kill_rate, min_cost, cycle from ${dbLottery}.lottery_info
+        select id, name,type,status, icon, official, kill_rate, min_cost,`order`, cycle from ${dbLottery}.lottery_info
     </sql>
 
     <select id="selectLotteryInfoList" parameterType="LotteryInfo" resultMap="LotteryInfoResult">
@@ -28,6 +29,7 @@
             <if test="official != null "> and official = #{official}</if>
             <if test="killRate != null "> and kill_rate = #{killRate}</if>
             <if test="minCost != null "> and min_cost = #{minCost}</if>
+            <if test="order != null "> and order = #{order}</if>
             <if test="cycle != null "> and cycle = #{cycle}</if>
         </where>
     </select>
