@@ -53,6 +53,11 @@ public class LotteryInfo extends BaseEntity {
     @Excel(name = "周期")
     private Long cycle;
 
+    /** 排序 */
+    @Excel(name = "排序")
+    private String order;
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -64,6 +69,7 @@ public class LotteryInfo extends BaseEntity {
             .append("official", getOfficial())
             .append("killRate", getKillRate())
             .append("minCost", getMinCost())
+            .append("order", getOrder())
             .append("cycle", getCycle())
             .toString();
     }
