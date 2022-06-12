@@ -818,6 +818,7 @@ public class MemberInfoController extends BaseController {
      * handle status set 0 (Deactivate)
      *
      */
+    @Log(title = "根据IP禁用用户", businessType = BusinessType.UPDATE)
     @PutMapping("/ban-ip")
     public int banIp(MemberInfo memberInfo){
         memberInfo.setLoginIp(memberInfo.getLoginIp());

@@ -97,7 +97,4 @@ public interface IMemberInfoService {
 
 	public int banStatus(MemberInfo memberInfo);
 
-
-	public MemberInfo selectMemberInfoByIp(String id);
-
 }
