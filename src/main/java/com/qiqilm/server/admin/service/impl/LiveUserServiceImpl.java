@@ -217,6 +217,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
         if (liveImage1 != null) {
             liveImage = (String) map.get("liveImage");
         }
+        Integer lotteryId = (Integer) map.get("lotteryId");
+        String lotteryName = (String) map.get("lotteryName");
         LiveVideo liveVideo = liveVideoMapper.selectLiveVideoById(new Long(id));
         log.error("虚拟主播开播map:{}", JsonUtil.object2Json(map));
         LiveUser hostInfo = liveUserMapper.selectLiveUserById(new Long(id));
@@ -237,6 +239,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setHostName(hostInfo.getNickName());
             liveVideo.setNewPlayFlv(flv);
             liveVideo.setPlayUrl(flv);
+            liveVideo.setLotteryId(lotteryId);
+            liveVideo.setLotteryName(lotteryName);
             liveVideoMapper.updateLiveVideo2(liveVideo);
         } else {
             //新增
@@ -254,10 +258,15 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setPaiId(-1L);
             liveVideo.setLiveImage(liveImage);
             liveVideo.setHeadImage(hostInfo.getHeadImage());
-            liveVideo.setLotteryId(1002);
             liveVideo.setNewPlayFlv(flv);
-            liveVideo.setLotteryName("一分快三");
             liveVideo.setPlayUrl(flv);
+            if (lotteryId != null) {
+                liveVideo.setLotteryId(lotteryId);
+                liveVideo.setLotteryName(lotteryName);
+            } else {
+                liveVideo.setLotteryId(1002);
+                liveVideo.setLotteryName("一分快三");
+            }
             setIms(liveVideo, id, title);
             liveVideo.setNPlayFlv(AesUtil.aesEncrypt(flv, "qwertyui12345678"));
             if (profile.equals("7701")) {

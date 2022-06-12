@@ -46,7 +46,7 @@ public class UpdateNickNameTask {
     @Async
     public void updateNickNameCache() throws Exception {
 
-        if (!ArrayUtils.contains(new String[]{"7709"}, profile)) {
+        if (!ArrayUtils.contains(new String[]{"7703"}, profile)) {
             return;
         }
 
@@ -79,7 +79,7 @@ public class UpdateNickNameTask {
                         continue;
                     }
 
-                    if (StringUtils.indexOfAny(nickName.toString(), "玫瑰") >= 0) {
+                    if (StringUtils.indexOfAny(nickName.toString(), "雪梨") >= 0) {
                         resultMaps.put(userId.toString(), scanResult);
                     }
                 }

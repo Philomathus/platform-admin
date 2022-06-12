@@ -44,6 +44,7 @@ public interface MemberGameDatafixMapper {
 	public int updateMemberGameDatafix(MemberGameDatafix memberGameDatafix);
 
 	MemberGameDatafix getgameDatafix();
+	MemberGameDatafix getgameDatafixLottery();
 
 	/**
 	 * 删除游戏注单修复

@@ -85,6 +85,7 @@ public class LotteryInfoServiceImpl implements ILotteryInfoService {
      */
     @Override
     public int updateLiveLotterySetStatus(LotteryInfo lotteryInfoSetStatus) {
+        redisUtil.unlink(PLATFORM_LOTTERY_KEY);
         return lotteryInfoMapper.updateLiveLotterySetStatus(lotteryInfoSetStatus);
     }
 }

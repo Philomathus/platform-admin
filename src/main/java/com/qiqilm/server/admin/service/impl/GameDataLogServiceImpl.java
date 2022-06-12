@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import com.qiqilm.server.admin.mapper.*;
@@ -12,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +59,9 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     private SqlSessionTemplate sqlSessionTemplate;
     @Resource
     private RobotMessage robotMessage;
+
+    @Autowired
+    private SysConfigCacheUtil sysConfigCacheUtil;
 
     /**
      * 查询总代理游戏注单
@@ -330,12 +335,12 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     }
 
     @Override
-    public void beatLotteryCode(String lottery_telegram, String platformTypeId, BigDecimal beatRate, String start,
-                                String end) {
+    public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String start, String end) {
         List<LotteryBet> list = lotteryBetMapper.selectLotteryBetList(start, end);
         if (list.size() == 0) {
             return;
         }
+        log.warn("彩票拉取注单数量" + list.size());
         Map<String, BigDecimal> willCodeMap = new HashMap<>();
         List<MemberGameData> willCodeList = new ArrayList<>();
         SqlSession session = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH,
@@ -375,6 +380,9 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         doBeatCode(willCodeMap);
 
         deQuestCheck(willCodeList);
+
+        String lottery_telegram = sysConfigCacheUtil.getConf("lottery_telegram");
+
         log.info("纸飞机2id" + lottery_telegram);
         if (lottery_telegram != null) {
             noticeRobotMessage(lottery_telegram, willCodeList);

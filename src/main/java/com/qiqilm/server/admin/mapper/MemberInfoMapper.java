@@ -125,5 +125,5 @@ public interface MemberInfoMapper {
 
     int banStatus(MemberInfo memberInfo);
 
-    MemberInfo selectMemberInfoByIp(String id);
+    List<MemberInfo> selectMemberInfoByIp(String id);
 }
