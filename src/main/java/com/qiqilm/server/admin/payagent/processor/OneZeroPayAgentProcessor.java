@@ -121,16 +121,16 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
                 log.error("提现相关记录丢失 - merOrderNo:{}", merchantOrderId);
                 return "fail";
             }
+
             if (withdrawLog.getStatus() == 1) {
-                    if (withdrawLog.getStatus() == 1) {
-                        log.error("已有代付记录 - merOrderNo:{}", merchantOrderId);
-                        return "OK";
-                    }
-                   if(withdrawLog.getStatus() == 2) {
-                        log.error("提现相关记录丢失 - merOrderNo:{}", merchantOrderId);
-                        return "fail";
-                    }
+                log.error("已有代付记录 - merOrderNo:{}", merchantOrderId);
+                return "OK";
             }
+            if(withdrawLog.getStatus() == 2) {
+                log.error("提现相关记录丢失 - merOrderNo:{}", merchantOrderId);
+                return "fail";
+            }
+
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merchantOrderId);
             payAgentService.processOrderPay(withdrawLog, payAgentLog, requestMap.getOrDefault("orderNo", "").toString(),
                     payAgentPlatform, "1".equals(status));
