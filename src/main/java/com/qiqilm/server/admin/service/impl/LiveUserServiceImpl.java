@@ -239,8 +239,13 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setHostName(hostInfo.getNickName());
             liveVideo.setNewPlayFlv(flv);
             liveVideo.setPlayUrl(flv);
-            liveVideo.setLotteryId(lotteryId);
-            liveVideo.setLotteryName(lotteryName);
+            if (lotteryId != null) {
+                liveVideo.setLotteryId(lotteryId);
+                liveVideo.setLotteryName(lotteryName);
+            } else {
+                liveVideo.setLotteryId(1002);
+                liveVideo.setLotteryName("一分快三");
+            }
             liveVideoMapper.updateLiveVideo2(liveVideo);
         } else {
             //新增
