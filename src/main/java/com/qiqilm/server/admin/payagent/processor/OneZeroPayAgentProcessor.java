@@ -48,7 +48,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bankCode", withdrawLog.getBankCode());
         bodyMap.put("cardType", withdrawLog.getBankName().trim());
 
-        bodyMap.put("callBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.ONE_ZERO);
+        bodyMap.put("customerCallbackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.ONE_ZERO);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
