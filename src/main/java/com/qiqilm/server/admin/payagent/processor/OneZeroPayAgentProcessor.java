@@ -53,6 +53,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
+        log.warn(tempStr);
         String sign = DigestUtils.md5Hex(tempStr).toLowerCase();
         bodyMap.put("sign", sign);
 
