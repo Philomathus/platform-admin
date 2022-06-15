@@ -118,7 +118,7 @@ public class RequestLogAspect {
                 //结果
                 "Result    : " + getExceptionMsg( e ) + "\n";
         System.out.println( sb );
-//        log.info("Error Request Info      : {}", JSON.toJSONString(requestErrorInfo));
+//        log.info("Error Request Info      : {}", JsonUtil.object2Json(requestErrorInfo));
     }
 
     /**

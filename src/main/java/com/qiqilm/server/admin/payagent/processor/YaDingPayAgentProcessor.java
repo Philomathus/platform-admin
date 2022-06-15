@@ -1,7 +1,5 @@
 package com.qiqilm.server.admin.payagent.processor;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -38,11 +36,11 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
         map.put("OutOrderId", withdrawLog.getOrderNo());
         List<Map<String,Object>> dataList = new LinkedList<>();
         dataList.add(map);
-        dataMap.put("data", JSON.toJSONString(dataList));
+        dataMap.put("data", JsonUtil.object2Json(dataList));
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
-        String tempStr = JSON.toJSONString(dataList) + signMd5;
+        String tempStr = JsonUtil.object2Json(dataList) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
 
@@ -58,7 +56,6 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
         log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             String dataStr = resultMap.getOrDefault("data", "").toString();
-            String msg = JSONObject.parseObject(dataStr).getString("failMsg");
             String code = resultMap.getOrDefault("code", "").toString();
             String success = resultMap.getOrDefault("success", "").toString();
 
@@ -66,7 +63,8 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
                 log.info(payAgentPlatform.getName()+"订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
-                reqPayAgent.setFailReason(msg);
+                Map data = (Map) resultMap.getOrDefault("data", new HashMap<>());
+                reqPayAgent.setFailReason(data.get("failMsg").toString());
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
@@ -129,7 +127,7 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> orderMap = new LinkedHashMap<>();
         orderMap.put("outOrderId",withdrawLog.getOrderNo());
-        String data = JSON.toJSONString(orderMap);
+        String data = JsonUtil.object2Json(orderMap);
         dataMap.put("data", data);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(

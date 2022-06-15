@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.payagent.processor;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
@@ -24,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -69,7 +69,8 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
 
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("1".equals(resultMap.getOrDefault("code", "").toString())) {
-                String id = JSONObject.parseObject(resultMap.get("data").toString()).getString("id");
+                Map data = (Map) resultMap.getOrDefault("data", new HashMap<>());
+                String id = data.getOrDefault("id","").toString();
                 PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(withdrawLog.getOrderNo());
                 payAgentLog.setPayAgentOrderNo(id);
                 payAgentLogMapper.updatePayAgentLog(payAgentLog);
@@ -164,7 +165,8 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
                 //  statusCode 1-已创建,4-已转币,8-已取消,99-错误
-                String statusCode = JSONObject.parseObject(resultMap.get("data").toString()).getString("state");
+                Map<String,Object> data = (Map<String,Object>)resultMap.getOrDefault("data", new HashMap<>());
+                String statusCode = data.getOrDefault("state", "").toString();
                 if (!"1".equals(code)) {
                     statusCode = "99";
                 }

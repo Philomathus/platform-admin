@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.cache;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.domain.GameInfo;
@@ -80,9 +79,9 @@ public class GameCacheManager {
 	public void initVip(){
 		List<RspVipSet> list =  configVipMapper.findListForCache();
 		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-		operations.set(Constants.CX_VIP.concat("list"), JSON.toJSONString(list));
+		operations.set(Constants.CX_VIP.concat("list"), JsonUtil.object2Json(list));
 		for(RspVipSet p:list){
-			operations.set(Constants.CX_VIP.concat(String.valueOf(p.getLevel_flag())), JSON.toJSONString(p));
+			operations.set(Constants.CX_VIP.concat(String.valueOf(p.getLevel_flag())), JsonUtil.object2Json(p));
 		}
 
 	}
@@ -103,7 +102,7 @@ public class GameCacheManager {
 		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
 
 		for(RspGameInfo game : gameInfoMapper.findTypeList()){
-			operations.set(Constants.CX_GAME.concat("id:").concat(game.getId()), JSON.toJSONString(game));
+			operations.set(Constants.CX_GAME.concat("id:").concat(game.getId()), JsonUtil.object2Json(game));
 			if(game.getPlatformId()==3){
 				operations.set(Constants.CX_GAME.concat("liveId"), game.getId());
 			}
@@ -114,7 +113,7 @@ public class GameCacheManager {
 		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
 		RspGameInfo game = new RspGameInfo();
 		BeanUtils.copyProperties(gameInfo,game);
-		operations.set(Constants.CX_GAME.concat("id:").concat(game.getId()), JSON.toJSONString(game));
+		operations.set(Constants.CX_GAME.concat("id:").concat(game.getId()), JsonUtil.object2Json(game));
 		if(game.getPlatformId() != null && game.getPlatformId()==3){
 			operations.set(Constants.CX_GAME.concat("liveId"), game.getId());
 		}
@@ -124,7 +123,7 @@ public class GameCacheManager {
 	public void initGamesTypes(){
 		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
 		List<RspGameType> typeList =  gameTypeMapper.findList(new ReqGameType());
-		operations.set(Constants.CX_GAME.concat("type:list"), JSON.toJSONString(typeList.stream().filter(s->s.getStatus()>0).collect(Collectors.toList())));
+		operations.set(Constants.CX_GAME.concat("type:list"), JsonUtil.object2Json(typeList.stream().filter(s->s.getStatus()>0).collect(Collectors.toList())));
 	}
 
 	/*public List<RspGameType> getGamesTypes(){
@@ -140,7 +139,7 @@ public class GameCacheManager {
 		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
 		for(RspGameType gameType : getGamesTypes() ){
 			List<String> gameList =  gameInfoMapper.findListByType(gameType.getId()).stream().map(RspGameInfo::getId).collect(Collectors.toList());
-			operations.set(Constants.CX_GAME.concat("group:").concat(gameType.getId()), JSON.toJSONString(gameList));
+			operations.set(Constants.CX_GAME.concat("group:").concat(gameType.getId()), JsonUtil.object2Json(gameList));
 		}
 	}*/
 
@@ -155,16 +154,16 @@ public class GameCacheManager {
 				continue;
 			}
 			allIds.add(String.valueOf(p.getId()));
-			operations.set(Constants.CX_GAME.concat("platformId:").concat(String.valueOf(p.getId())), JSON.toJSONString(p));
+			operations.set(Constants.CX_GAME.concat("platformId:").concat(String.valueOf(p.getId())), JsonUtil.object2Json(p));
 			if(!groupMap.containsKey(p.getGame_typeID())){
 				groupMap.put(p.getGame_typeID(), new ArrayList<>() );
 			}
 			groupMap.get(p.getGame_typeID()).add(String.valueOf(p.getId()));
 		}
 
-		operations.set(Constants.CX_GAME.concat("platformIds:list"), JSON.toJSONString(allIds));
+		operations.set(Constants.CX_GAME.concat("platformIds:list"), JsonUtil.object2Json(allIds));
 		for(String typeId : groupMap.keySet()){
-			operations.set(Constants.CX_GAME.concat("platformGroups:").concat(typeId), JSON.toJSONString(groupMap.get(typeId)));
+			operations.set(Constants.CX_GAME.concat("platformGroups:").concat(typeId), JsonUtil.object2Json(groupMap.get(typeId)));
 		}
 	}
 	public String getICGToken() {
@@ -180,15 +179,16 @@ public class GameCacheManager {
 		ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
 		List<String>                    ids;
 		if ( StringUtils.isEmpty( gameTypeId ) ) {
-			ids = JSON.parseArray( operations.get( Constants.CX_GAME.concat( "platformIds:list" ) ), String.class );
+			ids = JsonUtil.json2Array(operations.get(Constants.CX_GAME.concat("platformIds:list")), new TypeReference<List<String>>() {
+			});
 		} else {
-			ids = JSON.parseArray( operations.get( Constants.CX_GAME.concat( "platformGroups:" ).concat( gameTypeId ) ),
-					String.class );
+			ids = JsonUtil.json2Array( operations.get( Constants.CX_GAME.concat( "platformGroups:" ).concat( gameTypeId ) ),
+					new TypeReference<List<String>>() {} );
 		}
 		List<RspGamePlatform> list = new ArrayList<>();
 		if ( ids != null ) {
 			for ( String pid : ids ) {
-				list.add( JSON.parseObject( operations.get( Constants.CX_GAME.concat( "platformId:" ).concat( String.valueOf( pid ) ) ), RspGamePlatform.class ) );
+				list.add( JsonUtil.json2Object( operations.get( Constants.CX_GAME.concat( "platformId:" ).concat( String.valueOf( pid ) ) ), RspGamePlatform.class ) );
 			}
 		}
 		return list;

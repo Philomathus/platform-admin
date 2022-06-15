@@ -14,15 +14,14 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
+
+import com.qiqilm.server.admin.utils.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Base64;
-import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.codec.digest.DigestUtils;
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.Map;
 import java.util.SortedMap;
@@ -53,7 +52,6 @@ import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import com.alibaba.fastjson.JSON;
 
 /**
  * Http网络请求工具类
@@ -282,36 +280,6 @@ public class HttpClientTools {
         }
         return result.toString();
     }
-    /**
-     * @描述:PostMethod请求 application/x-www-form-urlencoded
-     */
-    public static  String POSTReturnString(String url, JSONObject jsonObject,String charSet) {
-        HttpClient client = new HttpClient();
-        PostMethod method = new PostMethod(url);
-        String result = "";
-        try {
-//            client.getHttpConnectionManager().getParams().setConnectionTimeout(10000);//            链接超时 10S
-//            client.getHttpConnectionManager().getParams().setSoTimeout(10000);//            读取超时 10S
-            method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=" + charSet);
-            for (String key :jsonObject.keySet()) {
-                method.setParameter(key, jsonObject.getString(key));
-            }
-            int statusCode = client.executeMethod(method);
-            if (statusCode != HttpStatus.SC_OK) {
-                logger.info("请求响应失败" + statusCode);
-            } else {
-                result = method.getResponseBodyAsString();
-                logger.info("POST请求响应:{}",result);
-            }
-        } catch (HttpException e) {
-            logger.error("POST请求异常",e);
-        } catch (IOException e) {
-            logger.error("POST请求IO异常",e);
-        }finally {
-            method.releaseConnection(); // 释放连接
-        }
-        return result;
-    }
 
     /**
      * @描述: Post发送NameValuePair参数
@@ -329,7 +297,7 @@ public class HttpClientTools {
             client.getHttpConnectionManager().getParams().setSoTimeout(10000);//            读取超时 10S
             method.addRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             method.setRequestBody(param);
-            logger.info("doPostMethod请求入参:{}", JSON.toJSONString(param));
+            logger.info("doPostMethod请求入参:{}", JsonUtil.object2Json(param));
             int status = client.executeMethod(method);
             if (status == HttpStatus.SC_OK) {
                 result = method.getResponseBodyAsString();
@@ -346,12 +314,6 @@ public class HttpClientTools {
         return result;
     }
 
-
-
-    //基础网络请求二次包装 CHARTSET_UTF_8
-    public static String baseHttpSendPost(String url, JSONObject reqParam) throws Exception {
-        return baseHttpSendPost(url, reqParam, CHARTSET_UTF_8);
-    }
     //基础网络请求二次包装 CHARTSET_UTF_8
     public static String baseHttpSendPost(String url, String jsonStr) throws Exception {
         return baseHttpSendPost(url, jsonStr, CHARTSET_UTF_8);
@@ -359,10 +321,6 @@ public class HttpClientTools {
     //基础网络请求二次包装 CHARTSET_UTF_8
     public static String baseHttpSendPost(String url, Map<String, String> reqMap) throws Exception {
         return baseHttpSendPost(url, reqMap.toString(), CHARTSET_UTF_8);
-    }
-    //基础网络请求二次包装 json
-    public static String baseHttpSendPost(String url, JSONObject reqParam, String charset) throws Exception {
-        return baseHttpSendPost(url,reqParam.toString(),charset);
     }
 
     public static String httpSendPostForm(String url,Map<String,String> params) throws IOException {
@@ -556,26 +514,6 @@ public class HttpClientTools {
             }
         }
         return result;
-    }
-
-    /**
-     * @描述:请求&拼接字符串转为JSONObject格式（通常get请求参数转为json）
-     */
-    public static JSONObject StringToJson(String str){
-        JSONObject notifyJson = new JSONObject();
-        String[] param = str.split("&");
-        for (String content : param) {
-            if (content.indexOf("=") > 0) {
-                String key = content.substring(0, content.indexOf("="));
-                String value = content.substring(content.indexOf("=") + 1);
-                notifyJson.put(StringUtils.deleteWhitespace(key), StringUtils.deleteWhitespace(value).replace("\"", ""));
-            }else if (content.indexOf(":") > 0) {
-                String key = content.substring(0, content.indexOf(":"));
-                String value = content.substring(content.indexOf(":") + 1);
-                notifyJson.put(StringUtils.deleteWhitespace(key),StringUtils.deleteWhitespace(value).replace("\"", ""));
-            }
-        }
-        return notifyJson;
     }
 
     public static String sendUrlGet(String url, String param) throws IOException {
@@ -965,23 +903,6 @@ public class HttpClientTools {
         }
     }
 
-    /**
-     * @描述:拼接签名串
-     */
-    public static String getSignStr(JSONObject jsonData){
-        String signStr = "";
-        try {
-            SortedMap<String, Object> sortedMap = new TreeMap<String, Object>();
-            for (Object key : jsonData.keySet()) {
-                sortedMap.put(key.toString(), jsonData.get(key));
-            }
-            return getSignStr(sortedMap);
-        } catch (Exception e) {
-            System.out.println("根据字母排序验签异常");
-            e.printStackTrace();
-            return signStr;
-        }
-    }
     public static String getSignStr(Map<String,String> map){
         String signStr = "";
         try {
@@ -1023,23 +944,6 @@ public class HttpClientTools {
         }
     }
 
-    /**
-     * @描述:参数签名 不包含参数名 参数直接拼接
-     */
-    public static String getRequestSign (JSONObject jsonPrams, String signKey) throws Exception {
-        SortedMap<String, String> sortedMap = new TreeMap<String, String>();
-        for (String key : jsonPrams.keySet()) {
-            sortedMap.put(key, jsonPrams.getString(key));
-        }
-        StringBuilder builder = new StringBuilder();
-        for (String key : sortedMap.keySet()){
-            builder.append(sortedMap.get(key));
-        }
-        builder.append(signKey);
-        String signStr = builder.toString();
-        System.out.println("signStr = " + signStr);
-        return md5(signStr);
-    }
 
     /**
      * 字符串MD5加密
@@ -1164,43 +1068,5 @@ public class HttpClientTools {
         return sb.toString();
     }
 
-    /**
-     * 计算签名
-     * @param jsonObj 要参与签名的json数据
-     * @param md5Key  密钥
-     * @return 签名
-     */
-    public static String getSign(JSONObject jsonObj, String md5Key) {
-        if (jsonObj == null || jsonObj.isEmpty()) {
-            return null;
-        }
-        String str2Sign = buildParam4Sign(jsonObj, SIGN_KEY, md5Key);
-        System.err.println("str2Sign:"+str2Sign);
-        return DigestUtils.md5Hex(str2Sign).toUpperCase();
-    }
-    /**
-     * 拼接用于签名的参数
-     * @param jsonObj
-     * @return
-     */
-    private static String buildParam4Sign(JSONObject jsonObj, String signKey, String md5Key) {
-        Set<String> keySet = jsonObj.keySet();
-        StringBuilder param = new StringBuilder(20 * keySet.size());
-        String[] keys = keySet.toArray(new String[0]);
-        Arrays.sort(keys, String.CASE_INSENSITIVE_ORDER);
-        for (String key : keys) {
-            // 排除sign
-            if (signKey.equals(key)) {
-                continue;
-            }
-            Object value = jsonObj.get(key);
-            // 排除值为null的情况
-            if (value != null) {
-                param.append(key).append("=").append(value).append("&");
-            }
-        }
-        param.append(SECRET_KEY).append("=").append(md5Key);
-        return param.toString();
-    }
 }
 

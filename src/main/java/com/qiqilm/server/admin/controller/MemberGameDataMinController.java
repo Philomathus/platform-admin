@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.annotation.AccessLimit;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -11,6 +10,7 @@ import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.GamePlatformMapper;
 import com.qiqilm.server.admin.service.IMemberGameDataMinService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
+import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RequestParamData;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
@@ -142,11 +142,11 @@ public class MemberGameDataMinController extends BaseController {
 			GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( memberGameData.getPlatformId() );
 			if (gamePlatform != null){
 				String result = RequestParamData.requestBBINSportBetDetail(memberGameData,gamePlatform);
-				log.info(EnumGamePlatform.BBIN_SPORT.getName()+"获取局明细返回结果数据:"+JSON.toJSONString(result));
+				log.info(EnumGamePlatform.BBIN_SPORT.getName()+"获取局明细返回结果数据:"+ JsonUtil.object2Json(result));
 				return RequestParamData.gameBBINSportDetailDataWrapper(result);
 			}
 		}catch (Exception e) {
-			log.error( "查询游戏局号明细失败，参数:{},错误信息:",JSON.toJSONString(memberGameData),e);
+			log.error( "查询游戏局号明细失败，参数:{},错误信息:",JsonUtil.object2Json(memberGameData),e);
 			return AjaxResult.error("查询游戏局号明细失败Account:" + memberGameData.getAccount());
 		}
 		return AjaxResult.error("游戏未配置，请选择其他游戏!");
