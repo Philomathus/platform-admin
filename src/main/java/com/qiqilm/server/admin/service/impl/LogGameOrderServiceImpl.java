@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.LogGameOrder;
 import com.qiqilm.server.admin.domain.LogMoney;
@@ -8,6 +7,7 @@ import com.qiqilm.server.admin.domain.MemberGameTransfer;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogGameOrderService;
+import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,7 +208,7 @@ public class LogGameOrderServiceImpl implements ILogGameOrderService {
 			List<MemberGameTransfer> list = memberGameTransferMapper.selectMemberGameTransferList(memberGameTransfer);
 			if (list != null && list.size() >0){
 				if (list.size() > 1){
-					log.error("额度记录表出现多条记录，请排查信息:{}", JSON.toJSONString(list));
+					log.error("额度记录表出现多条记录，请排查信息:{}", JsonUtil.object2Json(list));
 				}
 				change = list.get(0).getTransferAmount();//真实资金
 			}

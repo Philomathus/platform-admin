@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.utils.nanKaiPayAgentUtils;
 
-import com.alibaba.fastjson.JSONObject;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
@@ -212,7 +211,7 @@ public class HttpClientUtils extends DefaultHttpClient {
 
             String sign = getSign(data, secret);
             String bt_cipher = encrypt(JsonUtil.object2Json(data), pubKey);
-            JSONObject postData = new JSONObject();
+            Map postData = new HashMap<>();
             postData.put("merId", encode(merchantNo));
             postData.put("signData", sign);
             postData.put("encryptData", bt_cipher);

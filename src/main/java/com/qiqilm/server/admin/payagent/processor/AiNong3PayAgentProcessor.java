@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.payagent.processor;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
@@ -188,7 +187,7 @@ public class AiNong3PayAgentProcessor extends AbstractPayAgent {
         String jsonStr = null;
         try {
             jsonStr = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), httpEntity, String.class);
-            Map resultMap = (Map) JSON.parse(jsonStr);
+            Map resultMap = JsonUtil.json2Map(jsonStr);
             log.warn(payAgentPlatform.getName()+"查询结果 - result:{}", JsonUtil.object2Json(resultMap));
 
             if (!CollectionUtils.isEmpty(resultMap)) {

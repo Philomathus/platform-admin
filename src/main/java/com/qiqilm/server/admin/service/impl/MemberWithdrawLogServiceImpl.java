@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;

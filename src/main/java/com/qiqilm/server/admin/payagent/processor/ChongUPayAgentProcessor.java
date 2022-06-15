@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.payagent.processor;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
