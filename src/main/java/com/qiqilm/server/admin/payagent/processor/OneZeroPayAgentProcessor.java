@@ -81,35 +81,29 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
         if (!CollectionUtils.isEmpty(resultMap)) {
             String success = resultMap.getOrDefault("success", "").toString();
             if ("true".equals(success)) {
-                log.info("银联代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                log.info(payAgentPlatform.getName() + "订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", "").toString());
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("支付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.warn(payAgentPlatform.getName() + "订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
+        Map<String,Object> dataMap = (Map<String, Object>) requestMap.get("data");
 
-        String transactionalNumber = requestMap.getOrDefault("transactionalNumber","").toString();
-        String merchantOrderId = requestMap.getOrDefault("orderNo", "").toString();
-        String status = requestMap.getOrDefault("status", "").toString();
-        String amount = requestMap.getOrDefault("amount","").toString();
+        String merchantOrderId = dataMap.getOrDefault("orderNo", "").toString();
+        String status = dataMap.getOrDefault("status", "").toString();
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
 
-        Map<String, Object> bodyMap = new LinkedHashMap<>();
-        bodyMap.put("orderNo",merchantOrderId);
-        bodyMap.put("amount",amount);
-        bodyMap.put("status", status);
-        bodyMap.put("transactionalNumber", transactionalNumber);
-
+        Map<String, Object> bodyMap = new TreeMap<>(dataMap);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
@@ -180,7 +174,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map(text);
                     });
-            log.info("银联代付查询结果- result:{}", JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName() + "查询结果- result:{}", JsonUtil.object2Json(resultMap));
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String success = resultMap.getOrDefault("success", "").toString();
                 if ("true".equals(success)) {
@@ -205,7 +199,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "银联代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName() + "查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }
 
