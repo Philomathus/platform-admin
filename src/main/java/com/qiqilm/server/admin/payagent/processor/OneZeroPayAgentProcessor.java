@@ -45,10 +45,21 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("channelCode", "1");
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
         bodyMap.put("orderNo", withdrawLog.getOrderNo());
-        bodyMap.put("bankCode", withdrawLog.getBankCode());
-        bodyMap.put("cardType", withdrawLog.getBankName().trim());
 
-        bodyMap.put("customerCallbackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.ONE_ZERO);
+
+//        if(StringUtils.isNotEmpty(withdrawLog.getBankName())){
+//            bodyMap.put("cardType", withdrawLog.getBankName());
+//        }
+
+        bodyMap.put("accountName", withdrawLog.getBankUserName().trim());
+        bodyMap.put("idCard","idCard");
+        bodyMap.put("bankName", withdrawLog.getBankName().trim());
+        bodyMap.put("bankCard", withdrawLog.getBankAccount().trim());
+        if(StringUtils.isNotEmpty(withdrawLog.getBankCode())){
+            bodyMap.put("bankCode", withdrawLog.getBankCode());
+        }
+
+        bodyMap.put("callBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.ONE_ZERO);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -96,8 +107,9 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
-        String merchantOrderId = requestMap.getOrDefault("orderNo", "").toString();
 
+        String transactionalNumber = requestMap.getOrDefault("transactionalNumber","").toString();
+        String merchantOrderId = requestMap.getOrDefault("orderNo", "").toString();
         String status = requestMap.getOrDefault("status", "").toString();
         String amount = requestMap.getOrDefault("amount","").toString();
 
@@ -108,7 +120,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("orderNo",merchantOrderId);
         bodyMap.put("amount",amount);
         bodyMap.put("status", status);
-        bodyMap.put("transactionalNumber", requestMap.get("transactionalNumber"));
+        bodyMap.put("transactionalNumber", transactionalNumber);
 
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
@@ -124,17 +136,17 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
 
             if (withdrawLog.getStatus() == 1) {
                 log.error("已有代付记录 - merOrderNo:{}", merchantOrderId);
-                return "OK";
+                return "ok";
             }
-            if(withdrawLog.getStatus() == 2) {
+            if(withdrawLog.getStatus() == 2 || withdrawLog.getStatus()==3) {
                 log.error("提现相关记录丢失 - merOrderNo:{}", merchantOrderId);
                 return "fail";
             }
 
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(merchantOrderId);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, requestMap.getOrDefault("orderNo", "").toString(),
-                    payAgentPlatform, "1".equals(status));
-            return "OK";
+                String orderN = requestMap.getOrDefault("orderNo", "").toString();
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, orderN, payAgentPlatform, "1".equals(status));
+            return "ok";
         }
         return "fail";
     }
@@ -149,8 +161,10 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
 
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(payAgentLog.getWithdrawOrderNo());
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById(payAgentLog.getPayAgentPlatId());
+
         Map<String, Object> paramsMap = new TreeMap<>();
         paramsMap.put("customerNo", payAgentPlatform.getMerId());
+        paramsMap.put("timeStamp",System.currentTimeMillis()/1000);
         paramsMap.put("orderNo", withdrawLog.getOrderNo());
 
 
@@ -185,7 +199,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
                     Map<String, Object> dataMap = (Map<String, Object>) resultMap.get("data");
                     String statusType = dataMap.getOrDefault("status", "").toString();
                     // status 4代付中 5代付失败 6代付成功
-                    // trade_state  1等待处理 2准备打款,3已打款,4已拒绝 處理中,需繼續查詢
+                    // statusType  2已拒绝,3已拒绝,4已打款  處理中,需繼續查詢
                     int status = 4;
                     int orderStatus = 0;
                     if ("4".equals(statusType)) {
