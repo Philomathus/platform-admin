@@ -317,7 +317,7 @@ public class RequestParamData {
         Map object = JsonUtil.json2Map(result);
         Map d = (Map) object.get("d");
         if (d != null) {
-            int code = Integer.parseInt(object.get("code").toString());
+            int code = Integer.parseInt(d.get("code").toString());
             if (code != 0) {
                 code = code + 10000;
                 return AjaxResult.error(code, "查询游戏局号日志失败[未知错误]");
