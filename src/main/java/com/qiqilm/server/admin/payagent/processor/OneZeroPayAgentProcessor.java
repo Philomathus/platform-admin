@@ -58,6 +58,10 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
         if(StringUtils.isNotEmpty(withdrawLog.getBankCode())){
             bodyMap.put("bankCode", withdrawLog.getBankCode());
         }
+        if(StringUtils.isNotEmpty(withdrawLog.getBankName())){
+            bodyMap.put("bankBanchName", withdrawLog.getBankName().trim());
+        }
+
 
         bodyMap.put("callBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.ONE_ZERO);
 
