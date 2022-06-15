@@ -36,33 +36,17 @@ import java.util.TreeMap;
 @Log4j2
 public class OneZeroPayAgentProcessor extends AbstractPayAgent {
 
-
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
 
         SortedMap<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put("customerNo", payAgentPlatform.getMerId());
-        bodyMap.put("channelCode", "1");
+        bodyMap.put("channelCode", payAgentPlatform.getHeaderKey());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
         bodyMap.put("orderNo", withdrawLog.getOrderNo());
-
-
-//        if(StringUtils.isNotEmpty(withdrawLog.getBankName())){
-//            bodyMap.put("cardType", withdrawLog.getBankName());
-//        }
-
         bodyMap.put("accountName", withdrawLog.getBankUserName().trim());
-        bodyMap.put("idCard","idCard");
         bodyMap.put("bankName", withdrawLog.getBankName().trim());
         bodyMap.put("bankCard", withdrawLog.getBankAccount().trim());
-        if(StringUtils.isNotEmpty(withdrawLog.getBankCode())){
-            bodyMap.put("bankCode", withdrawLog.getBankCode());
-        }
-        if(StringUtils.isNotEmpty(withdrawLog.getBankName())){
-            bodyMap.put("bankBanchName", withdrawLog.getBankName().trim());
-        }
-
-
         bodyMap.put("callBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.ONE_ZERO);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -104,7 +88,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("银联代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.warn("支付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -168,7 +152,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> paramsMap = new TreeMap<>();
         paramsMap.put("customerNo", payAgentPlatform.getMerId());
-        paramsMap.put("timeStamp",System.currentTimeMillis()/1000);
+        paramsMap.put("timeStamp",System.currentTimeMillis());
         paramsMap.put("orderNo", withdrawLog.getOrderNo());
 
 
