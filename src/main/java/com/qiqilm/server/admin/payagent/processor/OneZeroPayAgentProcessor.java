@@ -106,7 +106,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> bodyMap = new TreeMap<>(dataMap);
 
-        String tempStr = this.assemblyUrl(bodyMap) + signMd5;
+        String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
 
         log.info(payAgentPlatform.getName() + "代付回调签名:" + sign + "_" + signStr);
@@ -155,6 +155,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
                 "secretkey/payAgentPrivateKey"));
 
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
+        log.warn(tempStr);
         String sign = DigestUtils.md5Hex(tempStr).toLowerCase();
         paramsMap.put("sign", sign);
 
