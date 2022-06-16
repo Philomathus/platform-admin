@@ -147,7 +147,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> paramsMap = new TreeMap<>();
         paramsMap.put("customerNo", payAgentPlatform.getMerId());
-        paramsMap.put("timeStamp",System.currentTimeMillis());
+        paramsMap.put("timestamp",System.currentTimeMillis());
         paramsMap.put("orderNo", withdrawLog.getOrderNo());
 
 
