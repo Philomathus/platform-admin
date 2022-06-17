@@ -39,9 +39,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
                 and date_format(ctime,'%y%m%d') <![CDATA[ <= ]]> date_format(#{params.endTime},'%y%m%d')
             </if>
-            <!-- 数据范围过滤 -->
-            ${params.dataScope}
         </where>
+         order by `order` asc
     </select>
 
     <select id="selectActivityInfoById" parameterType="String" resultMap="ActivityInfoResult">
