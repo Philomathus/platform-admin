@@ -70,7 +70,7 @@ public class OKPayPayAgentProcessor extends AbstractPayAgent {
 
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("1".equals(resultMap.getOrDefault("code", "").toString())) {
-                Map data = (Map) resultMap.get("data");
+                Map data = JsonUtil.json2Map(resultMap.getOrDefault("data", "").toString());
                 String id = data.get("id").toString();
                 PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(withdrawLog.getOrderNo());
                 payAgentLog.setPayAgentOrderNo(id);
