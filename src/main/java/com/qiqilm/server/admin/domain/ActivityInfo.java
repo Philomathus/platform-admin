@@ -58,6 +58,10 @@ public class ActivityInfo extends BaseEntity {
     @Excel(name = "图标跳转链接")
     private String url;
 
+    /** 种类*/
+    @Excel(name = "种类")
+    private String order;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -68,6 +72,7 @@ public class ActivityInfo extends BaseEntity {
             .append("indexs", getIndexs())
             .append("typeId", getTypeId())
             .append("content", getContent())
+                .append("order", getContent())
             .toString();
     }
 }
