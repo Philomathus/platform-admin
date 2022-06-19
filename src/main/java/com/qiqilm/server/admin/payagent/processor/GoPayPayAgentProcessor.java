@@ -154,7 +154,7 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map(text);
                     });
-            log.info(payAgentPlatform.getName() + "查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName() + "查询结果 - 订单号:{} - result:{}", payAgentLog.getWithdrawOrderNo(), JsonUtil.object2Json(resultMap));
 
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();

@@ -155,10 +155,13 @@ public class OKPayPayAgentProcessor extends AbstractPayAgent {
                         }
                         return JsonUtil.json2Map(text);
                     });
-            log.info(payAgentPlatform.getName() + "查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+            log.info(payAgentPlatform.getName() + "查询结果 - 订单号:{} - result:{}", payAgentLog.getWithdrawOrderNo(), JsonUtil.object2Json(resultMap));
 
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();
+                if("467".equals(code)){
+                    return resultMap.getOrDefault("msg", "").toString();
+                }
 
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
