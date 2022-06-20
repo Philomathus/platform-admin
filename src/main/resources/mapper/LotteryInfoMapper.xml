@@ -44,6 +44,7 @@
         update ${dbLottery}.lottery_info
         <trim prefix="SET" suffixOverrides=",">
             <if test="icon != null">icon = #{icon},</if>
+            <if test="order != null">`order` = #{order},</if>
         </trim>
         where id = #{id}
     </update>
