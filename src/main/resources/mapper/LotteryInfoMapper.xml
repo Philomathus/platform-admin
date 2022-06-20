@@ -32,6 +32,7 @@
             <if test="order != null "> and order = #{order}</if>
             <if test="cycle != null "> and cycle = #{cycle}</if>
         </where>
+        order by `order` asc
     </select>
 
     <select id="selectLotteryInfoListById" parameterType="String" resultMap="LotteryInfoResult">
