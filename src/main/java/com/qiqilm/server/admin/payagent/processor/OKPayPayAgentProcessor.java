@@ -166,7 +166,7 @@ public class OKPayPayAgentProcessor extends AbstractPayAgent {
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
                 //  statusCode 1-已创建,4-已转币,8-已取消,99-错误
-                Map data = (Map) resultMap.get("data");
+                Map data = JsonUtil.json2Map(resultMap.getOrDefault("data","").toString());
                 String statusCode = data.getOrDefault("state", "").toString();
                 if (!"1".equals(code)) {
                     statusCode = "99";
