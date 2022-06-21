@@ -4,11 +4,16 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
+import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.LotteryInfo;
 import com.qiqilm.server.admin.domain.LotteryPrizepool;
+import com.qiqilm.server.admin.domain.SysUser;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.service.ILotteryInfoService;
+import com.qiqilm.server.admin.service.impl.TokenService;
+import com.qiqilm.server.admin.utils.ServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,46 +27,53 @@ import java.util.List;
  * @date 2021-02-23
  */
 @RestController
-@RequestMapping( "/admin/lotteryInfo" )
+@RequestMapping("/admin/lotteryInfo")
 public class LotteryInfoController extends BaseController {
-	@Autowired
-	private ILotteryInfoService lotteryInfoService;
+    @Autowired
+    private ILotteryInfoService lotteryInfoService;
+    @Autowired
+    private TokenService tokenService;
 
-	/**
-	 * 查询彩票名称列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:lotteryInfo:list')" )
-	@GetMapping( "/list" )
-	public TableDataInfo list( LotteryInfo lotteryInfo ) {
-		startPage();
-		List<LotteryInfo> list = lotteryInfoService.selectLotteryInfoList( lotteryInfo );
-		return getDataTable( list );
-	}
+    /**
+     * 查询彩票名称列表
+     */
+    @PreAuthorize("@ss.hasPermi('admin:lotteryInfo:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(LotteryInfo lotteryInfo) {
+        startPage();
+        List<LotteryInfo> list = lotteryInfoService.selectLotteryInfoList(lotteryInfo);
+        return getDataTable(list);
+    }
 
-	/**
-	 * 获取彩票名称详细
-	 */
-	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo(@PathVariable( "id" ) String id ) {
-		return AjaxResult.success( lotteryInfoService.selectLotteryInfoListById( id ) );
-	}
+    /**
+     * 获取彩票名称详细
+     */
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") String id) {
+        return AjaxResult.success(lotteryInfoService.selectLotteryInfoListById(id));
+    }
 
-	/**
-	 * 修改彩票名称
-	 */
-	@PutMapping
-	@Log( title = "彩票信息修改", businessType = BusinessType.UPDATE )
-	public AjaxResult edit( @RequestBody LotteryInfo lotteryInfo) {
-		return toAjax( lotteryInfoService.updateLotteryInfo(lotteryInfo) );
-	}
+    /**
+     * 修改彩票名称
+     */
+    @PutMapping
+    @Log(title = "彩票信息修改", businessType = BusinessType.UPDATE)
+    public AjaxResult edit(@RequestBody LotteryInfo lotteryInfo) {
+        return toAjax(lotteryInfoService.updateLotteryInfo(lotteryInfo));
+    }
 
-	/**
-	 * Update Status controller
-	 */
-	@PutMapping( "/statusDetail" )
-	@Log( title = "彩票信息状态更新", businessType = BusinessType.UPDATE )
-	public AjaxResult statusDetail(LotteryInfo lotteryInfoSetStatus ) {
-		return toAjax( lotteryInfoService.updateLiveLotterySetStatus(lotteryInfoSetStatus) );
-	}
+    /**
+     * Update Status controller
+     */
+    @PutMapping("/statusDetail")
+    @Log(title = "彩票信息状态更新", businessType = BusinessType.UPDATE)
+    public AjaxResult statusDetail(LotteryInfo lotteryInfoSetStatus) {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
+        SysUser user = loginUser.getUser();
+        if (!"mengjun".equals(user.getUserName())) {
+			throw new BusinessException("您无权操作");
+        }
+        return toAjax(lotteryInfoService.updateLiveLotterySetStatus(lotteryInfoSetStatus));
+    }
 
 }
