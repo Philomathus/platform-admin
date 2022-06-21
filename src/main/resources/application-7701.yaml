@@ -68,6 +68,8 @@ payAgentLimitShanDePay: 30000
 payAgentMiaoDaoFuPay: 30000
 # GoPay代付额度
 payAgentLimitGoPayPay: 100000
+# OkPay代付额度
+payAgentLimitOkPayPay: 100000
 # 新汇代付额度
 payAgentXinHuiPay: 100000
 # 大牛代付额度

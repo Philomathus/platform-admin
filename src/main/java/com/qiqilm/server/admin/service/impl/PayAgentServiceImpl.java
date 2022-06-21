@@ -102,6 +102,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentLimitShanDePay;
 	@Value( "${payAgentLimitGoPayPay:5000}" )
 	private Integer payAgentLimitGoPayPay;
+	@Value( "${payAgentLimitOkPayPay:5000}" )
+	private Integer payAgentLimitOkPayPay;
 	@Value( "${payAgentMiaoDaoFuPay:5000}" )
 	private Integer payAgentMiaoDaoFuPay;
 	@Value( "${payAgentXinHuiPay:5000}" )
@@ -333,6 +335,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
 		} else if ( (payAgentPlatform.getCode().equals( ConstantsPayAgent.GOPAY ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitGoPayPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentLimitGoPayPay + "元以上出款" );
+		} else if ( (payAgentPlatform.getCode().equals( ConstantsPayAgent.OK ))
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimitOkPayPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentLimitOkPayPay + "元以上出款" );
 		} else if ( (payAgentPlatform.getCode().equals( ConstantsPayAgent.DANIU ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentDaNiuPay ) ) > 0 ) {
 			return AjaxResult.error( "此代付暂不支持" + payAgentDaNiuPay + "元以上出款" );
@@ -392,6 +397,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.FULIANG2 )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YANGGUANG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.GOPAY )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.OK )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.MIAODAOFU )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.XINHUI )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DANIU )

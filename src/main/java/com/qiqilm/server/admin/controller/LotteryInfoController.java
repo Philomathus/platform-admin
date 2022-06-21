@@ -50,6 +50,7 @@ public class LotteryInfoController extends BaseController {
 	 * 修改彩票名称
 	 */
 	@PutMapping
+	@Log( title = "彩票信息修改", businessType = BusinessType.UPDATE )
 	public AjaxResult edit( @RequestBody LotteryInfo lotteryInfo) {
 		return toAjax( lotteryInfoService.updateLotteryInfo(lotteryInfo) );
 	}
@@ -58,6 +59,7 @@ public class LotteryInfoController extends BaseController {
 	 * Update Status controller
 	 */
 	@PutMapping( "/statusDetail" )
+	@Log( title = "彩票信息状态更新", businessType = BusinessType.UPDATE )
 	public AjaxResult statusDetail(LotteryInfo lotteryInfoSetStatus ) {
 		return toAjax( lotteryInfoService.updateLiveLotterySetStatus(lotteryInfoSetStatus) );
 	}
