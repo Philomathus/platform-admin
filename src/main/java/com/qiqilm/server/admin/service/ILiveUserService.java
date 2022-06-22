@@ -58,4 +58,6 @@ public interface ILiveUserService {
 	AjaxResult updateLiveUserBank(LiveUser liveUser);
 	int delLiveUserBankById(String id);
 	AjaxResult kickOutLiveById( Long id );
+
+	String selectMobileById(String id);
 }

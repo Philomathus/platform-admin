@@ -437,4 +437,10 @@ public class LiveUserServiceImpl implements ILiveUserService {
         return AjaxResult.success();
     }
 
+    @Override
+    public String selectMobileById(String id) {
+        return liveUserMapper.selectMobileById(id);
+    }
+
+
 }

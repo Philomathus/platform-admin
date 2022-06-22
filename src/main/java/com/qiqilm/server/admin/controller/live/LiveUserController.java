@@ -175,6 +175,21 @@ public class LiveUserController extends BaseController {
         if (x != null) return x;
         return liveUserService.updateMobile(newMobile,oldMobile,id);
     }
+
+
+    /**
+     * 获取完整手机号
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveUser:fullMobile')")
+    @GetMapping(value = "/fullMobile/{id}")
+    public AjaxResult fullMobile(@PathVariable("id") String id) {
+		System.out.println(id);
+		String user =  liveUserService.selectMobileById(id);
+		System.out.println(user);
+        return AjaxResult.success(liveUserService.selectMobileById(id));
+    }
+
+
     /**
      * 开播
      */
