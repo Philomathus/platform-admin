@@ -199,6 +199,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             case "7701":
                 liveVideoMapper.updateLive7706Video(updateVideo);
                 liveVideoMapper.updateLive7711Video(updateVideo);
+                liveVideoMapper.updateLive77jpVideo(updateVideo);
                 break;
             case "7704":
                 liveVideoMapper.updateLive7705Video(updateVideo);
@@ -345,6 +346,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             case "7701":
                 liveVideoMapper.updateLive7706Video(entity);
                 liveVideoMapper.updateLive7711Video(entity);
+                liveVideoMapper.updateLive77jpVideo(entity);
                 break;
             case "7704":
                 liveVideoMapper.updateLive7705Video(entity);
@@ -651,8 +653,64 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                         updateMap.put(v.getId(), v);
                     }
                 }
+
+                //先收集77jp
+                Map<String, LiveHostWageDay> update77jpMap = new HashMap<>();
+                propDayVos = liveVideoPropMapper.sumHostPropDay77jpList(dayTime);
+
+                for (HostPropDayVo v : propDayVos) {
+                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
+                    LiveHostWageDay updateLiveDay = update77jpMap.get(id);
+                    if (updateLiveDay == null) {
+                        updateLiveDay = new LiveHostWageDay();
+                        updateLiveDay.setId(id);
+                        update77jpMap.put(updateLiveDay.getId(), updateLiveDay);
+                    }
+                    updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp()));
+
+                }
+                log.error("77jp主播收礼物数：{}", propDayVos.size());
+
+                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay77jpList(begin, end);
+                for (HostPropDayVo v : lotteryDayVos) {
+                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
+                    LiveHostWageDay updateLiveDay = update77jpMap.get(id);
+                    if (updateLiveDay == null) {
+                        updateLiveDay = new LiveHostWageDay();
+                        updateLiveDay.setId(id);
+                        update77jpMap.put(updateLiveDay.getId(), updateLiveDay);
+                    }
+                    updateLiveDay.setLotteryCost(updateLiveDay.getLotteryCost().add(v.getSumHostProp()));
+
+                }
+                log.error("77jp主播投注数：{}", lotteryDayVos.size());
+                for (LiveHostWageDay updateLiveDay : update77jpMap.values()) {
+                    LiveHostWageDay db = liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
+                    if (db == null) {
+                        continue;
+                    }
+                    updateLiveDay.setHostId(db.getHostId());
+                    updateLiveDay.setStartTime(db.getStartTime());
+                    updateLiveDay.setEndTime(db.getEndTime());
+                    updateLiveDay.setFamilyId(db.getFamilyId());
+                    updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
+                    updateLiveDay.setTimes(db.getTimes());
+                    liveHostWageDayMapper.insertLiveHostWageDay77jp(updateLiveDay);
+                }
+
+                //合并到7701
+                for (LiveHostWageDay v : update77jpMap.values()) {
+                    if (updateMap.containsKey(v.getId())) {
+                        LiveHostWageDay tem = updateMap.get(v.getId());
+                        tem.setTicket(tem.getTicket().add(v.getTicket()));
+                        tem.setLotteryCost(tem.getLotteryCost().add(v.getLotteryCost()));
+                        updateMap.put(v.getId(), tem);
+                    } else {
+                        updateMap.put(v.getId(), v);
+                    }
+                }
             } catch (Exception e) {
-                log.error("7706 7711 主播结算异常", e);
+                log.error("7706 7711 77jp 主播结算异常", e);
             }
         }
 

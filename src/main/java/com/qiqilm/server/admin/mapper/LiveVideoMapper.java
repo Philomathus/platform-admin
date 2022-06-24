@@ -47,6 +47,7 @@ public interface LiveVideoMapper {
 	public int updateLive7710Video(LiveVideo updateVideo);
 	public int updateLive7711Video(LiveVideo updateVideo);
 	public int updateLive77mmVideo(LiveVideo updateVideo);
+	public int updateLive77jpVideo(LiveVideo updateVideo);
 
 	/**
 	 * 修改直播,结束时间可以为null
@@ -84,4 +85,5 @@ public interface LiveVideoMapper {
 	void insertLiveVideo7710(LiveVideo liveVideo);
 	void insertLiveVideo7711(LiveVideo liveVideo);
 	void insertLiveVideo77mm(LiveVideo liveVideo);
+	void insertLiveVideo77jp(LiveVideo liveVideo);
 }
