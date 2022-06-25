@@ -352,4 +352,9 @@
 			and t.channel_id in (SELECT id from pay_channel_new where name like concat(#{channelName}, '%'))
 		</if>
 	</select>
+
+	<select id="selectMemberPayJourRspList" resultType="com.qiqilm.server.admin.domain.rsp.MemberPayJourRsp">
+		select id,member_id memberId,platform_id platformId,channel_id channelId,money,`status`, pay_time orderTime
+		from member_pay_jour order by create_time desc limit ${count}
+    </select>
 </mapper>

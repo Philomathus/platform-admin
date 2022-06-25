@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.PayChannelNew;
+import com.qiqilm.server.admin.domain.rsp.MemberPayJourRsp;
 import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
 import com.qiqilm.server.admin.mapper.PayChannelNewMapper;
@@ -91,5 +92,20 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 			memberPayJour.setSelectEndDate(memberPayJour.getUpdateTime() + " 23:59:59");
 		}
 		return memberPayJourMapper.listCounts(memberPayJour);
+	}
+
+	@Override
+	public List<MemberPayJourRsp> selectMemberPayJourRspList(Long count) {
+		List<MemberPayJourRsp> memberPayJourRsps = memberPayJourMapper.selectMemberPayJourRspList(count);
+		List<PayChannelNew> payChannelNews = payChannelNewMapper.selectPayChannelName();
+		for ( MemberPayJourRsp me : memberPayJourRsps ) {
+			for ( PayChannelNew pa : payChannelNews ) {
+				if ( me.getChannelId().equals( String.valueOf( pa.getId() ) ) ) {
+					me.setPlatformName( pa.getPayPlatformName() );
+					me.setChannelName( pa.getName() );
+				}
+			}
+		}
+		return memberPayJourRsps;
 	}
 }
