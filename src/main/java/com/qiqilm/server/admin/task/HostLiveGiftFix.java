@@ -17,17 +17,18 @@ public class HostLiveGiftFix {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Value( "${spring.profiles.active}" )
+    @Value("${spring.profiles.active}")
     private String profile;
 
-    @Scheduled(cron="0 0 2 * * ?" )
+    @Scheduled(cron = "0 0 2 * * ?")
     public void listenerMonitor() {
 
-        if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),900)){
+        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 900)) {
             return;
         }
 
-        if(profile.equals("7706")||profile.equals("7705")||profile.equals("7710")||profile.equals("7711")||profile.equals("77mm")||profile.equals("77jp")){
+        if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711")
+                || profile.equals("77mm") || profile.equals("77jp") || profile.equals("7703")) {
             return;
         }
 

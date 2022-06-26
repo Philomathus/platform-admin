@@ -156,6 +156,26 @@
         </where>
         ORDER BY g.create_time desc
     </select>
+    <select id="selectLiveBlackList7703" resultType="com.qiqilm.server.admin.domain.LiveBlack">
+        SELECT
+        g.id,
+        g.remark,
+        g.host_id as hostId,
+        g.create_time as createTime,
+        g.black_user_id as blackUserId,
+        m.vip,
+        m.nick_name as nickName,
+        r.nick_name as hostName
+        FROM
+        cx_live.live_black g
+        LEFT JOIN cx_live.live_user r ON g.host_id = r.id
+        INNER JOIN 7703_main.member_info m ON g.black_user_id = m.id
+        <where>
+            <if test="hostId != null "> and host_id = #{hostId}</if>
+            <if test="blackUserId != null  and blackUserId != ''"> and black_user_id = #{blackUserId}</if>
+        </where>
+        ORDER BY g.create_time desc
+    </select>
 
     <delete id="deleteLiveBlackById" parameterType="Long">
         delete from ${dbLive}.live_black where id = #{id}

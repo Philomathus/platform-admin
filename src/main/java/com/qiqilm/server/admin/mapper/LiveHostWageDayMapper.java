@@ -46,6 +46,7 @@ public interface LiveHostWageDayMapper {
 	public int insertLiveHostWageDay7711( LiveHostWageDay updateLiveDay );
 	public int insertLiveHostWageDay77mm( LiveHostWageDay updateLiveDay );
 	public int insertLiveHostWageDay77jp( LiveHostWageDay updateLiveDay );
+	public int insertLiveHostWageDay7703( LiveHostWageDay updateLiveDay );
 
 	/**
 	 * 修改主播时长
