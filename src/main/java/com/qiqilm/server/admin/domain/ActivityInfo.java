@@ -71,7 +71,7 @@ public class ActivityInfo extends BaseEntity {
             .append("indexs", getIndexs())
             .append("typeId", getTypeId())
             .append("content", getContent())
-                .append("order", getContent())
+                .append("order", getOrder())
             .toString();
     }
 }
