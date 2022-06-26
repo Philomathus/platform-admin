@@ -44,6 +44,7 @@ public interface LiveVideoPropMapper {
 	List<HostPropDayVo> sumHostPropDay7711List( @Param( "dayTime" ) String dayTime );
 	List<HostPropDayVo> sumHostPropDay77mmList( @Param( "dayTime" ) String dayTime );
 	List<HostPropDayVo> sumHostPropDay77jpList( @Param( "dayTime" ) String dayTime );
+	List<HostPropDayVo> sumHostPropDay7703List( @Param( "dayTime" ) String dayTime );
 
 	List<HostPropDayVo> sumHostLotteryDayList( @Param( "begin" ) String begin, @Param( "end" ) String end);
 	List<HostPropDayVo> sumHostLotteryDay7706List( @Param( "begin" ) String begin, @Param( "end" ) String end);
@@ -52,6 +53,7 @@ public interface LiveVideoPropMapper {
 	List<HostPropDayVo> sumHostLotteryDay7711List( @Param( "begin" ) String begin, @Param( "end" ) String end );
 	List<HostPropDayVo> sumHostLotteryDay77mmList( @Param( "begin" ) String begin, @Param( "end" ) String end );
 	List<HostPropDayVo> sumHostLotteryDay77jpList( @Param( "begin" ) String begin, @Param( "end" ) String end );
+	List<HostPropDayVo> sumHostLotteryDay7703List( @Param( "begin" ) String begin, @Param( "end" ) String end );
 
     List<RspTestAccountProp> testAccountPorpList(LiveVideoProp liveVideoProp1);
 
