@@ -58,8 +58,7 @@ public class ActivityInfo extends BaseEntity {
     @Excel(name = "图标跳转链接")
     private String url;
 
-    /** 种类*/
-    @Excel(name = "种类")
+    @Excel(name = "排序")
     private String order;
 
     @Override

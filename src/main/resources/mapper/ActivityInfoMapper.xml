@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status"    />
         <result property="type"    column="type"    />
         <result property="url"    column="url"    />
-        <result property="order"    column="order"    />
+        <result property="`order`"    column="order"    />
     </resultMap>
 
     <sql id="selectActivityInfoVo">
@@ -92,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">status = #{status},</if>
             <if test="type != null">type = #{type},</if>
             <if test="url != null">url = #{url},</if>
-            <if test="order != null">url = #{order},</if>
+            <if test="order != null">`order` = #{order},</if>
         </trim>
         where id = #{id}
     </update>
