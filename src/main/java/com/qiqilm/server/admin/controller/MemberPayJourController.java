@@ -6,15 +6,14 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
+import com.qiqilm.server.admin.domain.req.MemberPayJourReq;
+import com.qiqilm.server.admin.domain.rsp.MemberPayJourRsp;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -31,6 +30,12 @@ import java.util.Map;
 public class MemberPayJourController extends BaseController {
     @Autowired
     private IMemberPayJourService memberPayJourService;
+
+    @PostMapping("/all-list")
+    public AjaxResult list(@RequestBody MemberPayJourReq req) {
+        List<MemberPayJourRsp> list = memberPayJourService.selectMemberPayJourRspList(req.getCount());
+        return AjaxResult.success(list);
+    }
 
     /**
      * 查询线上充值信息列表

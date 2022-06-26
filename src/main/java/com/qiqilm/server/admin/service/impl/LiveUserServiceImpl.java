@@ -277,6 +277,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
 //            if (profile.equals("7701")) {
 //                liveVideoMapper.insertLiveVideo7706(liveVideo);
 //                liveVideoMapper.insertLiveVideo7711(liveVideo);
+//                liveVideoMapper.insertLiveVideo77jp(liveVideo);
 //            }
 //            if (profile.equals("7704")) {
 //                liveVideoMapper.insertLiveVideo7705(liveVideo);

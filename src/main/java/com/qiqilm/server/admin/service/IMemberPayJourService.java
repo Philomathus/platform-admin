@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.domain.MemberPayJour;
+import com.qiqilm.server.admin.domain.rsp.MemberPayJourRsp;
 import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 
 import java.util.List;
@@ -41,4 +42,6 @@ public interface IMemberPayJourService {
 	public List<RspPayJour> selectMemberPayJourLists(MemberPayJour memberPayJour );
 
 	Map listCounts( MemberPayJour memberPayJour );
+
+    List<MemberPayJourRsp> selectMemberPayJourRspList(Long count);
 }

@@ -26,6 +26,8 @@ public interface LiveBlackMapper {
 	List<LiveBlack> selectLiveBlackList7710( LiveBlack liveBlack );
 	List<LiveBlack> selectLiveBlackList7711( LiveBlack liveBlack );
 	List<LiveBlack> selectLiveBlackList77mm( LiveBlack liveBlack );
+	List<LiveBlack> selectLiveBlackList77jp( LiveBlack liveBlack );
+	List<LiveBlack> selectLiveBlackList7703( LiveBlack liveBlack );
 
 	int deleteLiveBlackById(Long id);
 	int deleteLiveBlackById7706(Long id);
