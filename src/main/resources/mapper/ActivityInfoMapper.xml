@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status"    />
         <result property="type"    column="type"    />
         <result property="url"    column="url"    />
-        <result property="order"    column="order"    />
+        <result property="order"    column="`order`"    />
     </resultMap>
 
     <sql id="selectActivityInfoVo">

@@ -35,9 +35,7 @@ public class LianFuBao5AgentProcessor extends AbstractPayAgent {
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         BankCodeLianFuBaoType bankCodeType = BankCodeLianFuBaoType.getCodeByDesc( withdrawLog.getBankName() );
         if ( bankCodeType == null ) {
-            payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
-            log.warn( payAgentPlatform.getName()+"无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
-            throw new BusinessException( payAgentPlatform.getName()+"无法支持的银行类型：" + withdrawLog.getBankName() );
+            bankCodeType = BankCodeLianFuBaoType.OTHER;
         }
         withdrawLog.setBankCode( bankCodeType.name() );
 

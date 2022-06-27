@@ -4,6 +4,7 @@ server:
     threads:
       min-spare: 100
       max: 1000
+  shutdown: graceful
   port: 42002
 logging:
   level:
@@ -87,6 +88,8 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  lifecycle:
+    timeout-per-shutdown-phase: 5s
 
 pagehelper:
   autoRuntimeDialect: true

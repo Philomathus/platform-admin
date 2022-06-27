@@ -16,23 +16,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class WheelUser extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 平台会员ID */
     private String id;
 
-    /** 剩余次数 */
     @Excel(name = "剩余次数")
     private Integer times;
 
-    /** 皮肤转盘剩余次数 */
     @Excel(name = "皮肤转盘剩余次数")
     private Integer skinTimes;
 
+    @Excel(name = "大奖池剩余次数")
+    private Integer poolTimes;
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("times", getTimes())
-            .append("skinTimes", getSkinTimes())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("times", getTimes())
+                .append("skinTimes", getSkinTimes())
+                .append("poolTimes", getPoolTimes())
+                .toString();
     }
 }
