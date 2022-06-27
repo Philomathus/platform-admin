@@ -96,16 +96,6 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 
 	@Override
 	public List<MemberPayJourRsp> selectMemberPayJourRspList(Long count) {
-		List<MemberPayJourRsp> memberPayJourRsps = memberPayJourMapper.selectMemberPayJourRspList(count);
-		List<PayChannelNew> payChannelNews = payChannelNewMapper.selectPayChannelName();
-		for ( MemberPayJourRsp me : memberPayJourRsps ) {
-			for ( PayChannelNew pa : payChannelNews ) {
-				if ( me.getChannelId().equals( String.valueOf( pa.getId() ) ) ) {
-					me.setPlatformName( pa.getPayPlatformName() );
-					me.setChannelName( pa.getName() );
-				}
-			}
-		}
-		return memberPayJourRsps;
+		return memberPayJourMapper.selectMemberPayJourRspList(count);
 	}
 }
