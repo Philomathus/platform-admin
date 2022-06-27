@@ -20,7 +20,7 @@ public class HostLiveGiftFix {
     @Value("${spring.profiles.active}")
     private String profile;
 
-    @Scheduled(cron = "0 0 2 * * ?")
+    @Scheduled(cron = "0 20 16 * * ?")
     public void listenerMonitor() {
 
         if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 900)) {
