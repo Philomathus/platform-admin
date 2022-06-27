@@ -15,11 +15,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status"    />
         <result property="type"    column="type"    />
         <result property="url"    column="url"    />
-        <result property="order"    column="`order`"    />
+        <result property="order"    column="oder"    />
     </resultMap>
 
     <sql id="selectActivityInfoVo">
-        select id, icon, title, ctime, indexs, type_id, content, status, type, url ,`order` from activity_info
+        select id, icon, title, ctime, indexs, type_id, content, status, type, url ,`order` oder from activity_info
     </sql>
 
     <select id="selectActivityInfoList" parameterType="ActivityInfo" resultMap="ActivityInfoResult">
