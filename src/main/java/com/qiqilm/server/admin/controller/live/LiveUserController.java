@@ -181,7 +181,7 @@ public class LiveUserController extends BaseController {
 	 * Get full phone number
      * 获取完整手机号
      */
-    @PreAuthorize("@ss.hasPermi('admin:liveUser:fullMobile')")
+//    @PreAuthorize("@ss.hasPermi('admin:liveUser:fullMobile')")
     @GetMapping(value = "/fullMobile/{id}")
     public AjaxResult fullMobile(@PathVariable("id") String id) {
         return AjaxResult.success(liveUserService.selectMobileById(id));
