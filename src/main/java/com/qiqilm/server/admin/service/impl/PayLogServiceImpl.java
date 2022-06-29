@@ -90,4 +90,9 @@ public class PayLogServiceImpl implements IPayLogService {
     public int deletePayLogById(Long id) {
         return payLogMapper.deletePayLogById(id);
     }
+
+    @Override
+    public List<PayLog> selectPayLogErrorList() {
+        return payLogMapper.selectPayLogErrorList();
+    }
 }
