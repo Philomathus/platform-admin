@@ -98,7 +98,37 @@ management:
   endpoint:
     health:
       enabled: true
-      show-details: always
+      show-details: when_authorized
+    beans:
+      enabled: false
+    info:
+      enabled: false
+    conditions:
+      enabled: false
+    shutdown:
+      enabled: false
+    configprops:
+      enabled: false
+    auditevents:
+      enabled: false
+    caches:
+      enabled: false
+    env:
+      enabled: false
+    metrics:
+      enabled: false
+    scheduledtasks:
+      enabled: false
+    mappings:
+      enabled: false
+    loggers:
+      enabled: false
+    integrationgraph:
+      enabled: false
+    heapdump:
+      enabled: false
+    threaddump:
+      enabled: false
 
 # token配置
 token:

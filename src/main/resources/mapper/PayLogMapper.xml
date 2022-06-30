@@ -102,4 +102,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectPayLogErrorList" resultMap="PayLogResult">
+        select l.id, l.member_id, l.member_account, l.platform_id, l.platform_name, c.pay_method channel_id,
+               l.channel_name, l.money, l.success, l.fail_reason, l.create_time
+        from pay_log l left join pay_channel_new c on l.channel_id = c.id
+        where l.success = 0 order by l.create_time desc limit 20
+    </select>
 </mapper>

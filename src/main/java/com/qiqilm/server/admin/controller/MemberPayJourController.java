@@ -5,11 +5,13 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberPayJour;
+import com.qiqilm.server.admin.domain.PayLog;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.domain.req.MemberPayJourReq;
 import com.qiqilm.server.admin.domain.rsp.MemberPayJourRsp;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
+import com.qiqilm.server.admin.service.IPayLogService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,10 +32,18 @@ import java.util.Map;
 public class MemberPayJourController extends BaseController {
     @Autowired
     private IMemberPayJourService memberPayJourService;
+    @Autowired
+    private IPayLogService payLogService;
 
     @PostMapping("/all-list")
     public AjaxResult list(@RequestBody MemberPayJourReq req) {
         List<MemberPayJourRsp> list = memberPayJourService.selectMemberPayJourRspList(req.getCount());
+        return AjaxResult.success(list);
+    }
+
+    @PostMapping("/error-list")
+    public AjaxResult errorList() {
+        List<PayLog> list = payLogService.selectPayLogErrorList();
         return AjaxResult.success(list);
     }
 

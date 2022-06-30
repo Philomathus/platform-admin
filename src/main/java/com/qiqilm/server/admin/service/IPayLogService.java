@@ -58,4 +58,6 @@ public interface IPayLogService {
 	 * @return 结果
 	 */
 	public int deletePayLogById(Long id);
+
+    List<PayLog> selectPayLogErrorList();
 }

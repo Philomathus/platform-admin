@@ -354,7 +354,29 @@
 	</select>
 
 	<select id="selectMemberPayJourRspList" resultType="com.qiqilm.server.admin.domain.rsp.MemberPayJourRsp">
-		select id,member_id memberId,platform_id platformId,channel_id channelId,money,`status`, pay_time orderTime
-		from member_pay_jour order by create_time desc limit ${count}
-    </select>
+		SELECT
+		a.*,
+		p.`name` platformName
+		FROM
+		(
+		SELECT
+		j.id,
+		j.member_id memberId,
+		j.platform_id platformId,
+		j.channel_id channelId,
+		j.money,
+		j.`status`,
+		c.`name` channelName,
+		j.pay_time orderTime
+		FROM
+		member_pay_jour j
+		LEFT JOIN pay_channel_new c ON c.id = j.channel_id
+		WHERE
+		c.`status` = 1
+		ORDER BY
+		j.pay_time DESC
+		LIMIT ${count}
+		) a
+		LEFT JOIN pay_platform_new p ON p.id = a.platformId
+	</select>
 </mapper>

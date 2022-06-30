@@ -58,4 +58,6 @@ public interface PayLogMapper {
 	 * @return 结果
 	 */
 	public int deletePayLogByIds(Long[] ids );
+
+    List<PayLog> selectPayLogErrorList();
 }
