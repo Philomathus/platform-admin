@@ -160,7 +160,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             gameDataLog.setId(og.getId());
             gameDataLog.setGameId(og.getGameId());
             gameDataLog.setGameRound(og.getGameRound());
-            gameDataLog.setAccount(og.getAccount());
+            gameDataLog.setAccount(og.getAccount().toLowerCase());
             gameDataLog.setKindId(og.getKindId());
             gameDataLog.setCellScore(og.getCellScore());
             gameDataLog.setAllBet(og.getAllBet());
