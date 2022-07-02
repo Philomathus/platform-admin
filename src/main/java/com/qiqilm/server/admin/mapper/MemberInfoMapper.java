@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberInfo;
-import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
@@ -123,7 +122,7 @@ public interface MemberInfoMapper {
     List<MemberInfo> selectNikeNameById( @Param( "array" ) List<String> memberIds );
 
 
-    int banStatus(MemberInfo memberInfo);
+    int banStatus(@Param( "array" ) List<String> memberIds);
 
     List<MemberInfo> selectMemberInfoByIp(String id);
 }

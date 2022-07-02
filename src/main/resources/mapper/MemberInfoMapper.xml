@@ -811,8 +811,10 @@
 <!--	creating ban on click ban status-->
 	<update id="banStatus">
 		UPDATE member_info set status=0
-        WHERE
-			login_ip=#{loginIp}
+        WHERE id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
 	</update>
 
 <!--	find by ip address -->

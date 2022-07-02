@@ -544,10 +544,12 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public int banStatus(MemberInfo memberInfo) {
         List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoByIp(memberInfo.getLoginIp());
+        List<String> loginIp = new ArrayList<>();
         for (MemberInfo info : memberInfos) {
             memberCacheManager.delToken(info.getId());
+            loginIp.add(info.getId());
         }
-        return memberInfoMapper.banStatus(memberInfo);
+        return memberInfoMapper.banStatus(loginIp);
     }
 
 }
