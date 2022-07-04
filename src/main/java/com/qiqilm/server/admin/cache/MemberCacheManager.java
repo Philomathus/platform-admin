@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -128,6 +129,7 @@ public class MemberCacheManager {
 	 *
 	 * @return
 	 */
+	@Async
 	public void delToken( String memberId ) {
 		//大平台
 		String token = getTokenByUserId( memberId );
