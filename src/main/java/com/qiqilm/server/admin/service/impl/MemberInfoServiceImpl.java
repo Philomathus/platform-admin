@@ -8,7 +8,6 @@ import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
-import com.qiqilm.server.admin.dao.MemberInfoDao;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
@@ -75,9 +74,6 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Autowired
-    private MemberInfoDao memberInfoDao;
-
     /**
      * 查询会员信息
      *
@@ -86,8 +82,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
      */
     @Override
     public MemberInfo selectMemberInfoById(String id) {
-//        return memberInfoMapper.selectMemberInfoById(id);
-        return memberInfoDao.selectMemberInfoById(id);
+        return memberInfoMapper.selectMemberInfoById(id);
     }
 
     /**
@@ -101,8 +96,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         if (StringUtils.hasText(memberInfo.getSearchValue()) || StringUtils.hasText(memberInfo.getLoginIp()) || StringUtils.hasText(memberInfo.getPhone()) || StringUtils.hasText(memberInfo.getNickName())) {
             memberInfo.setParams(null);
         }
-//        List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
-        List<MemberInfo> memberInfos = memberInfoDao.selectMemberInfoList(memberInfo);
+        List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
         if (memberInfos.size() > 0 && !CollectionUtils.isEmpty(memberInfos)) {
             for (MemberInfo me : memberInfos) {
                 if (StringUtils.hasText(me.getPhone())) {
@@ -125,11 +119,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         if (!ValidatorUtil.isNumber11(memberInfo.getPhone())) {
             return AjaxResult.error("手机号必须是11位数字");
         }
-        int phoneNumber = memberInfoDao.countByPhone(memberInfo.getPhone());
-//        if (memberInfoMapper.countByPhone(memberInfo.getPhone()) > 0) {
-//            return AjaxResult.error("此手机号已经存在");
-//        }
-        if(phoneNumber>0){
+        if (memberInfoMapper.countByPhone(memberInfo.getPhone()) > 0) {
             return AjaxResult.error("此手机号已经存在");
         }
         MemberInfo member = memberCacheManager.createMember();
@@ -153,9 +143,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         member.setInviterCode(memberInfo.getInviterCode());
         member.setNickName(nameUtil.nickNameRandom());
         member.setLoginNum(0);
-        int memberInsert = memberInfoDao.insertMemberInfo(member);
-//        if (memberInfoMapper.insertMemberInfo(member) > 0) {
-        if(memberInsert>0){
+        if (memberInfoMapper.insertMemberInfo(member) > 0) {
             return AjaxResult.success("添加成功");
         } else {
             return AjaxResult.success("添加失败");
@@ -170,8 +158,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
      */
     @Override
     public int updateMemberInfo(MemberInfo memberInfo) {
-//        return memberInfoMapper.updateMemberInfo(memberInfo);
-        return memberInfoDao.updateMemberInfo(memberInfo);
+        return memberInfoMapper.updateMemberInfo(memberInfo);
     }
 
     @Override
@@ -274,16 +261,14 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
-    public PageBO<WithdrawReport> withdrawReport(String memberId, Integer pageNum, Integer pageSize) {
+    public PageBO<WithdrawReport> withdrawReport(String memberid, Integer pageNum, Integer pageSize) {
 //		memberInfoMapper.call_pro_useranalysis( memberid );
         PageBO<WithdrawReport> pageBO = new PageBO<>();
         pageNum = 1;
         pageSize = 100;
         Page page = PageHelper.startPage(pageNum, pageSize, true);
-//        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
-        List<WithdrawReport> withdrawReports = memberInfoDao.userWithdrawReportList();
-//        String remark = memberInfoMapper.findBanRemark(memberid);
-        String remark = memberInfoDao.findBanRemark(memberId);
+        List<WithdrawReport> withdrawReports = memberInfoMapper.userWithdrawReportList();
+        String remark = memberInfoMapper.findBanRemark(memberid);
         WithdrawReport withdrawReport = new WithdrawReport();
         withdrawReport.setClass_twoname("禁言禁用备注");
         withdrawReport.setT_value(remark);
@@ -349,13 +334,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     public int changeSpeak(MemberInfo memberInfo) {
         if ("0".equals(memberInfo.getSpeak())) {
             memberInfo.setSpeak("0");
-//            memberInfoMapper.updateMemberInfo(memberInfo);
-            memberInfoDao.updateMemberInfo(memberInfo);
+            memberInfoMapper.updateMemberInfo(memberInfo);
             memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), false);
         } else {
             memberInfo.setSpeak("1");
-//            memberInfoMapper.updateMemberInfo(memberInfo);
-            memberInfoDao.updateMemberInfo(memberInfo);
+            memberInfoMapper.updateMemberInfo(memberInfo);
             memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), true);
         }
         return 1;
@@ -379,8 +362,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             } else {
                 req.setPhones("\"" + req.getPhones() + "\"");
             }
-//            memberInfoMapper.updatePhones(req);
-            memberInfoDao.updatePhones(req);
+            memberInfoMapper.updatePhones(req);
             return AjaxResult.success();
         }
         return AjaxResult.error(0, "请输入批量手机号和密码");
@@ -404,8 +386,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             } else {
                 req.setUserIds("\"" + req.getUserIds() + "\"");
             }
-//            List<ReqSmallFeatures> phonesAndUserId = memberInfoMapper.queryPhones(req);
-            List<ReqSmallFeatures> phonesAndUserId = memberInfoDao.queryPhones(req);
+            List<ReqSmallFeatures> phonesAndUserId = memberInfoMapper.queryPhones(req);
             List<String> phonesByIds = new ArrayList<>();
             for (ReqSmallFeatures ph : phonesAndUserId) {
                 phonesByIds.add(ph.getUserIds() + ":" + ph.getPhonesByIds());
@@ -436,10 +417,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
                 req.setUserIds("\"" + req.getMemberIds() + "\"" + "," + req.getMoney());
             }
             //清除表中数据
-//            memberInfoMapper.clear();
-            memberInfoDao.clear();
-//            memberInfoMapper.insertPaiSong(req.getUserIds());
-            memberInfoDao.insertPaiSong(req.getUserIds());
+            memberInfoMapper.clear();
+            memberInfoMapper.insertPaiSong(req.getUserIds());
             return AjaxResult.success();
         }
         return AjaxResult.error(0, "请输入批量会员ID");
@@ -508,34 +487,29 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
     @Override
     public AjaxResult updateInviterCode(String inviterCode, String memberId) {
-//        memberInfoMapper.updateInviterCode(memberId, inviterCode);
-        memberInfoDao.updateInviterCode(memberId, inviterCode);
+        memberInfoMapper.updateInviterCode(memberId, inviterCode);
         return AjaxResult.success("修改成功");
     }
 
     @Override
     public AjaxResult changeEmail(MemberInfo memberInfo) {
-//        memberInfoMapper.changeEmail(memberInfo);
-        memberInfoDao.changeEmail(memberInfo);
+        memberInfoMapper.changeEmail(memberInfo);
         return AjaxResult.success("修改成功");
     }
 
     @Override
     public String getMemberLoginAddress(String id) {
-//        return memberInfoMapper.selectMemberInfoAddressById(id);
-        return memberInfoDao.selectMemberInfoAddressById(id);
+        return memberInfoMapper.selectMemberInfoAddressById(id);
     }
 
     @Override
     public String getHistoryRecharge(String id) {
-//        return memberInfoMapper.selectMemberInfoHistoryRechargeById(id);
-        return memberInfoDao.selectMemberInfoHistoryRechargeById(id);
+        return memberInfoMapper.selectMemberInfoHistoryRechargeById(id);
     }
 
     @Override
     public List<RspMemberChannel> memberstatistics(MemberInfo memberInfo) {
-//        return memberInfoMapper.memberstatistics(memberInfo);
-        return memberInfoDao.memberstatistics(memberInfo);
+        return memberInfoMapper.memberstatistics(memberInfo);
     }
 
     @Override
@@ -543,21 +517,18 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         if (memberInfo.getBanSpeakTime() == 0) {
             memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), false);
             memberInfo.setSpeak("0");
-//            memberInfoMapper.updateMemberInfo(memberInfo);
-            memberInfoDao.updateMemberInfo(memberInfo);
+            memberInfoMapper.updateMemberInfo(memberInfo);
         }
         if (memberInfo.getBanSpeakTime() > 0) {
             memberForbidUtil.setPlatformUserSpeak(memberInfo.getId(), true);
             memberInfo.setSpeak("1");
-//            memberInfoMapper.updateMemberInfo(memberInfo);
-            memberInfoDao.updateMemberInfo(memberInfo);
+            memberInfoMapper.updateMemberInfo(memberInfo);
         }
     }
 
     @Override
     public Map listCount(MemberInfo memberInfo) {
-//        return memberInfoMapper.listCount(memberInfo);
-        return memberInfoDao.listCount(memberInfo);
+        return memberInfoMapper.listCount(memberInfo);
     }
 
     @Override
@@ -572,15 +543,13 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
     @Override
     public int banStatus(MemberInfo memberInfo) {
-//        List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoByIp(memberInfo.getLoginIp());
-        List<MemberInfo> memberInfos = memberInfoDao.selectMemberInfoByIp(memberInfo.getLoginIp());
+        List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoByIp(memberInfo.getLoginIp());
         List<String> loginIp = new ArrayList<>();
         for (MemberInfo info : memberInfos) {
             memberCacheManager.delToken(info.getId());
             loginIp.add(info.getId());
         }
-//        return memberInfoMapper.banStatus(loginIp);
-        return memberInfoDao.banStatus(loginIp);
+        return memberInfoMapper.banStatus(loginIp);
     }
 
 }
