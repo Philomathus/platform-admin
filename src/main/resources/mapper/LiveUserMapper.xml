@@ -251,7 +251,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </select>
 
-    <select id="selectMobileById" parameterType="String" resultType="string">
+    <select id="selectMobileById" parameterType="String" resultMap="LiveUserResult">
         select mobile from ${dbLive}.live_user
         where id = #{id}
     </select>
