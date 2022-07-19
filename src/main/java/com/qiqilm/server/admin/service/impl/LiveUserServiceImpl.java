@@ -439,7 +439,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
     }
 
     @Override
-    public String selectMobileById(String id) {
+    public LiveUser selectMobileById(String id) {
         return liveUserMapper.selectMobileById(id);
     }
 

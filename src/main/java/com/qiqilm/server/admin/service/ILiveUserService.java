@@ -59,5 +59,5 @@ public interface ILiveUserService {
 	int delLiveUserBankById(String id);
 	AjaxResult kickOutLiveById( Long id );
 
-	String selectMobileById(String id);
+	LiveUser selectMobileById(String id);
 }

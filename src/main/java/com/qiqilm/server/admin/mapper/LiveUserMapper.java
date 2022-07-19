@@ -79,5 +79,5 @@ public interface LiveUserMapper {
 
     List<LiveUser> selectLiveUserInId(@Param("array") Set<Long> liveUserId);
 
-    String selectMobileById(String id);
+	LiveUser selectMobileById(String id);
 }
