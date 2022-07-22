@@ -23,6 +23,7 @@ public enum BankCodeShunWeiType {
 	SPDB( Arrays.asList( "浦发银行" ) ),
 	PSBC( Arrays.asList( "邮政储蓄银行", "邮政银行" ) ),
 	HXB( Arrays.asList( "华夏银行" ) ),
+	QTBC(Arrays.asList( "其它银行" )),
 	;
 
 	private final List<String> desc;
