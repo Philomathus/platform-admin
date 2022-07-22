@@ -31,9 +31,7 @@ public class ShunWei12PayAgentProcessor extends AbstractPayAgent {
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         BankCodeShunWeiType bankCodeType = BankCodeShunWeiType.getCodeByDesc( withdrawLog.getBankName() );
         if ( bankCodeType == null ) {
-            payAgentService.callBackOrder( withdrawLog,payAgentPlatform );
-            log.warn( payAgentPlatform.getName()+"无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
-            throw new BusinessException( payAgentPlatform.getName()+"无法支持的银行类型：" + withdrawLog.getBankName() );
+            bankCodeType = BankCodeShunWeiType.QTBC;
         }
         withdrawLog.setBankCode( bankCodeType.name() );
 
