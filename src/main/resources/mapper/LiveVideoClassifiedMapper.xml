@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isHostShow != null "> and is_host_show = #{isHostShow}</if>
             <if test="sortDesc != null  and sortDesc != ''"> and sort_desc = #{sortDesc}</if>
         </where>
+            order by sort DESC
     </select>
 
     <select id="selectLiveVideoClassifiedById" parameterType="Long" resultMap="LiveVideoClassifiedResult">
