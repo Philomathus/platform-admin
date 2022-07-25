@@ -33,8 +33,8 @@ public class ConfigBank extends BaseEntity {
     @Excel(name = "图标")
     private String icon;
 
-    /** 银行官网地址 */
-    @Excel(name = "银行官网地址")
+    /** 省份限制 */
+    @Excel(name = "省份限制")
     private String url;
 
     /** 排序 */

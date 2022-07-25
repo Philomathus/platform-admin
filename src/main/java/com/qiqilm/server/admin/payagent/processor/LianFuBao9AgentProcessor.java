@@ -20,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -83,6 +84,12 @@ public class LianFuBao9AgentProcessor extends AbstractPayAgent {
                     } );
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
+            if (e instanceof HttpServerErrorException) {
+                reqPayAgent.setFailReason("三方网络异常:" + e.getMessage());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+                return false;
+            }
         }
         log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
