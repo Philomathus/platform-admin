@@ -112,7 +112,6 @@ public class ConfigBankController extends BaseController {
 		if ( bankList != null ) {
 			configBank.setIcon( bankLists.get( 0 ).getBankIcon() );
 			configBank.setCode( bankLists.get( 0 ).getBankCode() );
-			configBank.setUrl( bankLists.get( 0 ).getUrl() );
 		}
 		return toAjax( configBankService.insertConfigBank( configBank ) );
 	}
