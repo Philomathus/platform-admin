@@ -113,8 +113,8 @@
 			<if test="loginIp != null  and loginIp != ''">
 				and login_ip = #{loginIp}
 			</if>
-			<if test="userName != null  and userName != ''">
-				and user_name = #{userName}
+			<if test="realName != null  and realName != ''">
+				and id in (select member_id from member_card where real_name = #{realName})
 			</if>
 			<if test="nickName != null  and nickName != ''">
 				and id in (select id from member_info where nick_name like concat('%', #{nickName}, '%'))
