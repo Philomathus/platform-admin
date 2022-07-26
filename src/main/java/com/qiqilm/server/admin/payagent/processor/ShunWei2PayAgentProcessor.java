@@ -70,7 +70,7 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         try {
             result = request(payAgentPlatform.getPayOrderAddr(), paramsRequest, payAgentPlatform.getHeaderKey());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", result,withdrawLog.getOrderNo());
         Map<String, String> resultMap = JsonUtil.json2Map(result);
@@ -116,7 +116,7 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
             outStream.close();
             return getResponseBodyAsString(conn.getInputStream());
         } catch (Exception e) {
-            e.printStackTrace();
+          log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -132,7 +132,7 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
             }
             return data.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+          log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -272,7 +272,7 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         try {
             result = request(payAgentPlatform.getPayOrderQueryAddr(), paramsRequest, payAgentPlatform.getHeaderKey());
         } catch (Exception e) {
-            e.printStackTrace();
+          log.error(e.getMessage(), e);
         }
         log.warn("顺为2代付查询结果 - result:{}", result);
         if (StringUtils.isNotBlank(result)) {
