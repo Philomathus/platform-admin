@@ -256,4 +256,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <select id="selectLiveUserAuthList" parameterType="LiveUser" resultMap="LiveUserResult">
+        select is_authentication from ${dbLive}.live_user
+    </select>
+
 </mapper>

@@ -346,4 +346,28 @@ public class LiveUserController extends BaseController {
 		return liveUserService.kickOutLiveById( id );
 	}
 
+
+	@GetMapping( "/authList" )
+	public TableDataInfo authList( LiveUser liveUser ) {
+		startPage();
+		List<LiveUser> authList = liveUserService.selectLiveUserAuthList(liveUser);
+		return getDataTable( authList);
+	}
+
+//	@PreAuthorize("@ss.hasPermi('admin:liveUser:changeAuth')")
+	@Log(title = "修改用户状态", businessType = BusinessType.UPDATE)
+	@PutMapping("/change_auth")
+	public Object changeStatus(LiveUser liveUser) {
+		LiveUser newLiveUser = new LiveUser();
+		newLiveUser.setIsAuthentication(liveUser.getIsAuthentication());
+		LiveUser getLiveUser = liveUserService.selectLiveUserById(liveUser.getId());
+		if(getLiveUser !=null){
+			newLiveUser.setId(getLiveUser.getId());
+		}
+		if(newLiveUser !=null){
+			liveUserService.updateLiveUser(newLiveUser);
+		}
+		return new RspBase();
+	}
+
 }
