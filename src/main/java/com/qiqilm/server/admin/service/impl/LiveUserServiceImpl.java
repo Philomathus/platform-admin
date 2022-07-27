@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 
 /**
  * 主播用户信息Service业务层处理
@@ -441,6 +442,13 @@ public class LiveUserServiceImpl implements ILiveUserService {
     @Override
     public LiveUser selectMobileById(String id) {
         return liveUserMapper.selectMobileById(id);
+    }
+
+    @Override
+    public ArrayList selectLiveUserAuthList(LiveUser liveUser) {
+        List<LiveUser> authList =  liveUserMapper.selectLiveUserAuthList(liveUser);
+        Set<LiveUser> hashSet = new LinkedHashSet(authList);
+        return new ArrayList(hashSet);
     }
 
 
