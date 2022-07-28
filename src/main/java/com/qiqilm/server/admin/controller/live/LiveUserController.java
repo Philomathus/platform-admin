@@ -354,7 +354,7 @@ public class LiveUserController extends BaseController {
 		return getDataTable( authList);
 	}
 
-//	@PreAuthorize("@ss.hasPermi('admin:liveUser:changeAuth')")
+	@PreAuthorize("@ss.hasPermi('admin:liveUser:changeAuth')")
 	@Log(title = "修改用户直播状态", businessType = BusinessType.UPDATE)
 	@PutMapping("/change_auth")
 	public Object changeAuth(LiveUser liveUser) {
