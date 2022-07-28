@@ -357,7 +357,7 @@ public class LiveUserController extends BaseController {
 //	@PreAuthorize("@ss.hasPermi('admin:liveUser:changeAuth')")
 	@Log(title = "修改用户直播状态", businessType = BusinessType.UPDATE)
 	@PutMapping("/change_auth")
-	public Object changeStatus(LiveUser liveUser) {
+	public Object changeAuth(LiveUser liveUser) {
 		LiveUser getLiveUser = liveUserService.selectLiveUserById(liveUser.getId());
 		if(liveUser !=null){
 			getLiveUser.setIsAuthentication(liveUser.getIsAuthentication());
