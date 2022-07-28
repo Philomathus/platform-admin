@@ -355,17 +355,13 @@ public class LiveUserController extends BaseController {
 	}
 
 //	@PreAuthorize("@ss.hasPermi('admin:liveUser:changeAuth')")
-	@Log(title = "修改用户状态", businessType = BusinessType.UPDATE)
+	@Log(title = "修改用户直播状态", businessType = BusinessType.UPDATE)
 	@PutMapping("/change_auth")
 	public Object changeStatus(LiveUser liveUser) {
-		LiveUser newLiveUser = new LiveUser();
-		newLiveUser.setIsAuthentication(liveUser.getIsAuthentication());
 		LiveUser getLiveUser = liveUserService.selectLiveUserById(liveUser.getId());
-		if(getLiveUser !=null){
-			newLiveUser.setId(getLiveUser.getId());
-		}
-		if(newLiveUser !=null){
-			liveUserService.updateLiveUser(newLiveUser);
+		if(liveUser !=null){
+			getLiveUser.setIsAuthentication(liveUser.getIsAuthentication());
+			liveUserService.updateLiveUser(liveUser);
 		}
 		return new RspBase();
 	}
