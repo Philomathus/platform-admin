@@ -45,8 +45,9 @@ public class WheelPoolController  extends BaseController {
     @Log(title = "修改wheelPool", businessType = BusinessType.UPDATE)
     @GetMapping("/{id}")
     @PreAuthorize( "@ss.hasPermi('admin:wheelPool:query')" )
-    public WheelPool findById(@PathVariable("id") Long id){
-        return wheelPoolService.findWheelPoolById(id);
+    public AjaxResult findById(@PathVariable("id") Long id){
+        WheelPool wheelPool =  wheelPoolService.findWheelPoolById(id);
+        return AjaxResult.success(wheelPool);
     }
 
     /**
