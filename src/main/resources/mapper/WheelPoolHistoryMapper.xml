@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelPoolHistoryMapper">
+
+    <resultMap type="WheelPoolHistory" id="WheelPoolResult">
+        <result property="id"    column="id"    />
+        <result property="memberId"  column="member_id"    />
+        <result property="nickName"  column="nick_name"    />
+        <result property="headId"  column="head_id"    />
+        <result property="status"  column="status"    />
+        <result property="first"  column="first"    />
+        <result property="prize"  column="prize"    />
+        <result property="winId"  column="win_id"    />
+        <result property="medalType"  column="medal_type"    />
+        <result property="drawType"  column="draw_type"    />
+        <result property="position"  column="position"    />
+        <result property="createTime"  column="createTime"    />
+        <result property="updateTime"  column="updateTime"    />
+    </resultMap>
+
+    <sql id="selectWheelPoolVo">
+        select id, member_id, nick_name, head_id, status,`first`,prize,win_id,medal_type,draw_type,`position`,createTime,updateTime, from ${dbLive}.wheel_pool_history
+    </sql>
+
+    <select id="selectAllWheelPoolHistory" parameterType="WheelPool" resultMap="WheelPoolResult">
+        <include refid="selectWheelPoolVo"/>
+        <where>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId},</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name = #{nickName}, '%')</if>
+            <if test="headId != null "> and head_id = #{headId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="first != null "> and `first` = #{first}</if>
+            <if test="prize != null "> and prize = #{prize}</if>
+            <if test="winId != null "> and win_d = #{winId}</if>
+            <if test="medalType != null and medalType !='' "> and medal_type = #{medalType}</if>
+            <if test="position != null and position !='' "> and position = #{position}</if>
+            <if test="position != null and position !='' "> and position = #{position}</if>
+            <if test="createTime !=null">and create_time = #{createTime}</if>
+            <if test="updateTime !=null">and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+</mapper>
