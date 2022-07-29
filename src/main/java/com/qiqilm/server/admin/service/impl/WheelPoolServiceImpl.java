@@ -23,6 +23,7 @@ public class WheelPoolServiceImpl implements WheelPoolService {
     @Autowired
     private WheelPoolDao wheelPoolDao;
 
+     /**查询获取所有轮池列表 query get all wheel pool list->service implementation layer*/
     @Override
     public List<WheelPool> selectAllWheelPool(WheelPool wheelPool) {
        List<WheelPool> wheelPoolList =  wheelPoolDao.selectAllWheelPool(wheelPool);
@@ -32,6 +33,7 @@ public class WheelPoolServiceImpl implements WheelPoolService {
         return wheelPoolList;
     }
 
+    /**查询通过id获取数据 服务实现层-  query to get data by id -> service implementation layer*/
     @Override
     public WheelPool findWheelPoolById(Long wheelId) {
         WheelPool wheelPoolById = wheelPoolDao.findWheelPoolById(wheelId);
@@ -41,6 +43,7 @@ public class WheelPoolServiceImpl implements WheelPoolService {
         return wheelPoolById;
     }
 
+    /** 更新轮池 update wheel pool ->service implementation layer*/
     @Override
     public int updateWheelPool(WheelPool wheelPool) {
         return wheelPoolDao.updateWheelPool(wheelPool);

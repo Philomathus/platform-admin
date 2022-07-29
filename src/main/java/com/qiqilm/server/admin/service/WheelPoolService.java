@@ -5,7 +5,7 @@ import com.qiqilm.server.admin.domain.WheelPool;
 import java.util.List;
 
 /**
- * wheel pool Service接口
+ * wheel pool Service interface接口
  *
  * @author Rajesh
  * @date 2022-07-29

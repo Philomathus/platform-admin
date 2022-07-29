@@ -12,6 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 【wheel_pool_history】Controller
+ *
+ * @author Rajesh
+ * @date 2022-07-29
+ */
+
 @RestController
 @RequestMapping("/admin/wheelPoolHistory")
 public class WheelPoolHistoryController extends BaseController {
@@ -19,9 +26,10 @@ public class WheelPoolHistoryController extends BaseController {
     @Autowired
     private WheelPoolHistoryService wheelPoolHistoryService;
 
+    /** get all wheel pool history data */
     @GetMapping("/list")
     @PreAuthorize( "@ss.hasPermi('admin:wheelPoolHistory:list')" )
-    public TableDataInfo list(WheelPoolHistory wheelPoolHistory){
+    public TableDataInfo wheelPoolHistoryList(WheelPoolHistory wheelPoolHistory){
         startPage();
         List<WheelPoolHistory> wheelPoolHistoryList =  wheelPoolHistoryService.selectAllWheelPoolHistory(wheelPoolHistory);
         return getDataTable(wheelPoolHistoryList);

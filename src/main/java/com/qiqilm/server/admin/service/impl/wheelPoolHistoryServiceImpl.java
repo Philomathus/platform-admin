@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 轮池历史服务接口实现 - wheel pool History service interface implementation
+ */
 @Service
 public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
 
     @Autowired
     private WheelPoolHistoryDao wheelPoolHistoryDao;
 
+ /** * 查询轮池列表 - wheel pool History service implementation layer */
     @Override
     public List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory) {
         List<WheelPoolHistory> wheelPoolHistoryList = wheelPoolHistoryDao.selectAllWheelPoolHistory(wheelPoolHistory);

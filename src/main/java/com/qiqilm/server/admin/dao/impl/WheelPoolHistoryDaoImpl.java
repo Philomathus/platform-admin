@@ -9,12 +9,20 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * wheel pool history dao implementation
+ * 接口
+ *
+ * @author Rajesh
+ * @date 2022-07-29
+ */
 @Component
 public class WheelPoolHistoryDaoImpl implements WheelPoolHistoryDao {
 
     @Resource
     private WheelPoolHistoryMapper wheelPoolHistoryMapper;
 
+    /**查询获取所有轮池历史列表 query get all wheel pool history list data layer*/
     @Override
     public List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory) {
         return wheelPoolHistoryMapper.selectAllWheelPoolHistory(wheelPoolHistory);

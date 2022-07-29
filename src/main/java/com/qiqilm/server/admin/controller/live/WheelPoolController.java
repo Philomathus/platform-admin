@@ -42,6 +42,9 @@ public class WheelPoolController  extends BaseController {
         return getDataTable( wheelPoolList );
     }
 
+    /**
+     * 查询通过id获取数据 -  query to get data by id
+     */
     @Log(title = "修改wheelPool", businessType = BusinessType.UPDATE)
     @GetMapping("/{id}")
     @PreAuthorize( "@ss.hasPermi('admin:wheelPool:query')" )
@@ -51,7 +54,7 @@ public class WheelPoolController  extends BaseController {
     }
 
     /**
-     * update wheel pool
+     * 更新轮池 update wheel pool
      */
     @PreAuthorize( "@ss.hasPermi('admin:wheelPool:edit')" )
     @Log( title = "漩涡", businessType = BusinessType.UPDATE )
