@@ -26,7 +26,7 @@ public class WheelPoolHistoryController extends BaseController {
     @Autowired
     private WheelPoolHistoryService wheelPoolHistoryService;
 
-    /** get all wheel pool history data */
+    /** 获取所有轮池历史数据 get all wheel pool history data */
     @GetMapping("/list")
     @PreAuthorize( "@ss.hasPermi('admin:wheelPoolHistory:list')" )
     public TableDataInfo wheelPoolHistoryList(WheelPoolHistory wheelPoolHistory){
