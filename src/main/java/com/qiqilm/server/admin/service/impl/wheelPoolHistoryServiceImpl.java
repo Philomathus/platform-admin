@@ -6,7 +6,6 @@ import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.service.WheelPoolHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
     @Override
     public List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory) {
         List<WheelPoolHistory> wheelPoolHistoryList = wheelPoolHistoryDao.selectAllWheelPoolHistory(wheelPoolHistory);
-        if(CollectionUtils.isEmpty(wheelPoolHistoryList)){
+        if(wheelPoolHistoryList ==null){
             throw new BusinessException("数据不可用");
         }
         return wheelPoolHistoryList;
