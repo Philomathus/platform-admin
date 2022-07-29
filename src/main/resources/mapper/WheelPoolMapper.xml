@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.WheelPoolMapper">
+
+    <resultMap type="WheelPool" id="WheelPoolResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="secMoney"    column="sec_money"    />
+        <result property="limitMoney"    column="limit_money"    />
+        <result property="weight"    column="weights"    />
+    </resultMap>
+
+    <sql id="selectWheelPoolVo">
+        select id, name, sec_money, limit_money, weights from ${dbLive}.wheel_pool
+    </sql>
+
+    <select id="selectAllWheelPool" parameterType="WheelPool" resultMap="WheelPoolResult">
+        <include refid="selectWheelPoolVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="secMoney != null "> and sec_money = #{secMoney}</if>
+            <if test="limitMoney != null "> and limit_money = #{limitMoney}</if>
+            <if test="weight != null "> and weights = #{weight}</if>
+        </where>
+    </select>
+
+
+    <select id="WheelPoolFindById" parameterType="Long" resultMap="WheelPoolResult">
+        <include refid="selectWheelPoolVo"/>
+        where id = #{id}
+    </select>
+
+
+    <update id="updateWheelPool" parameterType="WheelPool">
+        update ${dbLive}.wheel_pool
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+
+            <if test="secMoney != null">sec_money = #{secMoney},</if>
+
+            <if test="limitMoney != null">limit_money = #{limitMoney},</if>
+
+            <if test="weight != null">weights = #{weight},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+</mapper>
