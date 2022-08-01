@@ -73,12 +73,10 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         params.add("request_body", URLEncoder.encode(encryptData, "utf-8"));
         params.add("interface_version", DigestUtils.md5Hex("1.0.0".concat(payAgentPlatform.getHeaderKey())));
 
-        String paramsRequest = this.assemblyUrl(params);
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         httpHeaders.set("security_header_key", payAgentPlatform.getHeaderKey());
-        HttpEntity<String> httpEntity = new HttpEntity<>(paramsRequest, httpHeaders);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, httpHeaders);
 
         Map<String, String> resultMap = null;
         try {
