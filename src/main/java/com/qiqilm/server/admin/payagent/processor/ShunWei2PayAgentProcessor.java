@@ -82,7 +82,7 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
 
         Map<String, String> resultMap = null;
         try {
-            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+            resultMap = restTemplate.execute(uriComponents.toUri(), HttpMethod.POST,
                     restTemplate.httpEntityCallback(httpEntity), response -> {
                         InputStream bodyStream = response.getBody();
                         String text;
