@@ -26,6 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -48,7 +49,7 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("client_num", payAgentPlatform.getMerId());
         dataMap.put("order_num", withdrawLog.getOrderNo());
         dataMap.put("amount", withdrawLog.getWithdrawMoney().multiply(new BigDecimal(100)).setScale(0,
-                BigDecimal.ROUND_HALF_EVEN).toString());
+                RoundingMode.HALF_EVEN).toString());
         dataMap.put("bank_account_name", withdrawLog.getBankUserName().trim());
         dataMap.put("bank_account_no", withdrawLog.getBankAccount().trim());
         dataMap.put("bank_code", withdrawLog.getBankCode());
@@ -69,14 +70,17 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         String encryptData = RSACoder.encryptByPublicKey(JsonUtil.object2Json(paramMap),
                 payAgentPlatform.getSignPublicKey());
         // 请求参数封装
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("request_body", URLEncoder.encode(encryptData, "utf-8"));
-        params.add("interface_version", DigestUtils.md5Hex("1.0.0".concat(payAgentPlatform.getHeaderKey())));
+        Map<String, String> params = new HashMap<>();
+        params.put("request_body", URLEncoder.encode(encryptData, "utf-8"));
+        params.put("interface_version", DigestUtils.md5Hex("1.0.0".concat(payAgentPlatform.getHeaderKey())));
+
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.setAll(params);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         httpHeaders.set("security_header_key", payAgentPlatform.getHeaderKey());
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, httpHeaders);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(requestParams, httpHeaders);
 
         Map<String, String> resultMap = null;
         try {
