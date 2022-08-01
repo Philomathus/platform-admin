@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -11,12 +12,19 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -64,16 +72,37 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         params.put("request_body", URLEncoder.encode(encryptData, "utf-8"));
         params.put("interface_version", DigestUtils.md5Hex("1.0.0".concat(payAgentPlatform.getHeaderKey())));
 
-        String paramsRequest = this.assemblyUrl(params);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.set("security_header_key", payAgentPlatform.getHeaderKey());
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(new HashMap<>(), httpHeaders);
 
-        String result = null;
+        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(params);
+        UriComponents uriComponents = UriComponentsBuilder.fromUriString(payAgentPlatform.getPayOrderAddr())
+                .queryParams(requestMap).build();
+
+        Map<String, String> resultMap = null;
         try {
-            result = request(payAgentPlatform.getPayOrderAddr(), paramsRequest, payAgentPlatform.getHeaderKey());
+            resultMap = restTemplate.execute(uriComponents.toUri(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
+                        }
+                        return JsonUtil.json2Map(text);
+                    });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            if (e instanceof HttpServerErrorException) {
+                reqPayAgent.setFailReason("三方网络异常:" + e.getMessage());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+                return false;
+            }
         }
-        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", result,withdrawLog.getOrderNo());
-        Map<String, String> resultMap = JsonUtil.json2Map(result);
+        log.info(payAgentPlatform.getName() + "下单结果{},订单号:{}", JsonUtil.object2Json(resultMap), withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("200".equals(resultMap.get("state_code"))) {
                 resultMap.remove("state_code");
@@ -95,46 +124,6 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         }
         log.warn("顺为代付订单提交失败 - orderNo:{},result:{}", withdrawLog.getOrderNo(), JsonUtil.object2Json(resultMap));
         return false;
-    }
-
-    private String request(String url, String params, String headerKey) {
-        try {
-            URL urlObj = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setConnectTimeout(5000);
-            conn.setRequestProperty("Charset", "UTF-8");
-            conn.setRequestProperty("security_header_key", headerKey);
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("Content-Length", String.valueOf(params.length()));
-            OutputStream outStream = conn.getOutputStream();
-            outStream.write(params.getBytes(StandardCharsets.UTF_8));
-            outStream.flush();
-            outStream.close();
-            return getResponseBodyAsString(conn.getInputStream());
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
-            return null;
-        }
-    }
-
-    private String getResponseBodyAsString(InputStream in) {
-        try {
-            BufferedInputStream buf = new BufferedInputStream(in);
-            byte[] buffer = new byte[1024];
-            StringBuilder data = new StringBuilder();
-            int readDataLen;
-            while ((readDataLen = buf.read(buffer)) != -1) {
-                data.append(new String(buffer, 0, readDataLen, StandardCharsets.UTF_8));
-            }
-            return data.toString();
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
-        }
-        return null;
     }
 
     private String generateRandNum(int size) {
@@ -266,45 +255,59 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         Map<String, String> params = new HashMap<>();
         params.put("request_body", URLEncoder.encode(encryptData, "utf-8"));
         params.put("interface_version", DigestUtils.md5Hex("1.0.0".concat(payAgentPlatform.getHeaderKey())));
-        String paramsRequest = this.assemblyUrl(params);
 
-        String result = null;
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.set("security_header_key", payAgentPlatform.getHeaderKey());
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(new HashMap<>(), httpHeaders);
+
+        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll(params);
+        UriComponents uriComponents = UriComponentsBuilder.fromUriString(payAgentPlatform.getPayOrderQueryAddr())
+                .queryParams(requestMap).build();
+
+        Map<String, String> resultMap = null;
         try {
-            result = request(payAgentPlatform.getPayOrderQueryAddr(), paramsRequest, payAgentPlatform.getHeaderKey());
+            resultMap = restTemplate.execute(uriComponents.toUri(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback(httpEntity), response -> {
+                        InputStream bodyStream = response.getBody();
+                        String text;
+                        try (Reader reader = new InputStreamReader(bodyStream)) {
+                            text = CharStreams.toString(reader);
+                        }
+                        return JsonUtil.json2Map(text);
+                    });
         } catch (Exception e) {
-          log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
-        log.warn("顺为2代付查询结果 - result:{}", result);
-        if (StringUtils.isNotBlank(result)) {
-            Map<String, String> jsonObject = JsonUtil.json2Map(result);
-            if (!CollectionUtils.isEmpty(jsonObject)) {
-                String stateCode = jsonObject.remove("state_code");
-                if (org.apache.commons.lang3.StringUtils.equals("200", stateCode)) {
-                    String resultSign = jsonObject.remove("sign");
-                    Map<String, String> signMap = new TreeMap<>(jsonObject);
-                    String randNum = signMap.getOrDefault("random_str", "");
-                    Map<String, String> param = paramSort(signMap, randNum);
-                    String signStr = JsonUtil.object2Json(param);
-                    String reSign = DigestUtils.md5Hex(signStr.concat(signMd5));
-                    if (org.apache.commons.lang3.StringUtils.equals(resultSign, reSign)) {
-                        String remit_state_code = jsonObject.getOrDefault("remit_state_code", "");
-                        // status 4代付中5代付失败6代付成功
-                        // orderState (0=处理中，1=成功，2=失败)
-                        int status = 4;
-                        int orderState = 0;
-                        if ("SUCCESS".equals(remit_state_code)) {
-                            status = 6;
-                            orderState = 1;
-                        }
-                        if ("FAILED".equals(remit_state_code)) {
-                            status = 5;
-                            orderState = 2;
-                        }
-                        payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
+        log.warn("顺为2代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+        if (!CollectionUtils.isEmpty(resultMap)) {
+            String stateCode = resultMap.remove("state_code");
+            if (org.apache.commons.lang3.StringUtils.equals("200", stateCode)) {
+                String resultSign = resultMap.remove("sign");
+                Map<String, String> signMap = new TreeMap<>(resultMap);
+                String randNum = signMap.getOrDefault("random_str", "");
+                Map<String, String> param = paramSort(signMap, randNum);
+                String signStr = JsonUtil.object2Json(param);
+                String reSign = DigestUtils.md5Hex(signStr.concat(signMd5));
+                if (org.apache.commons.lang3.StringUtils.equals(resultSign, reSign)) {
+                    String remit_state_code = resultMap.getOrDefault("remit_state_code", "");
+                    // status 4代付中5代付失败6代付成功
+                    // orderState (0=处理中，1=成功，2=失败)
+                    int status = 4;
+                    int orderState = 0;
+                    if ("SUCCESS".equals(remit_state_code)) {
+                        status = 6;
+                        orderState = 1;
                     }
+                    if ("FAILED".equals(remit_state_code)) {
+                        status = 5;
+                        orderState = 2;
+                    }
+                    payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState);
                 }
-                return jsonObject.getOrDefault("msg", "");
             }
+            return resultMap.getOrDefault("msg", "");
         }
         return "顺为2代付查询失败,订单号:" + withdrawLog.getOrderNo();
     }
