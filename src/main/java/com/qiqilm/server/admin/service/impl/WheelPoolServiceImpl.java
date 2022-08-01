@@ -51,7 +51,8 @@ public class WheelPoolServiceImpl implements WheelPoolService {
     /** 更新轮池 update wheel pool ->service implementation layer*/
     @Override
     public int updateWheelPool(WheelPool wheelPool) {
+        int wheelPoolUpdated =  wheelPoolDao.updateWheelPool(wheelPool);
         redisUtil.unlink("live:wheelPoolList");
-        return wheelPoolDao.updateWheelPool(wheelPool);
+        return wheelPoolUpdated;
     }
 }
