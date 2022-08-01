@@ -68,23 +68,18 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         String encryptData = RSACoder.encryptByPublicKey(JsonUtil.object2Json(paramMap),
                 payAgentPlatform.getSignPublicKey());
         // 请求参数封装
-        Map<String, String> params = new HashMap<>();
-        params.put("request_body", URLEncoder.encode(encryptData, "utf-8"));
-        params.put("interface_version", DigestUtils.md5Hex("1.0.0".concat(payAgentPlatform.getHeaderKey())));
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("request_body", URLEncoder.encode(encryptData, "utf-8"));
+        params.add("interface_version", DigestUtils.md5Hex("1.0.0".concat(payAgentPlatform.getHeaderKey())));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         httpHeaders.set("security_header_key", payAgentPlatform.getHeaderKey());
-        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(new HashMap<>(), httpHeaders);
-
-        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll(params);
-        UriComponents uriComponents = UriComponentsBuilder.fromUriString(payAgentPlatform.getPayOrderAddr())
-                .queryParams(requestMap).build();
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, httpHeaders);
 
         Map<String, String> resultMap = null;
         try {
-            resultMap = restTemplate.execute(uriComponents.toUri(), HttpMethod.POST,
+            resultMap = restTemplate.execute(payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
                     restTemplate.httpEntityCallback(httpEntity), response -> {
                         InputStream bodyStream = response.getBody();
                         String text;
