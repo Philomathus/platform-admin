@@ -6,7 +6,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeShunWeiType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
@@ -14,10 +13,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -39,7 +37,7 @@ public class ShunWei3PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("client_num", payAgentPlatform.getMerId());
         dataMap.put("order_num", withdrawLog.getOrderNo());
         dataMap.put("amount", withdrawLog.getWithdrawMoney().multiply(new BigDecimal(100)).setScale(0,
-                BigDecimal.ROUND_HALF_EVEN).toString());
+                RoundingMode.HALF_EVEN).toString());
         dataMap.put("bank_account_name", withdrawLog.getBankUserName().trim());
         dataMap.put("bank_account_no", withdrawLog.getBankAccount().trim());
         dataMap.put("bank_code", withdrawLog.getBankCode());
@@ -71,6 +69,12 @@ public class ShunWei3PayAgentProcessor extends AbstractPayAgent {
             result = request(payAgentPlatform.getPayOrderAddr(), paramsRequest, payAgentPlatform.getHeaderKey());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            if (e instanceof IOException && e.getMessage().contains("Server returned HTTP response code")) {
+                reqPayAgent.setFailReason("三方网络异常:" + e.getMessage());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+                return false;
+            }
         }
         log.warn(payAgentPlatform.getName() + "下单结果:{},订单号:{}", result, withdrawLog.getOrderNo());
         Map<String, String> resultMap = JsonUtil.json2Map(result);
@@ -86,55 +90,45 @@ public class ShunWei3PayAgentProcessor extends AbstractPayAgent {
                 if (!org.apache.commons.lang3.StringUtils.equalsIgnoreCase(resultSign, reSign)) {
                     return false;
                 }
-                log.info("顺为代付订单提交成功，orderNo：{}", withdrawLog.getOrderNo());
+                log.info(payAgentPlatform.getName() + "订单提交成功，orderNo：{}", withdrawLog.getOrderNo());
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("message", ""));
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("顺为代付订单提交失败 - orderNo:{},result:{}", withdrawLog.getOrderNo(), JsonUtil.object2Json(resultMap));
+        log.warn(payAgentPlatform.getName() + "订单提交失败 - orderNo:{},result:{}", withdrawLog.getOrderNo(), JsonUtil.object2Json(resultMap));
         return false;
     }
 
-    private String request(String url, String params, String headerKey) {
-        try {
-            URL urlObj = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setConnectTimeout(5000);
-            conn.setRequestProperty("Charset", "UTF-8");
-            conn.setRequestProperty("security_header_key", headerKey);
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("Content-Length", String.valueOf(params.length()));
-            OutputStream outStream = conn.getOutputStream();
-            outStream.write(params.getBytes(StandardCharsets.UTF_8));
-            outStream.flush();
-            outStream.close();
-            return getResponseBodyAsString(conn.getInputStream());
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
-            return null;
-        }
+    private String request(String url, String params, String headerKey) throws Exception {
+        URL urlObj = new URL(url);
+        HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setUseCaches(false);
+        conn.setConnectTimeout(5000);
+        conn.setRequestProperty("Charset", "UTF-8");
+        conn.setRequestProperty("security_header_key", headerKey);
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setRequestProperty("Content-Length", String.valueOf(params.length()));
+        OutputStream outStream = conn.getOutputStream();
+        outStream.write(params.getBytes(StandardCharsets.UTF_8));
+        outStream.flush();
+        outStream.close();
+        return getResponseBodyAsString(conn.getInputStream());
     }
 
-    private String getResponseBodyAsString(InputStream in) {
-        try {
-            BufferedInputStream buf = new BufferedInputStream(in);
-            byte[] buffer = new byte[1024];
-            StringBuilder data = new StringBuilder();
-            int readDataLen;
-            while ((readDataLen = buf.read(buffer)) != -1) {
-                data.append(new String(buffer, 0, readDataLen, StandardCharsets.UTF_8));
-            }
-            return data.toString();
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
+    private String getResponseBodyAsString(InputStream in) throws Exception {
+        BufferedInputStream buf = new BufferedInputStream(in);
+        byte[] buffer = new byte[1024];
+        StringBuilder data = new StringBuilder();
+        int readDataLen;
+        while ((readDataLen = buf.read(buffer)) != -1) {
+            data.append(new String(buffer, 0, readDataLen, StandardCharsets.UTF_8));
         }
-        return null;
+        return data.toString();
     }
 
     private String generateRandNum(int size) {
@@ -193,7 +187,7 @@ public class ShunWei3PayAgentProcessor extends AbstractPayAgent {
 
             return "ok";
         }
-        log.info("ShunWei:" + "顺为解密失败");
+        log.info(payAgentPlatform.getName() + "回调验签失败");
         return "fail";
     }
 
@@ -272,9 +266,9 @@ public class ShunWei3PayAgentProcessor extends AbstractPayAgent {
         try {
             result = request(payAgentPlatform.getPayOrderQueryAddr(), paramsRequest, payAgentPlatform.getHeaderKey());
         } catch (Exception e) {
-          log.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
-        log.warn("顺为3代付查询结果 - result:{}", result);
+        log.warn(payAgentPlatform.getName() + "查询结果 - result:{}", result);
         if (StringUtils.isNotBlank(result)) {
             Map<String, String> jsonObject = JsonUtil.json2Map(result);
             if (!CollectionUtils.isEmpty(jsonObject)) {
@@ -306,6 +300,6 @@ public class ShunWei3PayAgentProcessor extends AbstractPayAgent {
                 return jsonObject.getOrDefault("msg", "");
             }
         }
-        return "顺为3代付查询失败,订单号:" + withdrawLog.getOrderNo();
+        return payAgentPlatform.getName() + "查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 }
