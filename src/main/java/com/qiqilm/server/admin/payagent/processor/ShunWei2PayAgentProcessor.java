@@ -27,6 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -77,12 +78,14 @@ public class ShunWei2PayAgentProcessor extends AbstractPayAgent {
         httpHeaders.set("security_header_key", payAgentPlatform.getHeaderKey());
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(null, httpHeaders);
 
-        UriComponents uriComponents = UriComponentsBuilder.fromUriString(payAgentPlatform.getPayOrderAddr())
-                .queryParams(params).build();
+        URI orderUri = UriComponentsBuilder.fromUriString(payAgentPlatform.getPayOrderAddr())
+                .queryParams(params).build().toUri();
+
+        log.warn(orderUri.toString());
 
         Map<String, String> resultMap = null;
         try {
-            resultMap = restTemplate.execute(uriComponents.toUri(), HttpMethod.POST,
+            resultMap = restTemplate.execute(orderUri, HttpMethod.POST,
                     restTemplate.httpEntityCallback(httpEntity), response -> {
                         InputStream bodyStream = response.getBody();
                         String text;
