@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.dao.WheelPoolDao;
 import com.qiqilm.server.admin.domain.WheelPool;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.service.WheelPoolService;
+import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,10 @@ public class WheelPoolServiceImpl implements WheelPoolService {
 
     @Autowired
     private WheelPoolDao wheelPoolDao;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
 
      /**查询获取所有轮池列表 query get all wheel pool list->service implementation layer*/
     @Override
@@ -46,6 +51,7 @@ public class WheelPoolServiceImpl implements WheelPoolService {
     /** 更新轮池 update wheel pool ->service implementation layer*/
     @Override
     public int updateWheelPool(WheelPool wheelPool) {
+        redisUtil.unlink("live:wheelPoolList");
         return wheelPoolDao.updateWheelPool(wheelPool);
     }
 }
