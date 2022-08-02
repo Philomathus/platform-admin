@@ -80,4 +80,6 @@ public interface LiveUserMapper {
     List<LiveUser> selectLiveUserInId(@Param("array") Set<Long> liveUserId);
 
 	LiveUser selectMobileById(String id);
+
+	List<LiveUser> selectLiveUserAuthList(LiveUser liveUser);
 }

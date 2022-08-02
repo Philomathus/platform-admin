@@ -60,4 +60,7 @@ public interface ILiveUserService {
 	AjaxResult kickOutLiveById( Long id );
 
 	LiveUser selectMobileById(String id);
+
+   public List<LiveUser> selectLiveUserAuthList(LiveUser liveUser);
+
 }
