@@ -3,6 +3,8 @@ package com.qiqilm.server.admin.domain;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 
@@ -60,5 +62,22 @@ public class WheelPoolHistory extends BaseEntity {
     /** 位置 */
     @Excel(name = "位置")
     private String position;
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("memberId", getMemberId())
+                .append("nickName", getNickName())
+                .append("headId", getHeadId())
+                .append("status", getStatus())
+                .append("first", getFirst())
+                .append("prize", getPrize())
+                .append("winId", getWinId())
+                .append("medalType", getMedalType())
+                .append("drawType", getDrawType())
+                .append("position", getPosition())
+                .toString();
+    }
 
 }
