@@ -3,7 +3,6 @@ package com.qiqilm.server.admin.cache;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.domain.dto.PlatformUser;
 import com.qiqilm.server.admin.enums.EnumLock;
-import com.qiqilm.server.admin.enums.PlatformUserKey;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
