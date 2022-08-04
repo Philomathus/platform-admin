@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 public class WheelPoolServiceImpl implements WheelPoolService {
 
+    private static final String WHEEL_POOL_LIST_KEY ="live:wheelPoolList";
 
     @Autowired
     private WheelPoolDao wheelPoolDao;
@@ -52,7 +53,7 @@ public class WheelPoolServiceImpl implements WheelPoolService {
     @Override
     public int updateWheelPool(WheelPool wheelPool) {
         int wheelPoolUpdated =  wheelPoolDao.updateWheelPool(wheelPool);
-        redisUtil.unlink("live:wheelPoolList");
+        redisUtil.unlink(WHEEL_POOL_LIST_KEY);
         return wheelPoolUpdated;
     }
 }
