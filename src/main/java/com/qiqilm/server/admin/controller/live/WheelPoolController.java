@@ -45,7 +45,6 @@ public class WheelPoolController  extends BaseController {
     /**
      * 查询通过id获取数据 -  query to get data by id
      */
-    @Log(title = "修改wheelPool", businessType = BusinessType.UPDATE)
     @GetMapping("/{id}")
     @PreAuthorize( "@ss.hasPermi('admin:wheelPool:query')" )
     public AjaxResult findById(@PathVariable("id") Long id){
