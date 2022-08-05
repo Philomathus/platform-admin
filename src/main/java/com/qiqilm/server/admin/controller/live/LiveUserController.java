@@ -251,6 +251,7 @@ public class LiveUserController extends BaseController {
 	@ApiOperation(value = "重置提现密码", notes = "重置提现密码")
 	@PostMapping("/reset")
 	@Log(title = "重置提现密码", businessType = BusinessType.UPDATE)
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:reset')" )
 	public Object reset(HttpServletRequest request, LiveUser liveUser) throws Exception {
 		RspBase rspBase = new RspBase();
 		if (liveUser.getGoogleAuthCode() == null) {
