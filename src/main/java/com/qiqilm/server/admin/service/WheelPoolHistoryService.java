@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.domain.WheelPoolHistory;
+import com.qiqilm.server.admin.domain.dto.PlatformUser;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface WheelPoolHistoryService {
      * @return 轮池列表集合 list of wheelPoolHistory
      */
     List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory);
+
+    List<PlatformUser> wheelPoolLotteryCacheList();
 }

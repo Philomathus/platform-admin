@@ -29,8 +29,6 @@ public class WheelPoolHistoryController extends BaseController {
     @Autowired
     private WheelPoolHistoryService wheelPoolHistoryService;
 
-    @Autowired
-    private WheelPoolCacheUtil wheelPoolCacheUtil;
 
     /** 获取所有轮池历史数据 get all wheel pool history data */
     @GetMapping("/list")
@@ -43,11 +41,11 @@ public class WheelPoolHistoryController extends BaseController {
 
     @GetMapping("/lotteryCacheList")
     public TableDataInfo getLotteryList(){
-        List<PlatformUser> userList =  wheelPoolCacheUtil.getLotteryList();
-        userList.forEach(platformUser -> {
+        List<PlatformUser> wheelPoolLotteryCacheList =  wheelPoolHistoryService.wheelPoolLotteryCacheList();
+        wheelPoolLotteryCacheList.forEach(platformUser -> {
             System.out.println(platformUser.getUserId());
             System.out.println(platformUser.getNickName());
         });
-        return getDataTable(userList);
+        return getDataTable(wheelPoolLotteryCacheList);
     }
 }

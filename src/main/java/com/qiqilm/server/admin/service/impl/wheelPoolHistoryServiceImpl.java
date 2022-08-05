@@ -1,7 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.WheelPoolCacheUtil;
 import com.qiqilm.server.admin.dao.WheelPoolHistoryDao;
 import com.qiqilm.server.admin.domain.WheelPoolHistory;
+import com.qiqilm.server.admin.domain.dto.PlatformUser;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.service.WheelPoolHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
     @Autowired
     private WheelPoolHistoryDao wheelPoolHistoryDao;
 
+    @Autowired
+    private WheelPoolCacheUtil wheelPoolCacheUtil;
+
  /** * 查询轮池列表 - wheel pool History service implementation layer */
     @Override
     public List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory) {
@@ -26,5 +31,14 @@ public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
             throw new BusinessException("数据不可用");
         }
         return wheelPoolHistoryList;
+    }
+
+    @Override
+    public List<PlatformUser> wheelPoolLotteryCacheList() {
+        List<PlatformUser> list = wheelPoolCacheUtil.getLotteryList();
+        if(list ==null){
+            throw new BusinessException("数据不可用");
+        }
+        return list;
     }
 }
