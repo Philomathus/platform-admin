@@ -18,7 +18,7 @@ public class PlatformUser {
 	private String  nickName;
 	@ApiModelProperty(value = "会员头像")
 	private String  headImage;
-	@ApiModelProperty(value = "会员vip")
+	@ApiModelProperty(value = "会员类型")
 	private Integer status;
 	@ApiModelProperty(value = "会员vip")
 	private Integer vip;
