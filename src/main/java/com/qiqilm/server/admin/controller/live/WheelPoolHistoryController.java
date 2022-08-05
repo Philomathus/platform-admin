@@ -40,11 +40,6 @@ public class WheelPoolHistoryController extends BaseController {
 
     @GetMapping("/lotteryCacheList")
     public TableDataInfo getLotteryList(){
-        List<PlatformUser> wheelPoolLotteryCacheList =  wheelPoolHistoryService.wheelPoolLotteryCacheList();
-        wheelPoolLotteryCacheList.forEach(platformUser -> {
-            System.out.println(platformUser.getUserId());
-            System.out.println(platformUser.getNickName());
-        });
-        return getDataTable(wheelPoolLotteryCacheList);
+        return getDataTable(wheelPoolHistoryService.wheelPoolLotteryCacheList());
     }
 }
