@@ -2262,7 +2262,7 @@
     </insert>
 
     <select id="selectLiveVideoInIds" resultMap="LiveVideoResult">
-        select id, host_name ${dbLive}.live_video where id in
+        select id, host_name FROM ${dbLive}.live_video where id in
         <foreach collection="array" item="userId" open="(" separator="," close=")">
             #{userId}
         </foreach>
