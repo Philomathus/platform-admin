@@ -8,8 +8,10 @@ import java.util.stream.Collectors;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveUser;
+import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.domain.rsp.RspTestAccountProp;
 import com.qiqilm.server.admin.mapper.LiveUserMapper;
+import com.qiqilm.server.admin.mapper.LiveVideoMapper;
 import com.qiqilm.server.admin.utils.DateUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +35,8 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
     private LiveVideoPropMapper liveVideoPropMapper;
     @Autowired
     private LiveUserMapper liveUserMapper;
-    @Value("${spring.profiles.active}")
-    private String profile;
+    @Autowired
+    private LiveVideoMapper liveVideoMapper;
 
 
     /**
@@ -49,11 +51,11 @@ public class LiveVideoPropServiceImpl implements ILiveVideoPropService {
         List<LiveVideoProp> liveVideoProps = liveVideoPropMapper.selectLiveVideoPropList(liveVideoProp1);
         Set<Long> liveUserId = liveVideoProps.stream().map(LiveVideoProp::getToUserId).filter(toUserId -> toUserId != -1).collect(Collectors.toSet());
         if (!CollectionUtils.isEmpty(liveUserId)) {
-            List<LiveUser> liveUsers = liveUserMapper.selectLiveUserInId(liveUserId);
+            List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoInIds(liveUserId);
             for (LiveVideoProp videoProp : liveVideoProps) {
-                for (LiveUser liveUser : liveUsers) {
-                    if (Objects.equals(videoProp.getToUserId(), liveUser.getId())) {
-                        videoProp.setNickName(liveUser.getNickName());
+                for (LiveVideo liveVideo : liveVideos) {
+                    if (Objects.equals(videoProp.getToUserId(), liveVideo.getId())) {
+                        videoProp.setNickName(liveVideo.getHostName());
                     }
                 }
             }
