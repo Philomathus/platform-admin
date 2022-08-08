@@ -276,19 +276,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             }
             setIms(liveVideo, id, title);
             liveVideo.setNPlayFlv(AesUtil.aesEncrypt(flv, "qwertyui12345678"));
-//            if (profile.equals("7701")) {
-//                liveVideoMapper.insertLiveVideo7706(liveVideo);
-//                liveVideoMapper.insertLiveVideo7711(liveVideo);
-//                liveVideoMapper.insertLiveVideo77jp(liveVideo);
-//            }
-//            if (profile.equals("7704")) {
-//                liveVideoMapper.insertLiveVideo7705(liveVideo);
-//                liveVideoMapper.insertLiveVideo77mm(liveVideo);
-//            }
-//            if (profile.equals("7708")) {
-//                liveVideoMapper.insertLiveVideo7710(liveVideo);
-//            }
-            liveVideoMapper.insertLiveVideo(liveVideo);
+            liveVideoMapper.insertLiveVideo(liveVideo, LiveCenterConfig.me.getProfileDbLive());
         }
         RedisCacheUtil.me.clear(id, LiveVideo.class);
         return null;
@@ -447,7 +435,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
 
     @Override
     public ArrayList selectLiveUserAuthList(LiveUser liveUser) {
-        List<LiveUser> authList =  liveUserMapper.selectLiveUserAuthList(liveUser);
+        List<LiveUser> authList = liveUserMapper.selectLiveUserAuthList(liveUser);
         Set<LiveUser> hashSet = new LinkedHashSet(authList);
         return new ArrayList(hashSet);
     }

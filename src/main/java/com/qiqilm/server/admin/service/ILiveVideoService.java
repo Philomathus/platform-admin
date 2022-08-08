@@ -45,4 +45,6 @@ public interface ILiveVideoService {
 	void countHostGift(String profile);
 
 	LiveVideo liveInStatus(Long userId);
+
+	AjaxResult syncMainLiveSort();
 }

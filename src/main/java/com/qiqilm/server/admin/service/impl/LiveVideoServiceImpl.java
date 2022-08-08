@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.domain.ServerLive;
 import com.qiqilm.server.admin.domain.vo.HostPropDayVo;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageEnum;
 import com.qiqilm.server.admin.im.MessageType;
@@ -592,5 +593,27 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
     @Override
     public LiveVideo liveInStatus(Long userId) {
         return liveVideoMapper.liveInStatus(userId);
+    }
+
+    @Override
+    public AjaxResult syncMainLiveSort() {
+        if (LiveCenterConfig.me.isLiveCenter()) {
+            return AjaxResult.error("主台无需同步");
+        }
+
+        // redis 加锁,不可以频繁同步
+        if (!redisUtil.adminLock(EnumLock.adminTask, "syncMainLiveSort", 60)) {
+            return AjaxResult.error("请勿频繁同步,需等待" + redisUtil.getExpire(Constants.ADMIN_LOCK.concat(EnumLock.adminTask.getKey()).concat("syncMainLiveSort")) + "秒");
+        }
+
+        List<LiveVideo> liveVideos = liveVideoMapper.selectMainLiveInVideoList(LiveCenterConfig.me.getLiveCenterDbLive());
+        for (LiveVideo liveVideo : liveVideos) {
+            if (liveVideoMapper.countLiveVideo(liveVideo.getId()) > 0) {
+                liveVideoMapper.updateLiveVideoSort(liveVideo);
+            } else {
+                liveVideoMapper.insertLiveVideo(liveVideo, LiveCenterConfig.me.getProfileDbLive());
+            }
+        }
+        return AjaxResult.success();
     }
 }

@@ -31,121 +31,121 @@ import java.util.Objects;
  */
 @Log4j2
 @RestController
-@RequestMapping( "/admin/liveVideo" )
+@RequestMapping("/admin/liveVideo")
 public class LiveVideoController extends BaseController {
-	@Autowired
-	private ILiveVideoService liveVideoService;
-	@Autowired
-	private HelpNoticeUtil    helpNoticeUtil;
-	@Autowired
-	private ILiveUserService  liveUserService;
+    @Autowired
+    private ILiveVideoService liveVideoService;
+    @Autowired
+    private HelpNoticeUtil helpNoticeUtil;
+    @Autowired
+    private ILiveUserService liveUserService;
 
-	/**
-	 * 查询直播列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:list')" )
-	@GetMapping( "/list" )
-	public TableDataInfo list( LiveVideo liveVideo ) {
-		startPage();
-		List<LiveVideo> list = liveVideoService.selectLiveVideoList( liveVideo );
-		return getDataTable( list );
-	}
+    /**
+     * 查询直播列表
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideo:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(LiveVideo liveVideo) {
+        startPage();
+        List<LiveVideo> list = liveVideoService.selectLiveVideoList(liveVideo);
+        return getDataTable(list);
+    }
 
-	/**
-	 * 获取直播详细信息
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:query')" )
-	@GetMapping( value = "/{id}" )
-	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
-		return AjaxResult.success( liveVideoService.selectLiveVideoById( id ) );
-	}
+    /**
+     * 获取直播详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideo:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
+        return AjaxResult.success(liveVideoService.selectLiveVideoById(id));
+    }
 
-	/**
-	 * 导出直播列表
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:export')" )
-	@Log( title = "直播", businessType = BusinessType.EXPORT )
-	@GetMapping( "/export" )
-	public void export( LiveVideo liveVideo, HttpServletResponse response ) {
-		List<LiveVideo> list = liveVideoService.selectLiveVideoList( liveVideo );
-		ExportExcelUtil.exportExcel( list, "直播", "直播息表", LiveVideo.class, response );
-	}
+    /**
+     * 导出直播列表
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideo:export')")
+    @Log(title = "直播", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public void export(LiveVideo liveVideo, HttpServletResponse response) {
+        List<LiveVideo> list = liveVideoService.selectLiveVideoList(liveVideo);
+        ExportExcelUtil.exportExcel(list, "直播", "直播息表", LiveVideo.class, response);
+    }
 
-	/**
-	 * 关播
-	 */
-	@Log( title = "关播", businessType = BusinessType.CLOSE )
-	@GetMapping( value = "close/{ids}" )
-	public AjaxResult close( @PathVariable( "ids" ) String ids ) {
-		String[] allId = ids.split( "," );
-		for ( String id : allId ) {
-			liveVideoService.close( Long.valueOf( id ), "admin" );
-		}
-		return AjaxResult.success();
-	}
+    /**
+     * 关播
+     */
+    @Log(title = "关播", businessType = BusinessType.CLOSE)
+    @GetMapping(value = "close/{ids}")
+    public AjaxResult close(@PathVariable("ids") String ids) {
+        String[] allId = ids.split(",");
+        for (String id : allId) {
+            liveVideoService.close(Long.valueOf(id), "admin");
+        }
+        return AjaxResult.success();
+    }
 
-	/**
-	 * 开启直播付费
-	 */
-	@Log( title = "直播付费", businessType = BusinessType.LIVE_PAY )
-	@PutMapping( "/livePay/{userId}" )
-	public AjaxResult livePay( @PathVariable long userId, Integer liveFee ) {
-		if ( Objects.nonNull( liveFee ) && liveFee > 0 ) {
-			try {
-				return AjaxResult.success( liveVideoService.livePay( userId, liveFee, 1 ) );
-			} catch ( Exception e ) {
-				log.error( e.getMessage(), e );
-			}
-		}
-		return AjaxResult.error();
-	}
+    /**
+     * 开启直播付费
+     */
+    @Log(title = "直播付费", businessType = BusinessType.LIVE_PAY)
+    @PutMapping("/livePay/{userId}")
+    public AjaxResult livePay(@PathVariable long userId, Integer liveFee) {
+        if (Objects.nonNull(liveFee) && liveFee > 0) {
+            try {
+                return AjaxResult.success(liveVideoService.livePay(userId, liveFee, 1));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+        return AjaxResult.error();
+    }
 
-	/**
-	 * 设置排序值 固定定位、取消固定定位、推荐、取消推荐、置底、取消置底
-	 */
-	@PutMapping( "/updateVideoSort" )
-	public AjaxResult updateVideoSort( @RequestBody LiveVideo liveVideo ) {
-		return liveVideoService.updateVideoSort( liveVideo );
-	}
+    /**
+     * 设置排序值 固定定位、取消固定定位、推荐、取消推荐、置底、取消置底
+     */
+    @PutMapping("/updateVideoSort")
+    public AjaxResult updateVideoSort(@RequestBody LiveVideo liveVideo) {
+        return liveVideoService.updateVideoSort(liveVideo);
+    }
 
-	@ApiOperation( "直播间小助手" )
-	@Log( title = "直播间小助手", businessType = BusinessType.UPDATE )
-	@PostMapping( "/sendLiveMsg" )
-	public AjaxResult sendLiveMsg( @RequestBody LiveVideo liveVideo ) {
-		if ( Strings.isBlank( liveVideo.getInfo() ) ) {
-			return AjaxResult.success( "小助手消息不能为空" );
-		}
-		if ( Objects.isNull( liveVideo.getId() ) ) {
-			helpNoticeUtil.sendMsg( liveVideo.getInfo() );
-		} else {
+    @ApiOperation("直播间小助手")
+    @Log(title = "直播间小助手", businessType = BusinessType.UPDATE)
+    @PostMapping("/sendLiveMsg")
+    public AjaxResult sendLiveMsg(@RequestBody LiveVideo liveVideo) {
+        if (Strings.isBlank(liveVideo.getInfo())) {
+            return AjaxResult.success("小助手消息不能为空");
+        }
+        if (Objects.isNull(liveVideo.getId())) {
+            helpNoticeUtil.sendMsg(liveVideo.getInfo());
+        } else {
 //			LiveUser liveUser = liveUserService.selectLiveUserById( liveVideo.getId() );
 //			if ( Objects.isNull( liveUser ) ) {
 //				return AjaxResult.success( "主播id有误" );
 //			}
-			if(liveVideo.getId()==null){
-				return AjaxResult.success( "error-input" );
-			}
-			LiveVideo liveVideo1 = liveVideoService.selectLiveVideoById( liveVideo.getId() );
-			if(liveVideo1==null){
-				return AjaxResult.success( "主播不存在" );
-			}
-			if ( liveVideo1.getLiveIn() == 1 ) {
-				helpNoticeUtil.sendMsg( liveVideo.getInfo(), liveVideo1.getGroupId() );
-				log.warn( "小助手发言消息" + liveVideo.getInfo(), liveVideo1.getGroupId() );
-			} else {
-				return AjaxResult.success( "主播未在线" );
-			}
-		}
-		return AjaxResult.success( "发送成功" );
-	}
+            if (liveVideo.getId() == null) {
+                return AjaxResult.success("error-input");
+            }
+            LiveVideo liveVideo1 = liveVideoService.selectLiveVideoById(liveVideo.getId());
+            if (liveVideo1 == null) {
+                return AjaxResult.success("主播不存在");
+            }
+            if (liveVideo1.getLiveIn() == 1) {
+                helpNoticeUtil.sendMsg(liveVideo.getInfo(), liveVideo1.getGroupId());
+                log.warn("小助手发言消息" + liveVideo.getInfo(), liveVideo1.getGroupId());
+            } else {
+                return AjaxResult.success("主播未在线");
+            }
+        }
+        return AjaxResult.success("发送成功");
+    }
 
-	/**
-	 * 同步主台排序
-	 */
-	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:sync')" )
-	@Log( title = "同步主台排序", businessType = BusinessType.UPDATE )
-	@GetMapping( "/sync" )
-	public AjaxResult sync(){
-		return null;
-	}
+    /**
+     * 同步主台排序
+     */
+    @PreAuthorize("@ss.hasPermi('admin:liveVideo:sync')")
+    @Log(title = "同步主台排序", businessType = BusinessType.UPDATE)
+    @GetMapping("/sync")
+    public AjaxResult sync() {
+        return liveVideoService.syncMainLiveSort();
+    }
 }
