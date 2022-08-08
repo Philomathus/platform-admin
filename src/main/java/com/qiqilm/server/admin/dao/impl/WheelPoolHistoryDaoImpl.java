@@ -7,7 +7,9 @@ import com.qiqilm.server.admin.mapper.WheelPoolHistoryMapper;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * wheel pool history dao implementation
@@ -26,5 +28,10 @@ public class WheelPoolHistoryDaoImpl implements WheelPoolHistoryDao {
     @Override
     public List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory) {
         return wheelPoolHistoryMapper.selectAllWheelPoolHistory(wheelPoolHistory);
+    }
+
+    @Override
+    public List<Map<String, Object>> listCount(WheelPoolHistory wheelPoolHistory) {
+        return wheelPoolHistoryMapper.listCount(wheelPoolHistory);
     }
 }

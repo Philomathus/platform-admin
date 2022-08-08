@@ -2,8 +2,11 @@ package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.WheelPool;
 import com.qiqilm.server.admin.domain.WheelPoolHistory;
+import io.swagger.models.auth.In;
+import org.apache.ibatis.annotations.MapKey;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 轮池一览Mapper interface接口
@@ -21,5 +24,5 @@ public interface WheelPoolHistoryMapper {
 	 */
 	 List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory);
 
-
+	List<Map<String, Object>> listCount(WheelPoolHistory wheelPoolHistory);
 }

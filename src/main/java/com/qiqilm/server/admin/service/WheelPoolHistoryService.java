@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.domain.WheelPoolHistory;
 import com.qiqilm.server.admin.domain.dto.PlatformUser;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 轮池历史服务接口 - wheel pool History service interface
@@ -19,4 +20,6 @@ public interface WheelPoolHistoryService {
     List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory);
 
     List<PlatformUser> wheelPoolLotteryCacheList();
+
+    Map listCount(WheelPoolHistory wheelPoolHistory);
 }

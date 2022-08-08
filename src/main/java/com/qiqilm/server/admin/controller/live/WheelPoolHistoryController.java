@@ -3,8 +3,9 @@ package com.qiqilm.server.admin.controller.live;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.domain.WheelPoolHistory;
-import com.qiqilm.server.admin.domain.dto.PlatformUser;
+import com.qiqilm.server.admin.mapper.WheelPoolHistoryMapper;
 import com.qiqilm.server.admin.service.WheelPoolHistoryService;
+import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -41,5 +43,11 @@ public class WheelPoolHistoryController extends BaseController {
     @GetMapping("/lotteryCacheList")
     public TableDataInfo getLotteryList(){
         return getDataTable(wheelPoolHistoryService.wheelPoolLotteryCacheList());
+    }
+
+    @PreAuthorize( "@ss.hasPermi('admin:wheelPoolHistory:list')" )
+    @GetMapping("/listCount")
+    public Map listCount(WheelPoolHistory wheelPoolHistory) {
+        return wheelPoolHistoryService.listCount(wheelPoolHistory);
     }
 }

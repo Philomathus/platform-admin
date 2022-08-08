@@ -7,12 +7,14 @@ import com.qiqilm.server.admin.domain.WheelPoolHistory;
 import com.qiqilm.server.admin.domain.dto.PlatformUser;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.WheelPoolHistoryMapper;
 import com.qiqilm.server.admin.service.WheelPoolHistoryService;
+import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +25,8 @@ public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
 
     @Autowired
     private WheelPoolHistoryDao wheelPoolHistoryDao;
-    @Autowired
+
+    @Resource
     private MemberInfoMapper memberInfoMapper;
 
     @Autowired
@@ -54,5 +57,23 @@ public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
             throw new BusinessException("数据不可用");
         }
         return list;
+    }
+
+    @Override
+    public Map<String, Object> listCount(WheelPoolHistory wheelPoolHistory) {
+        Map<String, Object> map = new HashMap<>();
+
+        List<Map<String, Object>> dataList = wheelPoolHistoryDao.listCount(wheelPoolHistory);
+
+        for (Map<String, Object> resultMap : dataList) {
+            if (resultMap.get("statusStr").equals("n")) {
+                map.put("totalPeopleCount", resultMap.get("totalCount"));
+                map.put("totalCountMoney", resultMap.get("totalMoney"));
+            } else {
+                map.put("testTotalPeoples", resultMap.get("totalCount"));
+                map.put("testTotalMoney", resultMap.get("totalMoney"));
+            }
+        }
+        return map;
     }
 }
