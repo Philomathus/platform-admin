@@ -139,4 +139,13 @@ public class LiveVideoController extends BaseController {
 		return AjaxResult.success( "发送成功" );
 	}
 
+	/**
+	 * 同步主台排序
+	 */
+	@PreAuthorize( "@ss.hasPermi('admin:liveVideo:sync')" )
+	@Log( title = "同步主台排序", businessType = BusinessType.UPDATE )
+	@GetMapping( "/sync" )
+	public AjaxResult sync(){
+		return null;
+	}
 }

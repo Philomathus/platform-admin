@@ -20,6 +20,8 @@ mybatis:
       dbLive: 7710_live
       dbLottery: 7710_lottery
 
+liveCenter: 7708
+
 # 代付额度
 payAgentLimit: 30000
 # 顺为代付额度

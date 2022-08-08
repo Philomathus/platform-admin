@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.VideoCacheUtil;
+import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqLotteryBat;
@@ -346,7 +347,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             liveVideo.setEndDate(new Date());
             liveVideo.setEndTime(new Date());
             liveVideo.setLiveIn(0);
-            liveVideoMapper.updateLiveVideo(liveVideo);
+            liveVideoMapper.updateLiveVideo(liveVideo, LiveCenterConfig.me.getProfileDbLive());
 
             RedisCacheUtil.me.clear(liveVideo.getId(), LiveVideo.class);
             return AjaxResult.success("关播成功");

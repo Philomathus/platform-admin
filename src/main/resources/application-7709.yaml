@@ -19,6 +19,8 @@ mybatis:
       dbLive: 7709_live
       dbLottery: 7709_lottery
 
+liveCenter: 7709
+
 downLoadLimit: 100000
 
 # 代付额度

@@ -41,15 +41,7 @@ public interface LiveVideoMapper {
 	 * @param liveVideo 直播
 	 * @return 结果
 	 */
-	public int updateLiveVideo(LiveVideo liveVideo);
-
-	public int updateLive7706Video(LiveVideo liveVideo);
-	public int updateLive7705Video(LiveVideo liveVideo);
-	public int updateLive7710Video(LiveVideo updateVideo);
-	public int updateLive7711Video(LiveVideo updateVideo);
-	public int updateLive77mmVideo(LiveVideo updateVideo);
-	public int updateLive77jpVideo(LiveVideo updateVideo);
-	public int updateLive7703Video(LiveVideo updateVideo);
+	public int updateLiveVideo(LiveVideo liveVideo,@Param("dbMainLive") String dbMainLive);
 
 	/**
 	 * 修改直播,结束时间可以为null

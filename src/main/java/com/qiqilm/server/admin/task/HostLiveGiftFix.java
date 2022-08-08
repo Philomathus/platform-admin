@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.task;
 
+import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.RedisUtil;
@@ -23,12 +24,11 @@ public class HostLiveGiftFix {
     @Scheduled(cron = "0 0 2 * * ?")
     public void listenerMonitor() {
 
-        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 900)) {
+        if (!LiveCenterConfig.me.isLiveCenter()) {
             return;
         }
 
-        if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711")
-                || profile.equals("77mm") || profile.equals("77jp") || profile.equals("7703")) {
+        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 900)) {
             return;
         }
 

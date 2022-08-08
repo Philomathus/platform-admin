@@ -18,26 +18,22 @@ import java.util.List;
  * @date 2021-08-25
  */
 @RestController
-@RequestMapping( "/admin/liveBlack" )
+@RequestMapping("/admin/liveBlack")
 public class LiveBlackController extends BaseController {
-	@Autowired
-	private ILiveBlackService liveBlackService;
+    @Autowired
+    private ILiveBlackService liveBlackService;
 
-	@PreAuthorize( "@ss.hasPermi('admin:liveBlack:list')" )
-	@GetMapping( "/list" )
-	public TableDataInfo liveBlackList(LiveBlack liveBlack) {
-		startPage();
-		List<LiveBlack> list = liveBlackService.selectLiveBlackList(liveBlack);
-		return getDataTable( list );
-	}
+    @PreAuthorize("@ss.hasPermi('admin:liveBlack:list')")
+    @GetMapping("/list")
+    public TableDataInfo liveBlackList(LiveBlack liveBlack) {
+        startPage();
+        List<LiveBlack> list = liveBlackService.selectLiveBlackList(liveBlack);
+        return getDataTable(list);
+    }
 
-	@PreAuthorize( "@ss.hasPermi('admin:liveBlack:remove')" )
-	@PutMapping( "/deleteLiveBlack" )
-	public AjaxResult deleteLiveBlack(@RequestBody LiveBlack liveBlack) {
-
-		return liveBlackService.deleteLiveBlackById(liveBlack);
-
-	}
-
-
+    @PreAuthorize("@ss.hasPermi('admin:liveBlack:remove')")
+    @PutMapping("/deleteLiveBlack")
+    public AjaxResult deleteLiveBlack(@RequestBody LiveBlack liveBlack) {
+        return liveBlackService.deleteLiveBlackById(liveBlack);
+    }
 }

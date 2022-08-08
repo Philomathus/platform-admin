@@ -20,6 +20,8 @@ mybatis:
       dbLive: 7707_live
       dbLottery: 7707_lottery
 
+liveCenter: 7707
+
 payAgentLimit: 30000
 payAgentLimitBinLi: 50000
 payAgentLimitLianFuBao: 30000
