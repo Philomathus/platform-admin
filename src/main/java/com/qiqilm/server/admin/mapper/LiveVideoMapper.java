@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.domain.LiveVideo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 直播Mapper接口
@@ -88,4 +89,6 @@ public interface LiveVideoMapper {
 	void insertLiveVideo77mm(LiveVideo liveVideo);
 	void insertLiveVideo77jp(LiveVideo liveVideo);
 	void insertLiveVideo7703(LiveVideo liveVideo);
+
+	List<LiveVideo> selectLiveVideoInIds(@Param("array") Set<Long> ids);
 }

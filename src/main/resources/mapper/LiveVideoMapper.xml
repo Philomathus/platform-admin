@@ -2260,4 +2260,11 @@
             <if test="lotteryName != null">#{lotteryName},</if>
         </trim>
     </insert>
+
+    <select id="selectLiveVideoInIds" resultMap="LiveVideoResult">
+        select id, host_name FROM ${dbLive}.live_video where id in
+        <foreach collection="array" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </select>
 </mapper>
