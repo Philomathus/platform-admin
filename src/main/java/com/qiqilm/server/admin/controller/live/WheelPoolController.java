@@ -36,9 +36,6 @@ public class WheelPoolController  extends BaseController {
     public TableDataInfo wheelPools(WheelPool wheelPool){
         startPage();
         List<WheelPool> wheelPoolList =  wheelPoolService.selectAllWheelPool(wheelPool);
-        for (WheelPool wheelPoolTest : wheelPoolList){
-            System.out.println(wheelPoolTest.getName());
-        }
         return getDataTable( wheelPoolList );
     }
 
