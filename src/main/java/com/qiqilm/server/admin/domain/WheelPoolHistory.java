@@ -63,6 +63,9 @@ public class WheelPoolHistory extends BaseEntity {
     @Excel(name = "位置")
     private String position;
 
+    @Excel(name = "会员类型")
+    private Integer memberStatus;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)

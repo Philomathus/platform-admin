@@ -826,6 +826,12 @@
 		where login_ip = #{loginIp}
 	</select>
 
+	<select id="selectStatusByIds" resultMap="MemberInfoResult">
+		select status, id from member_info where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+    </select>
 </mapper>
 
 

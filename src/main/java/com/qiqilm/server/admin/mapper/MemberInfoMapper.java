@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 会员信息Mapper接口
@@ -125,4 +126,6 @@ public interface MemberInfoMapper {
     int banStatus(@Param( "array" ) List<String> memberIds);
 
     List<MemberInfo> selectMemberInfoByIp(String id);
+
+    List<MemberInfo> selectStatusByIds(@Param( "array" ) Set<String> memberIds);
 }
