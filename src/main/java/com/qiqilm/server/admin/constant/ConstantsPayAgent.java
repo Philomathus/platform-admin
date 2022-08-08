@@ -246,4 +246,6 @@ public abstract class ConstantsPayAgent {
 
     //ONE_ZERO代付
     public static final String ONE_ZERO = "oneZero";
+    //卓越代付代付
+    public static final String ZHUO_YUE = "zhuoYue";
 }
