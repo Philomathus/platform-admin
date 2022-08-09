@@ -1,7 +1,9 @@
 package com.qiqilm.server.admin.config;
 
+import com.qiqilm.server.admin.utils.SpringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -20,9 +22,6 @@ public class LiveCenterConfig {
 
     @Value("${spring.profiles.active}")
     private String profile;
-
-    @Value("${liveSubAgents}")
-    private List<String> liveSubAgents;
 
     public boolean isLiveCenter() {
         return profile.equals(liveCenter);
@@ -64,8 +63,9 @@ public class LiveCenterConfig {
         return profile + "_lottery";
     }
 
-    public List<String> getLiveSubAgents() {
-        return this.liveSubAgents;
+    public String[] getLiveSubAgents() {
+        String propertiesValue = SpringUtils.getPropertiesValue("live.share." + this.liveCenter);
+        return StringUtils.hasText(propertiesValue) ? propertiesValue.split(",") : null;
     }
 
     public String getLiveSubAgentDbLive(String agent) {

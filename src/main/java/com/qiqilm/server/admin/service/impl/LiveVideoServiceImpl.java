@@ -198,7 +198,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
         RedisCacheUtil.me.clear(id, LiveVideo.class);
 
-        if (!CollectionUtils.isEmpty(LiveCenterConfig.me.getLiveSubAgents())) {
+        if (!Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
             for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
                 liveVideoMapper.updateLiveVideo(updateVideo, LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
             }
@@ -337,7 +337,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             RedisCacheUtil.me.clear(entity.getId(), LiveVideo.class);
         }
 
-        if (!CollectionUtils.isEmpty(LiveCenterConfig.me.getLiveSubAgents())) {
+        if (!Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
             for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
                 liveVideoMapper.updateLiveVideo(entity, LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
             }
@@ -524,7 +524,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             updateLiveDay.setLotteryCost(v.getSumHostProp());
         }
 
-        if (!CollectionUtils.isEmpty(LiveCenterConfig.me.getLiveSubAgents())) {
+        if (!Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
             for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
                 Map<String, LiveHostWageDay> updateLiveSubMap = new HashMap<>();
                 propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime, LiveCenterConfig.me.getLiveSubAgentDbMain(liveSubAgent), LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));

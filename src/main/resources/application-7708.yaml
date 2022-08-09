@@ -21,7 +21,6 @@ mybatis:
       dbLottery: 7708_lottery
 
 liveCenter: 7708
-liveSubAgents: 7710
 
 payAgentLimit: 30000
 payAgentLimitBinLi: 50000

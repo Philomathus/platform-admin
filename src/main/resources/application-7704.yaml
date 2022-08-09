@@ -21,7 +21,6 @@ mybatis:
       dbLottery: 7704_lottery
 
 liveCenter: 7704
-liveSubAgents: 7705,77mm
 
 # 代付额度
 payAgentLimit: 50000
