@@ -7,9 +7,7 @@ import com.qiqilm.server.admin.domain.WheelPoolHistory;
 import com.qiqilm.server.admin.domain.dto.PlatformUser;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
-import com.qiqilm.server.admin.mapper.WheelPoolHistoryMapper;
 import com.qiqilm.server.admin.service.WheelPoolHistoryService;
-import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.dao;
 
 import com.qiqilm.server.admin.domain.WheelPoolHistory;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;

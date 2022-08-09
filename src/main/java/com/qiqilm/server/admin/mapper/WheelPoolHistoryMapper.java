@@ -1,9 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
-import com.qiqilm.server.admin.domain.WheelPool;
 import com.qiqilm.server.admin.domain.WheelPoolHistory;
-import io.swagger.models.auth.In;
-import org.apache.ibatis.annotations.MapKey;
 
 import java.util.List;
 import java.util.Map;
