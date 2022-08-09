@@ -57,6 +57,10 @@ public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
         return list;
     }
 
+    /**
+     * 计数总行数和总钱轮池历史服务实现层
+     * - count total rows and total money wheel pool History service implementation layer
+     */
     @Override
     public Map<String, Object> listCount(WheelPoolHistory wheelPoolHistory) {
         Map<String, Object> map = new HashMap<>();

@@ -30,6 +30,11 @@ public class WheelPoolHistoryDaoImpl implements WheelPoolHistoryDao {
         return wheelPoolHistoryMapper.selectAllWheelPoolHistory(wheelPoolHistory);
     }
 
+
+    /**
+     * 统计总行数和总钱轮池 History dao 实现层
+     * - count total rows and total money wheel pool History dao implementation layer
+     */
     @Override
     public List<Map<String, Object>> listCount(WheelPoolHistory wheelPoolHistory) {
         return wheelPoolHistoryMapper.listCount(wheelPoolHistory);

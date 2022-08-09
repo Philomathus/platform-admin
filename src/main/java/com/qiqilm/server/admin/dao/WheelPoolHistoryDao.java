@@ -22,5 +22,9 @@ public interface WheelPoolHistoryDao {
      */
     List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory);
 
+    /**
+     * 统计总行数和总钱轮池 History dao 实现层
+     * - count total rows and total money wheel pool History dao implementation layer
+     */
     List<Map<String, Object>> listCount(WheelPoolHistory wheelPoolHistory);
 }

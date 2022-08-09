@@ -21,5 +21,11 @@ public interface WheelPoolHistoryMapper {
 	 */
 	 List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory);
 
+
+	/**
+	 * 统计总行数和总钱轮池 History mapper 实现层
+	 * - count total rows and total money wheel pool History mapper implementation layer
+	 */
+
 	List<Map<String, Object>> listCount(WheelPoolHistory wheelPoolHistory);
 }

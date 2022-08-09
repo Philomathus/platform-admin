@@ -38,11 +38,20 @@ public class WheelPoolHistoryController extends BaseController {
         return getDataTable(wheelPoolHistoryList);
     }
 
+    /**
+     * 获取所有轮盘池历史彩票缓存
+     * get all wheel pool history lottery caches
+     */
     @GetMapping("/lotteryCacheList")
     public TableDataInfo getLotteryList(){
         return getDataTable(wheelPoolHistoryService.wheelPoolLotteryCacheList());
     }
 
+
+    /**
+     * 获取所有轮池历史计数
+     * get all wheel pool history count
+     */
     @PreAuthorize( "@ss.hasPermi('admin:wheelPoolHistory:list')" )
     @GetMapping("/listCount")
     public Map listCount(WheelPoolHistory wheelPoolHistory) {
