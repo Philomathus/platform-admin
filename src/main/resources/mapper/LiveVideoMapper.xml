@@ -105,146 +105,146 @@
     <update id="updateLiveVideo" parameterType="LiveVideo">
         update ${dbMainLive}.live_video
         <trim prefix="SET" suffixOverrides=",">
-            <if test="title != null and title != ''">
-                title = #{title},
+            <if test="lv.title != null and lv.title != ''">
+                title = #{lv.title},
             </if>
-            <if test="userId != null">
-                user_id = #{userId},
+            <if test="lv.userId != null">
+                user_id = #{lv.userId},
             </if>
-            <if test="liveIn != null">
-                live_in = #{liveIn},
+            <if test="lv.liveIn != null">
+                live_in = #{lv.liveIn},
             </if>
-            <if test="watchNumber != null">
-                watch_number = #{watchNumber},
+            <if test="lv.watchNumber != null">
+                watch_number = #{lv.watchNumber},
             </if>
-            <if test="virtualWatchNumber != null">
-                virtual_watch_number = #{virtualWatchNumber},
+            <if test="lv.virtualWatchNumber != null">
+                virtual_watch_number = #{lv.virtualWatchNumber},
             </if>
-            <if test="voteNumber != null">
-                vote_number = #{voteNumber},
+            <if test="lv.voteNumber != null">
+                vote_number = #{lv.voteNumber},
             </if>
-            <if test="cateId != null">
-                cate_id = #{cateId},
+            <if test="lv.cateId != null">
+                cate_id = #{lv.cateId},
             </if>
-            <if test="createTime != null">
-                create_time = UNIX_TIMESTAMP(#{createTime}),
+            <if test="lv.createTime != null">
+                create_time = UNIX_TIMESTAMP(#{lv.createTime}),
             </if>
-            <if test="beginTime != null">
-                begin_time = #{beginTime},
+            <if test="lv.beginTime != null">
+                begin_time = #{lv.beginTime},
             </if>
-            <if test="endTime != null">
-                end_time = #{endTime},
+            <if test="lv.endTime != null">
+                end_time = #{lv.endTime},
             </if>
-            <if test="endDate != null">
-                end_date = #{endDate},
+            <if test="lv.endDate != null">
+                end_date = #{lv.endDate},
             </if>
-            <if test="groupId != null">
-                group_id = #{groupId},
+            <if test="lv.groupId != null">
+                group_id = #{lv.groupId},
             </if>
-            <if test="maxWatchNumber != null">
-                max_watch_number = #{maxWatchNumber},
+            <if test="lv.maxWatchNumber != null">
+                max_watch_number = #{lv.maxWatchNumber},
             </if>
-            <if test="monitorTime != null">
-                monitor_time = #{monitorTime},
+            <if test="lv.monitorTime != null">
+                monitor_time = #{lv.monitorTime},
             </if>
-            <if test="robotNum != null">
-                robot_num = #{robotNum},
+            <if test="lv.robotNum != null">
+                robot_num = #{lv.robotNum},
             </if>
-            <if test="isAborted != null">
-                is_aborted = #{isAborted},
+            <if test="lv.isAborted != null">
+                is_aborted = #{lv.isAborted},
             </if>
-            <if test="onlineStatus != null">
-                online_status = #{onlineStatus},
+            <if test="lv.onlineStatus != null">
+                online_status = #{lv.onlineStatus},
             </if>
-            <if test="sort != null">
-                sort = #{sort},
+            <if test="lv.sort != null">
+                sort = #{lv.sort},
             </if>
-            <if test="paiId != null">
-                pai_id = #{paiId},
+            <if test="lv.paiId != null">
+                pai_id = #{lv.paiId},
             </if>
-            <if test="maxRobotNum != null">
-                max_robot_num = #{maxRobotNum},
+            <if test="lv.maxRobotNum != null">
+                max_robot_num = #{lv.maxRobotNum},
             </if>
-            <if test="fansCount != null">
-                fans_count = #{fansCount},
+            <if test="lv.fansCount != null">
+                fans_count = #{lv.fansCount},
             </if>
-            <if test="pushRtmp != null">
-                push_rtmp = #{pushRtmp},
+            <if test="lv.pushRtmp != null">
+                push_rtmp = #{lv.pushRtmp},
             </if>
-            <if test="playFlv != null">
-                play_flv = #{playFlv},
+            <if test="lv.playFlv != null">
+                play_flv = #{lv.playFlv},
             </if>
-            <if test="playRtmp != null">
-                play_rtmp = #{playRtmp},
+            <if test="lv.playRtmp != null">
+                play_rtmp = #{lv.playRtmp},
             </if>
-            <if test="playMp4 != null">
-                play_mp4 = #{playMp4},
+            <if test="lv.playMp4 != null">
+                play_mp4 = #{lv.playMp4},
             </if>
-            <if test="playHls != null">
-                play_hls = #{playHls},
+            <if test="lv.playHls != null">
+                play_hls = #{lv.playHls},
             </if>
-            <if test="headImage != null and headImage != ''">
-                head_image = #{headImage},
+            <if test="lv.headImage != null and lv.headImage != ''">
+                head_image = #{lv.headImage},
             </if>
-            <if test="playUrl != null and playUrl != ''">
-                play_url = #{playUrl},
+            <if test="lv.playUrl != null and lv.playUrl != ''">
+                play_url = #{lv.playUrl},
             </if>
-            <if test="isRecommend != null">
-                is_recommend = #{isRecommend},
+            <if test="lv.isRecommend != null">
+                is_recommend = #{lv.isRecommend},
             </if>
-            <if test="liveImage != null and liveImage != ''">
-                live_image = #{liveImage},
+            <if test="lv.liveImage != null and lv.liveImage != ''">
+                live_image = #{lv.liveImage},
             </if>
-            <if test="virtualNumber != null">
-                virtual_number = #{virtualNumber},
+            <if test="lv.virtualNumber != null">
+                virtual_number = #{lv.virtualNumber},
             </if>
-            <if test="livePayTime != null">
-                live_pay_time = #{livePayTime},
+            <if test="lv.livePayTime != null">
+                live_pay_time = #{lv.livePayTime},
             </if>
-            <if test="isLivePay != null">
-                is_live_pay = #{isLivePay},
+            <if test="lv.isLivePay != null">
+                is_live_pay = #{lv.isLivePay},
             </if>
-            <if test="liveFee != null">
-                live_fee = #{liveFee},
+            <if test="lv.liveFee != null">
+                live_fee = #{lv.liveFee},
             </if>
-            <if test="liveIsMention != null">
-                live_is_mention = #{liveIsMention},
+            <if test="lv.liveIsMention != null">
+                live_is_mention = #{lv.liveIsMention},
             </if>
-            <if test="livePayType != null">
-                live_pay_type = #{livePayType},
+            <if test="lv.livePayType != null">
+                live_pay_type = #{lv.livePayType},
             </if>
-            <if test="livePayCount != null">
-                live_pay_count = #{livePayCount},
+            <if test="lv.livePayCount != null">
+                live_pay_count = #{lv.livePayCount},
             </if>
-            <if test="lenTime != null">
-                len_time = #{lenTime},
+            <if test="lv.lenTime != null">
+                len_time = #{lv.lenTime},
             </if>
-            <if test="classifiedId != null">
-                classified_id = #{classifiedId},
+            <if test="lv.classifiedId != null">
+                classified_id = #{lv.classifiedId},
             </if>
-            <if test="lotteryId != null">
-                lottery_id = #{lotteryId},
+            <if test="lv.lotteryId != null">
+                lottery_id = #{lv.lotteryId},
             </if>
-            <if test="newPlayFlv != null">
-                new_play_flv = #{newPlayFlv},
+            <if test="lv.newPlayFlv != null">
+                new_play_flv = #{lv.newPlayFlv},
             </if>
-            <if test="nPlayFlv != null">
-                n_play_flv = #{nPlayFlv},
+            <if test="lv.nPlayFlv != null">
+                n_play_flv = #{lv.nPlayFlv},
             </if>
-            <if test="hostName != null">
-                host_name = #{hostName},
+            <if test="lv.hostName != null">
+                host_name = #{lv.hostName},
             </if>
-            <if test="lotteryName != null">
-                lottery_name = #{lotteryName},
+            <if test="lv.lotteryName != null">
+                lottery_name = #{lv.lotteryName},
             </if>
-            <if test="stick != null">
-                stick = #{stick},
+            <if test="lv.stick != null">
+                stick = #{lv.stick},
             </if>
-            <if test="sortInit != null">
-                sort_init = #{sortInit},
+            <if test="lv.sortInit != null">
+                sort_init = #{lv.sortInit},
             </if>
         </trim>
-        where id = #{id}
+        where id = #{lv.id}
     </update>
 
     <update id="updateLiveVideo2" parameterType="LiveVideo">

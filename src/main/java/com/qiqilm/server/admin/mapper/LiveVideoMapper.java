@@ -42,7 +42,7 @@ public interface LiveVideoMapper {
      * @param liveVideo 直播
      * @return 结果
      */
-    public int updateLiveVideo(LiveVideo liveVideo, @Param("dbMainLive") String dbMainLive);
+    public int updateLiveVideo(@Param("lv") LiveVideo liveVideo, @Param("dbMainLive") String dbMainLive);
 
     /**
      * 修改直播,结束时间可以为null
