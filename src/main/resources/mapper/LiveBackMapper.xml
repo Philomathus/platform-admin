@@ -28,8 +28,8 @@
         LEFT JOIN ${dbMainLive}.live_user r ON g.host_id = r.id
         INNER JOIN ${dbMain}.member_info m ON g.black_user_id = m.id
         <where>
-            <if test="hostId != null "> and host_id = #{hostId}</if>
-            <if test="blackUserId != null  and blackUserId != ''"> and black_user_id = #{blackUserId}</if>
+            <if test="lb.hostId != null "> and host_id = #{lb.hostId}</if>
+            <if test="lb.blackUserId != null  and lb.blackUserId != ''"> and black_user_id = #{lb.blackUserId}</if>
         </where>
         ORDER BY g.create_time desc
     </select>
