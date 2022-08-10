@@ -567,7 +567,7 @@
         sort_init,
         classified_id,
         lottery_id
-        FROM ${dbMainLive}.live_video where live_in = 1 and id > 0
+        FROM ${dbMainLive}.live_video where live_in = 1 and id > 0 and title not like "%教程%";
     </select>
 
     <select id="countLiveVideo" resultType="java.lang.Integer">
