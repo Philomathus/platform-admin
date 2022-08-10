@@ -74,7 +74,7 @@ public interface LiveVideoMapper {
      * @param liveVideo 直播
      * @return 结果
      */
-    public int insertLiveVideo(LiveVideo liveVideo, @Param("dbMainLive") String dbMainLive);
+    public int insertLiveVideo(@Param("lv") LiveVideo liveVideo, @Param("dbMainLive") String dbMainLive);
 
     List<LiveVideo> selectLiveVideoInIds(@Param("array") Set<Long> ids);
 
