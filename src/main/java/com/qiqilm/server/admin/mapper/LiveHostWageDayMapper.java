@@ -38,7 +38,7 @@ public interface LiveHostWageDayMapper {
      * @param liveHostWageDay 主播时长
      * @return 结果
      */
-    public int insertLiveHostWageDay(LiveHostWageDay liveHostWageDay, @Param("dbMainLive") String dbMainLive);
+    public int insertLiveHostWageDay(@Param("lhw") LiveHostWageDay liveHostWageDay, @Param("dbMainLive") String dbMainLive);
 
     /**
      * 修改主播时长

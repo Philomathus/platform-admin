@@ -47,24 +47,24 @@
     <insert id="insertLiveHostWageDay" parameterType="LiveHostWageDay" useGeneratedKeys="true" keyProperty="id">
         insert into ${dbMainLive}.live_host_wage_day
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
-            <if test="familyId != null">family_id,</if>
-            <if test="hostId != null">host_id,</if>
-            <if test="startTime != null and startTime != ''">start_time,</if>
-            <if test="endTime != null and endTime != ''">end_time,</if>
-            <if test="liveTimeSec != null">live_time_sec,</if>
-            <if test="ticket != null">ticket,</if>
-            <if test="times != null">times,</if>
+            <if test="lhw.id != null">id,</if>
+            <if test="lhw.familyId != null">family_id,</if>
+            <if test="lhw.hostId != null">host_id,</if>
+            <if test="lhw.startTime != null and lhw.startTime != ''">start_time,</if>
+            <if test="lhw.endTime != null and lhw.endTime != ''">end_time,</if>
+            <if test="lhw.liveTimeSec != null">live_time_sec,</if>
+            <if test="lhw.ticket != null">ticket,</if>
+            <if test="lhw.times != null">times,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
-            <if test="familyId != null">#{familyId},</if>
-            <if test="hostId != null">#{hostId},</if>
-            <if test="startTime != null and startTime != ''">#{startTime},</if>
-            <if test="endTime != null and endTime != ''">#{endTime},</if>
-            <if test="liveTimeSec != null">#{liveTimeSec},</if>
-            <if test="ticket != null">#{ticket},</if>
-            <if test="times != null">#{times},</if>
+            <if test="lhw.id != null">#{lhw.id},</if>
+            <if test="lhw.familyId != null">#{lhw.familyId},</if>
+            <if test="lhw.hostId != null">#{lhw.hostId},</if>
+            <if test="lhw.startTime != null and lhw.startTime != ''">#{lhw.startTime},</if>
+            <if test="lhw.endTime != null and lhw.endTime != ''">#{lhw.endTime},</if>
+            <if test="lhw.liveTimeSec != null">#{lhw.liveTimeSec},</if>
+            <if test="lhw.ticket != null">#{lhw.ticket},</if>
+            <if test="lhw.times != null">#{lhw.times},</if>
         </trim>
     </insert>
 

@@ -21,7 +21,7 @@ public interface LiveBlackMapper {
      * @param liveBlack 拉黑
      * @return 拉黑集合
      */
-    List<LiveBlack> selectLiveBlackList(LiveBlack liveBlack, @Param("dbMainLive") String dbMainLive);
+    List<LiveBlack> selectLiveBlackList(@Param("lb") LiveBlack liveBlack, @Param("dbMainLive") String dbMainLive);
 
     int deleteLiveBlackById(@Param("id") Long id, @Param("dbMainLive") String dbMainLive);
 
