@@ -2,9 +2,8 @@ package com.qiqilm.server.admin.utils;
 
 import com.qiqilm.server.admin.cache.BatchIMCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.im.ImApi;
-import com.qiqilm.server.admin.im.MessageEnum;
-import com.qiqilm.server.admin.im.MessageType;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +67,7 @@ public class HelpNoticeUtil implements Serializable {
 //		}else{
 //			info.put( "agent", agent );
 //		}
-        if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711")
-                || profile.equals("77mm") || profile.equals("77jp") || profile.equals("7703")) {
+        if (!LiveCenterConfig.me.isLiveCenter()) {
             info.put("agent", agent);
         } else {
             agent = "";
@@ -121,8 +119,7 @@ public class HelpNoticeUtil implements Serializable {
         info.put("guardType", "2");
         info.put("agent", profile);
         ext.put("sender", info);
-        if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711")
-                || profile.equals("77mm") || profile.equals("77jp") || profile.equals("7703")) {
+        if (!LiveCenterConfig.me.isLiveCenter()) {
             info.put("agent", agent);
         } else {
             agent = "";

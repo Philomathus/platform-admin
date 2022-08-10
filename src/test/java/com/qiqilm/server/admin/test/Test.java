@@ -1,12 +1,9 @@
 package com.qiqilm.server.admin.test;
 
 import com.qiqilm.server.admin.PlatformAdminApplication;
-import com.qiqilm.server.admin.service.IPayAgentService;
-import com.ulisesbocchio.jasyptspringboot.encryptor.SimpleAsymmetricConfig;
-import com.ulisesbocchio.jasyptspringboot.encryptor.SimpleAsymmetricStringEncryptor;
+import com.qiqilm.server.admin.config.LiveCenterConfig;
 import lombok.extern.log4j.Log4j2;
 import org.jasypt.encryption.StringEncryptor;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -49,7 +46,8 @@ public class Test {
 //		System.out.println(password);
 	}
 
-	public static void main(String[] args) {
-
+	@org.junit.jupiter.api.Test
+	public void test3() {
+		System.out.println(LiveCenterConfig.me.getLiveSubAgents());
 	}
 }

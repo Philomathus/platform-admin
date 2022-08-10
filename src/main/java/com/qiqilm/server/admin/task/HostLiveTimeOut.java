@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.task;
 
+import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.ILiveVideoService;
@@ -28,8 +29,7 @@ public class HostLiveTimeOut {
 
     @Scheduled(fixedDelay = 120000, initialDelay = 120000)
     public void listenerMonitor() {
-        if (profile.equals("7706") || profile.equals("7705") || profile.equals("7710") || profile.equals("7711")
-                || profile.equals("77mm") || profile.equals("77jp") || profile.equals("7703")) {
+        if (!LiveCenterConfig.me.isLiveCenter()) {
             return;
         }
         if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 100)) {

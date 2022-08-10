@@ -13,82 +13,74 @@ import java.util.Set;
  * @date 2021-01-25
  */
 public interface LiveVideoMapper {
-	/**
-	 * 查询直播
-	 *
-	 * @param id 直播ID
-	 * @return 直播
-	 */
-	public LiveVideo selectLiveVideoById(Long id);
+    /**
+     * 查询直播
+     *
+     * @param id 直播ID
+     * @return 直播
+     */
+    public LiveVideo selectLiveVideoById(Long id);
 
-	/**
-	 * 查询直播列表
-	 *
-	 * @param liveVideo 直播
-	 * @return 直播集合
-	 */
-	public List<LiveVideo> selectLiveVideoList(LiveVideo liveVideo);
+    /**
+     * 查询直播列表
+     *
+     * @param liveVideo 直播
+     * @return 直播集合
+     */
+    public List<LiveVideo> selectLiveVideoList(LiveVideo liveVideo);
 
-	/**
-	 * 在线群组
-	 * @return
-	 */
-	public List<String> selectOnlineLiveGroups();
+    /**
+     * 在线群组
+     *
+     * @return
+     */
+    public List<String> selectOnlineLiveGroups();
 
-	/**
-	 * 修改直播
-	 *
-	 * @param liveVideo 直播
-	 * @return 结果
-	 */
-	public int updateLiveVideo(LiveVideo liveVideo);
+    /**
+     * 修改直播
+     *
+     * @param liveVideo 直播
+     * @return 结果
+     */
+    public int updateLiveVideo(LiveVideo liveVideo, @Param("dbMainLive") String dbMainLive);
 
-	public int updateLive7706Video(LiveVideo liveVideo);
-	public int updateLive7705Video(LiveVideo liveVideo);
-	public int updateLive7710Video(LiveVideo updateVideo);
-	public int updateLive7711Video(LiveVideo updateVideo);
-	public int updateLive77mmVideo(LiveVideo updateVideo);
-	public int updateLive77jpVideo(LiveVideo updateVideo);
-	public int updateLive7703Video(LiveVideo updateVideo);
+    /**
+     * 修改直播,结束时间可以为null
+     *
+     * @param liveVideo 直播
+     * @return 结果
+     */
+    public int updateLiveVideo2(LiveVideo liveVideo);
 
-	/**
-	 * 修改直播,结束时间可以为null
-	 *
-	 * @param liveVideo 直播
-	 * @return 结果
-	 */
-	public int updateLiveVideo2(LiveVideo liveVideo);
+    LiveVideo selectLiveVideoSortById(Long id);
 
-	LiveVideo selectLiveVideoSortById( Long id );
+    List<LiveVideo> selectLiveInVideoSort();
 
-	List<LiveVideo> selectLiveInVideoSort();
+    long countLiveInSort(Long sort);
 
-	long countLiveInSort( Long sort );
+    Integer countLineCount(@Param("paiId") Long paiId);
 
-	Integer countLineCount(@Param("paiId") Long paiId );
-
-	List<LiveVideo> selectLiveInPlayDetect();
+    List<LiveVideo> selectLiveInPlayDetect();
 
     List<LiveVideo> selectLiveVideoList2(LiveVideo liveVideo);
 
-	List<Long> selectExpiredVideo();
+    List<Long> selectExpiredVideo();
 
-	LiveVideo liveInStatus(Long userId);
+    LiveVideo liveInStatus(Long userId);
 
-	/**
-	 * 新增直播
-	 *
-	 * @param liveVideo 直播
-	 * @return 结果
-	 */
-	public int insertLiveVideo(LiveVideo liveVideo);
-    void insertLiveVideo7706(LiveVideo liveVideo);
-	void insertLiveVideo7705(LiveVideo liveVideo);
-	void insertLiveVideo7710(LiveVideo liveVideo);
-	void insertLiveVideo7711(LiveVideo liveVideo);
-	void insertLiveVideo77mm(LiveVideo liveVideo);
-	void insertLiveVideo77jp(LiveVideo liveVideo);
-	void insertLiveVideo7703(LiveVideo liveVideo);
+    /**
+     * 新增直播
+     *
+     * @param liveVideo 直播
+     * @return 结果
+     */
+    public int insertLiveVideo(LiveVideo liveVideo, @Param("dbMainLive") String dbMainLive);
 
-	List<LiveVideo> selectLiveVideoInIds(@Param("array") Set<Long> ids);
+    List<LiveVideo> selectLiveVideoInIds(@Param("array") Set<Long> ids);
+
+    List<LiveVideo> selectMainLiveInVideoList(@Param("dbMainLive") String liveCenterDbLive);
+
+    Integer countLiveVideo(Long id);
+
+    int updateLiveVideoSort(LiveVideo liveVideo);
 }

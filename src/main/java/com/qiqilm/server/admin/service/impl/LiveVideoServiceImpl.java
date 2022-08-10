@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.cache.VideoCacheUtil;
+import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LiveHostWageDay;
@@ -10,6 +11,7 @@ import com.qiqilm.server.admin.domain.LiveUser;
 import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.domain.ServerLive;
 import com.qiqilm.server.admin.domain.vo.HostPropDayVo;
+import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.im.MessageEnum;
 import com.qiqilm.server.admin.im.MessageType;
@@ -168,7 +170,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
         updateUser.setOpenPay(0);
         liveUserMapper.updateLiveUser(updateUser);
 
-        liveVideoMapper.updateLiveVideo(updateVideo);
+        liveVideoMapper.updateLiveVideo(updateVideo, LiveCenterConfig.me.getProfileDbLive());
 
         try {
             this.processVideoSort();
@@ -195,20 +197,11 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
         this.closeVideoIMNotify(video, isAborted, why);
 
         RedisCacheUtil.me.clear(id, LiveVideo.class);
-        switch (profile) {
-            case "7701":
-                liveVideoMapper.updateLive7706Video(updateVideo);
-                liveVideoMapper.updateLive7711Video(updateVideo);
-                liveVideoMapper.updateLive77jpVideo(updateVideo);
-                liveVideoMapper.updateLive7703Video(updateVideo);
-                break;
-            case "7704":
-                liveVideoMapper.updateLive7705Video(updateVideo);
-                liveVideoMapper.updateLive77mmVideo(updateVideo);
-                break;
-            case "7708":
-                liveVideoMapper.updateLive7710Video(updateVideo);
-                break;
+
+        if (!Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
+            for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
+                liveVideoMapper.updateLiveVideo(updateVideo, LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
+            }
         }
 
         return false;
@@ -229,7 +222,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             hostLiveDay.setFamilyId(liveUser.getFamilyId());
             hostLiveDay.setLiveTimeSec(0);
             hostLiveDay.setTimes(1);
-            liveHostWageDayMapper.insertLiveHostWageDay(hostLiveDay);
+            liveHostWageDayMapper.insertLiveHostWageDay(hostLiveDay, LiveCenterConfig.me.getProfileDbLive());
         } else {
             LiveHostWageDay updateLiveDay = new LiveHostWageDay();
             updateLiveDay.setId(hostLiveDayId);
@@ -339,24 +332,15 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
     @Override
     public void updateVideo(LiveVideo entity) {
-        int updateCount = liveVideoMapper.updateLiveVideo(entity);
+        int updateCount = liveVideoMapper.updateLiveVideo(entity, LiveCenterConfig.me.getProfileDbLive());
         if (updateCount > 0) {
             RedisCacheUtil.me.clear(entity.getId(), LiveVideo.class);
         }
-        switch (profile) {
-            case "7701":
-                liveVideoMapper.updateLive7706Video(entity);
-                liveVideoMapper.updateLive7711Video(entity);
-                liveVideoMapper.updateLive77jpVideo(entity);
-                liveVideoMapper.updateLive7703Video(entity);
-                break;
-            case "7704":
-                liveVideoMapper.updateLive7705Video(entity);
-                liveVideoMapper.updateLive77mmVideo(entity);
-                break;
-            case "7708":
-                liveVideoMapper.updateLive7710Video(entity);
-                break;
+
+        if (!Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
+            for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
+                liveVideoMapper.updateLiveVideo(entity, LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
+            }
         }
     }
 
@@ -409,7 +393,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 return AjaxResult.error("当前主播是推荐位，无法设置置底位，请取消推荐位后重试");
             }
         }
-        int i = liveVideoMapper.updateLiveVideo(liveVideo);
+        int i = liveVideoMapper.updateLiveVideo(liveVideo, LiveCenterConfig.me.getProfileDbLive());
         redisUtil.unlink("admin:videoSort:" + liveVideo.getId());
         if (i > 0) {
             this.processVideoSort();
@@ -484,7 +468,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             LiveVideo update = new LiveVideo();
             update.setId(resultList.get(i));
             update.setSortInit(i);
-            liveVideoMapper.updateLiveVideo(update);
+            liveVideoMapper.updateLiveVideo(update, LiveCenterConfig.me.getProfileDbLive());
         }
     }
 
@@ -511,12 +495,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
         long s = System.currentTimeMillis();
         log.info("开始执行主播礼物计算,彩票投注");
         String dayTime = LocalDate.now().plusDays(-1).toString();
-        List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime);
+        List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime, LiveCenterConfig.me.getProfileDbMain(), LiveCenterConfig.me.getProfileDbLive());
         log.info("收礼物主播数：{}", propDayVos.size());
         String begin = dayTime.concat(" 00:00:00");
         String end = dayTime.concat(" 23:59:59");
 
-        List<HostPropDayVo> lotteryDayVos = liveVideoPropMapper.sumHostLotteryDayList(begin, end);
+        List<HostPropDayVo> lotteryDayVos = liveVideoPropMapper.sumHostLotteryDayList(begin, end, LiveCenterConfig.me.getProfileDbMain(), LiveCenterConfig.me.getProfileDbLottery());
         log.info("投注主播数：{}", lotteryDayVos.size());
 
 
@@ -538,43 +522,40 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 updateMap.put(updateLiveDay.getId(), updateLiveDay);
             }
             updateLiveDay.setLotteryCost(v.getSumHostProp());
-
         }
 
-        if (profile.equals("7701")) {
-
-            try {
-                //先收集7706
-                Map<String, LiveHostWageDay> update7706Map = new HashMap<>();
-                propDayVos = liveVideoPropMapper.sumHostPropDay7706List(dayTime);
+        if (!Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
+            for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
+                Map<String, LiveHostWageDay> updateLiveSubMap = new HashMap<>();
+                propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime, LiveCenterConfig.me.getLiveSubAgentDbMain(liveSubAgent), LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
 
                 for (HostPropDayVo v : propDayVos) {
                     id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7706Map.get(id);
+                    LiveHostWageDay updateLiveDay = updateLiveSubMap.get(id);
                     if (updateLiveDay == null) {
                         updateLiveDay = new LiveHostWageDay();
                         updateLiveDay.setId(id);
-                        update7706Map.put(updateLiveDay.getId(), updateLiveDay);
+                        updateLiveSubMap.put(updateLiveDay.getId(), updateLiveDay);
                     }
                     updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp()));
 
                 }
-                log.error("7706主播收礼物数：{}", propDayVos.size());
+                log.error(liveSubAgent + "主播收礼物数：{}", propDayVos.size());
 
-                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay7706List(begin, end);
+                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDayList(begin, end, LiveCenterConfig.me.getLiveSubAgentDbMain(liveSubAgent), LiveCenterConfig.me.getLiveSubAgentDbLottery(liveSubAgent));
                 for (HostPropDayVo v : lotteryDayVos) {
                     id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7706Map.get(id);
+                    LiveHostWageDay updateLiveDay = updateLiveSubMap.get(id);
                     if (updateLiveDay == null) {
                         updateLiveDay = new LiveHostWageDay();
                         updateLiveDay.setId(id);
-                        update7706Map.put(updateLiveDay.getId(), updateLiveDay);
+                        updateLiveSubMap.put(updateLiveDay.getId(), updateLiveDay);
                     }
                     updateLiveDay.setLotteryCost(updateLiveDay.getLotteryCost().add(v.getSumHostProp()));
 
                 }
-                log.error("7706主播投注数：{}", lotteryDayVos.size());
-                for (LiveHostWageDay updateLiveDay : update7706Map.values()) {
+                log.error(liveSubAgent + "主播投注数：{}", lotteryDayVos.size());
+                for (LiveHostWageDay updateLiveDay : updateLiveSubMap.values()) {
                     LiveHostWageDay db = liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
                     if (db == null) {
                         continue;
@@ -585,11 +566,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                     updateLiveDay.setFamilyId(db.getFamilyId());
                     updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
                     updateLiveDay.setTimes(db.getTimes());
-                    liveHostWageDayMapper.insertLiveHostWageDay7706(updateLiveDay);
+                    liveHostWageDayMapper.insertLiveHostWageDay(updateLiveDay, LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
                 }
-
-                //合并到7701
-                for (LiveHostWageDay v : update7706Map.values()) {
+                for (LiveHostWageDay v : updateLiveSubMap.values()) {
                     if (updateMap.containsKey(v.getId())) {
                         LiveHostWageDay tem = updateMap.get(v.getId());
                         tem.setTicket(tem.getTicket().add(v.getTicket()));
@@ -599,360 +578,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                         updateMap.put(v.getId(), v);
                     }
                 }
-
-                //先收集7711
-                Map<String, LiveHostWageDay> update7711Map = new HashMap<>();
-                propDayVos = liveVideoPropMapper.sumHostPropDay7711List(dayTime);
-
-                for (HostPropDayVo v : propDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7711Map.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update7711Map.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp()));
-
-                }
-                log.error("7711主播收礼物数：{}", propDayVos.size());
-
-                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay7711List(begin, end);
-                for (HostPropDayVo v : lotteryDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7711Map.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update7711Map.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setLotteryCost(updateLiveDay.getLotteryCost().add(v.getSumHostProp()));
-
-                }
-                log.error("7711主播投注数：{}", lotteryDayVos.size());
-                for (LiveHostWageDay updateLiveDay : update7711Map.values()) {
-                    LiveHostWageDay db = liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
-                    if (db == null) {
-                        continue;
-                    }
-                    updateLiveDay.setHostId(db.getHostId());
-                    updateLiveDay.setStartTime(db.getStartTime());
-                    updateLiveDay.setEndTime(db.getEndTime());
-                    updateLiveDay.setFamilyId(db.getFamilyId());
-                    updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
-                    updateLiveDay.setTimes(db.getTimes());
-                    liveHostWageDayMapper.insertLiveHostWageDay7711(updateLiveDay);
-                }
-
-                //合并到7701
-                for (LiveHostWageDay v : update7711Map.values()) {
-                    if (updateMap.containsKey(v.getId())) {
-                        LiveHostWageDay tem = updateMap.get(v.getId());
-                        tem.setTicket(tem.getTicket().add(v.getTicket()));
-                        tem.setLotteryCost(tem.getLotteryCost().add(v.getLotteryCost()));
-                        updateMap.put(v.getId(), tem);
-                    } else {
-                        updateMap.put(v.getId(), v);
-                    }
-                }
-
-                //先收集77jp
-                Map<String, LiveHostWageDay> update77jpMap = new HashMap<>();
-                propDayVos = liveVideoPropMapper.sumHostPropDay77jpList(dayTime);
-
-                for (HostPropDayVo v : propDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update77jpMap.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update77jpMap.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp()));
-
-                }
-                log.error("77jp主播收礼物数：{}", propDayVos.size());
-
-                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay77jpList(begin, end);
-                for (HostPropDayVo v : lotteryDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update77jpMap.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update77jpMap.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setLotteryCost(updateLiveDay.getLotteryCost().add(v.getSumHostProp()));
-
-                }
-                log.error("77jp主播投注数：{}", lotteryDayVos.size());
-                for (LiveHostWageDay updateLiveDay : update77jpMap.values()) {
-                    LiveHostWageDay db = liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
-                    if (db == null) {
-                        continue;
-                    }
-                    updateLiveDay.setHostId(db.getHostId());
-                    updateLiveDay.setStartTime(db.getStartTime());
-                    updateLiveDay.setEndTime(db.getEndTime());
-                    updateLiveDay.setFamilyId(db.getFamilyId());
-                    updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
-                    updateLiveDay.setTimes(db.getTimes());
-                    liveHostWageDayMapper.insertLiveHostWageDay77jp(updateLiveDay);
-                }
-
-                //合并到7701
-                for (LiveHostWageDay v : update77jpMap.values()) {
-                    if (updateMap.containsKey(v.getId())) {
-                        LiveHostWageDay tem = updateMap.get(v.getId());
-                        tem.setTicket(tem.getTicket().add(v.getTicket()));
-                        tem.setLotteryCost(tem.getLotteryCost().add(v.getLotteryCost()));
-                        updateMap.put(v.getId(), tem);
-                    } else {
-                        updateMap.put(v.getId(), v);
-                    }
-                }
-
-
-                //先收集7703
-                Map<String, LiveHostWageDay> update7703Map = new HashMap<>();
-                propDayVos = liveVideoPropMapper.sumHostPropDay7703List(dayTime);
-
-                for (HostPropDayVo v : propDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7703Map.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update7703Map.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp()));
-
-                }
-                log.error("7703主播收礼物数：{}", propDayVos.size());
-
-                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay7703List(begin, end);
-                for (HostPropDayVo v : lotteryDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7703Map.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update7703Map.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setLotteryCost(updateLiveDay.getLotteryCost().add(v.getSumHostProp()));
-
-                }
-                log.error("7703主播投注数：{}", lotteryDayVos.size());
-                for (LiveHostWageDay updateLiveDay : update7703Map.values()) {
-                    LiveHostWageDay db = liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
-                    if (db == null) {
-                        continue;
-                    }
-                    updateLiveDay.setHostId(db.getHostId());
-                    updateLiveDay.setStartTime(db.getStartTime());
-                    updateLiveDay.setEndTime(db.getEndTime());
-                    updateLiveDay.setFamilyId(db.getFamilyId());
-                    updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
-                    updateLiveDay.setTimes(db.getTimes());
-                    liveHostWageDayMapper.insertLiveHostWageDay7703(updateLiveDay);
-                }
-
-                //合并到7701
-                for (LiveHostWageDay v : update7703Map.values()) {
-                    if (updateMap.containsKey(v.getId())) {
-                        LiveHostWageDay tem = updateMap.get(v.getId());
-                        tem.setTicket(tem.getTicket().add(v.getTicket()));
-                        tem.setLotteryCost(tem.getLotteryCost().add(v.getLotteryCost()));
-                        updateMap.put(v.getId(), tem);
-                    } else {
-                        updateMap.put(v.getId(), v);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("7706 7711 77jp 7703 主播结算异常", e);
-            }
-        }
-
-        if (profile.equals("7704")) {
-
-            try {
-                //先收集7705
-                Map<String, LiveHostWageDay> update7705Map = new HashMap<>();
-                propDayVos = liveVideoPropMapper.sumHostPropDay7705List(dayTime);
-
-                for (HostPropDayVo v : propDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7705Map.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update7705Map.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp()));
-
-                }
-                log.error("7705主播收礼物数：{}", propDayVos.size());
-
-                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay7705List(begin, end);
-                for (HostPropDayVo v : lotteryDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7705Map.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update7705Map.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setLotteryCost(updateLiveDay.getLotteryCost().add(v.getSumHostProp()));
-
-                }
-                log.error("7705主播投注数：{}", lotteryDayVos.size());
-                for (LiveHostWageDay updateLiveDay : update7705Map.values()) {
-                    LiveHostWageDay db = liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
-                    if (db == null) {
-                        continue;
-                    }
-                    updateLiveDay.setHostId(db.getHostId());
-                    updateLiveDay.setStartTime(db.getStartTime());
-                    updateLiveDay.setEndTime(db.getEndTime());
-                    updateLiveDay.setFamilyId(db.getFamilyId());
-                    updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
-                    updateLiveDay.setTimes(db.getTimes());
-                    liveHostWageDayMapper.insertLiveHostWageDay7705(updateLiveDay);
-                }
-
-                //合并到7704
-                for (LiveHostWageDay v : update7705Map.values()) {
-                    if (updateMap.containsKey(v.getId())) {
-                        LiveHostWageDay tem = updateMap.get(v.getId());
-                        tem.setTicket(tem.getTicket().add(v.getTicket()));
-                        tem.setLotteryCost(tem.getLotteryCost().add(v.getLotteryCost()));
-                        updateMap.put(v.getId(), tem);
-                    } else {
-                        updateMap.put(v.getId(), v);
-                    }
-                }
-
-                //先收集77mm
-                Map<String, LiveHostWageDay> update77mmMap = new HashMap<>();
-                propDayVos = liveVideoPropMapper.sumHostPropDay77mmList(dayTime);
-
-                for (HostPropDayVo v : propDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update77mmMap.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update77mmMap.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp()));
-
-                }
-                log.error("77mm主播收礼物数：{}", propDayVos.size());
-
-                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay77mmList(begin, end);
-                for (HostPropDayVo v : lotteryDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update77mmMap.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update77mmMap.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setLotteryCost(updateLiveDay.getLotteryCost().add(v.getSumHostProp()));
-
-                }
-                log.error("77mm主播投注数：{}", lotteryDayVos.size());
-                for (LiveHostWageDay updateLiveDay : update77mmMap.values()) {
-                    LiveHostWageDay db = liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
-                    if (db == null) {
-                        continue;
-                    }
-                    updateLiveDay.setHostId(db.getHostId());
-                    updateLiveDay.setStartTime(db.getStartTime());
-                    updateLiveDay.setEndTime(db.getEndTime());
-                    updateLiveDay.setFamilyId(db.getFamilyId());
-                    updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
-                    updateLiveDay.setTimes(db.getTimes());
-                    liveHostWageDayMapper.insertLiveHostWageDay77mm(updateLiveDay);
-                }
-
-                //合并到7704
-                for (LiveHostWageDay v : update77mmMap.values()) {
-                    if (updateMap.containsKey(v.getId())) {
-                        LiveHostWageDay tem = updateMap.get(v.getId());
-                        tem.setTicket(tem.getTicket().add(v.getTicket()));
-                        tem.setLotteryCost(tem.getLotteryCost().add(v.getLotteryCost()));
-                        updateMap.put(v.getId(), tem);
-                    } else {
-                        updateMap.put(v.getId(), v);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("7705 77mm 主播结算异常", e);
-            }
-
-        }
-
-        if (profile.equals("7708")) {
-
-            try {
-                //先收集7710
-                Map<String, LiveHostWageDay> update7710Map = new HashMap<>();
-                propDayVos = liveVideoPropMapper.sumHostPropDay7710List(dayTime);
-
-                for (HostPropDayVo v : propDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7710Map.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update7710Map.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setTicket(updateLiveDay.getTicket().add(v.getSumHostProp()));
-
-                }
-                log.error("7710主播收礼物数：{}", propDayVos.size());
-
-                lotteryDayVos = liveVideoPropMapper.sumHostLotteryDay7710List(begin, end);
-                for (HostPropDayVo v : lotteryDayVos) {
-                    id = dayTime.concat("-").concat(String.valueOf(v.getHostId()));
-                    LiveHostWageDay updateLiveDay = update7710Map.get(id);
-                    if (updateLiveDay == null) {
-                        updateLiveDay = new LiveHostWageDay();
-                        updateLiveDay.setId(id);
-                        update7710Map.put(updateLiveDay.getId(), updateLiveDay);
-                    }
-                    updateLiveDay.setLotteryCost(updateLiveDay.getLotteryCost().add(v.getSumHostProp()));
-
-                }
-                log.error("7710主播投注数：{}", lotteryDayVos.size());
-                for (LiveHostWageDay updateLiveDay : update7710Map.values()) {
-                    LiveHostWageDay db = liveHostWageDayMapper.selectLiveHostWageDayById(updateLiveDay.getId());
-                    if (db == null) {
-                        continue;
-                    }
-                    updateLiveDay.setHostId(db.getHostId());
-                    updateLiveDay.setStartTime(db.getStartTime());
-                    updateLiveDay.setEndTime(db.getEndTime());
-                    updateLiveDay.setFamilyId(db.getFamilyId());
-                    updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
-                    updateLiveDay.setTimes(db.getTimes());
-                    liveHostWageDayMapper.insertLiveHostWageDay7710(updateLiveDay);
-                }
-
-                //合并到7708
-                for (LiveHostWageDay v : update7710Map.values()) {
-                    if (updateMap.containsKey(v.getId())) {
-                        LiveHostWageDay tem = updateMap.get(v.getId());
-                        tem.setTicket(tem.getTicket().add(v.getTicket()));
-                        tem.setLotteryCost(tem.getLotteryCost().add(v.getLotteryCost()));
-                        updateMap.put(v.getId(), tem);
-                    } else {
-                        updateMap.put(v.getId(), v);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("7710 主播结算异常", e);
             }
         }
 
@@ -968,5 +593,27 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
     @Override
     public LiveVideo liveInStatus(Long userId) {
         return liveVideoMapper.liveInStatus(userId);
+    }
+
+    @Override
+    public AjaxResult syncMainLiveSort() {
+        if (LiveCenterConfig.me.isLiveCenter()) {
+            return AjaxResult.error("主台无需同步");
+        }
+
+        // redis 加锁,不可以频繁同步
+        if (!redisUtil.adminLock(EnumLock.adminTask, "syncMainLiveSort", 60)) {
+            return AjaxResult.error("请勿频繁同步,需等待" + redisUtil.getExpire(Constants.ADMIN_LOCK.concat(EnumLock.adminTask.getKey()).concat("syncMainLiveSort")) + "秒");
+        }
+
+        List<LiveVideo> liveVideos = liveVideoMapper.selectMainLiveInVideoList(LiveCenterConfig.me.getLiveCenterDbLive());
+        for (LiveVideo liveVideo : liveVideos) {
+            if (liveVideoMapper.countLiveVideo(liveVideo.getId()) > 0) {
+                liveVideoMapper.updateLiveVideoSort(liveVideo);
+            } else {
+                liveVideoMapper.insertLiveVideo(liveVideo, LiveCenterConfig.me.getProfileDbLive());
+            }
+        }
+        return AjaxResult.success();
     }
 }

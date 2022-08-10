@@ -16,57 +16,49 @@ import java.util.Map;
  * @date 2021-03-29
  */
 public interface LiveHostWageDayMapper {
-	/**
-	 * 查询主播时长
-	 *
-	 * @param id 主播时长ID
-	 * @return 主播时长
-	 */
-	public LiveHostWageDay selectLiveHostWageDayById(String id );
+    /**
+     * 查询主播时长
+     *
+     * @param id 主播时长ID
+     * @return 主播时长
+     */
+    public LiveHostWageDay selectLiveHostWageDayById(String id);
 
-	/**
-	 * 查询主播时长列表
-	 *
-	 * @param liveHostWageDay 主播时长
-	 * @return 主播时长集合
-	 */
-	public List<LiveHostWageDay> selectLiveHostWageDayList( LiveHostWageDay liveHostWageDay );
+    /**
+     * 查询主播时长列表
+     *
+     * @param liveHostWageDay 主播时长
+     * @return 主播时长集合
+     */
+    public List<LiveHostWageDay> selectLiveHostWageDayList(LiveHostWageDay liveHostWageDay);
 
-	/**
-	 * 新增主播时长
-	 *
-	 * @param liveHostWageDay 主播时长
-	 * @return 结果
-	 */
-	public int insertLiveHostWageDay( LiveHostWageDay liveHostWageDay );
+    /**
+     * 新增主播时长
+     *
+     * @param liveHostWageDay 主播时长
+     * @return 结果
+     */
+    public int insertLiveHostWageDay(LiveHostWageDay liveHostWageDay, @Param("dbMainLive") String dbMainLive);
 
-	public int insertLiveHostWageDay7706( LiveHostWageDay liveHostWageDay );
-	public int insertLiveHostWageDay7705( LiveHostWageDay liveHostWageDay );
-	public int insertLiveHostWageDay7710( LiveHostWageDay updateLiveDay );
-	public int insertLiveHostWageDay7711( LiveHostWageDay updateLiveDay );
-	public int insertLiveHostWageDay77mm( LiveHostWageDay updateLiveDay );
-	public int insertLiveHostWageDay77jp( LiveHostWageDay updateLiveDay );
-	public int insertLiveHostWageDay7703( LiveHostWageDay updateLiveDay );
+    /**
+     * 修改主播时长
+     *
+     * @param liveHostWageDay 主播时长
+     * @return 结果
+     */
+    public int updateLiveHostWageDay(LiveHostWageDay liveHostWageDay);
 
-	/**
-	 * 修改主播时长
-	 *
-	 * @param liveHostWageDay 主播时长
-	 * @return 结果
-	 */
-	public int updateLiveHostWageDay( LiveHostWageDay liveHostWageDay );
+    public LiveHostWageDay beforeDay(@Param("userId") Long userId);
 
-	public LiveHostWageDay beforeDay( @Param( "userId" ) Long userId );
+    public List<RspLiveHostWageDayFamily> familyPage(@Param("dto") LiveHostWageDay dto);
 
-	public List<RspLiveHostWageDayFamily> familyPage(@Param( "dto" ) LiveHostWageDay dto );
+    public List<Map<String, Object>> selectFamilyName();
 
-	public List<Map<String, Object>> selectFamilyName();
+    public List<RspLiveHostWageDayList> hostPage(@Param("dto") LiveHostWageDay dto);
 
-	public List<RspLiveHostWageDayList> hostPage(@Param( "dto" ) LiveHostWageDay dto );
+    List<String> getliveHostWageDay(@Param("createTime") String createTime, @Param("familyId") Long familyId);
 
-	List<String> getliveHostWageDay( @Param( "createTime" ) String createTime, @Param( "familyId" ) Long familyId);
+    String callprorepLivehostwagedays(@Param("p_begintime") String p_begintime, @Param("p_endtime") String p_endtime);
 
-	String callprorepLivehostwagedays(@Param( "p_begintime" ) String p_begintime,@Param( "p_endtime" ) String p_endtime);
-
-	List<RspLiveHostWageDays> getLiveHostWageDays(@Param( "dto" ) LiveHostWageDay dto);
+    List<RspLiveHostWageDays> getLiveHostWageDays(@Param("dto") LiveHostWageDay dto);
 }

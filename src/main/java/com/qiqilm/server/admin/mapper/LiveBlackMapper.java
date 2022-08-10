@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.LiveBlack;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Set;
@@ -14,25 +15,15 @@ import java.util.Set;
 public interface LiveBlackMapper {
 
 
-	/**
-	 * 查询拉黑列表
-	 *
-	 * @param liveBlack 拉黑
-	 * @return 拉黑集合
-	 */
-	List<LiveBlack> selectLiveBlackList(LiveBlack liveBlack);
-	List<LiveBlack> selectLiveBlackList7706(LiveBlack liveBlack);
-	List<LiveBlack> selectLiveBlackList7705(LiveBlack liveBlack);
-	List<LiveBlack> selectLiveBlackList7710( LiveBlack liveBlack );
-	List<LiveBlack> selectLiveBlackList7711( LiveBlack liveBlack );
-	List<LiveBlack> selectLiveBlackList77mm( LiveBlack liveBlack );
-	List<LiveBlack> selectLiveBlackList77jp( LiveBlack liveBlack );
-	List<LiveBlack> selectLiveBlackList7703( LiveBlack liveBlack );
+    /**
+     * 查询拉黑列表
+     *
+     * @param liveBlack 拉黑
+     * @return 拉黑集合
+     */
+    List<LiveBlack> selectLiveBlackList(LiveBlack liveBlack, @Param("dbMainLive") String dbMainLive);
 
-	int deleteLiveBlackById(Long id);
-	int deleteLiveBlackById7706(Long id);
-	int deleteLiveBlackById7705(Long id);
-	int deleteLiveBlackById7710( Long id );
+    int deleteLiveBlackById(@Param("id") Long id, @Param("dbMainLive") String dbMainLive);
 
-	Set userBlackList(Long host_id);
+    Set userBlackList(Long host_id);
 }
