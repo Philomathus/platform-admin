@@ -1,15 +1,21 @@
 package com.qiqilm.server.admin.controller.live;
 
+import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
+import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.WheelPoolHistory;
+import com.qiqilm.server.admin.domain.req.DownLoadTime;
+import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.WheelPoolHistoryService;
+import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -56,5 +62,18 @@ public class WheelPoolHistoryController extends BaseController {
     @GetMapping("/listCount")
     public Map listCount(WheelPoolHistory wheelPoolHistory) {
         return wheelPoolHistoryService.listCount(wheelPoolHistory);
+    }
+
+//    @PreAuthorize("@ss.hasPermi('admin:wheelPoolHistory:export')")
+    @Log(title = "导出", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public AjaxResult export(WheelPoolHistory wheelPoolHistory, HttpServletResponse response) {
+        List<WheelPoolHistory> list =  wheelPoolHistoryService.selectAllWheelPoolHistory(wheelPoolHistory);
+        if (list.size() <= DownLoadTime.downLoadLimit) {
+            ExportExcelUtil.exportExcel(list, "车轮信息", "车轮信息表", WheelPoolHistory.class, response);
+            return AjaxResult.success("下载成功");
+        } else {
+            return AjaxResult.error("导出条数超过20万条");
+        }
     }
 }
