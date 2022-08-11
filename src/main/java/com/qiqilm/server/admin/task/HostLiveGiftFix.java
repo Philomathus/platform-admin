@@ -18,9 +18,6 @@ public class HostLiveGiftFix {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Value("${spring.profiles.active}")
-    private String profile;
-
     @Scheduled(cron = "0 0 2 * * ?")
     public void listenerMonitor() {
 
@@ -32,7 +29,7 @@ public class HostLiveGiftFix {
             return;
         }
 
-        liveVideoService.countHostGift(profile);
+        liveVideoService.countHostGift();
 
     }
 }

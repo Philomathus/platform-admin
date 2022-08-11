@@ -491,7 +491,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
     }
 
     @Override
-    public void countHostGift(String profile) {
+    public void countHostGift() {
         long s = System.currentTimeMillis();
         log.info("开始执行主播礼物计算,彩票投注");
         String dayTime = LocalDate.now().plusDays(-1).toString();
