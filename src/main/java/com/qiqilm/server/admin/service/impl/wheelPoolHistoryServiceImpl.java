@@ -37,14 +37,17 @@ public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
     public List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory) {
         List<WheelPoolHistory> wheelPoolHistoryList = wheelPoolHistoryDao.selectAllWheelPoolHistory(wheelPoolHistory);
         Set<String> memberIds = wheelPoolHistoryList.stream().map(WheelPoolHistory::getMemberId).collect(Collectors.toSet());
-        List<MemberInfo> memberInfos = memberInfoMapper.selectStatusByIds(memberIds);
-        for (WheelPoolHistory history : wheelPoolHistoryList) {
-            for (MemberInfo memberInfo : memberInfos) {
-                if (history.getMemberId().equals(memberInfo.getId())) {
-                    history.setMemberStatus(memberInfo.getStatus());
+        if(!memberIds.isEmpty()){
+            List<MemberInfo> memberInfos = memberInfoMapper.selectStatusByIds(memberIds);
+            for (WheelPoolHistory history : wheelPoolHistoryList) {
+                for (MemberInfo memberInfo : memberInfos) {
+                    if (history.getMemberId().equals(memberInfo.getId())) {
+                        history.setMemberStatus(memberInfo.getStatus());
+                    }
                 }
             }
         }
+
         return wheelPoolHistoryList;
     }
 
