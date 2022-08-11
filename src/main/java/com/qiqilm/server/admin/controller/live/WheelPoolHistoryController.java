@@ -64,13 +64,13 @@ public class WheelPoolHistoryController extends BaseController {
         return wheelPoolHistoryService.listCount(wheelPoolHistory);
     }
 
-//    @PreAuthorize("@ss.hasPermi('admin:wheelPoolHistory:export')")
+    @PreAuthorize("@ss.hasPermi('admin:wheelPoolHistory:export')")
     @Log(title = "导出", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(WheelPoolHistory wheelPoolHistory, HttpServletResponse response) {
         List<WheelPoolHistory> list =  wheelPoolHistoryService.selectAllWheelPoolHistory(wheelPoolHistory);
         if (list.size() <= DownLoadTime.downLoadLimit) {
-            ExportExcelUtil.exportExcel(list, "车轮信息", "车轮信息表", WheelPoolHistory.class, response);
+            ExportExcelUtil.exportExcel(list, "大奖池历史", "大奖池历史", WheelPoolHistory.class, response);
             return AjaxResult.success("下载成功");
         } else {
             return AjaxResult.error("导出条数超过20万条");
