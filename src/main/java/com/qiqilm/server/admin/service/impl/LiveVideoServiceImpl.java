@@ -524,6 +524,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             updateLiveDay.setLotteryCost(v.getSumHostProp());
         }
 
+        log.error(JsonUtil.object2Json(updateMap));
+
         if (!Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
             for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
                 Map<String, LiveHostWageDay> updateLiveSubMap = new HashMap<>();
@@ -580,6 +582,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 }
             }
         }
+
+        log.error(JsonUtil.object2Json(updateMap));
 
         for (LiveHostWageDay updateLiveDay : updateMap.values()) {
             liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
