@@ -66,6 +66,9 @@ public class WheelPoolHistory extends BaseEntity {
     @Excel(name = "会员类型")
     private Integer memberStatus;
 
+    @Excel(name = "获胜次数")
+    private Integer winTimes;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -80,6 +83,7 @@ public class WheelPoolHistory extends BaseEntity {
                 .append("medalType", getMedalType())
                 .append("drawType", getDrawType())
                 .append("position", getPosition())
+                .append("winTimes", getWinTimes())
                 .toString();
     }
 
