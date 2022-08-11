@@ -44,7 +44,7 @@
     </select>
 
 
-    <insert id="insertLiveHostWageDay" parameterType="LiveHostWageDay" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertLiveHostWageDay" parameterType="LiveHostWageDay">
         insert into ${dbMainLive}.live_host_wage_day
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="lhw.id != null">id,</if>
