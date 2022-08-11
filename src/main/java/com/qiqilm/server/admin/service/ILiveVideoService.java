@@ -42,7 +42,7 @@ public interface ILiveVideoService {
 
 	void updateNowLine();
 
-	void countHostGift(String profile);
+	void countHostGift();
 
 	LiveVideo liveInStatus(Long userId);
 

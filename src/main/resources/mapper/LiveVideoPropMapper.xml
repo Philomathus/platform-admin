@@ -157,6 +157,6 @@
 	</select>
 
 	<select id="sumHostLotteryDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
-		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from ${dbLottery}.lottery_bet_bb_view  where  update_time <![CDATA[ >= ]]> #{begin} and update_time <![CDATA[ <= ]]> #{end} and anchor >0 and puser_id not in (select id from ${dbMainMain}.member_info where  status = 2)   GROUP BY anchor
+		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from ${dbMainLottery}.lottery_bet_bb_view  where  update_time <![CDATA[ >= ]]> #{begin} and update_time <![CDATA[ <= ]]> #{end} and anchor >0 and puser_id not in (select id from ${dbMainMain}.member_info where  status = 2)   GROUP BY anchor
 	</select>
 </mapper>
