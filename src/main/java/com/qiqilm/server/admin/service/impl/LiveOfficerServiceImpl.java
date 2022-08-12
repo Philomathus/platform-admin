@@ -52,10 +52,14 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
         if (Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
             memberInfos = memberInfoMapper.selectNikeNameById(puserIds);
         } else {
-            List<String> liveSubAgents = Arrays.asList(LiveCenterConfig.me.getLiveSubAgents());
-            Set<String> liveSubAgentSet = liveSubAgents.stream().map(a -> LiveCenterConfig.me.getLiveSubAgentDbMain(a)).collect(Collectors.toSet());
-            liveSubAgentSet.add(LiveCenterConfig.me.getLiveCenterDbMain());
-            memberInfos = memberInfoMapper.selectAllDBNikeName(puserIds, liveSubAgentSet);
+            if (puserIds.isEmpty()) {
+                memberInfos = new ArrayList<>();
+            } else {
+                List<String> liveSubAgents = Arrays.asList(LiveCenterConfig.me.getLiveSubAgents());
+                Set<String> liveSubAgentSet = liveSubAgents.stream().map(a -> LiveCenterConfig.me.getLiveSubAgentDbMain(a)).collect(Collectors.toSet());
+                liveSubAgentSet.add(LiveCenterConfig.me.getLiveCenterDbMain());
+                memberInfos = memberInfoMapper.selectAllDBNikeName(puserIds, liveSubAgentSet);
+            }
         }
         for (MemberInfo memberInfo : memberInfos) {
             for (LiveOfficer officer : liveOfficers) {
