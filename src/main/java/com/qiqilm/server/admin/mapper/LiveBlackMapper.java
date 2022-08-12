@@ -25,5 +25,5 @@ public interface LiveBlackMapper {
 
     int deleteLiveBlackById(@Param("id") Long id, @Param("dbMainLive") String dbMainLive);
 
-    Set userBlackList(Long host_id);
+    Set<String> userBlackList(Long host_id);
 }

@@ -2,8 +2,11 @@ package com.qiqilm.server.admin.mapper;
 
 
 import com.qiqilm.server.admin.domain.LiveOfficer;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Set;
 
 public interface LiveOfficerMapper {
 
@@ -54,4 +57,7 @@ public interface LiveOfficerMapper {
      * @return 结果
      */
     public int deleteLiveOfficerByIds(String[] ids );
+
+    @Select("select p_user_id from ${dbLive}.live_officer where host_id = #{hostId}")
+    Set<String> userManage(@Param("hostId") Long hostId);
 }
