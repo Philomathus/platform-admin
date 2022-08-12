@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -120,7 +121,7 @@ public interface MemberInfoMapper {
     Integer clear();
     Integer insertPaiSong(@Param("userIds") String userIds);
 
-    List<MemberInfo> selectNikeNameById( @Param( "array" ) List<String> memberIds );
+    List<MemberInfo> selectNikeNameById( @Param( "array" ) Collection<String> memberIds );
 
 
     int banStatus(@Param( "array" ) List<String> memberIds);
@@ -128,4 +129,6 @@ public interface MemberInfoMapper {
     List<MemberInfo> selectMemberInfoByIp(String id);
 
     List<MemberInfo> selectStatusByIds(@Param( "array" ) Set<String> memberIds);
+
+    List<MemberInfo> selectAllDBNikeName(@Param( "array" ) Set<String> puserIds,@Param( "arrayDb" ) Set<String> liveSubAgentSet);
 }

@@ -1,22 +1,28 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.google.common.collect.Lists;
 import com.qiqilm.server.admin.cache.ManageCacheUtil;
+import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.domain.LiveOfficer;
+import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LiveOfficerMapper;
+import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILiveOfficerService;
 import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class LiveOfficerServiceImpl implements ILiveOfficerService {
 
     @Resource
     private LiveOfficerMapper liveOfficerMapper;
+    @Resource
+    private MemberInfoMapper memberInfoMapper;
     @Resource
     private ManageCacheUtil manageCacheUtil;
 
@@ -39,11 +45,26 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
      */
     @Override
     public List<LiveOfficer> selectLiveOfficerList(LiveOfficer liveOfficer) {
-        List<LiveOfficer> listOffices = liveOfficerMapper.selectLiveOfficerList(liveOfficer);
-        for (LiveOfficer getLiveOfficer : listOffices) {
-            getLiveOfficer.setStatus(1L);
+        List<LiveOfficer> liveOfficers = liveOfficerMapper.selectLiveOfficerList(liveOfficer);
+        Set<String> puserIds = liveOfficers.stream().map(LiveOfficer::getPuserId).collect(Collectors.toSet());
+
+        List<MemberInfo> memberInfos;
+        if (Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
+            memberInfos = memberInfoMapper.selectNikeNameById(puserIds);
+        } else {
+            List<String> liveSubAgents = Arrays.asList(LiveCenterConfig.me.getLiveSubAgents());
+            Set<String> liveSubAgentSet = liveSubAgents.stream().map(a -> LiveCenterConfig.me.getLiveSubAgentDbMain(a)).collect(Collectors.toSet());
+            liveSubAgentSet.add(LiveCenterConfig.me.getLiveCenterDbMain());
+            memberInfos = memberInfoMapper.selectAllDBNikeName(puserIds, liveSubAgentSet);
         }
-        return listOffices;
+        for (MemberInfo memberInfo : memberInfos) {
+            for (LiveOfficer officer : liveOfficers) {
+                if (officer.getPuserId().equals(memberInfo.getId())) {
+                    officer.setPuserName(memberInfo.getNickName());
+                }
+            }
+        }
+        return liveOfficers;
     }
 
     /**
