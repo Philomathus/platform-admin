@@ -30,7 +30,7 @@ public class LiveOfficer extends BaseEntity {
     @Excel(name = "创建时间", width = 30, databaseFormat = "yyyy-MM-dd HH:mm:ss")
     private Date cTime;
 
-    private int status = 1;
+    private Long status;
 
     private String hostName;
 

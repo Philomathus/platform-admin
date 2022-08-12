@@ -36,6 +36,7 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
     public List<LiveOfficer> selectLiveOfficerList(LiveOfficer liveOfficer) {
         List<LiveOfficer> listOffices = liveOfficerMapper.selectLiveOfficerList(liveOfficer);
         for(LiveOfficer getLiveOfficer : listOffices){
+            getLiveOfficer.setStatus(1L);
             if(getLiveOfficer.getType().equals("1")){
                 getLiveOfficer.setType("超管");
             } else if (getLiveOfficer.getType().equals("2")) {
@@ -44,6 +45,7 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
                 getLiveOfficer.setType("");
             }
         }
+        System.out.println(listOffices);
         return listOffices;
     }
 
@@ -56,6 +58,7 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
     @Override
     public int insertLiveOfficer(LiveOfficer liveOfficer) {
         liveOfficer.setCTime(new Date());
+        liveOfficer.setStatus(1L);
         return liveOfficerMapper.insertLiveOfficer(liveOfficer);
     }
 
