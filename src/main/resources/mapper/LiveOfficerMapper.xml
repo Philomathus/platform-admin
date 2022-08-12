@@ -10,7 +10,7 @@
         <result property="ctime"    column="c_time"    />
         <result property="status"    column="status"    />
         <result property="hostName"    column="host_name"    />
-        <result property="pUserName"    column="p_user_name"    />
+        <result property="puserName"    column="p_user_name"    />
     </resultMap>
 
     <sql id="selectLiveOfficerVo">
