@@ -4,7 +4,6 @@
 
     <resultMap type="LiveOfficer" id="LiveOfficerResult">
         <result property="id"    column="id"    />
-        <result property="type"    column="type"    />
         <result property="hostId"    column="host_id"    />
         <result property="puserId"    column="p_user_id"    />
         <result property="ctime"    column="c_time"    />
@@ -12,7 +11,7 @@
     </resultMap>
 
     <sql id="selectLiveOfficerVo">
-        select o.id, o.type, o.host_id, o.p_user_id, o.c_time, u.nick_name host_name
+        select o.id, o.host_id, o.p_user_id, o.c_time, u.nick_name host_name
         from ${dbLive}.live_officer o left join ${dbLive}.live_user u on u.id = o.host_id
     </sql>
 

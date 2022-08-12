@@ -81,6 +81,7 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
     public int insertLiveOfficer(LiveOfficer liveOfficer) {
         liveOfficer.setCtime(new Date());
         liveOfficer.setStatus(1L);
+        liveOfficer.setType(2);
         if (liveOfficer.getHostId() != null && StringUtils.isNotBlank(liveOfficer.getPuserId())) {
             liveOfficer.setId(liveOfficer.getPuserId() + "-" + liveOfficer.getHostId());
             int getCountedId = liveOfficerMapper.countId(liveOfficer.getId());

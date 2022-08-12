@@ -34,12 +34,6 @@ public class LiveOfficer extends BaseEntity {
     private String puserName;
 
     /**
-     * 1=超管2=房管
-     */
-    @Excel(name = "类型")
-    private Integer type;
-
-    /**
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -49,5 +43,9 @@ public class LiveOfficer extends BaseEntity {
     @Excel(name = "状态", isColumnHidden = true)
     private Long status;
 
-
+    /**
+     * 1=超管2=房管
+     */
+    @Excel(name = "类型", isColumnHidden = true)
+    private Integer type;
 }
