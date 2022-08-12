@@ -34,7 +34,17 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
      */
     @Override
     public List<LiveOfficer> selectLiveOfficerList(LiveOfficer liveOfficer) {
-        return liveOfficerMapper.selectLiveOfficerList(liveOfficer);
+        List<LiveOfficer> listOffices = liveOfficerMapper.selectLiveOfficerList(liveOfficer);
+        for(LiveOfficer getLiveOfficer : listOffices){
+            if(getLiveOfficer.getType().equals("1")){
+                getLiveOfficer.setType("超管");
+            } else if (getLiveOfficer.getType().equals("2")) {
+                getLiveOfficer.setType("房管");
+            } else{
+                getLiveOfficer.setType("");
+            }
+        }
+        return listOffices;
     }
 
     /**

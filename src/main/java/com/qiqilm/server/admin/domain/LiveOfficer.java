@@ -15,7 +15,7 @@ public class LiveOfficer extends BaseEntity {
 
     /** 1=超管2=房管 */
     @Excel(name = "类型")
-    private Long type;
+    private String type;
 
     /** 主播ID */
     @Excel(name = "主播ID")
