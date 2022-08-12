@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.qiqilm.server.admin.cache.ManageCacheUtil;
 import com.qiqilm.server.admin.domain.LiveOfficer;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LiveOfficerMapper;
@@ -16,6 +17,8 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
 
     @Resource
     private LiveOfficerMapper liveOfficerMapper;
+    @Resource
+    private ManageCacheUtil manageCacheUtil;
 
     /**
      * 查询房管管理 select live officer by id
@@ -37,7 +40,7 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
     @Override
     public List<LiveOfficer> selectLiveOfficerList(LiveOfficer liveOfficer) {
         List<LiveOfficer> listOffices = liveOfficerMapper.selectLiveOfficerList(liveOfficer);
-        for(LiveOfficer getLiveOfficer : listOffices){
+        for (LiveOfficer getLiveOfficer : listOffices) {
             getLiveOfficer.setStatus(1L);
         }
         return listOffices;
@@ -53,13 +56,14 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
     public int insertLiveOfficer(LiveOfficer liveOfficer) {
         liveOfficer.setCtime(new Date());
         liveOfficer.setStatus(1L);
-        if(liveOfficer.getHostId()!=null && StringUtils.isNotBlank(liveOfficer.getPuserId())){
+        if (liveOfficer.getHostId() != null && StringUtils.isNotBlank(liveOfficer.getPuserId())) {
             liveOfficer.setId(liveOfficer.getPuserId() + "-" + liveOfficer.getHostId());
             int getCountedId = liveOfficerMapper.countId(liveOfficer.getId());
-            if(getCountedId > 0){
+            if (getCountedId > 0) {
                 throw new BusinessException("记录已存在，请勿重复添加");
             }
         }
+        manageCacheUtil.addManage(liveOfficer.getHostId(), liveOfficer.getPuserId());
         return liveOfficerMapper.insertLiveOfficer(liveOfficer);
     }
 
@@ -71,7 +75,14 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
      */
     @Override
     public int deleteLiveOfficerByIds(String[] ids) {
-        return liveOfficerMapper.deleteLiveOfficerByIds(ids);
+        int i = liveOfficerMapper.deleteLiveOfficerByIds(ids);
+        if (i > 0) {
+            for (String id : ids) {
+                String[] split = id.split("-");
+                manageCacheUtil.removeManage(Long.parseLong(split[1]), split[0]);
+            }
+        }
+        return i;
     }
 
     /**
@@ -82,6 +93,11 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
      */
     @Override
     public int deleteLiveOfficerById(String id) {
-        return liveOfficerMapper.deleteLiveOfficerById(id);
+        int i = liveOfficerMapper.deleteLiveOfficerById(id);
+        if (i > 0) {
+            String[] split = id.split("-");
+            manageCacheUtil.removeManage(Long.parseLong(split[1]), split[0]);
+        }
+        return i;
     }
 }
