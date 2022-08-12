@@ -71,16 +71,6 @@ public class LiverOfficerController extends BaseController {
     }
 
     /**
-     * 修改房管管理 Modify live officer management
-     */
-    @PreAuthorize( "@ss.hasPermi('admin:liveOfficer:edit')" )
-    @Log( title = "房管管理", businessType = BusinessType.UPDATE )
-    @PutMapping
-    public AjaxResult edit( @RequestBody LiveOfficer liveOfficer) {
-        return toAjax( liveOfficerService.updateLiveOfficer(liveOfficer) );
-    }
-
-    /**
      * 删除房管管理
      */
     @PreAuthorize( "@ss.hasPermi('admin:liveOfficer:remove')" )

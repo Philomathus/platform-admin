@@ -15,7 +15,7 @@ public class LiveOfficer extends BaseEntity {
 
     /** 1=超管2=房管 */
     @Excel(name = "类型")
-    private String type;
+    private Integer type;
 
     /** 主播ID */
     @Excel(name = "主播ID")
@@ -28,7 +28,7 @@ public class LiveOfficer extends BaseEntity {
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "创建时间", width = 30, databaseFormat = "yyyy-MM-dd HH:mm:ss")
-    private Date cTime;
+    private Date ctime;
 
     private Long status;
 

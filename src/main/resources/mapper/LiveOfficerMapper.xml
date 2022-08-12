@@ -7,7 +7,7 @@
         <result property="type"    column="type"    />
         <result property="hostId"    column="host_id"    />
         <result property="puserId"    column="p_user_id"    />
-        <result property="cTime"    column="c_time"    />
+        <result property="ctime"    column="c_time"    />
         <result property="status"    column="status"    />
         <result property="hostName"    column="host_name"    />
         <result property="pUserName"    column="p_user_name"    />
@@ -23,11 +23,9 @@
     <select id="selectLiveOfficerList" parameterType="LiveOfficer" resultMap="LiveOfficerResult">
         <include refid="selectLiveOfficerVo"/>
         <where>
-            <if test="type != null "> and type = #{type}</if>
-            <if test="hostId != null "> and host_id = #{hostId}</if>
-            <if test="puserId != null  and puserId != ''"> and p_user_id = #{puserId}</if>
-            <if test="cTime != null "> and c_time = #{cTime}</if>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null"> and o.type = #{type}</if>
+            <if test="hostId != null "> and o.host_id = #{hostId}</if>
+            <if test="puserId != null  and puserId != ''"> and o.p_user_id = #{puserId}</if>
         </where>
         order by c_time desc
     </select>
@@ -36,15 +34,18 @@
         <include refid="selectLiveOfficerVo"/>
         where id = #{id}
     </select>
+    <select id="countId" resultType="java.lang.Integer">
+        select count(1) from ${dbLive}.live_officer where id=#{id}
+    </select>
 
     <insert id="insertLiveOfficer" parameterType="LiveOfficer">
-        insert into live_officer
+        insert into ${dbLive}.live_officer
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="type != null">type,</if>
             <if test="hostId != null">host_id,</if>
             <if test="puserId != null">p_user_id,</if>
-            <if test="cTime != null">c_time,</if>
+            <if test="ctime != null">c_time,</if>
             <if test="status != null">status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -52,29 +53,17 @@
             <if test="type != null">#{type},</if>
             <if test="hostId != null">#{hostId},</if>
             <if test="puserId != null">#{puserId},</if>
-            <if test="cTime != null">#{cTime},</if>
+            <if test="ctime != null">#{ctime},</if>
             <if test="status != null">#{status},</if>
         </trim>
     </insert>
 
-    <update id="updateLiveOfficer" parameterType="LiveOfficer">
-        update live_officer
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="type != null">type = #{type},</if>
-            <if test="hostId != null">host_id = #{hostId},</if>
-            <if test="puserId != null">p_user_id = #{puserId},</if>
-            <if test="cTime != null">c_time = #{cTime},</if>
-            <if test="status != null">status = #{status},</if>
-        </trim>
-        where id = #{id}
-    </update>
-
     <delete id="deleteLiveOfficerById" parameterType="String">
-        delete from live_officer where id = #{id}
+        delete from ${dbLive}.live_officer where id = #{id}
     </delete>
 
     <delete id="deleteLiveOfficerByIds" parameterType="String">
-        delete from live_officer where id in
+        delete from ${dbLive}.live_officer where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

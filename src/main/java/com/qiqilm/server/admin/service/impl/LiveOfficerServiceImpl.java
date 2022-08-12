@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.LiveOfficer;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LiveOfficerMapper;
 import com.qiqilm.server.admin.service.ILiveOfficerService;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,15 +39,7 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
         List<LiveOfficer> listOffices = liveOfficerMapper.selectLiveOfficerList(liveOfficer);
         for(LiveOfficer getLiveOfficer : listOffices){
             getLiveOfficer.setStatus(1L);
-            if(getLiveOfficer.getType().equals("1")){
-                getLiveOfficer.setType("超管");
-            } else if (getLiveOfficer.getType().equals("2")) {
-                getLiveOfficer.setType("房管");
-            } else{
-                getLiveOfficer.setType("");
-            }
         }
-        System.out.println(listOffices);
         return listOffices;
     }
 
@@ -57,20 +51,16 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
      */
     @Override
     public int insertLiveOfficer(LiveOfficer liveOfficer) {
-        liveOfficer.setCTime(new Date());
+        liveOfficer.setCtime(new Date());
         liveOfficer.setStatus(1L);
+        if(liveOfficer.getHostId()!=null && StringUtils.isNotBlank(liveOfficer.getPuserId())){
+            liveOfficer.setId(liveOfficer.getPuserId() + "-" + liveOfficer.getHostId());
+            int getCountedId = liveOfficerMapper.countId(liveOfficer.getId());
+            if(getCountedId > 0){
+                throw new BusinessException("记录已存在，请勿重复添加");
+            }
+        }
         return liveOfficerMapper.insertLiveOfficer(liveOfficer);
-    }
-
-    /**
-     * 修改房管管理 update liveOfficer management
-     *
-     * @param liveOfficer 房管管理
-     * @return 结果
-     */
-    @Override
-    public int updateLiveOfficer(LiveOfficer liveOfficer) {
-        return liveOfficerMapper.updateLiveOfficer(liveOfficer);
     }
 
     /**

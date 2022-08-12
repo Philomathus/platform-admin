@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="conUrl != null  and conUrl != ''"> and con_url = #{conUrl}</if>
             <if test="iconUrl != null  and iconUrl != ''"> and icon_url = #{iconUrl}</if>
         </where>
+        order by id asc
     </select>
 
     <select id="selectH5PluginById" parameterType="Long" resultMap="H5PluginResult">

@@ -31,14 +31,6 @@ public interface ILiveOfficerService {
     public int insertLiveOfficer(LiveOfficer liveOfficer);
 
     /**
-     * 修改房管管理  update lifer officer
-     *
-     * @param liveOfficer 房管管理
-     * @return 结果
-     */
-    public int updateLiveOfficer(LiveOfficer liveOfficer);
-
-    /**
      * 批量删除房管管理 delete multiple live officers
      *
      * @param ids 需要删除的房管管理ID

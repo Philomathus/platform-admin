@@ -35,14 +35,6 @@ public interface LiveOfficerMapper {
     public int insertLiveOfficer(LiveOfficer liveOfficer);
 
     /**
-     * 修改房管管理 update live officer
-     *
-     * @param liveOfficer 房管管理
-     * @return 结果
-     */
-    public int updateLiveOfficer(LiveOfficer liveOfficer);
-
-    /**
      * 删除房管管理 delete live officer
      *
      * @param id 房管管理ID
@@ -60,4 +52,6 @@ public interface LiveOfficerMapper {
 
     @Select("select p_user_id from ${dbLive}.live_officer where host_id = #{hostId}")
     Set<String> userManage(@Param("hostId") Long hostId);
+
+    public int countId(@Param( "id" ) String id);
 }
