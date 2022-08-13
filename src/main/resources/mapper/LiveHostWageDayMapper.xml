@@ -69,26 +69,18 @@
     </insert>
 
     <update id="updateLiveHostWageDay" parameterType="LiveHostWageDay">
-        update ${dbLive}.live_host_wage_day
+        update ${dbMainLive}.live_host_wage_day
         <trim prefix="SET" suffixOverrides=",">
-            <if test="familyId != null">family_id = #{familyId},</if>
-
-            <if test="hostId != null">host_id = #{hostId},</if>
-
-            <if test="startTime != null and startTime != ''">start_time = #{startTime},</if>
-
-            <if test="endTime != null and endTime != ''">end_time = #{endTime},</if>
-
-            <if test="liveTimeSec != null">live_time_sec = #{liveTimeSec},</if>
-
-            <if test="ticket != null">ticket = #{ticket},</if>
-
-            <if test="lotteryCost != null"> lottery_cost= #{lotteryCost},</if>
-
-            <if test="times != null">times = #{times},</if>
-
+            <if test="lhw.familyId != null">family_id = #{lhw.familyId},</if>
+            <if test="lhw.hostId != null">host_id = #{lhw.hostId},</if>
+            <if test="lhw.startTime != null and lhw.startTime != ''">start_time = #{lhw.startTime},</if>
+            <if test="lhw.endTime != null and lhw.endTime != ''">end_time = #{lhw.endTime},</if>
+            <if test="lhw.liveTimeSec != null">live_time_sec = #{lhw.liveTimeSec},</if>
+            <if test="lhw.ticket != null">ticket = #{lhw.ticket},</if>
+            <if test="lhw.lotteryCost != null">lottery_cost= #{lhw.lotteryCost},</if>
+            <if test="lhw.times != null">times = #{lhw.times},</if>
         </trim>
-        where id = #{id}
+        where id = #{lhw.id}
     </update>
 
     <select id="beforeDay" resultMap="LiveHostWageDayResult">
@@ -204,5 +196,9 @@
             <if test="dto.familyName!=null and dto.familyName!=''">and lf.name like concat('%',#{dto.familyName},'%')</if>
         </where>
         order by lh.host_id
+    </select>
+
+    <select id="countId" resultType="int">
+        select count(1) from ${dbMainLive}.live_host_wage_day where id = #{id}
     </select>
 </mapper>

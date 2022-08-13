@@ -43,10 +43,11 @@ public interface LiveHostWageDayMapper {
     /**
      * 修改主播时长
      *
-     * @param liveHostWageDay 主播时长
+     * @param liveHostWageDay    主播时长
+     * @param liveSubAgentDbLive
      * @return 结果
      */
-    public int updateLiveHostWageDay(LiveHostWageDay liveHostWageDay);
+    public int updateLiveHostWageDay(@Param("lhw") LiveHostWageDay liveHostWageDay, @Param("dbMainLive") String dbMainLive);
 
     public LiveHostWageDay beforeDay(@Param("userId") Long userId);
 
@@ -61,4 +62,6 @@ public interface LiveHostWageDayMapper {
     String callprorepLivehostwagedays(@Param("p_begintime") String p_begintime, @Param("p_endtime") String p_endtime);
 
     List<RspLiveHostWageDays> getLiveHostWageDays(@Param("dto") LiveHostWageDay dto);
+
+    int countId(@Param("id") String id, @Param("dbMainLive") String liveSubAgentDbLive);
 }

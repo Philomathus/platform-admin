@@ -13,8 +13,6 @@ import com.qiqilm.server.admin.domain.ServerLive;
 import com.qiqilm.server.admin.domain.vo.HostPropDayVo;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.im.ImApi;
-import com.qiqilm.server.admin.im.MessageEnum;
-import com.qiqilm.server.admin.im.MessageType;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.*;
@@ -227,7 +225,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             LiveHostWageDay updateLiveDay = new LiveHostWageDay();
             updateLiveDay.setId(hostLiveDayId);
             updateLiveDay.setTicket(liveVideoPropMapper.sumHostPropDay(video.getUserId(), dayTime));
-            liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
+            liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay, LiveCenterConfig.me.getProfileDbLive());
         }
     }
 
@@ -568,7 +566,14 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                     updateLiveDay.setFamilyId(db.getFamilyId());
                     updateLiveDay.setLiveTimeSec(db.getLiveTimeSec());
                     updateLiveDay.setTimes(db.getTimes());
-                    liveHostWageDayMapper.insertLiveHostWageDay(updateLiveDay, LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
+
+                    String liveSubAgentDbLive = LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent);
+
+                    if (liveHostWageDayMapper.countId(updateLiveDay.getId(), liveSubAgentDbLive) > 0) {
+                        liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay, liveSubAgentDbLive);
+                    } else {
+                        liveHostWageDayMapper.insertLiveHostWageDay(updateLiveDay, liveSubAgentDbLive);
+                    }
                 }
                 for (LiveHostWageDay v : updateLiveSubMap.values()) {
                     if (updateMap.containsKey(v.getId())) {
@@ -586,7 +591,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
         log.error(JsonUtil.object2Json(updateMap));
 
         for (LiveHostWageDay updateLiveDay : updateMap.values()) {
-            liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay);
+            liveHostWageDayMapper.updateLiveHostWageDay(updateLiveDay, LiveCenterConfig.me.getProfileDbLive());
         }
 
 
