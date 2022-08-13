@@ -203,6 +203,6 @@
     </select>
 
     <select id="selectLikeId" resultMap="LiveHostWageDayResult">
-        select * from live_host_wage_day where id like concat(#{id},'-%')
+        select * from ${dbLive}.live_host_wage_day where id like concat(#{id},'-%')
     </select>
 </mapper>
