@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayFamily;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDayList;
 import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageDays;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
@@ -64,4 +65,6 @@ public interface LiveHostWageDayMapper {
     List<RspLiveHostWageDays> getLiveHostWageDays(@Param("dto") LiveHostWageDay dto);
 
     int countId(@Param("id") String id, @Param("dbMainLive") String liveSubAgentDbLive);
+
+    List<LiveHostWageDay> selectLikeId(@Param("id") String s);
 }

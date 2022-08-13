@@ -201,4 +201,8 @@
     <select id="countId" resultType="int">
         select count(1) from ${dbMainLive}.live_host_wage_day where id = #{id}
     </select>
+
+    <select id="selectLikeId" resultMap="LiveHostWageDayResult">
+        select * from live_host_wage_day where id like concat(#{id},'-%')
+    </select>
 </mapper>
