@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/test")
@@ -34,6 +35,10 @@ public class ATestController {
 
     @PutMapping
     public void put(String dayTime) {
+        if (LiveCenterConfig.me.isLiveCenter() && !Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
+            return;
+        }
+
         List<LiveHostWageDay> liveHostWageDayList = liveHostWageDayMapper.selectLikeId(dayTime);
         List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList(dayTime,
                 LiveCenterConfig.me.getProfileDbMain(), LiveCenterConfig.me.getProfileDbLive());
