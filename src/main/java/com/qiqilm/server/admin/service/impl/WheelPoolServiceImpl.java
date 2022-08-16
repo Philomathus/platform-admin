@@ -1,13 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.qiqilm.server.admin.dao.WheelPoolDao;
 import com.qiqilm.server.admin.domain.WheelPool;
 import com.qiqilm.server.admin.exception.BusinessException;
+import com.qiqilm.server.admin.mapper.WheelPoolMapper;
 import com.qiqilm.server.admin.service.WheelPoolService;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,11 +20,10 @@ import java.util.List;
 
 @Service
 public class WheelPoolServiceImpl implements WheelPoolService {
-
     private static final String WHEEL_POOL_LIST_KEY ="live:wheelPoolList";
 
-    @Autowired
-    private WheelPoolDao wheelPoolDao;
+    @Resource
+    private WheelPoolMapper wheelPoolMapper;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -32,7 +32,7 @@ public class WheelPoolServiceImpl implements WheelPoolService {
      /**查询获取所有轮池列表 query get all wheel pool list->service implementation layer*/
     @Override
     public List<WheelPool> selectAllWheelPool(WheelPool wheelPool) {
-       List<WheelPool> wheelPoolList =  wheelPoolDao.selectAllWheelPool(wheelPool);
+       List<WheelPool> wheelPoolList =  wheelPoolMapper.selectAllWheelPool(wheelPool);
        if(wheelPoolList ==null){
            throw new BusinessException("数据不可用");
        }
@@ -42,7 +42,7 @@ public class WheelPoolServiceImpl implements WheelPoolService {
     /**查询通过id获取数据 服务实现层-  query to get data by id -> service implementation layer*/
     @Override
     public WheelPool findWheelPoolById(Long wheelId) {
-        WheelPool wheelPoolById = wheelPoolDao.findWheelPoolById(wheelId);
+        WheelPool wheelPoolById = wheelPoolMapper.WheelPoolFindById(wheelId);
         if(wheelPoolById ==null){
             throw new BusinessException("没有 id 的数据： "+wheelId);
         }
@@ -52,7 +52,7 @@ public class WheelPoolServiceImpl implements WheelPoolService {
     /** 更新轮池 update wheel pool ->service implementation layer*/
     @Override
     public int updateWheelPool(WheelPool wheelPool) {
-        int wheelPoolUpdated =  wheelPoolDao.updateWheelPool(wheelPool);
+        int wheelPoolUpdated =  wheelPoolMapper.updateWheelPool(wheelPool);
         redisUtil.unlink(WHEEL_POOL_LIST_KEY);
         return wheelPoolUpdated;
     }

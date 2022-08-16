@@ -1,12 +1,12 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.WheelPoolCacheUtil;
-import com.qiqilm.server.admin.dao.WheelPoolHistoryDao;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.WheelPoolHistory;
 import com.qiqilm.server.admin.domain.dto.PlatformUser;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.WheelPoolHistoryMapper;
 import com.qiqilm.server.admin.service.WheelPoolHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
 
-    @Autowired
-    private WheelPoolHistoryDao wheelPoolHistoryDao;
+    @Resource
+    private WheelPoolHistoryMapper wheelPoolHistoryMapper;
 
     @Resource
     private MemberInfoMapper memberInfoMapper;
@@ -35,7 +35,7 @@ public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
      */
     @Override
     public List<WheelPoolHistory> selectAllWheelPoolHistory(WheelPoolHistory wheelPoolHistory) {
-        List<WheelPoolHistory> wheelPoolHistoryList = wheelPoolHistoryDao.selectAllWheelPoolHistory(wheelPoolHistory);
+        List<WheelPoolHistory> wheelPoolHistoryList = wheelPoolHistoryMapper.selectAllWheelPoolHistory(wheelPoolHistory);
         Set<String> memberIds = wheelPoolHistoryList.stream().map(WheelPoolHistory::getMemberId).collect(Collectors.toSet());
         if(!memberIds.isEmpty()){
             List<MemberInfo> memberInfos = memberInfoMapper.selectStatusByIds(memberIds);
@@ -68,7 +68,7 @@ public class wheelPoolHistoryServiceImpl implements WheelPoolHistoryService {
     public Map<String, Object> listCount(WheelPoolHistory wheelPoolHistory) {
         Map<String, Object> map = new HashMap<>();
 
-        List<Map<String, Object>> dataList = wheelPoolHistoryDao.listCount(wheelPoolHistory);
+        List<Map<String, Object>> dataList = wheelPoolHistoryMapper.listCount(wheelPoolHistory);
 
         for (Map<String, Object> resultMap : dataList) {
             if (resultMap.get("statusStr").equals("n")) {
