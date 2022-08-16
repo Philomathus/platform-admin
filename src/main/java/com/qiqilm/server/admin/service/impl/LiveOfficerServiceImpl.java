@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.google.common.collect.Lists;
 import com.qiqilm.server.admin.cache.ManageCacheUtil;
 import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.domain.LiveOfficer;
@@ -15,6 +14,12 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
+
+/**
+ * live officer service implementation
+ *
+ * created date 2022-08-12
+ */
 
 @Service
 public class LiveOfficerServiceImpl implements ILiveOfficerService {
