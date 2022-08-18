@@ -38,8 +38,8 @@ public class FuLiang2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("acount_num", withdrawLog.getBankAccount());
         dataMap.put("acount_type", "0");
         dataMap.put("acount_bank_branch_no", "123");
-        dataMap.put("apply_fee", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0,BigDecimal.ROUND_HALF_UP));
-        dataMap.put("apply_type","301");
+        dataMap.put("apply_fee", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0, BigDecimal.ROUND_HALF_UP));
+        dataMap.put("apply_type", "301");
         dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.FULIANG2);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -48,27 +48,33 @@ public class FuLiang2PayAgentProcessor extends AbstractPayAgent {
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
 
-        log.warn(payAgentPlatform.getName()+"下单请求参数{}",JsonUtil.object2Json(dataMap));
+        log.warn(payAgentPlatform.getName() + "下单请求参数{}", JsonUtil.object2Json(dataMap));
         String resultStr = null;
         try {
-            resultStr = restTemplate.postForObject( payAgentPlatform.getPayOrderAddr(), dataMap, String.class );
-        } catch ( Exception e ) {
-            log.error( e.getMessage(), e );
+            resultStr = restTemplate.postForObject(payAgentPlatform.getPayOrderAddr(), dataMap, String.class);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            if (e.getMessage().contains("failed to respond") || e.getMessage().contains("connect timed out")) {
+                reqPayAgent.setFailReason("三方网络异常:" + e.getMessage());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+                return false;
+            }
         }
 
-        log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", resultStr,withdrawLog.getOrderNo());
-        Map<String,Object> resultMap = null;
+        log.info(payAgentPlatform.getName() + "下单结果{},订单号:{}", resultStr, withdrawLog.getOrderNo());
+        Map<String, Object> resultMap = null;
         if (StringUtils.isNotBlank(resultStr)) {
             resultMap = JsonUtil.json2Map(resultStr);
             if ("0".equals(resultMap.getOrDefault("result_code", "").toString())) {
-                log.info(payAgentPlatform.getName()+"订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
+                log.info(payAgentPlatform.getName() + "订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn(payAgentPlatform.getName()+"订单提交失败 - result:{}", resultStr);
+        log.warn(payAgentPlatform.getName() + "订单提交失败 - result:{}", resultStr);
         return false;
     }
 
@@ -84,7 +90,7 @@ public class FuLiang2PayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
 
-        log.info(payAgentPlatform.getName()+"回调签名:" + rspSign + "_" + sign);
+        log.info(payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
             String order_num = requestMap.getOrDefault("cp_df_orderno", "").toString();
             String status = requestMap.getOrDefault("result_code", "").toString();
@@ -94,8 +100,8 @@ public class FuLiang2PayAgentProcessor extends AbstractPayAgent {
                 log.error("提现相关记录丢失 - merOrderNo:{}", order_num);
                 return "fail";
             }
-            if ( withdrawLog.getStatus() == 2 ) {
-                log.error( "订单已拒绝，无需回调 - merOrderNo:{}", order_num );
+            if (withdrawLog.getStatus() == 2) {
+                log.error("订单已拒绝，无需回调 - merOrderNo:{}", order_num);
                 return "success";
             }
             if (withdrawLog.getStatus() == 6) {
@@ -104,7 +110,7 @@ public class FuLiang2PayAgentProcessor extends AbstractPayAgent {
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(order_num);
             payAgentService.processOrderPay(withdrawLog, payAgentLog, "", payAgentPlatform, "0".equals(status));
-            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", order_num, "0".equals(status)? "成功" : "失败");
+            log.info(payAgentPlatform.getName() + "订单号:{},回调状态:{},", order_num, "0".equals(status) ? "成功" : "失败");
             return "success";
         }
         return "fail";
@@ -131,21 +137,21 @@ public class FuLiang2PayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
-        log.warn(payAgentPlatform.getName()+"查询代付状态接口请求参数{}",JsonUtil.object2Json(dataMap));
+        log.warn(payAgentPlatform.getName() + "查询代付状态接口请求参数{}", JsonUtil.object2Json(dataMap));
 
         String resultStr = null;
         try {
-            resultStr = restTemplate.postForObject( payAgentPlatform.getPayOrderQueryAddr(), dataMap, String.class );
-            log.warn(payAgentPlatform.getName()+"查询结果 - result:{}", resultStr);
+            resultStr = restTemplate.postForObject(payAgentPlatform.getPayOrderQueryAddr(), dataMap, String.class);
+            log.warn(payAgentPlatform.getName() + "查询结果 - result:{}", resultStr);
 
             if (StringUtils.isNotBlank(resultStr)) {
-                Map<String,Object> resultMap = JsonUtil.json2Map(resultStr);
+                Map<String, Object> resultMap = JsonUtil.json2Map(resultStr);
                 //  status 4代付中 5代付失败 6代付成功
                 int status = 4;
                 //  statusCode 0成功，1待结算，2结算失败，3无请求，4签名失败
                 String statusCode = resultMap.getOrDefault("result_code", "").toString();
 
-                if("0".equals(statusCode) || "2".equals(statusCode) || "3".equals(statusCode) || "4".equals(statusCode)){
+                if ("0".equals(statusCode) || "2".equals(statusCode) || "3".equals(statusCode) || "4".equals(statusCode)) {
                     if ("0".equals(statusCode)) {
                         status = 6;
                     } else {
@@ -153,12 +159,12 @@ public class FuLiang2PayAgentProcessor extends AbstractPayAgent {
                     }
                     payAgentService.processOrder(payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, Integer.parseInt(statusCode));
                 }
-                return resultMap.getOrDefault("result_msg","").toString();
+                return resultMap.getOrDefault("result_msg", "").toString();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return payAgentPlatform.getName()+"查询失败,订单号:"+withdrawLog.getOrderNo();
+        return payAgentPlatform.getName() + "查询失败,订单号:" + withdrawLog.getOrderNo();
     }
 
 }
