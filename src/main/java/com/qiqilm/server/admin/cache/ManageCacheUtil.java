@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.util.Set;
 
 /**
@@ -34,6 +35,7 @@ public class ManageCacheUtil {
         Set<String> set = liveOfficerMapper.userManage(host_id);
         if (!set.isEmpty()) {
             redisUtil.sAdd(MANAGE_KEY + host_id, set.toArray(new String[0]));
+            redisUtil.expire(MANAGE_KEY + host_id, Duration.ofHours(3));
         }
         return set;
     }
@@ -43,6 +45,7 @@ public class ManageCacheUtil {
         Set<String> set = liveBlackMapper.userBlackList(host_id);
         if (!set.isEmpty()) {
             redisUtil.sAdd(LIVE_BLACK_KEY + host_id, set.toArray(new String[0]));
+            redisUtil.expire(LIVE_BLACK_KEY + host_id, Duration.ofHours(3));
         }
         return set;
     }
