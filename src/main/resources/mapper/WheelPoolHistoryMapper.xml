@@ -27,13 +27,13 @@
         <include refid="selectWheelPoolHistoryVo"/>
         <where>
             <include refid="selectWhere" />
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%',#{nickName},'%')</if>
         </where>
         order by update_time desc
     </select>
 
     <sql id="selectWhere">
         <if test="memberId != null  and memberId != ''"> and member_id like concat('%', #{memberId}, '%')</if>
-        <if test="nickName != null  and nickName != ''"> and nick_name like concat('%',#{nickName},'%')</if>
         <if test="medalType != null and medalType !='' "> and medal_type = #{medalType},</if>
         <if test="position != null and position !='' "> and position = #{position},</if>
         <if test="winTimes != null and winTimes !='' "> and win_times = #{winTimes},</if>
@@ -58,6 +58,7 @@
         WHERE
         m.status <![CDATA[ <> ]]> 2
         <include refid="selectWhere" />
+        <if test="nickName != null  and nickName != ''"> and h.nick_name like concat('%',#{nickName},'%')</if>
         UNION
         SELECT
         count( h.id ) AS totalCount,
@@ -69,6 +70,7 @@
         WHERE
         m.status = 2
         <include refid="selectWhere" />
+        <if test="nickName != null  and nickName != ''"> and h.nick_name like concat('%',#{nickName},'%')</if>
     </select>
 
 </mapper>
