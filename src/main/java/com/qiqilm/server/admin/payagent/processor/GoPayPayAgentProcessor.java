@@ -63,7 +63,7 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
                     });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            if (e.getMessage().contains("443 failed to respond")) {
+            if (e.getMessage().contains("failed to respond")) {
                 reqPayAgent.setFailReason("三方网络异常:" + e.getMessage());
 
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
