@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -64,6 +63,12 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
                     });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            if (e.getMessage().contains("failed to respond")) {
+                reqPayAgent.setFailReason("三方网络异常:" + e.getMessage());
+
+                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+                return false;
+            }
         }
         log.info(payAgentPlatform.getName() + "下单结果{},订单号:{}", JsonUtil.object2Json(resultMap), withdrawLog.getOrderNo());
 
