@@ -27,16 +27,16 @@ public class Test {
 		String jdbc3 = stringEncryptor.encrypt("jdbc:mysql://pc-j6c1ah19tg2g51r3u.rwlb.rds.aliyuncs.com:3306/77xy_lottery?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false");
 		System.out.println("lottery: " + jdbc3);
 
-		String username = stringEncryptor.encrypt("r-j6cjt35tpd7v92rya6.redis.rds.aliyuncs.com");
+		String username = stringEncryptor.encrypt("r-j6cgbsd4ajjojv0bj8.redis.rds.aliyuncs.com");
 		System.out.println("redisHost: " + username);
 
-		String password = stringEncryptor.encrypt("yL#Drba&R6!XDTMm");
+		String password = stringEncryptor.encrypt("!J!2M**9lQqjv!%R");
 		System.out.println("redisPass: " + password);
 	}
 
 	@org.junit.jupiter.api.Test
 	public void test2() {
-		String jdbc = stringEncryptor.decrypt("6rDd6DG59esK4w7l7gXnnsSr6ARLR6v3Mi+sG5Jq16QiuuO5M7ts0fjQBdDruqyzJaRNGjEqNgQS3TWW9HYA6S3iG/beLr4ObtUICwfmQhn7GlxyLYd9eSn/jul1kL36urnigNx4T2m7yYru6toDC1EPzto77PvVdiM+b63ETQ3sNuPGtyuHz/JrSEqmWqh6PkqpqdYFbvKiAdUBarIq6rombPveCxbmrVbxKRGcuXO0mVAUH17g2ePAZKBRK+oV+34XyE+thWsYYqyoms4pwQ==");
+		String jdbc = stringEncryptor.decrypt("v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==");
 		System.out.println(jdbc);
 
 //		String username = stringEncryptor.decrypt("ntsELfEvY1lBOmFyTcgga5DF5OyuB9qA5FrxnMQdlwe14iRRN7BZPddMBZ9oDB+W");
