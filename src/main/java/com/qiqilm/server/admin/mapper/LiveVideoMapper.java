@@ -52,7 +52,7 @@ public interface LiveVideoMapper {
      */
     public int updateLiveVideo2(LiveVideo liveVideo);
 
-    LiveVideo selectLiveVideoSortById(Long id);
+    LiveVideo selectLiveVideoSortById(@Param("id") Long id, @Param("dbMainLive") String liveSubAgentDbLive);
 
     List<LiveVideo> selectLiveInVideoSort();
 

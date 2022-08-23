@@ -389,7 +389,7 @@
     </update>
 
     <select id="selectLiveVideoSortById" resultMap="LiveVideoResult">
-		select id, sort, is_recommend, stick, live_in FROM ${dbLive}.live_video where id = #{id}
+		select id, sort, is_recommend, stick, live_in FROM ${dbMainLive}.live_video where id = #{id}
 	</select>
 
     <select id="selectLiveInVideoSort" resultMap="LiveVideoResult">
