@@ -907,16 +907,19 @@
 
     <!--	creating ban on click ban status-->
     <update id="banStatus">
-        UPDATE member_info
-        set status=0
+        UPDATE member_info i left join member_card c on i.id = c.member_id
+        set i.status=0
         WHERE
-        id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+            1 = 1
+        <if test="array != null and array.size() != 0">
+            and i.id in
+            <foreach item="id" collection="array" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
 
         <if test="realName != null">
-            And id in (select member_id from member_card where real_name = #{realName})
+            and c.real_name = #{realName}
         </if>
     </update>
 
