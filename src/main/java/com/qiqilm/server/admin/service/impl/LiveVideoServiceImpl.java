@@ -370,6 +370,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 redisUtil.unlink("admin:videoSort:" + liveVideo.getId());
                 return AjaxResult.error("固定位{}已存在，请重新设置固定位值", liveVideo.getSort());
             }
+            liveVideo.setIsRecommend(0L);
+            liveVideo.setStick(0);
         }
         if (liveVideo.getIsRecommend() != null && liveVideo.getIsRecommend() == 1) {
             if (newLiveVideo.getSort() < 9999000) {
