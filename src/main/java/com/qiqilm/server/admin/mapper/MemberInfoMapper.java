@@ -124,7 +124,7 @@ public interface MemberInfoMapper {
     List<MemberInfo> selectNikeNameById( @Param( "array" ) Collection<String> memberIds );
 
 
-    int banStatus(@Param( "array" ) List<String> memberIds);
+    int banStatus(@Param( "array" ) List<String> memberIdsr,@Param("realName") String realName);
 
     List<MemberInfo> selectMemberInfoByIp(String id);
 

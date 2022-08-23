@@ -819,6 +819,7 @@ public class MemberInfoController extends BaseController {
     @PutMapping("/ban-ip")
     public int banIp(MemberInfo memberInfo){
         memberInfo.setLoginIp(memberInfo.getLoginIp());
+        memberInfo.setRealName(memberInfo.getRealName());
        return memberInfoService.banStatus(memberInfo);
     }
 

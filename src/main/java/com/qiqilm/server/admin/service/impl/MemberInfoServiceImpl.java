@@ -549,7 +549,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             memberCacheManager.delToken(info.getId());
             loginIp.add(info.getId());
         }
-        return memberInfoMapper.banStatus(loginIp);
+        return memberInfoMapper.banStatus(loginIp,memberInfo.getRealName());
     }
 
 }
