@@ -397,6 +397,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
         redisUtil.unlink("admin:videoSort:" + liveVideo.getId());
         if (i > 0) {
             if ((liveVideo.getIsRecommend() != null || liveVideo.getStick() != null)
+                    && liveVideo.getSort() == null
                     && LiveCenterConfig.me.isLiveCenter() && !Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())
                     && !"7704".equals(LiveCenterConfig.me.getProfile()) // 04不需要此功能
             ) {
