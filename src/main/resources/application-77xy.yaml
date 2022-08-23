@@ -9,9 +9,9 @@ spring:
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(NnM0G+rllSfb1aI6yyX26yPz1IAEq4StzsEq7NtHLzGM+MffnkF/cpLvo0W0Bd/Lme/v5wKIYgAdpNLRX5Hpx6iOCvoUKvZ/736WI5CA1hE=)
+    host: ENC(3Twn/h37yVu1iM+uKj6wP1usKM4Yg9Lh8PnxgOm1Lze5kE1jlehbhrChA1Ku9hJoEviyFNA+9cNHTCpRrk4OOzyWcdwKgTOvokskbIIRLqI=)
     port: 6379
-    password: ENC(LINjO8Pv/UmTlavI7geiCtju+c2W0VAnnO4v5DIOJXJUmG4laCxqICW5+RKcWRIHprAHNK4sjvpVbUIJiF7UNw==)
+    password: ENC(1P6wp6Ha+ihVgS4djS3H9s4RU6/BQDlRYYtb8ZhPu7szOw5chgU0SLnUfOEzz4788cYCwks0yyQQyO/f3LB+Cg==)
 
 mybatis:
   configuration:
