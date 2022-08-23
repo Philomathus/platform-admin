@@ -27,6 +27,10 @@ public class LiveCenterConfig {
         return profile.equals(liveCenter);
     }
 
+    public String getProfile() {
+        return profile;
+    }
+
     public String getLiveCenterDbMain() {
         if (liveCenter.equals("7701")) {
             return "db_cx001";
