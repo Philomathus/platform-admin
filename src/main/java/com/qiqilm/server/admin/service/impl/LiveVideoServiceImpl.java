@@ -347,7 +347,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
         if (!redisUtil.strSetIfAbsent("admin:videoSort:" + liveVideo.getId(), "1", Duration.ofSeconds(5))) {
             return AjaxResult.error("已有管理员正在设置此主播，请稍后重试");
         }
-        LiveVideo newLiveVideo = liveVideoMapper.selectLiveVideoSortById(liveVideo.getId());
+        LiveVideo newLiveVideo = liveVideoMapper.selectLiveVideoSortById(liveVideo.getId(), LiveCenterConfig.me.getProfileDbLive());
         if (newLiveVideo.getLiveIn() == 0) {
             redisUtil.unlink("admin:videoSort:" + liveVideo.getId());
             return AjaxResult.error("主播已下播，更新失败");
@@ -370,6 +370,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 redisUtil.unlink("admin:videoSort:" + liveVideo.getId());
                 return AjaxResult.error("固定位{}已存在，请重新设置固定位值", liveVideo.getSort());
             }
+            liveVideo.setIsRecommend(0L);
+            liveVideo.setStick(0);
         }
         if (liveVideo.getIsRecommend() != null && liveVideo.getIsRecommend() == 1) {
             if (newLiveVideo.getSort() < 9999000) {
@@ -394,12 +396,15 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
         int i = liveVideoMapper.updateLiveVideo(liveVideo, LiveCenterConfig.me.getProfileDbLive());
         redisUtil.unlink("admin:videoSort:" + liveVideo.getId());
         if (i > 0) {
-            if (liveVideo.getIsRecommend() != null || liveVideo.getStick() != null
+            if ((liveVideo.getIsRecommend() != null || liveVideo.getStick() != null)
                     && LiveCenterConfig.me.isLiveCenter() && !Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())
                     && !"7704".equals(LiveCenterConfig.me.getProfile()) // 04不需要此功能
             ) {
                 for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
-                    liveVideoMapper.updateLiveVideo(liveVideo, LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
+                    LiveVideo subLiveVideo = liveVideoMapper.selectLiveVideoSortById(liveVideo.getId(), LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
+                    if (subLiveVideo.getSort() == 9999999) {
+                        liveVideoMapper.updateLiveVideo(liveVideo, LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
+                    }
                 }
             }
             this.processVideoSort();
