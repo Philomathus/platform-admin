@@ -50,11 +50,11 @@ public class ManageCacheUtil {
         return set;
     }
 
-    public Long addBlackUser(Long host_id, String userId) {
+    public Long removeBlackUser(Long host_id, String userId) {
         if (redisUtil.sSize(LIVE_BLACK_KEY + host_id) == 1 && redisUtil.sRandom(LIVE_BLACK_KEY + host_id).startsWith("[")) {
             refreshBlack(host_id);
         }
-        return redisUtil.sAdd(LIVE_BLACK_KEY + host_id, userId);
+        return redisUtil.sRemove(LIVE_BLACK_KEY + host_id, userId);
     }
 
     public Long addManage(Long host_id, String userId) {
