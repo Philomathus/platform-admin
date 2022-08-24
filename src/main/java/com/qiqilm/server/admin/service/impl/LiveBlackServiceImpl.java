@@ -55,7 +55,7 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
         if (num <= 0) {
             return AjaxResult.error("移除黑名单失败");
         }
-        manageCacheUtil.addBlackUser(liveBlack.getHostId(), liveBlack.getBlackUserId());
+        manageCacheUtil.removeBlackUser(liveBlack.getHostId(), liveBlack.getBlackUserId());
         memberInfoMapper.updateSpeak(liveBlack.getBlackUserId(), 0);
         return AjaxResult.success("移除黑名单成功");
     }
