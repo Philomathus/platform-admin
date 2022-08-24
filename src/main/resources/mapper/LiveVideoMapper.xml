@@ -541,33 +541,7 @@
     </select>
 
     <select id="selectMainLiveInVideoList" resultMap="LiveVideoResult">
-        SELECT
-        id,
-        user_id,
-        group_id,
-        live_in,
-        title,
-        watch_number,
-        cate_id,
-        begin_time,
-        end_time,
-        monitor_time,
-        room_type,
-        pai_id,
-        sort,
-        is_recommend,
-        stick,
-        live_fee,
-        host_name,
-        lottery_name,
-        vote_Number,
-        is_live_pay,
-        live_image,
-        play_url,
-        sort_init,
-        classified_id,
-        lottery_id
-        FROM ${dbMainLive}.live_video where live_in = 1 and id > 0;
+        SELECT * FROM ${dbMainLive}.live_video where live_in = 1 and id > 0;
     </select>
 
     <select id="countLiveVideo" resultType="java.lang.Integer">
