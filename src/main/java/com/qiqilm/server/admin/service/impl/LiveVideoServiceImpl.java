@@ -400,6 +400,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                     && liveVideo.getSort() == null
                     && LiveCenterConfig.me.isLiveCenter() && !Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())
                     && !"7704".equals(LiveCenterConfig.me.getProfile()) // 04不需要此功能
+                    && !"7708".equals(LiveCenterConfig.me.getProfile()) // 08不需要此功能
             ) {
                 for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
                     LiveVideo subLiveVideo = liveVideoMapper.selectLiveVideoSortById(liveVideo.getId(), LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
