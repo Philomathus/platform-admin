@@ -100,7 +100,7 @@ public class RequestParamData {
         String param = s1;
         log.warn("我进来了3");
         //先写死，后续在处理 GY9
-        String apiUrl = "http://gi1wy9.gdcapi.com:3333/";
+        String apiUrl = "http://zd.mkecy.com/game-ag-detail/";
         String getURL = apiUrl.concat(url).concat(param);
         getURL = getURL.replace(" ", "%20");
         log.info("AG-视讯-对局列表-请求参数：{}", getURL);
