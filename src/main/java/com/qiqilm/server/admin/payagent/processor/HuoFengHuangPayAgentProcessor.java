@@ -20,7 +20,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -76,6 +75,13 @@ public class HuoFengHuangPayAgentProcessor extends AbstractPayAgent {
 		} catch ( Exception e ) {
 			log.error( e.getMessage(), e );
 			reqPayAgent.setFailReason( "火凤凰代付下单报错原因:" + e );
+
+			if (e.getMessage().contains("failed to respond")) {
+				reqPayAgent.setFailReason("三方网络异常:" + e.getMessage());
+
+				payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+				return false;
+			}
 		}
 		log.info( payAgentPlatform.getName() + "下单结果{},订单号:{}", JsonUtil.object2Json( resultMap ), withdrawLog.getOrderNo() );
 		if ( !CollectionUtils.isEmpty( resultMap ) ) {
