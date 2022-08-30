@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.ImmutableMap;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.cache.MemberForbidUtil;
 import com.qiqilm.server.admin.constant.Constants;
@@ -10,6 +11,7 @@ import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
+import com.qiqilm.server.admin.domain.rsp.RspGameBalance;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
 import com.qiqilm.server.admin.domain.vo.ReqAddScore;
@@ -34,6 +36,10 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -73,6 +79,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     private NameUtil nameUtil;
     @Autowired
     private RedisUtil redisUtil;
+
+    @Resource
+    private ForkJoinPool forkJoinPool;
 
     /**
      * 查询会员信息
@@ -551,5 +560,30 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         }
         return memberInfoMapper.banStatus(loginIp,memberInfo.getRealName());
     }
+
+    @Override
+    public AjaxResult personalReport(String startTime, String endTime, String memberId) {
+        Set<Callable<Map<String, Object>>> forkJoinTasks = new HashSet<>();
+
+        forkJoinTasks.add(()-> ImmutableMap.of("personalRecharge",memberInfoMapper.personalRecharge(startTime,endTime,memberId)));
+        forkJoinTasks.add(()->ImmutableMap.of("personalOnlineRecharge",memberInfoMapper.personalOnlineRecharge(startTime,endTime,memberId)));
+        forkJoinTasks.add(()->ImmutableMap.of("personalAgentRecharge",memberInfoMapper.personalAgentRecharge(startTime,endTime,memberId)));
+        forkJoinTasks.add(()->ImmutableMap.of("personalUsdtRecharge",memberInfoMapper.personalUsdtRecharge(startTime,endTime,memberId)));
+        forkJoinTasks.add(()->ImmutableMap.of("personalWithdrawRecharge",memberInfoMapper.personalWithdrawRecharge(memberId)));
+        forkJoinTasks.add(()->ImmutableMap.of("personalLiverVideoProp",memberInfoMapper.personalLiverVideoProp(startTime,endTime,memberId)));
+
+        List<Future<Map<String, Object>>> futureList = forkJoinPool.invokeAll( forkJoinTasks );
+
+        Set<Map<String, Object>> resultSet = futureList.stream().map( t -> {
+            try {
+                return t.get();
+            } catch (InterruptedException | ExecutionException e ) {
+                throw new IllegalStateException( e );
+            }
+        } ).filter( Objects::nonNull ).collect( Collectors.toSet() );
+
+        return AjaxResult.success( resultSet );
+    }
+
 
 }
