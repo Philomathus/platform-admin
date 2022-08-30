@@ -946,6 +946,51 @@
             </foreach>
         </foreach> m
     </select>
+
+
+    <select id="personalRecharge" resultType="java.math.BigDecimal">
+          select ifnull(SUM(recharge_money),0) as n from member_recharge_log
+            where status = 3
+            and update_time >= #{startTime}
+            and update_time  <![CDATA[ <= ]]> #{endTime}
+            and member_id = #{memberId};
+    </select>
+
+    <select id="personalOnlineRecharge" resultType="java.math.BigDecimal">
+        select ifnull(SUM(money),0)) as n from member_pay_jour
+         where status = 1 and
+         update_time >= #{startTime} and
+         update_time <![CDATA[ <= ]]> #{endTime} and
+         member_id= #{memberId}
+    </select>
+
+    <select id="personalAgentRecharge" resultType="java.math.BigDecimal">
+        select ifnull(SUM(money),0) as n from pay_agent_recharge_log
+        where create_time >= #{startTime} and
+        create_time <![CDATA[ <= ]]> #{endTime} and
+        member_id= #{memberId}
+    </select>
+    <select id="personalUsdtRecharge" resultType="java.math.BigDecimal">
+        select ifnull(SUM(recharge_money),0) as n from pay_usdt_recharge
+        WHERE status = 3 and
+        create_time >= #{startTime} and
+        create_time <![CDATA[ <= ]]> #{endTime} and
+        member_id= #{memberId}
+   </select>
+    <select id="personalWithdrawRecharge" resultType="java.math.BigDecimal">
+       select ifnull(SUM(withdraw_money),0) as n from member_withdraw_log
+       where member_id = #{memberId} and
+       status in(3,6);
+    </select>
+
+    <select id="personalLiverVideoProp" resultType="java.math.BigDecimal">
+        select ifnull(SUM(total_diamonds),0) from live_video_prop
+        where create_date >= #{startTime}  and
+        create_date <![CDATA[ <= ]]> #{endTime} and
+        total_diamonds>0 and
+         p_user_id = #{memberId}
+    </select>
+
 </mapper>
 
 
