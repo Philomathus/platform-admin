@@ -562,7 +562,8 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
-    public AjaxResult personalReport(String startTime, String endTime, String memberId) {
+    public AjaxResult personalReport(String startTime,String endTime , String memberId) {
+
         Set<Callable<Map<String, Object>>> forkJoinTasks = new HashSet<>();
 
         forkJoinTasks.add(()-> ImmutableMap.of("personalRecharge",memberInfoMapper.personalRecharge(startTime,endTime,memberId)));

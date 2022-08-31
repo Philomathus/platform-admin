@@ -133,16 +133,16 @@ public interface MemberInfoMapper {
     List<MemberInfo> selectAllDBNikeName(@Param( "array" ) Set<String> puserIds,@Param( "arrayDb" ) Set<String> liveSubAgentSet);
 
 
-    BigDecimal personalRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,String memberId);
+    BigDecimal personalRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId);
 
-    BigDecimal personalOnlineRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,String memberId);
+    BigDecimal personalOnlineRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId);
 
-    BigDecimal personalAgentRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,String memberId);
+    BigDecimal personalAgentRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId);
 
-    BigDecimal personalUsdtRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,String memberId);
+    BigDecimal personalUsdtRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId);
 
     BigDecimal personalWithdrawRecharge(String memberId);
 
-    BigDecimal personalLiverVideoProp(@Param("startTime") String startTime,@Param("endTime") String endTime,String memberId);
+    BigDecimal personalLiverVideoProp(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId);
 
 }
