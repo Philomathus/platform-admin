@@ -957,11 +957,13 @@
     </select>
 
     <select id="personalOnlineRecharge" resultType="java.math.BigDecimal">
-        select ifnull(SUM(money),0)) as n from member_pay_jour
-         where status = 1 and
-         update_time >= #{startTime} and
-         update_time <![CDATA[ <= ]]> #{endTime} and
-         member_id= #{memberId}
+        select ifnull(SUM(money),0) as n
+        from ${dbMain}.member_pay_jour
+         where
+             status = 1 and
+             update_time >= #{startTime} and
+             update_time <![CDATA[ <= ]]> #{endTime} and
+             member_id= #{memberId}
     </select>
 
     <select id="personalAgentRecharge" resultType="java.math.BigDecimal">
@@ -984,7 +986,7 @@
     </select>
 
     <select id="personalLiverVideoProp" resultType="java.math.BigDecimal">
-        select ifnull(SUM(total_diamonds),0) from live_video_prop
+        select ifnull(SUM(total_diamonds),0) from ${dbLive}.live_video_prop
         where create_date >= #{startTime}  and
         create_date <![CDATA[ <= ]]> #{endTime} and
         total_diamonds>0 and

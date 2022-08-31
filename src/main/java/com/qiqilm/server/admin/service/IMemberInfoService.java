@@ -97,6 +97,6 @@ public interface IMemberInfoService {
 
 	public int banStatus(MemberInfo memberInfo);
 
-	AjaxResult personalReport(String startTime,String endTime,String memberId);
+	AjaxResult personalReport(String startTime,String endTime , String memberId);
 
 }

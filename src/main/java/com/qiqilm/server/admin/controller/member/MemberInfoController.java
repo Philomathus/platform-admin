@@ -35,9 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -822,5 +820,16 @@ public class MemberInfoController extends BaseController {
         memberInfo.setRealName(memberInfo.getRealName());
        return memberInfoService.banStatus(memberInfo);
     }
+
+
+    @GetMapping("/personal-report/{memberId}")
+    public AjaxResult personalReport(@PathVariable String memberId){
+        String startTime = "2021-01-21 00:00:00";
+        String endTime   = "2022-08-31 00:00:00";
+        System.out.println(memberInfoService.personalReport(startTime,endTime,memberId));
+        return AjaxResult.success(memberInfoService.personalReport(startTime,endTime,memberId));
+    }
+
+
 
 }
