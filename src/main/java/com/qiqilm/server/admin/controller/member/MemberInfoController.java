@@ -28,6 +28,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -823,10 +824,10 @@ public class MemberInfoController extends BaseController {
 
 
     @GetMapping("/personal-report/{memberId}")
-    public AjaxResult personalReport(@PathVariable String memberId){
-        String startTime = "2021-01-21 00:00:00";
-        String endTime   = "2022-08-31 00:00:00";
-        System.out.println(memberInfoService.personalReport(startTime,endTime,memberId));
+    public AjaxResult personalReport(@PathVariable String memberId,HttpServletRequest request){
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        String startTime = parameterMap.get("dateRange[0]")[0];
+        String endTime   = parameterMap.get("dateRange[1]")[0];
         return memberInfoService.personalReport(startTime,endTime,memberId);
     }
 

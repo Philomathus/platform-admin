@@ -993,6 +993,18 @@
          p_user_id = #{memberId}
     </select>
 
+    <select id="personalGameData" resultType="Map">
+        select a.*,p.name platformName from(
+        select ifnull(SUM(cell_score),0) as cellScore,
+        ifnull(SUM(all_bet),0) as allBet,
+        ifnull(SUM(profit),0) as profit,
+        platform_id platformId
+        from member_game_data${dbNodes}
+        where account= #{memberId} and game_end_time >=  #{startTime}
+        and         game_end_time <![CDATA[ <= ]]> #{endTime}
+        GROUP BY platform_id) a left join game_platform p on p.id = a.platformId
+    </select>
+
 </mapper>
 
 

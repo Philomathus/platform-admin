@@ -145,4 +145,6 @@ public interface MemberInfoMapper {
 
     BigDecimal personalLiverVideoProp(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId);
 
+    List<Map> personalGameData(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId,@Param( "dbNodes" ) String dbNodes );
+
 }

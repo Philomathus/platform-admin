@@ -566,20 +566,24 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
         List<Callable<Map<String, Object>>> forkJoinTasks = new ArrayList<>();
 
-        // 线下充值
+        // 线下充值 Offline recharge
         forkJoinTasks.add(()-> ImmutableMap.of("personalRecharge",memberInfoMapper.personalRecharge(startTime,endTime,memberId)));
-        // 线上充值
+        // 线上充值 online recharge
         forkJoinTasks.add(()->ImmutableMap.of("personalOnlineRecharge",memberInfoMapper.personalOnlineRecharge(startTime,endTime,memberId)));
-        // 线上充值2
+        // 线上充值2 online recharge 2
         forkJoinTasks.add(()->ImmutableMap.of("personalAgentRecharge",memberInfoMapper.personalAgentRecharge(startTime,endTime,memberId)));
-        // 线上充值3
+        // 线上充值3 online recharge 3
         forkJoinTasks.add(()->ImmutableMap.of("personalUsdtRecharge",memberInfoMapper.personalUsdtRecharge(startTime,endTime,memberId)));
-        // 提款
+        // 提款 withdrawal
         forkJoinTasks.add(()->ImmutableMap.of("personalWithdrawRecharge",memberInfoMapper.personalWithdrawRecharge(memberId)));
-        // 送礼
+        // 送礼 gift
         forkJoinTasks.add(()->ImmutableMap.of("personalLiverVideoProp",memberInfoMapper.personalLiverVideoProp(startTime,endTime,memberId)));
 
+
         List<Future<Map<String, Object>>> futureList = forkJoinPool.invokeAll( forkJoinTasks );
+        if(futureList.isEmpty()){
+            System.out.println("error is here");
+        }
 
         Set<Map<String, Object>> resultSet = futureList.stream().map( t -> {
             try {
@@ -590,10 +594,16 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         } ).filter( Objects::nonNull ).collect( Collectors.toSet() );
         resultSet.add(ImmutableMap.of("memberId", memberId));
 
-        return AjaxResult.success( resultSet.stream()
+        Map<String, Object> resultMap = resultSet.stream()
                 .map(Map::entrySet)
                 .flatMap(Set::stream)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)) );
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        List<Map> mapList = memberInfoMapper.personalGameData(startTime, endTime, memberId, memberId.substring(memberId.length() - 1));
+
+        resultMap.put("bcodeList", mapList);
+
+        return AjaxResult.success( resultMap);
     }
 
 
