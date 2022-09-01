@@ -564,13 +564,19 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     @Override
     public AjaxResult personalReport(String startTime,String endTime , String memberId) {
 
-        Set<Callable<Map<String, Object>>> forkJoinTasks = new HashSet<>();
+        List<Callable<Map<String, Object>>> forkJoinTasks = new ArrayList<>();
 
+        // 线下充值
         forkJoinTasks.add(()-> ImmutableMap.of("personalRecharge",memberInfoMapper.personalRecharge(startTime,endTime,memberId)));
+        // 线上充值
         forkJoinTasks.add(()->ImmutableMap.of("personalOnlineRecharge",memberInfoMapper.personalOnlineRecharge(startTime,endTime,memberId)));
+        // 线上充值2
         forkJoinTasks.add(()->ImmutableMap.of("personalAgentRecharge",memberInfoMapper.personalAgentRecharge(startTime,endTime,memberId)));
+        // 线上充值3
         forkJoinTasks.add(()->ImmutableMap.of("personalUsdtRecharge",memberInfoMapper.personalUsdtRecharge(startTime,endTime,memberId)));
+        // 提款
         forkJoinTasks.add(()->ImmutableMap.of("personalWithdrawRecharge",memberInfoMapper.personalWithdrawRecharge(memberId)));
+        // 送礼
         forkJoinTasks.add(()->ImmutableMap.of("personalLiverVideoProp",memberInfoMapper.personalLiverVideoProp(startTime,endTime,memberId)));
 
         List<Future<Map<String, Object>>> futureList = forkJoinPool.invokeAll( forkJoinTasks );
@@ -582,8 +588,12 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
                 throw new IllegalStateException( e );
             }
         } ).filter( Objects::nonNull ).collect( Collectors.toSet() );
+        resultSet.add(ImmutableMap.of("memberId", memberId));
 
-        return AjaxResult.success( resultSet );
+        return AjaxResult.success( resultSet.stream()
+                .map(Map::entrySet)
+                .flatMap(Set::stream)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)) );
     }
 
 

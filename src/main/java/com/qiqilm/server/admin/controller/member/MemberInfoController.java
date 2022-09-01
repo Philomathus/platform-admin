@@ -827,7 +827,7 @@ public class MemberInfoController extends BaseController {
         String startTime = "2021-01-21 00:00:00";
         String endTime   = "2022-08-31 00:00:00";
         System.out.println(memberInfoService.personalReport(startTime,endTime,memberId));
-        return AjaxResult.success(memberInfoService.personalReport(startTime,endTime,memberId));
+        return memberInfoService.personalReport(startTime,endTime,memberId);
     }
 
 
