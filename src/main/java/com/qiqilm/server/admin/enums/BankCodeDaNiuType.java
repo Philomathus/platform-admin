@@ -286,6 +286,7 @@ public enum BankCodeDaNiuType {
     a276(Arrays.asList("浙江省农村信用社", "浙江农信", "浙江农村信用社银行", "浙江农村信用社", "浙江省农村信用社银行")),
     a277(Arrays.asList("浙江泰隆商业银行")),
     a278(Arrays.asList("浙江网商银行")),
+    a279(Arrays.asList("浙商银行")),
     a280(Arrays.asList("中德住房储蓄银行")),
     a281(Arrays.asList("中国进出口银行")),
     a282(Arrays.asList("中国农业发展银行")),
@@ -301,7 +302,6 @@ public enum BankCodeDaNiuType {
     a292(Arrays.asList("安徽省农村信用社联合社", "安徽农信", "安徽农村信用社银行", "安徽农村信用社", "安徽省农村信用社银行")),
     a293(Arrays.asList("江苏农村商业银行", "江苏农商", "江苏农商银行")),
     a294(Arrays.asList("广州农村信用社", "广州农信", "广州农村信用社银行")),
-    a279(Arrays.asList("浙商银行")),
     ;
 
     private final List<String> desc;
