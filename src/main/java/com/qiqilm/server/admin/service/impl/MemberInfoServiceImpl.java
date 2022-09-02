@@ -601,7 +601,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
         List<Map> mapList = memberInfoMapper.personalGameData(startTime, endTime, memberId, memberId.substring(memberId.length() - 1));
 
-        resultMap.put("bcodeList", mapList);
+        resultMap.put("bCodeList", mapList);
 
         return AjaxResult.success( resultMap);
     }
