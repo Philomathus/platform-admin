@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -60,6 +61,12 @@ public class ActivityInfo extends BaseEntity {
 
     @Excel(name = "排序")
     private String order;
+
+    public void setUrl( String url ) {
+        if( StringUtils.isNotBlank( url ) ){
+            this.url = url.trim();
+        }
+    }
 
     @Override
     public String toString() {
