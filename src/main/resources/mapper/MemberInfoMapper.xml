@@ -968,8 +968,8 @@
 
     <select id="personalAgentRecharge" resultType="java.math.BigDecimal">
         select ifnull(SUM(money),0) as n from pay_agent_recharge_log
-        where update_time >= #{startTime} and
-        update_time <![CDATA[ <= ]]> #{endTime} and
+        where create_time >= #{startTime} and
+        create_time <![CDATA[ <= ]]> #{endTime} and
         member_id= #{memberId}
     </select>
     <select id="personalUsdtRecharge" resultType="java.math.BigDecimal">
