@@ -575,7 +575,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         // 线上充值3 online recharge 3
         forkJoinTasks.add(()->ImmutableMap.of("personalUsdtRecharge",memberInfoMapper.personalUsdtRecharge(startTime,endTime,memberId)));
         // 提款 withdrawal
-        forkJoinTasks.add(()->ImmutableMap.of("personalWithdrawRecharge",memberInfoMapper.personalWithdrawRecharge(memberId)));
+        forkJoinTasks.add(()->ImmutableMap.of("personalWithdrawRecharge",memberInfoMapper.personalWithdrawRecharge(startTime,endTime,memberId)));
         // 送礼 gift
         forkJoinTasks.add(()->ImmutableMap.of("personalLiverVideoProp",memberInfoMapper.personalLiverVideoProp(startTime,endTime,memberId)));
 

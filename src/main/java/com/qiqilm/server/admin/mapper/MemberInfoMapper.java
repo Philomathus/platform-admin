@@ -141,7 +141,8 @@ public interface MemberInfoMapper {
 
     BigDecimal personalUsdtRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId);
 
-    BigDecimal personalWithdrawRecharge(String memberId);
+    BigDecimal personalWithdrawRecharge(@Param("startTime") String startTime,@Param("endTime") String endTime,
+                                        @Param("memberId") String memberId);
 
     BigDecimal personalLiverVideoProp(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId);
 

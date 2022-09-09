@@ -968,21 +968,23 @@
 
     <select id="personalAgentRecharge" resultType="java.math.BigDecimal">
         select ifnull(SUM(money),0) as n from pay_agent_recharge_log
-        where create_time >= #{startTime} and
-        create_time <![CDATA[ <= ]]> #{endTime} and
+        where update_time >= #{startTime} and
+        update_time <![CDATA[ <= ]]> #{endTime} and
         member_id= #{memberId}
     </select>
     <select id="personalUsdtRecharge" resultType="java.math.BigDecimal">
         select ifnull(SUM(recharge_money),0) as n from pay_usdt_recharge
         WHERE status = 3 and
-        create_time >= #{startTime} and
-        create_time <![CDATA[ <= ]]> #{endTime} and
+        update_time >= #{startTime} and
+        update_time <![CDATA[ <= ]]> #{endTime} and
         member_id= #{memberId}
    </select>
     <select id="personalWithdrawRecharge" resultType="java.math.BigDecimal">
-       select ifnull(SUM(withdraw_money),0) as n from member_withdraw_log
-       where member_id = #{memberId} and
-       status in(3,6);
+        select ifnull(SUM(withdraw_money),0) as n from member_withdraw_log
+        where member_id = #{memberId} and
+        status in(3,6) and
+        update_time >= #{startTime} and
+        update_time <![CDATA[ <= ]]> #{endTime};
     </select>
 
     <select id="personalLiverVideoProp" resultType="java.math.BigDecimal">
@@ -1001,7 +1003,7 @@
         platform_id platformId
         from member_game_data${dbNodes}
         where account= #{memberId} and game_end_time >=  #{startTime}
-        and         game_end_time <![CDATA[ <= ]]> #{endTime}
+        and game_end_time <![CDATA[ <= ]]> #{endTime}
         GROUP BY platform_id) a left join game_platform p on p.id = a.platformId
     </select>
 
