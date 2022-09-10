@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
 
 @Log4j2
@@ -30,10 +29,7 @@ public class WheelLotteryTask {
     @Resource
     private RedisUtil                 redisUtil;
 
-    private static final List<String> A = Arrays.asList( "7711_1809184", "7711_9175739", "7711_5804255", "7711_936476",
-            "7711_4153426" );
-
-    @Scheduled( cron = "0 35 20 * * ?" )// 每天16:00点执行一次
+    @Scheduled( cron = "0 0 16 * * ?" )// 每天16:00点执行一次
     public void cashBackTask() {
         if ( !sysConfigCacheUtil.getConfBool( "lottery_wheel_switch" ) ) {
             return;
@@ -49,9 +45,6 @@ public class WheelLotteryTask {
         }
         long now = System.currentTimeMillis();
         for ( MemberRechargeLog memberRechargeLog : memberRechargeLogs ) {
-            if ( A.contains( memberRechargeLog.getMemberId() ) ) {
-                continue;
-            }
             //抽奖次数
             Integer diceBycash = wheelDiceConfigMapper.selectWheelDiceBycash( memberRechargeLog.getRechargeMoney() );
             if ( diceBycash != null ) {

@@ -57,8 +57,6 @@ public class SysLoginController {
 
 		String    decryptStr = RSACoder.decryptByPrivateKey( data, AuthUtil.getSecurityKeyStr( "secretkey/loginPrivateKey" ) );
 		LoginBody loginBody  = JsonUtil.json2Object( decryptStr, LoginBody.class );
-		
-		log.warn( loginBody );
 		// 生成令牌
 		return loginService.login( ip, loginBody );
 	}
