@@ -164,7 +164,6 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                         return AjaxResult.error(EnumGamePlatform.NEWWORLD_CHESS.getName() + "访问超时，稍后再试!");
                     return RequestParamData.xsjGameBetDataWrapper(result, memberGameData.getAgent() + "_" + memberGameData.getAccount());
                 } else if (EnumGamePlatform.AG_LIVE.getType() == memberGameData.getPlatformId()) {
-                    log.warn("我进来了");
                     String result = RequestParamData.requestAGPlayBetDetail(memberGameData, "getorders.xml?");
                     log.info(EnumGamePlatform.AG_LIVE.getName() + "获取局列表返回结果数据:" + JsonUtil.object2Json(result));
                     return RequestParamData.gameAgPlayBetDataWrapper(result, memberGameData.getAccount());

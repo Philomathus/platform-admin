@@ -90,7 +90,6 @@ public class RequestParamData {
         Date startdate = DateFormatUtils.parse(memberGameData.getGameEndTime());
         startdate = DateFormatUtils.addMin(startdate, -5);
         Date enddate = DateFormatUtils.addMin(startdate, 10);
-        log.warn("我进来了2");
         String stringStartDate = DateFormatUtils.beiJinToMeiDong(startdate, DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String stringEndDate = DateFormatUtils.beiJinToMeiDong(enddate, DateFormatUtils.SPLIT_PATTERN_DATETIME);
         String lineCode = agent.split("_")[0];
@@ -98,7 +97,6 @@ public class RequestParamData {
         String s1 = String.format(RE_AG_PLAY_DETAIL_RECORD_S1,
                 lineCode, stringStartDate, stringEndDate, memberGameData.getKindId(), memberGameData.getGameRound(), key);
         String param = s1;
-        log.warn("我进来了3");
         //先写死，后续在处理 GY9
         String apiUrl = "http://zd.mkecy.com/game-ag-detail/";
         String getURL = apiUrl.concat(url).concat(param);

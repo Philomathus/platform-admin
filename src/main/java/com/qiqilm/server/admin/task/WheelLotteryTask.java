@@ -13,63 +13,69 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
 @Log4j2
 @Component
 public class WheelLotteryTask {
-	@Resource
-	private IMemberRechargeLogService memberRechargeLogService;
-	@Resource
-	private WheelDiceConfigMapper wheelDiceConfigMapper;
-	@Resource
-	private SysConfigCacheUtil sysConfigCacheUtil;
-	@Resource
-	private WheelUserDiceMapper wheelUserDiceMapper;
-	@Resource
-	private RedisUtil redisUtil;
+    @Resource
+    private IMemberRechargeLogService memberRechargeLogService;
+    @Resource
+    private WheelDiceConfigMapper     wheelDiceConfigMapper;
+    @Resource
+    private SysConfigCacheUtil        sysConfigCacheUtil;
+    @Resource
+    private WheelUserDiceMapper       wheelUserDiceMapper;
+    @Resource
+    private RedisUtil                 redisUtil;
 
-	@Scheduled(cron="0 0 16 * * ?")// 每天16:00点执行一次
-	public void cashBackTask() {
-		String lottery_wheel_switch = sysConfigCacheUtil.getConf("lottery_wheel_switch","0");
-		if(!("1").equals(lottery_wheel_switch)){
-			return;
-		}
-		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 ) ) {
-			return;
-		}
-		//查询昨天公司入款金额
-		List<MemberRechargeLog> memberRechargeLogs = memberRechargeLogService.memberRechargeLogLists();
-		if (memberRechargeLogs == null || memberRechargeLogs.size() == 0){
-			log.warn("昨日没充值数据");
-			return;
-		}
-		long now = System.currentTimeMillis();
-		for (MemberRechargeLog memberRechargeLog:memberRechargeLogs){
-			//抽奖次数
-			Integer diceBycash = wheelDiceConfigMapper.selectWheelDiceBycash(memberRechargeLog.getRechargeMoney());
-			if (diceBycash!=null){
-				//抽奖次数
-				try {
-					this.updateLotteryTimes(memberRechargeLog.getMemberId(),diceBycash);
-				} catch (Exception e) {
-					log.error( e.getMessage(), e );
-				}
-			}
-		}
-		log.info("博饼抽奖任务执行时间:{}ms", System.currentTimeMillis() - now);
-	}
+    private static final List<String> A = Arrays.asList( "7711_1809184", "7711_9175739", "7711_5804255", "7711_936476",
+            "7711_4153426" );
 
-	private boolean updateLotteryTimes(String userId,Integer times){
-		WheelUserDice wheelUserDice=wheelUserDiceMapper.selectWheelUserDiceById(userId);
-		if ( wheelUserDice == null) {
-			WheelUserDice wheelDice=new WheelUserDice();
-			wheelDice.setId(userId);
-			wheelDice.setTimes(times);
-			return wheelUserDiceMapper.insertWheelUserDice(wheelDice)>0;
-		}
-		wheelUserDice.setTimes(times);
-		return wheelUserDiceMapper.updateWheelUserDiceTimes(wheelUserDice)>0;
-	}
+    @Scheduled( cron = "0 35 20 * * ?" )// 每天16:00点执行一次
+    public void cashBackTask() {
+        if ( !sysConfigCacheUtil.getConfBool( "lottery_wheel_switch" ) ) {
+            return;
+        }
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 ) ) {
+            return;
+        }
+        //查询昨天公司入款金额
+        List<MemberRechargeLog> memberRechargeLogs = memberRechargeLogService.memberRechargeLogLists();
+        if ( memberRechargeLogs == null || memberRechargeLogs.size() == 0 ) {
+            log.warn( "昨日没充值数据" );
+            return;
+        }
+        long now = System.currentTimeMillis();
+        for ( MemberRechargeLog memberRechargeLog : memberRechargeLogs ) {
+            if ( A.contains( memberRechargeLog.getMemberId() ) ) {
+                continue;
+            }
+            //抽奖次数
+            Integer diceBycash = wheelDiceConfigMapper.selectWheelDiceBycash( memberRechargeLog.getRechargeMoney() );
+            if ( diceBycash != null ) {
+                //抽奖次数
+                try {
+                    this.updateLotteryTimes( memberRechargeLog.getMemberId(), diceBycash );
+                } catch ( Exception e ) {
+                    log.error( e.getMessage(), e );
+                }
+            }
+        }
+        log.info( "博饼抽奖任务执行时间:{}ms", System.currentTimeMillis() - now );
+    }
+
+    private boolean updateLotteryTimes( String userId, Integer times ) {
+        WheelUserDice wheelUserDice = wheelUserDiceMapper.selectWheelUserDiceById( userId );
+        if ( wheelUserDice == null ) {
+            WheelUserDice wheelDice = new WheelUserDice();
+            wheelDice.setId( userId );
+            wheelDice.setTimes( times );
+            return wheelUserDiceMapper.insertWheelUserDice( wheelDice ) > 0;
+        }
+        wheelUserDice.setTimes( times );
+        return wheelUserDiceMapper.updateWheelUserDiceTimes( wheelUserDice ) > 0;
+    }
 
 }
