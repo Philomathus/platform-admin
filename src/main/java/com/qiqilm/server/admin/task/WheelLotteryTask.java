@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.util.List;
 
 @Log4j2
@@ -34,7 +35,7 @@ public class WheelLotteryTask {
         if ( !sysConfigCacheUtil.getConfBool( "lottery_wheel_switch" ) ) {
             return;
         }
-        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 ) ) {
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 ) || redisUtil.exists( getClass().getSimpleName() )) {
             return;
         }
         //查询昨天公司入款金额
@@ -56,6 +57,7 @@ public class WheelLotteryTask {
                 }
             }
         }
+        redisUtil.strSet( getClass().getSimpleName(), "0", Duration.ofHours( 23 ) );
         log.info( "博饼抽奖任务执行时间:{}ms", System.currentTimeMillis() - now );
     }
 
