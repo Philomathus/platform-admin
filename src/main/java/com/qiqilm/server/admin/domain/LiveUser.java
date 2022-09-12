@@ -2,11 +2,15 @@ package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
+import com.qiqilm.server.admin.utils.StringUtils;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * //用户信息对象 live_user
@@ -155,6 +159,22 @@ public class LiveUser extends DownLoadTime {
 	private String qqId;
 	private String qqToken;
 
+	private String userIds;
+	private Set<String> userIdSet;
+
+	public Set<String> getUserIdSet() {
+		if(StringUtils.isNotBlank(userIds)){
+			String[] strings = userIds.split(",");
+			Set<String> userIdsSet = new HashSet<>();
+			for (String s : strings) {
+				if(StringUtils.isNotBlank(s)){
+					userIdsSet.add(s.trim());
+				}
+			}
+			return userIdsSet;
+		}
+		return userIdSet;
+	}
 
 	public String getAuthStr() {
 		if ( isAuthentication != null ) {

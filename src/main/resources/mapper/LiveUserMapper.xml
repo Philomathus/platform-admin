@@ -72,6 +72,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="familyId != null "> and family_id = #{familyId}</if>
             <if test="coin != null "> and coin = #{coin}</if>
             <if test="openPay != null "> and open_pay = #{openPay}</if>
+            <if test="userIdSet != null and userIdSet.size() != 0">
+                and u.id in
+                <foreach item="userId" collection="userIdSet" open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+            </if>
         </where>
     </select>
 
