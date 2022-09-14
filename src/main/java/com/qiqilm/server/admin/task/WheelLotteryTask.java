@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
 import com.qiqilm.server.admin.domain.WheelUserDice;
 import com.qiqilm.server.admin.enums.EnumLock;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.WheelDiceConfigMapper;
 import com.qiqilm.server.admin.mapper.WheelUserDiceMapper;
 import com.qiqilm.server.admin.service.IMemberRechargeLogService;
@@ -16,6 +17,9 @@ import javax.annotation.Resource;
 import java.time.Duration;
 import java.util.List;
 
+/**
+ * 中秋博饼活动
+ */
 @Log4j2
 @Component
 public class WheelLotteryTask {
@@ -30,12 +34,13 @@ public class WheelLotteryTask {
     @Resource
     private RedisUtil                 redisUtil;
 
-    @Scheduled( cron = "0 0 16 * * ?" )// 每天16:00点执行一次
+    @Scheduled( cron = "0 5 16 * * ?" )// 每天16:05点执行一次
     public void cashBackTask() {
         if ( !sysConfigCacheUtil.getConfBool( "lottery_wheel_switch" ) ) {
             return;
         }
-        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 ) || redisUtil.exists( getClass().getSimpleName() )) {
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 )
+                || redisUtil.exists( getClass().getSimpleName() ) ) {
             return;
         }
         //查询昨天公司入款金额
@@ -53,7 +58,7 @@ public class WheelLotteryTask {
                 try {
                     this.updateLotteryTimes( memberRechargeLog.getMemberId(), diceBycash );
                 } catch ( Exception e ) {
-                    log.error( e.getMessage(), e );
+                    log.error( memberRechargeLog.getMemberId() + "数据插入失败" + e.getMessage(), e );
                 }
             }
         }
@@ -61,16 +66,21 @@ public class WheelLotteryTask {
         log.info( "博饼抽奖任务执行时间:{}ms", System.currentTimeMillis() - now );
     }
 
-    private boolean updateLotteryTimes( String userId, Integer times ) {
+    private void updateLotteryTimes( String userId, Integer times ) {
         WheelUserDice wheelUserDice = wheelUserDiceMapper.selectWheelUserDiceById( userId );
+        int           i;
         if ( wheelUserDice == null ) {
             WheelUserDice wheelDice = new WheelUserDice();
             wheelDice.setId( userId );
             wheelDice.setTimes( times );
-            return wheelUserDiceMapper.insertWheelUserDice( wheelDice ) > 0;
+            i = wheelUserDiceMapper.insertWheelUserDice( wheelDice );
+        } else {
+            wheelUserDice.setTimes( times );
+            i = wheelUserDiceMapper.updateWheelUserDiceTimes( wheelUserDice );
         }
-        wheelUserDice.setTimes( times );
-        return wheelUserDiceMapper.updateWheelUserDiceTimes( wheelUserDice ) > 0;
+        if ( i <= 0 ) {
+            throw new BusinessException( "数据插入失败" );
+        }
     }
 
 }
