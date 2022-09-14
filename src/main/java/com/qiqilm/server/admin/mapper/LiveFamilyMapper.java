@@ -61,4 +61,7 @@ public interface LiveFamilyMapper {
 	LiveFamily selectLiveFamilyName(@Param( "name") String name);
 
 	int updateLiveFamilyStatusById(Long id);
+
+	@Update( "update ${dbLive}.live_family set user_count = user_count - 1 where id= ${familyId}" )
+	void updateFamilyCount( @Param( "familyId" ) Long  familyId );
 }

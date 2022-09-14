@@ -31,9 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 主播用户信息Controller
@@ -298,8 +296,8 @@ public class LiveUserController extends BaseController {
 	@ApiOperation( "加入家族" )
 	@Log( title = "加入家族", businessType = BusinessType.UPDATE )
 	@PutMapping( "/gofamiily" )
-	public AjaxResult gofamiily( LiveUser user ) {
-		return liveUserService.updateFamilyID( user.getFamilyId(), user.getId() );
+	public AjaxResult gofamiily( @RequestBody LiveUser user ) {
+		return liveUserService.updateFamilyID( user.getFamilyId(), user.getUserIdSet() );
 	}
 
 	@ApiOperation( "修改印票" )
@@ -341,12 +339,19 @@ public class LiveUserController extends BaseController {
 	/**
 	 * 踢出家族
 	 */
+	@Log(title = "踢出家族", businessType = BusinessType.AUDIT)
 	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
 	@PutMapping( value = "/kickOutLive/{id}" )
-	public AjaxResult kickOutLive( @PathVariable( "id" ) Long id ) {
-		return liveUserService.kickOutLiveById( id );
+	public AjaxResult kickOutLive( @PathVariable( "id" ) String id ) {
+		return liveUserService.kickOutLiveById( Collections.singleton( id ) );
 	}
 
+	@Log(title = "踢出家族", businessType = BusinessType.AUDIT)
+	@PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
+	@PutMapping( value = "/kickOutLive" )
+	public AjaxResult kickOutLive( @RequestBody LiveUser user ) {
+		return liveUserService.kickOutLiveById( user.getUserIdSet() );
+	}
 
 	@GetMapping( "/authList" )
 	public TableDataInfo authList( LiveUser liveUser ) {
