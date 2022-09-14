@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    primary:
+      jdbc-url: ENC(kXTgXBTitwN1EBHZPmLfuUMao+j2cfxqznY9uX3tbn62lRyfgg8hK8Gju5x4xJGvvlVgBm4zm6I8Gk8CGilOCM3/cAPV/ZJeQxA4Gr9T5r2vOXdNxWMAkkiDBBwDwuxDyvr9I8/yzptPA71dqn45x3oLtHtUoCKx77wkWOMk6DX/P147i2LWauPrYtgJLKGitQz5X8DpGZkd8iFoEnmybJ/G9V9sBUDjFbMssObMrQD8sai4JEwCwwU+tVMINALgzxuhBL40qFQPauFEgOI3Ag==)
+      username: ENC(ntsELfEvY1lBOmFyTcgga5DF5OyuB9qA5FrxnMQdlwe14iRRN7BZPddMBZ9oDB+W)
+      password: ENC(FNO20k6i7eNncA5GwwfAkYUhkNXMPlh/VGkMNBoADnG6lPbL6ebkqsR4xJdfM6kHM/0P8R1dZs2+LpMaUWj4Cw==)
+    secondary:
+      jdbc-url: ENC(WlfQDA9idMqhLlWQanW8T7NrSpYER5S/EV0eSdeeXlX2f9T31leOXX69piCBaun+JQvxj1uXvYGQB1RLkMA+gmzwg7DWa2+LYNjURswFWI28GimHK7Soe0yLpt7VBiG5RzDmT5bsEUTaxwvWQW2AKq7Rdkl8gzpJ7Cg7uUfwH0VxrmiiBHDj17h3qyzfEiPYm31OVDV8ExN9zgx0ADuOhw==)
+      username: ENC(5mwKH5QTPd1k80o6dLDPTZrCnk/7CDG/vtm7TjBRTpDR0wXRKXmolfitvX9CMBCm)
+      password: ENC(3CQQEKOPYc8qm0DS4EIO+8MWoa6rfLFHJAqdyNvYmVHyp4aSK3Uj/GSs7IzilfXt)
+  redis:
+    host: ENC(TlVOPwGxNqagJevc6FCKJuVu/sXdysgyVgN7ijsPdxt7qlVDSy2IF9wEG+VMLfGUYi24SeP4TYd1PRdY9PKQG8/ZLm76f+mQJdMosrIto04=)
+    port: 6379
+    password: ENC(Isf3MkSLkJ90XMW2oRP2CEMdSeTsfiH7W9MikPJhs62PUb4HmTzUMzxVw/tIZ2tbdYkMzUqnZnuWiqxMZx9RUQ==)
+
+mybatis:
+  configuration:
+    variables:
+      dbMain: 77je_main
+      dbLive: 77je_live
+      dbLottery: 77je_lottery
+
+liveCenter: 7704
+
+# 代付额度
+payAgentLimit: 50000
+# 顺为代付额度
+payAgentLimitShunWei: 50000
+# 宾利代付额度
+payAgentLimitBinLi: 50000
+# 特仑苏代付额度
+payAgentLimitTels: 50000
+# 联付宝代付额度
+payAgentLimitLianFuBao: 50000
+# 马云代付额度
+payAgentLimitMaYun: 50000
+# 合众代付额度
+payAgentLimitHeZhong: 50000
+# newMax代付额度
+payAgentLimitNewMaxPay: 50000
+# 鲁班代付额度
+payAgentLimitLuBanPay: 50000
+# 银联代付额度
+payAgentLimitYinLianPay: 50000
+# 弗良代付额度
+payAgentLimitFuLiangPay: 50000
+# GoPay代付额度
+payAgentLimitGoPayPay: 50000
+# 爱农代付额度
+payAgentLimitAiNongPay: 50000
