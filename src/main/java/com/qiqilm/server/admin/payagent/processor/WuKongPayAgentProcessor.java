@@ -99,8 +99,8 @@ public class WuKongPayAgentProcessor extends AbstractPayAgent {
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
 
-        String withdrawOrderId = requestMap.getOrDefault("MerchantUniqueOrderId", "").toString();
-        String status = requestMap.getOrDefault("Status", "").toString();
+        String withdrawOrderId = requestMap.getOrDefault("merchantUniqueOrderId", "").toString();
+        String status = requestMap.getOrDefault("status", "").toString();
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
@@ -122,7 +122,7 @@ public class WuKongPayAgentProcessor extends AbstractPayAgent {
                 return "SUCCESS";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo(withdrawOrderId);
-            payAgentService.processOrderPay(withdrawLog, payAgentLog, requestMap.getOrDefault("WithdrawOrderId", "").toString(),
+            payAgentService.processOrderPay(withdrawLog, payAgentLog, requestMap.getOrDefault("withdrawOrderId", "").toString(),
                     payAgentPlatform, "100".equals(status));
             return "SUCCESS";
         }
