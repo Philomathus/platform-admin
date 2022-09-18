@@ -15,7 +15,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles:
-    active: "@spring.profiles.active@"
+    active: 7700
   application:
     name: platform-admin
   datasource:
