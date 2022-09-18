@@ -20,6 +20,7 @@ public class PayAgentTask {
 	@Scheduled( cron = "0 0/3 * * * ?" ) // 每3分钟执行一次
 	public void confirmPayAgentOrder() {
 		try {
+			log.warn( "开始执行代付订单的超时查询 - 判断锁" );
 			Boolean lock = redisUtil.strSetIfAbsent( "confirmPayAgentOrder", "1", Duration.ofSeconds( 30 ) );
 			if ( lock != null && lock ) {
 				log.warn( "开始执行代付订单的超时查询" );
