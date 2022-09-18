@@ -9,8 +9,6 @@
 	<version>2.0.0</version>
 
 	<properties>
-		<resource.delimiter>@</resource.delimiter>
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -37,34 +35,6 @@
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
 	</properties>
-
-
-	<profiles>
-		<profile>
-			<id>7700</id>
-			<properties>
-				<spring.profiles.active>7700</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>7701</id>
-			<properties>
-				<spring.profiles.active>7701</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>7702</id>
-			<properties>
-				<spring.profiles.active>7702</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>7703</id>
-			<properties>
-				<spring.profiles.active>7703</spring.profiles.active>
-			</properties>
-		</profile>
-	</profiles>
 
 	<dependencyManagement>
 		<dependencies>
@@ -384,10 +354,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>8</source>
-					<target>8</target>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
