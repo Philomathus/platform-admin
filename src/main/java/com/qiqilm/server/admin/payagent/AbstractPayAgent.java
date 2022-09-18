@@ -7,26 +7,26 @@ import com.qiqilm.server.admin.mapper.PayAgentLogMapper;
 import com.qiqilm.server.admin.mapper.PayAgentPlatformMapper;
 import com.qiqilm.server.admin.service.IPayAgentService;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Set;
 
 @Log4j2
 public abstract class AbstractPayAgent implements BasePayAgent {
-	@Autowired
+	@Resource
 	protected PayAgentPlatformMapper  payAgentPlatformMapper;
-	@Autowired
+	@Resource
 	protected MemberWithdrawLogMapper withdrawLogMapper;
-	@Autowired
+	@Resource
 	protected PayAgentLogMapper       payAgentLogMapper;
-	@Autowired
+	@Resource
 	protected RestTemplate            restTemplate;
-	@Autowired
+	@Resource
 	protected IPayAgentService        payAgentService;
-	@Autowired
+	@Resource
 	protected SysConfigCacheUtil      sysConfigCacheUtil;
 
 	protected String assemblyUrl( Map<String, ?> bodyMap ) {

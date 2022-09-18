@@ -15,9 +15,8 @@
  */
 package com.qiqilm.server.admin.utils;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.util.Base64Utils;
 
 import javax.crypto.Cipher;
@@ -36,9 +35,8 @@ import java.util.Map;
  * 	公钥(n,e)加密: m^e=c(mod n)，m明文，c密文
  *	私钥(n,d)解密: c^d=m(mod n)，c密文，m明文
  */
+@Log4j2
 public class RsaUtil {
-
-    private static Logger logger = Logger.getLogger(RsaUtil.class);
 
     public static final String KEY_ALGORITHM = "RSA";
 
@@ -59,14 +57,14 @@ public class RsaUtil {
         String algorithm = "RSA/ECB/" + padMode;
         byte[] res = null;
         if (publicKey == null) {
-            logger.error("publicKey is null");
+            log.error("publicKey is null");
         }
         try {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             res = cipher.doFinal(data);
         } catch (Exception e) {
-            logger.error("Fail: RSA Ecb Encrypt",e);
+            log.error("Fail: RSA Ecb Encrypt",e);
         }
         return res;
     }
@@ -80,7 +78,7 @@ public class RsaUtil {
      */
     public static byte[] rsaEcbDecrypt(RSAPrivateKey privateKey, byte[] data, String padMode) {
         if (privateKey == null) {
-            logger.error("privateKey is null");
+            log.error("privateKey is null");
         }
         String algorithm = "RSA/ECB/" + padMode;
         byte[] res = null;
@@ -89,7 +87,7 @@ public class RsaUtil {
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             res = cipher.doFinal(data);
         } catch (Exception e) {
-            logger.error("Fail: RSA Ecb Decrypt",e);
+            log.error("Fail: RSA Ecb Decrypt",e);
         }
         return res;
     }
@@ -109,7 +107,7 @@ public class RsaUtil {
             st.update(data);
             result = st.sign();
         } catch (Exception e) {
-            logger.error("Fail: RSA  sign",e);
+            log.error("Fail: RSA  sign",e);
         }
         return result;
     }
@@ -128,7 +126,7 @@ public class RsaUtil {
             st.update(data);
             result = st.sign();
         } catch (Exception e) {
-            logger.error("Fail: RSA with sha256 sign",e);
+            log.error("Fail: RSA with sha256 sign",e);
         }
         return result;
     }
@@ -148,7 +146,7 @@ public class RsaUtil {
             st.update(data);
             correct = st.verify(sign);
         } catch (Exception e) {
-            logger.error("Fail: RSA with sha256 verify",e);
+            log.error("Fail: RSA with sha256 verify",e);
         }
         return correct;
     }
@@ -168,7 +166,7 @@ public class RsaUtil {
             st.update(data);
             correct = st.verify(sign);
         } catch (Exception e) {
-            logger.error("Fail: RSA verify",e);
+            log.error("Fail: RSA verify",e);
         }
         return correct;
     }
@@ -195,7 +193,7 @@ public class RsaUtil {
 //        TreeMap<String,String> treeMap = new TreeMap<>();
 //        treeMap.putAll(param);
 //        String signStr = getParamStr(param);
-        logger.info("待签名的字符KV串："+signStr);
+        log.info("待签名的字符KV串："+signStr);
         byte[] msg = signStr.getBytes("UTF-8");
         byte[] signature = null;
         if("RSA".equals(signType)){
@@ -255,11 +253,11 @@ public class RsaUtil {
             PrivateKey priKey = keyFactory.generatePrivate(priPKCS8);
             return priKey;
         } catch (IOException e) {
-            logger.error("读取私钥文件失败！",e);
+            log.error("读取私钥文件失败！",e);
         } catch (NoSuchAlgorithmException e) {
-            logger.error("获取私钥失败！",e);
+            log.error("获取私钥失败！",e);
         } catch (InvalidKeySpecException e) {
-            logger.error("获取私钥失败！",e);
+            log.error("获取私钥失败！",e);
         }
         return null;
     }
@@ -283,11 +281,11 @@ public class RsaUtil {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             return keyFactory.generatePublic(pubX509);
         } catch (IOException e) {
-            logger.error("读取公钥文件失败！",e);
+            log.error("读取公钥文件失败！",e);
         } catch (NoSuchAlgorithmException e) {
-            logger.error("获取公钥失败！",e);
+            log.error("获取公钥失败！",e);
         } catch (InvalidKeySpecException e) {
-            logger.error("获取公钥失败！",e);
+            log.error("获取公钥失败！",e);
         }
         return null;
 
@@ -310,7 +308,7 @@ public class RsaUtil {
             }
             return sb.toString();
         } catch (IOException e) {
-            logger.error("读取私钥文件失败！",e);
+            log.error("读取私钥文件失败！",e);
         }
         return null;
     }

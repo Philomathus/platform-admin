@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.utils.nanKaiPayAgentUtils;
 
 import com.qiqilm.server.admin.utils.JsonUtil;
-import org.apache.commons.lang.StringUtils;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -169,12 +169,6 @@ public class HttpClientUtils extends DefaultHttpClient {
 
     }
 
-    /**
-     * 随机生成RSA密钥对(默认密钥长度为1024)
-     *
-     * @return
-     */
-
     public HttpClientUtils() throws Exception {
         super();
         SSLContext ctx = SSLContext.getInstance("TLS");
@@ -232,48 +226,6 @@ public class HttpClientUtils extends DefaultHttpClient {
             ex.printStackTrace();
         }
         return result;
-    }
-
-
-    public static String doPost(String url, Map<String, String> map, String charset) {
-        HttpClient httpClient = null;
-        HttpPost httpPost = null;
-        String result = null;
-        try {
-            httpClient = new HttpClientUtils();
-            httpPost = new HttpPost(url);
-            //设置参数
-            List<NameValuePair> list = new ArrayList<NameValuePair>();
-            Iterator iterator = map.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Entry<String, String> elem = (Entry<String, String>) iterator.next();
-                list.add(new BasicNameValuePair(elem.getKey(), elem.getValue()));
-            }
-            if (list.size() > 0) {
-                UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list, charset);
-                httpPost.setEntity(entity);
-            }
-            HttpResponse response = httpClient.execute(httpPost);
-            if (response != null) {
-                HttpEntity resEntity = response.getEntity();
-                if (resEntity != null) {
-                    result = EntityUtils.toString(resEntity, charset);
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return result;
-    }
-
-
-    public List<NameValuePair> genEncryptData(String data) throws Exception {
-        if (data == null) {
-            return null;
-        }
-        List<NameValuePair> formparams = new ArrayList();
-        formparams.add(new BasicNameValuePair("encryptData", data));
-        return formparams;
     }
 
     private static char[] base64EncodeChars = new char[]
@@ -875,7 +827,7 @@ public class HttpClientUtils extends DefaultHttpClient {
      */
     public static boolean isRightSign(Map<String, Object> paramMap, String paySecret, String signStr) {
 
-        if (StringUtils.isBlank(signStr)) {
+        if ( StringUtils.isBlank(signStr)) {
             return false;
         }
 

@@ -4,11 +4,10 @@ import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.vo.XiaFenResult;
 import com.qiqilm.server.admin.utils.Encrypt;
 import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.PostData;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -41,7 +40,7 @@ public class LegService {
 				.append( "&timestamp=" ).append( timestamp )
 				.append( "&param=" ).append( paramStr )
 				.append( "&key=" ).append( md5 );
-		String              result    = get( gamePlatform.getApiUrl() + stringBuilder );
+		String              result    = PostData.get( gamePlatform.getApiUrl() + stringBuilder );
 		Map<String, Object> resultMap = JsonUtil.json2Map( result );
 		if ( !CollectionUtils.isEmpty( resultMap ) ) {
 			resultMap = ( Map<String, Object> ) resultMap.get( "d" );
@@ -88,7 +87,7 @@ public class LegService {
 				.append( "&timestamp=" ).append( timestamp )
 				.append( "&param=" ).append( paramStr )
 				.append( "&key=" ).append( md5 );
-		String              result    = get( gamePlatform.getApiUrl() + stringBuilder );
+		String              result    = PostData.get( gamePlatform.getApiUrl() + stringBuilder );
 		Map<String, Object> resultMap = JsonUtil.json2Map( result );
 		if ( !CollectionUtils.isEmpty( resultMap ) ) {
 			resultMap = ( Map<String, Object> ) resultMap.get( "d" );
@@ -99,21 +98,4 @@ public class LegService {
 		}
 		return BigDecimal.ZERO;
 	}
-
-	public String get( String postUrl ) {
-		String     obj    = null;
-		HttpClient client = new HttpClient();
-		GetMethod  method = null;
-		try {
-			method = new GetMethod( postUrl );
-			client.executeMethod( method );
-			client.getHttpConnectionManager().getParams().setConnectionTimeout( 5000 );
-			client.getHttpConnectionManager().getParams().setSoTimeout( 5000 );
-			obj = method.getResponseBodyAsString();
-		} catch ( Exception e ) {
-			log.error( "LEG->{}", e.getMessage() );
-		}
-		return obj;
-	}
-
 }

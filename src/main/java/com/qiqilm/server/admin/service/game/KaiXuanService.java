@@ -4,11 +4,10 @@ import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.vo.XiaFenResult;
 import com.qiqilm.server.admin.utils.Encrypt;
 import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.PostData;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -20,99 +19,78 @@ import java.util.Map;
 @Log4j2
 public class KaiXuanService {
 
-	public boolean transfer( GamePlatform gamePlatform, String userId, BigDecimal changeMoney, String orderId, Date date ) {
-		StringBuilder stringBuilder = new StringBuilder();
-		StringBuilder param         = new StringBuilder();
-		String        agent         = gamePlatform.getAgent();
-		long          timestamp     = date.getTime();
-		param.append( "s=3&account=" ).append( userId )
-				.append( "&money=" ).append( changeMoney )
-				.append( "&orderid=" ).append( orderId );
-		String paramStr;
-		try {
-			paramStr = Encrypt.AESEncrypt( param.toString(), gamePlatform.getDes() );
-		} catch ( Exception e ) {
-			log.error( "newWorld 加密失败->{}", e.getMessage() );
-			return false;
-		}
-		String md5 = gamePlatform.getMd5();
-		md5 = DigestUtils.md5Hex( agent + timestamp + md5 );
-		stringBuilder.append( "?agent=" ).append( agent )
-				.append( "&timestamp=" ).append( timestamp )
-				.append( "&param=" ).append( paramStr )
-				.append( "&key=" ).append( md5 );
-		String              result    = get( gamePlatform.getApiUrl() + stringBuilder );
-		Map<String, Object> resultMap = JsonUtil.json2Map( result );
-		if ( !CollectionUtils.isEmpty( resultMap ) ) {
-			resultMap = ( Map<String, Object> ) resultMap.get( "d" );
-			if ( StringUtils.equals( "0", String.valueOf( resultMap.get( "code" ) ) ) ) {
-				return true;
-			}
-			log.warn( "newWorld 下分 失败->{}", JsonUtil.object2Json( resultMap ) );
-		}
-		return false;
-	}
+    public boolean transfer( GamePlatform gamePlatform, String userId, BigDecimal changeMoney, String orderId, Date date ) {
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder param         = new StringBuilder();
+        String        agent         = gamePlatform.getAgent();
+        long          timestamp     = date.getTime();
+        param.append( "s=3&account=" ).append( userId ).append( "&money=" ).append( changeMoney ).append( "&orderid=" )
+             .append( orderId );
+        String paramStr;
+        try {
+            paramStr = Encrypt.AESEncrypt( param.toString(), gamePlatform.getDes() );
+        } catch ( Exception e ) {
+            log.error( "newWorld 加密失败->{}", e.getMessage() );
+            return false;
+        }
+        String md5 = gamePlatform.getMd5();
+        md5 = DigestUtils.md5Hex( agent + timestamp + md5 );
+        stringBuilder.append( "?agent=" ).append( agent ).append( "&timestamp=" ).append( timestamp ).append( "&param=" )
+                     .append( paramStr ).append( "&key=" ).append( md5 );
+        String              result    = PostData.get( gamePlatform.getApiUrl() + stringBuilder );
+        Map<String, Object> resultMap = JsonUtil.json2Map( result );
+        if ( !CollectionUtils.isEmpty( resultMap ) ) {
+            resultMap = ( Map<String, Object> ) resultMap.get( "d" );
+            if ( StringUtils.equals( "0", String.valueOf( resultMap.get( "code" ) ) ) ) {
+                return true;
+            }
+            log.warn( "newWorld 下分 失败->{}", JsonUtil.object2Json( resultMap ) );
+        }
+        return false;
+    }
 
-	public XiaFenResult transfer( GamePlatform gamePlatform, String userId, String orderId, Date date ) {
-		XiaFenResult result = new XiaFenResult();
-		result.setOk( true );
-		BigDecimal balance = queryCoin( gamePlatform, userId, date );
-		if ( balance.compareTo( BigDecimal.ZERO ) > 0 ) {
-			result.setBackMoney( balance );
-			if ( transfer( gamePlatform, userId, balance, orderId, date ) ) {
-				return result;
-			}
-			result.setOk( false );
-			return result;
-		}
-		result.setBackMoney( BigDecimal.ZERO );
-		return result;
-	}
+    public XiaFenResult transfer( GamePlatform gamePlatform, String userId, String orderId, Date date ) {
+        XiaFenResult result = new XiaFenResult();
+        result.setOk( true );
+        BigDecimal balance = queryCoin( gamePlatform, userId, date );
+        if ( balance.compareTo( BigDecimal.ZERO ) > 0 ) {
+            result.setBackMoney( balance );
+            if ( transfer( gamePlatform, userId, balance, orderId, date ) ) {
+                return result;
+            }
+            result.setOk( false );
+            return result;
+        }
+        result.setBackMoney( BigDecimal.ZERO );
+        return result;
+    }
 
-	public BigDecimal queryCoin( GamePlatform gamePlatform, String userId, Date date ) {
-		StringBuilder stringBuilder = new StringBuilder();
-		StringBuilder param         = new StringBuilder();
-		String        agent         = gamePlatform.getAgent();
-		long          timestamp     = date.getTime();
-		param.append( "s=1&account=" ).append( userId );
-		String paramStr;
-		try {
-			paramStr = Encrypt.AESEncrypt( param.toString(), gamePlatform.getDes() );
-		} catch ( Exception e ) {
-			log.error( "newWorld 加密失败->{}", e.getMessage() );
-			return BigDecimal.ZERO;
-		}
-		String md5 = gamePlatform.getMd5();
-		md5 = DigestUtils.md5Hex( agent + timestamp + md5 );
-		stringBuilder.append( "?agent=" ).append( agent )
-				.append( "&timestamp=" ).append( timestamp )
-				.append( "&param=" ).append( paramStr )
-				.append( "&key=" ).append( md5 );
-		String              result    = get( gamePlatform.getApiUrl() + stringBuilder );
-		Map<String, Object> resultMap = JsonUtil.json2Map( result );
-		if ( !CollectionUtils.isEmpty( resultMap ) ) {
-			resultMap = ( Map<String, Object> ) resultMap.get( "d" );
-			if ( org.apache.commons.lang3.StringUtils.equals( "0", String.valueOf( resultMap.get( "code" ) ) ) ) {
-				return new BigDecimal( String.valueOf( resultMap.get( "money" ) ) );
-			}
-			log.warn( "newWorld 余额 失败->{}", JsonUtil.object2Json( resultMap ) );
-		}
-		return BigDecimal.ZERO;
-	}
-
-	public String get( String postUrl ) {
-		String     obj    = null;
-		HttpClient client = new HttpClient();
-		GetMethod  method = null;
-		try {
-			method = new GetMethod( postUrl );
-			client.executeMethod( method );
-			client.getHttpConnectionManager().getParams().setConnectionTimeout( 5000 );
-			client.getHttpConnectionManager().getParams().setSoTimeout( 5000 );
-			obj = method.getResponseBodyAsString();
-		} catch ( Exception e ) {
-			log.error( "newWorld->{}", e.getMessage() );
-		}
-		return obj;
-	}
+    public BigDecimal queryCoin( GamePlatform gamePlatform, String userId, Date date ) {
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder param         = new StringBuilder();
+        String        agent         = gamePlatform.getAgent();
+        long          timestamp     = date.getTime();
+        param.append( "s=1&account=" ).append( userId );
+        String paramStr;
+        try {
+            paramStr = Encrypt.AESEncrypt( param.toString(), gamePlatform.getDes() );
+        } catch ( Exception e ) {
+            log.error( "newWorld 加密失败->{}", e.getMessage() );
+            return BigDecimal.ZERO;
+        }
+        String md5 = gamePlatform.getMd5();
+        md5 = DigestUtils.md5Hex( agent + timestamp + md5 );
+        stringBuilder.append( "?agent=" ).append( agent ).append( "&timestamp=" ).append( timestamp ).append( "&param=" )
+                     .append( paramStr ).append( "&key=" ).append( md5 );
+        String              result    = PostData.get( gamePlatform.getApiUrl() + stringBuilder );
+        Map<String, Object> resultMap = JsonUtil.json2Map( result );
+        if ( !CollectionUtils.isEmpty( resultMap ) ) {
+            resultMap = ( Map<String, Object> ) resultMap.get( "d" );
+            if ( org.apache.commons.lang3.StringUtils.equals( "0", String.valueOf( resultMap.get( "code" ) ) ) ) {
+                return new BigDecimal( String.valueOf( resultMap.get( "money" ) ) );
+            }
+            log.warn( "newWorld 余额 失败->{}", JsonUtil.object2Json( resultMap ) );
+        }
+        return BigDecimal.ZERO;
+    }
 }

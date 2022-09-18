@@ -9,10 +9,10 @@ import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import com.qiqilm.server.admin.utils.lvJianPayAgentUtils.HttpClientTools;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
@@ -152,7 +152,7 @@ public class NewYiDaPayAgentProcessor extends AbstractPayAgent {
             log.error(e.getMessage(), e);
         }
         log.info("新益达代付查询结果- result:{}", responseData);
-        if (StringUtils.isNotBlank(responseData)) {
+        if ( StringUtils.isNotBlank(responseData)) {
             Map<String, Object> resultMap = JsonUtil.json2Map(responseData);
             if (!CollectionUtils.isEmpty(resultMap)) {
                 String code = resultMap.getOrDefault("code", "").toString();

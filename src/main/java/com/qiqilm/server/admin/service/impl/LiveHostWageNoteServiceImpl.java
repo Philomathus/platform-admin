@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteList;
 import com.qiqilm.server.admin.mapper.LiveHostWageNoteMapper;
 import com.qiqilm.server.admin.service.ILiveHostWageNoteService;
 import com.qiqilm.server.admin.utils.StringUtils;
-import org.apache.htrace.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

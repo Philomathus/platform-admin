@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.domain;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @date 2021-04-27
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class TCIM extends BaseEntity {
     private static final long serialVersionUID = 1L;
 

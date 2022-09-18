@@ -13,9 +13,6 @@ import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.hbase.io.crypto.aes.AES;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -44,7 +41,6 @@ public class HuiChaoPayAgentProcessor extends AbstractPayAgent {
 
     //编码方式
     public static final String CODE_TYPE = "UTF-8";
-    static Logger logger = LogManager.getLogger(AES.class);
 
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
@@ -221,7 +217,7 @@ public class HuiChaoPayAgentProcessor extends AbstractPayAgent {
             byte[] encryptedData = cipher.doFinal(cleartext.getBytes(CODE_TYPE));
             return Base64Utils.encodeToString(encryptedData);
         } catch (Exception e) {
-            logger.warn(e);
+            log.warn(e);
             return cleartext;
         }
     }

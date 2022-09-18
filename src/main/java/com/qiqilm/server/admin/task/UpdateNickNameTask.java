@@ -7,8 +7,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -19,6 +18,7 @@ import redis.clients.jedis.ScanResult;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.commands.MultiKeyCommands;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -28,12 +28,12 @@ import java.util.stream.Collectors;
 @Log4j2
 @Component
 public class UpdateNickNameTask {
-    @Autowired
+    @Resource
     private StringRedisTemplate stringRedisTemplate;
-    @Autowired
+    @Resource
     private MemberInfoMapper memberInfoMapper;
 
-    @Autowired
+    @Resource
     private RedisUtil redisUtil;
 
     @Value("${spring.profiles.active}")
