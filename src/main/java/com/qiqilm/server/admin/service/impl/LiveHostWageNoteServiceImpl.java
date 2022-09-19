@@ -7,14 +7,13 @@ import com.qiqilm.server.admin.domain.rsp.RspLiveHostWageNoteList;
 import com.qiqilm.server.admin.mapper.LiveHostWageNoteMapper;
 import com.qiqilm.server.admin.service.ILiveHostWageNoteService;
 import com.qiqilm.server.admin.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +25,9 @@ import java.util.List;
  */
 @Service
 public class LiveHostWageNoteServiceImpl implements ILiveHostWageNoteService {
-	@Autowired
+	@Resource
 	private LiveHostWageNoteMapper liveHostWageNoteMapper;
-	@Autowired
+	@Resource
 	private SysConfigCacheUtil     sysConfigCacheUtil;
 
 	/**

@@ -262,9 +262,7 @@ public class RequestParamData {
         String s3      = Encrypt.AESEncrypt( s2, gamePlatform.getDes() );
         String param   = s1.replace( "{0}", s3 );
         String apiUrl  = gamePlatform.getRecordUrl();
-        String getURL  = apiUrl.concat( "?" ).concat( param );
-        log.error( "s2:{},md5:{},des:{}", s2, md5, gamePlatform.getDes() );
-        return getURL;
+        return apiUrl.concat( "?" ).concat( param );
     }
 
     //凯旋棋牌|开元棋牌 对局详情 暂时共享
@@ -279,8 +277,7 @@ public class RequestParamData {
         String s3      = Encrypt.AESEncrypt( s2, gamePlatform.getDes() );
         String param   = s1.replace( "{0}", s3 );
         String apiUrl  = gamePlatform.getRecordUrl();
-        String getURL  = apiUrl.concat( "?" ).concat( param );
-        return getURL;
+        return apiUrl.concat( "?" ).concat( param );
     }
 
     //新世界 对局列表 暂时共享

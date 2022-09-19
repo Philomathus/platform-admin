@@ -21,6 +21,7 @@ import org.springframework.util.Base64Utils;
 
 import javax.crypto.Cipher;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -194,7 +195,7 @@ public class RsaUtil {
 //        treeMap.putAll(param);
 //        String signStr = getParamStr(param);
         log.info("待签名的字符KV串："+signStr);
-        byte[] msg = signStr.getBytes("UTF-8");
+        byte[] msg = signStr.getBytes( StandardCharsets.UTF_8 );
         byte[] signature = null;
         if("RSA".equals(signType)){
             signature = signRsa(privateKey,msg);

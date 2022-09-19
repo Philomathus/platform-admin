@@ -1,10 +1,8 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.google.common.io.CharStreams;
-import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
-import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.*;
@@ -23,7 +21,6 @@ import com.qiqilm.server.admin.utils.UuidUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -33,13 +30,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,29 +53,29 @@ import java.util.stream.Collectors;
 @Log4j2
 @Service
 public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
-    @Autowired
+    @Resource
     private   MemberRechargeLogMapper             memberRechargeLogMapper;
-    @Autowired
+    @Resource
     private   MemberInfoMapper                    memberInfoMapper;
-    @Autowired
+    @Resource
     private   MemberBcodeMapper                   memberBcodeMapper;
-    @Autowired
+    @Resource
     private   MemberRecommendMapper               recommendMapper;
-    @Autowired
+    @Resource
     private   ConfigRecommendMapper               configRecommendMapper;
-    @Autowired
+    @Resource
     private   ActivityCashBackFirstRechargeMapper cashBackFirstRechargeMapper;
-    @Autowired
+    @Resource
     private   MemberCacheManager                  memberCacheManager;
-    @Autowired
+    @Resource
     private   ILogService                         logService;
-    @Autowired
+    @Resource
     private   TokenService                        tokenService;
-    @Autowired
+    @Resource
     private   RedisUtil                           redisUtil;
-    @Autowired
+    @Resource
     private   SysConfigCacheUtil                  sysConfigCacheUtil;
-    @Autowired
+    @Resource
     protected RestTemplate                        restTemplate;
 
     /**
