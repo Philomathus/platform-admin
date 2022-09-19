@@ -3,14 +3,18 @@ package com.qiqilm.server.admin.domain;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.pagehelper.util.StringUtil;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 会员信息对象 member_info
@@ -198,6 +202,26 @@ public class MemberInfo extends DownLoadTime {
     private String deviceId;
 
     private Long banSpeakTime;
+
+    private String searchValue;
+
+    private Set<String> searchValues;
+
+    public Set<String> getSearchValues() {
+        if(StringUtils.isNotBlank(searchValue)){
+            String[] strings = searchValue.split(",");
+            Set<String> searchValueSet = new HashSet<>();
+            for (String s : strings) {
+                if(StringUtils.isNotBlank(s)){
+                    searchValueSet.add(s.trim());
+                }
+            }
+            return searchValueSet;
+        }
+        return searchValues;
+    }
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
