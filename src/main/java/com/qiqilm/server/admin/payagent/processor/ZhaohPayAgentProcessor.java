@@ -92,11 +92,13 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         }
         log.info( payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
-            if ( "0".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
-                String dataStr = requestMap.getOrDefault( "data", "" ).toString();
-                Map<String, Object> resDataMap = JsonUtil.json2Map( RSACoder.decryptByPrivateKey( dataStr,
-                        payAgentPlatform.getSignPrivateKey() ) );
-                if ( "SUCCESS".equals( resDataMap.getOrDefault( "result", "" ) ) ) {
+            String dataStr = resultMap.getOrDefault( "data", "" ).toString();
+            Map<String, Object> resDataMap = JsonUtil.json2Map( RSACoder.decryptByPrivateKey( dataStr,
+                    payAgentPlatform.getSignPrivateKey() ) );
+            log.warn( "解密数据:" + JsonUtil.object2Json( resDataMap ) );
+            if ( "0".equals( resDataMap.getOrDefault( "code", "" ).toString() ) ) {
+                Map<String, Object> data = ( Map<String, Object> ) resDataMap.getOrDefault( "data", new HashMap<>() );
+                if ( "SUCCESS".equals( data.getOrDefault( "result", "" ) ) ) {
                     log.info( payAgentPlatform.getName() + "订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
                     return true;
                 }
@@ -216,10 +218,9 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-        MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-        PayAgentPlatform    payAgentPlatform =
-                payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-        Map<String, String> dataMap          = new TreeMap<>();
+        MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+        PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
+        Map<String, String> dataMap = new TreeMap<>();
         dataMap.put( "merchantCode", payAgentPlatform.getMerId() );
         dataMap.put( "merchantNo", withdrawLog.getOrderNo() );
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
