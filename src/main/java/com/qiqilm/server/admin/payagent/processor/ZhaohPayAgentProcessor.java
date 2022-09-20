@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 @Repository( value = ConstantsPayAgent.ZHAOH + "PayAgentProcessor" )
 @Log4j2
@@ -67,12 +66,8 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
 
         log.warn( JsonUtil.object2Json( dataMap ) );
 
-        String signData = dataMap.entrySet().stream().filter( e -> StringUtils.isNotEmpty( e.getValue() ) )
-                                 .map( e -> e.getKey().concat( "=" ).concat( e.getValue() ) )
-                                 .collect( Collectors.joining( "&" ) );
-
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put( "data", RSACoder.encryptByPublicKey( signData, payAgentPlatform.getSignPublicKey() ) );
+        requestMap.put( "data", RSACoder.encryptByPublicKey( this.assemblyUrl( dataMap ), payAgentPlatform.getSignPublicKey() ) );
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
@@ -98,7 +93,9 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         log.info( payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
             if ( "0".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
-                Map<String, Object> resDataMap = ( Map<String, Object> ) resultMap.getOrDefault( "data", new HashMap<>() );
+                String dataStr = requestMap.getOrDefault( "data", "" ).toString();
+                Map<String, Object> resDataMap = JsonUtil.json2Map( RSACoder.decryptByPrivateKey( dataStr,
+                        payAgentPlatform.getSignPrivateKey() ) );
                 if ( "SUCCESS".equals( resDataMap.getOrDefault( "result", "" ) ) ) {
                     log.info( payAgentPlatform.getName() + "订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
                     return true;
@@ -219,9 +216,10 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-        MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-        PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-        Map<String, String> dataMap = new TreeMap<>();
+        MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+        PayAgentPlatform    payAgentPlatform =
+                payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
+        Map<String, String> dataMap          = new TreeMap<>();
         dataMap.put( "merchantCode", payAgentPlatform.getMerId() );
         dataMap.put( "merchantNo", withdrawLog.getOrderNo() );
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -232,12 +230,8 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         String sign    = DigestUtils.md5Hex( signStr );
         dataMap.put( "sign", sign );
 
-        String signData = dataMap.entrySet().stream().filter( e -> StringUtils.isNotEmpty( e.getValue() ) )
-                                 .map( e -> e.getKey().concat( "=" ).concat( e.getValue() ) )
-                                 .collect( Collectors.joining( "&" ) );
-
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put( "data", RSACoder.encryptByPublicKey( signData, payAgentPlatform.getSignPublicKey() ) );
+        requestMap.put( "data", RSACoder.encryptByPublicKey( this.assemblyUrl( dataMap ), payAgentPlatform.getSignPublicKey() ) );
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
