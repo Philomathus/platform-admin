@@ -36,6 +36,7 @@
         <where>
             <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
             <if test="platformId != null "> and a.platform_id = #{platformId}</if>
+            <if test="status != null and status !=''"> and a.status = #{status}</if>
         </where>
     </select>
 
