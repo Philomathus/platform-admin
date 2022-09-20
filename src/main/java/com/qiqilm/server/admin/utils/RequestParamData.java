@@ -258,7 +258,9 @@ public class RequestParamData {
         String md5     = gamePlatform.getMd5();
         String key     = DigestUtils.md5Hex( agent + nowTime.getTime() + md5 );
         String s1      = String.format( RE_KY_DETAIL_RECORD_S1, agent, nowTime.getTime(), "{0}", key );
+        log.warn( s1 );
         String s2      = String.format( RE_KY_DETAIL_RECORD_S2, "9", endTime.getTime(), endTime.getTime() );
+        log.warn( s2 );
         String s3      = Encrypt.AESEncrypt( s2, gamePlatform.getDes() );
         String param   = s1.replace( "{0}", s3 );
         String apiUrl  = gamePlatform.getRecordUrl();
