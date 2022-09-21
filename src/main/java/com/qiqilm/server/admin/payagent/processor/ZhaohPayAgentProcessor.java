@@ -97,7 +97,8 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
             if ( "0".equals( resDataMap.getOrDefault( "code", "" ).toString() ) ) {
                 Map<String, Object> data = JsonUtil.json2Map( resDataMap.getOrDefault( "data", "" ).toString() );
                 if ( "SUCCESS".equals( data.getOrDefault( "result", "" ) ) ) {
-                    log.info( payAgentPlatform.getName() + "订单提交成功 - result:{}", resDataMap.getOrDefault( "data", "" ).toString() );
+                    log.info( payAgentPlatform.getName() + "订单提交成功 - result:{}", resDataMap.getOrDefault( "data", "" )
+                                                                                                 .toString() );
                     return true;
                 }
             }
@@ -216,10 +217,9 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-        MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-        PayAgentPlatform    payAgentPlatform =
-                payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-        Map<String, String> dataMap          = new TreeMap<>();
+        MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+        PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
+        Map<String, String> dataMap = new TreeMap<>();
         dataMap.put( "merchantCode", payAgentPlatform.getMerId() );
         dataMap.put( "merchantNo", withdrawLog.getOrderNo() );
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
@@ -235,6 +235,7 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
+        httpHeaders.set( "token", payAgentPlatform.getHeaderKey() );
         HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>( requestMap, httpHeaders );
 
         Map<String, Object> resultMap = null;
@@ -253,23 +254,30 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         }
         log.info( payAgentPlatform.getName() + "查询结果 - result:{}", JsonUtil.object2Json( resultMap ) );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
-            if ( "0".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
-                Map<String, Object> resultDataMap = ( Map<String, Object> ) resultMap.getOrDefault( "data", new HashMap<>() );
-                int                 orderState    = Integer.parseInt( resultDataMap.getOrDefault( "Status", 0 ).toString() );
-                // status 4代付中5代付失败6代付成功
-                // orderState 2 成功 3 失败 1 处理中
-                int status = 4;
-                switch ( orderState ) {
-                case 2:
-                    status = 6;
-                    break;
-                case 3:
-                    status = 5;
-                    break;
-                default:
-                    break;
+            String dataStr = resultMap.getOrDefault( "data", "" ).toString();
+            Map<String, Object> resDataMap = JsonUtil.json2Map( RSACoder.decryptByPublicKey( dataStr,
+                    payAgentPlatform.getSignPublicKey() ) );
+            log.warn( "解密数据:" + JsonUtil.object2Json( resDataMap ) );
+            if ( "0".equals( resDataMap.getOrDefault( "code", "" ).toString() ) ) {
+                Map<String, Object> data = JsonUtil.json2Map( resDataMap.getOrDefault( "data", "" ).toString() );
+                if ( !CollectionUtils.isEmpty( data ) ) {
+                    int orderState = Integer.parseInt( data.getOrDefault( "status", 0 ).toString() );
+                    // status 4代付中5代付失败6代付成功
+                    // orderState 2 成功 3 失败 1 处理中
+                    int status = 4;
+                    switch ( orderState ) {
+                    case 2:
+                        status = 6;
+                        break;
+                    case 3:
+                        status = 5;
+                        break;
+                    default:
+                        break;
+                    }
+                    payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
+                            orderState );
                 }
-                payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState );
             }
             return resultMap.getOrDefault( "message", "" ).toString();
         }
