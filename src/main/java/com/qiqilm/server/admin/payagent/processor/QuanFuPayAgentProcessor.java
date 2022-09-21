@@ -17,25 +17,14 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.util.*;
-
-import static com.qiqilm.server.admin.utils.RsaUtil.getPrivateKey;
-import static com.qiqilm.server.admin.utils.RsaUtil.getPublicKey;
-
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Repository( value = ConstantsPayAgent.QUANFU + "PayAgentProcessor" )
 @Log4j2
 public class QuanFuPayAgentProcessor extends AbstractPayAgent {
-    private static final String ALGORITHMS_SHA1WithRSA   = "SHA1WithRSA";
-    private static final String ALGORITHMS_SHA256WithRSA = "SHA256WithRSA";
-    private static final String DEFAULT_CHARSET          = "UTF-8";
-
-    private static String getAlgorithms( boolean isRsa2 ) {
-        return isRsa2 ? ALGORITHMS_SHA256WithRSA : ALGORITHMS_SHA1WithRSA;
-    }
 
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
@@ -58,7 +47,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
                 + "/payAgentPrivateKey" ) );
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
         String sign    = encryption( tempStr ).toUpperCase();
-        sign = sign( sign, payAgentPlatform.getSignPrivateKey(), true );
+        sign = RSACoder.signSha256Rsa( sign, payAgentPlatform.getSignPrivateKey() );
 
         Map<String, Object> hdata = new HashMap<>();
         hdata.put( "sign", sign );
@@ -101,7 +90,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
                 + "/payAgentPrivateKey" ) );
         String  tempStr = this.assemblyUrl( treeMap ) + "&key=" + signMd5;
         String  rspSign = encryption( tempStr ).toUpperCase();
-        boolean flag    = verify( rspSign, sign, payAgentPlatform.getSignPublicKey(), true );
+        boolean flag    = RSACoder.verifySha256Rsa( rspSign, payAgentPlatform.getSignPublicKey(), sign );
 
         log.info( payAgentPlatform.getName() + "回调签名验签:" + flag );
         if ( flag ) {
@@ -151,7 +140,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
                 + "/payAgentPrivateKey" ) );
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
         String sign    = encryption( tempStr ).toUpperCase();
-        sign = sign( sign, payAgentPlatform.getSignPrivateKey(), true );
+        sign = RSACoder.signSha256Rsa( sign, payAgentPlatform.getSignPrivateKey() );
 
         Map<String, Object> hdata = new HashMap<>();
         hdata.put( "sign", sign );
@@ -294,32 +283,6 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
             return RandomStringUtils.randomNumeric( len );
         }
 
-    }
-
-    /**
-     * 私钥签名
-     *
-     * @throws InvalidKeySpecException
-     * @throws Exception
-     */
-    public static String sign( String content, String privateKey, boolean isRsa2 ) throws Exception {
-        PrivateKey              priKey    = getPrivateKey( privateKey );
-        java.security.Signature signature = java.security.Signature.getInstance( getAlgorithms( isRsa2 ) );
-        signature.initSign( priKey );
-        signature.update( content.getBytes( DEFAULT_CHARSET ) );
-        byte[] signed = signature.sign();
-        return Base64.getEncoder().encodeToString( signed );
-    }
-
-    /**
-     * 公钥验签
-     */
-    public static boolean verify( String content, String sign, String publicKey, boolean isRsa2 ) throws Exception {
-        PublicKey               pubKey    = getPublicKey( publicKey );
-        java.security.Signature signature = java.security.Signature.getInstance( getAlgorithms( isRsa2 ) );
-        signature.initVerify( pubKey );
-        signature.update( content.getBytes( DEFAULT_CHARSET ) );
-        return signature.verify( Base64.getDecoder().decode( sign ) );
     }
 
 }

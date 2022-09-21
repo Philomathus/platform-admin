@@ -27,30 +27,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.security.PrivateKey;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-
-import static com.qiqilm.server.admin.utils.RsaUtil.getPrivateKey;
-
 
 @Repository(value = ConstantsPayAgent.ZHONGBANG + "PayAgentProcessor")
 @Log4j2
 public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
     //填充类型
     public static final String AES_TYPE = "AES/ECB/PKCS5Padding";
-
-    //编码方式
-    public static final String CODE_TYPE = "UTF-8";
-
-    private static final String ALGORITHMS_SHA1WithRSA = "SHA1WithRSA";
-    private static final String ALGORITHMS_SHA256WithRSA = "SHA256WithRSA";
-    private static final String DEFAULT_CHARSET = "UTF-8";
-
-    private static String getAlgorithms(boolean isRsa2) {
-        return isRsa2 ? ALGORITHMS_SHA256WithRSA : ALGORITHMS_SHA1WithRSA;
-    }
 
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
@@ -75,7 +61,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(dataMap);
-        String sign = sign(tempStr, payAgentPlatform.getSignPrivateKey(), false);
+        String sign = RSACoder.signSha1Rsa(tempStr, payAgentPlatform.getSignPrivateKey());
         dataMap.put("sign", sign);
 
         String jsonStr = JsonUtil.object2Json(dataMap);
@@ -143,7 +129,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         treeMap.put("orderCost",new BigDecimal(orderCost).setScale(2,BigDecimal.ROUND_HALF_UP));
 
         String tempStr = this.assemblyUrl(treeMap);
-        String rspSign = sign(tempStr, payAgentPlatform.getSignPrivateKey(), false);
+        String rspSign = RSACoder.signSha1Rsa(tempStr, payAgentPlatform.getSignPrivateKey());
 
         log.info(payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign);
         if (rspSign.equalsIgnoreCase(sign)) {
@@ -188,7 +174,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey/payAgentPrivateKey"));
         String tempStr = this.assemblyUrl(dataMap);
-        String sign = sign(tempStr, payAgentPlatform.getSignPrivateKey(), false);
+        String sign = RSACoder.signSha1Rsa(tempStr, payAgentPlatform.getSignPrivateKey());
         dataMap.put("sign", sign);
 
         log.warn(payAgentPlatform.getName() + "查询请求参数{}", JsonUtil.object2Json(dataMap));
@@ -237,21 +223,6 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
     }
 
     /**
-     * 私钥签名
-     *
-     * @throws
-     * @throws Exception
-     */
-    private static String sign(String content, String privateKey, boolean isRsa2) throws Exception {
-        PrivateKey priKey = getPrivateKey(privateKey);
-        java.security.Signature signature = java.security.Signature.getInstance(getAlgorithms(isRsa2));
-        signature.initSign(priKey);
-        signature.update(content.getBytes(DEFAULT_CHARSET));
-        byte[] signed = signature.sign();
-        return Base64Utils.encodeToString(signed);
-    }
-
-    /**
      * 加密
      *
      * @param cleartext,aesKey
@@ -262,7 +233,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
             SecretKeySpec key    = new SecretKeySpec( aesKey.getBytes(), "AES" );
             Cipher        cipher = Cipher.getInstance( AES_TYPE );
             cipher.init( Cipher.ENCRYPT_MODE, key );
-            byte[] encryptedData = cipher.doFinal( cleartext.getBytes( CODE_TYPE ) );
+            byte[] encryptedData = cipher.doFinal( cleartext.getBytes( StandardCharsets.UTF_8 ) );
             return Base64Utils.encodeToString( encryptedData );
         } catch ( Exception e ) {
             log.warn( e );
@@ -282,12 +253,11 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
             Cipher cipher = Cipher.getInstance(AES_TYPE);
             cipher.init(Cipher.DECRYPT_MODE, key);
             byte[] decryptedData = cipher.doFinal(Base64Utils.decodeFromString(encrypted));
-            return new String(decryptedData, CODE_TYPE);
+            return new String(decryptedData, StandardCharsets.UTF_8);
         } catch (Exception e) {
             log.warn(e);
             return encrypted;
         }
     }
-
 }
 

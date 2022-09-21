@@ -58,7 +58,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
 
         String tempStr = this.assemblyUrl(dataMap) + "&SecretKey=" + signMd5;
         log.warn(tempStr);
-        String sign = RSACoder.decryptMD5withRSA(tempStr, payAgentPlatform.getSignPrivateKey());
+        String sign = RSACoder.signMd5Rsa(tempStr, payAgentPlatform.getSignPrivateKey());
         dataMap.put("Sign", sign);
         dataMap.put("BackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DANIU);
         log.warn(JsonUtil.object2Json(dataMap));
@@ -125,7 +125,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
 
         String signStr = this.assemblyUrl(signMap) + "&SecretKey=" + signMd5;
 
-        if (RSACoder.verifyMD5withRSA(signStr, payAgentPlatform.getSignPublicKey(), requestMap.get("Sign").toString())) {
+        if (RSACoder.verifyMd5Rsa(signStr, payAgentPlatform.getSignPublicKey(), requestMap.get("Sign").toString())) {
             int Status = Integer.parseInt(resultMap.getOrDefault("Status", -1).toString());
             if (Status >= 2 && Status <= 4) {
                 MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(OrderNo);
@@ -174,7 +174,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
 
         String signStr = this.assemblyUrl(signMap) + "&SecretKey=" + signMd5;
 
-        if (RSACoder.verifyMD5withRSA(signStr, payAgentPlatform.getSignPublicKey(), requestMap.get("sign").toString())) {
+        if (RSACoder.verifyMd5Rsa(signStr, payAgentPlatform.getSignPublicKey(), requestMap.get("sign").toString())) {
             MemberWithdrawLog memberWithdrawLog = withdrawLogMapper.selectByOrderNo(OrderNo);
             if (memberWithdrawLog == null || Amount.compareTo(memberWithdrawLog.getWithdrawMoney()) != 0
                     || !MerchNo.equals(payAgentPlatform.getMerId())) {
@@ -203,7 +203,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
 
         // 生成签名信息
         String signStr = this.assemblyUrl(dataMap) + "&SecretKey=" + signMd5;
-        String sign = RSACoder.decryptMD5withRSA(signStr, payAgentPlatform.getSignPrivateKey());
+        String sign = RSACoder.signMd5Rsa(signStr, payAgentPlatform.getSignPrivateKey());
         dataMap.put("sign", sign);
 
         HttpHeaders httpHeaders = new HttpHeaders();

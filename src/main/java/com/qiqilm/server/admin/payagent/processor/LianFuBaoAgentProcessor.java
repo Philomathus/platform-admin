@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeLianFuBaoType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -115,7 +114,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 
 		String dataStr = requestMap.getOrDefault( "data", "" ).toString();
 
-		String data = RSACoder.decryptByPrivateKeyShunWei( dataStr, payAgentPlatform.getSignPrivateKey() );
+		String data = RSACoder.decryptByPrivateKey( dataStr, payAgentPlatform.getSignPrivateKey() );
 		log.info( data );
 		Map<String, Object> resultMap = JsonUtil.json2Map( data );
 
@@ -199,6 +198,7 @@ public class LianFuBaoAgentProcessor extends AbstractPayAgent {
 			} else if ( !merId.equals( payAgentPlatform.getMerId() ) ) {
 				signMap.put( "code", "9999" );
 				signMap.put( "message", "商户号错误" );
+				return signMap;
 			} else {
 				signMap.put( "code", "0" );
 				signMap.put( "message", "成功" );

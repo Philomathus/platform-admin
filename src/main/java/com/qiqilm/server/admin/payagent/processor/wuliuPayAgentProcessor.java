@@ -9,7 +9,7 @@ import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.wuliuPayAgentUtils.RSAUtils;
+import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +41,7 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
 
         String paramJson = JsonUtil.object2Json(bodyMap);
         // RSA 2048 PKCS8 公钥加密
-        String encrypt = RSAUtils.encryptRSA(paramJson, payAgentPlatform.getSignPublicKey());
+        String encrypt = RSACoder.encryptByPublicKey(paramJson, payAgentPlatform.getSignPublicKey());
 
         Map<String, String> params = new HashMap<>();
         params.put("merchantNo", payAgentPlatform.getMerId());
@@ -95,7 +95,7 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
         String signData = JsonUtil.object2Json(signMap);
 
         //RSA 2048 SHA256 公钥验签
-        if (RSAUtils.verify(signData, sign,payAgentPlatform.getSignPublicKey())) {
+        if (RSACoder.verifySha256Rsa(signData,payAgentPlatform.getSignPublicKey(), sign)) {
             String state = signMap.getOrDefault("state", "").toString();
             String orderNo = signMap.getOrDefault("orderNo", "").toString();
             MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo(orderNo);
@@ -131,7 +131,7 @@ public class wuliuPayAgentProcessor extends AbstractPayAgent {
 
         String paramJson = JsonUtil.object2Json(bodyMap);
         // RSA 2048 PKCS8 公钥加密
-        String encrypt = RSAUtils.encryptRSA(paramJson, payAgentPlatform.getSignPublicKey());
+        String encrypt = RSACoder.encryptByPublicKey(paramJson, payAgentPlatform.getSignPublicKey());
 
         Map<String, String> params = new HashMap<>();
         params.put("merchantNo", payAgentPlatform.getMerId());

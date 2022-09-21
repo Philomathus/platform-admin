@@ -115,7 +115,7 @@ public class LianFuBao5AgentProcessor extends AbstractPayAgent {
 
         String dataStr = requestMap.getOrDefault( "data", "" ).toString();
 
-        String data = RSACoder.decryptByPrivateKeyShunWei( dataStr, payAgentPlatform.getSignPrivateKey() );
+        String data = RSACoder.decryptByPrivateKey( dataStr, payAgentPlatform.getSignPrivateKey() );
         log.info( data );
         Map<String, Object> resultMap = JsonUtil.json2Map( data );
 

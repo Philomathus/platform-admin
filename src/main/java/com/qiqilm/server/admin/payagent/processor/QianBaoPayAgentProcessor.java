@@ -10,8 +10,6 @@ import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
-import com.qiqilm.server.admin.utils.RsaUtil;
-import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -45,7 +43,7 @@ public class QianBaoPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap);
         System.out.println("待加密字符串" + tempStr);
         //RSA2证书为2048位，使用算法SHA256withRSA。
-        String sign = RsaUtil.sign(tempStr, payAgentPlatform.getSignPrivateKey(), "RSA2");
+        String sign = RSACoder.signSha256Rsa( tempStr, payAgentPlatform.getSignPrivateKey() );
         System.out.println("加密后" + sign);
 
         bodyMap.put("sign", sign);

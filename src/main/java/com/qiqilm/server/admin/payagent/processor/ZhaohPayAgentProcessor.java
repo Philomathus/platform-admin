@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.CollectionUtils;
 
 import java.io.InputStream;
@@ -26,11 +27,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Repository( value = ConstantsPayAgent.ZHAOH + "PayAgentProcessor" )
 @Log4j2
@@ -52,9 +50,9 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "name", withdrawLog.getBankUserName().trim() );
         dataMap.put( "bankNo", withdrawLog.getBankAccount().trim() );
         dataMap.put( "issueBankCode", withdrawLog.getBankCode() );
-        dataMap.put( "callbackUrl", URLEncoder.encode(
-                sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode(), "UTF-8" ) );
-        dataMap.put( "channelGroup", "0" );//通道组信息
+        String callbackUrl = sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode();
+        dataMap.put( "callbackUrl", Base64Utils.encodeToUrlSafeString( callbackUrl.getBytes( StandardCharsets.UTF_8 ) ) );
+        dataMap.put( "channelGroup", "0" );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey" + "/payAgentPrivateKey" ) );
@@ -93,8 +91,8 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         log.info( payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
             String dataStr = resultMap.getOrDefault( "data", "" ).toString();
-            Map<String, Object> resDataMap = JsonUtil.json2Map( RSACoder.decryptByPrivateKey( dataStr,
-                    payAgentPlatform.getSignPrivateKey() ) );
+            Map<String, Object> resDataMap = JsonUtil.json2Map( RSACoder.decryptByPublicKey( dataStr,
+                    payAgentPlatform.getSignPublicKey() ) );
             log.warn( "解密数据:" + JsonUtil.object2Json( resDataMap ) );
             if ( "0".equals( resDataMap.getOrDefault( "code", "" ).toString() ) ) {
                 Map<String, Object> data = ( Map<String, Object> ) resDataMap.getOrDefault( "data", new HashMap<>() );
@@ -218,9 +216,10 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-        MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-        PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-        Map<String, String> dataMap = new TreeMap<>();
+        MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+        PayAgentPlatform    payAgentPlatform =
+                payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
+        Map<String, String> dataMap          = new TreeMap<>();
         dataMap.put( "merchantCode", payAgentPlatform.getMerId() );
         dataMap.put( "merchantNo", withdrawLog.getOrderNo() );
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(

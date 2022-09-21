@@ -247,7 +247,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 ext.put("systemtime", time);
                 String signData = video.getId().toString() + video.getMaxWatchNumber().toString() + why + time;
                 log.warn(signData);
-                ext.put("userinfomat", RSA8SignUtils.sign(signData, liveRsaPrivateKey));
+                ext.put("userinfomat", RSACoder.signSha1Rsa(signData, liveRsaPrivateKey));
 
                 log.warn("关播通知：{}", JsonUtil.object2Json(ext));
 
@@ -314,7 +314,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 long time = System.currentTimeMillis();
                 ext.put("systemtime", time);
                 String signData = room_id.toString() + live_fee + time;
-                ext.put("userinfomat", RSA8SignUtils.sign(signData, liveRsaPrivateKey));
+                ext.put("userinfomat", RSACoder.signSha1Rsa(signData, liveRsaPrivateKey));
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -79,7 +79,7 @@ public class HelpNoticeUtil implements Serializable {
 
             String data = info.get("user_id").toString() + info.get("nick_name").toString() + time
                     + info.get("user_level").toString() + text + agent;
-            ext.put("userinfomat", RSA8SignUtils.sign(data, liveRsaPrivateKey));
+            ext.put("userinfomat", RSACoder.signSha1Rsa(data, liveRsaPrivateKey));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -131,7 +131,7 @@ public class HelpNoticeUtil implements Serializable {
             String data = info.get("user_id").toString() + info.get("nick_name").toString() + time
                     + info.get("user_level").toString() + text + agent;
             log.error("管理后台给主播发通知data:{}", data);
-            ext.put("userinfomat", RSA8SignUtils.sign(data, liveRsaPrivateKey));
+            ext.put("userinfomat", RSACoder.signSha1Rsa(data, liveRsaPrivateKey));
 
             ext.put("groupId", groupId);
 
