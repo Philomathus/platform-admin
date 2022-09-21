@@ -1,7 +1,5 @@
 package com.qiqilm.server.admin.task.beat;
 
-import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
-import com.qiqilm.server.admin.config.dds.DynamicDataSourceContextHolder;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.MemberGameDatafix;
 import com.qiqilm.server.admin.enums.EnumLock;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,25 +56,27 @@ public class FixDataTask {
         if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName())) {
             return;
         }
-        MemberGameDatafix memberGameDatafix = memberGameDatafixMapper.getgameDatafix();
-        if (memberGameDatafix == null) {
-            return;
+        MemberGameDatafix query = new MemberGameDatafix();
+        query.setStatus( 0 );
+        List<MemberGameDatafix> memberGameDatafixes = memberGameDatafixMapper.selectMemberGameDatafixList( query );
+        for ( MemberGameDatafix memberGameDatafix : memberGameDatafixes ) {
+            if (memberGameDatafix == null) {
+                continue;
+            }
+            Long platformId = memberGameDatafix.getPlatformId();
+            if (platformId == 3 || platformId == 4) {
+                continue;
+            }
+            String platformid = platformId.toString();
+            try {
+                gameDataLogService.beatGameCodeAgent(memberGameDatafix.getGameStartTime(), platformType, beatRateMap, profile, memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime(), memberGameDatafix.getUserId(), platformid);
+                MemberGameDatafix data = new MemberGameDatafix();
+                data.setId(memberGameDatafix.getId());
+                data.setStatus(1);
+                memberGameDatafixMapper.updateMemberGameDatafix(data);
+            } catch (Exception e) {
+                log.error("修复游戏注定数据失败,", e);
+            }
         }
-        Long platformId = memberGameDatafix.getPlatformId();
-        if (platformId == 3 || platformId == 4) {
-            return;
-        }
-        String platformid = platformId.toString();
-        try {
-            gameDataLogService.beatGameCodeAgent(memberGameDatafix.getGameStartTime(), platformType, beatRateMap, profile, memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime(), memberGameDatafix.getUserId(), platformid);
-            MemberGameDatafix data = new MemberGameDatafix();
-            data.setId(memberGameDatafix.getId());
-            data.setStatus(1);
-            memberGameDatafixMapper.updateMemberGameDatafix(data);
-        } catch (Exception e) {
-            log.error("修复游戏注定数据失败,", e);
-        }
-
-
     }
 }
