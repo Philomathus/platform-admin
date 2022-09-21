@@ -101,7 +101,7 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
                     return true;
                 }
             }
-            reqPayAgent.setFailReason( resultMap.getOrDefault( "message", "" ).toString() );
+            reqPayAgent.setFailReason( resDataMap.getOrDefault( "message", "" ).toString() );
             payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
         }
         log.warn( payAgentPlatform.getName() + "订单提交失败 - orderNo:{}", withdrawLog.getOrderNo() );
