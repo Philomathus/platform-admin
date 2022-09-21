@@ -118,7 +118,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
         int i = liveUserMapper.updateLiveUser( liveUser );
         if ( i > 0 ) {
             RedisCacheUtil.me.clear( liveUser.getId(), LiveUser.class );
-            if ( liveUser.getIsBan() == 1 ) {
+            if ( liveUser.getIsBan() != null && liveUser.getIsBan() == 1 ) {
                 liveCacheUtil.delHostToken( liveUser.getId() );
             }
         }
