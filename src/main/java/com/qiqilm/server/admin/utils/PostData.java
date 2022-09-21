@@ -6,8 +6,6 @@ import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.exception.BaseException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -84,20 +83,31 @@ public class PostData {
      */
     public static String get( String postUrl ) {
         String     obj    = null;
-        HttpClient client = new HttpClient();
-        GetMethod  method = null;
         try {
-            method = new GetMethod( postUrl );
+            /*HttpClient client = new HttpClient();
+            GetMethod  method = new GetMethod( postUrl );
             client.executeMethod( method );
             client.getHttpConnectionManager().getParams().setConnectionTimeout( 8000 );
             client.getHttpConnectionManager().getParams().setSoTimeout( 8000 );
-            obj = method.getResponseBodyAsString();
+            obj = method.getResponseBodyAsString();*/
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setAccept( new ArrayList<>() );
+            httpHeaders.setConnection( new ArrayList<>() );
+            HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>( null, httpHeaders );
+            obj = restTemplate.execute( postUrl, HttpMethod.GET, restTemplate.httpEntityCallback( httpEntity ), response -> {
+                InputStream bodyStream = response.getBody();
+                String      text;
+                try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                    text = CharStreams.toString( reader );
+                }
+                return text;
+            } );
         } catch ( Exception e ) {
             e.printStackTrace();
         }
         return obj;
     }
-
 
     /**
      * 进入游戏接口
@@ -549,7 +559,7 @@ public class PostData {
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>( params, headers );
 
         ResponseEntity<Map> responseGameResult = restTemplate.exchange( url, method, requestEntity, Map.class );
-        if ( responseGameResult.getStatusCode().toString().equals( "200 OK" ) ) {
+        if ( "200 OK".equals( responseGameResult.getStatusCode().toString() ) ) {
             Map result = responseGameResult.getBody();
             log.info( result.get( "gameURL" ) );
         }
@@ -574,7 +584,7 @@ public class PostData {
 
         ResponseEntity<Map> responseGameResult = restTemplate.exchange( url, method, requestEntity, Map.class );
 
-        if ( responseGameResult.getStatusCode().toString().contains( "201" ) ) {
+        if ( responseGameResult.getStatusCodeValue() == 201 ) {
             Map result = responseGameResult.getBody();
             //			log.info(result);
             //throw new BaseException( "MG转账失败" );
@@ -598,11 +608,30 @@ public class PostData {
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>( params, headers );
 
         ResponseEntity<Map> responseGameResult = restTemplate.exchange( url, method, requestEntity, Map.class );
-        if ( responseGameResult.getStatusCode().toString().contains( "200" ) ) {
+        if ( responseGameResult.getStatusCodeValue() == 200 ) {
             Map result    = responseGameResult.getBody();
             Map resultMap = ( Map ) result.get( "balance" );
             backMoney = new BigDecimal( resultMap.get( "total" ).toString() );
         }
         return backMoney;
+    }
+
+    public static void main( String[] args ) {
+        String url = "http://127.0.0.1:42002/test/test";
+        RestTemplate restTemp = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setAccept( new ArrayList<>() );
+        httpHeaders.setConnection( new ArrayList<>() );
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>( null, httpHeaders );
+        String obj = restTemp.execute( url, HttpMethod.GET, restTemp.httpEntityCallback( httpEntity ), response -> {
+            InputStream bodyStream = response.getBody();
+            String      text;
+            try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                text = CharStreams.toString( reader );
+            }
+            return text;
+        } );
+        System.out.println(obj);
+        System.out.println(get( url ));
     }
 }
