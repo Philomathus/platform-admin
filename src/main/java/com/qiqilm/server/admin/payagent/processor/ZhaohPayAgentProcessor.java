@@ -19,7 +19,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.CollectionUtils;
 
 import java.io.InputStream;
@@ -27,8 +26,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Repository( value = ConstantsPayAgent.ZHAOH + "PayAgentProcessor" )
 @Log4j2
@@ -51,7 +53,7 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "bankNo", withdrawLog.getBankAccount().trim() );
         dataMap.put( "issueBankCode", withdrawLog.getBankCode() );
         String callbackUrl = sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode();
-        dataMap.put( "callbackUrl", Base64Utils.encodeToUrlSafeString( callbackUrl.getBytes( StandardCharsets.UTF_8 ) ) );
+        dataMap.put( "callbackUrl", URLEncoder.encode( callbackUrl, "UTF-8" ) );
         dataMap.put( "channelGroup", "0" );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
