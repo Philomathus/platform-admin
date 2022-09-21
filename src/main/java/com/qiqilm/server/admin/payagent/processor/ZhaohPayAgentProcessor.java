@@ -95,9 +95,9 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
                     payAgentPlatform.getSignPublicKey() ) );
             log.warn( "解密数据:" + JsonUtil.object2Json( resDataMap ) );
             if ( "0".equals( resDataMap.getOrDefault( "code", "" ).toString() ) ) {
-                Map<String, Object> data = ( Map<String, Object> ) resDataMap.getOrDefault( "data", new HashMap<>() );
+                Map<String, Object> data = JsonUtil.json2Map( resDataMap.getOrDefault( "data", "" ).toString() );
                 if ( "SUCCESS".equals( data.getOrDefault( "result", "" ) ) ) {
-                    log.info( payAgentPlatform.getName() + "订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
+                    log.info( payAgentPlatform.getName() + "订单提交成功 - result:{}", resDataMap.getOrDefault( "data", "" ).toString() );
                     return true;
                 }
             }
