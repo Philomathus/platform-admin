@@ -6,6 +6,8 @@ import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.exception.BaseException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -81,16 +83,15 @@ public class PostData {
      * @Date 2016-08-26
      */
     public static String get( String postUrl ) {
-        String obj = null;
+        String     obj    = null;
+        HttpClient client = new HttpClient();
+        GetMethod  method = null;
         try {
-            obj = restTemplate.execute( postUrl, HttpMethod.GET, restTemplate.httpEntityCallback( null ), response -> {
-                InputStream bodyStream = response.getBody();
-                String      text;
-                try ( Reader reader = new InputStreamReader( bodyStream ) ) {
-                    text = CharStreams.toString( reader );
-                }
-                return text;
-            } );
+            method = new GetMethod( postUrl );
+            client.executeMethod( method );
+            client.getHttpConnectionManager().getParams().setConnectionTimeout( 8000 );
+            client.getHttpConnectionManager().getParams().setSoTimeout( 8000 );
+            obj = method.getResponseBodyAsString();
         } catch ( Exception e ) {
             e.printStackTrace();
         }
