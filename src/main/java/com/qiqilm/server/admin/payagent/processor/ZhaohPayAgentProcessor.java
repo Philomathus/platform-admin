@@ -160,15 +160,10 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         if ( this.checkWhiteIp( payAgentPlatform.getPlatWhiteIpList(), realIp ) ) {
             log.warn( "请求ip非白名单:{},request:{}", realIp, JsonUtil.object2Json( requestMap ) );
             resultMap.put( "message", "请求ip非白名单:" + realIp );
-            resultMap.put( "code", 9999 );
+            resultMap.put( "code", "9999" );
             return resultMap;
         }
-        Map<String, Object> dataMap;
-        if ( requestMap.get( "data" ) instanceof String ) {
-            dataMap = JsonUtil.json2Map( requestMap.get( "data" ).toString() );
-        } else {
-            dataMap = ( Map<String, Object> ) requestMap.get( "data" );
-        }
+        Map<String, Object> dataMap = JsonUtil.json2Map( requestMap.get( "data" ).toString() );
 
         // 解密后对签名验证
         SortedMap<String, Object> signMap = new TreeMap<>( dataMap );
@@ -179,32 +174,33 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl( signMap ) + "&token=" + payAgentPlatform.getHeaderKey() + "&sign=" + signMd5;
 
         if ( StringUtils.equalsIgnoreCase( DigestUtils.md5Hex( tempStr ), sign ) ) {
-            String            orderNo           = requestMap.get( "merOrderNo" ).toString();
-            String            bankAccountNo     = requestMap.get( "bankAccountNo" ).toString();
-            String            merId             = requestMap.get( "merId" ).toString();
-            BigDecimal        amount            = new BigDecimal( requestMap.get( "amount" ).toString() );
+            String            orderNo           = dataMap.get( "merOrderNo" ).toString();
+            String            bankAccountNo     = dataMap.get( "bankAccountNo" ).toString();
+            String            merchNo           = requestMap.get( "merchNo" ).toString();
+            String            merId             = dataMap.get( "merId" ).toString();
+            BigDecimal        amount            = new BigDecimal( dataMap.get( "amount" ).toString() );
             MemberWithdrawLog memberWithdrawLog = withdrawLogMapper.selectByOrderNo( orderNo );
             if ( memberWithdrawLog == null ) {
                 resultMap.put( "message", "订单不存在" );
-                resultMap.put( "code", 1002 );
+                resultMap.put( "code", "1002" );
                 return resultMap;
             }
             if ( amount.compareTo( memberWithdrawLog.getWithdrawMoney() ) != 0 ) {
-                signMap.put( "code", 1004 );
+                signMap.put( "code", "1004" );
                 signMap.put( "message", "金额不匹配" );
                 return resultMap;
             }
             if ( !bankAccountNo.equals( memberWithdrawLog.getBankAccount() ) ) {
-                signMap.put( "code", 1003 );
+                signMap.put( "code", "1003" );
                 signMap.put( "message", "银行卡不匹配" );
                 return resultMap;
             }
-            if ( !merId.equals( payAgentPlatform.getMerId() ) ) {
-                signMap.put( "code", 9999 );
+            if ( !merchNo.equals( payAgentPlatform.getMerId() ) ) {
+                signMap.put( "code", "9999" );
                 signMap.put( "message", "商户号错误" );
                 return resultMap;
             }
-            resultMap.put( "code", 0 );
+            resultMap.put( "code", "0" );
             resultMap.put( "message", "验证成功" );
             resultMap.put( "merId", merId );
             resultMap.put( "merOrderNo", orderNo );
@@ -213,7 +209,7 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
             return resultMap;
         }
         resultMap.put( "message", "验签失败" );
-        resultMap.put( "code", 1001 );
+        resultMap.put( "code", "1001" );
         return resultMap;
     }
 
