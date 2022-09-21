@@ -45,6 +45,12 @@ public abstract class Constants {
 	public static final String  TOKEN_USER_KEY             = "CX:platform:token-user:";
 	public static final String  CX_HOME_NOTICE             = "CX:home-notices";
 	public static final String  CX_HOME_BANNER             = "CX:home-banners";
+
+	// 主播token取userId
+	public static final String  TOKEN_HOST                 = LIVE_PREX + "token-host:";
+	// 主播userId取token
+	public static final String  HOST_TOKEN                 = LIVE_PREX + "host-token:";
+
 	// 主播签名
 	public static final String  HOST_SIGN                  = LIVE_PREX + "host-sign:";
 	public static final String  USER_SIGN                  = LIVE_PREX + "user-sign:";

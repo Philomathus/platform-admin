@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
+import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.RedisCacheUtil;
 import com.qiqilm.server.admin.cache.VideoCacheUtil;
 import com.qiqilm.server.admin.config.LiveCenterConfig;
@@ -50,6 +51,8 @@ public class LiveUserServiceImpl implements ILiveUserService {
     private LiveFamilyJoinMapper  liveFamilyJoinMapper;
     @Resource
     private VideoCacheUtil        videoCacheUtil;
+    @Resource
+    private LiveCacheUtil         liveCacheUtil;
     @Resource
     private BankListMapper        bankListMapper;
 
@@ -115,6 +118,9 @@ public class LiveUserServiceImpl implements ILiveUserService {
         int i = liveUserMapper.updateLiveUser( liveUser );
         if ( i > 0 ) {
             RedisCacheUtil.me.clear( liveUser.getId(), LiveUser.class );
+            if ( liveUser.getIsBan() == 1 ) {
+                liveCacheUtil.delHostToken( liveUser.getId() );
+            }
         }
         return i;
     }
