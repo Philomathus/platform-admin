@@ -48,6 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="discountBill != null "> and discount_bill = #{discountBill}</if>
             <if test="openLevel != null "> and open_level = #{openLevel}</if>
         </where>
+             order by status desc, indexs asc
     </select>
 
     <select id="selectConfigBankById" parameterType="String" resultMap="ConfigBankResult">
