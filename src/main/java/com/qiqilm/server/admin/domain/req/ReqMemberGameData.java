@@ -21,7 +21,7 @@ public class ReqMemberGameData {
     /**
      * 账号
      */
-    private String account;
+    private String account = "";
 
     /**
      * 代理编号
