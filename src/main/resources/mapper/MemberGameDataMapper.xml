@@ -115,6 +115,12 @@
         <if test="platformId != null and platformId != ''">
             and m.platform_id = #{platformId}
         </if>
+        <if test="name != null and name.length != 0">
+            and  m.platform_id in
+            <foreach item="value" collection="name" open="(" separator="," close=")">
+                #{value}
+            </foreach>
+        </if>
     </sql>
 
     <sql id="whereCount">

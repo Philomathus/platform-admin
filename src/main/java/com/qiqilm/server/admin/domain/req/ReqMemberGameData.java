@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.domain.req;
 
 import lombok.Data;
-
 @Data
 public class ReqMemberGameData {
     /**
@@ -27,4 +26,7 @@ public class ReqMemberGameData {
     private String gameId;
 
     private Integer platformId;
+
+    private String[] name;
+
 }
