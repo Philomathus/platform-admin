@@ -66,10 +66,14 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 reqMemberGameData.getPlatformIds().remove( "4" );
             }
         }
-        String tableLast = reqMemberGameData.getAccount().substring( reqMemberGameData.getAccount().length() - 1 );
         //判断是否为数字
-        if ( NUM_PATTERN.matcher( tableLast ).matches() ) {
-            reqMemberGameData.setTableLast( tableLast );
+        if ( StringUtils.isNotBlank( reqMemberGameData.getAccount() ) ) {
+            String tableLast = reqMemberGameData.getAccount().substring( reqMemberGameData.getAccount().length() - 1 );
+            if ( NUM_PATTERN.matcher( tableLast ).matches() ) {
+                reqMemberGameData.setTableLast( tableLast );
+            } else {
+                reqMemberGameData.setTableLast( "0" );
+            }
         } else {
             reqMemberGameData.setTableLast( "0" );
         }
