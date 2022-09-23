@@ -41,15 +41,7 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
 
     private static Pattern NUM_PATTERN = Pattern.compile( "^[-\\+]?[\\d]*$" );
 
-    /**
-     * 查询会员注单数据列表
-     *
-     * @param reqMemberGameData 会员注单数据
-     *
-     * @return 会员注单数据
-     */
-    @Override
-    public List<RspMemberGameData> selectMemberGameDataList( ReqMemberGameData reqMemberGameData ) {
+    private void pingjieReq( ReqMemberGameData reqMemberGameData ) {
         if ( reqMemberGameData.getSelectDate() != null ) {
             reqMemberGameData.setStartTime( reqMemberGameData.getSelectDate()[ 0 ] + " 00:00:00" );
             reqMemberGameData.setEndTime( reqMemberGameData.getSelectDate()[ 1 ] + " 23:59:59" );
@@ -63,50 +55,8 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
             }
             reqMemberGameData.setPlatformId( null );
         }
-        if ( reqMemberGameData.getPlatformIds() != null && ( reqMemberGameData.getPlatformIds().contains( "3" ) || reqMemberGameData
-                .getPlatformIds().contains( "4" ) ) ) {
-            if ( reqMemberGameData.getPlatformIds().contains( "3" ) ) {
-                reqMemberGameData.getAgents().add( "80000" );
-                reqMemberGameData.getPlatformIds().remove( "3" );
-            }
-            if ( reqMemberGameData.getPlatformIds().contains( "4" ) ) {
-                reqMemberGameData.getAgents().add( "10000" );
-                reqMemberGameData.getPlatformIds().remove( "4" );
-            }
-        }
-        if ( StringUtils.isNotBlank( reqMemberGameData.getAccount() ) ) {
-            String tableLast = reqMemberGameData.getAccount().substring( reqMemberGameData.getAccount().length() - 1 );
-            //判断是否为数字
-            if ( NUM_PATTERN.matcher( tableLast ).matches() ) {
-                reqMemberGameData.setTableLast( tableLast );
-                log.info( "游戏会员id后缀" + reqMemberGameData.getAccount() + ";tableLast" + reqMemberGameData.getTableLast() );
-            } else {
-                reqMemberGameData.setTableLast( "0" );
-            }
-            return memberGameDataMapper.selectMemberGameDataList( reqMemberGameData );
-        } else {
-            reqMemberGameData.setTableLast( "0" );
-            return memberGameDataMapper.selectMemberGameDataList( reqMemberGameData );
-        }
-    }
-
-    @Override
-    public RspMemberGameData getCount( ReqMemberGameData reqMemberGameData ) {
-        if ( reqMemberGameData.getSelectDate() != null ) {
-            reqMemberGameData.setStartTime( reqMemberGameData.getSelectDate()[ 0 ] + " 00:00:00" );
-            reqMemberGameData.setEndTime( reqMemberGameData.getSelectDate()[ 1 ] + " 23:59:59" );
-        }
-        if ( reqMemberGameData.getPlatformId() != null && ( reqMemberGameData.getPlatformId() == 3
-                || reqMemberGameData.getPlatformId() == 4 ) ) {
-            if ( reqMemberGameData.getPlatformId() == 3 ) {
-                reqMemberGameData.setAgent( "80000" );
-            } else {
-                reqMemberGameData.setAgent( "10000" );
-            }
-            reqMemberGameData.setPlatformId( null );
-        }
-        if ( reqMemberGameData.getPlatformIds() != null && ( reqMemberGameData.getPlatformIds().contains( "3" ) || reqMemberGameData
-                .getPlatformIds().contains( "4" ) ) ) {
+        if ( reqMemberGameData.getPlatformIds() != null && ( reqMemberGameData.getPlatformIds().contains( "3" )
+                || reqMemberGameData.getPlatformIds().contains( "4" ) ) ) {
             if ( reqMemberGameData.getPlatformIds().contains( "3" ) ) {
                 reqMemberGameData.getAgents().add( "80000" );
                 reqMemberGameData.getPlatformIds().remove( "3" );
@@ -123,6 +73,24 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
         } else {
             reqMemberGameData.setTableLast( "0" );
         }
+    }
+
+    /**
+     * 查询会员注单数据列表
+     *
+     * @param reqMemberGameData 会员注单数据
+     *
+     * @return 会员注单数据
+     */
+    @Override
+    public List<RspMemberGameData> selectMemberGameDataList( ReqMemberGameData reqMemberGameData ) {
+        pingjieReq( reqMemberGameData );
+        return memberGameDataMapper.selectMemberGameDataList( reqMemberGameData );
+    }
+
+    @Override
+    public RspMemberGameData getCount( ReqMemberGameData reqMemberGameData ) {
+        pingjieReq( reqMemberGameData );
         return memberGameDataMapper.getCountMemberGameDataList( reqMemberGameData );
     }
 
