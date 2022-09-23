@@ -1,6 +1,10 @@
 package com.qiqilm.server.admin.domain.req;
 
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 public class ReqMemberGameData {
     /**
@@ -14,19 +18,25 @@ public class ReqMemberGameData {
 
     private String tableLast;
 
-    /** 账号 */
+    /**
+     * 账号
+     */
     private String account;
 
-    /** 代理编号 */
+    /**
+     * 代理编号
+     */
     private String agent;
 
-    /** 子平台名称 */
+    /**
+     * 子平台名称
+     */
     private String sonPlatformName;
 
     private String gameId;
 
     private Integer platformId;
 
-    private String[] name;
-
+    private List<String> platformIds = new ArrayList<>();
+    private List<String> agents      = new ArrayList<>();
 }

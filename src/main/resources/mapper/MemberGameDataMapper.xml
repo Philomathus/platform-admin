@@ -115,11 +115,32 @@
         <if test="platformId != null and platformId != ''">
             and m.platform_id = #{platformId}
         </if>
-        <if test="name != null and name.length != 0">
-            and  m.platform_id in
-            <foreach item="value" collection="name" open="(" separator="," close=")">
-                #{value}
+        <if test="platformIds != null and platformIds.size() != 0">
+            and
+            <if test="agents != null and agents.size() != 0">
+                (
+            </if>
+            m.platform_id in
+            <foreach item="pid" collection="platformIds" open="(" separator="," close=")">
+                #{pid}
             </foreach>
+        </if>
+        <if test="agents != null and agents.size() != 0">
+            <choose>
+                <when test="platformIds != null and platformIds.size() != 0">
+                    or
+                </when>
+                <otherwise>
+                    and
+                </otherwise>
+            </choose>
+            m.agent in
+            <foreach item="ag" collection="agents" open="(" separator="," close=")">
+                #{ag}
+            </foreach>
+            <if test="platformIds != null and platformIds.size() != 0">
+                )
+            </if>
         </if>
     </sql>
 
