@@ -66,7 +66,6 @@ public class MemberGameDataServiceImpl implements IMemberGameDataService {
                 reqMemberGameData.getPlatformIds().remove( "4" );
             }
         }
-        //判断是否为数字
         if ( StringUtils.isNotBlank( reqMemberGameData.getAccount() ) ) {
             String tableLast = reqMemberGameData.getAccount().substring( reqMemberGameData.getAccount().length() - 1 );
             if ( NUM_PATTERN.matcher( tableLast ).matches() ) {
