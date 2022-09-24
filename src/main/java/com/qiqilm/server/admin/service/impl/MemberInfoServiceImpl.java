@@ -11,7 +11,6 @@ import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
-import com.qiqilm.server.admin.domain.rsp.RspGameBalance;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
 import com.qiqilm.server.admin.domain.vo.ReqAddScore;
@@ -21,10 +20,7 @@ import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
-import com.qiqilm.server.admin.utils.NameUtil;
-import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.UuidUtil;
-import com.qiqilm.server.admin.utils.ValidatorUtil;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,6 +104,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
         if (memberInfos.size() > 0 && !CollectionUtils.isEmpty(memberInfos)) {
             for (MemberInfo me : memberInfos) {
+                if(me.getId().equals( "7702_84507" )){
+                    log.warn( JsonUtil.object2Json( memberInfos ) );
+                }
                 if (StringUtils.hasText(me.getPhone())) {
                     me.setPhone(me.getPhone().substring(0, 3) + "****" + me.getPhone().substring(7, 11));
                 }
