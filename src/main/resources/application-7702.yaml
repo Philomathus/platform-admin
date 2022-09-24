@@ -19,6 +19,7 @@ mybatis:
       dbMain: 7702_main
       dbLive: 7702_live
       dbLottery: 7702_lottery
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 liveCenter: 7702
 
