@@ -104,9 +104,6 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoList(memberInfo);
         if (memberInfos.size() > 0 && !CollectionUtils.isEmpty(memberInfos)) {
             for (MemberInfo me : memberInfos) {
-                if(me.getId().equals( "7702_84507" )){
-                    log.warn( JsonUtil.object2Json( memberInfos ) );
-                }
                 if (StringUtils.hasText(me.getPhone())) {
                     me.setPhone(me.getPhone().substring(0, 3) + "****" + me.getPhone().substring(7, 11));
                 }

@@ -100,7 +100,7 @@ public class LiveUserWithdrawNewlog extends BaseEntity {
     private String province;
     private String city;
 
-    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    @JsonFormat( pattern = "yyyy-MM-dd" )
     private Date createTime;
 
     @JsonIgnore
