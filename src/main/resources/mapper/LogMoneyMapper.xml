@@ -120,9 +120,14 @@
 		<if test="startTime != null">
 			and create_time <![CDATA[ >= ]]>  #{startTime} and create_time <![CDATA[ <= ]]> #{endTime}
 		</if>
+<!--		<if test="mark != null  and mark != ''">-->
+<!--			and mark like concat('%', #{mark}, '%')-->
+<!--		</if>-->
+
 		<if test="mark != null  and mark != ''">
-			and mark like concat('%', #{mark}, '%')
+			and mark = #{mark}
 		</if>
+
 	</sql>
 
 	<insert id="insertLogMoney" parameterType="LogMoney">

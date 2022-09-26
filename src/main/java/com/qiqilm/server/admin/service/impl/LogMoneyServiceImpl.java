@@ -36,7 +36,9 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
             return logMoneyMapper.selectLogMoneySingleList(logMoney);
         } else if (logMoney.getTypes() != null && "8".equals(logMoney.getTypes()[0]) && "智勇大闯关".equals(logMoney.getMark())) {
             return logMoneyMapper.selectLogMoneyList(logMoney);
-        } else if (logMoney.getTypes() != null && StringUtils.isBlank(logMoney.getSearchValue())) {
+        } else if(logMoney.getTypes() == null && StringUtils.isNotBlank(logMoney.getMark()) && StringUtils.isBlank(logMoney.getSearchValue())){
+            return logMoneyMapper.selectLogMoneyList(logMoney);
+        }else if (logMoney.getTypes() != null && StringUtils.isBlank(logMoney.getSearchValue())) {
             return logMoneyMapper.selectLogMoneyFirstList(logMoney);
         } else {
             logMoney.setTableLast("0");
