@@ -18,7 +18,6 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
-import com.qiqilm.server.admin.mapper.MemberMoneyMapper;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
@@ -27,16 +26,17 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -49,26 +49,24 @@ import java.util.regex.Pattern;
 @RequestMapping("/member/memberInfo")
 @Log4j2
 public class MemberInfoController extends BaseController {
-    @Autowired
+    @Resource
     private IMemberInfoService memberInfoService;
-    @Autowired
+    @Resource
     private MemberInfoMapper memberInfoMapper;
-    @Autowired
+    @Resource
     private TokenService tokenService;
-    @Autowired
+    @Resource
     private ISysUserService sysUserService;
-    @Autowired
+    @Resource
     private MemberCacheManager memberCacheManager;
-    @Autowired
+    @Resource
     private RedisUtil redisUtil;
-    @Autowired
+    @Resource
     private MemberForbidUtil memberForbidUtil;
-    @Autowired
+    @Resource
     private ISysUserService userService;
-    @Autowired
+    @Resource
     private ImApi imApi;
-    @Autowired
-    private MemberMoneyMapper memberMoneyMapper;
 
     /**
      * 查询用户信息列表
