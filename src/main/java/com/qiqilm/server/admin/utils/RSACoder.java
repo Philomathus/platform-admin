@@ -114,28 +114,7 @@ public class RSACoder {
         cipher.init( Cipher.DECRYPT_MODE, privateKey );
         byte[] decodeData = Base64Utils.decodeFromString( data );
         int    blockSize  = cipher.getOutputSize( decodeData.length );
-        return new String( doFinal( decodeData, cipher, blockSize ), StandardCharsets.UTF_8 );
-    }
-
-    private static byte[] doFinal( byte[] decryptData, Cipher cipher, int blockSize ) throws IllegalBlockSizeException,
-            BadPaddingException, IOException {
-        int                   offSet = 0;
-        byte[]                cache;
-        int                   i      = 0;
-        ByteArrayOutputStream out    = new ByteArrayOutputStream();
-        while ( decryptData.length - offSet > 0 ) {
-            if ( decryptData.length - offSet > blockSize ) {
-                cache = cipher.doFinal( decryptData, offSet, blockSize );
-            } else {
-                cache = cipher.doFinal( decryptData, offSet, decryptData.length - offSet );
-            }
-            out.write( cache, 0, cache.length );
-            i++;
-            offSet = i * blockSize;
-        }
-        byte[] encryptedData = out.toByteArray();
-        out.close();
-        return encryptedData;
+        return new String( cipherDoFinal( cipher, decodeData, blockSize ), StandardCharsets.UTF_8 );
     }
 
     /**
