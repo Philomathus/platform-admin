@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(jxsELylxE4cIhYdrhTLsK7CepT0O8jfjthhzjhVjRfc6VA9sQwm1RlLwwm4/lvMx57hS/CS6UFr+xuNreYINzWwIDhubWECn7T2DvS7jOShk0JWgPY6DP4HWJId8w/3IuSKWXScjYye91HWKHc5TAuYE4UrSBt9gEbSVSWlFctG5osvBi8tvGGjj2P80DpSFaaLXqCcYLnq/aIV/PEUx6Fat3d+moKRc+Iba6xVrmr9FgHuOckiv2aeoKeBv2YOd9PEmNOu/MITAdMRhAFZI1Q==)
+      jdbc-url: ENC(bY5Q1ED0RK9KdWIxiWVLpMPaorYlOo5+uPyxGVfQhMsbHOcwp4QET/DbMS4RV51INhfU6NFp7mGELToW5r4S7JCDjfSqzeKpj+YB8O5AhcVD3KIRFmP8Z3QNS7O12O8hTqggpRqKe4IwjIPcUnvfuMj0+ah1cVoQv4ZysT/ETJrzaQBVswpTZ6lRZa2c/RW2OOL0M5wZlf3+bz5KvwxRjrrKxXvr+zmQ3Wld6Hy9fPpX/pCCGwj9hG1Pb7k4pZOCCqRm2av7mMA8Y8i+T+PdEg==)
       username: ENC(v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==)
       password: ENC(BcGcqamgY/2aUcGdrr7PoyPJPWgvHNChl4tQojazzxSlJ0bfbqbTpXIBa0rLMxiu1WfdmGMzT8EHvqX5OpNWHQ==)
     secondary:
