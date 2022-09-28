@@ -1,0 +1,72 @@
+spring:
+  datasource:
+    primary:
+      jdbc-url: ENC(jxsELylxE4cIhYdrhTLsK7CepT0O8jfjthhzjhVjRfc6VA9sQwm1RlLwwm4/lvMx57hS/CS6UFr+xuNreYINzWwIDhubWECn7T2DvS7jOShk0JWgPY6DP4HWJId8w/3IuSKWXScjYye91HWKHc5TAuYE4UrSBt9gEbSVSWlFctG5osvBi8tvGGjj2P80DpSFaaLXqCcYLnq/aIV/PEUx6Fat3d+moKRc+Iba6xVrmr9FgHuOckiv2aeoKeBv2YOd9PEmNOu/MITAdMRhAFZI1Q==)
+      username: ENC(v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==)
+      password: ENC(BcGcqamgY/2aUcGdrr7PoyPJPWgvHNChl4tQojazzxSlJ0bfbqbTpXIBa0rLMxiu1WfdmGMzT8EHvqX5OpNWHQ==)
+    secondary:
+      jdbc-url: ENC(rQSm78M8lGPyB7F8JHr6ZDTtVYv4diNGJwz8PfKv2nZs4c4uFKFrLYNhoRqihhG07ieXgibrX0zyiT5JolgpOEzB1s7ub5lMyeX1revCZ1A6EzHk+dBUoHFfb2KTprxE6dbhwTN5R+Lw17vahYP3AN7/PaGiacPEvM0aFkTY/CAEPzBWENSzqp/eXISprAEfuOZFEpKp1w3hCPzaKkSL2VlSBLSx2SvutDUbGmOhrJw=)
+      username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
+      password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
+  redis:
+    host: ENC(Sko47EOJgenKI6uEgD1MUn6V6+L+MOLrjSgb79FVtf+5RdwEp7cvOzezapwVp+yLLcVhaxZPAhIScvLWaX226FpMcZHg5e5d6+bIkf7g59U=)
+    port: 6379
+    password: ENC(zS70/bLYBuzXunJ2Btgz0hplCQzcdSuSCKNAUK92Petpw7n28eQ1TiFIyQ+diX67cyqCvJwhEu2pxvwlQ5Vfsw==)
+
+mybatis:
+  configuration:
+    variables:
+      dbMain: 77te_main
+      dbLive: 77te_live
+      dbLottery: 77te_lottery
+
+liveCenter: 7701
+
+# 代付额度
+payAgentLimit: 5000
+# 顺为代付额度
+payAgentLimitShunWei: 30000
+# 宾利代付额度
+payAgentLimitBinLi: 30000
+# 特仑苏代付额度
+payAgentLimitTels: 30000
+# 联付宝代付额度
+payAgentLimitLianFuBao: 30000
+# 马云代付额度
+payAgentLimitMaYun: 30000
+# 合众代付额度
+payAgentLimitHeZhong: 30000
+# 滴滴代付额度
+payAgentLimitDiDi: 30000
+# newMax代付额度
+payAgentLimitNewMaxPay: 30000
+# 阳光代付额度
+payAgentLimitYangGuangPay: 30000
+# 大风车代付额度
+payAgentLimitDaFengChePay: 30000
+# 魯班代付额度
+payAgentLimitLuBanPay: 30000
+# 鼎丰代付额度
+payAgentLimitDingFengPay: 30000
+# 宏博代付额度
+payAgentLimitHongBoPay: 30000
+# 小月代付额度
+payAgentLimitXiaoYuePay: 30000
+# 银联代付额度
+payAgentLimitYinLianPay: 30000
+# 爱农代付额度
+payAgentLimitAiNongPay: 30000
+# 众家代付额度
+payAgentLimitZhongJiaPay: 30000
+# 老乡代付额度
+payAgentLimitLaoXiangPay: 30000
+# 弗良代付额度
+payAgentLimitFuLiangPay: 30000
+# 东东汇潮代付额度
+payAgentLimitHuiYuanPay: 30000
+# 杉德代付额度
+payAgentLimitShanDePay: 30000
+# GoPay代付额度
+payAgentLimitGoPayPay: 100000
+# 大牛代付额度
+payAgentDaNiuPay: 50000
