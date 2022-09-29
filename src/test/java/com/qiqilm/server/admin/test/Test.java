@@ -18,19 +18,25 @@ public class Test {
 
 	@org.junit.jupiter.api.Test
 	public void test1() {
-		String jdbc = stringEncryptor.encrypt("jdbc:mysql://pc-j6ct6o187g7dis32y.rwlb.rds.aliyuncs.com:3306/77je_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false");
+		String jdbc = stringEncryptor.encrypt("jdbc:mysql://pc-j6c1ah19tg2g51r3u.rwlb.rds.aliyuncs"
+				+ ".com:3306/77te_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly"
+				+ "=false");
 		System.out.println("main: " + jdbc);
 
-		String jdbc2 = stringEncryptor.encrypt("jdbc:mysql://pc-j6ct6o187g7dis32y.rwlb.rds.aliyuncs.com:3306/77je_live?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false");
+		String jdbc2 = stringEncryptor.encrypt("jdbc:mysql://pc-j6c1ah19tg2g51r3u.rwlb.rds.aliyuncs"
+				+ ".com:3306/77te_live?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly"
+				+ "=false");
 		System.out.println("live: " + jdbc2);
 
-		String jdbc3 = stringEncryptor.encrypt("jdbc:mysql://pc-j6ct6o187g7dis32y.rwlb.rds.aliyuncs.com:3306/77je_lottery?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false");
+		String jdbc3 = stringEncryptor.encrypt("jdbc:mysql://pc-j6c1ah19tg2g51r3u.rwlb.rds.aliyuncs"
+				+ ".com:3306/77te_lottery?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true"
+				+ "&failOverReadOnly=false");
 		System.out.println("lottery: " + jdbc3);
 
-		String username = stringEncryptor.encrypt("r-j6cytgyf9e8i0bd5m7.redis.rds.aliyuncs.com");
+		String username = stringEncryptor.encrypt("r-j6cqmjlq5xexziok7j.redis.rds.aliyuncs.com");
 		System.out.println("redisHost: " + username);
 
-		String password = stringEncryptor.encrypt("zzxj8Qe%!VfELnrA");
+		String password = stringEncryptor.encrypt("sGDwkEKhU!z#a5%s");
 		System.out.println("redisPass: " + password);
 	}
 
