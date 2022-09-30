@@ -12,14 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+
+/**
+ * lottery count Controller
+ *
+ * @author Feiwin Developer
+ * @date 2022-09-30
+ */
+
 @RestController
 @RequestMapping("/admin/lotteryCount")
 public class LotteryCountController extends BaseController {
 
-
     @Autowired
     private LotteryCountService lotteryCountService;
 
+
+    /**
+     * get all lotteryCount
+     */
     @PreAuthorize( "@ss.hasPermi('admin:lotteryCount:list')")
     @GetMapping("/list")
     public TableDataInfo lotteryCountList(LotteryCount lotteryCount){

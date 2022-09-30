@@ -8,12 +8,22 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * lottery count service implementation
+ *
+ * @author Feiwin Developer
+ * @date 2022-09-30
+ */
+
 @Service
 public class LotteryCountServiceImpl implements LotteryCountService {
 
     @Resource
     private LotteryCountMapper lotteryCountMapper;
 
+    /**
+     * get all lotteryCount
+     */
     @Override
     public List<LotteryCount> selectAllLotteryCount(LotteryCount lotteryCount) {
         return lotteryCountMapper.selectAllLotteryCount(lotteryCount);
