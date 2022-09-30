@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LotteryCountMapper">
+
+    <resultMap type="LotteryCount" id="LotteryCountResult">
+        <result property="id"    column="id"    />
+        <result property="agent"    column="agent"    />
+        <result property="lotteryId"    column="lottery_id"    />
+        <result property="pUserId"    column="puser_id"    />
+        <result property="issue"    column="issue"    />
+        <result property="betInfo"    column="bet_info"    />
+        <result property="chip"    column="chip"    />
+        <result property="ip"    column="ip"    />
+    </resultMap>
+
+    <sql id="selectWheelPoolVo">
+        select l.id, l.agent, l.lottery_id,l.puser_id,l.issue,l.bet_info,l.chip,l.ip
+        from ${dbLottery}.lottery_count l
+        left join ${dbMain}.member_info m on m.id = l.id
+    </sql>
+
+    <select id="selectAllLotteryCount" parameterType="LotteryCount" resultMap="LotteryCountResult">
+        <include refid="selectWheelPoolVo"/>
+        <where>
+            <if test="agent != null  and agent != ''"> and l.agent #{agent}</if>
+            <if test="lotteryId != null "> and l.lottery_id = #{lotteryId}</if>
+            <if test="pUserId != null and pUserId !='' "> and l.puser_d = #{pUserId}</if>
+            <if test="issue != null and issue !='' "> and l.issue = #{issue}</if>
+            <if test="betInfo != null and betInfo !='' "> and l.bet_info = #{betInfo}</if>
+            <if test="chip != null and chip !='' "> and l.chip = #{chip}</if>
+            <if test="ip != null and ip !='' "> and l.ip = #{ip}</if>
+        </where>
+           order by l.id desc
+    </select>
+
+
+</mapper>
