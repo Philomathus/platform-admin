@@ -30,4 +30,6 @@ public class LotteryCount extends BaseEntity {
     private String chip;
 
     private String ip;
+
+    private String lotteryName;
 }

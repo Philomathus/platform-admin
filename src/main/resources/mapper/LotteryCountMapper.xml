@@ -11,21 +11,22 @@
         <result property="betInfo"    column="bet_info"    />
         <result property="chip"    column="chip"    />
         <result property="ip"    column="ip"    />
+        <result property="lotteryName"    column="lottery_name"    />
     </resultMap>
 
-    <sql id="selectWheelPoolVo">
-        select l.id, l.agent, l.lottery_id,l.puser_id,l.issue,l.bet_info,l.chip,l.ip
+    <sql id="selectLotteryCountVo">
+        select l.id, l.agent, li.name lottery_name,l.puser_id,l.issue,l.bet_info,l.chip,l.ip
         from ${dbLottery}.lottery_count l
-        left join ${dbMain}.member_info m on m.id = l.id
+        left join ${dbLottery}.lottery_info li on l.lottery_id = li.id
     </sql>
 
     <select id="selectAllLotteryCount" parameterType="LotteryCount" resultMap="LotteryCountResult">
-        <include refid="selectWheelPoolVo"/>
+        <include refid="selectLotteryCountVo"/>
         <where>
-            <if test="agent != null  and agent != ''"> and l.agent #{agent}</if>
-            <if test="lotteryId != null "> and l.lottery_id = #{lotteryId}</if>
-            <if test="pUserId != null and pUserId !='' "> and l.puser_d = #{pUserId}</if>
+            <if test="agent != null  and agent != ''"> and l.agent like concat('%', #{agent}, '%')</if>
+            <if test="pUserId != null and pUserId !='' "> and l.puser_id = #{pUserId}</if>
             <if test="issue != null and issue !='' "> and l.issue = #{issue}</if>
+            <if test="lotteryName != null and lotteryName !='' "> and li.name = #{lotteryName}</if>
             <if test="betInfo != null and betInfo !='' "> and l.bet_info = #{betInfo}</if>
             <if test="chip != null and chip !='' "> and l.chip = #{chip}</if>
             <if test="ip != null and ip !='' "> and l.ip = #{ip}</if>
