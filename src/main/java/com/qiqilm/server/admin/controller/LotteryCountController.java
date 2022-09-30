@@ -25,10 +25,6 @@ public class LotteryCountController extends BaseController {
     public TableDataInfo lotteryCountList(LotteryCount lotteryCount){
         startPage();
         List<LotteryCount> lotteryCountList =  lotteryCountService.selectAllLotteryCount(lotteryCount);
-        System.out.println("=============================testing here ============================================");
-        for (LotteryCount lotteryC : lotteryCountList){
-            System.out.println(lotteryC);
-        }
         return getDataTable(lotteryCountList);
     }
 
