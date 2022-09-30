@@ -6,14 +6,12 @@ import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-
 /**
  * lottery Count
  *
  * @author rajesh
  * @date 2022-09-30
  */
-
 @Data
 public class LotteryCount extends BaseEntity {
     private static final long serialVersionUID = 1L;

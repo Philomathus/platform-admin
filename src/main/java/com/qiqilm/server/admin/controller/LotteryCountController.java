@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
 /**
  * lottery count Controller
  *
@@ -26,7 +25,6 @@ public class LotteryCountController extends BaseController {
 
     @Autowired
     private LotteryCountService lotteryCountService;
-
 
     /**
      * get all lotteryCount
