@@ -18,8 +18,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -49,12 +47,10 @@ public class LiuXingPayAgentProcessor extends AbstractPayAgent {
         String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
         dataMap.put( "sign", sign );
 
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll( dataMap );
-        log.warn( payAgentPlatform.getName() + "下单请求参数{}", JsonUtil.object2Json( requestMap ) );
+        log.warn( payAgentPlatform.getName() + "下单请求参数{}", JsonUtil.object2Json( dataMap ) );
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
-        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>( requestMap, httpHeaders );
+        httpHeaders.setContentType( MediaType.APPLICATION_JSON );
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>( dataMap, httpHeaders );
 
         Map<String, Object> resultMap = null;
         try {
@@ -145,12 +141,10 @@ public class LiuXingPayAgentProcessor extends AbstractPayAgent {
         String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
         dataMap.put( "sign", sign );
 
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
-        requestMap.setAll( dataMap );
-        log.warn( payAgentPlatform.getName() + "查询代付状态接口请求参数{}", JsonUtil.object2Json( requestMap ) );
+        log.warn( payAgentPlatform.getName() + "查询代付状态接口请求参数{}", JsonUtil.object2Json( dataMap ) );
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
-        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>( requestMap, httpHeaders );
+        httpHeaders.setContentType( MediaType.APPLICATION_JSON );
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>( dataMap, httpHeaders );
 
         Map<String, Object> responseMap = null;
         try {
