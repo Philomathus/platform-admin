@@ -252,4 +252,5 @@ public abstract class ConstantsPayAgent {
     // 悟空代付
     public static final String WU_KONG = "wuKong";
     public static final String ZHAOH = "zhaoh";
+    public static final String LIUXING = "liuXing";
 }
