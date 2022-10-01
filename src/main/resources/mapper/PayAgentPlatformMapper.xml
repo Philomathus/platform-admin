@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="platWhiteIpList != null  and platWhiteIpList != ''"> and plat_white_ip_list = #{platWhiteIpList}</if>
             <if test="status != null and status != '' "> and status = #{status}</if>
         </where>
-        order by id asc
+        order by id desc
     </select>
 
     <select id="selectPayAgentPlatformById" parameterType="Long" resultMap="PayAgentPlatformResult">
