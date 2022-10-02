@@ -49,7 +49,7 @@ public class LiuBangPayAgentProcessor extends AbstractPayAgent {
 
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
         String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
-        bodyMap.put( "pay_md5sign", sign );
+        bodyMap.put( "sign", sign );
 
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
@@ -148,7 +148,7 @@ public class LiuBangPayAgentProcessor extends AbstractPayAgent {
                 "secretkey" + "/payAgentPrivateKey" ) );
 
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
-        dataMap.put( "pay_md5sign", DigestUtils.md5Hex( tempStr ).toUpperCase() );
+        dataMap.put( "sign", DigestUtils.md5Hex( tempStr ).toUpperCase() );
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll( dataMap );
