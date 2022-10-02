@@ -410,7 +410,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             ) {
                 for (String liveSubAgent : LiveCenterConfig.me.getLiveSubAgents()) {
                     LiveVideo subLiveVideo = liveVideoMapper.selectLiveVideoSortById(liveVideo.getId(), LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
-                    if (subLiveVideo.getSort() == 9999999) {
+                    if (subLiveVideo != null && subLiveVideo.getSort() == 9999999) {
                         liveVideoMapper.updateLiveVideo(liveVideo, LiveCenterConfig.me.getLiveSubAgentDbLive(liveSubAgent));
                     }
                 }
