@@ -30,7 +30,9 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository( value = ConstantsPayAgent.LP + "PayAgentProcessor" )
@@ -112,10 +114,8 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
             return "fail";
         }
 
-        String sign = requestMap.remove( "sign" ).toString();
-
-        String withdrawOrderId = requestMap.getOrDefault( "mer_order_no", "" ).toString();
-        String status          = requestMap.getOrDefault( "result", "" ).toString();
+        String sign   = requestMap.remove( "sign" ).toString();
+        String status = requestMap.getOrDefault( "result", "" ).toString();
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
                 "secretkey" + "/payAgentPrivateKey" ) );
@@ -126,17 +126,21 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
 
         log.info( payAgentPlatform.getName() + "代付回调签名:" + sign + "_" + signStr );
         if ( sign.equalsIgnoreCase( signStr ) ) {
-            MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( withdrawOrderId );
+            List<Map<String, String>> orders = ( List<Map<String, String>> ) requestMap.getOrDefault( "orders",
+                    new ArrayList<>() );
+            Map<String, String> orderMap    = orders.get( 0 );
+            String              merOrderNo  = orderMap.get( "mer_order_no" );
+            MemberWithdrawLog   withdrawLog = withdrawLogMapper.selectByOrderNo( merOrderNo );
             if ( withdrawLog == null ) {
-                log.error( "提现相关记录丢失 - merOrderNo:{}", withdrawOrderId );
+                log.error( "提现相关记录丢失 - merOrderNo:{}", merOrderNo );
                 return "fail";
             }
             if ( withdrawLog.getStatus() == 0 ) {
-                log.error( "已有代付记录 - merOrderNo:{}", withdrawOrderId );
+                log.error( "已有代付记录 - merOrderNo:{}", merOrderNo );
                 return "SUCCESS";
             }
-            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( withdrawOrderId );
-            payAgentService.processOrderPay( withdrawLog, payAgentLog, requestMap.getOrDefault( "order_no", "" )
+            PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( merOrderNo );
+            payAgentService.processOrderPay( withdrawLog, payAgentLog, orderMap.getOrDefault( "order_no", "" )
                                                                                  .toString(), payAgentPlatform,
                     "S".equals( status ) );
             return "SUCCESS";
