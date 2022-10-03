@@ -51,7 +51,7 @@ public class HttpHelper {
 		try {
 			url = new URL( serverUrl );
 			conn = ( HttpURLConnection ) url.openConnection();
-			conn.setConnectTimeout( 5 * 1000 );
+			conn.setConnectTimeout( 1 * 1000 );
 			if ( conn.getResponseCode() == 200 ) {
 				connFlag = true;
 			}
