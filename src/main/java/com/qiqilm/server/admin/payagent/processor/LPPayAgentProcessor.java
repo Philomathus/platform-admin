@@ -14,14 +14,15 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -67,12 +68,14 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
         MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll( bodyMap );
 
-        UriComponents uriComponents = UriComponentsBuilder.fromUriString( payAgentPlatform.getPayOrderAddr() )
-                                                          .queryParams( requestMap ).build();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>( requestMap, httpHeaders );
+
         Map<String, Object> resultMap = null;
         try {
-            resultMap = restTemplate.execute( uriComponents.toUri(), HttpMethod.GET, restTemplate.httpEntityCallback( null ),
-                    response -> {
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
                 InputStream bodyStream = response.getBody();
                 String      text;
                 try ( Reader reader = new InputStreamReader( bodyStream ) ) {
@@ -210,12 +213,14 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
         MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll( dataMap );
 
-        UriComponents uriComponents = UriComponentsBuilder.fromUriString( payAgentPlatform.getPayOrderQueryAddr() )
-                                                          .queryParams( requestMap ).build();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>( requestMap, httpHeaders );
+
 
         try {
-            Map<String, Object> resultMap = restTemplate.execute( uriComponents.toUri(), HttpMethod.GET,
-                    restTemplate.httpEntityCallback( null ), response -> {
+            Map<String, Object> resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( httpEntity ), response -> {
                 InputStream bodyStream = response.getBody();
                 String      text;
                 try ( Reader reader = new InputStreamReader( bodyStream ) ) {
