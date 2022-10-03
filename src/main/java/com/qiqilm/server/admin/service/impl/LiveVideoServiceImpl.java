@@ -20,6 +20,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -91,9 +92,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
     public List<LiveVideo> selectLiveVideoList(LiveVideo liveVideo) {
         List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList(liveVideo);
 
-        if (CollectionUtils.isEmpty(liveVideos)) {
-            return liveVideos;
-        }
         Map<Object, Object> failMap = redisUtil.hGetAll(REDIS_KEY_DETECT_PLAY);
         liveVideos.forEach(video -> {
             failMap.forEach((key, value) -> {
@@ -104,6 +102,17 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             if (video.getLineStatus() == null) {
                 video.setLineStatus(0);
             }
+        });
+        SpringUtils.getBean( LiveVideoServiceImpl.class ).detectPlay( liveVideos );
+        return liveVideos;
+    }
+    
+    @Async
+    public void detectPlay(List<LiveVideo> liveVideos){
+        if (CollectionUtils.isEmpty(liveVideos)) {
+            return;
+        }
+        liveVideos.forEach(video -> {
             if (StringUtils.isBlank(video.getLiveStatus())) {
                 if (!HttpHelper.isConnServerByHttp(video.getPlayUrl())) {
                     redisUtil.hSet(Constants.REDIS_KEY_DETECT_PLAY, video.getId().toString(), "0");
@@ -114,7 +123,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 }
             }
         });
-        return liveVideos;
     }
 
     @Override
