@@ -103,10 +103,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 video.setLineStatus(0);
             }
         });
-        SpringUtils.getBean( LiveVideoServiceImpl.class ).detectPlay( liveVideos );
+        this.detectPlay( liveVideos );
         return liveVideos;
     }
-    
+
     @Async
     public void detectPlay(List<LiveVideo> liveVideos){
         if (CollectionUtils.isEmpty(liveVideos)) {
