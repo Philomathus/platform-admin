@@ -117,7 +117,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             return;
         }
         liveVideos.forEach( video -> {
-            if ( StringUtils.isBlank( video.getLiveStatus() ) ) {
+            if ( StringUtils.isBlank( video.getLiveStatus() ) && !redisUtil.hExists( Constants.REDIS_KEY_DETECT_PLAY, video
+                    .getId().toString() ) ) {
                 if ( !HttpHelper.isConnServerByHttp( video.getPlayUrl() ) ) {
                     redisUtil.hSet( Constants.REDIS_KEY_DETECT_PLAY, video.getId().toString(), "0" );
                     video.setLiveStatus( "0" );
@@ -530,7 +531,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
     public void countHostGift() {
         long s = System.currentTimeMillis();
         log.info( "开始执行主播礼物计算,彩票投注" );
-        String              dayTime    = LocalDate.now().plusDays( -1 ).toString();
+        String dayTime = LocalDate.now().plusDays( -1 ).toString();
         List<HostPropDayVo> propDayVos = liveVideoPropMapper.sumHostPropDayList( dayTime,
                 LiveCenterConfig.me.getProfileDbMain(), LiveCenterConfig.me.getProfileDbLive() );
         log.info( "收礼物主播数：{}", propDayVos.size() );
