@@ -140,9 +140,8 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
                 return "SUCCESS";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( merOrderNo );
-            payAgentService.processOrderPay( withdrawLog, payAgentLog, orderMap.getOrDefault( "order_no", "" )
-                                                                                 .toString(), payAgentPlatform,
-                    "S".equals( status ) );
+            payAgentService.processOrderPay( withdrawLog, payAgentLog, orderMap.getOrDefault( "order_no", "" ),
+                    payAgentPlatform, "S".equals( status ) );
             return "SUCCESS";
         }
         return "fail";
