@@ -51,7 +51,9 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "card_no", withdrawLog.getBankAccount() );
         bodyMap.put( "account_name", Base64Utils.encodeToString( withdrawLog.getBankUserName()
                                                                             .getBytes( StandardCharsets.UTF_8 ) ) );
+        bodyMap.put( "bank_branch", "" );
         bodyMap.put( "bank_code", bankCodeType.name() );
+        bodyMap.put( "cnaps_no", "" );
         bodyMap.put( "bank_name", Base64Utils.encodeToString( withdrawLog.getBankName().getBytes( StandardCharsets.UTF_8 ) ) );
         bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString() );
         bodyMap.put( "backend_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LP );
