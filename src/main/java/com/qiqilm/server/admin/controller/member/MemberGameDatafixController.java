@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberGameDatafix;
+import com.qiqilm.server.admin.domain.MemberGameMoney;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IMemberGameDatafixService;
@@ -82,5 +83,16 @@ public class MemberGameDatafixController extends BaseController {
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( memberGameDatafixService.deleteMemberGameDatafixByIds( ids ) );
 	}
+
+	/**
+	 * add member game data money controller layer
+	 */
+//	@PreAuthorize( "@ss.hasPermi('game:memberGameMoney:add')" )
+	@Log( title = "添加会员上分缺少", businessType = BusinessType.INSERT )
+	@PostMapping("/addMemberGameMoney")
+    public AjaxResult addMemberGameMoney(@RequestBody MemberGameMoney memberGameMoney){
+		return toAjax(memberGameDatafixService.insertMemberGameMoney(memberGameMoney));
+	}
+
 
 }

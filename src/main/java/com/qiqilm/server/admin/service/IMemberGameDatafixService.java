@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.MemberGameDatafix;
+import com.qiqilm.server.admin.domain.MemberGameMoney;
 
 /**
  * 【请填写功能名称】Service接口
@@ -51,5 +52,11 @@ public interface IMemberGameDatafixService {
 	 * @return 游戏注单修复
 	 */
 	public MemberGameDatafix selectMemberGameDatafixById(String id);
+
+	/**
+	 * add member game data money service
+	 */
+	int insertMemberGameMoney(MemberGameMoney memberGameMoney);
+
 
 }

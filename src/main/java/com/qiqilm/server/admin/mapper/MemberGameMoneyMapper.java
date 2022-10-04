@@ -45,4 +45,8 @@ public interface MemberGameMoneyMapper {
 	public int updateMemberGameMoney( MemberGameMoney memberGameMoney );
 
 	List<Integer> lists(@Param("member_id") String member_id);
+
+	 int countMemberGameMoneyId(@Param( "id" ) String id);
+
+
 }

@@ -130,4 +130,12 @@
 		select platform_id from member_game_money
 		where member_id =  #{member_id}
 	</select>
+
+<!-- count member game money Id-->
+	<select id="countMemberGameMoneyId" resultType="java.lang.Integer">
+		select count(1) from ${dbMain}.member_game_money where id=#{id}
+	</select>
+
+
+
 </mapper>

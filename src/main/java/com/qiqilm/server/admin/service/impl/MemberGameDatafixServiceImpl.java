@@ -1,11 +1,16 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.MemberGameDatafix;
+import com.qiqilm.server.admin.domain.MemberGameMoney;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.MemberGameDatafixMapper;
+import com.qiqilm.server.admin.mapper.MemberGameMoneyMapper;
 import com.qiqilm.server.admin.service.IMemberGameDatafixService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,6 +23,9 @@ import java.util.List;
 public class MemberGameDatafixServiceImpl implements IMemberGameDatafixService {
     @Resource
     private MemberGameDatafixMapper memberGameDatafixMapper;
+
+    @Resource
+    private MemberGameMoneyMapper memberGameMoneyMapper;
 
 
     /**
@@ -56,5 +64,29 @@ public class MemberGameDatafixServiceImpl implements IMemberGameDatafixService {
     public MemberGameDatafix selectMemberGameDatafixById(String id) {
         return memberGameDatafixMapper.selectMemberGameDatafixById(id);
     }
+
+    /**
+     * add member game data money service implementation layer
+     */
+    @Override
+    public int insertMemberGameMoney(MemberGameMoney memberGameMoney) {
+        memberGameMoney.setCtime(new Date());
+        memberGameMoney.setStatus(0);
+        memberGameMoney.setOderSn(null);
+        memberGameMoney.setMoney(BigDecimal.valueOf(0.0d));
+
+        if (memberGameMoney.getMemberId() != null && memberGameMoney.getMemberId() != null) {
+            String customId = memberGameMoney.getMemberId()+ "_" + memberGameMoney.getPlatformId();
+            memberGameMoney.setId(customId);
+            System.out.println(memberGameMoney.getId());
+//             add member game data money service implementation layer
+            int countId = memberGameMoneyMapper.countMemberGameMoneyId(memberGameMoney.getId());
+            if (countId > 0) {
+                throw new BusinessException("ID已存在于系统中!");
+            }
+        }
+        return memberGameMoneyMapper.insertMemberGameMoney(memberGameMoney);
+    }
+
 
 }
