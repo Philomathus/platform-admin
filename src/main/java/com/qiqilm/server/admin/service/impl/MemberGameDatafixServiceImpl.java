@@ -82,7 +82,7 @@ public class MemberGameDatafixServiceImpl implements IMemberGameDatafixService {
 //             add member game data money service implementation layer
             int countId = memberGameMoneyMapper.countMemberGameMoneyId(memberGameMoney.getId());
             if (countId > 0) {
-                throw new BusinessException("ID已存在于系统中!");
+                throw new BusinessException("记录已存在");
             }
         }
         return memberGameMoneyMapper.insertMemberGameMoney(memberGameMoney);
