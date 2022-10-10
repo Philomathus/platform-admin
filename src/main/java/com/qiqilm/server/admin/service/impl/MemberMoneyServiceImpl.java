@@ -1,34 +1,33 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.LogMoney;
 import com.qiqilm.server.admin.domain.MemberBcode;
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.MemberMoney;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.LogMoneyMapper;
 import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.MemberMoneyMapper;
 import com.qiqilm.server.admin.service.ILogService;
+import com.qiqilm.server.admin.service.IMemberMoneyService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.ServletUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.MemberMoneyMapper;
-import com.qiqilm.server.admin.domain.MemberMoney;
-import com.qiqilm.server.admin.service.IMemberMoneyService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 派送彩金暂存表Service业务层处理
@@ -123,8 +122,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
         BigDecimal money = li.getMoney();
         BigDecimal beat = li.getBeat();
         //资金日志
-        String markorder = "CJ" + today + userId + money.setScale(0, BigDecimal.ROUND_HALF_UP) + moneydes;
-        ;
+        String markorder = "CJ" + today + userId + "_" + money.setScale(0, RoundingMode.HALF_UP ) + moneydes;
         List<LogMoney> markList = null;
         if (money.compareTo(BigDecimal.ZERO) > 0) {
             markList = logMoneyMapper.findMarkStartTime(userId, markorder, money, null, userId.substring(userId.length() - 1), startFirstTime);
