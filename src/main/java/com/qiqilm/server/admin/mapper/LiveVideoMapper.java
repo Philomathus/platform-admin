@@ -34,7 +34,7 @@ public interface LiveVideoMapper {
      *
      * @return
      */
-    public List<String> selectOnlineLiveGroups();
+    public List<LiveVideo> selectOnlineLiveGroups();
 
     /**
      * 修改直播

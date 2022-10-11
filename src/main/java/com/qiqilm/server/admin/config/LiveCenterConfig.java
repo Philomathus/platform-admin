@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Component
 public class LiveCenterConfig {
@@ -17,14 +16,18 @@ public class LiveCenterConfig {
         me = this;
     }
 
-    @Value("${liveCenter}")
+    @Value( "${liveCenter}" )
     private String liveCenter;
 
-    @Value("${spring.profiles.active}")
+    @Value( "${spring.profiles.active}" )
     private String profile;
 
+    public String getLiveCenter() {
+        return liveCenter;
+    }
+
     public boolean isLiveCenter() {
-        return profile.equals(liveCenter);
+        return profile.equals( liveCenter );
     }
 
     public String getProfile() {
@@ -32,14 +35,14 @@ public class LiveCenterConfig {
     }
 
     public String getLiveCenterDbMain() {
-        if (liveCenter.equals("7701")) {
+        if ( liveCenter.equals( "7701" ) ) {
             return "db_cx001";
         }
         return liveCenter + "_main";
     }
 
     public String getLiveCenterDbLive() {
-        if (liveCenter.equals("7701")) {
+        if ( liveCenter.equals( "7701" ) ) {
             return "cx_live";
         }
         return liveCenter + "_live";
@@ -50,14 +53,14 @@ public class LiveCenterConfig {
     }
 
     public String getProfileDbMain() {
-        if (profile.equals("7701")) {
+        if ( profile.equals( "7701" ) ) {
             return "db_cx001";
         }
         return profile + "_main";
     }
 
     public String getProfileDbLive() {
-        if (profile.equals("7701")) {
+        if ( profile.equals( "7701" ) ) {
             return "cx_live";
         }
         return profile + "_live";
@@ -68,19 +71,19 @@ public class LiveCenterConfig {
     }
 
     public String[] getLiveSubAgents() {
-        String propertiesValue = SpringUtils.getPropertiesValue("live.share." + this.liveCenter);
-        return StringUtils.hasText(propertiesValue) ? propertiesValue.split(",") : null;
+        String propertiesValue = SpringUtils.getPropertiesValue( "live.share." + this.liveCenter );
+        return StringUtils.hasText( propertiesValue ) ? propertiesValue.split( "," ) : null;
     }
 
-    public String getLiveSubAgentDbLive(String agent) {
+    public String getLiveSubAgentDbLive( String agent ) {
         return agent + "_live";
     }
 
-    public String getLiveSubAgentDbMain(String agent) {
+    public String getLiveSubAgentDbMain( String agent ) {
         return agent + "_main";
     }
 
-    public String getLiveSubAgentDbLottery(String agent) {
+    public String getLiveSubAgentDbLottery( String agent ) {
         return agent + "_lottery";
     }
 }

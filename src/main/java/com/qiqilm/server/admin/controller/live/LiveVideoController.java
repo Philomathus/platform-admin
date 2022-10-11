@@ -132,7 +132,7 @@ public class LiveVideoController extends BaseController {
                 return AjaxResult.success( "主播不存在" );
             }
             if ( liveVideo1.getLiveIn() == 1 ) {
-                helpNoticeUtil.sendMsg( liveVideo.getInfo(), liveVideo1.getGroupId() );
+                helpNoticeUtil.sendMsg( liveVideo.getInfo(), liveVideo1.getGroupId(), String.valueOf( liveVideo.getId() ) );
                 log.warn( "小助手发言消息" + liveVideo.getInfo(), liveVideo1.getGroupId() );
             } else {
                 return AjaxResult.success( "主播未在线" );

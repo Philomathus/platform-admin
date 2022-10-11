@@ -13,6 +13,7 @@ import com.qiqilm.server.admin.domain.ServerLive;
 import com.qiqilm.server.admin.domain.vo.HostPropDayVo;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.im.ImApi;
+import com.qiqilm.server.admin.imserver.ImServerUtils;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.*;
@@ -64,6 +65,8 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
     private LiveHostWageDayMapper liveHostWageDayMapper;
     @Resource
     private HelpNoticeUtil        helpNoticeUtil;
+    @Resource
+    private ImServerUtils         imServerUtils;
 
     @Value( "${live.encrypt.privateKey}" )
     private String liveRsaPrivateKey;
@@ -268,6 +271,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 //imApi.sendGroupMessage(video.getGroupId(), message);
                 imApi.sendSystemNotify( video.getGroupId(), JsonUtil.object2Json( ext ) );
                 imApi.sendSystemNotify( video.getGroupId(), JsonUtil.object2Json( ext ) );
+
+                ext.remove( "systemtime" );
+                ext.remove( "userinfomat" );
+                imServerUtils.sendGroupMessage( String.valueOf( video.getId() ), JsonUtil.object2Json( ext ) );
             } catch ( Exception e ) {
                 log.error( "房间号不存在或无法发送直播结束通知 - videoId:{};groupId:{}", video.getId(), video.getGroupId(), e );
             }
@@ -340,6 +347,10 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             //imApi.sendGroupMessage(video.getGroupId(), message);
             imApi.sendSystemNotify( video.getGroupId(), JsonUtil.object2Json( ext ) );
             imApi.sendSystemNotify( video.getGroupId(), JsonUtil.object2Json( ext ) );
+
+            ext.remove( "systemtime" );
+            ext.remove( "userinfomat" );
+            imServerUtils.sendGroupMessage( String.valueOf( video.getId() ), JsonUtil.object2Json( ext ) );
             return msg;
         }
         throw new RuntimeException( "切换失败" );
@@ -440,7 +451,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 String msg     = sysConfigCacheUtil.getConf( "first_twenty_notice" );
                 String groupId = liveVideo1.getGroupId();
                 if ( StringUtils.isNotEmpty( msg ) && StringUtils.isNotEmpty( groupId ) ) {
-                    helpNoticeUtil.sendMsg( msg, groupId );
+                    helpNoticeUtil.sendMsg( msg, groupId, String.valueOf( liveVideo.getId() ) );
                 }
             }
         }
@@ -510,7 +521,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
     }
 
     @Override
-    public List<String> selectOnlineLiveGroups() {
+    public List<LiveVideo> selectOnlineLiveGroups() {
         return liveVideoMapper.selectOnlineLiveGroups();
     }
 

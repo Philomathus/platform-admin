@@ -399,8 +399,8 @@
     <select id="countLiveInSort" resultType="long">
 		select count(0) from ${dbLive}.live_video where live_in = 1 and sort = #{sort}
 	</select>
-    <select id="selectOnlineLiveGroups" resultType="java.lang.String">
-        select group_id FROM ${dbLive}.live_video where live_in = 1
+    <select id="selectOnlineLiveGroups" resultMap="LiveVideoResult">
+        select id,group_id FROM ${dbLive}.live_video where live_in = 1
     </select>
 
     <select id="selectLiveInPlayDetect" resultMap="LiveVideoResult">

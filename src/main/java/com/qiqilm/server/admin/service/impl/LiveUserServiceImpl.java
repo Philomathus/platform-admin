@@ -306,7 +306,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
     private void setIms( LiveVideo liveVideo, Object id, String title ) {
         if ( !org.springframework.util.StringUtils.hasText( liveVideo.getGroupId() ) ) {
             //创建 im 聊天群
-            String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM, String.valueOf( liveVideo.getUserId() ) );
+            String groupId = imApi.createGroup( null, GroupType.AV_CHART_ROOM, String.valueOf( liveVideo.getUserId() ) );
             if ( groupId == null ) {
                 throw new BusinessException( "创建直播失败,请联系客服" );
             }
@@ -319,7 +319,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             } catch ( Exception e ) {
                 log.error( "主播调用开播接口 - 测试群组失败 - userId:{};groupId:{}", id, liveVideo.getGroupId(), e );
                 //创建 im 聊天群
-                String groupId = imApi.createGroup( id.toString(), GroupType.AV_CHART_ROOM,
+                String groupId = imApi.createGroup( null, GroupType.AV_CHART_ROOM,
                         String.valueOf( liveVideo.getUserId() ) );
                 log.info( "主播调用开播接口 - 开始创建群组 - userId:{};groupId:{}", id, groupId );
                 liveVideo.setGroupId( groupId );

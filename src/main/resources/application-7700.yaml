@@ -23,3 +23,9 @@ mybatis:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 liveCenter: 7700
+
+im:
+  # 群聊
+  sendGroupMsg: http://54.178.74.47/chat/sendGroupMsg/
+  # 单聊
+  sendMsg: http://54.178.74.47/chat/sendMsg/

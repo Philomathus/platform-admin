@@ -1,15 +1,17 @@
 package com.qiqilm.server.admin.utils;
 
-import com.qiqilm.server.admin.cache.BatchIMCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.config.LiveCenterConfig;
+import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.im.ImApi;
+import com.qiqilm.server.admin.imserver.ImServerUtils;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,74 +26,79 @@ import java.util.Map;
 @Component
 public class HelpNoticeUtil implements Serializable {
     @Autowired
-    private ILiveVideoService liveVideoService;
+    private ILiveVideoService  liveVideoService;
     @Autowired
     private SysConfigCacheUtil sysConfigCacheUtil;
-    @Autowired
-    private BatchIMCacheUtil batchIMCacheUtil;
 
-    @Value("${live.encrypt.privateKey}")
+    @Value( "${live.encrypt.privateKey}" )
     private String liveRsaPrivateKey;
 
-    @Value("${spring.profiles.active}")
+    @Value( "${spring.profiles.active}" )
     private String profile;
 
     @Autowired
-    private ImApi imApi;
+    private ImApi         imApi;
+    @Resource
+    private ImServerUtils imServerUtils;
 
     /**
      * 所有直播间发送消息
      *
      * @param text 文本
      */
-    public void sendMsg(String text) {
-        if (text == null) {
+    public void sendMsg( String text ) {
+        if ( text == null ) {
             return;
         }
-        String agent = profile;
-        HashMap<String, Object> ext = new HashMap<>();
-        ext.put("type", 0); //普通消息
-        ext.put("fonts_color", "");
-        ext.put("text", text);
+        String                  agent = profile;
+        HashMap<String, Object> ext   = new HashMap<>();
+        ext.put( "type", 0 ); //普通消息
+        ext.put( "fonts_color", "" );
+        ext.put( "text", text );
         Map<String, Object> info = new HashMap<>();
-        info.put("user_id", "admin");
-        info.put("user_level", "50");
-        info.put("nick_name", sysConfigCacheUtil.getConf("77_help_nick_name"));
-        info.put("officer", "2");
-        info.put("guardType", "2");
-        info.put("agent", profile);
-        ext.put("sender", info);
+        info.put( "user_id", "admin" );
+        info.put( "user_level", "50" );
+        info.put( "nick_name", sysConfigCacheUtil.getConf( "77_help_nick_name" ) );
+        info.put( "officer", "2" );
+        info.put( "guardType", "2" );
+        info.put( "agent", profile );
+        ext.put( "sender", info );
 
-//		if(!profile.equals("7706")){
-//			agent = "";
-//		}else{
-//			info.put( "agent", agent );
-//		}
-        if (!LiveCenterConfig.me.isLiveCenter()) {
-            info.put("agent", agent);
+        //		if(!profile.equals("7706")){
+        //			agent = "";
+        //		}else{
+        //			info.put( "agent", agent );
+        //		}
+        if ( !LiveCenterConfig.me.isLiveCenter() ) {
+            info.put( "agent", agent );
         } else {
             agent = "";
         }
 
         try {
             long time = System.currentTimeMillis();
-            ext.put("systemtime", time);
+            ext.put( "systemtime", time );
 
-            String data = info.get("user_id").toString() + info.get("nick_name").toString() + time
-                    + info.get("user_level").toString() + text + agent;
-            ext.put("userinfomat", RSACoder.signSha1Rsa(data, liveRsaPrivateKey));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String data = info.get( "user_id" ).toString() + info.get( "nick_name" ).toString() + time + info.get( "user_level" )
+                                                                                                             .toString() + text
+                    + agent;
+            ext.put( "userinfomat", RSACoder.signSha1Rsa( data, liveRsaPrivateKey ) );
+        } catch ( Exception e ) {
+            log.error( e.getMessage(), e );
         }
 
-        for (String groupId : liveVideoService.selectOnlineLiveGroups()) {
-            try {
-                // ext.put("groupId", groupId);
-                // batchIMCacheUtil.push(JsonUtil.object2Json(ext));
+        String value = JsonUtil.object2Json( ext );
+        ext.remove( "systemtime" );
+        ext.remove( "userinfomat" );
+        String newImValue = JsonUtil.object2Json( ext );
 
-                imApi.sendSystemNotify(groupId, JsonUtil.object2Json(ext));
-            } catch (Exception e) {
-                log.error("小助手发消息失败", e);
+        for ( LiveVideo liveVideo : liveVideoService.selectOnlineLiveGroups() ) {
+            try {
+                imApi.sendSystemNotify( liveVideo.getGroupId(), value );
+
+                imServerUtils.sendGroupMessage( String.valueOf( liveVideo.getId() ), newImValue );
+            } catch ( Exception e ) {
+                log.error( "小助手发消息失败", e );
             }
 
         }
@@ -102,48 +109,49 @@ public class HelpNoticeUtil implements Serializable {
      *
      * @param text 文本
      */
-    public void sendMsg(String text, String groupId) {
-        if (text == null) {
+    public void sendMsg( String text, String groupId, String videoId ) {
+        if ( text == null ) {
             return;
         }
-        String agent = profile;
-        HashMap<String, Object> ext = new HashMap<>();
-        ext.put("type", 0); //普通消息
-        ext.put("fonts_color", "");
-        ext.put("text", text);
+        String                  agent = profile;
+        HashMap<String, Object> ext   = new HashMap<>();
+        ext.put( "type", 0 ); //普通消息
+        ext.put( "fonts_color", "" );
+        ext.put( "text", text );
         Map<String, Object> info = new HashMap<>();
-        info.put("user_id", "admin");
-        info.put("user_level", "50");
-        info.put("nick_name", sysConfigCacheUtil.getConf("77_help_nick_name"));
-        info.put("officer", "2");
-        info.put("guardType", "2");
-        info.put("agent", profile);
-        ext.put("sender", info);
-        if (!LiveCenterConfig.me.isLiveCenter()) {
-            info.put("agent", agent);
+        info.put( "user_id", "admin" );
+        info.put( "user_level", "50" );
+        info.put( "nick_name", sysConfigCacheUtil.getConf( "77_help_nick_name" ) );
+        info.put( "officer", "2" );
+        info.put( "guardType", "2" );
+        info.put( "agent", profile );
+        ext.put( "sender", info );
+        if ( !LiveCenterConfig.me.isLiveCenter() ) {
+            info.put( "agent", agent );
         } else {
             agent = "";
         }
 
         try {
             long time = System.currentTimeMillis();
-            ext.put("systemtime", time);
-            String data = info.get("user_id").toString() + info.get("nick_name").toString() + time
-                    + info.get("user_level").toString() + text + agent;
-            log.error("管理后台给主播发通知data:{}", data);
-            ext.put("userinfomat", RSACoder.signSha1Rsa(data, liveRsaPrivateKey));
+            ext.put( "systemtime", time );
+            String data = info.get( "user_id" ).toString() + info.get( "nick_name" ).toString() + time + info.get( "user_level" )
+                                                                                                             .toString() + text
+                    + agent;
+            log.error( "管理后台给主播发通知data:{}", data );
+            ext.put( "userinfomat", RSACoder.signSha1Rsa( data, liveRsaPrivateKey ) );
 
-            ext.put("groupId", groupId);
+            ext.put( "groupId", groupId );
 
-            imApi.sendSystemNotify(groupId, JsonUtil.object2Json(ext));
+            imApi.sendSystemNotify( groupId, JsonUtil.object2Json( ext ) );
 
-            //batchIMCacheUtil.push(JsonUtil.object2Json(ext));
+            ext.remove( "systemtime" );
+            ext.remove( "userinfomat" );
+            imServerUtils.sendGroupMessage( videoId, JsonUtil.object2Json( ext ) );
 
-            //MessageType messageType = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
-            //imApi.sendGroupMessage(groupId, messageType);
-            log.warn("小助手消息发送成功" + groupId, JsonUtil.object2Json(ext));
-        } catch (Exception e) {
-            log.error("小助手发消息失败", e);
+            log.warn( "小助手消息发送成功" + groupId, JsonUtil.object2Json( ext ) );
+        } catch ( Exception e ) {
+            log.error( "小助手发消息失败", e );
         }
 
 
