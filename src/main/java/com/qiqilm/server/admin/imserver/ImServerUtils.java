@@ -53,7 +53,7 @@ public class ImServerUtils {
     }
 
     private RspBase<?> sendGroupMessage( String groupId, String message, int retryNum ) {
-        if ( StringUtils.isBlank( this.imSendGroupMsgUrl ) ) {
+        if ( StringUtils.isBlank( this.imSendGroupMsgUrl ) || !this.imSendGroupMsgUrl.startsWith( "http" ) ) {
             log.error( "新IM - 未初始化参数, IM消息无法发送" );
             return null;
         }
@@ -91,7 +91,7 @@ public class ImServerUtils {
      * @param message  消息文本
      */
     public void sendMessage( String memberId, String message ) {
-        if ( StringUtils.isBlank( this.imSendMsgUrl ) ) {
+        if ( StringUtils.isBlank( this.imSendMsgUrl ) || !this.imSendMsgUrl.startsWith( "http" ) ) {
             log.error( "新IM - 未初始化参数, IM消息无法发送" );
             return;
         }
