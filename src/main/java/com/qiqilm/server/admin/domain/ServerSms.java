@@ -75,6 +75,11 @@ public class ServerSms {
 	 */
 	private Date updateTime;
 
+	/**
+	 * 管理员账号
+	 */
+	private String endpoint;
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
@@ -89,6 +94,7 @@ public class ServerSms {
 				.append( "smsSdkAppid", getSmsSdkAppid() )
 				.append( "identify", getIdentify() )
 				.append( "isEffect", getIsEffect() )
+				.append( "endpoint", getEndpoint())
 				.toString();
 	}
 }

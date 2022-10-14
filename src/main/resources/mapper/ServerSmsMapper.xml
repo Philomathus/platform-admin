@@ -16,6 +16,8 @@
 		<result property="identify" column="identify"/>
 		<result property="isEffect" column="is_effect"/>
 		<result property="updateTime" column="update_time"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="endpoint" column="endpoint"/>
 	</resultMap>
 
 	<sql id="selectServerSmsVo">
@@ -30,6 +32,7 @@
 			   sms_sdk_appid,
 			   identify,
 			   is_effect,
+			   endpoint,
 		       update_time
 		from ${dbLive}.server_sms
 	</sql>
@@ -90,6 +93,9 @@
 			<if test="updateTime != null">
 				update_time,
 			</if>
+			<if test="endpoint != null and endpoint != ''">
+				endpoint,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null and name != ''">
@@ -124,6 +130,9 @@
 			</if>
 			<if test="updateTime != null">
 				#{updateTime},
+			</if>
+			<if test="endpoint != null and endpoint=''">
+				#{endpoint},
 			</if>
 		</trim>
 	</insert>
@@ -163,6 +172,9 @@
 			</if>
 			<if test="updateTime != null">
 				update_time = #{updateTime},
+			</if>
+			<if test="endpoint != null and endpoint !=''">
+				endpoint = #{endpoint},
 			</if>
 		</trim>
 		where id = #{id}
