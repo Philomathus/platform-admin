@@ -25,49 +25,55 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
      * 查询 会员资金信息列表
      *
      * @param logMoney 会员资金信息
+     *
      * @return 会员资金信息
      */
     @Override
-    public List<LogMoney> selectLogMoneyList(LogMoney logMoney) {
-        this.getTime(logMoney);
-        if (StringUtils.isNotBlank(logMoney.getSearchValue()) && logMoney.getSearchValue().startsWith("77")) {
-            String tableLast = logMoney.getSearchValue().substring(logMoney.getSearchValue().length() - 1);
-            logMoney.setTableLast(tableLast);
-            return logMoneyMapper.selectLogMoneySingleList(logMoney);
-        } else if (logMoney.getTypes() != null && "8".equals(logMoney.getTypes()[0]) && "智勇大闯关".equals(logMoney.getMark())) {
-            return logMoneyMapper.selectLogMoneyList(logMoney);
-        } else if(logMoney.getTypes() == null && StringUtils.isNotBlank(logMoney.getMark()) && StringUtils.isBlank(logMoney.getSearchValue())){
-            return logMoneyMapper.selectLogMoneyList(logMoney);
-        }else if (logMoney.getTypes() != null && StringUtils.isBlank(logMoney.getSearchValue())) {
-            return logMoneyMapper.selectLogMoneyFirstList(logMoney);
+    public List<LogMoney> selectLogMoneyList( LogMoney logMoney ) {
+        this.getTime( logMoney );
+        if ( "智勇大闯关".equals( logMoney.getMark() ) ) {
+            logMoney.setMark( logMoney.getMark() + "彩金" );
+        }
+        if ( StringUtils.isNotBlank( logMoney.getSearchValue() ) && logMoney.getSearchValue().startsWith( "77" ) ) {
+            String tableLast = logMoney.getSearchValue().substring( logMoney.getSearchValue().length() - 1 );
+            logMoney.setTableLast( tableLast );
+            return logMoneyMapper.selectLogMoneySingleList( logMoney );
+        } else if ( logMoney.getTypes() != null && "8".equals( logMoney.getTypes()[ 0 ] )
+                && "智勇大闯关彩金".equals( logMoney.getMark() ) ) {
+            return logMoneyMapper.selectLogMoneyList( logMoney );
+        } else if ( logMoney.getTypes() == null && StringUtils.isNotBlank( logMoney.getMark() )
+                && StringUtils.isBlank( logMoney.getSearchValue() ) ) {
+            return logMoneyMapper.selectLogMoneyList( logMoney );
+        } else if ( logMoney.getTypes() != null && StringUtils.isBlank( logMoney.getSearchValue() ) ) {
+            return logMoneyMapper.selectLogMoneyFirstList( logMoney );
         } else {
-            logMoney.setTableLast("0");
-            return logMoneyMapper.selectLogMoneySingleList(logMoney);
+            logMoney.setTableLast( "0" );
+            return logMoneyMapper.selectLogMoneySingleList( logMoney );
         }
         //return logMoneyMapper.selectLogMoneyList( logMoney );
     }
 
     @Override
-    public AjaxResult totalCount(LogMoney logMoney) {
-        this.getTime(logMoney);
-        return AjaxResult.success(logMoneyMapper.totalCount(logMoney));
+    public AjaxResult totalCount( LogMoney logMoney ) {
+        this.getTime( logMoney );
+        return AjaxResult.success( logMoneyMapper.totalCount( logMoney ) );
     }
 
     @Override
-    public AjaxResult listCount(LogMoney logMoney) {
-        this.getTime(logMoney);
-        if (StringUtils.isNotBlank(logMoney.getSearchValue()) && logMoney.getSearchValue().startsWith("77")) {
-            String tableLast = logMoney.getSearchValue().substring(logMoney.getSearchValue().length() - 1);
-            logMoney.setTableLast(tableLast);
+    public AjaxResult listCount( LogMoney logMoney ) {
+        this.getTime( logMoney );
+        if ( StringUtils.isNotBlank( logMoney.getSearchValue() ) && logMoney.getSearchValue().startsWith( "77" ) ) {
+            String tableLast = logMoney.getSearchValue().substring( logMoney.getSearchValue().length() - 1 );
+            logMoney.setTableLast( tableLast );
         }
-        return AjaxResult.success(logMoneyMapper.listCount(logMoney));
+        return AjaxResult.success( logMoneyMapper.listCount( logMoney ) );
     }
 
 
-    private void getTime(LogMoney logMoney) {
-        if (logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0) {
-            logMoney.setStartTime(logMoney.getSelectDate()[0]);
-            logMoney.setEndTime(logMoney.getSelectDate()[1]);
+    private void getTime( LogMoney logMoney ) {
+        if ( logMoney.getSelectDate() != null && logMoney.getSelectDate().length > 0 ) {
+            logMoney.setStartTime( logMoney.getSelectDate()[ 0 ] );
+            logMoney.setEndTime( logMoney.getSelectDate()[ 1 ] );
         }
     }
 }
