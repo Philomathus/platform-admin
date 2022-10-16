@@ -13,6 +13,7 @@ import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberRechargeLogService;
+import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import com.qiqilm.server.admin.utils.UuidUtil;
 import lombok.extern.log4j.Log4j2;
@@ -25,6 +26,8 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 充值返现活动
@@ -58,9 +61,16 @@ public class MemberCashBackTask {
                 || redisUtil.exists( getClass().getSimpleName() ) ) {
             return;
         }
+        log.info( "开始执行充值返现活动任务" );
+
         //查询昨天公司入款金额
         List<MemberRechargeLog> memberRechargeLogs = memberRechargeLogService.memberRechargeLogLists();
-        long                    now                = System.currentTimeMillis();
+
+        Set<String> all = memberRechargeLogs.stream().map( memberRechargeLog -> memberRechargeLog.getMemberId() + ":"
+                + memberRechargeLog.getRechargeMoney() ).collect( Collectors.toSet() );
+        log.warn( "执行充值返现活动任务 - 昨日充值会员:{}", JsonUtil.object2Json( all ) );
+
+        long now = System.currentTimeMillis();
         for ( MemberRechargeLog memberRechargeLog : memberRechargeLogs ) {
             //要返现金额
             Integer bycash = activityCashBackMapper.selectActivityCashBackBycash( memberRechargeLog.getRechargeMoney() );
@@ -68,6 +78,8 @@ public class MemberCashBackTask {
                 int count = logMoneyMapper.findExistActivityCashBack( memberRechargeLog.getMemberId(), memberRechargeLog
                         .getMemberId().substring( memberRechargeLog.getMemberId().length() - 1 ) );
                 if ( count > 0 ) {
+                    log.error( "执行充值返现活动任务 - 存在充值记录的会员:{}, 金额:{}", memberRechargeLog.getMemberId(),
+                            memberRechargeLog.getRechargeMoney() );
                     continue;
                 }
                 //会员返现
@@ -76,7 +88,12 @@ public class MemberCashBackTask {
                             EnumMoney.activity.getDes(), memberRechargeLog.getOrderNo() );
                 } catch ( Exception e ) {
                     log.error( memberRechargeLog.getMemberId() + "数据插入失败" + e.getMessage(), e );
+                    log.error( "执行充值返现活动任务 - 充值失败的会员:{}, 金额:{}", memberRechargeLog.getMemberId(),
+                            memberRechargeLog.getRechargeMoney() );
                 }
+            } else {
+                log.warn( "执行充值返现活动任务 - 未达到充值标准的会员:{}, 金额:{}", memberRechargeLog.getMemberId(),
+                        memberRechargeLog.getRechargeMoney() );
             }
         }
         redisUtil.strSet( getClass().getSimpleName(), "0", Duration.ofHours( 23 ) );
@@ -94,9 +111,6 @@ public class MemberCashBackTask {
         codeFlow.setUserId( userId );
         codeFlow.setDes( chargeType );
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( userId );
-        if ( memberInfo == null ) {
-            return;
-        }
         //日志
         logService.logMoneyAdd( null, userId, memberInfo.getUserName(), EnumMoney.activity, money, memberInfo.getTotalAccount()
                 , "充值返现活动", orderNo );
