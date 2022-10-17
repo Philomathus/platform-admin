@@ -57,8 +57,7 @@ public class MemberCashBackTask {
         if ( !sysConfigCacheUtil.getConfBool( "cash_back_switch" ) ) {
             return;
         }
-        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 )
-                || redisUtil.exists( getClass().getSimpleName() ) ) {
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 ) ) {
             return;
         }
         log.info( "开始执行充值返现活动任务" );
