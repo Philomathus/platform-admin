@@ -20,28 +20,30 @@ import com.qiqilm.server.admin.domain.ServerSms;
 import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.mapper.ServerSmsMapper;
 import com.qiqilm.server.admin.service.IServerSmsService;
-import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.RandomUtils;
-import com.qiqilm.server.admin.utils.ServletUtil;
+import com.qiqilm.server.admin.utils.*;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
+import org.springframework.web.client.RestTemplate;
 
-import javax.net.ssl.*;
-import java.io.*;
-import java.net.URL;
+import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -53,12 +55,14 @@ import java.util.regex.Pattern;
 @Log4j2
 @Service
 public class ServerSmsServiceImpl implements IServerSmsService {
-    @Autowired
+    @Resource
     private ServerSmsMapper    serverSmsMapper;
-    @Autowired
+    @Resource
     private ServerSmsCacheUtil serverSmsCacheUtil;
-    @Autowired
+    @Resource
     private TokenService       tokenService;
+    @Resource
+    private RestTemplate       restTemplate;
 
     //无需修改,用于格式化鉴权头域,给"X-WSSE"参数赋值
     private static final String WSSE_HEADER_FORMAT =
@@ -196,6 +200,9 @@ public class ServerSmsServiceImpl implements IServerSmsService {
         }
         try {
             String code = this.sendSms( mobile, id );
+            if ( StringUtils.isBlank( code ) ) {
+                return AjaxResult.error( "短信发送失败" );
+            }
             return AjaxResult.success( "短信发送成功", code );
         } catch ( BaseException e ) {
             return AjaxResult.error( e.getMessage() );
@@ -313,91 +320,24 @@ public class ServerSmsServiceImpl implements IServerSmsService {
     }
 
     /**
-     * 构造请求Body体 Construct the request body
-     *
-     * @param sender
-     * @param receiver
-     * @param templateId
-     * @param templateParas
-     * @param statusCallBack
-     * @param signature      | 签名名称,使用国内短信通用模板时填写 Signature name, fill in when using the general template for domestic SMS
-     */
-    private static String buildRequestBody( String sender, String receiver, String templateId, String templateParas,
-                                            String signature ) {
-        if ( null == sender || null == receiver || null == templateId || sender.isEmpty() || receiver.isEmpty()
-                || templateId.isEmpty() ) {
-            return null;
-        }
-        Map<String, String> map = new HashMap<String, String>();
-
-        map.put( "from", sender );
-        map.put( "to", receiver );
-        map.put( "templateId", templateId );
-        if ( null != templateParas && !templateParas.isEmpty() ) {
-            map.put( "templateParas", templateParas );
-        }
-        if ( null != signature && !signature.isEmpty() ) {
-            map.put( "signature", signature );
-        }
-
-        StringBuilder sb   = new StringBuilder();
-        String        temp = "";
-
-        for ( String s : map.keySet() ) {
-            try {
-                temp = URLEncoder.encode( map.get( s ), "UTF-8" );
-            } catch ( UnsupportedEncodingException e ) {
-                e.printStackTrace();
-            }
-            sb.append( s ).append( "=" ).append( temp ).append( "&" );
-        }
-
-        return sb.deleteCharAt( sb.length() - 1 ).toString();
-    }
-
-    /**
      * 构造X-WSSE参数值 Construct X-WSSE parameter value
      *
      * @param appKey
      * @param appSecret
      */
     static String buildWsseHeader( String appKey, String appSecret ) {
-        if ( null == appKey || null == appSecret || appKey.isEmpty() || appSecret.isEmpty() ) {
-            log.error( "buildWsseHeader(): appKey or appSecret is null." );
-            return null;
-        }
-        SimpleDateFormat sdf            = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'Z'" );
-        String           time           = sdf.format( new Date() );
-        String           nonce          = UUID.randomUUID().toString().replace( "-", "" );
-        byte[]           passwordDigest = null;
         try {
-            MessageDigest md = MessageDigest.getInstance( "SHA-256" );
+            SimpleDateFormat sdf   = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'Z'" );
+            String           time  = sdf.format( new Date() );
+            String           nonce = UuidUtil.getRandomUuidWithoutSeparator();
+            MessageDigest    md    = MessageDigest.getInstance( "SHA-256" );
             md.update( ( nonce + time + appSecret ).getBytes() );
-            passwordDigest = md.digest();
+            String passwordDigestBase64Str = Base64Utils.encodeToString( md.digest() );
+            return String.format( WSSE_HEADER_FORMAT, appKey, passwordDigestBase64Str, nonce, time );
         } catch ( NoSuchAlgorithmException e ) {
             e.printStackTrace();
         }
-        String passwordDigestBase64Str = Base64.getEncoder().encodeToString( passwordDigest );
-        return String.format( WSSE_HEADER_FORMAT, appKey, passwordDigestBase64Str, nonce, time );
-    }
-
-    /*** @throws Exception
-     */
-    static void trustAllHttpsCertificates() throws Exception {
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-            public void checkClientTrusted( X509Certificate[] chain, String authType ) throws CertificateException {
-            }
-
-            public void checkServerTrusted( X509Certificate[] chain, String authType ) throws CertificateException {
-            }
-
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-        } };
-        SSLContext sc = SSLContext.getInstance( "SSL" );
-        sc.init( null, trustAllCerts, null );
-        HttpsURLConnection.setDefaultSSLSocketFactory( sc.getSocketFactory() );
+        return null;
     }
 
 
@@ -406,73 +346,46 @@ public class ServerSmsServiceImpl implements IServerSmsService {
         String receiver      = "+86" + phone;
         String templateParas = "[\"" + code + "\"]";
 
-        //请求Body,不携带签名名称时,signature请填null - When requesting Body, if the signature name is not included, please fill in null
-        // for signature
-        String body = buildRequestBody( serverSms.getSignature(), receiver, serverSms.getTemplate(), templateParas,
-                serverSms.getRegion() );
+        Map<String, String> params = new HashMap<>();
+        params.put( "from", serverSms.getSignature() );
+        params.put( "to", receiver );
+        params.put( "templateId", serverSms.getTemplate() );
+        params.put( "templateParas", templateParas );
+        params.put( "signature", serverSms.getName() );
+
+        StringBuilder sb = new StringBuilder();
+        params.forEach( ( k, v ) -> {
+            try {
+                sb.append( k ).append( "=" ).append( URLEncoder.encode( v, "UTF-8" ) ).append( "&" );
+            } catch ( UnsupportedEncodingException e ) {
+                throw new RuntimeException( e );
+            }
+        } );
+        String body = sb.substring( 0, sb.length() - 1 );
+
+        log.warn( body );
 
         //请求Headers中的X-WSSE参数值
         String wsseHeader = buildWsseHeader( serverSms.getAppKey(), serverSms.getAppAccess() );
 
-        Writer             out        = null;
-        BufferedReader     in         = null;
-        StringBuffer       result     = new StringBuffer();
-        InputStream        is         = null;
+        log.warn( wsseHeader );
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
+        httpHeaders.add( "Authorization", AUTH_HEADER_VALUE );
+        httpHeaders.add( "X-WSSE", wsseHeader );
+        HttpEntity<String> httpEntity = new HttpEntity<>( body, httpHeaders );
 
         try {
-            trustAllHttpsCertificates();
-
-            URL realUrl = new URL( serverSms.getEndpoint() );
-            HttpsURLConnection connection = ( HttpsURLConnection ) realUrl.openConnection();
-
-            connection.setHostnameVerifier( ( hostname, session ) -> true );
-            connection.setDoOutput( true );
-            connection.setDoInput( true );
-            connection.setUseCaches( true );
-            //请求方法
-            connection.setRequestMethod( "POST" );
-            //请求Headers参数
-            connection.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded" );
-            connection.setRequestProperty( "Authorization", AUTH_HEADER_VALUE );
-            connection.setRequestProperty( "X-WSSE", wsseHeader );
-
-            connection.connect();
-            out = new OutputStreamWriter( connection.getOutputStream() );
-            out.write( body );
-            out.flush();
-            out.close();
-
-            int status = connection.getResponseCode();
-            if ( 200 == status ) { //200
-                is = connection.getInputStream();
-            } else { //400/401
-                is = connection.getErrorStream();
+            ResponseEntity<Map> responseEntity = restTemplate.postForEntity(
+                    serverSms.getEndpoint() + "/sms/batchSendSms/v1", httpEntity, Map.class );
+            if ( responseEntity.getStatusCode().is2xxSuccessful() ) {
+                log.warn( JsonUtil.object2Json( responseEntity.getBody() ) );
+                return code;
             }
-            in = new BufferedReader( new InputStreamReader( is, StandardCharsets.UTF_8 ) );
-            String line = "";
-            while ( ( line = in.readLine() ) != null ) {
-                result.append( line );
-            }
-            log.info( result );
         } catch ( Exception e ) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if ( null != out ) {
-                    out.close();
-                }
-                if ( null != is ) {
-                    is.close();
-                }
-                if ( null != in ) {
-                    in.close();
-                }
-            } catch ( Exception e ) {
-                e.printStackTrace();
-            }
+            log.error( e.getMessage(), e );
         }
-
-
         return null;
     }
 
