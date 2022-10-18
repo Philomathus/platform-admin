@@ -363,12 +363,8 @@ public class ServerSmsServiceImpl implements IServerSmsService {
         } );
         String body = sb.substring( 0, sb.length() - 1 );
 
-        log.warn( body );
-
         //请求Headers中的X-WSSE参数值
         String wsseHeader = buildWsseHeader( serverSms.getAppKey(), serverSms.getAppAccess() );
-
-        log.warn( wsseHeader );
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
