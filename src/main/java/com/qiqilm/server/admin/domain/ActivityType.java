@@ -21,6 +21,10 @@ public class ActivityType extends BaseEntity {
     @Excel(name = "名称")
     private String name;
 
+    /** 排序字段 */
+    @Excel(name = "排序字段")
+    private String oder;
+
     public void setId(String id) {
         this.id = id;
     }
@@ -36,11 +40,21 @@ public class ActivityType extends BaseEntity {
         return name;
     }
 
+    public String getOder() {
+        return oder;
+    }
+
+    public void setOder(String oder) {
+        this.oder = oder;
+    }
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("name", getName())
+            .append("oder", getOder())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .toString();

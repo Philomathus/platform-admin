@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.MemberMoney;
@@ -58,4 +59,6 @@ public interface MemberMoneyMapper {
 	 * @return 结果
 	 */
 	public int deleteMemberMoneyByIds(String[] memberIds );
+
+	public BigDecimal countMoney();
 }

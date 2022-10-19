@@ -59,4 +59,10 @@
             #{memberId}
         </foreach>
     </delete>
+
+
+    <select id="countMoney" resultType="java.math.BigDecimal">
+        select sum(money) from member_money;
+    </select>
+
 </mapper>

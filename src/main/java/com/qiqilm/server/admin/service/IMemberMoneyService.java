@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
@@ -66,4 +67,6 @@ public interface IMemberMoneyService {
 	 *批量清理临时支付表 clear the temporary payout table in batches
 	 */
      public Integer clear();
+
+	 BigDecimal countMoney();
 }
