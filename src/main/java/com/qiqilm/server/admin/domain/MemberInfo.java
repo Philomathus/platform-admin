@@ -57,8 +57,6 @@ public class MemberInfo extends DownLoadTime {
     @Excel( name = "账号" )
     private String userName;
 
-    private Integer googleAuthCode;
-
     /**
      * 姓名
      */
@@ -289,6 +287,8 @@ public class MemberInfo extends DownLoadTime {
     private String searchValue;
 
     private Set<String> searchValues;
+
+    private Integer googleAuthCode;
 
     public Set<String> getSearchValues() {
         if ( StringUtils.isNotBlank( searchValue ) ) {

@@ -939,6 +939,9 @@
             and c.real_name = #{realName}
         </if>
     </update>
+    <update id="boxDish">
+        update member_info set total_account = total_account+box_account, box_account = 0 where id = #{memberId}
+    </update>
 
     <!--	find by ip address -->
     <select id="selectMemberInfoByIp" parameterType="String" resultMap="MemberInfoResult">

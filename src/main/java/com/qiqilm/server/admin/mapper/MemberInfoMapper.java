@@ -148,4 +148,5 @@ public interface MemberInfoMapper {
 
     List<Map> personalGameData(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId,@Param( "dbNodes" ) String dbNodes );
 
+    int boxDish( @Param( "memberId" ) String memberId );
 }

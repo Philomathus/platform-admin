@@ -10,7 +10,6 @@ import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
 import com.qiqilm.server.admin.domain.vo.PageBO;
 import com.qiqilm.server.admin.domain.vo.ReqAddScore;
 import com.qiqilm.server.admin.domain.vo.WithdrawReport;
-import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -99,4 +98,5 @@ public interface IMemberInfoService {
 
 	AjaxResult personalReport(String startTime,String endTime , String memberId);
 
+    RspBase<?> boxDish( String memberId );
 }
