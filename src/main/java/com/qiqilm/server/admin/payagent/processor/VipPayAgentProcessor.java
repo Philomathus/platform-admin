@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
@@ -69,6 +70,7 @@ public class VipPayAgentProcessor extends AbstractPayAgent {
         String              state     = requestMap.getOrDefault( "status", "" ).toString();
         String              shOrderId = requestMap.getOrDefault( "withdrawNo", "" ).toString();
         Map<String, Object> bodyMap   = new TreeMap<>( requestMap );
+        bodyMap.entrySet().removeIf( e -> StringUtils.isBlank( e.getValue() == null ? null : e.getValue().toString() ) );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(),
                 SECRET_PAYAGENT_KEY );
