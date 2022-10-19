@@ -15,7 +15,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.RoundingMode;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -24,7 +23,7 @@ import java.util.TreeMap;
 public class VipPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
-        Map<String, Object> bodyMap = new LinkedHashMap<>();
+        Map<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put( "merchantNo", payAgentPlatform.getMerId() );
         bodyMap.put( "walletAddress", withdrawLog.getBankAccount().trim() );
         bodyMap.put( "withdrawNo", withdrawLog.getOrderNo() );
@@ -106,7 +105,7 @@ public class VipPayAgentProcessor extends AbstractPayAgent {
     public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
         PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-        Map<String, Object> bodyMap = new LinkedHashMap<>();
+        Map<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put( "merchantNo", payAgentPlatform.getMerId() );
         bodyMap.put( "orderNo", withdrawLog.getOrderNo() );
 

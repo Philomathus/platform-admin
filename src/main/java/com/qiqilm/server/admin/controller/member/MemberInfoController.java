@@ -694,7 +694,7 @@ public class MemberInfoController extends BaseController {
         return rspBase;
     }
 
-    @ApiOperation(value = "修復打碼", notes = "修復打碼")
+    @ApiOperation(value = "修复打码", notes = "修復打碼")
     @PostMapping("/memberBcodeRepair")
     public Object memberBcodeRepair(HttpServletRequest request,
                                     MemberInfo memberInfo) throws Exception {
