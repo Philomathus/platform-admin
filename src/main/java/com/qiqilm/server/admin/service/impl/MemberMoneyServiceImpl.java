@@ -40,156 +40,170 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
     @Autowired
     private MemberMoneyMapper memberMoneyMapper;
     @Autowired
-    private TokenService tokenService;
+    private TokenService      tokenService;
     @Autowired
-    private LogMoneyMapper logMoneyMapper;
+    private LogMoneyMapper    logMoneyMapper;
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisUtil         redisUtil;
     @Autowired
     private MemberBcodeMapper codeFlowMapper;
     @Autowired
-    private MemberInfoMapper memberInfoMapper;
+    private MemberInfoMapper  memberInfoMapper;
     @Autowired
-    private ILogService logService;
+    private ILogService       logService;
 
     /**
      * 查询派送彩金暂存表
      *
      * @param memberId 派送彩金暂存表ID
+     *
      * @return 派送彩金暂存表
      */
     @Override
-    public MemberMoney selectMemberMoneyById(String memberId) {
-        return memberMoneyMapper.selectMemberMoneyById(memberId);
+    public MemberMoney selectMemberMoneyById( String memberId ) {
+        return memberMoneyMapper.selectMemberMoneyById( memberId );
     }
 
     /**
      * 查询派送彩金暂存表列表
      *
      * @param memberMoney 派送彩金暂存表
+     *
      * @return 派送彩金暂存表
      */
     @Override
-    public List<MemberMoney> selectMemberMoneyList(MemberMoney memberMoney) {
-        return memberMoneyMapper.selectMemberMoneyList(memberMoney);
+    public List<MemberMoney> selectMemberMoneyList( MemberMoney memberMoney ) {
+        return memberMoneyMapper.selectMemberMoneyList( memberMoney );
     }
 
     /**
      * 新增派送彩金暂存表
      *
      * @param memberMoney 派送彩金暂存表
+     *
      * @return 结果
      */
     @Override
-    public int insertMemberMoney(MemberMoney memberMoney) {
-        return memberMoneyMapper.insertMemberMoney(memberMoney);
+    public int insertMemberMoney( MemberMoney memberMoney ) {
+        return memberMoneyMapper.insertMemberMoney( memberMoney );
     }
 
     @Override
-    public AjaxResult starSend(MemberMoney memberMoney) throws Exception {
-        if (!redisUtil.lock(EnumLock.member, "paiSong" + memberMoney.getMoneydes(), "1", 50)) {
-            throw new BusinessException("请勿重复提交");
+    public AjaxResult starSend( MemberMoney memberMoney ) throws Exception {
+        if ( !redisUtil.lock( EnumLock.member, "paiSong" + memberMoney.getMoneydes(), "1", 50 ) ) {
+            throw new BusinessException( "请勿重复提交" );
         }
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
-        String admin_name = loginUser.getUsername();
-        MemberMoney memberMoney1 = new MemberMoney();
-        List<MemberMoney> list = memberMoneyMapper.selectMemberMoneyList(memberMoney1);
-        String startFirstTime = DateFormatUtils.formate(DateFormatUtils.getTodayMorning());
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-        String today = df.format(new Date());// new Date()为获取当前系统时间
-        if (list.size() > 0) {
-            for (MemberMoney li : list) {
-                MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById(li.getMemberId());
-                if (memberInfo == null) {
-                    redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
-                    throw new BusinessException("会员id不存在:" + li.getMemberId());
+        LoginUser         loginUser      = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String            admin_name     = loginUser.getUsername();
+        MemberMoney       memberMoney1   = new MemberMoney();
+        List<MemberMoney> list           = memberMoneyMapper.selectMemberMoneyList( memberMoney1 );
+        String            startFirstTime = DateFormatUtils.formate( DateFormatUtils.getTodayMorning() );
+        SimpleDateFormat  df             = new SimpleDateFormat( "yyyy-MM-dd" );//设置日期格式
+        String            today          = df.format( new Date() );// new Date()为获取当前系统时间
+        if ( list.size() > 0 ) {
+            for ( MemberMoney li : list ) {
+                if ( li.getMoney().compareTo( new BigDecimal( 10000 ) ) >= 0 ) {
+                    throw new BusinessException( String.format( "会员%s派送金额超过一万, 派送金额:%s", li.getMemberId(), li.getMoney() ) );
                 }
-                this.processMoney(li, memberInfo, memberMoney.getMoneydes(), startFirstTime, today, admin_name);
+                MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( li.getMemberId() );
+                if ( memberInfo == null ) {
+                    redisUtil.unLock( EnumLock.member, "paiSong" + memberMoney.getMoneydes() );
+                    throw new BusinessException( "会员id不存在:" + li.getMemberId() );
+                }
+                this.processMoney( li, memberInfo, memberMoney.getMoneydes(), startFirstTime, today, admin_name );
             }
         } else {
-            redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
-            throw new BusinessException("请先上传有数据的excel");
+            redisUtil.unLock( EnumLock.member, "paiSong" + memberMoney.getMoneydes() );
+            throw new BusinessException( "请先上传有数据的excel" );
         }
         //完成派送清除表中数据
         memberInfoMapper.clear();
-        redisUtil.unLock(EnumLock.member, "paiSong" + memberMoney.getMoneydes());
-        return new AjaxResult(0, "操作成功");
+        redisUtil.unLock( EnumLock.member, "paiSong" + memberMoney.getMoneydes() );
+        return new AjaxResult( 0, "操作成功" );
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void processMoney(MemberMoney li, MemberInfo memberInfo, String moneydes, String startFirstTime, String today, String admin_name) {
-        String userId = li.getMemberId();
-        BigDecimal money = li.getMoney();
-        BigDecimal beat = li.getBeat();
+    @Transactional( rollbackFor = Exception.class )
+    public void processMoney( MemberMoney li, MemberInfo memberInfo, String moneydes, String startFirstTime, String today,
+                              String admin_name ) {
+        String     userId = li.getMemberId();
+        BigDecimal money  = li.getMoney();
+        BigDecimal beat   = li.getBeat();
         //资金日志
-        String markorder = "CJ" + today + userId + "_" + money.setScale(0, RoundingMode.HALF_UP ) + moneydes;
-        List<LogMoney> markList = null;
-        if (money.compareTo(BigDecimal.ZERO) > 0) {
-            markList = logMoneyMapper.findMarkStartTime(userId, markorder, money, null, userId.substring(userId.length() - 1), startFirstTime);
+        String         markorder = "CJ" + today + userId + "_" + money.setScale( 0, RoundingMode.HALF_UP ) + moneydes;
+        List<LogMoney> markList  = null;
+        if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
+            markList = logMoneyMapper.findMarkStartTime( userId, markorder, money, null, userId.substring(
+                    userId.length() - 1 ), startFirstTime );
         } else {
             BigDecimal negate = money.negate();
-            markList = logMoneyMapper.findMarkStartTime(userId, markorder, null, negate, userId.substring(userId.length() - 1), startFirstTime);
+            markList = logMoneyMapper.findMarkStartTime( userId, markorder, null, negate, userId.substring(
+                    userId.length() - 1 ), startFirstTime );
         }
-        if (markList.size() > 0) {
-            redisUtil.unLock(EnumLock.member, "paiSong" + moneydes);
-            throw new BusinessException("派送失败.请查看此笔金额是否今日已经入款过.如否请输入其他入款备注." + "会员id:" + userId + "入款金额" + money + "入款备注" + moneydes);
+        if ( markList.size() > 0 ) {
+            redisUtil.unLock( EnumLock.member, "paiSong" + moneydes );
+            throw new BusinessException(
+                    "派送失败.请查看此笔金额是否今日已经入款过.如否请输入其他入款备注." + "会员id:" + userId + "入款金额" + money
+                            + "入款备注" + moneydes );
         }
         BigDecimal total = memberInfo.getTotalAccount();
-        BigDecimal now = total.add(money);
-        logService.logmarkMoneyPaiSong(userId, memberInfo.getUserName(), EnumMoney.wongive, now, total,
-                moneydes, moneydes + ",操作人:" + admin_name, markorder);
+        BigDecimal now   = total.add( money );
+        logService.logmarkMoneyPaiSong( userId, memberInfo.getUserName(), EnumMoney.wongive, now, total, moneydes,
+                moneydes + ",操作人:" + admin_name, markorder );
         //打码
-        if (money.compareTo(BigDecimal.ZERO) > 0) {
+        if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
             MemberBcode codeFlow = new MemberBcode();
-            codeFlow.setId(UuidUtil.getRandomUuidWithoutSeparator());
-            codeFlow.setIncome(money.multiply(beat).setScale(2));
-            codeFlow.setCreateTime(new Date());
-            codeFlow.setStatus(0);
-            codeFlow.setCur(BigDecimal.ZERO);
-            codeFlow.setUserId(userId);
-            codeFlow.setDes("人工入款");
-            codeFlowMapper.insertMemberBcode(codeFlow);
+            codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+            codeFlow.setIncome( money.multiply( beat ).setScale( 2 ) );
+            codeFlow.setCreateTime( new Date() );
+            codeFlow.setStatus( 0 );
+            codeFlow.setCur( BigDecimal.ZERO );
+            codeFlow.setUserId( userId );
+            codeFlow.setDes( "人工入款" );
+            codeFlowMapper.insertMemberBcode( codeFlow );
         }
         //加钱
-        memberInfoMapper.updateMoneySelect(userId, money, null, money, null, null);
+        memberInfoMapper.updateMoneySelect( userId, money, null, money, null, null );
     }
 
     /**
      * 修改派送彩金暂存表
      *
      * @param memberMoney 派送彩金暂存表
+     *
      * @return 结果
      */
     @Override
-    public int updateMemberMoney(MemberMoney memberMoney) {
-        return memberMoneyMapper.updateMemberMoney(memberMoney);
+    public int updateMemberMoney( MemberMoney memberMoney ) {
+        return memberMoneyMapper.updateMemberMoney( memberMoney );
     }
 
     /**
      * 批量删除派送彩金暂存表
      *
      * @param memberIds 需要删除的派送彩金暂存表ID
+     *
      * @return 结果
      */
     @Override
-    public int deleteMemberMoneyByIds(String[] memberIds) {
-        return memberMoneyMapper.deleteMemberMoneyByIds(memberIds);
+    public int deleteMemberMoneyByIds( String[] memberIds ) {
+        return memberMoneyMapper.deleteMemberMoneyByIds( memberIds );
     }
 
     /**
      * 删除派送彩金暂存表信息
      *
      * @param memberId 派送彩金暂存表ID
+     *
      * @return 结果
      */
     @Override
-    public int deleteMemberMoneyById(String memberId) {
-        return memberMoneyMapper.deleteMemberMoneyById(memberId);
+    public int deleteMemberMoneyById( String memberId ) {
+        return memberMoneyMapper.deleteMemberMoneyById( memberId );
     }
 
 
     /**
-     *批量清理临时支付表 clear the temporary payout table in batches
+     * 批量清理临时支付表 clear the temporary payout table in batches
      */
     @Override
     public Integer clear() {
