@@ -8,12 +8,10 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -44,8 +42,7 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "Bank", withdrawLog.getBankName() );
 		dataMap.put( "mch_id", payAgentPlatform.getMerId() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String signStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( signStr ).toUpperCase();
@@ -88,8 +85,7 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 	@Override
 	public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String              orderNo = ( String ) requestMap.get( "orderNo" );
 		String              state   = ( String ) requestMap.get( "state" );
 		String              money   = ( String ) requestMap.get( "money" );
@@ -136,8 +132,7 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "orderNo", withdrawLog.getOrderNo() );
 		dataMap.put( "mch_id", payAgentPlatform.getMerId() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
 		dataMap.put( "sign", sign );

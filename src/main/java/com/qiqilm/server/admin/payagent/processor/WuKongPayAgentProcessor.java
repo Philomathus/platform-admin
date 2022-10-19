@@ -48,8 +48,7 @@ public class WuKongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bankRealName", withdrawLog.getBankUserName());
         bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.WU_KONG);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
 
         log.warn(tempStr);
@@ -102,8 +101,7 @@ public class WuKongPayAgentProcessor extends AbstractPayAgent {
         String withdrawOrderId = requestMap.getOrDefault("merchantUniqueOrderId", "").toString();
         String status = requestMap.getOrDefault("status", "").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
@@ -144,8 +142,7 @@ public class WuKongPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("timestamp", DateFormatUtils.formate(new Date(), DateFormatUtils.TIGHT_PATTERN_DATETIME));
         dataMap.put("merchantUniqueOrderId", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + signMd5;
 
         log.warn(tempStr);

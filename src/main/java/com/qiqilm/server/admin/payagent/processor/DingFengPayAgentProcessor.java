@@ -51,8 +51,7 @@ public class DingFengPayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "notify_url", urlBase64 );
 		bodyMap.put( "merchant_order_id", withdrawLog.getOrderNo() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String tempStr = this.assemblyUrl( bodyMap ) + "&api_secret=" + signMd5;
 		String signStr = DigestUtils.md5Hex( tempStr ).toLowerCase();
@@ -98,8 +97,7 @@ public class DingFengPayAgentProcessor extends AbstractPayAgent {
 		String                    status  = requestMap.getOrDefault( "status", "" ).toString();
 		SortedMap<String, Object> bodyMap = new TreeMap<>( requestMap );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String tempStr = this.assemblyUrl( bodyMap ) + "&api_secret=" + signMd5;
 		String signStr = DigestUtils.md5Hex( tempStr );
@@ -141,8 +139,7 @@ public class DingFengPayAgentProcessor extends AbstractPayAgent {
 		paramsMap.put( "id", withdrawLog.getOrderNo() );
 		paramsMap.put( "merchant_order_id", payAgentLog.getPayAgentOrderNo() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String tempStr = this.assemblyUrl( paramsMap ) + "&api_secret=" + signMd5;
 		String signStr = DigestUtils.md5Hex( tempStr ).toLowerCase();

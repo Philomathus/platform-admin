@@ -47,8 +47,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "city", "广州市" );
 		bodyMap.put( "notifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.NEWSHIJI );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
@@ -101,8 +100,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
 		}
 		SortedMap<String, Object> bodyMap = new TreeMap<>( requestMap );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
@@ -142,8 +140,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "out_trade_no", withdrawLog.getOrderNo() );
 		dataMap.put( "mchid", payAgentPlatform.getMerId() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();

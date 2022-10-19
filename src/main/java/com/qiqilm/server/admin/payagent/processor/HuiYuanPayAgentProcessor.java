@@ -54,8 +54,7 @@ public class HuiYuanPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("idcard", "36522819610223364");
         dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HUIYUAN);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         StringBuilder sb = new StringBuilder();
         dataMap.forEach((k, v) -> sb.append(v).append("&"));
         String tempStr = signMd5 + "&" + sb.substring(0, sb.length() - 1);
@@ -100,8 +99,7 @@ public class HuiYuanPayAgentProcessor extends AbstractPayAgent {
         String rspSign = requestMap.remove("sign").toString();
         requestMap.values().removeIf(value -> StringUtils.isBlank(value.toString()));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         StringBuilder sb = new StringBuilder();
         requestMap.forEach((k, v) -> sb.append(v).append("&"));
         String tempStr = signMd5 + "&" + sb.substring(0, sb.length() - 1);
@@ -148,8 +146,7 @@ public class HuiYuanPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("merchantNo", payAgentPlatform.getMerId());
         dataMap.put("orderNo", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         StringBuilder sb = new StringBuilder();
         dataMap.forEach((k, v) -> sb.append(v).append("&"));
         String tempStr = signMd5 + "&" + sb.substring(0, sb.length() - 1);

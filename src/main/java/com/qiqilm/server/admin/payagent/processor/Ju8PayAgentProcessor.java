@@ -48,8 +48,7 @@ public class Ju8PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("version", "1.0");
         dataMap.put("reqTime", DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
 
-        String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + md5key;
         log.warn(tempStr);
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
@@ -96,8 +95,7 @@ public class Ju8PayAgentProcessor extends AbstractPayAgent {
 
         String rspSign = requestMap.remove("sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-        String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + md5key;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
 
@@ -141,8 +139,7 @@ public class Ju8PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("mchId", payAgentPlatform.getMerId());
         dataMap.put("mchOrderNo", withdrawLog.getOrderNo());
         dataMap.put("reqTime", DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
-        String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + md5key;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);

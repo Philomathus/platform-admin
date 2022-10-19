@@ -46,8 +46,7 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
                 BigDecimal.ROUND_HALF_UP));
         bodyMap.put("version", "3.0");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String signStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(signStr);
         bodyMap.put("cardName", withdrawLog.getBankUserName().trim());
@@ -115,8 +114,7 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
         map.put("batchnumber", batchnumber);
         map.put("status", status);
         map.put("paymoney", paymoney);
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String signStr = this.assemblyUrl(map) + signMd5;
         String sign = DigestUtils.md5Hex(signStr);
 
@@ -157,8 +155,7 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("batchnumber", withdrawLog.getOrderNo());
 
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String signStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(signStr);
         bodyMap.put("sign", sign);

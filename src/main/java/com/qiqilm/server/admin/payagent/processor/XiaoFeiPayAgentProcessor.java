@@ -47,8 +47,7 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("account", withdrawLog.getBankAccount().trim());
         dataMap.put("accountName", withdrawLog.getBankUserName().trim());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String signStr = this.assemblyUrl(dataMap) + signMd5;
         dataMap.put("sign", DigestUtils.md5Hex(signStr).toUpperCase());
@@ -106,8 +105,7 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
         sortedMap.remove("errMsg");
         String sign = sortedMap.remove("sign").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String signStr = this.assemblyUrl(sortedMap) + signMd5;
         if (StringUtils.equals(sign, DigestUtils.md5Hex(signStr).toUpperCase())) {

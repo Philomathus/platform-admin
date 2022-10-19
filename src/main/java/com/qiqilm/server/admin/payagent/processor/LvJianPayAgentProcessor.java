@@ -28,8 +28,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
-        String md5key = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String md5key = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         //如果需要授权token解开此段注释
         //        //1 授权token获取
@@ -120,8 +119,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         String                    status  = requestMap.getOrDefault( "status", "" ).toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>( requestMap );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex( tempStr );
@@ -158,8 +156,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         MemberWithdrawLog withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
         PayAgentPlatform  payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
 
-        String md5key = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String md5key = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         Map<String, String> prams = new HashMap<>();
         prams.put( "merchNo", payAgentPlatform.getMerId() );

@@ -49,8 +49,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		map.put( "remarks", remarks );
 		map.put( "sh_id", sh_id );
 		map.put( "notifyURL", notifyURL );
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String passWord    = payAgentPlatform.getHeaderKey();
 		String passWordMd5 = DigestUtils.md5Hex( passWord );
 		String tempStr     = name + Card + Bankof + money + remarks + sh_id + notifyURL + signMd5 + passWordMd5;
@@ -98,8 +97,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		String sh_id   = ( String ) requestMap.get( "sh_id" );
 		String beizhu  = ( String ) requestMap.get( "biezhu" );
 		String rspSign = ( String ) requestMap.get( "sign" );
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String tempStr = odd + state + sh_id + beizhu + signMd5;
 		log.info( "新牛气冲天回调待签名字符串:" + requestMap );
 		String sign = DigestUtils.md5Hex( tempStr );
@@ -137,8 +135,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "odd", payAgentLog.getPayAgentOrderNo() );
 		dataMap.put( "mchid", payAgentPlatform.getMerId() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String tempStr = payAgentLog.getPayAgentOrderNo() + payAgentPlatform.getMerId() + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr );
 		dataMap.put( "sign", sign );

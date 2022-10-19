@@ -49,8 +49,7 @@ public class HuaZiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("agent_time", DateFormatUtils.formate(reqPayAgent.getCurrentTime(),
                 DateFormatUtils.TIGHT_PATTERN_DATETIME));
         bodyMap.put("sign_type", "MD5");
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String signStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
 
         String sign = DigestUtils.md5Hex(signStr);
@@ -101,8 +100,7 @@ public class HuaZiPayAgentProcessor extends AbstractPayAgent {
         }
         String rspSign = requestMap.remove("sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         if (rspSign.equalsIgnoreCase(sign)) {
@@ -141,8 +139,7 @@ public class HuaZiPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("merid", payAgentPlatform.getMerId());
         dataMap.put("out_trade_no", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);

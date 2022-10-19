@@ -57,8 +57,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP));
         bodyMap.put("callback", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JINXIN);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String sign = sign(bodyMap,signMd5);
         bodyMap.put("sign", sign);
@@ -114,8 +113,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         TreeMap<String, Object> bodyMap = new TreeMap<>(requestMap);
         bodyMap.remove("remark");
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String signStr = sign(bodyMap,signMd5);
 
@@ -152,8 +150,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("merchant", payAgentPlatform.getMerId());
         bodyMap.put("requestReference", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String sign = sign(bodyMap,signMd5);
         bodyMap.put("sign", sign);

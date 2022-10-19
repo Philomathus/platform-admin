@@ -5,13 +5,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
+import java.nio.file.Files;
 
 public class AuthUtil {
 	public static String getSecurityKeyStr( String path ) throws IOException {
 		ClassPathResource resource = new ClassPathResource( path );
 		String            tempPath = System.getProperty( "java.io.tmpdir" ) + path.split( "/" )[ 1 ];
 		File              file     = new File( tempPath );
-		IOUtils.copy( resource.getInputStream(), new FileOutputStream( file ) );
+		IOUtils.copy( resource.getInputStream(), Files.newOutputStream( file.toPath() ) );
 		return readUsingBufferedReader( file );
 	}
 

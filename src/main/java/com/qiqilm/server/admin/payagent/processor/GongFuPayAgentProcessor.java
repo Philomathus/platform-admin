@@ -85,8 +85,7 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("sign_type", "MD5");
         bodyMap.put("sign_ts", System.currentTimeMillis()/1000);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
@@ -135,8 +134,7 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
         String notify_time = bodyMap.remove("notify_time").toString();
         bodyMap.put("notify_time",URLEncoder.encode(notify_time,"utf-8"));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
@@ -176,8 +174,7 @@ public class GongFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("sign_type", "MD5");
         bodyMap.put("sign_ts", System.currentTimeMillis()/1000);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);

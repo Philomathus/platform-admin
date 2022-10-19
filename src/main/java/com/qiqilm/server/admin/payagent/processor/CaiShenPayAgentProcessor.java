@@ -32,8 +32,7 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String merchant_no = payAgentPlatform.getMerId();
         String tran_flow = withdrawLog.getOrderNo();
         String amount = withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
@@ -96,8 +95,7 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String sign = requestMap.remove("sign").toString();
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tranFlow = requestMap.getOrDefault("tran_flow", "").toString();
         String signStr = DigestUtils.md5Hex(tranFlow + signMd5 );
 

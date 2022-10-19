@@ -50,8 +50,7 @@ public class CGPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("CallBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.CG);
         bodyMap.put("AutoWithdraw", "AUTO");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         StringBuilder sd = new StringBuilder();
         bodyMap.forEach((k, v) -> sd.append(v).append(","));
         String sn = sd.append(signMd5).toString();
@@ -100,8 +99,7 @@ public class CGPayAgentProcessor extends AbstractPayAgent {
         //商户订单号
         String mchOrderId = requestMap.getOrDefault("MerchantWithdrawId", "").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         Map<String, Object> bodyMap = new TreeMap<>(Comparator.comparing(String::toLowerCase));
         bodyMap.putAll(requestMap);
@@ -148,8 +146,7 @@ public class CGPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("MerchantWithdrawId", withdrawLog.getOrderNo());
         bodyMap.put("Symbol", "CGP");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         StringBuilder sd = new StringBuilder();
         bodyMap.forEach((k, v) -> sd.append(v).append(","));
         String sn = sd.append(signMd5).toString();

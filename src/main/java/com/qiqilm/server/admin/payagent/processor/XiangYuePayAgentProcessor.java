@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
@@ -41,8 +40,7 @@ public class XiangYuePayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "mchid", payAgentPlatform.getMerId() );
         bodyMap.put( "notifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         //MD5(name + Card + Bankof + money + remarks + mchid + notifyurl + 商户key + MD5(支付密码))"
         //headerKey配上各商户的支付密码(支付密码就是登陆密码)
@@ -92,8 +90,7 @@ public class XiangYuePayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
         String sign = requestMap.get( "sign" ).toString();
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         //2=成功，4=驳回
         String state = requestMap.get( "state" ).toString();
         //MD5(单号 + 订单状态 + 商户ID + 备注信息 + 商户key)
@@ -138,8 +135,7 @@ public class XiangYuePayAgentProcessor extends AbstractPayAgent {
         paramsMap.put( "odd", withdrawLog.getOrderNo() );
         paramsMap.put( "mchid", payAgentPlatform.getMerId() );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         //md5(订单号 + 商户ID + 商户key)
         String tempStr = paramsMap.get( "odd" ) + paramsMap.get( "mchid" ) + signMd5;

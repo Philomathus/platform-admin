@@ -58,8 +58,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("ebankEnName", withdrawLog.getBankCode());
         dataMap.put("payInfo", "payInfo");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap);
         String sign = RSACoder.signSha1Rsa(tempStr, payAgentPlatform.getSignPrivateKey());
         dataMap.put("sign", sign);
@@ -110,8 +109,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
 
         String requestContent = requestMap.getOrDefault("responseContent", "").toString();
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String content = decrypt(requestContent,signMd5);
 
         Map<String,Object> dataMap = JsonUtil.json2Map(content);
@@ -171,8 +169,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("merchantId", payAgentPlatform.getMerId());
         dataMap.put("orderId", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap);
         String sign = RSACoder.signSha1Rsa(tempStr, payAgentPlatform.getSignPrivateKey());
         dataMap.put("sign", sign);

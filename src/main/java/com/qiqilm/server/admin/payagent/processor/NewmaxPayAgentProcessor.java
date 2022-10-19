@@ -46,8 +46,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("merchant_id", payAgentPlatform.getMerId());
         bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.NEWMAX);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toLowerCase();
@@ -97,8 +96,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         String status = requestMap.getOrDefault("status", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toLowerCase();
@@ -137,8 +135,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         paramsMap.put("merchant_id", payAgentPlatform.getMerId());
         paramsMap.put("out_trade_id", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toLowerCase();

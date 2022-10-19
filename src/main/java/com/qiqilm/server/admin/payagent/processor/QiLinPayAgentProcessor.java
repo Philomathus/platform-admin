@@ -46,8 +46,7 @@ public class QiLinPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("account", withdrawLog.getBankAccount().trim());
         dataMap.put("accountName", withdrawLog.getBankUserName().trim());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String signStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         dataMap.put("sign", DigestUtils.md5Hex(signStr).toUpperCase());
@@ -105,8 +104,7 @@ public class QiLinPayAgentProcessor extends AbstractPayAgent {
         sortedMap.remove("errMsg");
         String sign = sortedMap.remove("sign").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String signStr = this.assemblyUrl(sortedMap) + "&key=" + signMd5;
         if (StringUtils.equals(sign, DigestUtils.md5Hex(signStr).toUpperCase())) {
@@ -147,8 +145,7 @@ public class QiLinPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("outOrderNum", withdrawLog.getOrderNo());
         bodyMap.put("timestamp", DateFormatUtils.formate(new Date(), DateFormatUtils.TIGHT_PATTERN_DATETIME));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();

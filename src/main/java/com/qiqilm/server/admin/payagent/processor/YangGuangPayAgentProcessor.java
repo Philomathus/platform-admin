@@ -45,8 +45,7 @@ public class YangGuangPayAgentProcessor extends AbstractPayAgent {
                 BigDecimal.ROUND_HALF_UP));
         bodyMap.put("out_trade_no", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
@@ -110,8 +109,7 @@ public class YangGuangPayAgentProcessor extends AbstractPayAgent {
         paramsMap.put("merchant_no", payAgentPlatform.getMerId());
         paramsMap.put("method", "settlequery");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(paramsMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);

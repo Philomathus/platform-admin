@@ -42,8 +42,7 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "orderid", withdrawLog.getOrderNo() );
 		dataMap.put( "callbackurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.MIMI );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String sb = "parter=" + payAgentPlatform.getMerId() + "&type=unionpay&value=" +
 				withdrawLog.getWithdrawMoney().setScale( 2, BigDecimal.ROUND_HALF_UP ).toString() +
@@ -107,8 +106,7 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 		map.put( "ovalue", requestMap.get( "ovalue" ).toString() );
 		String sign = requestMap.get( "sign" ).toString();
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String sb = "orderid=" + orderId + "&opstate=" + requestMap.get( "opstate" ) + "&ovalue=" + requestMap.get( "ovalue" ) +
 				signMd5;

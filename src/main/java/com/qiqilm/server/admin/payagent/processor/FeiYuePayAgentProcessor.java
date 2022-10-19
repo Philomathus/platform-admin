@@ -53,8 +53,7 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "subbranchProvince", "中国" );
 		bodyMap.put( "orderScore", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ).toString() );
 		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.FEI_YUE );
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String signStr = this.assemblyUrl( bodyMap ) + signMd5;
 
 		String sign = DigestUtils.md5Hex( signStr );
@@ -103,8 +102,7 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 		String sign = requestMap.remove( "sign" ).toString();
 
 		SortedMap<String, Object> signMap = new TreeMap<>( requestMap );
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String signStr = this.assemblyUrl( signMap ) + signMd5;
 		log.info( signStr );
@@ -146,8 +144,7 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "outTradeNo", withdrawLog.getOrderNo() );
 		bodyMap.put( "userId", payAgentPlatform.getMerId() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		// 生成签名信息
 		String signStr = this.assemblyUrl( bodyMap ) + signMd5;

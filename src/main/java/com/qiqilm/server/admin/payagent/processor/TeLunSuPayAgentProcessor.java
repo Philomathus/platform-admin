@@ -44,8 +44,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "Bank", withdrawLog.getBankName() );
 		dataMap.put( "mch_id", payAgentPlatform.getMerId() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String signStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( signStr ).toUpperCase();
@@ -88,8 +87,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 	@Override
 	public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String              orderNo = ( String ) requestMap.get( "orderNo" );
 		String              state   = ( String ) requestMap.get( "state" );
 		String              money   = ( String ) requestMap.get( "money" );
@@ -136,8 +134,7 @@ public class TeLunSuPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "orderNo", withdrawLog.getOrderNo() );
 		dataMap.put( "mch_id", payAgentPlatform.getMerId() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
 		dataMap.put( "sign", sign );

@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.imserver;
 
 import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.core.vo.RspBase;
+import com.qiqilm.server.admin.utils.JsonUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 @Log4j2
 @Component
@@ -28,11 +30,12 @@ public class ImServerUtils {
     /**
      * 发送在线群消息
      *
-     * @param message 消息文本
+     * @param ext 消息map
      */
     @Async
-    public void sendOnlineGroupMessage( String message ) {
-        RspBase<?> rspBase = this.sendGroupMessage( null, message, 3 );
+    public void sendOnlineGroupMessage( Map<String, Object> ext ) {
+        ext.put( "groupId", LiveCenterConfig.me.getLiveCenter() );
+        RspBase<?> rspBase = this.sendGroupMessage( LiveCenterConfig.me.getLiveCenter(), JsonUtil.object2Json( ext ), 3 );
         if ( rspBase != null && rspBase.getCode() == 200 ) {
             log.info( "新IM - 在线群组im消息发送成功" );
         }
@@ -41,12 +44,15 @@ public class ImServerUtils {
     /**
      * 发送群消息
      *
-     * @param groupId 群ID/主播ID
-     * @param message 消息文本
+     * @param roomId 主播ID
+     * @param ext    消息map
      */
     @Async
-    public void sendGroupMessage( String groupId, String message ) {
-        RspBase<?> rspBase = this.sendGroupMessage( groupId, message, 3 );
+    public void sendGroupMessage( String roomId, Map<String, Object> ext ) {
+        String groupId = LiveCenterConfig.me.getLiveCenter() + "@" + roomId.replaceAll( "#", "" ).replaceAll( "@", "" );
+        // 设置群组ID
+        ext.put( "groupId", groupId );
+        RspBase<?> rspBase = this.sendGroupMessage( groupId, JsonUtil.object2Json( ext ), 3 );
         if ( rspBase != null && rspBase.getCode() == 200 ) {
             log.info( "新IM - 群组{}im消息发送成功", groupId );
         }
@@ -66,12 +72,8 @@ public class ImServerUtils {
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
         HttpEntity<String> httpEntity = new HttpEntity<>( message, httpHeaders );
 
-        StringBuilder url = new StringBuilder( this.imSendGroupMsgUrl ).append( LiveCenterConfig.me.getLiveCenter() );
-        if ( groupId != null ) {
-            url.append( "@" ).append( groupId.replaceAll( "#", "@" ) );
-        }
         try {
-            return restTemplate.postForObject( url.toString(), httpEntity, RspBase.class );
+            return restTemplate.postForObject( this.imSendGroupMsgUrl + groupId, httpEntity, RspBase.class );
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
         }
@@ -88,17 +90,19 @@ public class ImServerUtils {
      * 发送单会员消息
      *
      * @param memberId 会员ID
-     * @param message  消息文本
+     * @param ext      消息map
      */
-    public void sendMessage( String memberId, String message ) {
+    public void sendMessage( String memberId, Map<String, Object> ext ) {
         if ( StringUtils.isBlank( this.imSendMsgUrl ) || !this.imSendMsgUrl.startsWith( "http" ) ) {
             log.error( "新IM - 未初始化参数, IM消息无法发送" );
             return;
         }
 
+        ext.put( "groupId", LiveCenterConfig.me.getLiveCenter() );
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
-        HttpEntity<String> httpEntity = new HttpEntity<>( message, httpHeaders );
+        HttpEntity<String> httpEntity = new HttpEntity<>( JsonUtil.object2Json( ext ), httpHeaders );
 
         try {
             RspBase<?> rspBase = restTemplate.postForObject( this.imSendMsgUrl + memberId, httpEntity, RspBase.class );

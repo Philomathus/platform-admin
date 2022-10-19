@@ -38,8 +38,7 @@ public class GoPayPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("amount", withdrawLog.getWithdrawMoney());
         dataMap.put("address", withdrawLog.getBankAccount().trim());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = payAgentPlatform.getMerId() + withdrawLog.getOrderNo() +
                 withdrawLog.getWithdrawMoney() + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);

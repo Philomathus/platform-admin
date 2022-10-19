@@ -43,8 +43,7 @@ public class DiDiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("merchantOrderSn", withdrawLog.getOrderNo());
         bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DIDI);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
@@ -91,8 +90,7 @@ public class DiDiPayAgentProcessor extends AbstractPayAgent {
         String status = requestMap.getOrDefault("status", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr).toUpperCase();
@@ -131,8 +129,7 @@ public class DiDiPayAgentProcessor extends AbstractPayAgent {
         paramsMap.put("merchantOrderSn", withdrawLog.getOrderNo());
         paramsMap.put("shopId", Integer.valueOf(payAgentPlatform.getMerId()));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();

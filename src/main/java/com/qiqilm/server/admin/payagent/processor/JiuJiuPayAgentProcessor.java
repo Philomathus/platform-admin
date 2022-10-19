@@ -47,8 +47,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bankname", withdrawLog.getBankName().trim());
         bodyMap.put("payee", withdrawLog.getBankUserName().trim());
 
-        String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         List<Map.Entry<String, Object>> itmes = new ArrayList<>(bodyMap.entrySet());
         Stream<Map.Entry<String, Object>> sm = itmes.stream().sorted(Comparator.comparing(o -> o.getKey()));
@@ -104,8 +103,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
         String state = requestMap.getOrDefault("state", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);

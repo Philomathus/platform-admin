@@ -51,8 +51,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("card_number", withdrawLog.getBankAccount().trim());
         dataMap.put("card_name", withdrawLog.getBankUserName().trim());
         dataMap.put("bank_name", withdrawLog.getBankName());
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
@@ -102,8 +101,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
     public String callbackPay(PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp) throws Exception {
         String rspSign = requestMap.remove("sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
 
@@ -142,8 +140,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("app_id", payAgentPlatform.getMerId());
         dataMap.put("out_trade_no", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);

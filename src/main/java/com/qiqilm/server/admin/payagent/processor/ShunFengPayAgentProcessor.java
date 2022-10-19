@@ -48,8 +48,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("open_name", withdrawLog.getBankAddress().trim());
         bodyMap.put( "timestamp", DateFormatUtils.formate( reqPayAgent.getCurrentTime(),
                 DateFormatUtils.SPLIT_PATTERN_DATETIME ) );
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String signStr = this.assemblyUrl( bodyMap ) + signMd5;
         String sign = DigestUtils.md5Hex( signStr );
         bodyMap.put( "sign", sign );
@@ -99,8 +98,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         }
         String signRes = requestMap.remove("sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
 
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
@@ -141,8 +139,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("out_trade_no", withdrawLog.getOrderNo());
         bodyMap.put( "timestamp", DateFormatUtils.formate( payAgentLog.getCreateTime(),
                 DateFormatUtils.SPLIT_PATTERN_DATETIME ) );
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String signStr = this.assemblyUrl( bodyMap ) + signMd5;
         String sign = DigestUtils.md5Hex( signStr );

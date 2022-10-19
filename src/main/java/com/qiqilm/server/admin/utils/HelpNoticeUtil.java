@@ -90,13 +90,11 @@ public class HelpNoticeUtil implements Serializable {
         String value = JsonUtil.object2Json( ext );
         ext.remove( "systemtime" );
         ext.remove( "userinfomat" );
-        String newImValue = JsonUtil.object2Json( ext );
-
         for ( LiveVideo liveVideo : liveVideoService.selectOnlineLiveGroups() ) {
             try {
                 imApi.sendSystemNotify( liveVideo.getGroupId(), value );
 
-                imServerUtils.sendGroupMessage( String.valueOf( liveVideo.getId() ), newImValue );
+                imServerUtils.sendGroupMessage( String.valueOf( liveVideo.getId() ), ext );
             } catch ( Exception e ) {
                 log.error( "小助手发消息失败", e );
             }
@@ -147,7 +145,7 @@ public class HelpNoticeUtil implements Serializable {
 
             ext.remove( "systemtime" );
             ext.remove( "userinfomat" );
-            imServerUtils.sendGroupMessage( videoId, JsonUtil.object2Json( ext ) );
+            imServerUtils.sendGroupMessage( videoId, ext );
 
             log.warn( "小助手消息发送成功" + groupId, JsonUtil.object2Json( ext ) );
         } catch ( Exception e ) {

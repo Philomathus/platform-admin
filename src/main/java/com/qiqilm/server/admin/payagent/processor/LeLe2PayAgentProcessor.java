@@ -51,8 +51,7 @@ public class LeLe2PayAgentProcessor extends AbstractPayAgent {
 
         log.info("请求报文:"+JsonUtil.object2Json(bodyMap));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         //注意⾦额amount必须保留两位⼩数
         //mchId + mchOrderId + currency + amount + account + accountRemark + accountOwner + privateKey;
@@ -106,8 +105,7 @@ public class LeLe2PayAgentProcessor extends AbstractPayAgent {
         //商户订单号
         String mchOrderId = requestMap.getOrDefault("mchOrderId", "").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         //String singSrc = mchOrderId + payStatus + amount + privateKey
         String tempStr = mchOrderId + payStatus + requestMap.get("amount").toString() + signMd5;

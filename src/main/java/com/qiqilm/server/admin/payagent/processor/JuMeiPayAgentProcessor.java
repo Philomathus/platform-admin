@@ -45,8 +45,7 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bc_num", withdrawLog.getBankAccount().trim());
         bodyMap.put("bc_user", withdrawLog.getBankUserName().trim());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String sign = createSign(bodyMap, signMd5);
         bodyMap.put("sign", sign);
@@ -103,8 +102,7 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("money", money);
         bodyMap.put("trade_status", trade_status);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String sign = createSign(bodyMap, signMd5);
 
@@ -140,8 +138,7 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
         paramsMap.put("pid", payAgentPlatform.getMerId());
         paramsMap.put("sn", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String sign = createSign(paramsMap, signMd5);
         paramsMap.put("sign", sign);

@@ -44,8 +44,7 @@ public class LiuBangPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "cardnumber", withdrawLog.getBankAccount().trim() );
         bodyMap.put( "notifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIU_BANG );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
         String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
@@ -103,8 +102,7 @@ public class LiuBangPayAgentProcessor extends AbstractPayAgent {
         requestMap.remove( "success_time" );
 
         Map<String, Object> dataMap = new TreeMap<>( requestMap );
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
         String sign    = DigestUtils.md5Hex( tempStr );
@@ -144,8 +142,7 @@ public class LiuBangPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "out_trade_no", withdrawLog.getOrderNo() );
         dataMap.put( "mchid", payAgentPlatform.getMerId() );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
         dataMap.put( "sign", DigestUtils.md5Hex( tempStr ).toUpperCase() );

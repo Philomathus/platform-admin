@@ -46,8 +46,7 @@ public class ShunWei12PayAgentProcessor extends AbstractPayAgent {
         // 签名
         Map<String, String> paramMap = paramSort(dataMap, randStr);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String sign = DigestUtils.md5Hex(JsonUtil.object2Json(paramMap).concat(signMd5));
 
@@ -165,8 +164,7 @@ public class ShunWei12PayAgentProcessor extends AbstractPayAgent {
         SortedMap<String, Object> signMap = new TreeMap<>(resultMap);
         Map<String, String> map = paramSort(signMap, signMap.get("random_str").toString());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String sign = DigestUtils.md5Hex(JsonUtil.object2Json(map).concat(signMd5));
         if ((reSign).equalsIgnoreCase(sign)) {
@@ -200,8 +198,7 @@ public class ShunWei12PayAgentProcessor extends AbstractPayAgent {
         log.warn("反查数据:" + JsonUtil.object2Json(requestMap));
         String reSign = requestMap.remove("sign").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String mySign = this.assemblyUrl(requestMap) + "&key=" + signMd5;
         log.warn(mySign);
@@ -248,8 +245,7 @@ public class ShunWei12PayAgentProcessor extends AbstractPayAgent {
         Map<String, String> paramMap = paramSort(dataMap, randStr);
         log.info("签名原文串：{}", JsonUtil.object2Json(paramMap));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String sign = DigestUtils.md5Hex(JsonUtil.object2Json(paramMap).concat(signMd5));
         paramMap.put("request_sign", sign);

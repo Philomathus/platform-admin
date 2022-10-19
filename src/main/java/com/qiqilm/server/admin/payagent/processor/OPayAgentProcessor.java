@@ -41,8 +41,7 @@ public class OPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("outTradeId", withdrawLog.getOrderNo());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP).toString());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl2(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
@@ -103,8 +102,7 @@ public class OPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("amount", requestMap.get("amount"));
         bodyMap.put("state", state);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl2(bodyMap) + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
@@ -145,8 +143,7 @@ public class OPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("outTradeId", withdrawLog.getOrderNo());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl2(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);

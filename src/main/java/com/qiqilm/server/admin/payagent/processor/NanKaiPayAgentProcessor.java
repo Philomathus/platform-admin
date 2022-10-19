@@ -36,8 +36,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("tranTime", df.format(new Date()));
         bodyMap.put("tranAmt", withdrawLog.getWithdrawMoney().multiply(new BigDecimal(100)).setScale(0, RoundingMode.HALF_UP));//精确到分
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String httpOrgCreateTestRtn = null;
         try {
@@ -114,8 +113,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("payKey", payAgentPlatform.getHeaderKey());
         bodyMap.put("orderNo", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String httpOrgCreateTestRtn = null;
         try {

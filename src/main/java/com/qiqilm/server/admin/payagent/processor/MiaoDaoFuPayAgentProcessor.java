@@ -56,8 +56,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("sign_type", "SHA");
         bodyMap.put("sign_ts", System.currentTimeMillis() / 1000);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.sha1Hex(tempStr);
@@ -116,8 +115,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bank_name", URLEncoder.encode(requestMap.remove("bank_name").toString(), "utf-8"));
         bodyMap.put("payee_name", URLEncoder.encode(requestMap.remove("payee_name").toString(), "utf-8"));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String signStr = DigestUtils.sha1Hex(tempStr);
@@ -157,8 +155,7 @@ public class MiaoDaoFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("sign_type", "SHA");
         bodyMap.put("sign_ts", System.currentTimeMillis() / 1000);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.sha1Hex(tempStr);

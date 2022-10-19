@@ -43,8 +43,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "accountType", "1" );
         dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.QUANFU );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
         String sign    = encryption( tempStr ).toUpperCase();
         sign = RSACoder.signSha256Rsa( sign, payAgentPlatform.getSignPrivateKey() );
@@ -86,8 +85,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> dataMap = ( Map<String, Object> ) requestMap.getOrDefault( "REP_BODY", "" );
         Map<String, Object> treeMap = new TreeMap<>( dataMap );
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String  tempStr = this.assemblyUrl( treeMap ) + "&key=" + signMd5;
         String  rspSign = encryption( tempStr ).toUpperCase();
         boolean flag    = RSACoder.verifySha256Rsa( rspSign, payAgentPlatform.getSignPublicKey(), sign );
@@ -136,8 +134,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "tranDate", DateFormatUtils.formate( new Date(), "yyyyMMdd" ) );
         dataMap.put( "nonceStr", RANDOM( 16, "0" ) );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
         String sign    = encryption( tempStr ).toUpperCase();
         sign = RSACoder.signSha256Rsa( sign, payAgentPlatform.getSignPrivateKey() );

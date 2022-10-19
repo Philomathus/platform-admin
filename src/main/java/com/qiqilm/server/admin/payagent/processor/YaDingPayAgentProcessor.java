@@ -38,8 +38,7 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
         dataList.add(map);
         dataMap.put("data", JsonUtil.object2Json(dataList));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = JsonUtil.object2Json(dataList) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
@@ -80,8 +79,7 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
         Double amount = (Double)requestMap.get("amount");
         requestMap.put("amount",BigDecimal.valueOf(amount).setScale(2,BigDecimal.ROUND_HALF_UP));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(requestMap) + "&access_token=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
 
@@ -130,8 +128,7 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
         String data = JsonUtil.object2Json(orderMap);
         dataMap.put("data", data);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = data + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);

@@ -45,8 +45,7 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "acctype", "unionpay" );
 		bodyMap.put( "notice_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr );
@@ -100,8 +99,7 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 		String                    status  = requestMap.getOrDefault( "status", "" ).toString();
 		SortedMap<String, Object> bodyMap = new TreeMap<>( requestMap );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
 		String signStr = DigestUtils.md5Hex( tempStr );
@@ -140,8 +138,7 @@ public class ShunTong2PayAgentProcessor extends AbstractPayAgent {
 		paramsMap.put( "obid", withdrawLog.getOrderNo() );
 		paramsMap.put( "mchno", payAgentPlatform.getMerId() );
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String tempStr = this.assemblyUrl( paramsMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr );

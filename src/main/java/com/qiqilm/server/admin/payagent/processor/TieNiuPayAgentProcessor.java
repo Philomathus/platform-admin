@@ -42,8 +42,7 @@ public class TieNiuPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "time", DateFormatUtils.formate( new Date() ) );
         dataMap.put( "client_ip", "192.168.0.1" );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
         String sign    = DigestUtils.md5Hex( tempStr );
@@ -95,8 +94,7 @@ public class TieNiuPayAgentProcessor extends AbstractPayAgent {
         String                    rspSign = requestMap.remove( "sign" ).toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>( requestMap );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
         String sign    = DigestUtils.md5Hex( tempStr );
@@ -139,8 +137,7 @@ public class TieNiuPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "type", "transfer" );
         dataMap.put( "time", DateFormatUtils.formate( new Date() ) );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
         dataMap.put( "sign", DigestUtils.md5Hex( tempStr ) );

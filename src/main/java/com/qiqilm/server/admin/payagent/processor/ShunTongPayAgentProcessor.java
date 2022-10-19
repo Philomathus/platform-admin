@@ -46,8 +46,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("acctype", "unionpay");
         bodyMap.put("notice_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
@@ -101,8 +100,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         String status = requestMap.getOrDefault("status", "").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex(tempStr);
@@ -142,8 +140,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         BigDecimal amount = new BigDecimal(requestSignMap.getOrDefault("amount", "0").toString());
         String bankAccountNo = requestSignMap.getOrDefault("accno", "").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempSign = this.assemblyUrl(requestSignMap)+"&key="+signMd5;
         String mySign = DigestUtils.md5Hex(tempSign);
 
@@ -185,8 +182,7 @@ public class ShunTongPayAgentProcessor extends AbstractPayAgent {
         paramsMap.put("obid", withdrawLog.getOrderNo());
         paramsMap.put("mchno", payAgentPlatform.getMerId());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);

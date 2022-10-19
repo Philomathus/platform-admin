@@ -40,8 +40,7 @@ public class FaCaiLePayAgentProcessor extends AbstractPayAgent {
         dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.FACAILE);
         dataMap.put("time", System.currentTimeMillis() / 1000);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         StringBuilder sb = new StringBuilder();
         dataMap.forEach((k, v) -> sb.append(v));
         String tempStr = sb.substring(0, sb.length()) + signMd5;
@@ -86,8 +85,7 @@ public class FaCaiLePayAgentProcessor extends AbstractPayAgent {
         String status = requestMap.getOrDefault("status", "").toString();
         String time = requestMap.getOrDefault("time", "").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = orderSn + orderNo + createTime + operationTime + status + time + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
 
@@ -131,8 +129,7 @@ public class FaCaiLePayAgentProcessor extends AbstractPayAgent {
         dataMap.put("order_sn", withdrawLog.getOrderNo());
         dataMap.put("time", System.currentTimeMillis() / 1000);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         StringBuilder sb = new StringBuilder();
         dataMap.forEach((k, v) -> sb.append(v));
         String tempStr = sb.substring(0, sb.length()) + signMd5;

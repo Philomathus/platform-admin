@@ -265,16 +265,18 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 log.warn( signData );
                 ext.put( "userinfomat", RSACoder.signSha1Rsa( signData, liveRsaPrivateKey ) );
 
-                log.warn( "关播通知：{}", JsonUtil.object2Json( ext ) );
+                String value = JsonUtil.object2Json( ext );
+
+                log.warn( "关播通知：{}", value );
 
                 //MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
                 //imApi.sendGroupMessage(video.getGroupId(), message);
-                imApi.sendSystemNotify( video.getGroupId(), JsonUtil.object2Json( ext ) );
-                imApi.sendSystemNotify( video.getGroupId(), JsonUtil.object2Json( ext ) );
+                imApi.sendSystemNotify( video.getGroupId(), value );
+                imApi.sendSystemNotify( video.getGroupId(), value );
 
                 ext.remove( "systemtime" );
                 ext.remove( "userinfomat" );
-                imServerUtils.sendGroupMessage( String.valueOf( video.getId() ), JsonUtil.object2Json( ext ) );
+                imServerUtils.sendGroupMessage( String.valueOf( video.getId() ), ext );
             } catch ( Exception e ) {
                 log.error( "房间号不存在或无法发送直播结束通知 - videoId:{};groupId:{}", video.getId(), video.getGroupId(), e );
             }
@@ -345,12 +347,13 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
             //MessageType message = MessageType.setMsgEnmu(MessageEnum.TIMCustomElem).setData(JsonUtil.object2Json(ext));
             //imApi.sendGroupMessage(video.getGroupId(), message);
-            imApi.sendSystemNotify( video.getGroupId(), JsonUtil.object2Json( ext ) );
-            imApi.sendSystemNotify( video.getGroupId(), JsonUtil.object2Json( ext ) );
+            String value = JsonUtil.object2Json( ext );
+            imApi.sendSystemNotify( video.getGroupId(), value );
+            imApi.sendSystemNotify( video.getGroupId(), value );
 
             ext.remove( "systemtime" );
             ext.remove( "userinfomat" );
-            imServerUtils.sendGroupMessage( String.valueOf( video.getId() ), JsonUtil.object2Json( ext ) );
+            imServerUtils.sendGroupMessage( String.valueOf( video.getId() ), ext );
             return msg;
         }
         throw new RuntimeException( "切换失败" );

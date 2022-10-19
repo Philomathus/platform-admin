@@ -54,8 +54,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("bankcode", withdrawLog.getBankCode());
         dataMap.put("list", JsonUtil.object2Json(list));
         dataMap.put("callback_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.LANG_YA);
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
@@ -114,8 +113,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
 
         String rspSign = requestMap.remove("sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         log.info("狼牙代付回调待签名字符串:" + requestMap);
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
@@ -154,8 +152,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("out_trade_no", withdrawLog.getOrderNo());
         dataMap.put("applytime", System.currentTimeMillis() + "");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);

@@ -49,8 +49,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bankCard", withdrawLog.getBankAccount().trim());
         bodyMap.put("callBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.ONE_ZERO);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + "&key=" + signMd5;
         log.warn(tempStr);
@@ -101,8 +100,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
         String merchantOrderId = dataMap.getOrDefault("orderNo", "").toString();
         String status = dataMap.getOrDefault("status", "").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         Map<String, Object> bodyMap = new TreeMap<>(dataMap);
 
@@ -151,8 +149,7 @@ public class OneZeroPayAgentProcessor extends AbstractPayAgent {
         paramsMap.put("orderNo", withdrawLog.getOrderNo());
 
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
         log.warn(tempStr);

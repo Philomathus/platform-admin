@@ -75,8 +75,7 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.SHANG_YIN);
         dataMap.put("userId", payAgentPlatform.getHeaderKey());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String signStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(signStr);
         dataMap.put("sign", sign);
@@ -139,8 +138,7 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("orderstate", requestMap.getOrDefault("orderstate", "").toString());
         dataMap.put("servertime", requestMap.getOrDefault("servertime", "").toString());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         dataMap.put("key", signMd5);
 
         String mySign = DigestUtils.md5Hex(this.assemblyUrl(dataMap));
@@ -204,8 +202,7 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("clientTime", DateFormatUtils.formate(new Date(),
                 DateFormatUtils.TIGHT_PATTERN_DATETIME));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);

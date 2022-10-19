@@ -46,8 +46,7 @@ public class ShanDe2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("branchbank", withdrawLog.getBankName());
         dataMap.put("wallet_id", StringUtils.isEmpty(payAgentPlatform.getHeaderKey()) ? "2" : payAgentPlatform.getHeaderKey());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("signature", sign);
@@ -107,8 +106,7 @@ public class ShanDe2PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("app_id", payAgentPlatform.getMerId());
         dataMap.put("order_sn", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("signature", sign);

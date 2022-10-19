@@ -45,8 +45,7 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
         bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.XIN_HUA_ZI);
         bodyMap.put("remark", "daifu");
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + "&api_key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         bodyMap.put("sign", sign);
@@ -95,8 +94,7 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
         requestMap.remove("code").toString();
         requestMap.remove("msg").toString();
         requestMap.remove("order_id").toString();
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         SortedMap<String, Object> signMap = new TreeMap<>(requestMap);
         String tempStr = this.assemblyUrl(requestMap)+"&api_key="+signMd5;
         String sign = DigestUtils.md5Hex( tempStr).toUpperCase();
@@ -134,8 +132,7 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
         String pay_date=getOrderAgentTime();
         dataMap.put( "pay_date", pay_date );
         dataMap.put("out_trade_no", withdrawLog.getOrderNo());
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&api_key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);

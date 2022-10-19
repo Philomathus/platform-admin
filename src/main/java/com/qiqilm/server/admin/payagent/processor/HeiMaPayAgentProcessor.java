@@ -54,8 +54,7 @@ public class HeiMaPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("list", list);
         dataMap.put("callback_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);
@@ -97,8 +96,7 @@ public class HeiMaPayAgentProcessor extends AbstractPayAgent {
         String rspSign = treeMap.remove("sign").toString();
         treeMap.values().removeIf(value -> StringUtils.isBlank(value.toString()));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(treeMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
 
@@ -144,8 +142,7 @@ public class HeiMaPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("out_trade_no", withdrawLog.getOrderNo());
         dataMap.put("applytime", System.currentTimeMillis() / 1000);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);

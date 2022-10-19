@@ -48,8 +48,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JIANDAN);
         bodyMap.put("extend_info", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap);
         tempStr = URLEncoder.encode(tempStr,"UTF-8").replace("*","%2A").replace("+","%20").replace("%7E","~");
@@ -104,8 +103,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
         String sign = requestMap.remove("sign").toString();
         SortedMap<String, Object> bodyMap = new TreeMap<>(requestMap);
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap);
         tempStr = URLEncoder.encode(tempStr,"UTF-8").replace("*","%2A").replace("+","%20").replace("%7E","~");

@@ -60,8 +60,7 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString() );
         bodyMap.put( "backend_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LP );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( bodyMap ) + "&pay_pwd=" + payAgentPlatform.getHeaderKey() + "&key=" + signMd5;
         log.warn( tempStr );
 
@@ -117,8 +116,7 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
         String sign   = requestMap.remove( "sign" ).toString();
         String status = requestMap.getOrDefault( "result", "" ).toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = JsonUtil.object2Json( requestMap ) + signMd5;
         log.warn( "回调验签加密前字符串:" + tempStr );
@@ -159,8 +157,7 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
         String cardNo     = requestMap.getOrDefault( "card_no", "" ).toString();
         String amount     = requestMap.getOrDefault( "amount", "0" ).toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         Map<String, Object> dataMap = new LinkedHashMap<>();
         dataMap.put( "merchant_no", requestMap.get( "merchant_no" ) );
@@ -207,8 +204,7 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "merchant_no", payAgentPlatform.getMerId() );
         dataMap.put( "order_no", withdrawLog.getOrderNo() );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;
 
         String sign = DigestUtils.md5Hex( tempStr );

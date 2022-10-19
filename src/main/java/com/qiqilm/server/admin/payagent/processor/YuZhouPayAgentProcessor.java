@@ -68,8 +68,7 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("sub_branch", withdrawLog.getBankName());
         dataMap.put("account_holder_id", "341124200001010101");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = outTradeNo + totalFee + bankAccount + accountHolder + depositBank + accountHolderMobile + mchId + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);
@@ -121,8 +120,7 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
         String status = requestMap.getOrDefault("status", "").toString();
 
         String rspSign = requestMap.remove("sign").toString();
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = orderNo + transactionId + timeEnd + mchId + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
 
@@ -164,8 +162,7 @@ public class YuZhouPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("mch_id", payAgentPlatform.getMerId());
         dataMap.put("out_trade_no", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = withdrawLog.getOrderNo() + payAgentPlatform.getMerId() + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         dataMap.put("sign", sign);

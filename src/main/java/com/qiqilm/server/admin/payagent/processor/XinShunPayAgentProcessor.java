@@ -42,8 +42,7 @@ public class XinShunPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "merchant_order_sn", withdrawLog.getOrderNo() );
 
 		String merchantId = payAgentPlatform.getMerId();
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String authStr = Base64.getEncoder().encodeToString(String.format("%s:%s", merchantId, signMd5).getBytes(StandardCharsets.UTF_8));
 
 		List<Map<String, Object>> list = new LinkedList<>();
@@ -96,8 +95,7 @@ public class XinShunPayAgentProcessor extends AbstractPayAgent {
 		String rspSign = requestMap.remove( "sign" ).toString();
 		String timestamp = requestMap.remove( "timestamp" ).toString();
 
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String temStr = JsonUtil.object2Json( requestMap )+"&key="+signMd5+"&timestamp="+timestamp;
 		String sign = DigestUtils.md5Hex( temStr );
 
@@ -141,8 +139,7 @@ public class XinShunPayAgentProcessor extends AbstractPayAgent {
 		String orderNo = withdrawLog.getOrderNo();
 
 		String merchantId = payAgentPlatform.getMerId();
-		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-				"secretkey/payAgentPrivateKey" ) );
+		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String authStr = Base64.getEncoder().encodeToString(String.format("%s:%s", merchantId, signMd5).getBytes(StandardCharsets.UTF_8));
 
 		log.warn( payAgentPlatform.getName() + "查询代付状态接口请求参数{}", orderNo );

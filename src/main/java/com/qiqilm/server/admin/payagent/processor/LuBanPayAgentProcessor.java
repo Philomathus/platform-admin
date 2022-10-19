@@ -45,8 +45,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "callback_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put( "withdraw_type", "1" );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         //$sign = md5(md5($account_id.$out_trade_no.$bank_id).$user_key);
         String tempStr = payAgentPlatform.getMerId() + withdrawLog.getOrderNo() + withdrawLog.getBankAccount().trim();
@@ -98,8 +97,7 @@ public class LuBanPayAgentProcessor extends AbstractPayAgent {
         String flow_no   = requestMap.getOrDefault( "flow_no", "" ).toString();
         String call_time = requestMap.getOrDefault( "call_time", "" ).toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr( "secretkey"
-                + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = flow_no + call_time + signMd5;
         String signStr = DigestUtils.md5Hex( tempStr ).toLowerCase();

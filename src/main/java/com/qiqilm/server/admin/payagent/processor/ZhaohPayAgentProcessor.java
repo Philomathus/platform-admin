@@ -56,8 +56,7 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "callbackUrl", URLEncoder.encode( callbackUrl, "UTF-8" ) );
         dataMap.put( "channelGroup", "0" );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( dataMap ) + "&token=" + payAgentPlatform.getHeaderKey() + "&sign=" + signMd5;
         log.warn( tempStr );
@@ -125,8 +124,7 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
 
         // 解密后对签名验证
         SortedMap<String, Object> signMap = new TreeMap<>( dataMap );
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String sign    = signMap.remove( "sign" ).toString();
         String tempStr = this.assemblyUrl( signMap ) + "&token=" + payAgentPlatform.getHeaderKey() + "&sign=" + signMd5;
@@ -167,8 +165,7 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
 
         // 解密后对签名验证
         SortedMap<String, Object> signMap = new TreeMap<>( dataMap );
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String sign    = signMap.remove( "sign" ).toString();
         String tempStr = this.assemblyUrl( signMap ) + "&token=" + payAgentPlatform.getHeaderKey() + "&sign=" + signMd5;
@@ -220,8 +217,7 @@ public class ZhaohPayAgentProcessor extends AbstractPayAgent {
         Map<String, String> dataMap = new TreeMap<>();
         dataMap.put( "merchantCode", payAgentPlatform.getMerId() );
         dataMap.put( "merchantNo", withdrawLog.getOrderNo() );
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/payAgentPrivateKey" ) );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         // 生成签名信息
         String signStr = this.assemblyUrl( dataMap ) + "&token=" + payAgentPlatform.getHeaderKey() + "&sign=" + signMd5;

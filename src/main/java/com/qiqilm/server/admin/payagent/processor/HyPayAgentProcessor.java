@@ -54,8 +54,7 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("reverseUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HY);
         bodyMap.put("submitIp", "192.168.0.1");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
 
         log.warn(tempStr);
@@ -113,8 +112,7 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
 
         String status = requestMap.getOrDefault("status", "").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         Map<String, Object> bodyMap = new LinkedHashMap<>();
         bodyMap.put("merchantId", requestMap.get("merchantId"));
@@ -171,8 +169,7 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("merchantOrderId", withdrawLog.getOrderNo());
         dataMap.put("orderAmount", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + signMd5;
 
         log.warn(tempStr);

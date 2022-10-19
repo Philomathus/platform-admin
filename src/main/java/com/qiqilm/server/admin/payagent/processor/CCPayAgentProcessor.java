@@ -46,8 +46,7 @@ public class CCPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("accountRemark", accountRemark);
         bodyMap.put("currency", "CNY");
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) +"&key="+ signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         bodyMap.put("sign", sign);
@@ -98,8 +97,7 @@ public class CCPayAgentProcessor extends AbstractPayAgent {
         //商户订单号
         String mchOrderId = requestMap.getOrDefault("mchOrderId", "").toString();
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         Map<String, Object> bodyMap = new TreeMap<>(requestMap);
         String tempStr = this.assemblyUrl(bodyMap)+"&key="+ signMd5;
@@ -139,8 +137,7 @@ public class CCPayAgentProcessor extends AbstractPayAgent {
         paramsMap.put("amount", withdrawLog.getWithdrawMoney());
         paramsMap.put("mchOrderId", withdrawLog.getOrderNo());
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(paramsMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         paramsMap.put("sign", sign);

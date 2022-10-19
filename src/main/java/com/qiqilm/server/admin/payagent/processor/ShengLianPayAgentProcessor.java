@@ -101,8 +101,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("cashType", "01");
         bodyMap.put("timestamp",  DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         log.info("盛联代付请求参数"+JsonUtil.object2Json(bodyMap));
@@ -193,8 +192,7 @@ public class ShengLianPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("orderNo", withdrawLog.getOrderNo());
         bodyMap.put("timestamp",  DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
 
-        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), AuthUtil.getSecurityKeyStr(
-                "secretkey/payAgentPrivateKey"));
+        String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
