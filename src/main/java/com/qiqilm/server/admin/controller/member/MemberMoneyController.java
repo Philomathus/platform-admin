@@ -134,4 +134,9 @@ public class MemberMoneyController extends BaseController {
 	public AjaxResult remove( @PathVariable String[] memberIds ) {
 		return toAjax( memberMoneyService.deleteMemberMoneyByIds( memberIds ) );
 	}
+
+	@GetMapping("/count")
+	public AjaxResult count(){
+		return AjaxResult.success(memberMoneyService.countMoney());
+	}
 }

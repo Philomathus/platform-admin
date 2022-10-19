@@ -195,4 +195,9 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
     public Integer clear() {
         return memberInfoMapper.clear();
     }
+
+    @Override
+    public BigDecimal countMoney() {
+        return memberMoneyMapper.countMoney();
+    }
 }
