@@ -35,7 +35,7 @@ public class ImServerUtils {
     @Async
     public void sendOnlineGroupMessage( Map<String, Object> ext ) {
         ext.put( "groupId", LiveCenterConfig.me.getLiveCenter() );
-        RspBase<?> rspBase = this.sendGroupMessage( LiveCenterConfig.me.getLiveCenter(), JsonUtil.object2Json( ext ), 3 );
+        RspBase<?> rspBase = this.sendGroupMessage( LiveCenterConfig.me.getLiveCenter(), ext, 3 );
         if ( rspBase != null && rspBase.getCode() == 200 ) {
             log.info( "新IM - 在线群组im消息发送成功" );
         }
@@ -52,25 +52,25 @@ public class ImServerUtils {
         String groupId = LiveCenterConfig.me.getLiveCenter() + "@" + roomId.replaceAll( "#", "" ).replaceAll( "@", "" );
         // 设置群组ID
         ext.put( "groupId", groupId );
-        RspBase<?> rspBase = this.sendGroupMessage( groupId, JsonUtil.object2Json( ext ), 3 );
+        RspBase<?> rspBase = this.sendGroupMessage( groupId, ext, 3 );
         if ( rspBase != null && rspBase.getCode() == 200 ) {
             log.info( "新IM - 群组{}im消息发送成功", groupId );
         }
     }
 
-    private RspBase<?> sendGroupMessage( String groupId, String message, int retryNum ) {
+    private RspBase<?> sendGroupMessage( String groupId, Map<String, Object> messageMap, int retryNum ) {
         if ( StringUtils.isBlank( this.imSendGroupMsgUrl ) || !this.imSendGroupMsgUrl.startsWith( "http" ) ) {
-            log.error( "新IM - 未初始化参数, IM消息无法发送" );
+            //log.error( "新IM - 未初始化参数, IM消息无法发送" );
             return null;
         }
         if ( retryNum <= 0 ) {
-            log.error( "新IM - IM访问失败,message:{}", message );
+            log.error( "新IM - IM访问失败,message:{}", JsonUtil.object2Json( messageMap ) );
             return null;
         }
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
-        HttpEntity<String> httpEntity = new HttpEntity<>( message, httpHeaders );
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>( messageMap, httpHeaders );
 
         try {
             return restTemplate.postForObject( this.imSendGroupMsgUrl + groupId, httpEntity, RspBase.class );
@@ -83,26 +83,26 @@ public class ImServerUtils {
             ex.printStackTrace();
         }
         retryNum--;
-        return this.sendGroupMessage( groupId, message, retryNum );
+        return this.sendGroupMessage( groupId, messageMap, retryNum );
     }
 
     /**
      * 发送单会员消息
      *
-     * @param memberId 会员ID
-     * @param ext      消息map
+     * @param memberId   会员ID
+     * @param messageMap 消息map
      */
-    public void sendMessage( String memberId, Map<String, Object> ext ) {
+    public void sendMessage( String memberId, Map<String, Object> messageMap ) {
         if ( StringUtils.isBlank( this.imSendMsgUrl ) || !this.imSendMsgUrl.startsWith( "http" ) ) {
-            log.error( "新IM - 未初始化参数, IM消息无法发送" );
+            //log.error( "新IM - 未初始化参数, IM消息无法发送" );
             return;
         }
 
-        ext.put( "groupId", LiveCenterConfig.me.getLiveCenter() );
+        messageMap.put( "groupId", LiveCenterConfig.me.getLiveCenter() );
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
-        HttpEntity<String> httpEntity = new HttpEntity<>( JsonUtil.object2Json( ext ), httpHeaders );
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>( messageMap, httpHeaders );
 
         try {
             RspBase<?> rspBase = restTemplate.postForObject( this.imSendMsgUrl + memberId, httpEntity, RspBase.class );
