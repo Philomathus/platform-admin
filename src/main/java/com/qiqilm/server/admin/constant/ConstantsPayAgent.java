@@ -257,4 +257,5 @@ public abstract class ConstantsPayAgent {
     public static final String    LIU_BANG      = "liuBang";
     public static final String    TIE_NIU      = "tieNiu";
     public static final String    VIP_PAY      = "vipPay";
+    public static final String    KUBI_PAY      = "kubiPay";
 }

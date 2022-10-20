@@ -105,7 +105,7 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
         log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("0000".equals(resultMap.getOrDefault("status", "").toString())) {
-                log.info("商银代付订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
+                log.info(payAgentPlatform.getName()+"订单提交成功 - result:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {
                 reqPayAgent.setFailReason(resultMap.getOrDefault("msg", "").toString());
@@ -113,7 +113,7 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
                 payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
             }
         }
-        log.warn("商银代付订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
+        log.warn(payAgentPlatform.getName()+"订单提交失败 - orderNo:{}", withdrawLog.getOrderNo());
         return false;
     }
 
@@ -228,7 +228,7 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        log.info("商银代付查询结果 - result:{}", JsonUtil.object2Json(resultMap));
+        log.info(payAgentPlatform.getName()+"查询结果 - result:{}", JsonUtil.object2Json(resultMap));
         if (!CollectionUtils.isEmpty(resultMap)) {
             if ("1".equals(resultMap.getOrDefault("queryStatus", "").toString())) {
                 int orderState = Integer.parseInt(resultMap.getOrDefault("orderStatus", 0).toString());
@@ -249,6 +249,6 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
             }
             return resultMap.getOrDefault("msg", "").toString();
         }
-        return "商银代付查询失败,订单号:"+withdrawLog.getOrderNo();
+        return payAgentPlatform.getName()+"查询失败,订单号:"+withdrawLog.getOrderNo();
     }
 }
