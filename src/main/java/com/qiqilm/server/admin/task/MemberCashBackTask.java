@@ -52,12 +52,12 @@ public class MemberCashBackTask {
     @Resource
     private RedisUtil                 redisUtil;
 
-    @Scheduled( cron = "0 0 16 * * ?" )// 每天16:00点执行一次
+    @Scheduled( cron = "0 58 15 * * ?" )// 每天15:58点执行一次
     public void cashBackTask() {
         if ( !sysConfigCacheUtil.getConfBool( "cash_back_switch" ) ) {
             return;
         }
-        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 100 ) ) {
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 5000 ) ) {
             return;
         }
         log.info( "开始执行充值返现活动任务" );
