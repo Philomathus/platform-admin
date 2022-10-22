@@ -40,6 +40,7 @@ public class UploadOssController {
 		String fileKey = sysConfigCacheUtil.getConf( "agent_id" ) + "/" + path + "/" + rFileName
 				+ FilenameUtils.EXTENSION_SEPARATOR + extension;
 
+		log.warn( fileKey );
 		if (serverOss.getProvider()==0){//阿里云
 			url = serverOssService.uploadInputStream( new FileInputStream( newFile ), fileKey );
 			newFile.delete();
