@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.imserver;
 import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.UuidUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,7 @@ public class ImServerUtils {
     @Async
     public void sendOnlineGroupMessage( Map<String, Object> ext ) {
         ext.put( "groupId", LiveCenterConfig.me.getLiveCenter() );
+        ext.put( "uuid", UuidUtil.getRandomUuidWithoutSeparator() );
         RspBase<?> rspBase = this.sendGroupMessage( LiveCenterConfig.me.getLiveCenter(), ext, 3 );
         if ( rspBase != null && rspBase.getCode() == 200 ) {
             log.info( "新IM - 在线群组im消息发送成功" );
@@ -52,6 +54,7 @@ public class ImServerUtils {
         String groupId = LiveCenterConfig.me.getLiveCenter() + "@" + roomId.replaceAll( "#", "" ).replaceAll( "@", "" );
         // 设置群组ID
         ext.put( "groupId", groupId );
+        ext.put( "uuid", UuidUtil.getRandomUuidWithoutSeparator() );
         RspBase<?> rspBase = this.sendGroupMessage( groupId, ext, 3 );
         if ( rspBase != null && rspBase.getCode() == 200 ) {
             log.info( "新IM - 群组{}im消息发送成功", groupId );
@@ -99,6 +102,7 @@ public class ImServerUtils {
         }
 
         messageMap.put( "groupId", LiveCenterConfig.me.getLiveCenter() );
+        messageMap.put( "uuid", UuidUtil.getRandomUuidWithoutSeparator() );
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType( MediaType.APPLICATION_JSON );
