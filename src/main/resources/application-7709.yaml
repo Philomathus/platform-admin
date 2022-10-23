@@ -21,6 +21,12 @@ mybatis:
 
 liveCenter: 7709
 
+im:
+  # 群聊
+  sendGroupMsg: http://alb-c8bpqf3la2md9yeih2.cn-hongkong.alb.aliyuncs.com/chat/sendGroupMsg/
+  # 单聊
+  sendMsg: http://alb-c8bpqf3la2md9yeih2.cn-hongkong.alb.aliyuncs.com/chat/sendMsg/
+
 downLoadLimit: 100000
 
 # 代付额度
