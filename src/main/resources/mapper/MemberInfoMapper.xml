@@ -1026,6 +1026,10 @@
         and game_end_time <![CDATA[ <= ]]> #{endTime}
         GROUP BY platform_id) a left join game_platform p on p.id = a.platformId
     </select>
+    <select id="totalAccount" resultType="hashmap">
+        select total_account,box_account from ${dbMain}.member_info
+        where id = #{memberId}
+    </select>
 
 </mapper>
 

@@ -8,10 +8,7 @@ import com.qiqilm.server.admin.domain.vo.WithdrawReport;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 会员信息Mapper接口
@@ -145,6 +142,8 @@ public interface MemberInfoMapper {
                                         @Param("memberId") String memberId);
 
     BigDecimal personalLiverVideoProp(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId);
+
+    HashMap totalAccount(@Param("startTime") String startTime, @Param("endTime") String endTime, @Param("memberId") String memberId);
 
     List<Map> personalGameData(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("memberId") String memberId,@Param( "dbNodes" ) String dbNodes );
 

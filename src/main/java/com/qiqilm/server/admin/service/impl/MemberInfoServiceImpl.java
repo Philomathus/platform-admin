@@ -586,6 +586,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         // 提款 withdrawal
         forkJoinTasks.add( () -> ImmutableMap.of( "personalWithdrawRecharge",
                 memberInfoMapper.personalWithdrawRecharge( startTime, endTime, memberId ) ) );
+
+
+        forkJoinTasks.add( () -> ImmutableMap.of( "totalAccount",
+                memberInfoMapper.totalAccount( startTime, endTime, memberId ) ) );
+
         // 送礼 gift
         forkJoinTasks.add( () -> ImmutableMap.of( "personalLiverVideoProp", memberInfoMapper.personalLiverVideoProp( startTime,
                 endTime, memberId ) ) );
