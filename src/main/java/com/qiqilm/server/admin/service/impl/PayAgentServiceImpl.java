@@ -114,7 +114,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentDaNiuPay;
 	@Value( "${payAgentBaiDaFuPay:5000}" )
 	private Integer payAgentBaiDaFuPay;
-	@Value( "${payAgentKuBiPay}" )
+	@Value( "${payAgentKuBiPay:5000}" )
 	private Integer payAgentKuBiPay;
 
 	@Override

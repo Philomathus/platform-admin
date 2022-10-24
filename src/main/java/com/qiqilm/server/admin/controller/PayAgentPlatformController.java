@@ -30,7 +30,7 @@ public class PayAgentPlatformController extends BaseController {
 	@Autowired
 	private IPayAgentPlatformService payAgentPlatformService;
 	@Autowired
-	private IPayAgentService         payAgentService;
+	private IPayAgentService  payAgentService;
 
 	/**
 	 * 查询代付平台列表
