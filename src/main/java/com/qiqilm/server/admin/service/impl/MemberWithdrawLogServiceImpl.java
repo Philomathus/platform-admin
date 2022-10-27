@@ -213,7 +213,6 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public AjaxResult refused(ReqMemberWithdrawLog req) {
         MemberWithdrawLog memberWithdrawLog = this.selectMemberWithdrawLogById(req.getId());
         if (memberWithdrawLog == null) {
@@ -238,7 +237,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             memberWithdrawLog.setStatus(2);//审核不通过
             memberWithdrawLog.setOpName(userName);
             memberWithdrawLog.setUpdateTime(new Date());
-            this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+            IMemberWithdrawLogService memberWithdrawLogService = SpringUtils.getBean( this.getClass() );
+            memberWithdrawLogService.refusedUpdateProcess(memberWithdrawLog, userName, ip);
         } else {
             return AjaxResult.error("会员账号" + memberWithdrawLog.getAccount() + "该笔订单状态" + memberWithdrawLog.getStatus() +
                     "该状态下订单不能拒绝");
@@ -250,7 +250,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    void refusedUpdateProcess(MemberWithdrawLog memberWithdrawLog, String userName, String ip) {
+    public void refusedUpdateProcess(MemberWithdrawLog memberWithdrawLog, String userName, String ip) {
         int updateW = memberWithdrawLogMapper.updateMemberWithdrawLog(memberWithdrawLog);
         //回退提现金额
         int updateM = memberInfoMapper.updateMoneySelect(memberWithdrawLog.getMemberId(), memberWithdrawLog.getWithdrawMoney(),
@@ -279,6 +279,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         if (withdrawLogList == null || withdrawLogList.size() == 0) {
             return AjaxResult.error("该订单已被处理,请刷新界面");
         }
+        IMemberWithdrawLogService memberWithdrawLogService = SpringUtils.getBean( this.getClass() );
         for (MemberWithdrawLog memberWithdrawLog : withdrawLogList) {
             if (memberWithdrawLog == null) {
                 return AjaxResult.error("订单不存在");
@@ -295,7 +296,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
                 memberWithdrawLog.setStatus(2);//审核不通过
                 memberWithdrawLog.setOpName(userName);
                 memberWithdrawLog.setUpdateTime(new Date());
-                this.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+                memberWithdrawLogService.refusedUpdateProcess(memberWithdrawLog, userName, ip);
             } else {
                 return AjaxResult.error("会员账号" + memberWithdrawLog.getAccount() + "该笔订单状态" + memberWithdrawLog.getStatus() +
                         "该状态下订单不能拒绝");

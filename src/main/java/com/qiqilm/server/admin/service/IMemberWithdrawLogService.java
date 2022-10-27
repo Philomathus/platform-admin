@@ -4,7 +4,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei;
 import com.qiqilm.server.admin.domain.req.ReqMemberWithdrawLog;
-import com.qiqilm.server.admin.domain.rsp.RspMemberInfo;
 
 import java.util.List;
 
@@ -36,6 +35,8 @@ public interface IMemberWithdrawLogService {
 	AjaxResult refused( ReqMemberWithdrawLog req );
 
 	AjaxResult refuseds( ReqMemberWithdrawLog req );
+
+	void refusedUpdateProcess(MemberWithdrawLog memberWithdrawLog, String userName, String ip);
 
 	AjaxResult back( ReqMemberWithdrawLog req );
 
