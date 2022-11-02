@@ -237,7 +237,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             memberWithdrawLog.setStatus(2);//审核不通过
             memberWithdrawLog.setOpName(userName);
             memberWithdrawLog.setUpdateTime(new Date());
-            IMemberWithdrawLogService memberWithdrawLogService = SpringUtils.getBean( this.getClass() );
+            IMemberWithdrawLogService memberWithdrawLogService = SpringUtils.getBean( IMemberWithdrawLogService.class );
             memberWithdrawLogService.refusedUpdateProcess(memberWithdrawLog, userName, ip);
         } else {
             return AjaxResult.error("会员账号" + memberWithdrawLog.getAccount() + "该笔订单状态" + memberWithdrawLog.getStatus() +
@@ -265,7 +265,6 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public AjaxResult refuseds(ReqMemberWithdrawLog req) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtil.getHttpServletRequest());
         String userName = loginUser.getUser().getUserName();
@@ -279,7 +278,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         if (withdrawLogList == null || withdrawLogList.size() == 0) {
             return AjaxResult.error("该订单已被处理,请刷新界面");
         }
-        IMemberWithdrawLogService memberWithdrawLogService = SpringUtils.getBean( this.getClass() );
+        IMemberWithdrawLogService service = SpringUtils.getBean( IMemberWithdrawLogService.class );
         for (MemberWithdrawLog memberWithdrawLog : withdrawLogList) {
             if (memberWithdrawLog == null) {
                 return AjaxResult.error("订单不存在");
@@ -296,7 +295,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
                 memberWithdrawLog.setStatus(2);//审核不通过
                 memberWithdrawLog.setOpName(userName);
                 memberWithdrawLog.setUpdateTime(new Date());
-                memberWithdrawLogService.refusedUpdateProcess(memberWithdrawLog, userName, ip);
+                service.refusedUpdateProcess(memberWithdrawLog, userName, ip);
             } else {
                 return AjaxResult.error("会员账号" + memberWithdrawLog.getAccount() + "该笔订单状态" + memberWithdrawLog.getStatus() +
                         "该状态下订单不能拒绝");
