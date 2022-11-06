@@ -131,7 +131,7 @@
 			<if test="updateTime != null">
 				#{updateTime},
 			</if>
-			<if test="endpoint != null and endpoint=''">
+			<if test="endpoint != null and endpoint != ''">
 				#{endpoint},
 			</if>
 		</trim>
