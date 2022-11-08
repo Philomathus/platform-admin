@@ -165,7 +165,7 @@
         <if test="dto.familyId!=null">and d.family_id = #{dto.familyId}</if>
         <if test="dto.hostId!=null">and d.host_id = #{dto.hostId}</if>
         <if test="dto.nickName!=null and dto.nickName!=''">and u.nick_name like concat('%',#{dto.nickName},'%')</if>
-        order by d.family_id
+        order by d.end_time desc
     </select>
     <select id="getliveHostWageDay" resultType="java.lang.String">
         SELECT host_id AS hostId from ${dbLive}.live_host_wage_day
