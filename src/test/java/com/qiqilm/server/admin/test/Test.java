@@ -33,7 +33,7 @@ public class Test {
 				+ "&failOverReadOnly=false");
 		System.out.println("lottery: " + jdbc3);
 
-		String username = stringEncryptor.encrypt("r-j6cc51pvcmzqyg66i2.redis.rds.aliyuncs.com\n");
+		String username = stringEncryptor.encrypt("r-j6cc51pvcmzqyg66i2.redis.rds.aliyuncs.com");
 		System.out.println("redisHost: " + username);
 
 		String password = stringEncryptor.encrypt("x&N9ygY0HC8jw&Nb");

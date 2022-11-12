@@ -9,7 +9,7 @@ spring:
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(7IVc1g4VrNplrT6qpHPd0CrR8cisBax8P3cOeOGKrMS5ljpTRa19U/HcfUyqN2gSoSj8I2Cz+WjgZ1sneEBaWXEI1FK6B041mDzI4MPvY1c=)
+    host: ENC(nBJNR0NT5TjSwxtAFq8DUz5k1sQ+CI5+k7JvMJeVshCpfljMMHL9Fl28ekVNa9aGJxLJWYAXzPrgx+iV+DmRbeu9yj7GcCNNvYJ2AMfjNDg=)
     port: 6379
     password: ENC(/zQbv7KGzd3LQuCywdGaKiFtPu72bHGrdoDyq7Y66jfBatu5/PpjoSVLQh6rnBNtIA6X/5QTxwsGl/PYit8VWQ==)
 
