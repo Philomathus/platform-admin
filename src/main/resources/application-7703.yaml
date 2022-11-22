@@ -33,10 +33,12 @@ payAgentLimit: 30000
 # 宾利代付额度
 payAgentLimitBinLi: 50000
 # 联付宝代付额度
-payAgentLimitLianFuBao: 30000
+payAgentLimitLianFuBao: 10000
+# 顺为代付额度
+payAgentLimitShunWei: 10000
 # 众家代付额度
 payAgentLimitZhongJiaPay: 50000
 # 老乡代付额度
 payAgentLimitLaoXiangPay: 50000
 # GoPay代付额度
-payAgentLimitGoPayPay: 50000
+payAgentLimitGoPayPay: 100000
