@@ -83,3 +83,5 @@ payAgentLimitOkPayPay: 100000
 payAgentDaNiuPay: 50000
 # 百达付代付额度
 payAgentBaiDaFuPay: 50000
+# 酷币代付额度
+payAgentKuBiPay: 20000

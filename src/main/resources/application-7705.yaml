@@ -64,3 +64,5 @@ payAgentLimitHuiYuanPay: 30000
 payAgentLimitYinLianPay: 50000
 # GoPay代付额度
 payAgentLimitGoPayPay: 50000
+# 酷币代付额度
+payAgentKuBiPay: 20000

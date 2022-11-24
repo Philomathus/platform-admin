@@ -68,3 +68,5 @@ payAgentLimitHuiYuanPay: 50000
 payAgentLimitShanDePay: 30000
 # GoPay代付额度
 payAgentLimitGoPayPay: 10000
+# 酷币代付额度
+payAgentKuBiPay: 20000

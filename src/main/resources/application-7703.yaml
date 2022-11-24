@@ -42,3 +42,5 @@ payAgentLimitZhongJiaPay: 50000
 payAgentLimitLaoXiangPay: 50000
 # GoPay代付额度
 payAgentLimitGoPayPay: 100000
+# 酷币代付额度
+payAgentKuBiPay: 20000
