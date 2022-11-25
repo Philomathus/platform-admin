@@ -1,7 +1,5 @@
 package com.qiqilm.server.admin.task.beat;
 
-import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
-import com.qiqilm.server.admin.config.dds.DynamicDataSourceContextHolder;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.domain.MemberGameDatafix;
 import com.qiqilm.server.admin.enums.EnumGamePlatform;
@@ -12,7 +10,6 @@ import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -71,8 +68,6 @@ public class LotteryDataTask {
         } catch (Exception e) {
             log.error("修复彩票注定数据失败,", e);
         }
-
-
     }
 
     @Scheduled(fixedDelay = 60000, initialDelay = 5000)
