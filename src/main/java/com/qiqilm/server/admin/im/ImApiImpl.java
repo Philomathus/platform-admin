@@ -48,7 +48,7 @@ public class ImApiImpl implements ImApi {
         }
         String sign = getIMAdminSign( tim_sdkappid, tim_sdk_key, tim_identifier );
 
-        return General.IM_API + api + "?" + "sdkappid=" + tim_sdkappid + "&identifier=" + tim_identifier + "&usersig=" + sign
+        return ( tim_sdkappid.equals( "20001274" ) ? General.IM_API_SGP : General.IM_API ) + api + "?" + "sdkappid=" + tim_sdkappid + "&identifier=" + tim_identifier + "&usersig=" + sign
                 + "&random=" + General.randomNum() + "&contenttype=" + General.contenttype;
     }
 
