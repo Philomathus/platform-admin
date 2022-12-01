@@ -24,9 +24,9 @@ liveCenter: 7701
 
 im:
   # 群聊
-  sendGroupMsg: http://alb-109m8hnlbeww3591nz.cn-shenzhen.alb.aliyuncs.com/chat/sendGroupMsg/
+  sendGroupMsg: http://8.218.39.243:43000/chat/sendGroupMsg/
   # 单聊
-  sendMsg: http://alb-109m8hnlbeww3591nz.cn-shenzhen.alb.aliyuncs.com/chat/sendMsg/
+  sendMsg: http://8.218.39.243:43000/chat/sendMsg/
 
 # 代付额度
 payAgentLimit: 5000
