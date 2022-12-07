@@ -158,6 +158,7 @@ public enum BankCodeKuBiType {
     YEEPAY( Arrays.asList( "易宝支付" ) ),
     ZZB( Arrays.asList( "郑州银行" ) ),
     GXBBWYX( Arrays.asList( "北部湾" ) ),
+    other( Arrays.asList( "其他银行" ) ),
     ;
 
     private final List<String> desc;
@@ -172,6 +173,6 @@ public enum BankCodeKuBiType {
                 return enumType;
             }
         }
-        return null;
+        return other;
     }
 }
