@@ -53,9 +53,11 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
         List<LiveOfficer> liveOfficers = liveOfficerMapper.selectLiveOfficerList(liveOfficer);
         Set<String> puserIds = liveOfficers.stream().map(LiveOfficer::getPuserId).collect(Collectors.toSet());
 
-        List<MemberInfo> memberInfos;
+        List<MemberInfo> memberInfos = null;
         if (Objects.isNull(LiveCenterConfig.me.getLiveSubAgents())) {
-            memberInfos = memberInfoMapper.selectNikeNameById(puserIds);
+            if(StringUtils.isNotEmpty(puserIds)){
+                memberInfos = memberInfoMapper.selectNikeNameById(puserIds);
+            }
         } else {
             if (puserIds.isEmpty()) {
                 memberInfos = new ArrayList<>();
@@ -66,13 +68,16 @@ public class LiveOfficerServiceImpl implements ILiveOfficerService {
                 memberInfos = memberInfoMapper.selectAllDBNikeName(puserIds, liveSubAgentSet);
             }
         }
-        for (MemberInfo memberInfo : memberInfos) {
-            for (LiveOfficer officer : liveOfficers) {
-                if (officer.getPuserId().equals(memberInfo.getId())) {
-                    officer.setPuserName(memberInfo.getNickName());
+        if(StringUtils.isNotEmpty( memberInfos )){
+            for (MemberInfo memberInfo : memberInfos) {
+                for (LiveOfficer officer : liveOfficers) {
+                    if (officer.getPuserId().equals(memberInfo.getId())) {
+                        officer.setPuserName(memberInfo.getNickName());
+                    }
                 }
             }
         }
+
         return liveOfficers;
     }
 
