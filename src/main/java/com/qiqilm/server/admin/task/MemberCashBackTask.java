@@ -52,12 +52,12 @@ public class MemberCashBackTask {
     @Resource
     private RedisUtil                 redisUtil;
 
-    @Scheduled( cron = "0 58 15 * * ?" )// 每天15:58点执行一次
+    @Scheduled( cron = "0 35 4 * * ?" )// 每天15:58点执行一次
     public void cashBackTask() {
         if ( !sysConfigCacheUtil.getConfBool( "cash_back_switch" ) ) {
             return;
         }
-        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 5000 ) ) {
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 500 ) ) {
             return;
         }
         log.info( "开始执行充值返现活动任务" );
@@ -112,7 +112,7 @@ public class MemberCashBackTask {
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( userId );
         //日志
         logService.logMoneyAdd( null, userId, memberInfo.getUserName(), EnumMoney.activity, money, memberInfo.getTotalAccount()
-                , "充值返现活动", orderNo );
+                , "充值返现活动17号", orderNo );
         int i = memberBcodeMapper.insertMemberBcode( codeFlow );
         int j = memberInfoMapper.updateMoneySelect( userId, money, null, money, null, null );
         if ( i <= 0 || j <= 0 ) {
