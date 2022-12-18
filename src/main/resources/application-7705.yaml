@@ -1,9 +1,9 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(p2y9mgf4jLFGYWxgRNGzKQwnN31bI3BNWxi9m9F2vXq9HIj2GaUCq+xYnSb9cMrMj+pP4w36IXofrvsy5tyGF/8ONV3z0swJ1WCcMVuI9LJkgWcnL+3KTLeSKPw3xZ97Zd3kqNPz+Gkgo//ePluIycDHE5y7it1QwBkPZ6Vrr5nL2qx+xfCaTLyAk57SyD7FhWpfuicPHwh2V7WL+WDiEOCx8kxAV1OAzYGUrM+pPc19HXaX6goGmjUD47lLy5vUkazj7tEKk1tluYVMU8cGnw==)
-      username: ENC(fQDn4kqFyUNo4CQUicK4TcATB+mfbxftG6lMucxqpt5rymxcnGwK8qUMkUgZIlSl)
-      password: ENC(Z+lAsmL3cb2GQLkUtVuVkllVVngHXGCgyJiHib21sw/tRmwLIjm7fMXtkuKq5Y0XfdnGp92fg40kv1RIo9s7FA==)
+      jdbc-url: jdbc:mysql://qweqweta123dd.rwlb.rds.aliyuncs.com:3306/7705_main?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: tv77admin
+      password: 8h6NDC2#OWSyyC%Lfhnjwiejew
     secondary:
       jdbc-url: ENC(4DxCzpibIaqtORggExqisSoKMAeyoQVwMQnYVSozasWnn0l8EIlhua+GjuQqCHGMGziDUS9vANt5kZd1kX+rE1CsHBLmX4nMznkADUhRFEhm/xU0gRbkSZnFQs8Giyqb3XeHs/J7iWL9JUw8N4qXFVvVlgkeIXh8Vkl9vqHloU1H2fPJuJKKFaBsAoujiCLFLpt3xv28zhjLDRf0PoQuhQ==)
       username: ENC(jDRgsd9cVTXiNMHjD5IlkNjOebg/PbW+u9SBMuv2utvAmrM3jM8zco+dGyiSj6jJ)
