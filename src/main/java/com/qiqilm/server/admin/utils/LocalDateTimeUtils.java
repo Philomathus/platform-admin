@@ -7,6 +7,13 @@ import java.time.temporal.TemporalUnit;
 
 public class LocalDateTimeUtils {
 
+	public static final DateTimeFormatter YYYY_MM_DD_FORMATTER = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+	public static final DateTimeFormatter YYYYMMDD_FORMATTER   = DateTimeFormatter.ofPattern( "yyyyMMdd" );
+
+	public static final DateTimeFormatter YYYY_MM_DD_HH_MM_SS_FORMATTER = DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm:ss" );
+	public static final DateTimeFormatter YYYYMMDDHHMMSS_FORMATTER      = DateTimeFormatter.ofPattern( "yyyyMMddHHmmss" );
+	public static final DateTimeFormatter YYYYMMDDHHMMSSSSS_FORMATTER   = DateTimeFormatter.ofPattern( "yyyyMMddHHmmssSSS" );
+
 	public static final String SPLIT_PATTERN_DATETIME = "yyyy-MM-dd HH:mm:ss";
 	public static final String SPLIT_PATTERN_TIME     = "HH:mm:ss";
 	public static final String SPLIT_PATTERN_DATE     = "yyyy-MM-dd";
@@ -15,6 +22,78 @@ public class LocalDateTimeUtils {
 	public static final String TIGHT_PATTERN_DATETIME = "yyyyMMddHHmmss";
 	public static final String TIGHT_PATTERN_TIME     = "HHmmss";
 	public static final String TIGHT_PATTERN_DATE     = "yyyyMMdd";
+
+	/**
+	 * 格式化LocalDate
+	 *
+	 * @param date
+	 */
+	public static String format( LocalDate date, DateTimeFormatter formatter ) {
+		return date.format( formatter );
+	}
+
+	/**
+	 * 默认格式化LocalDate
+	 *
+	 * @param date
+	 */
+	public static String format( LocalDate date ) {
+		return date.format( LocalDateTimeUtils.YYYY_MM_DD_FORMATTER );
+	}
+
+	/**
+	 * 格式化LocalDateTime
+	 *
+	 * @param time
+	 */
+	public static String format( LocalDateTime time, DateTimeFormatter formatter ) {
+		return time.format( formatter );
+	}
+
+	/**
+	 * 默认格式化LocalDateTime
+	 *
+	 * @param time
+	 */
+	public static String format( LocalDateTime time ) {
+		return time.format( LocalDateTimeUtils.YYYY_MM_DD_HH_MM_SS_FORMATTER );
+	}
+
+	/**
+	 * 将字符串转化为LocalDate
+	 *
+	 * @param dateStr
+	 */
+	public static LocalDate parseLocalDate( String dateStr, DateTimeFormatter formatter ) {
+		return LocalDate.parse( dateStr, formatter );
+	}
+
+	/**
+	 * 将字符串转化为LocalDate 默认
+	 *
+	 * @param dateStr
+	 */
+	public static LocalDate parseLocalDate( String dateStr ) {
+		return LocalDate.parse( dateStr, YYYY_MM_DD_FORMATTER );
+	}
+
+	/**
+	 * 将字符串转化为LocalDateTime
+	 *
+	 * @param dateStr
+	 */
+	public static LocalDateTime parseLocalDateTime( String dateStr, DateTimeFormatter formatter ) {
+		return LocalDateTime.parse( dateStr, formatter );
+	}
+
+	/**
+	 * 将字符串转化为LocalDateTime
+	 *
+	 * @param dateStr
+	 */
+	public static LocalDateTime parseLocalDateTime( String dateStr ) {
+		return LocalDateTime.parse( dateStr, YYYY_MM_DD_HH_MM_SS_FORMATTER );
+	}
 
 	public static LocalDateTime getDateTimeOfTimestamp( long timestamp ) {
 		Instant instant = Instant.ofEpochMilli( timestamp );
