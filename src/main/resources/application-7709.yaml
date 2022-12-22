@@ -23,9 +23,9 @@ liveCenter: 7709
 
 im:
   # 群聊
-  sendGroupMsg: http://alb-c8bpqf3la2md9yeih2.cn-hongkong.alb.aliyuncs.com/chat/sendGroupMsg/
+  sendGroupMsg: http://8.218.39.243:43000/chat/sendGroupMsg/
   # 单聊
-  sendMsg: http://alb-c8bpqf3la2md9yeih2.cn-hongkong.alb.aliyuncs.com/chat/sendMsg/
+  sendMsg: http://8.218.39.243:43000/chat/sendMsg/
 
 downLoadLimit: 100000
 
@@ -83,3 +83,5 @@ payAgentLimitOkPayPay: 100000
 payAgentDaNiuPay: 50000
 # 百达付代付额度
 payAgentBaiDaFuPay: 50000
+# 酷币代付额度
+payAgentKuBiPay: 20000

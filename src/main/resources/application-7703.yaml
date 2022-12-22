@@ -24,19 +24,23 @@ liveCenter: 7701
 
 im:
   # 群聊
-  sendGroupMsg: http://alb-c8bpqf3la2md9yeih2.cn-hongkong.alb.aliyuncs.com/chat/sendGroupMsg/
+  sendGroupMsg: http://8.218.39.243:43000/chat/sendGroupMsg/
   # 单聊
-  sendMsg: http://alb-c8bpqf3la2md9yeih2.cn-hongkong.alb.aliyuncs.com/chat/sendMsg/
+  sendMsg: http://8.218.39.243:43000/chat/sendMsg/
 
 # 代付额度
 payAgentLimit: 30000
 # 宾利代付额度
 payAgentLimitBinLi: 50000
 # 联付宝代付额度
-payAgentLimitLianFuBao: 30000
+payAgentLimitLianFuBao: 10000
+# 顺为代付额度
+payAgentLimitShunWei: 10000
 # 众家代付额度
 payAgentLimitZhongJiaPay: 50000
 # 老乡代付额度
 payAgentLimitLaoXiangPay: 50000
 # GoPay代付额度
-payAgentLimitGoPayPay: 50000
+payAgentLimitGoPayPay: 100000
+# 酷币代付额度
+payAgentKuBiPay: 20000

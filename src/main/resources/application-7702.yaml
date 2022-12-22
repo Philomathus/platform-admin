@@ -30,3 +30,5 @@ payAgentLimitBinLi: 50000
 payAgentLimitTels: 100000
 # 联付宝代付额度
 payAgentLimitLianFuBao: 30000
+# 酷币代付额度
+payAgentKuBiPay: 20000

@@ -6,7 +6,6 @@ import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

@@ -148,6 +148,9 @@ public class LiveVideoController extends BaseController {
     @Log( title = "同步主台排序", businessType = BusinessType.UPDATE )
     @GetMapping( "/sync" )
     public AjaxResult sync() {
+        if ( LiveCenterConfig.me.getProfile().equals( "77te" ) ) {
+            return AjaxResult.error( "功能已关闭" );
+        }
         return liveVideoService.syncMainLiveSort();
     }
 }
