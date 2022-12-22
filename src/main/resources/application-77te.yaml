@@ -24,9 +24,9 @@ liveCenter: 7701
 
 im:
   # 群聊
-  sendGroupMsg: http://8.218.39.243:43000/chat/sendGroupMsg/
+  sendGroupMsg: http://120.79.40.30:43000/chat/sendGroupMsg/
   # 单聊
-  sendMsg: http://8.218.39.243:43000/chat/sendMsg/
+  sendMsg: http://120.79.40.30:43000/chat/sendMsg/
 
 # 代付额度
 payAgentLimit: 5000
