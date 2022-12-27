@@ -141,6 +141,12 @@
             <if test="downLoadDate[1] != null">
                 and reg_time <![CDATA[ <= ]]> '${downLoadDate[1]}'
             </if>
+            <if test="version != null  and version != ''">
+                and version = #{version}
+            </if>
+            <if test="loginDev != null  and loginDev != ''">
+                and login_dev = #{loginDev}
+            </if>
 
             <if test="searchValues != null and searchValues.size() != 0">
                 and (id in
