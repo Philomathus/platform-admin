@@ -19,6 +19,7 @@ import com.qiqilm.server.admin.enums.EnumAction;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.*;
+import com.qiqilm.server.admin.service.IConfigEnvironmentService;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.utils.*;
@@ -79,6 +80,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
     @Resource
     private ForkJoinPool forkJoinPool;
+
+    @Autowired
+    private IConfigEnvironmentService configEnvironmentService;
 
     /**
      * 查询会员信息
@@ -186,11 +190,19 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         BigDecimal total         = oldmemberInfo.getTotalAccount();
 
         if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
-            if ( money.compareTo( new BigDecimal( 1000000 ) ) > 0 ) {
-                rspBase.setMsg( "最大金额为1000000" );
+            ConfigEnvironment environment = configEnvironmentService.selectConfigEnvironmentById( "addmoney" );
+            String environmentAmount;
+            if( environment == null) {
+                environmentAmount="1000000";
+            }else{
+                environmentAmount=environment.getEnvValue();
+            }
+            if ( money.compareTo( new BigDecimal( Integer.parseInt(environmentAmount) ) ) > 0 ) {
+                rspBase.setMsg( "最大金额为"+ Integer.parseInt(environmentAmount));
                 rspBase.setCode( 1 );
                 return rspBase;
             }
+
         } else if ( money.compareTo( BigDecimal.ZERO ) < 0 ) {
             BigDecimal lat = total.add( money );
             if ( lat.compareTo( BigDecimal.ZERO ) < 0 ) {
