@@ -99,4 +99,6 @@ public interface IMemberInfoService {
 	AjaxResult personalReport(String startTime,String endTime , String memberId);
 
     RspBase<?> boxDish( String memberId );
+
+	int unBlockStatus( MemberInfo memberInfo );
 }

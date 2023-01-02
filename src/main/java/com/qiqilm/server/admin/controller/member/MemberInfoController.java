@@ -764,6 +764,16 @@ public class MemberInfoController extends BaseController {
         return memberInfoService.banStatus( memberInfo );
     }
 
+    /**
+     * handle status set 1 (activate)
+     */
+    @Log( title = "根据IP禁用用户", businessType = BusinessType.UPDATE )
+    @PutMapping( "/unBlock-ip" )
+    public int unBlockIp( MemberInfo memberInfo ) {
+        memberInfo.setLoginIp( memberInfo.getLoginIp() );
+        memberInfo.setRealName( memberInfo.getRealName() );
+        return memberInfoService.unBlockStatus( memberInfo );
+    }
 
     @GetMapping( "/personal-report/{memberId}" )
     public AjaxResult personalReport( @PathVariable String memberId, HttpServletRequest request ) {

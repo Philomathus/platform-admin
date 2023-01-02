@@ -579,6 +579,17 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
+    public int unBlockStatus( MemberInfo memberInfo ) {
+        List<MemberInfo> memberInfos = memberInfoMapper.selectMemberInfoByIp( memberInfo.getLoginIp() );
+        List<String>     loginIp     = new ArrayList<>();
+        for ( MemberInfo info : memberInfos ) {
+            memberCacheManager.delToken( info.getId() );
+            loginIp.add( info.getId() );
+        }
+        return memberInfoMapper.unBlockStatus( loginIp, memberInfo.getRealName() );
+    }
+
+    @Override
     public AjaxResult personalReport( String startTime, String endTime, String memberId ) {
 
         List<Callable<Map<String, Object>>> forkJoinTasks = new ArrayList<>();
