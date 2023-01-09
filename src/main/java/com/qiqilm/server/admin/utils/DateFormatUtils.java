@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -346,6 +349,25 @@ public abstract class DateFormatUtils {
 			}
 		}
 		return timeStr;
+	}
+
+	/**
+	 * 获取周
+	 * @param l
+	 * @return
+	 */
+	public static int getWeekOfYear(LocalDate l ){
+		WeekFields weekFields = WeekFields.of(DayOfWeek.MONDAY,1);
+		return l.get(weekFields.weekOfYear());
+	}
+
+	/**
+	 * 获取年
+	 * @param l
+	 * @return
+	 */
+	public static int getYear(LocalDate l){
+		return l.getYear();
 	}
 
 	public static String unitFormat( int i ) {

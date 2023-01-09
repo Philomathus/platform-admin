@@ -3,9 +3,13 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.domain.ReportAnchorhotDay;
 import com.qiqilm.server.admin.mapper.ReportAnchorhotDayMapper;
 import com.qiqilm.server.admin.service.IReportAnchorhotDayService;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -54,8 +58,10 @@ public class ReportAnchorhotDayServiceImpl implements IReportAnchorhotDayService
 			reportAnchorhotDay.setNum(  year  +"-"+ days );
 			return reportAnchorhotDayMapper.selectReportAnchorhotDayByDay( reportAnchorhotDay );
 		} else if ( reportAnchorhotDay.getType() == 1 ) {
-			int week = ca.get(Calendar.WEEK_OF_YEAR);//获取是第几周
-			reportAnchorhotDay.setNum(  year  +"-"+ week );
+			LocalDate today = LocalDate.now();
+			LocalDate monday = today.with(TemporalAdjusters.previousOrSame( DayOfWeek.MONDAY));
+			int week = DateFormatUtils.getWeekOfYear(monday);
+			reportAnchorhotDay.setNum(  DateFormatUtils.getYear(monday) + "-" + week );
 			return reportAnchorhotDayMapper.selectReportAnchorhotDayByWeek( reportAnchorhotDay );
 		} else if ( reportAnchorhotDay.getType() == 2 ) {
 			int month = ca.get(Calendar.MONTH)+1;//获取是第几周
