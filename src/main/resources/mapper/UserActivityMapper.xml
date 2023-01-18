@@ -36,7 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectById" resultType="com.qiqilm.server.admin.domain.UserActivity">
         <include refid="selectAllUserActivityVo"></include>
-         where id = #{id}
+         where user_id = #{id}
     </select>
 
     <!--    insert data -->
