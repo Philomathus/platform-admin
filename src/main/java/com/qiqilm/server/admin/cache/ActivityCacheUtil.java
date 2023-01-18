@@ -29,6 +29,8 @@ public class ActivityCacheUtil {
     // 活动类型
     public static final String ACTIVITY_TYPE_KEY = Constants.LIVE_PREX + "activity:activityType";
     public static final String ACTIVITY_INFO_KEY = Constants.LIVE_PREX + "activity:activityInfo";
+
+    public static final String ACTIVITY_USER_ACTIVITY_KEY = Constants.LIVE_PREX + "activity:userActivity";
     //任务
     public static final String ACTIVITY_QUEST_INFO_KEY = Constants.LIVE_PREX + "activity:activityQuestInfo";
     public static final String ACTIVITY_QUEST_TYPE_KEY = Constants.LIVE_PREX + "activity:activityQuestType";

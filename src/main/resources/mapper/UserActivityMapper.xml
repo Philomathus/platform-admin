@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.UserActivityMapper">
+
+    <resultMap type="UserActivity" id="UserActivityResult">
+        <result property="id"    column="user_id"    />
+        <result property="msg"    column="msg"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectAllUserActivityVo">
+        select user_id,msg,status,create_time,update_time,update_by from useractivity
+    </sql>
+
+    <select id="selectAllUserActivity"  parameterType="UserActivity" resultMap="UserActivityResult">
+        <include refid="selectAllUserActivityVo"></include>
+        <where>
+            <if test="id != null  and id != ''"> and user_id = #{id}</if>
+            <if test="msg != null  and msg != ''"> and msg = #{msg}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') <![CDATA[ >= ]]> date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') <![CDATA[ <= ]]> date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectById" resultType="com.qiqilm.server.admin.domain.UserActivity">
+        <include refid="selectAllUserActivityVo"></include>
+         where id = #{id}
+    </select>
+
+    <!--    insert data -->
+    <insert id="insert" parameterType="userActivity">
+     insert into useractivity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">user_id,</if>
+            <if test="msg != null">msg,</if>
+            <if test="status != null">status,</if>
+            <if test="updateBy != null">updateBy,</if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">#{id},</if>
+        <if test="msg != null">#{msg},</if>
+        <if test="status != null">#{status},</if>
+        <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <!--    update data -->
+    <update id="update" parameterType="userActivity">
+     update useractivity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="id != null">user_id=#{id},</if>
+            <if test="msg != null">msg=#{msg},</if>
+            <if test="status != null">status=#{status},</if>
+            <if test="updateBy != null">updateBy=#{updateBy},</if>
+        </trim>
+         where user_id = #{id}
+    </update>
+
+    <!--    delete data -->
+    <delete id="deleteById" parameterType="String">
+       delete from useractivity where user_id = #{id};
+    </delete>
+
+    <!--    insert data by ids -->
+    <delete id="deleteUserActivityByIds" parameterType="String">
+        delete from useractivity where user_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>
