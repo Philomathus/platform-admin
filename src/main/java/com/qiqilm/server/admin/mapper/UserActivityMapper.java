@@ -22,23 +22,6 @@ public interface UserActivityMapper {
      */
     List<UserActivity> selectAllUserActivity( UserActivity userActivity);
 
-    /**
-     * 添加用户活动信息
-     *
-     * @param userActivity 用户事件信息
-     * @return 结果
-     */
-    int insert( UserActivity userActivity );
-
-    /**
-     * 修改用户事件信息
-     *
-     * @param userActivity 活动信息
-     * @return 结果
-     */
-    int update( UserActivity userActivity );
-
-    int deleteById( String userId );
 
     /**
      * 批量删除活动信息

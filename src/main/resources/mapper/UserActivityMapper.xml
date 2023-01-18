@@ -39,41 +39,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          where user_id = #{id}
     </select>
 
-    <!--    insert data -->
-    <insert id="insert" parameterType="userActivity">
-     insert into useractivity
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">user_id,</if>
-            <if test="msg != null">msg,</if>
-            <if test="status != null">status,</if>
-            <if test="updateBy != null">updateBy,</if>
-        </trim>
-
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-        <if test="id != null">#{id},</if>
-        <if test="msg != null">#{msg},</if>
-        <if test="status != null">#{status},</if>
-        <if test="updateBy != null">#{updateBy},</if>
-        </trim>
-    </insert>
-
-    <!--    update data -->
-    <update id="update" parameterType="userActivity">
-     update useractivity
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="id != null">user_id=#{id},</if>
-            <if test="msg != null">msg=#{msg},</if>
-            <if test="status != null">status=#{status},</if>
-            <if test="updateBy != null">updateBy=#{updateBy},</if>
-        </trim>
-         where user_id = #{id}
-    </update>
-
-    <!--    delete data -->
-    <delete id="deleteById" parameterType="String">
-       delete from useractivity where user_id = #{id};
-    </delete>
-
     <!--    insert data by ids -->
     <delete id="deleteUserActivityByIds" parameterType="String">
         delete from useractivity where user_id in

@@ -53,40 +53,6 @@ public class UserActivityController extends BaseController {
         return AjaxResult.success(userActivityService.selectByUserId(id));
     }
 
-    /**
-     * 添加用户活动信息
-     */
-    @PreAuthorize( "@ss.hasPermi('activity:userActivity:add')" )
-    @Log(title = "添加用户活动",businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add( @RequestBody UserActivity userActivity ){
-//        userActivity.setId( UuidUtil.getRandomUuidWithoutSeparator());
-        userActivity.setCreateTime( new Date() );
-        userActivity.setUpdateTime( new Date() );
-        return toAjax(userActivityService.insert(userActivity));
-    }
-
-    /**
-     * 修改用户活动信息
-     */
-    @PreAuthorize( "@ss.hasPermi('activity:userActivity:edit')" )
-    @Log(title = "更新用户活动",businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult update( @RequestBody UserActivity userActivity ){
-        userActivity.setCreateTime(userActivity.getCreateTime());
-        userActivity.setUpdateTime( new Date() );
-        return toAjax(userActivityService.update( userActivity ));
-    }
-
-    /**
-     * 删除用户活动信息
-     */
-    @PreAuthorize( "@ss.hasPermi('activity:userActivity:remove')" )
-    @Log(title ="删除用户活动",businessType = BusinessType.DELETE)
-    @DeleteMapping("/delete/{userId}")
-    public AjaxResult delete(@PathVariable String[] userId){
-        return  toAjax( userActivityService.deleteUserActivityByIds(userId) );
-    }
 
     /**
      * 导出用户活动信息列表
