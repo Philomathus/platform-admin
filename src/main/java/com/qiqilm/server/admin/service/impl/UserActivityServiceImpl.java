@@ -4,7 +4,6 @@ import com.qiqilm.server.admin.cache.ActivityCacheUtil;
 import com.qiqilm.server.admin.domain.UserActivity;
 import com.qiqilm.server.admin.mapper.UserActivityMapper;
 import com.qiqilm.server.admin.service.UserActivityService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
