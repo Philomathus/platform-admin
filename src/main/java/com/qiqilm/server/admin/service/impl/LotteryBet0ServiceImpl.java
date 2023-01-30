@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -40,12 +42,18 @@ public class LotteryBet0ServiceImpl implements ILotteryBet0Service {
 		if ( lotteryBet0.getSelectDate() != null && lotteryBet0.getSelectDate().length > 0 ) {
 			lotteryBet0.setStartTime( lotteryBet0.getSelectDate()[ 0 ] );
 			lotteryBet0.setEndTime( lotteryBet0.getSelectDate()[ 1 ] );
+		}else{
+			LocalDate today     = LocalDate.now();
+			Instant   startDate = Instant.parse(today.toString()+"T00:00:00Z");
+			Instant   endDate   = Instant.parse(today.toString()+"T23:59:59Z");
+			lotteryBet0.setStartTime( String.valueOf( startDate ) );
+			lotteryBet0.setEndTime( String.valueOf( endDate ) );
 		}
 		if ( StringUtils.isNotBlank( lotteryBet0.getPuserId() ) ) {
 			String tableLast = lotteryBet0.getPuserId().substring( lotteryBet0.getPuserId().length() - 1 );
 			lotteryBet0.setTableLast( tableLast );
 			return lotteryBet0Mapper.selectLotteryBet0SingleList( lotteryBet0 );
-		}else if (StringUtils.isNotBlank( lotteryBet0.getIssue() )){
+		}else if (StringUtils.isNotBlank( lotteryBet0.getIssue()  ) || StringUtils.isBlank( lotteryBet0.getPuserId() )){
 			HttpServletRequest httpServletRequest = ServletUtil.getHttpServletRequest();
 			String username = tokenService.getLoginUser(httpServletRequest).getUsername();
 			log.warn("管理员{}访问投注接口:{}", username, JsonUtil.object2Json(lotteryBet0));
