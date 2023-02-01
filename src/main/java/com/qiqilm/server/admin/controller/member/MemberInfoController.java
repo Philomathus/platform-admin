@@ -389,6 +389,9 @@ public class MemberInfoController extends BaseController {
         RspBase    rspBase       = new RspBase();
         MemberInfo newMemberInfo = new MemberInfo();
         MemberInfo memberInfo    = memberInfoService.selectMemberInfoById( req.getId() );
+        if ( memberInfo.getStatus() == 2 ) {
+            return AjaxResult.error( "测试号不允许修改为其它状态" );
+        }
         newMemberInfo.setStatus( req.getStatus() );
         memberForbidUtil.setPlatformUserStatus( memberInfo.getId(), req.getStatus() );
 
