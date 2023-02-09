@@ -190,7 +190,7 @@ public class MemberInfo extends DownLoadTime {
     /**
      * 股东网址
      */
-    @Excel( name = "股东网址" )
+//    @Excel( name = "股东网址" )
     private String linkUrl;
 
     /**
