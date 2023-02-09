@@ -76,6 +76,9 @@ public class MemberInfo extends DownLoadTime {
     @Excel( name = "会员vip" )
     private Integer vip;
 
+    /**
+     * 会员vip Min and Max
+     */
     @JsonIgnore
     private String vipMin;
     @JsonIgnore
