@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.Data;
@@ -74,6 +75,11 @@ public class MemberInfo extends DownLoadTime {
      */
     @Excel( name = "会员vip" )
     private Integer vip;
+
+    @JsonIgnore
+    private String vipMin;
+    @JsonIgnore
+    private String vipMax;
 
     /**
      * 余额

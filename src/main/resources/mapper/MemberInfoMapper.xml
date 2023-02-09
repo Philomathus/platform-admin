@@ -164,6 +164,11 @@
                 )
             </if>
 
+            <if test="vipMin != null and vipMax != null  and vipMin != ''  and vipMax != ''">
+                and vip <![CDATA[ >= ]]> #{vipMin}
+                and vip <![CDATA[ <= ]]> #{vipMax}
+            </if>
+
         </where>
         order by reg_time desc
     </select>
