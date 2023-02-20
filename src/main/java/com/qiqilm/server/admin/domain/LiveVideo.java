@@ -91,7 +91,7 @@ public class LiveVideo extends BaseEntity {
 
 	/** 主播在线状态;1:在线(默认); 0:离开 */
 	@Excel( name = "主播在线状态;1:在线(默认); 0:离开" )
-	private Integer onlineStatus;
+	private Boolean onlineStatus;
 
 	/** 热门排序 */
 	@Excel( name = "热门排序" )
@@ -165,7 +165,7 @@ public class LiveVideo extends BaseEntity {
 
 	/** 是否已经提档 1是、0否 */
 	@Excel( name = "是否已经提档 1是、0否" )
-	private Integer liveIsMention;
+	private Boolean liveIsMention;
 
 	/** 收费类型 0按时收费，1按场次收费 (is_live_pay 是1时候有效) */
 	@Excel( name = "收费类型 0按时收费，1按场次收费 (is_live_pay 是1时候有效)" )
@@ -184,7 +184,7 @@ public class LiveVideo extends BaseEntity {
 
 	/** 是否置底 0 不置底 1 置底 */
 	@Excel( name = "是否置底" )
-	private Integer stick;
+	private Boolean stick;
 
 	/** 分类id */
 	@Excel( name = "分类id" )

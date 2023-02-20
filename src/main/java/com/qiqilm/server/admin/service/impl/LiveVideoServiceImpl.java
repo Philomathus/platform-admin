@@ -18,6 +18,7 @@ import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -393,7 +394,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
                 return AjaxResult.error( "当前主播是推荐位，无法设置固定位，请取消推荐位后重试" );
             }
-            if ( newLiveVideo.getStick() == 1 ) {
+            if ( liveVideo.getStick() != null && newLiveVideo.getStick() ) {
                 redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
                 return AjaxResult.error( "当前主播是置底位，无法设置固定位，请取消置底位后重试" );
             }
@@ -403,19 +404,19 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 return AjaxResult.error( "固定位{}已存在，请重新设置固定位值", liveVideo.getSort() );
             }
             liveVideo.setIsRecommend( 0L );
-            liveVideo.setStick( 0 );
+            liveVideo.setStick( false );
         }
         if ( liveVideo.getIsRecommend() != null && liveVideo.getIsRecommend() == 1 ) {
             if ( newLiveVideo.getSort() < 9999000 ) {
                 redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
                 return AjaxResult.error( "当前主播是固定位，无法设置推荐位，请取消固定位后重试" );
             }
-            if ( newLiveVideo.getStick() == 1 ) {
+            if ( liveVideo.getStick() != null && newLiveVideo.getStick() ) {
                 redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
                 return AjaxResult.error( "当前主播是置底位，无法设置推荐位，请取消置底位后重试" );
             }
         }
-        if ( liveVideo.getStick() != null && liveVideo.getStick() == 1 ) {
+        if ( liveVideo.getStick() != null && liveVideo.getStick() ) {
             if ( newLiveVideo.getSort() < 9999000 ) {
                 redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
                 return AjaxResult.error( "当前主播是固定位，无法设置置底位，请取消固定位后重试" );
@@ -429,12 +430,12 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
         redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
         if ( i > 0 ) {
             if ( liveVideo.getStick() == null ) {
-                liveVideo.setStick( 0 );
+                liveVideo.setStick( false );
             }
             if ( liveVideo.getIsRecommend() == null ) {
                 liveVideo.setIsRecommend( 0L );
             }
-            if ( ( liveVideo.getIsRecommend() == 1 || liveVideo.getStick() == 1 ) && liveVideo.getSort() == null
+            if ( ( liveVideo.getIsRecommend() == 1 || BooleanUtils.isTrue( liveVideo.getStick() ) ) && liveVideo.getSort() == null
                     && LiveCenterConfig.me.isLiveCenter() && !Objects.isNull( LiveCenterConfig.me.getLiveSubAgents() )
                     && !"7704".equals( LiveCenterConfig.me.getProfile() ) // 04不需要此功能
                     && !"7708".equals( LiveCenterConfig.me.getProfile() ) // 08不需要此功能
@@ -482,9 +483,9 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 sortHostMap.put( liveVideo.getSort().intValue(), liveVideo.getId() );
             } else if ( liveVideo.getIsRecommend() == 1 ) {
                 recommendHostList.add( liveVideo.getId() );
-            } else if ( liveVideo.getIsRecommend() == 0 && liveVideo.getStick() == 0 ) {
+            } else if ( liveVideo.getIsRecommend() == 0 && !liveVideo.getStick() ) {
                 normalHostList.add( liveVideo.getId() );
-            } else if ( liveVideo.getStick() == 1 ) {
+            } else if ( liveVideo.getStick() ) {
                 stickHostList.add( liveVideo.getId() );
             }
         } );
