@@ -69,17 +69,13 @@
         where id like concat(#{dateTime}, '%') and ticket is not NULL
         UNION all
         select '坐骑金额' as liveprop,'0'  as gamecell,'0' as paicai,SUM(total_diamonds)from ${dbLive}.live_video_prop  where p_user_id not in
-        (select id from member_info
-        <where>
-            AND STATUS  in ('2'))
-            <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
-                AND  create_date <![CDATA[ >= ]]>  STR_TO_DATE(#{begindate},'%Y-%m-%d')
-            </if>
-            <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
-                AND create_date <![CDATA[ <= ]]> STR_TO_DATE(#{endDate},'%Y-%m-%d')
-            </if>
-            AND prop_id = '-2'
-        </where>
+        (select id from member_info where STATUS  = 2 )  AND prop_id = '-2'
+        <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
+            AND  create_date <![CDATA[ >= ]]>  STR_TO_DATE(#{begindate},'%Y-%m-%d')
+        </if>
+        <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
+            AND create_date <![CDATA[ <= ]]> STR_TO_DATE(#{endDate},'%Y-%m-%d')
+        </if>
     </select>
 
     <select id="countBetMonth"  resultType="com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth">
