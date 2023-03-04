@@ -1,24 +1,23 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(Z76BTjpDaN63dmjTom8fEBH1f+wYVi9GhhBUYbBgb74R5BF/a5p4iZ7p9OWOIVr9U1e40B5sgbMffF9FtPcwKnf6aFCmGQ2oaZGvnuUlFOsvIf36MWwyMT4B/PQIJzoRycIccCgosL0OqqWu+o3XYez8Fdx4YWr7Obuwxi+baWcEBC3yc+Fm7/KkH9fBKxwOEIE4a6qHLqMDGEznfkbdwMLbCp72dZEnM1hrgKFh20vDxxSGKE6A76pkVqD46214/vYczVXSDk0WMjC1GEn11A==)
-      username: ENC(v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==)
-      password: ENC(BcGcqamgY/2aUcGdrr7PoyPJPWgvHNChl4tQojazzxSlJ0bfbqbTpXIBa0rLMxiu1WfdmGMzT8EHvqX5OpNWHQ==)
+      jdbc-url: ENC(8PcMkEYJw1L/G8PhPiagwyyqXgEhxmVhVnr1Wk82fuUNxd9rguFojJvAq2MNEPjfreq76EwoFPV1ql8K3ME80i5LEu43u0GQ6Aiap38MlFln5qxjui2lUCL06x90jtpJqhxMTIU0qjGHKvGgFe5F8DAogrFiTEjpnG4xzPdiUJLiBZBTFZNkvuwL2y2HUY7o4f1ZKiGacVazPwjv/n3NawhWLrYcEiMP7NYVX1kzh8VQtH/lyRZjo9ccyvqKD/Eg+gti1htL1zTwuqeNVYT5EHJJpX2THsrw6UONA81O6Tc=)
+      username: admin
+      password: ENC(eNEs8Zeo1ZxWlxk7DA8+KKdlWOyq4udWhsa9oqw9RfzxSqbbd7qqNppi8ROSNDYziS5U2jlyX4KlF9gAOzJYCg==)
     secondary:
-      jdbc-url: ENC(rQSm78M8lGPyB7F8JHr6ZDTtVYv4diNGJwz8PfKv2nZs4c4uFKFrLYNhoRqihhG07ieXgibrX0zyiT5JolgpOEzB1s7ub5lMyeX1revCZ1A6EzHk+dBUoHFfb2KTprxE6dbhwTN5R+Lw17vahYP3AN7/PaGiacPEvM0aFkTY/CAEPzBWENSzqp/eXISprAEfuOZFEpKp1w3hCPzaKkSL2VlSBLSx2SvutDUbGmOhrJw=)
+      jdbc-url: ENC(AxjxThZpL1kolf6Yx5MuBFGbP5sST9IeCMFijDG2zLlFRliUQPMeQt3f8zHbDRllaYPjoIEYVe0QsxTZULfTmJNRk2uRDDYq6U7X33dY6Dxznc33PumGdlo/IblJu+gEJG3UlIZIjkB+wYPSP9N0qioZYHoxuAdyINa84LSUvEk0WXxHRBe1g592bKRm7PbnluKYxsSG60auGF8b9DTPCw==)
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(SVDwaPvzW3gTGD0YslK9583BnAw+6DkPze52DuyvFEQb4tWfCSPJqV4+39KeVy54uWdd11uwU/e7avEcgd3KWz4swoiSlNaZEhL+CdurwPU=)
+    host: ENC(pBXCcSmYvFHfKbWo+8ywGGy5LDYX9Y3JejbpH5Bcd5HP6qZcaHoJzcNVovYECDTg1LFJjzrSi0857DB8SiGA7Nl8jjIQGOp7z2fH09G+Gio=)
     port: 6379
-    password: ENC(Eo5Gd7+EhU21sjUMLD7UlgNUhoJ8sxfhPJR0wMauFg1Bhrh3ltleHVANxmf6ed+gAtgMbVkFf62nP/b9m3r8eQ==)
 
 mybatis:
   configuration:
     variables:
-      dbMain: 7706_main
-      dbLive: 7706_live
-      dbLottery: 7706_lottery
+      dbMain: 77jr_main
+      dbLive: 77jr_live
+      dbLottery: 77jr_lottery
 
 liveCenter: 7701
 
@@ -74,13 +73,7 @@ payAgentLimitHuiYuanPay: 30000
 payAgentLimitShanDePay: 30000
 # GoPay代付额度
 payAgentLimitGoPayPay: 100000
-# OkPay代付额度
-payAgentLimitOkPayPay: 100000
-# 新汇代付额度
-payAgentXinHuiPay: 100000
 # 大牛代付额度
 payAgentDaNiuPay: 50000
 # 酷币代付额度
 payAgentKuBiPay: 20000
-# VIPPAY代付额度
-payAgentVipPay: 200000

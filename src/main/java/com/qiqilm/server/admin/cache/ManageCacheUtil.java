@@ -3,7 +3,6 @@ package com.qiqilm.server.admin.cache;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.mapper.LiveBlackMapper;
 import com.qiqilm.server.admin.mapper.LiveOfficerMapper;
-import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;

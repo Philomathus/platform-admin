@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(bf/+icANZeTFcb4s6DMhY/IFilAdrniiA/us9Xe93/eZKWBJ1TG7yOtGLnGn8kTlpUnxfk4PLDGjHUWxuHX7IIFheYf8nZB847YSpu8jyxFq2gs07jpkcbi+Er1UmLDM6xEzEN1sna3+30awQrkt5THxdWAxxsnQR6/ohsGqV+mpWWdhw+YaaUZb30gVUMUF8+VqSGXAxbeS3doCnAvAThfX+GiBggMu2C/Xb8idP0K3SpVD4slVvM1u+aKwIUH2iGpzDggoMifgM9+dmDKksA==)
+      jdbc-url: ENC(gFqkxW//h2dh7ubvkm7hV/iIbnNiD0Rk81rQXmuhxWZtOZ3x2Nqm3vC9GDSagJ7wLIBjLgBBmspjieB1TDW6kPqDck57KPFKUvdulm+zF5cRBpX9vLNKx+C5SU46ktsNTYFCoAxP8X6e1TPEVNV1gnNo9WWknMC/zEmd9f6/VOfsnOQaXmWAFJ3OGuYDjBVHECI+0RKjKU8AGWiwJuGIUW98ofDwAqHwUokZ9a7YBW1CYKQKDcKBlHo16r/YG3tAiIh1RKdV2mKaQHCM7Ny27g==)
       username: ENC(ntsELfEvY1lBOmFyTcgga5DF5OyuB9qA5FrxnMQdlwe14iRRN7BZPddMBZ9oDB+W)
       password: ENC(FNO20k6i7eNncA5GwwfAkYUhkNXMPlh/VGkMNBoADnG6lPbL6ebkqsR4xJdfM6kHM/0P8R1dZs2+LpMaUWj4Cw==)
     secondary:
@@ -9,21 +9,21 @@ spring:
       username: ENC(5mwKH5QTPd1k80o6dLDPTZrCnk/7CDG/vtm7TjBRTpDR0wXRKXmolfitvX9CMBCm)
       password: ENC(3CQQEKOPYc8qm0DS4EIO+8MWoa6rfLFHJAqdyNvYmVHyp4aSK3Uj/GSs7IzilfXt)
   redis:
-    host: ENC(46Caz6CNamrg1U/LsvO4wnGo40U5mar3sgZiIrQr+lrl3N8P+riBp2ZaLOyqMQMflX5xuuY+tKnKxCymQx/bCl7WxPQCzj8xNKzYpNP+hgs=)
+    host: ENC(HaWmKXl+VsM5BO6Jomkknznhmx7qO2ZOix2jFD4CxjjcFv8Rc2dysz0V4Ko4mm2B1b/TjKqx4omzndQMCqZLIGEb9VxtfwI53qK8Q4LLQms=)
     port: 6379
-    password: ENC(jTdX7av9+6T6OSj6Uzijxc4gKm3AgoyysmQsscXqVgUTxRXYT4hrQXN0YRcDrwzg6MUp0dagLUDGGnZ4k0OvLQ==)
+    password: ENC(Hf9BLC78g054vvPbsQIYJ/h6OazPPdcP8MyOc49/obWDsyIviyDjlnnHyt1ipEYAniMR0PnMcLLfvGDKp4h5pw==)
 
 mybatis:
   configuration:
     variables:
-      dbMain: 77mm_main
-      dbLive: 77mm_live
-      dbLottery: 77mm_lottery
+      dbMain: 77yutu_main
+      dbLive: 77yutu_live
+      dbLottery: 77yutu_lottery
 
-liveCenter: 77mm
+liveCenter: 7701
 
 # 代付额度
-payAgentLimit: 30000
+payAgentLimit: 50000
 # 顺为代付额度
 payAgentLimitShunWei: 50000
 # 宾利代付额度
@@ -36,37 +36,19 @@ payAgentLimitLianFuBao: 50000
 payAgentLimitMaYun: 50000
 # 合众代付额度
 payAgentLimitHeZhong: 50000
-# 滴滴代付额度
-payAgentLimitDiDi: 50000
 # newMax代付额度
 payAgentLimitNewMaxPay: 50000
-# 阳光代付额度
-payAgentLimitYangGuangPay: 50000
-# 大风车代付额度
-payAgentLimitDaFengChePay: 50000
-# 魯班代付额度
+# 鲁班代付额度
 payAgentLimitLuBanPay: 50000
-# 鼎丰代付额度
-payAgentLimitDingFengPay: 50000
-# 宏博代付额度
-payAgentLimitHongBoPay: 50000
-# 小月代付额度
-payAgentLimitXiaoYuePay: 50000
 # 银联代付额度
 payAgentLimitYinLianPay: 50000
-# 爱农代付额度
-payAgentLimitAiNongPay: 50000
-# 众家代付额度
-payAgentLimitZhongJiaPay: 50000
-# 老乡代付额度
-payAgentLimitLaoXiangPay: 50000
 # 弗良代付额度
 payAgentLimitFuLiangPay: 50000
-# 东东汇潮代付额度
-payAgentLimitHuiYuanPay: 50000
-# 杉德代付额度
-payAgentLimitShanDePay: 30000
 # GoPay代付额度
-payAgentLimitGoPayPay: 10000
+payAgentLimitGoPayPay: 50000
+# 爱农代付额度
+payAgentLimitAiNongPay: 50000
 # 酷币代付额度
 payAgentKuBiPay: 20000
+# VIPPAY代付额度
+payAgentVipPay: 200000

@@ -95,6 +95,11 @@ public class LiveCacheUtil {
         redisUtil.strSet( signKey, sign, Duration.ofDays( 300 ) );
     }
 
+    public void addAdminSign( String adminKey, String sign, Long sec ) {
+        String signKey = Constants.ADMIN_SIGN + adminKey;
+        redisUtil.strSet( signKey, sign, Duration.ofSeconds( sec ) );
+    }
+
     public void delAdminSign( String adminKey ) {
         redisUtil.unlink( Constants.ADMIN_SIGN + adminKey );
     }

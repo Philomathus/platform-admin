@@ -20,7 +20,7 @@ mybatis:
       dbLive: 77je_live
       dbLottery: 77je_lottery
 
-liveCenter: 7704
+liveCenter: 7701
 
 # 代付额度
 payAgentLimit: 50000

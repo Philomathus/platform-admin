@@ -1,13 +1,11 @@
 package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.MemberPayJour;
-import com.qiqilm.server.admin.domain.PayChannelNew;
 import com.qiqilm.server.admin.domain.rsp.MemberPayJourRsp;
 import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
 import com.qiqilm.server.admin.mapper.PayChannelNewMapper;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,18 +50,7 @@ public class MemberPayJourServiceImpl implements IMemberPayJourService {
 			memberPayJour.setSelectStartDate( selectDate[ 0 ] );
 			memberPayJour.setSelectEndDate( selectDate[ 1 ] );
 		}
-		List<MemberPayJour> memberPayJours = memberPayJourMapper.selectMemberPayJourList( memberPayJour );
-		List<PayChannelNew> payChannelNews = payChannelNewMapper.selectPayChannelName();
-		for ( MemberPayJour me : memberPayJours ) {
-			for ( PayChannelNew pa : payChannelNews ) {
-				if ( me.getChannelId().equals( String.valueOf( pa.getId() ) ) ) {
-					me.setPlatformName( pa.getPayPlatformName() );
-					me.setChannelName( pa.getName() );
-					me.setPayRate( pa.getPayRate() );
-				}
-			}
-		}
-		return memberPayJours;
+		return memberPayJourMapper.selectMemberPayJourList( memberPayJour );
 	}
 
 	@Override

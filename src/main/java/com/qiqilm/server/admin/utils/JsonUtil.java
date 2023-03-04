@@ -90,7 +90,7 @@ public class JsonUtil {
 			try {
 				return getObjectMapper().readValue( json, valueType );
 			} catch ( Exception e ) {
-				e.printStackTrace();
+				log.error( json + "转化为object失败", e.getMessage(), e );
 			}
 		}
 		return null;
