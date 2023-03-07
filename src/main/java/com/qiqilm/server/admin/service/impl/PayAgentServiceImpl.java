@@ -118,6 +118,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 	private Integer payAgentKuBiPay;
 	@Value( "${payAgentVipPay:5000}" )
 	private Integer payAgentVipPay;
+	@Value( "${payAgentYunBeiPay:5000}" )
+	private Integer payAgentYunBeiPay;
 
 	@Override
 	@Transactional( rollbackFor = Exception.class )
@@ -357,10 +359,14 @@ public class PayAgentServiceImpl implements IPayAgentService {
 			return AjaxResult.error( "此代付暂不支持" + payAgentKuBiPay + "元以上出款" );
 		} else if ( (payAgentPlatform.getCode().equals( ConstantsPayAgent.VIP_PAY ))
 				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentVipPay ) ) > 0 ) {
-			return AjaxResult.error( "此代付暂不支持" + payAgentKuBiPay + "元以上出款" );
-		}else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
+			return AjaxResult.error( "此代付暂不支持" + payAgentVipPay + "元以上出款" );
+		} else if ( (payAgentPlatform.getCode().equals( ConstantsPayAgent.YUNBEI_PAY ))
+				&& withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentYunBeiPay ) ) > 0 ) {
+			return AjaxResult.error( "此代付暂不支持" + payAgentYunBeiPay + "元以上出款" );
+		} else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.VIP_PAY )
+				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.YUNBEI_PAY )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG )
 				&& !payAgentPlatform.getCode().equals( ConstantsPayAgent.DIDI )
 				&& !payAgentPlatform.getCode().contains( ConstantsPayAgent.BINLI )

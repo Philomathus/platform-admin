@@ -77,3 +77,5 @@ payAgentLimitGoPayPay: 100000
 payAgentDaNiuPay: 50000
 # 酷币代付额度
 payAgentKuBiPay: 20000
+# 云贝代付额度
+payAgentYunBeiPay: 30000
