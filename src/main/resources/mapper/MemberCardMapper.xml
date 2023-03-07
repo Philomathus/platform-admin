@@ -1,112 +1,204 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberCardMapper">
-
     <resultMap type="MemberCard" id="MemberCardResult">
-        <result property="id"    column="id"    />
-        <result property="realName"    column="real_name"    />
-        <result property="bankName"    column="bank_name"    />
-        <result property="bankAccount"    column="bank_account"    />
-        <result property="bankAddress"    column="bank_address"    />
-        <result property="memberId"    column="member_id"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="type"    column="type"    />
-        <result property="dv"    column="dv"    />
-        <result property="realBankAddress"    column="real_bank_address"    />
+        <result property="id" column="id" />
+        <result property="realName" column="real_name" />
+        <result property="bankName" column="bank_name" />
+        <result property="bankAccount" column="bank_account" />
+        <result property="bankAddress" column="bank_address" />
+        <result property="memberId" column="member_id" />
+        <result property="createTime" column="create_time" />
+        <result property="type" column="type" />
+        <result property="dv" column="dv" />
+        <result property="realBankAddress" column="real_bank_address" />
+        <result property="bankId" column="bank_id" />
     </resultMap>
 
     <sql id="selectMemberCardVo">
-        select id, real_name, bank_name, bank_account, bank_address, member_id,  FROM_UNIXTIME(create_time) create_time ,type, dv,real_bank_address from ${dbMain}.member_card
+        select id,
+               real_name,
+               bank_name,
+               bank_account,
+               bank_address,
+               member_id,
+               FROM_UNIXTIME(create_time) create_time,
+               type,
+               dv,
+               real_bank_address,
+               bank_id
+        from ${dbMain}.member_card
     </sql>
 
     <select id="selectMemberCardList" parameterType="MemberCard" resultMap="MemberCardResult">
-        <include refid="selectMemberCardVo"/>
+        <include refid="selectMemberCardVo" />
         <where>
-            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
-            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
-            <if test="bankAccount != null  and bankAccount != ''"> and bank_account = #{bankAccount}</if>
-            <if test="bankAddress != null  and bankAddress != ''"> and bank_address = #{bankAddress}</if>
-            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
-            <if test="type != null "> and type = #{type}</if>
-            <if test="dv != null "> and dv = #{dv}</if>
+            <if test="realName != null  and realName != ''">
+                and real_name like concat('%'
+                                         , #{realName}
+                                         , '%')
+            </if>
+            <if test="bankName != null  and bankName != ''">
+                and bank_name like concat('%'
+                  , #{bankName}
+                  , '%')
+            </if>
+            <if test="bankAccount != null  and bankAccount != ''">
+                and bank_account = #{bankAccount}
+            </if>
+            <if test="bankAddress != null  and bankAddress != ''">
+                and bank_address = #{bankAddress}
+            </if>
+            <if test="memberId != null  and memberId != ''">
+                and member_id = #{memberId}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="dv != null">
+                and dv = #{dv}
+            </if>
+            <if test="bankId != null">
+                and bank_id = #{bankId}
+            </if>
         </where>
     </select>
     <select id="memberCardList" parameterType="MemberCard" resultMap="MemberCardResult">
-        <include refid="selectMemberCardVo"/>
+        <include refid="selectMemberCardVo" />
         <where>
-            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="memberId != null  and memberId != ''">
+                and member_id = #{memberId}
+            </if>
         </where>
     </select>
     <select id="getMemberCardInfo" parameterType="MemberCard" resultMap="MemberCardResult">
-        <include refid="selectMemberCardVo"/>
+        <include refid="selectMemberCardVo" />
         <where>
-            real_bank_address is null  or real_bank_address='' LIMIT 100
+            real_bank_address is null or real_bank_address=''
+            LIMIT 100
         </where>
     </select>
     <select id="selectMemberCardById" parameterType="String" resultMap="MemberCardResult">
-        <include refid="selectMemberCardVo"/>
+        <include refid="selectMemberCardVo" />
         where id = #{id}
     </select>
 
     <insert id="insertMemberCard" parameterType="MemberCard">
         insert into ${dbMain}.member_card
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
-            <if test="realName != null">real_name,</if>
-            <if test="bankName != null">bank_name,</if>
-            <if test="bankAccount != null">bank_account,</if>
-            <if test="bankAddress != null">bank_address,</if>
-            <if test="memberId != null">member_id,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="type != null">type,</if>
-            <if test="dv != null">dv,</if>
-         </trim>
+            <if test="id != null">
+                id,
+            </if>
+            <if test="realName != null">
+                real_name,
+            </if>
+            <if test="bankName != null">
+                bank_name,
+            </if>
+            <if test="bankAccount != null">
+                bank_account,
+            </if>
+            <if test="bankAddress != null">
+                bank_address,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="dv != null">
+                dv,
+            </if>
+            <if test="bankId != null">
+                bank_id,
+            </if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id != null">#{id},</if>
-                    <if test="realName != null">#{realName},</if>
-                    <if test="bankName != null">#{bankName},</if>
-                    <if test="bankAccount != null">#{bankAccount},</if>
-                    <if test="bankAddress != null">#{bankAddress},</if>
-                    <if test="memberId != null">#{memberId},</if>
-                <if test="createTime != null">UNIX_TIMESTAMP(#{createTime}),</if>
-                    <if test="type != null">#{type},</if>
-                    <if test="dv != null">#{dv},</if>
-             </trim>
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="realName != null">
+                #{realName},
+            </if>
+            <if test="bankName != null">
+                #{bankName},
+            </if>
+            <if test="bankAccount != null">
+                #{bankAccount},
+            </if>
+            <if test="bankAddress != null">
+                #{bankAddress},
+            </if>
+            <if test="memberId != null">
+                #{memberId},
+            </if>
+            <if test="createTime != null">
+                UNIX_TIMESTAMP(#{createTime}),
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="dv != null">
+                #{dv},
+            </if>
+            <if test="bankId != null">
+                #{bankId},
+            </if>
+        </trim>
     </insert>
 
     <update id="updateMemberCard" parameterType="MemberCard">
         update ${dbMain}.member_card
         <trim prefix="SET" suffixOverrides=",">
-            <if test="realName != null">real_name = #{realName},</if>
-
-            <if test="bankName != null">bank_name = #{bankName},</if>
-
-
-            <if test="bankAccount != null">bank_account = #{bankAccount},</if>
-
-            <if test="bankAddress != null">bank_address = #{bankAddress},</if>
-
-            <if test="memberId != null">member_id = #{memberId},</if>
-
-            <if test="createTime != null">create_time = UNIX_TIMESTAMP(#{createTime}),</if>
-
-            <if test="type != null">type = #{type},</if>
-
-            <if test="dv != null">dv = #{dv},</if>
-            <if test="dv != null">real_bank_address = #{realBankAddress},</if>
-
+            <if test="realName != null">
+                real_name = #{realName},
+            </if>
+            <if test="bankName != null">
+                bank_name = #{bankName},
+            </if>
+            <if test="bankAccount != null">
+                bank_account = #{bankAccount},
+            </if>
+            <if test="bankAddress != null">
+                bank_address = #{bankAddress},
+            </if>
+            <if test="memberId != null">
+                member_id = #{memberId},
+            </if>
+            <if test="createTime != null">
+                create_time = UNIX_TIMESTAMP(#{createTime}),
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="dv != null">
+                dv = #{dv},
+            </if>
+            <if test="realBankAddress != null">
+                real_bank_address = #{realBankAddress},
+            </if>
+            <if test="bankId != null">
+                bank_id = #{bankId},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteMemberCardById" parameterType="String">
-        delete from ${dbMain}.member_card where id = #{id}
+        delete
+        from ${dbMain}.member_card
+        where id = #{id}
     </delete>
 
     <delete id="deleteMemberCardByIds" parameterType="String">
-        delete from ${dbMain}.member_card where id in
+        delete
+        from ${dbMain}.member_card where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -120,7 +212,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <update id="updateMemberCardList" parameterType="java.util.List">
         <foreach collection="list" separator=";" item="item">
-            update member_card set real_bank_address=#{item.realBankAddress} where id=#{item.id}
+            update member_card
+            set real_bank_address=#{item.realBankAddress}
+            where id = #{item.id}
         </foreach>
     </update>
 </mapper>

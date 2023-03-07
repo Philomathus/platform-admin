@@ -482,10 +482,10 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             }
         }
         MemberCard memberCard = memberCardMapper.selectMemberCardById( id );
-        memberCard.setRealName( member.getRealName() );
-        memberCard.setBankName( member.getBankName() );
-        memberCard.setBankAddress( member.getBankAddress() );
-        memberCard.setBankAccount( member.getBankAccount() );
+        memberCard.setRealName( member.getRealName().trim() );
+        memberCard.setBankAddress( member.getBankAddress().trim() );
+        memberCard.setBankAccount( member.getBankAccount().trim() );
+        memberCard.setBankId( member.getBankId() );
         memberCardMapper.updateMemberCard( memberCard );
         return AjaxResult.success( "修改银行卡信息成功" );
     }
