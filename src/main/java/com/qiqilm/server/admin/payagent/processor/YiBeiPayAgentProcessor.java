@@ -31,9 +31,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository( value = ConstantsPayAgent.YUNBEI_PAY + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.YIBEI_PAY + "PayAgentProcessor" )
 @Log4j2
-public class YunBeiPayAgentProcessor extends AbstractPayAgent {
+public class YiBeiPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         SortedMap<String, Object> bodyMap = new TreeMap<>();

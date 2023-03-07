@@ -14,7 +14,6 @@ import java.util.Set;
  */
 public interface LiveBlackMapper {
 
-
     /**
      * 查询拉黑列表
      *
