@@ -2,9 +2,12 @@ package com.qiqilm.server.admin.domain;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Date;
 
 /**
  * 转盘用户对象 wheel_user
@@ -26,6 +29,9 @@ public class WheelUser extends BaseEntity {
 
     @Excel(name = "大奖池剩余次数")
     private Integer poolTimes;
+
+    @ApiModelProperty( value = "更新时间" )
+    private Date updateTime;
 
     @Override
     public String toString() {
