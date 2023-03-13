@@ -54,7 +54,7 @@
 	</sql>
 
 	<select id="selectMemberPayJourList" parameterType="MemberPayJour" resultMap="MemberPayJourResult">
-		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
+		select j.*, p.name platform_name, c.name channel_name, IFNULL(c.pay_rate, j.platform_rate) pay_rate from (
 		<include refid="selectMemberPayJourVo"/>
 		<where>
 			<include refid="listWhere"/>
@@ -68,7 +68,7 @@
 	</select>
 
 	<select id="selectMemberPayJourById" parameterType="String" resultMap="MemberPayJourResult">
-		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
+		select j.*, p.name platform_name, c.name channel_name, IFNULL(c.pay_rate, j.platform_rate) pay_rate from (
 		<include refid="selectMemberPayJourVo"/>
 		where id = #{id}
 		) j
