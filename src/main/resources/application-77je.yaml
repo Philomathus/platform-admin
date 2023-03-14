@@ -48,3 +48,5 @@ payAgentLimitFuLiangPay: 50000
 payAgentLimitGoPayPay: 50000
 # 爱农代付额度
 payAgentLimitAiNongPay: 50000
+# VIPPAY代付额度
+payAgentVipPay: 50000

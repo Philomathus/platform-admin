@@ -79,3 +79,5 @@ payAgentDaNiuPay: 50000
 payAgentKuBiPay: 20000
 # 云贝代付额度
 payAgentYunBeiPay: 30000
+# VIPPAY代付额度
+payAgentVipPay: 200000

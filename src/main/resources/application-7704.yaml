@@ -50,3 +50,5 @@ payAgentLimitGoPayPay: 50000
 payAgentLimitAiNongPay: 50000
 # 酷币代付额度
 payAgentKuBiPay: 20000
+# VIPPAY代付额度
+payAgentVipPay: 50000
