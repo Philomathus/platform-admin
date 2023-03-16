@@ -1,0 +1,81 @@
+spring:
+  datasource:
+    primary:
+      jdbc-url: ENC(ad0I96AgmANuWYkSbupMnP+krcVwoaQWI2ZkUACyN8vIyTlOOtZt0E202dE2xZgfcXRNQ7E9WQjdkTap0/mu0UXJC0lFNMoyfQ/zyTFEfZ6QTX23gkE44UaVco53j+o4HV1yfGCNSYGGyTDsin1nKbqyA3lIToTJzgvbdSjbf2zXCdnJy2PQNIqNtNImHlMCj9eYYQ77UEyJNBU50z7TQzXsgeKjnJ+57gHdP9X+ipG5ILBnHGDUXzHhIpnFhOcRNu3rTqRZr/WH5RyuPTCaTdgVkJaNh+9Wdd+UQucfgww=)
+      username: admin
+      password: ENC(eNEs8Zeo1ZxWlxk7DA8+KKdlWOyq4udWhsa9oqw9RfzxSqbbd7qqNppi8ROSNDYziS5U2jlyX4KlF9gAOzJYCg==)
+    secondary:
+      jdbc-url: ENC(AxjxThZpL1kolf6Yx5MuBFGbP5sST9IeCMFijDG2zLlFRliUQPMeQt3f8zHbDRllaYPjoIEYVe0QsxTZULfTmJNRk2uRDDYq6U7X33dY6Dxznc33PumGdlo/IblJu+gEJG3UlIZIjkB+wYPSP9N0qioZYHoxuAdyINa84LSUvEk0WXxHRBe1g592bKRm7PbnluKYxsSG60auGF8b9DTPCw==)
+      username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
+      password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
+  redis:
+    host: ENC(KJWI1z4pmBICRo4d85jXRbXwqpBZ8I8EaVPlevvBoLlNU70vBPwhTWzZD8Zm5xIFZgcqkERIqy4AyCFQ1/raseRKwH5dSx68lnOqIvtJvLU=)
+    port: 6379
+
+mybatis:
+  configuration:
+    variables:
+      dbMain: 77wm_main
+      dbLive: 77wm_live
+      dbLottery: 77wm_lottery
+
+liveCenter: 7701
+
+im:
+  # 群聊
+  sendGroupMsg: http://47.243.143.163:43000/chat/sendGroupMsg/
+  # 单聊
+  sendMsg: http://47.243.143.163:43000/chat/sendMsg/
+
+# 代付额度
+payAgentLimit: 5000
+# 顺为代付额度
+payAgentLimitShunWei: 30000
+# 宾利代付额度
+payAgentLimitBinLi: 30000
+# 特仑苏代付额度
+payAgentLimitTels: 30000
+# 联付宝代付额度
+payAgentLimitLianFuBao: 30000
+# 马云代付额度
+payAgentLimitMaYun: 30000
+# 合众代付额度
+payAgentLimitHeZhong: 30000
+# 滴滴代付额度
+payAgentLimitDiDi: 30000
+# newMax代付额度
+payAgentLimitNewMaxPay: 30000
+# 阳光代付额度
+payAgentLimitYangGuangPay: 30000
+# 大风车代付额度
+payAgentLimitDaFengChePay: 30000
+# 魯班代付额度
+payAgentLimitLuBanPay: 30000
+# 鼎丰代付额度
+payAgentLimitDingFengPay: 30000
+# 宏博代付额度
+payAgentLimitHongBoPay: 30000
+# 小月代付额度
+payAgentLimitXiaoYuePay: 30000
+# 银联代付额度
+payAgentLimitYinLianPay: 30000
+# 爱农代付额度
+payAgentLimitAiNongPay: 30000
+# 众家代付额度
+payAgentLimitZhongJiaPay: 30000
+# 老乡代付额度
+payAgentLimitLaoXiangPay: 30000
+# 弗良代付额度
+payAgentLimitFuLiangPay: 30000
+# 东东汇潮代付额度
+payAgentLimitHuiYuanPay: 30000
+# 杉德代付额度
+payAgentLimitShanDePay: 30000
+# GoPay代付额度
+payAgentLimitGoPayPay: 100000
+# 大牛代付额度
+payAgentDaNiuPay: 50000
+# 酷币代付额度
+payAgentKuBiPay: 20000
+# VIPPAY代付额度
+payAgentVipPay: 200000
