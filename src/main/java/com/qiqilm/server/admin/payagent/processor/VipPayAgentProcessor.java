@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -11,9 +12,13 @@ import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,8 +41,26 @@ public class VipPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
         bodyMap.put( "sign", DigestUtils.md5Hex( tempStr ).toUpperCase() );
 
-        Map<String, Object> resultMap = this.sendPostMap( payAgentPlatform.getPayOrderAddr(), packageJson( bodyMap ),
-                reqPayAgent );
+        Map<String, Object> resultMap = null;
+        try {
+            resultMap = restTemplate.execute( payAgentPlatform.getPayOrderAddr(), HttpMethod.POST,
+                    restTemplate.httpEntityCallback( packageJson( bodyMap ) ), response -> {
+                InputStream bodyStream = response.getBody();
+                String      text;
+                try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                    text = CharStreams.toString( reader );
+                }
+                return JsonUtil.json2Map( text );
+            } );
+        } catch ( Exception e ) {
+            log.error( e.getMessage(), e );
+            if ( e.getMessage().contains( "No route to host (Host unreachable)" ) ) {
+                reqPayAgent.setFailReason( "代付IP需加白:" + e.getMessage() );
+                payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
+                return false;
+            }
+            reqPayAgent.setFailReason( e.getMessage() );
+        }
 
         log.info( payAgentPlatform.getName()
                 + "下单结果{},订单号:{}", JsonUtil.object2Json( resultMap ), withdrawLog.getOrderNo() );
@@ -72,8 +95,7 @@ public class VipPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> bodyMap   = new TreeMap<>( requestMap );
         bodyMap.entrySet().removeIf( e -> StringUtils.isBlank( e.getValue() == null ? null : e.getValue().toString() ) );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(),
-                SECRET_PAYAGENT_KEY );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
         String signStr = DigestUtils.md5Hex( tempStr ).toUpperCase();
@@ -111,8 +133,7 @@ public class VipPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "merchantNo", payAgentPlatform.getMerId() );
         bodyMap.put( "orderNo", withdrawLog.getOrderNo() );
 
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(),
-                SECRET_PAYAGENT_KEY );
+        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
         bodyMap.put( "sign", DigestUtils.md5Hex( tempStr ).toUpperCase() );
