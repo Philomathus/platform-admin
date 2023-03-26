@@ -162,8 +162,8 @@ public class ServerOssServiceImpl implements IServerOssService {
         String      fileName      = file.getOriginalFilename();
         String      extension     = FilenameUtils.getExtension( fileName );
         InputStream inputStream   = file.getInputStream();
-        File newFile       = new File( System.getProperty( "java.io.tmpdir" ) + fileName );
-        Path newFileToPath = newFile.toPath();
+        File        newFile       = new File( System.getProperty( "java.io.tmpdir" ) + fileName );
+        Path        newFileToPath = newFile.toPath();
         IOUtils.copy( inputStream, Files.newOutputStream( newFileToPath ) );
         String rFileName = DigestUtils.md5Hex( Files.newInputStream( newFileToPath ) );
         String fileKey   = LiveCenterConfig.me.getProfile() + "/" + path + "/" + rFileName + "." + extension;

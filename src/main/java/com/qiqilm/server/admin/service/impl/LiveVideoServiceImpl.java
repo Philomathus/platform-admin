@@ -32,6 +32,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 直播Service业务层处理
@@ -99,7 +100,18 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
      */
     @Override
     public List<LiveVideo> selectLiveVideoList( LiveVideo liveVideo ) {
-        List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList( liveVideo );
+        List<LiveVideo> liveVideos   = liveVideoMapper.selectLiveVideoList( liveVideo );
+        Set<Long>       liveVideoIds = liveVideos.stream().map( LiveVideo::getId ).collect( Collectors.toSet() );
+        if ( !CollectionUtils.isEmpty( liveVideoIds ) ) {
+            List<LiveUser> liveUsers = liveUserMapper.selectLiveUserInId( liveVideoIds );
+            for ( LiveUser liveUser : liveUsers ) {
+                for ( LiveVideo video : liveVideos ) {
+                    if ( Objects.equals( video.getId(), liveUser.getId() ) ) {
+                        video.setOpenPay( liveUser.getOpenPay().toString() );
+                    }
+                }
+            }
+        }
 
         Map<Object, Object> failMap = redisUtil.hGetAll( REDIS_KEY_DETECT_PLAY );
         liveVideos.forEach( video -> {

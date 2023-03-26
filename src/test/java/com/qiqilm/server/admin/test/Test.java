@@ -18,7 +18,7 @@ public class Test {
 
     @org.junit.jupiter.api.Test
     public void test1() {
-        String agent = "77mt";
+        String agent = "77ql";
         String host  = "livedata-instance-1.c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com";
         String jdbc = stringEncryptor.encrypt( "jdbc:mysql://" + host + ":3306/" + agent
                 + "_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false" );
@@ -32,11 +32,12 @@ public class Test {
                 + "_lottery?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false" );
         System.out.println( agent + "lottery: " + jdbc3 );
 
-        String username = stringEncryptor.encrypt( "mt.zczoyz.ng.0001.ape1.cache.amazonaws.com" );
+
+        String username = stringEncryptor.encrypt( "ql.zczoyz.ng.0001.ape1.cache.amazonaws.com" );
         System.out.println( "redisHost: " + username );
 
-        //String password = stringEncryptor.encrypt( "82ETU94ptj@&cqhk" );
-        //System.out.println( "redisPass: " + password );
+        //String password = stringEncryptor.encrypt( "X*5GXuIIMo5gY1ua" );
+        //System.out.println( "databasePass: " + password );
     }
 
     @org.junit.jupiter.api.Test

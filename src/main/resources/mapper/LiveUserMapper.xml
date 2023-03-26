@@ -251,7 +251,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectLiveUserInId" resultMap="LiveUserResult">
-        select id,nick_name from ${dbLive}.live_user where id in
+        select id,nick_name, open_pay from ${dbLive}.live_user where id in
         <foreach collection="array" item="userId" open="(" separator="," close=")">
             #{userId}
         </foreach>
