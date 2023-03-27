@@ -191,14 +191,14 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
         if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
             ConfigEnvironment environment = configEnvironmentService.selectConfigEnvironmentById( "addmoney" );
-            String environmentAmount;
-            if( environment == null) {
-                environmentAmount="1000000";
-            }else{
-                environmentAmount=environment.getEnvValue();
+            String            environmentAmount;
+            if ( environment == null ) {
+                environmentAmount = "1000000";
+            } else {
+                environmentAmount = environment.getEnvValue();
             }
-            if ( money.compareTo( new BigDecimal( Integer.parseInt(environmentAmount) ) ) > 0 ) {
-                rspBase.setMsg( "最大金额为"+ Integer.parseInt(environmentAmount));
+            if ( money.compareTo( new BigDecimal( Integer.parseInt( environmentAmount ) ) ) > 0 ) {
+                rspBase.setMsg( "最大金额为" + Integer.parseInt( environmentAmount ) );
                 rspBase.setCode( 1 );
                 return rspBase;
             }
@@ -575,6 +575,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             memberCacheManager.delToken( info.getId() );
             loginIp.add( info.getId() );
         }
+        if ( CollectionUtils.isEmpty( loginIp ) ) {
+            throw new BusinessException( "未查询到需要禁用的会员" );
+        }
         return memberInfoMapper.banStatus( loginIp, memberInfo.getRealName() );
     }
 
@@ -585,6 +588,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         for ( MemberInfo info : memberInfos ) {
             memberCacheManager.delToken( info.getId() );
             loginIp.add( info.getId() );
+        }
+        if ( CollectionUtils.isEmpty( loginIp ) ) {
+            throw new BusinessException( "未查询到需要解禁的会员" );
         }
         return memberInfoMapper.unBlockStatus( loginIp, memberInfo.getRealName() );
     }
