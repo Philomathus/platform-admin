@@ -1,17 +1,16 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(0him8oHg5cszPDXdEsbnszqjn3xHkRaKj5mbKjoHnuU+KVVyRHdSLM4KroMCWcnqcPd6IVJpyZ668PNlK4cORFjClRZRmtPzmDsXRCETDuJ0alnZYNAKzG/0SpYoGSLvwl4VGK4wOxoFhrADC3J2/oHJzSAuhGo7Lw/PqHZevwY6tQQEgca4MjtF3hg9/UCq4/7/sclwm3/AUY+QvY1otMlDWZ7/B4QcP4lgEx/WPvdew9/H9q1/VM1tK8hMx+2fp8Xhtm1BPmrzJ16LqD/K4A==)
-      username: ENC(v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==)
-      password: ENC(BcGcqamgY/2aUcGdrr7PoyPJPWgvHNChl4tQojazzxSlJ0bfbqbTpXIBa0rLMxiu1WfdmGMzT8EHvqX5OpNWHQ==)
+      jdbc-url: ENC(gD4Zf8oh4H/G0t4bYNeMD1t2rnykPr+smKSDrl4JMt7WNP8ycq0pSfiRcI3X/3rtdo6Ifjsmw7cMOWQ2ME21tetyU9j/nYVGDK0WlKHLXcHgw7bp5cBtVx1HSUOAfpQzjuMkzUlOh5QuDR1iguaRZPlOIROdttovF4Zopl+LJmq6ItZXyIqHwDM1/l4Dh9t4oGC7mDQR7VvPmWVn6Qx2R7BU9y0crM87JSd2FhEgFiiOQg1T+gOEy9ncDNcOymBHOjUC2Ytq7Dlu6fFBnlMrGeuqLEVBtdX/mkdTGn689aM=)
+      username: admin
+      password: djkteCbsupY3RCDkPDPS
     secondary:
       jdbc-url: ENC(rQSm78M8lGPyB7F8JHr6ZDTtVYv4diNGJwz8PfKv2nZs4c4uFKFrLYNhoRqihhG07ieXgibrX0zyiT5JolgpOEzB1s7ub5lMyeX1revCZ1A6EzHk+dBUoHFfb2KTprxE6dbhwTN5R+Lw17vahYP3AN7/PaGiacPEvM0aFkTY/CAEPzBWENSzqp/eXISprAEfuOZFEpKp1w3hCPzaKkSL2VlSBLSx2SvutDUbGmOhrJw=)
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(wPYT/GrMDrA3QluJGi1uVGaGa0yY2g931k4jLm8gQp/S7HwHHzdwkAorDvpVv74VfMZ2m5MfjPgFYllBxGb/oWp0arjd8hO9Al+99g9Zwr4=)
+    host: ENC(MeBD/lFemaoCPCT+coYpfCpdcGUUTlLjxb8YGDHm1buVYW6OTo2z4FzUo+tQa/XDZLWKacF5XOaAeifk3i3pmAeLg5b1vZnvQCUU7fA/bu8=)
     port: 6379
-    password: ENC(OqsTllTcYdJPYGStNmuT5RhqPBSYhR/BkIZYfk22oDWLbVbCR3WKxvtkTv46vyGVc0Ub3l6eeu9M61+Pd/5tTg==)
 
 mybatis:
   configuration:

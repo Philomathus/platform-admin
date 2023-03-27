@@ -1,23 +1,23 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(kblJ1I3x4tTOcn4/FKxqxCfsVbTvqzijEbW6q/TwXuq1Y1neiqIwrSnPwHOebV6cj3LrUwc71zuL0vaXiblP3jIafV08oOL0OuV7S4Pi1wXo0AP86+lqsKBG2VlqrpT5guhTTpNJv7dMfGHn0couVMtghsyOf/rFKylz0o1A6wyz/tlWEeutM3XgmxC6hmlbnE/zqYGQLoxk7s63cl7J/Wx1MsS7mKVSjSNoM2c30vUsoRtoD3chSw49YyEGXgIfNaJ4tdJBPWPPAIv1J3tA40fimVEjeQdebxp/C1b4fbw=)
+      jdbc-url: ENC(ZmPeFx772Qv9zejLFksKTv3VuEc+RiLKL9UiUHO3zRxiyg3QoU8iNy8eTTNwC7rw4nXl7R+kRMPuuZ0DvRnydipJ1hVOXLbD0INn7U5wlk3LkRz4Y01a1+f1OWw1AN2rMr+QH04lL2FN31MgAPawXWGm22r0q3auoX7ms+N0g5jeJ9/Gnxe1N7U1Pzcss/Ec7SHRu61K+4RrepEVbOQoMiA15oFRrcB5cerxdwkj9KGX3aPF9uRS7VHMYabKw5t+hmw1l/8exPEhlIef5CpLXuALuw6WiiV38iOERi0Fgow=)
       username: admin
-      password: djkteCbsupY3RCDkPDPS
+      password: ENC(eNEs8Zeo1ZxWlxk7DA8+KKdlWOyq4udWhsa9oqw9RfzxSqbbd7qqNppi8ROSNDYziS5U2jlyX4KlF9gAOzJYCg==)
     secondary:
-      jdbc-url: ENC(rQSm78M8lGPyB7F8JHr6ZDTtVYv4diNGJwz8PfKv2nZs4c4uFKFrLYNhoRqihhG07ieXgibrX0zyiT5JolgpOEzB1s7ub5lMyeX1revCZ1A6EzHk+dBUoHFfb2KTprxE6dbhwTN5R+Lw17vahYP3AN7/PaGiacPEvM0aFkTY/CAEPzBWENSzqp/eXISprAEfuOZFEpKp1w3hCPzaKkSL2VlSBLSx2SvutDUbGmOhrJw=)
+      jdbc-url: ENC(AxjxThZpL1kolf6Yx5MuBFGbP5sST9IeCMFijDG2zLlFRliUQPMeQt3f8zHbDRllaYPjoIEYVe0QsxTZULfTmJNRk2uRDDYq6U7X33dY6Dxznc33PumGdlo/IblJu+gEJG3UlIZIjkB+wYPSP9N0qioZYHoxuAdyINa84LSUvEk0WXxHRBe1g592bKRm7PbnluKYxsSG60auGF8b9DTPCw==)
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(thh8lUbAfzF4XDfOP1c8Awdc44Tjlyn0wNaduH5HDLfYXN0iEAL2jpBLue9MQTVybv5jVT9k3+e9uy/ZJSdlFBTKTKKAFB6XtZq8fCq/4jA=)
+    host: ENC(/x3sbqi7hzTZK4XJyX4MgQ65KvKV/F3vQyeLUBQY3SPZr/khHSX1WxfFeGG7nbBvSlbv14zXncBWrn+EihLnggriNcBIv0se1ohUIg5ZGBA=)
     port: 6379
 
 mybatis:
   configuration:
     variables:
-      dbMain: 77xy_main
-      dbLive: 77xy_live
-      dbLottery: 77xy_lottery
+      dbMain: 77yy_main
+      dbLive: 77yy_live
+      dbLottery: 77yy_lottery
 
 liveCenter: 7701
 
