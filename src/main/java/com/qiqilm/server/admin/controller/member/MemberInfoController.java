@@ -766,6 +766,9 @@ public class MemberInfoController extends BaseController {
         if ( StringUtils.isBlank( memberInfo.getLoginIp() ) ) {
             throw new BusinessException( "封禁IP为空" );
         }
+        if ( UserDataUtil.internalIp( memberInfo.getLoginIp() ) ) {
+            throw new BusinessException( "IP为内网,无法禁用" );
+        }
         memberInfo.setLoginIp( memberInfo.getLoginIp() );
         memberInfo.setRealName( memberInfo.getRealName() );
         return memberInfoService.banStatus( memberInfo );
@@ -779,6 +782,9 @@ public class MemberInfoController extends BaseController {
     public int unBlockIp( MemberInfo memberInfo ) {
         if ( StringUtils.isBlank( memberInfo.getLoginIp() ) ) {
             throw new BusinessException( "封禁IP为空" );
+        }
+        if ( UserDataUtil.internalIp( memberInfo.getLoginIp() ) ) {
+            throw new BusinessException( "IP为内网,无法解禁" );
         }
         memberInfo.setLoginIp( memberInfo.getLoginIp() );
         memberInfo.setRealName( memberInfo.getRealName() );
