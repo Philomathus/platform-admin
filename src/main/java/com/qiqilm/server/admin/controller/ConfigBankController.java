@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.BankList;
 import com.qiqilm.server.admin.domain.ConfigBank;
+import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.mapper.SysUserMapper;
 import com.qiqilm.server.admin.service.IBankListService;
@@ -182,6 +183,13 @@ public class ConfigBankController extends BaseController {
 	@Log( title = "支付类型", businessType = BusinessType.UPDATE )
 	@PutMapping( "/changeStatus" )
 	public AjaxResult changeStatus( @RequestBody ConfigBank configBank ) {
+		return toAjax( configBankService.updateConfigBank( configBank ) );
+	}
+
+	@PreAuthorize( "@ss.hasPermi('pay:configBank:edit')" )
+	@Log( title = "支付类型", businessType = BusinessType.UPDATE )
+	@PutMapping( "/changeText" )
+	public AjaxResult edits( @RequestBody ConfigBank configBank ) {
 		return toAjax( configBankService.updateConfigBank( configBank ) );
 	}
 }
