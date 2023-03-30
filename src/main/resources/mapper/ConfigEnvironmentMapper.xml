@@ -12,11 +12,10 @@
         <result property="envGroup" column="env_group"/>
         <result property="envSort" column="env_sort"/>
         <result property="envStatus" column="env_status"/>
-        <result property="deviceType" column="device_type"/>
     </resultMap>
 
     <sql id="selectConfigEnvironmentVo">
-        select env_title, env_code, env_value, env_des, env_group, env_sort, env_status, device_type from ${dbMain}.config_environment
+        select env_title, env_code, env_value, env_des, env_group, env_sort, env_status from ${dbMain}.config_environment
     </sql>
 
     <select id="selectConfigEnvironmentList" parameterType="ConfigEnvironment" resultMap="ConfigEnvironmentResult">

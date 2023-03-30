@@ -3,6 +3,8 @@ package com.qiqilm.server.admin.domain;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 【请填写功能名称】对象 config_environment
@@ -43,7 +45,4 @@ public class ConfigEnvironment extends BaseEntity {
     /** 状态 1启用 0禁用 */
     @Excel(name = "状态 1启用 0禁用")
     private Integer envStatus;
-
-    @Excel(name = "DEVICE_TYPE")
-    private String deviceType;
 }
