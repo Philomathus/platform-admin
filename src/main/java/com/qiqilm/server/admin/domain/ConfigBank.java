@@ -74,6 +74,17 @@ public class ConfigBank extends BaseEntity {
 
     private Integer googleAuthCode;
 
+    @Excel(name = "文本1")
+    private String tex1;
+    @Excel(name = "文本2")
+    private String tex2;
+    @Excel(name = "文本3")
+    private String tex3;
+    @Excel(name = "文本4")
+    private String tex4;
+    @Excel(name = "文本5")
+    private String tex5;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -93,6 +104,11 @@ public class ConfigBank extends BaseEntity {
             .append("accountName", getAccountName())
             .append("bankAddress", getBankAddress())
             .append("discountBill", getDiscountBill())
+            .append("tex1", getTex1())
+            .append("tex2", getTex2())
+            .append("tex3", getTex3())
+            .append("tex4", getTex4())
+            .append("tex5", getTex5())
             .append("openLevel", getOpenLevel())
             .append("openLevelMax", getOpenLevelMax())
             .toString();

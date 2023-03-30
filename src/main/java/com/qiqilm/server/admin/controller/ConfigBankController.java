@@ -189,7 +189,7 @@ public class ConfigBankController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('pay:configBank:edit')" )
 	@Log( title = "支付类型", businessType = BusinessType.UPDATE )
 	@PutMapping( "/changeText" )
-	public AjaxResult edits( @RequestBody ConfigBank configBank ) {
+	public AjaxResult changeText( @RequestBody ConfigBank configBank ) {
 		return toAjax( configBankService.updateConfigBank( configBank ) );
 	}
 }
