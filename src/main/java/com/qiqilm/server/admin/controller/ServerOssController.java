@@ -90,8 +90,6 @@ public class ServerOssController extends BaseController {
 	public AjaxResult uploadOssTest( @RequestParam( "file" ) MultipartFile file,
 									 @PathVariable String path,
 									 @PathVariable long id ) throws IOException {
-		String fileName = file.getOriginalFilename();
-		String fileKey  = path + "/" + fileName;
-		return AjaxResult.success( "上传成功", serverOssService.uploadOssTest( file.getInputStream(), fileKey, id ) );
+		return AjaxResult.success( "上传成功", serverOssService.uploadOssTest( file, path, id ) );
 	}
 }

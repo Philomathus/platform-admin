@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(kXTgXBTitwN1EBHZPmLfuUMao+j2cfxqznY9uX3tbn62lRyfgg8hK8Gju5x4xJGvvlVgBm4zm6I8Gk8CGilOCM3/cAPV/ZJeQxA4Gr9T5r2vOXdNxWMAkkiDBBwDwuxDyvr9I8/yzptPA71dqn45x3oLtHtUoCKx77wkWOMk6DX/P147i2LWauPrYtgJLKGitQz5X8DpGZkd8iFoEnmybJ/G9V9sBUDjFbMssObMrQD8sai4JEwCwwU+tVMINALgzxuhBL40qFQPauFEgOI3Ag==)
+      jdbc-url: ENC(gFqkxW//h2dh7ubvkm7hV/iIbnNiD0Rk81rQXmuhxWZtOZ3x2Nqm3vC9GDSagJ7wLIBjLgBBmspjieB1TDW6kPqDck57KPFKUvdulm+zF5cRBpX9vLNKx+C5SU46ktsNTYFCoAxP8X6e1TPEVNV1gnNo9WWknMC/zEmd9f6/VOfsnOQaXmWAFJ3OGuYDjBVHECI+0RKjKU8AGWiwJuGIUW98ofDwAqHwUokZ9a7YBW1CYKQKDcKBlHo16r/YG3tAiIh1RKdV2mKaQHCM7Ny27g==)
       username: ENC(ntsELfEvY1lBOmFyTcgga5DF5OyuB9qA5FrxnMQdlwe14iRRN7BZPddMBZ9oDB+W)
       password: ENC(FNO20k6i7eNncA5GwwfAkYUhkNXMPlh/VGkMNBoADnG6lPbL6ebkqsR4xJdfM6kHM/0P8R1dZs2+LpMaUWj4Cw==)
     secondary:
@@ -9,16 +9,16 @@ spring:
       username: ENC(5mwKH5QTPd1k80o6dLDPTZrCnk/7CDG/vtm7TjBRTpDR0wXRKXmolfitvX9CMBCm)
       password: ENC(3CQQEKOPYc8qm0DS4EIO+8MWoa6rfLFHJAqdyNvYmVHyp4aSK3Uj/GSs7IzilfXt)
   redis:
-    host: ENC(TlVOPwGxNqagJevc6FCKJuVu/sXdysgyVgN7ijsPdxt7qlVDSy2IF9wEG+VMLfGUYi24SeP4TYd1PRdY9PKQG8/ZLm76f+mQJdMosrIto04=)
+    host: ENC(HaWmKXl+VsM5BO6Jomkknznhmx7qO2ZOix2jFD4CxjjcFv8Rc2dysz0V4Ko4mm2B1b/TjKqx4omzndQMCqZLIGEb9VxtfwI53qK8Q4LLQms=)
     port: 6379
-    password: ENC(Isf3MkSLkJ90XMW2oRP2CEMdSeTsfiH7W9MikPJhs62PUb4HmTzUMzxVw/tIZ2tbdYkMzUqnZnuWiqxMZx9RUQ==)
+    password: ENC(Hf9BLC78g054vvPbsQIYJ/h6OazPPdcP8MyOc49/obWDsyIviyDjlnnHyt1ipEYAniMR0PnMcLLfvGDKp4h5pw==)
 
 mybatis:
   configuration:
     variables:
-      dbMain: 77je_main
-      dbLive: 77je_live
-      dbLottery: 77je_lottery
+      dbMain: 77yutu_main
+      dbLive: 77yutu_live
+      dbLottery: 77yutu_lottery
 
 liveCenter: 7701
 
@@ -48,5 +48,7 @@ payAgentLimitFuLiangPay: 50000
 payAgentLimitGoPayPay: 50000
 # 爱农代付额度
 payAgentLimitAiNongPay: 50000
+# 酷币代付额度
+payAgentKuBiPay: 20000
 # VIPPAY代付额度
-payAgentVipPay: 50000
+payAgentVipPay: 200000

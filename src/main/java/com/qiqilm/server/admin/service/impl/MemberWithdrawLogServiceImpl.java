@@ -88,7 +88,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             List<String> memberIds = new ArrayList<>();
             for (MemberWithdrawLog me : memberWithdrawLogList) {
                 //入款人姓名不为空，并且入款人不包含提现人，整条数据标红警告
-                if (Strings.isNotBlank(me.getRechargeUserName()) &&
+                if (Strings.isNotBlank(me.getRechargeUserName()) && Strings.isNotBlank( me.getBankUserName() ) &&
                         !me.getRechargeUserName().contains(me.getBankUserName())) {
                     me.setRechargeUserNameStatus(1);//等于1,数据警告
                 } else {

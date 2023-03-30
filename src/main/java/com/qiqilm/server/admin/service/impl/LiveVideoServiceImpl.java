@@ -32,6 +32,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 直播Service业务层处理
@@ -99,7 +100,18 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
      */
     @Override
     public List<LiveVideo> selectLiveVideoList( LiveVideo liveVideo ) {
-        List<LiveVideo> liveVideos = liveVideoMapper.selectLiveVideoList( liveVideo );
+        List<LiveVideo> liveVideos   = liveVideoMapper.selectLiveVideoList( liveVideo );
+        Set<Long>       liveVideoIds = liveVideos.stream().map( LiveVideo::getId ).collect( Collectors.toSet() );
+        if ( !CollectionUtils.isEmpty( liveVideoIds ) ) {
+            List<LiveUser> liveUsers = liveUserMapper.selectLiveUserInId( liveVideoIds );
+            for ( LiveUser liveUser : liveUsers ) {
+                for ( LiveVideo video : liveVideos ) {
+                    if ( Objects.equals( video.getId(), liveUser.getId() ) ) {
+                        video.setOpenPay( liveUser.getOpenPay().toString() );
+                    }
+                }
+            }
+        }
 
         Map<Object, Object> failMap = redisUtil.hGetAll( REDIS_KEY_DETECT_PLAY );
         liveVideos.forEach( video -> {
@@ -201,16 +213,13 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
 
         this.saveHostWageNote( liveUser, video );
 
-
         ServerLive serverLive = serverLiveMapper.selectServerLiveById( video.getPaiId() );
         if ( serverLive != null && serverLive.getCountNum() > 0 ) {
             serverLive.setCountNum( serverLive.getCountNum() - 1 );
             serverLiveMapper.updateServerLive( serverLive );
             //	videoStreamUtil.setServerLive( serverLive );
         }
-
         this.closeVideoIMNotify( video, isAborted, why );
-
         RedisCacheUtil.me.clear( id, LiveVideo.class );
 
         if ( !Objects.isNull( LiveCenterConfig.me.getLiveSubAgents() ) ) {
@@ -258,7 +267,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             ext.put( "fonts_color", "" ); //字体颜色
             ext.put( "desc", why );  //弹幕消息;
             ext.put( "desc2", "直播结束" );  //弹幕消息;
-
             try {
                 long time = System.currentTimeMillis();
                 ext.put( "systemtime", time );
@@ -274,9 +282,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
                 //imApi.sendGroupMessage(video.getGroupId(), message);
                 imApi.sendSystemNotify( video.getGroupId(), value );
                 imApi.sendSystemNotify( video.getGroupId(), value );
-
-                ext.remove( "systemtime" );
-                ext.remove( "userinfomat" );
                 imServerUtils.sendGroupMessage( String.valueOf( video.getId() ), ext );
             } catch ( Exception e ) {
                 log.error( "房间号不存在或无法发送直播结束通知 - videoId:{};groupId:{}", video.getId(), video.getGroupId(), e );
@@ -336,7 +341,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             ext.put( "type", live_pay_type == 0 ? 32 : 40 );
             ext.put( "room_id", room_id );
             ext.put( "live_fee", live_fee );
-
             try {
                 long time = System.currentTimeMillis();
                 ext.put( "systemtime", time );
@@ -351,9 +355,6 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             String value = JsonUtil.object2Json( ext );
             imApi.sendSystemNotify( video.getGroupId(), value );
             imApi.sendSystemNotify( video.getGroupId(), value );
-
-            ext.remove( "systemtime" );
-            ext.remove( "userinfomat" );
             imServerUtils.sendGroupMessage( String.valueOf( video.getId() ), ext );
             return msg;
         }

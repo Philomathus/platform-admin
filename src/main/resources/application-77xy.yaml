@@ -1,17 +1,16 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(d0t2Q5LTj+lTbzh32WVo7Zp8pUbSm5fPpY0jUdtsSiyE4DMGL6Cbq/H12Zu0JDnaR/OuXr6EZZfHwnBAorQjDqpr49Z1BdJnph8yU2l4ygR1APl/cRHRmxMYXF3Mct993pM/GdP7TjT16x28ICiw/6yn/xpJoKT/lorYyiLfJ5r3Ab7rEF1mGAEIwh9RFZIagWtNHwFyF1Os8NEbnh54N1KyEPaK4Kv/vUg9Ma2hqV5Th6OWJBxcrgqlL3OoAlbfbNghkS/Hx7/geDLHmlVmMA==)
-      username: ENC(v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==)
-      password: ENC(BcGcqamgY/2aUcGdrr7PoyPJPWgvHNChl4tQojazzxSlJ0bfbqbTpXIBa0rLMxiu1WfdmGMzT8EHvqX5OpNWHQ==)
+      jdbc-url: ENC(kblJ1I3x4tTOcn4/FKxqxCfsVbTvqzijEbW6q/TwXuq1Y1neiqIwrSnPwHOebV6cj3LrUwc71zuL0vaXiblP3jIafV08oOL0OuV7S4Pi1wXo0AP86+lqsKBG2VlqrpT5guhTTpNJv7dMfGHn0couVMtghsyOf/rFKylz0o1A6wyz/tlWEeutM3XgmxC6hmlbnE/zqYGQLoxk7s63cl7J/Wx1MsS7mKVSjSNoM2c30vUsoRtoD3chSw49YyEGXgIfNaJ4tdJBPWPPAIv1J3tA40fimVEjeQdebxp/C1b4fbw=)
+      username: admin
+      password: djkteCbsupY3RCDkPDPS
     secondary:
       jdbc-url: ENC(rQSm78M8lGPyB7F8JHr6ZDTtVYv4diNGJwz8PfKv2nZs4c4uFKFrLYNhoRqihhG07ieXgibrX0zyiT5JolgpOEzB1s7ub5lMyeX1revCZ1A6EzHk+dBUoHFfb2KTprxE6dbhwTN5R+Lw17vahYP3AN7/PaGiacPEvM0aFkTY/CAEPzBWENSzqp/eXISprAEfuOZFEpKp1w3hCPzaKkSL2VlSBLSx2SvutDUbGmOhrJw=)
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(3Twn/h37yVu1iM+uKj6wP1usKM4Yg9Lh8PnxgOm1Lze5kE1jlehbhrChA1Ku9hJoEviyFNA+9cNHTCpRrk4OOzyWcdwKgTOvokskbIIRLqI=)
+    host: ENC(thh8lUbAfzF4XDfOP1c8Awdc44Tjlyn0wNaduH5HDLfYXN0iEAL2jpBLue9MQTVybv5jVT9k3+e9uy/ZJSdlFBTKTKKAFB6XtZq8fCq/4jA=)
     port: 6379
-    password: ENC(1P6wp6Ha+ihVgS4djS3H9s4RU6/BQDlRYYtb8ZhPu7szOw5chgU0SLnUfOEzz4788cYCwks0yyQQyO/f3LB+Cg==)
 
 mybatis:
   configuration:
@@ -24,9 +23,9 @@ liveCenter: 7701
 
 im:
   # 群聊
-  sendGroupMsg: http://154.23.182.40:43000/chat/sendGroupMsg/
+  sendGroupMsg: http://47.243.143.163:43000/chat/sendGroupMsg/
   # 单聊
-  sendMsg: http://154.23.182.40:43000/chat/sendMsg/
+  sendMsg: http://47.243.143.163:43000/chat/sendMsg/
 
 # 代付额度
 payAgentLimit: 5000
@@ -78,3 +77,5 @@ payAgentLimitGoPayPay: 100000
 payAgentDaNiuPay: 50000
 # 酷币代付额度
 payAgentKuBiPay: 20000
+# VIPPAY代付额度
+payAgentVipPay: 200000

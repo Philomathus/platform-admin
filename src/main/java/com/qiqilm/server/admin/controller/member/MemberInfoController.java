@@ -16,6 +16,7 @@ import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.vo.*;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.service.IMemberInfoService;
@@ -762,6 +763,12 @@ public class MemberInfoController extends BaseController {
     @Log( title = "根据IP禁用用户", businessType = BusinessType.UPDATE )
     @PutMapping( "/ban-ip" )
     public int banIp( MemberInfo memberInfo ) {
+        if ( StringUtils.isBlank( memberInfo.getLoginIp() ) ) {
+            throw new BusinessException( "封禁IP为空" );
+        }
+        if ( UserDataUtil.internalIp( memberInfo.getLoginIp() ) ) {
+            throw new BusinessException( "IP为内网,无法禁用" );
+        }
         memberInfo.setLoginIp( memberInfo.getLoginIp() );
         memberInfo.setRealName( memberInfo.getRealName() );
         return memberInfoService.banStatus( memberInfo );
@@ -773,6 +780,12 @@ public class MemberInfoController extends BaseController {
     @Log( title = "根据IP禁用用户", businessType = BusinessType.UPDATE )
     @PutMapping( "/unBlock-ip" )
     public int unBlockIp( MemberInfo memberInfo ) {
+        if ( StringUtils.isBlank( memberInfo.getLoginIp() ) ) {
+            throw new BusinessException( "封禁IP为空" );
+        }
+        if ( UserDataUtil.internalIp( memberInfo.getLoginIp() ) ) {
+            throw new BusinessException( "IP为内网,无法解禁" );
+        }
         memberInfo.setLoginIp( memberInfo.getLoginIp() );
         memberInfo.setRealName( memberInfo.getRealName() );
         return memberInfoService.unBlockStatus( memberInfo );

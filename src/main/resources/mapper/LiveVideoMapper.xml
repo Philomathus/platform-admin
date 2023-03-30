@@ -64,12 +64,10 @@
 		s.name lineName,
 		s.status lineStatus,
 		live_image,
-		play_url,
-		u.open_pay
+		play_url
 		FROM
 		${dbLive}.live_video v
 		left join ${dbLive}.server_live s on(v.pai_id=s.id)
-		left join ${dbLive}.live_user u on (u.id=v.user_id)
 	</sql>
 
     <select id="selectLiveVideoList" parameterType="LiveVideo" resultMap="LiveVideoResult">

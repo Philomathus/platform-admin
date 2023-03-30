@@ -4,6 +4,7 @@ import com.qiqilm.server.admin.domain.ServerOss;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -66,10 +67,10 @@ public interface IServerOssService {
 
 	String uploadInputStream( InputStream inputStream, String fileKey );
 
-	String uploadOssTest( InputStream inputStream, String fileKey, long id );
+	String uploadOssTest( MultipartFile file, String path, long id ) throws IOException;
 
 
-	void amazonawsUpload(MultipartFile file, String path, ServerOss serverOss, File newFile);
+	void amazonawsUpload(String path, ServerOss serverOss, File newFile);
 
 	void kuaiKuaiYun(MultipartFile file, String fileKey, ServerOss serverOss, File newFile);
 }

@@ -47,8 +47,9 @@ public class UploadOssController {
             newFile.delete();
         }
         if ( serverOss.getProvider() == 1 ) {//亚马逊
-            serverOssService.amazonawsUpload( file, fileKey, serverOss, newFile );
-            url = serverOss.getEndpoint() + fileKey;
+            serverOssService.amazonawsUpload( fileKey, serverOss, newFile );
+            url = "/" + fileKey;
+            newFile.delete();
         }
         return AjaxResult.success( "上传成功", url );
     }

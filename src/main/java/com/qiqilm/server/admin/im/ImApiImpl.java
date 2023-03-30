@@ -48,8 +48,9 @@ public class ImApiImpl implements ImApi {
         }
         String sign = getIMAdminSign( tim_sdkappid, tim_sdk_key, tim_identifier );
 
-        return ( tim_sdkappid.equals( "20001274" ) ? General.IM_API_SGP : General.IM_API ) + api + "?" + "sdkappid=" + tim_sdkappid + "&identifier=" + tim_identifier + "&usersig=" + sign
-                + "&random=" + General.randomNum() + "&contenttype=" + General.contenttype;
+        return ( tim_sdkappid.equals( "20001274" ) ? General.IM_API_SGP : General.IM_API ) + api + "?" + "sdkappid="
+                + tim_sdkappid + "&identifier=" + tim_identifier + "&usersig=" + sign + "&random=" + General.randomNum()
+                + "&contenttype=" + General.contenttype;
     }
 
     @Override
@@ -227,10 +228,8 @@ public class ImApiImpl implements ImApi {
         final SendOne sendOne = new SendOne();
         sendOne.setFrom_Account( sendId );
         sendOne.setTo_Account( receiverId );
-        final List<ObjectNode> list = Stream
-                .of( msg )
-                .map( MessageType.setMsgEnmu( MessageEnum.TIMCustomElem )::ofNode )
-                .collect( Collectors.toList() );
+        final List<ObjectNode> list = Stream.of( msg ).map( MessageType.setMsgEnmu( MessageEnum.TIMCustomElem )::ofNode )
+                                            .collect( Collectors.toList() );
         sendOne.setMsgBody( list );
         return doPost( sendOne, MessageRsp.class, 1 );
     }
@@ -240,10 +239,7 @@ public class ImApiImpl implements ImApi {
         final SendOne sendOne = new SendOne();
         sendOne.setFrom_Account( sendId );
         sendOne.setTo_Account( receiverId );
-        final List<ObjectNode> list = Stream
-                .of( msg )
-                .map( MessageType::getNode )
-                .collect( Collectors.toList() );
+        final List<ObjectNode> list = Stream.of( msg ).map( MessageType::getNode ).collect( Collectors.toList() );
         sendOne.setMsgBody( list );
         return doPost( sendOne, MessageRsp.class, 1 );
     }
@@ -268,10 +264,9 @@ public class ImApiImpl implements ImApi {
         final GroupList groupList = new GroupList();
         groupList.setMember_Account( userId );
         final Map<String, Object> map = doPost( groupList );
-        final List<String> collect = ( ( List<Map<String, String>> ) map.get( "GroupIdList" ) )
-                .stream()
-                .map( e -> e.get( "GroupId" ) )
-                .collect( Collectors.toList() );
+        final List<String> collect = ( ( List<Map<String, String>> ) map.get( "GroupIdList" ) ).stream()
+                                                                                               .map( e -> e.get( "GroupId" ) )
+                                                                                               .collect( Collectors.toList() );
         return collect;
     }
 

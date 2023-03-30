@@ -20,7 +20,7 @@ mybatis:
       dbLive: 7704_live
       dbLottery: 7704_lottery
 
-liveCenter: 7704
+liveCenter: 7701
 
 # 代付额度
 payAgentLimit: 50000
@@ -50,3 +50,5 @@ payAgentLimitGoPayPay: 50000
 payAgentLimitAiNongPay: 50000
 # 酷币代付额度
 payAgentKuBiPay: 20000
+# VIPPAY代付额度
+payAgentVipPay: 50000

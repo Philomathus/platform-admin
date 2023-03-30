@@ -87,6 +87,10 @@
         select max(reg_time) from r_member_info
     </select>
 
+    <select id="memberInfoLately" resultType="java.lang.String">
+        select max(reg_time) from member_info where inviter_code >0
+    </select>
+
     <insert id="addPromotionCode">
         insert into ${dbMain}.report_agentcode (`CODE`) values (#{code})
     </insert>
@@ -94,5 +98,6 @@
     <delete id="delPromotionCode" >
         delete from ${dbMain}.report_agentcode where (`CODE`) = (#{code})
     </delete>
+
 
 </mapper>

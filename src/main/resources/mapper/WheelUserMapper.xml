@@ -6,10 +6,11 @@
         <result property="times" column="times"/>
         <result property="skinTimes" column="skin_times"/>
         <result property="poolTimes" column="pool_times"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectWheelUserVo">
-        select id, times, skin_times, pool_times
+        select id, times, skin_times, pool_times, update_time
         from ${dbLive}.wheel_user
     </sql>
 
@@ -48,6 +49,7 @@
             <if test="poolTimes != null">
                 pool_times,
             </if>
+            update_time,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -62,6 +64,7 @@
             <if test="poolTimes != null">
                 #{poolTimes},
             </if>
+            SYSDATE(),
         </trim>
     </insert>
 
@@ -77,6 +80,7 @@
             <if test="poolTimes != null">
                 pool_times = #{poolTimes},
             </if>
+            update_time = SYSDATE(),
         </trim>
         where id = #{id}
     </update>

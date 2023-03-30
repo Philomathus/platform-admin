@@ -27,3 +27,5 @@ payAgentLimitBinLi: 50000
 payAgentLimitLianFuBao: 30000
 # 酷币代付额度
 payAgentKuBiPay: 20000
+# VIPPAY代付额度
+payAgentVipPay: 200000

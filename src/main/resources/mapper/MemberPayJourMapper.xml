@@ -54,17 +54,21 @@
 	</sql>
 
 	<select id="selectMemberPayJourList" parameterType="MemberPayJour" resultMap="MemberPayJourResult">
+		select j.*, p.name platform_name, c.name channel_name, IFNULL(c.pay_rate, j.platform_rate) pay_rate from (
 		<include refid="selectMemberPayJourVo"/>
 		<where>
 			<include refid="listWhere"/>
-            <if test="downLoadDate[0] != null "> and update_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>
-            <if test="downLoadDate[1] != null "> and update_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>
+			<if test="downLoadDate[0] != null "> and update_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>
+			<if test="downLoadDate[1] != null "> and update_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>
 		</where>
+		) j
+		left join pay_platform_new p on j.platform_id = p.id
+		left join pay_channel_new c on j.channel_id = c.id
 		order by update_time desc
 	</select>
 
 	<select id="selectMemberPayJourById" parameterType="String" resultMap="MemberPayJourResult">
-		select j.*, p.name platform_name, c.name channel_name, c.pay_rate from (
+		select j.*, p.name platform_name, c.name channel_name, IFNULL(c.pay_rate, j.platform_rate) pay_rate from (
 		<include refid="selectMemberPayJourVo"/>
 		where id = #{id}
 		) j
@@ -322,7 +326,7 @@
 		where order_no = #{orderNo}
 	</select>
     <select id="selectMemberPayJourLists" resultType="com.qiqilm.server.admin.domain.rsp.RspPayJour">
-		SELECT  p.name AS platformName,c.pay_rate as channelPayRate,c.name AS channelName, t.platform_id as platformId ,t.channel_id as channelId,SUM( money ) AS money,SUM( sub_money ) AS subMoney ,t.update_time as updateTime FROM member_pay_jour t
+		SELECT  p.name AS platformName,IFNULL(c.pay_rate,t.platform_rate) as channelPayRate,c.name AS channelName, t.platform_id as platformId ,t.channel_id as channelId,SUM( money ) AS money,SUM( sub_money ) AS subMoney ,t.update_time as updateTime FROM member_pay_jour t
 		LEFT JOIN pay_channel_new c ON t.channel_id = c.id
 		LEFT JOIN pay_platform_new p ON t.platform_id = p.id
         where t.status='1'
