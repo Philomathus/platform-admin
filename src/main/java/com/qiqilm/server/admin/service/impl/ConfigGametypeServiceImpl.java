@@ -9,8 +9,12 @@ import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.mapper.ConfigGametypeMapper;
 import com.qiqilm.server.admin.mapper.GamePlatformMapper;
 import com.qiqilm.server.admin.service.IConfigGametypeService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -105,4 +109,68 @@ public class ConfigGametypeServiceImpl implements IConfigGametypeService {
     public int deleteConfigGametypeById(String id) {
         return configGametypeMapper.deleteConfigGametypeById(id);
     }
+
+    @Override
+    public AjaxResult batchExcel(@RequestParam( "excelFile" ) MultipartFile excelFile) {
+        Workbook workbook = null;
+        StringBuilder userId   = new StringBuilder();
+        try {
+            workbook = WorkbookFactory.create( excelFile.getInputStream() );
+            excelFile.getInputStream().close();
+            Sheet sheet = workbook.getSheetAt( 0 );
+            int rowLength = sheet.getLastRowNum() + 1;
+            Row row;
+            //start at row 1 as row 0 is headers
+            for ( int i = 1; i < rowLength; i++ ) {
+                Cell cell;
+                row = sheet.getRow( i );
+                String cell1 = null; //platform_id + sub_platform_id
+                String cell2 = null; //platform_id
+                String cell3 = null; //platform_name
+                String cell4 = null; //sub_platform_id
+                String cell5 = null; //sub_platform_name
+                for ( int j = 0; j < 3; j++ ) {
+                    System.out.println("@@ " +j);
+                    cell = row.getCell( j );
+                    if ( cell != null ) {
+                        cell.setCellType( CellType.STRING );
+                        String data = cell.getStringCellValue();
+                        System.out.println("@@ Data: "+data);
+                        if ( j == 0 ) {
+                            cell3 = data.trim();
+                        } else if ( j == 1 ) {
+                            cell4 = data.trim();
+                        } else {
+                            cell5 = data.trim();
+                        }
+
+                    }
+                }
+                if(cell3 != null){
+                    GamePlatform gamePlatform = configGametypeMapper.findAgentId(cell3);
+                    cell2 = gamePlatform.getName();
+                }
+                if(cell4 != null){
+                    cell1 = cell2 + cell4;
+                }
+
+                userId = userId.append( "\"" )
+                        .append( cell1 ).append( "\"" ).append( "," )
+                        .append( cell2 ).append( "\"" ).append( "," )
+                        .append( cell3 ).append( "\"" ).append( "," )
+                        .append( cell4 ).append( "," )
+                        .append( cell5 ).append( "),(" );
+                System.out.println("@@1 :" +userId);
+            }
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
+        System.out.println("@@  "+userId);
+        userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
+        String userIds = String.valueOf( userId );
+        //清除表中数据
+        configGametypeMapper.insertExcelSheet( userIds );
+        return AjaxResult.success();
+    }
+
 }

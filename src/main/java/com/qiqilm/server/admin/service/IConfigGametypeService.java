@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigGametype;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -61,4 +63,6 @@ public interface IConfigGametypeService {
 	 * @return 结果
 	 */
 	public int deleteConfigGametypeById(String id);
+
+	public AjaxResult batchExcel(@RequestParam( "excelFile" ) MultipartFile excelFile );
 }

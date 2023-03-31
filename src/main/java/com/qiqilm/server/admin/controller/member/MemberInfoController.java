@@ -245,7 +245,7 @@ public class MemberInfoController extends BaseController {
             //总列数
             //            int colLength = row.getLastCellNum();
             //得到指定的单元格
-            for ( int i = 0; i < rowLength; i++ ) {
+            for ( int i = 1; i < rowLength; i++ ) {
                 Cell cell = row.getCell( i );
                 row = sheet.getRow( i );
                 String cell1 = null;
@@ -271,14 +271,20 @@ public class MemberInfoController extends BaseController {
                 if ( StringUtils.isBlank( cell3 ) ) {
                     cell3 = "1";
                 }
-                userId = userId.append( "\"" ).append( cell1 ).append( "\"" ).append( "," ).append( cell2 ).append( "," )
-                               .append( cell3 ).append( "),(" );
+                userId = userId.append( "\"" )
+                                .append( cell1 ).append( "\"" ).append( "," )
+                                .append( cell2 ).append( "," )
+                                .append( cell3 ).append( "),(" );
+
+                System.out.println("@@ "+userId);
             }
         } catch ( Exception e ) {
             e.getMessage();
         }
         userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
+        System.out.println("@@2 "+userId);
         String userIds = String.valueOf( userId );
+        System.out.println("@userids "+ userIds);
         //清除表中数据
         memberInfoMapper.clear();
         memberInfoMapper.insertPaiSong( userIds );
@@ -351,7 +357,6 @@ public class MemberInfoController extends BaseController {
         Pattern pattern = Pattern.compile( "[a-z]" );
         return pattern.matcher( username.substring( 0, 1 ) ).find();
     }
-
 
     /**
      * 注册账号检查
@@ -589,7 +594,6 @@ public class MemberInfoController extends BaseController {
         return null;
     }
 
-
     /**
      * 发送短信
      */
@@ -616,7 +620,6 @@ public class MemberInfoController extends BaseController {
         }
         return sysUserService.updateMobile( newMobile, oldMobile, memberId );
     }
-
 
     /**
      * 查询资金明细列表
