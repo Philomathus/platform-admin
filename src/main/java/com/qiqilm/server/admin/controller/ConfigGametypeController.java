@@ -91,7 +91,7 @@ public class ConfigGametypeController extends BaseController {
 		return toAjax( configGametypeService.deleteConfigGametypeByIds( ids ) );
 	}
 
-	@RequestMapping( value = "/batchInsertDictionary", method = RequestMethod.POST )
+	@RequestMapping( value = "/batchInsertExcel", method = RequestMethod.POST )
 	@Transactional( rollbackFor = Exception.class )
 	public AjaxResult batchInsert( @RequestParam( "excelFile" ) MultipartFile excelFile ) throws Exception {
 		AjaxResult ajaxResult = configGametypeService.batchExcel(excelFile);

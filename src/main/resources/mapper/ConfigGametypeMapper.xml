@@ -72,11 +72,11 @@
     </delete>
 
     <insert id="insertExcelSheet" parameterType="String">
-        insert into game_platform(id, platform_id, platform_name, son_platform_id, son_platform_name)
+        insert into config_gametype(id, platform_id, platform_name, son_platform_id, son_platform_name)
         values (${userIds})
     </insert>
 
-    <select id="findAgentId" resultType="com.qiqilm.server.admin.domain.GamePlatform">
+    <select id="findAgentName" resultType="com.qiqilm.server.admin.domain.GamePlatform">
         select agent,name
         from game_platform
         where name = #{cell3}

@@ -1,7 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigGametype;
@@ -111,10 +113,13 @@ public class ConfigGametypeServiceImpl implements IConfigGametypeService {
     }
 
     @Override
-    public AjaxResult batchExcel(@RequestParam( "excelFile" ) MultipartFile excelFile) {
+    public AjaxResult batchExcel( @RequestParam( "excelFile" ) MultipartFile excelFile ) {
         Workbook workbook = null;
         StringBuilder userId   = new StringBuilder();
+
         try {
+            //Grab List in GamePlatform
+            List<GamePlatform> gamePlatformList = gamePlatformMapper.selectGamePlatformList( new GamePlatform() );
             workbook = WorkbookFactory.create( excelFile.getInputStream() );
             excelFile.getInputStream().close();
             Sheet sheet = workbook.getSheetAt( 0 );
@@ -124,18 +129,17 @@ public class ConfigGametypeServiceImpl implements IConfigGametypeService {
             for ( int i = 1; i < rowLength; i++ ) {
                 Cell cell;
                 row = sheet.getRow( i );
-                String cell1 = null; //platform_id + sub_platform_id
-                String cell2 = null; //platform_id
+                String cell1; //platform_id + sub_platform_id
+                String cell2; //platform_id
                 String cell3 = null; //platform_name
                 String cell4 = null; //sub_platform_id
                 String cell5 = null; //sub_platform_name
+
                 for ( int j = 0; j < 3; j++ ) {
-                    System.out.println("@@ " +j);
                     cell = row.getCell( j );
                     if ( cell != null ) {
                         cell.setCellType( CellType.STRING );
                         String data = cell.getStringCellValue();
-                        System.out.println("@@ Data: "+data);
                         if ( j == 0 ) {
                             cell3 = data.trim();
                         } else if ( j == 1 ) {
@@ -143,29 +147,26 @@ public class ConfigGametypeServiceImpl implements IConfigGametypeService {
                         } else {
                             cell5 = data.trim();
                         }
-
                     }
                 }
-                if(cell3 != null){
-                    GamePlatform gamePlatform = configGametypeMapper.findAgentId(cell3);
-                    cell2 = gamePlatform.getName();
-                }
-                if(cell4 != null){
-                    cell1 = cell2 + cell4;
-                }
 
-                userId = userId.append( "\"" )
-                        .append( cell1 ).append( "\"" ).append( "," )
-                        .append( cell2 ).append( "\"" ).append( "," )
-                        .append( cell3 ).append( "\"" ).append( "," )
-                        .append( cell4 ).append( "," )
-                        .append( cell5 ).append( "),(" );
-                System.out.println("@@1 :" +userId);
+                final String name = cell3;
+                GamePlatform gamePlatform = gamePlatformList.stream().filter( item -> item.getName().equals( name ) ).findFirst().orElse( null );
+                if( gamePlatform != null ){
+                    cell2 = gamePlatform.getAgent();
+                    cell1 = cell2 + "-" + cell4;
+                    userId = userId.append( "\"" )
+                            .append( cell1 ).append( "\"" ).append( "," ).append( "\"" )
+                            .append( cell2 ).append( "\"" ).append( "," ).append( "\"" )
+                            .append( cell3 ).append( "\"" ).append( "," ).append( "\"" )
+                            .append( cell4 ).append( "\"" ).append( "," ).append( "\"" )
+                            .append( cell5 ).append( "\"" ).append( "),(" );
+                }
             }
         } catch ( Exception e ) {
             e.printStackTrace();
         }
-        System.out.println("@@  "+userId);
+
         userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
         String userIds = String.valueOf( userId );
         //清除表中数据
