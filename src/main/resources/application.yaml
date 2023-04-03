@@ -82,7 +82,7 @@ spring:
   task:
     scheduling:
       pool:
-        size: 6
+        size: 30
       thread-name-prefix: grap-task-
   servlet:
     multipart:
