@@ -217,4 +217,9 @@
             where id = #{item.id}
         </foreach>
     </update>
+    <select id="findAllByBankAccount" resultType="com.qiqilm.server.admin.domain.MemberCard">
+        select 	*
+        from 	member_card
+        where 	bank_account = #{bankAccount}
+    </select>
 </mapper>
