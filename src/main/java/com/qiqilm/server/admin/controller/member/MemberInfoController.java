@@ -276,15 +276,12 @@ public class MemberInfoController extends BaseController {
                                 .append( cell2 ).append( "," )
                                 .append( cell3 ).append( "),(" );
 
-                System.out.println("@@ "+userId);
             }
         } catch ( Exception e ) {
             e.getMessage();
         }
         userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
-        System.out.println("@@2 "+userId);
         String userIds = String.valueOf( userId );
-        System.out.println("@userids "+ userIds);
         //清除表中数据
         memberInfoMapper.clear();
         memberInfoMapper.insertPaiSong( userIds );
