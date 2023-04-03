@@ -68,6 +68,6 @@ public interface MemberCardMapper {
 
     public int updateMemberCardList(@Param("list") List<MemberCard> listMemberCard);
 
-	List<MemberCard> findAllByBankAccount(MemberCard userid);
+	List<MemberCard> findAllByBankAccount(MemberCard memberCard);
 
 }

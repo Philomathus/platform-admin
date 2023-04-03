@@ -485,7 +485,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
         List<MemberCard> memberCardList = memberCardMapper.findAllByBankAccount( member );
         if ( memberCardList.size() == 1 ) {
-            return AjaxResult.error( "卡已绑定" + memberCardList.get(0).getBankName() + "/" + memberCardList.get(0).getBankAccount() + "账号" );
+            return AjaxResult.error( "卡已绑定账号" );
         } else if ( memberCardList.size() >= 2 ) {
             return AjaxResult.error( "这张卡已经绑定了多个账户");
         }
