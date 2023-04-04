@@ -430,8 +430,12 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
                     userIds = req.getMemberIds().split( "\n" );
                     StringBuilder userId = new StringBuilder();
                     for ( int i = 0; i < userIds.length; i++ ) {
-                        userId.append( "\"" ).append( userIds[ i ] ).append( "\"" ).append( "," ).append( req.getMoney() )
-                              .append( "),(" );
+                        userId.append( "\"" ).append( userIds[ i ] ).append( "\"" )
+                                .append( "," )
+                                .append( req.getMoney() )
+                                .append( "," )
+                                .append( req.getMoney() )
+                                .append( "),(" );
                     }
                     userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
                     req.setUserIds( userId.toString() );
@@ -439,7 +443,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
                     return AjaxResult.error( 0, "分割会员ID出错,请检查格式" );
                 }
             } else {
-                req.setUserIds( "\"" + req.getMemberIds() + "\"" + "," + req.getMoney() );
+                req.setUserIds( "\"" + req.getMemberIds() + "\"" + "," + req.getMoney() + "," + req.getMoney());
             }
             //清除表中数据
             memberInfoMapper.clear();
