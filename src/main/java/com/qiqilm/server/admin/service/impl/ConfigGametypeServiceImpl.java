@@ -146,6 +146,8 @@ public class ConfigGametypeServiceImpl implements IConfigGametypeService {
                             cell3 = data.trim();
                         } else if ( j == 1 ) {
                             cell4 = data.trim();
+                            //remove decimal points
+                            cell4 = cell4.substring( 0 , cell4.length() - 2 );
                         } else {
                             cell5 = data.trim();
                         }
