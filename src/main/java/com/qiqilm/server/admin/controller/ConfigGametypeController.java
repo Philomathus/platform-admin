@@ -7,11 +7,14 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ConfigGametype;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.enums.BusinessType;
+import com.qiqilm.server.admin.mapper.ConfigGametypeMapper;
 import com.qiqilm.server.admin.service.IConfigGametypeService;
 import com.qiqilm.server.admin.service.IGamePlatformService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,7 +31,8 @@ public class ConfigGametypeController extends BaseController {
 	private IConfigGametypeService configGametypeService;
 	@Autowired
 	private IGamePlatformService   gamePlatformService;
-
+	@Autowired
+	ConfigGametypeMapper configGametypeMapper;
 	/**
 	 * 查询游戏字典列表
 	 */
@@ -86,4 +90,13 @@ public class ConfigGametypeController extends BaseController {
 	public AjaxResult remove( @PathVariable String[] ids ) {
 		return toAjax( configGametypeService.deleteConfigGametypeByIds( ids ) );
 	}
+
+	@RequestMapping( value = "/batchInsertExcel", method = RequestMethod.POST )
+	@Transactional( rollbackFor = Exception.class )
+	public AjaxResult batchInsert( @RequestParam( "excelFile" ) MultipartFile excelFile ) throws Exception {
+		AjaxResult ajaxResult = configGametypeService.batchExcel(excelFile);
+		return ajaxResult;
+
+	}
+
 }

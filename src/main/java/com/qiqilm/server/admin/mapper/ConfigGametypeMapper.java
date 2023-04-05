@@ -1,6 +1,9 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.ConfigGametype;
+import com.qiqilm.server.admin.domain.GamePlatform;
+import org.apache.ibatis.annotations.Param;
+import org.telegram.telegrambots.meta.api.objects.games.Game;
 
 import java.util.List;
 
@@ -59,4 +62,11 @@ public interface ConfigGametypeMapper {
 	 * @return 结果
 	 */
 	public int deleteConfigGametypeByIds(String[] ids );
+
+	Integer insertExcelSheet( @Param("userIds") String userIds );
+
+	public GamePlatform findAgentName(String id);
+
+
+
 }
