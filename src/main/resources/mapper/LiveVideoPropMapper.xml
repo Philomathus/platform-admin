@@ -1,162 +1,236 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.LiveVideoPropMapper">
-	<resultMap type="LiveVideoProp" id="LiveVideoPropResult">
-		<result property="id" column="id"/>
-		<result property="propId" column="prop_id"/>
-		<result property="propName" column="prop_name"/>
-		<result property="totalScore" column="total_score"/>
-		<result property="totalDiamonds" column="total_diamonds"/>
-		<result property="totalTicket" column="total_ticket"/>
-		<result property="currentDiamonds" column="current_diamonds"/>
-		<result property="beforeTicket" column="before_ticket"/>
-		<result property="fromUserId" column="from_user_id"/>
-		<result property="pUserId" column="p_user_id"/>
-		<result property="pUserName" column="p_user_name"/>
-		<result property="toUserId" column="to_user_id"/>
-		<result property="nickName" column="nick_name"/>
-		<result property="createTime" column="create_time"/>
-		<result property="createDate" column="create_date"/>
-		<result property="createY" column="create_y"/>
-		<result property="createM" column="create_m"/>
-		<result property="createD" column="create_d"/>
-		<result property="createW" column="create_w"/>
-		<result property="num" column="num"/>
-		<result property="videoId" column="video_id"/>
-		<result property="groupId" column="group_id"/>
-		<result property="isRedEnvelope" column="is_red_envelope"/>
-		<result property="msg" column="msg"/>
-		<result property="actionstatus" column="ActionStatus"/>
-		<result property="errorinfo" column="ErrorInfo"/>
-		<result property="errorcode" column="ErrorCode"/>
-		<result property="createYm" column="create_ym"/>
-		<result property="isPrivate" column="is_private"/>
-		<result property="fromIp" column="from_ip"/>
-		<result property="isCoin" column="is_coin"/>
-	</resultMap>
+    <resultMap type="LiveVideoProp" id="LiveVideoPropResult">
+        <result property="id" column="id" />
+        <result property="propId" column="prop_id" />
+        <result property="propName" column="prop_name" />
+        <result property="totalScore" column="total_score" />
+        <result property="totalDiamonds" column="total_diamonds" />
+        <result property="totalTicket" column="total_ticket" />
+        <result property="currentDiamonds" column="current_diamonds" />
+        <result property="beforeTicket" column="before_ticket" />
+        <result property="fromUserId" column="from_user_id" />
+        <result property="pUserId" column="p_user_id" />
+        <result property="pUserName" column="p_user_name" />
+        <result property="toUserId" column="to_user_id" />
+        <result property="nickName" column="nick_name" />
+        <result property="createTime" column="create_time" />
+        <result property="createDate" column="create_date" />
+        <result property="createY" column="create_y" />
+        <result property="createM" column="create_m" />
+        <result property="createD" column="create_d" />
+        <result property="createW" column="create_w" />
+        <result property="num" column="num" />
+        <result property="videoId" column="video_id" />
+        <result property="groupId" column="group_id" />
+        <result property="isRedEnvelope" column="is_red_envelope" />
+        <result property="msg" column="msg" />
+        <result property="actionstatus" column="ActionStatus" />
+        <result property="errorinfo" column="ErrorInfo" />
+        <result property="errorcode" column="ErrorCode" />
+        <result property="createYm" column="create_ym" />
+        <result property="isPrivate" column="is_private" />
+        <result property="fromIp" column="from_ip" />
+        <result property="isCoin" column="is_coin" />
+    </resultMap>
 
-	<sql id="selectLiveVideoPropVo">
-		select id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id,
-		p_user_id perUserId, p_user_name, to_user_id, FROM_UNIXTIME(create_time) create_time , create_date, create_y, create_m, create_d,
-		create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private,
-		from_ip, is_coin from ${dbLive}.live_video_prop
-	</sql>
+    <sql id="selectLiveVideoPropVo">
+        select id,
+               prop_id,
+               prop_name,
+               total_score,
+               total_diamonds,
+               total_ticket,
+               current_diamonds,
+               before_ticket,
+               from_user_id,
+               p_user_id                  perUserId,
+               p_user_name,
+               to_user_id,
+               FROM_UNIXTIME(create_time) create_time,
+               create_date,
+               create_y,
+               create_m,
+               create_d,
+               create_w,
+               num,
+               video_id,
+               group_id,
+               is_red_envelope,
+               msg,
+               ActionStatus,
+               ErrorInfo,
+               ErrorCode,
+               create_ym,
+               is_private,
+               from_ip,
+               is_coin
+        from ${dbLive}.live_video_prop
+    </sql>
 
-	<select id="selectLiveVideoPropList" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
-		select id, prop_id, prop_name, total_score, total_diamonds, total_ticket, current_diamonds, before_ticket, from_user_id,
-		p_user_id perUserId, p_user_name, to_user_id, FROM_UNIXTIME(create_time) create_time , create_date, create_y, create_m, create_d,
-		create_w, num, video_id, group_id, is_red_envelope, msg, ActionStatus, ErrorInfo, ErrorCode, create_ym, is_private,
-		from_ip, is_coin from ${dbLive}.live_video_prop
-		<where>
-			<if test="pUserId != null and pUserId != ''">
-				and p_user_id = #{pUserId}
-			</if>
-			<if test="toUserId != null and toUserId != ''">
-				and to_user_id = #{toUserId}
-			</if>
-			<if test="propName != null and propName != ''">
-				and prop_name = #{propName}
-			</if>
-			<if test="startTime != null and startTime != ''">
-				and FROM_UNIXTIME(create_time) <![CDATA[ >= ]]> #{startTime}
-				and FROM_UNIXTIME(create_time) <![CDATA[ <= ]]> #{endTime}
-			</if>
-		</where>
-	</select>
+    <select id="selectLiveVideoPropList" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
+        select id,
+               prop_id,
+               prop_name,
+               total_score,
+               total_diamonds,
+               total_ticket,
+               current_diamonds,
+               before_ticket,
+               from_user_id,
+               p_user_id                  perUserId,
+               p_user_name,
+               to_user_id,
+               FROM_UNIXTIME(create_time) create_time,
+               create_date,
+               create_y,
+               create_m,
+               create_d,
+               create_w,
+               num,
+               video_id,
+               group_id,
+               is_red_envelope,
+               msg,
+               ActionStatus,
+               ErrorInfo,
+               ErrorCode,
+               create_ym,
+               is_private,
+               from_ip,
+               is_coin
+        from ${dbLive}.live_video_prop
+        <where>
+            <if test="pUserId != null and pUserId != ''">
+                and p_user_id = #{pUserId}
+            </if>
+            <if test="toUserId != null and toUserId != ''">
+                and to_user_id = #{toUserId}
+            </if>
+            <if test="propName != null and propName != ''">
+                and prop_name = #{propName}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and FROM_UNIXTIME(create_time) <![CDATA[ >= ]]> #{startTime}
+                and FROM_UNIXTIME(create_time) <![CDATA[ <= ]]> #{endTime}
+            </if>
+        </where>
+    </select>
 
-	<select id="selectLiveVideoPropById" parameterType="Long" resultMap="LiveVideoPropResult">
-		<include refid="selectLiveVideoPropVo"/>
-		where id = #{id}
-	</select>
+    <select id="selectLiveVideoPropById" parameterType="Long" resultMap="LiveVideoPropResult">
+        <include refid="selectLiveVideoPropVo" />
+        where id = #{id}
+    </select>
 
-	<select id="findVideoPropList" resultType="com.qiqilm.server.admin.domain.vo.LiveVideoPropVo">
-		select id,
-			   prop_id,
-			   prop_name,
-			   total_diamonds,
-			   current_diamonds,
-			   p_user_id,
-			   to_user_id,
-			   create_time
-		from ${dbLive}.live_video_prop
-		where create_time <![CDATA[ >= ]]> #{start}
-		  and create_time <![CDATA[ <= ]]> #{end}
-	</select>
+    <select id="findVideoPropList" resultType="com.qiqilm.server.admin.domain.vo.LiveVideoPropVo">
+        select id,
+               prop_id,
+               prop_name,
+               total_diamonds,
+               current_diamonds,
+               p_user_id,
+               to_user_id,
+               create_time
+        from ${dbLive}.live_video_prop
+        where create_time <![CDATA[ >= ]]> #{start}
+          and create_time <![CDATA[ <= ]]> #{end}
+    </select>
 
-	<select id="getCount" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
-		select sum(total_diamonds) countTotal
-		from ${dbLive}.live_video_prop
-		<where>
-			and (prop_id > 0 or prop_id = -1)
-			<if test="pUserId != null and pUserId != ''">
-				and p_user_id = #{pUserId}
-			</if>
-			<if test="toUserId != null and toUserId != ''">
-				and to_user_id =#{toUserId}
-			</if>
-			<if test="startTime != null and startTime != ''">
-				and FROM_UNIXTIME(create_time) <![CDATA[ >= ]]> #{startTime}
-				and FROM_UNIXTIME(create_time) <![CDATA[ <= ]]> #{endTime}
-			</if>
-		</where>
-	</select>
+    <select id="getCount" parameterType="LiveVideoProp" resultMap="LiveVideoPropResult">
+        select sum(total_diamonds) countTotal
+        from ${dbLive}.live_video_prop
+        <where>
+            and (prop_id
+                > 0
+               or prop_id = -1)
+            <if test="pUserId != null and pUserId != ''">
+                and p_user_id = #{pUserId}
+            </if>
+            <if test="toUserId != null and toUserId != ''">
+                and to_user_id =#{toUserId}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and FROM_UNIXTIME(create_time) <![CDATA[ >= ]]> #{startTime}
+                and FROM_UNIXTIME(create_time) <![CDATA[ <= ]]> #{endTime}
+            </if>
+        </where>
+    </select>
 
-	<select id="sumHostProp" resultType="java.math.BigDecimal">
-		select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and create_time <![CDATA[ >= ]]>
-		UNIX_TIMESTAMP(CONCAT(#{beginTime})) and create_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(NOW())
-	</select>
+    <select id="sumHostProp" resultType="java.math.BigDecimal">
+        select IFNULL(SUM(total_ticket), 0)
+        from ${dbLive}.live_video_prop
+        where to_user_id = #{userId}
+          and create_time <![CDATA[ >= ]]>
+		UNIX_TIMESTAMP(CONCAT(#{beginTime}))
+          and create_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(NOW())
+    </select>
 
-	<select id="testAccountPorpList" resultType="com.qiqilm.server.admin.domain.rsp.RspTestAccountProp">
-		SELECT
-		p_user_id as pUserId,
-		p_user_name as pUserName,
-		to_user_id as toUserId,
-		SUM( total_diamonds ) as totalDiamonds
-		FROM
-		${dbLive}.live_video_prop
-		<where>
-			and to_user_id NOT IN ( '0', '-1' )
-			and p_user_id IN ( SELECT id FROM  ${dbMain}.member_info WHERE status  in ('2','0'))
-			<if test="toUserId != null">
-				and to_user_id =#{toUserId}
-			</if>
-			<if test="testAccountCreateTime != null">
-				and create_date = #{testAccountCreateTime}
-			</if>
-		</where>
-		GROUP BY
-		p_user_id,
-		to_user_id
-		ORDER BY
-		to_user_id
-	</select>
-	<select id="testAccountPorpCount" resultType="com.qiqilm.server.admin.domain.rsp.RspTestAccountProp">
-		SELECT
-		SUM( total_diamonds ) as testAccountPorpTotal
-		FROM
-		${dbLive}.live_video_prop
-		<where>
-			and to_user_id NOT IN ( '0', '-1' )
-			and p_user_id IN ( SELECT id FROM  ${dbMain}.member_info WHERE STATUS = '2' )
-			<if test="toUserId != null">
-				and to_user_id =#{toUserId}
-			</if>
-			<if test="testAccountCreateTime != null">
-				and create_date = #{testAccountCreateTime}
-			</if>
-		</where>
-	</select>
-	<select id="sumHostPropDay" resultType="java.math.BigDecimal">
-        select IFNULL(SUM(total_ticket),0) from ${dbLive}.live_video_prop  where to_user_id = #{userId} and  p_user_id not in (select id from ${dbMain}.member_info where status = 2) and create_date = #{dayTime}
-	</select>
+    <select id="testAccountPorpList" resultType="com.qiqilm.server.admin.domain.rsp.RspTestAccountProp">
+        SELECT p_user_id           as pUserId,
+               p_user_name         as pUserName,
+               to_user_id          as toUserId,
+               SUM(total_diamonds) as totalDiamonds
+        FROM ${dbLive}.live_video_prop
+        <where>
+            and to_user_id NOT IN ( '0'
+                                  , '-1' )
+                                and p_user_id IN ( SELECT id FROM ${dbMain}.member_info WHERE status in ('2'
+                                  , '0'))
+            <if test="toUserId != null">
+                and to_user_id =#{toUserId}
+            </if>
+            <if test="testAccountCreateTime != null">
+                and create_date = #{testAccountCreateTime}
+            </if>
+        </where>
+        GROUP BY
+            p_user_id,
+            to_user_id
+        ORDER BY
+            to_user_id
+    </select>
+    <select id="testAccountPorpCount" resultType="com.qiqilm.server.admin.domain.rsp.RspTestAccountProp">
+        SELECT SUM(total_diamonds) as testAccountPorpTotal
+        FROM ${dbLive}.live_video_prop
+        <where>
+            and to_user_id NOT IN ( '0'
+                                  , '-1' )
+                                and p_user_id IN ( SELECT id FROM ${dbMain}.member_info WHERE STATUS = '2' )
+            <if test="toUserId != null">
+                and to_user_id =#{toUserId}
+            </if>
+            <if test="testAccountCreateTime != null">
+                and create_date = #{testAccountCreateTime}
+            </if>
+        </where>
+    </select>
+    <select id="sumHostPropDay" resultType="java.math.BigDecimal">
+        select IFNULL(SUM(total_ticket), 0)
+        from ${dbLive}.live_video_prop
+        where to_user_id = #{userId}
+          and p_user_id not in (select id from ${dbMain}.member_info where status = 2)
+          and create_date = #{dayTime}
+    </select>
 
-	<select id="sumHostPropDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
-        select to_user_id hostId, IFNULL(SUM(total_ticket),0) sumHostProp from ${dbMainLive}.live_video_prop  where to_user_id > 0 and  p_user_id not in (select id from ${dbMainMain}.member_info where  status = 2) and create_date = #{dayTime} GROUP BY to_user_id
-	</select>
+    <select id="sumHostPropDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
+        select to_user_id hostId, IFNULL(SUM(total_ticket), 0) sumHostProp
+        from ${dbMainLive}.live_video_prop
+        where to_user_id > 0
+          and p_user_id not in (select id from ${dbMainMain}.member_info where status = 2)
+          and create_date = #{dayTime}
+        GROUP BY to_user_id
+    </select>
 
-	<select id="sumHostLotteryDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
-		select anchor hostId ,IFNULL(SUM(cost),0) sumHostProp from ${dbMainLottery}.lottery_bet_bb_view  where  update_time <![CDATA[ >= ]]> #{begin} and update_time <![CDATA[ <= ]]> #{end} and anchor >0 and puser_id not in (select id from ${dbMainMain}.member_info where  status = 2)   GROUP BY anchor
-	</select>
+    <select id="sumHostLotteryDayList" resultType="com.qiqilm.server.admin.domain.vo.HostPropDayVo">
+        select anchor hostId, IFNULL(sum(prize) - SUM(cost), 0) sumHostProp
+        from ${dbMainLottery}.lottery_bet_bb_view
+        where update_time <![CDATA[ >= ]]> #{begin}
+          and update_time <![CDATA[ <= ]]> #{end}
+          and anchor > 0
+          and puser_id not in (select id from ${dbMainMain}.member_info where status = 2)
+        GROUP BY anchor
+    </select>
 </mapper>
