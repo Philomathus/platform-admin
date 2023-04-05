@@ -147,6 +147,12 @@
             <if test="loginDev != null  and loginDev != ''">
                 and login_dev = #{loginDev}
             </if>
+            <if test="vipMin != null and vipMin != ''">
+                and vip <![CDATA[ >= ]]> #{vipMin}
+            </if>
+            <if test="vipMax != null and vipMax != ''">
+                and vip <![CDATA[ <= ]]> #{vipMax}
+            </if>
 
             <if test="searchValues != null and searchValues.size() != 0">
                 and (id in
