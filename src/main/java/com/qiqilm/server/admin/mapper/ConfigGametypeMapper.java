@@ -3,7 +3,6 @@ package com.qiqilm.server.admin.mapper;
 import com.qiqilm.server.admin.domain.ConfigGametype;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import org.apache.ibatis.annotations.Param;
-import org.telegram.telegrambots.meta.api.objects.games.Game;
 
 import java.util.List;
 

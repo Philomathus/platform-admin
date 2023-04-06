@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.BankList;
 import com.qiqilm.server.admin.domain.ConfigBank;
-import com.qiqilm.server.admin.domain.PayType;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.mapper.SysUserMapper;
 import com.qiqilm.server.admin.service.IBankListService;
