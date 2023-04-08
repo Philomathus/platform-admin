@@ -1,17 +1,16 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(hX+ffaB7DLOgbRKSIx1BvSnjw3L4y8Qpw14Ty61U99m1i/va6ywt6IuAL9RhEs1Cr51l/CVmwLM0aK6Ir4Du3abCeh+24YNtDBqOzXPPyMcswuudYkvxUQldCpHAPH98LOLG+esG9XbmSA6JOwUZ0S/x+PeNWSkSEC+1M09aUb6k8sBp34mRATV7gFOS8Ey1yYxNhdHJb4JFunXG1WSwAWTpO1ABocQfKPUQr9BD7dMgPp2QhZc7D/vJ29u4r4QxJ5EwxFA7JWdYRA6s2TgaqA==)
-      username: ENC(v1g9jT15U5Rj/Y+/o4zJNuXtRcEnyuTPHR1gnUvYUYzZltQRmjrpNVQYdch3E4K7A6JKvRNU1FFqmRQ7dEPHfw==)
-      password: ENC(BcGcqamgY/2aUcGdrr7PoyPJPWgvHNChl4tQojazzxSlJ0bfbqbTpXIBa0rLMxiu1WfdmGMzT8EHvqX5OpNWHQ==)
+      jdbc-url: ENC(/wQ52rypKQIVZUY7G/pE9kgvzUhtjKWkDtrV/gZfaUQDz62i8HZjdue/07WZ7v4KLeWAtCL/lBBVP2MKRQo3uswg36Ew1ZOYY4WQX3l7Ux8pZzYHHU6C7seUMZEahwWse1sKJo5LYkTFx1FNriy3ySZKg0yHV9mYNLs/iq9dpmcNNqU6NMnTKhTVcxw1ZsvGotTTbHJRIBOsCluNF4pD7BwgA8n4DCwKWzT6mvPcOeJgocfkbKrtx1sCs93RHRAbsd3TKUeTWSbC0MaC71zf08/rj1VFQSNuyREmSCORchE=)
+      username: admin
+      password: djkteCbsupY3RCDkPDPS
     secondary:
-      jdbc-url: ENC(rQSm78M8lGPyB7F8JHr6ZDTtVYv4diNGJwz8PfKv2nZs4c4uFKFrLYNhoRqihhG07ieXgibrX0zyiT5JolgpOEzB1s7ub5lMyeX1revCZ1A6EzHk+dBUoHFfb2KTprxE6dbhwTN5R+Lw17vahYP3AN7/PaGiacPEvM0aFkTY/CAEPzBWENSzqp/eXISprAEfuOZFEpKp1w3hCPzaKkSL2VlSBLSx2SvutDUbGmOhrJw=)
+      jdbc-url: ENC(AxjxThZpL1kolf6Yx5MuBFGbP5sST9IeCMFijDG2zLlFRliUQPMeQt3f8zHbDRllaYPjoIEYVe0QsxTZULfTmJNRk2uRDDYq6U7X33dY6Dxznc33PumGdlo/IblJu+gEJG3UlIZIjkB+wYPSP9N0qioZYHoxuAdyINa84LSUvEk0WXxHRBe1g592bKRm7PbnluKYxsSG60auGF8b9DTPCw==)
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(BpDz0Nnwmvc3GDesXwrhAXW/tLAhwnYrrWsb3hdKPyhgyL7NFwRaxbJXKBa7FWTCjp+C++hQr86D9Pd7jqmsZBivrN5Z5Tim07qIffvXpD4=)
+    host: ENC(xDr0eC47VErY81aSCanu2Ud6OmhQpJ8/Ic8MkJdfarL1N+SQWtlAg46ir0i//He/AL3sk/nRRInIX3sTNfBtorOwqwD1TjiX7A2ngLtI11gi1vdeZEAAAxJ9tdz1SRLE)
     port: 6379
-    password: ENC(EiDMqEea7/jho5Haylf4e97lYTCirodW9MfGGFroUQMup1Nb1KMkkdosUNejbNWG)
 
 mybatis:
   configuration:

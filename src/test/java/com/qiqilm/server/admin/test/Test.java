@@ -18,8 +18,9 @@ public class Test {
 
     @org.junit.jupiter.api.Test
     public void test1() {
-        String agent = "77ql";
-        String host  = "livedata-instance-1.c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com";
+        //jdbc:mysql://database-1-instance-1.c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77jp_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+        String agent = "7707";
+        String host  = "database-1-instance-1.c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com";
         String jdbc = stringEncryptor.encrypt( "jdbc:mysql://" + host + ":3306/" + agent
                 + "_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false" );
         System.out.println( agent + "main: " + jdbc );
@@ -33,7 +34,7 @@ public class Test {
         System.out.println( agent + "lottery: " + jdbc3 );
 
 
-        String username = stringEncryptor.encrypt( "ql.zczoyz.ng.0001.ape1.cache.amazonaws.com" );
+        String username = stringEncryptor.encrypt( "serven7707.zczoyz.ng.0001.ape1.cache.amazonaws.com" );
         System.out.println( "redisHost: " + username );
 
         //String password = stringEncryptor.encrypt( "X*5GXuIIMo5gY1ua" );
@@ -42,18 +43,11 @@ public class Test {
 
     @org.junit.jupiter.api.Test
     public void test2() {
-        String jdbc = stringEncryptor.decrypt( "1mr9hspXjV0N/0JxFuNb7P1yHROzzQaOC/YRlg0dtLSIBZfTzrSHg7cv1P"
-                + "/2jIeWGqx3hQJe1meiHwo5m2oc5sss2WFUMvb3UkyRMn+CfG33Dhqw1m3iAK5uvkpEQ1xPiETNip2NQpHG/9+zPuVpwVed"
-                + "/tn30XNt6kpYAyRrjA0A8i+dPZqDl4Lv8FlYtPfWp6tFb43FA4bEbCCg44bhmubXVWX177hgh23wXQ7SVoDNXU/bqvNqC"
-                + "+jMtQlOi0D29NgmTwX/OybNMsjM915r6A==" );
+        String jdbc = stringEncryptor.decrypt( "uPJFxgjBH4319Jv9gOHIhyHmu1gg21ACb2FeqtgF1TI2F7vf52pFzMeOmXBMdEfmbmsmPDpFFbHwSgf2ixVb9A==" );
         System.out.println( jdbc );
 
-        String username = stringEncryptor.decrypt( "ntsELfEvY1lBOmFyTcgga5DF5OyuB9qA5FrxnMQdlwe14iRRN7BZPddMBZ9oDB+W" );
+        String username = stringEncryptor.decrypt( "Eo5Gd7+EhU21sjUMLD7UlgNUhoJ8sxfhPJR0wMauFg1Bhrh3ltleHVANxmf6ed+gAtgMbVkFf62nP/b9m3r8eQ==" );
         System.out.println( username );
-
-        String password = stringEncryptor.decrypt(
-                "FNO20k6i7eNncA5GwwfAkYUhkNXMPlh/VGkMNBoADnG6lPbL6ebkqsR4xJdfM6kHM/0P8R1dZs2" + "+LpMaUWj4Cw==" );
-        System.out.println( password );
     }
 
     @org.junit.jupiter.api.Test
