@@ -1,8 +1,8 @@
 spring:
   datasource:
     primary:
-      #jdbc-url: ENC(/wQ52rypKQIVZUY7G/pE9kgvzUhtjKWkDtrV/gZfaUQDz62i8HZjdue/07WZ7v4KLeWAtCL/lBBVP2MKRQo3uswg36Ew1ZOYY4WQX3l7Ux8pZzYHHU6C7seUMZEahwWse1sKJo5LYkTFx1FNriy3ySZKg0yHV9mYNLs/iq9dpmcNNqU6NMnTKhTVcxw1ZsvGotTTbHJRIBOsCluNF4pD7BwgA8n4DCwKWzT6mvPcOeJgocfkbKrtx1sCs93RHRAbsd3TKUeTWSbC0MaC71zf08/rj1VFQSNuyREmSCORchE=)
-      jdbc-url: jdbc:mysql://dataolda.cluster-custom-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/7702_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: ENC(/wQ52rypKQIVZUY7G/pE9kgvzUhtjKWkDtrV/gZfaUQDz62i8HZjdue/07WZ7v4KLeWAtCL/lBBVP2MKRQo3uswg36Ew1ZOYY4WQX3l7Ux8pZzYHHU6C7seUMZEahwWse1sKJo5LYkTFx1FNriy3ySZKg0yHV9mYNLs/iq9dpmcNNqU6NMnTKhTVcxw1ZsvGotTTbHJRIBOsCluNF4pD7BwgA8n4DCwKWzT6mvPcOeJgocfkbKrtx1sCs93RHRAbsd3TKUeTWSbC0MaC71zf08/rj1VFQSNuyREmSCORchE=)
+      #jdbc-url: jdbc:mysql://dataolda.cluster-custom-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/7702_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: admin
       password: djkteCbsupY3RCDkPDPS
     secondary:
