@@ -833,6 +833,11 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     }
 
     @Override
+    public AjaxResult countAll() {
+        return AjaxResult.success(memberWithdrawLogMapper.countAll());
+    }
+
+    @Override
     public List<MemberWithdrawLog> getWithdrawLogList() {
         String date = getTime();
         String beginTime = date.split(" ")[0] + " 00:00:00";

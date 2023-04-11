@@ -421,4 +421,11 @@
         STATUS,
         op_name
     </select>
+    <select id="countAll" resultType="java.lang.Integer">
+        select
+            count(*) numberTotal
+        from
+            `${dbMain}`.member_withdraw_log
+        where create_time between timestamp(current_date) and now();
+    </select>
 </mapper>

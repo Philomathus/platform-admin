@@ -1,8 +1,8 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.ActivityQuestInfo;
+
+import java.util.List;
 
 /**
  * 任务信息列表Mapper接口
@@ -74,4 +74,6 @@ public interface ActivityQuestInfoMapper {
 	 * @return 结果
 	 */
 	public int deleteActivityQuestInfoByIds(String[] ids );
+
+	List<ActivityQuestInfo> titleSelect();
 }

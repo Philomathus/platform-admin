@@ -150,4 +150,10 @@ public class ActivityQuestInfoController extends BaseController {
 		List<GamePlatform> gameInfo = gamePlatformService.platformIdSelect();
 		return AjaxResult.success( gameInfo );
 	}
+
+	@GetMapping( "/titleSelect" )
+	public AjaxResult titleSelect() {
+		List<ActivityQuestInfo> activityQuestInfos = activityQuestInfoService.titleSelect();
+		return AjaxResult.success( activityQuestInfos );
+	}
 }

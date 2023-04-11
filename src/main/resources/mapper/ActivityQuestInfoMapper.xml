@@ -133,4 +133,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="titleSelect" parameterType="ActivityQuestInfo" resultMap="ActivityQuestInfoResult">
+        select distinct title, id from ${dbMain}.activity_quest_info
+    </select>
+
 </mapper>

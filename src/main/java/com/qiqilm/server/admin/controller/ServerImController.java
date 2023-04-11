@@ -4,7 +4,7 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.RspServerIm;
+import com.qiqilm.server.admin.domain.rsp.RspServerIm;
 import com.qiqilm.server.admin.domain.ServerIm;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IServerImService;

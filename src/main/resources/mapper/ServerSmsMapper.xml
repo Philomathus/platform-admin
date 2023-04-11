@@ -33,7 +33,8 @@
 			   identify,
 			   is_effect,
 			   endpoint,
-		       update_time
+		       update_time,
+		       ratio
 		from ${dbLive}.server_sms
 	</sql>
 

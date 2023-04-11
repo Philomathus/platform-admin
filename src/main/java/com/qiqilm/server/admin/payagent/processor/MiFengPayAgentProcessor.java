@@ -32,13 +32,14 @@ public class MiFengPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "product_id", payAgentPlatform.getHeaderKey() );
         bodyMap.put( "out_trade_no", withdrawLog.getOrderNo() );
         bodyMap.put( "notify_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
-        bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
+        bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString() );
         bodyMap.put( "time", System.currentTimeMillis() / 1000 );
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
-        bodyMap.put( "sign", DigestUtils.md5Hex( tempStr ).toUpperCase() );
+        log.warn( tempStr );
+        bodyMap.put( "sign", DigestUtils.md5Hex( tempStr ) );
 
-        Map<String, Object> extMap = CollectionUtils.newHashMap( 1 );
+        Map<String, Object> extMap = CollectionUtils.newHashMap( 3 );
         extMap.put( "accountName", withdrawLog.getBankUserName() );
         extMap.put( "accountNumber", withdrawLog.getBankAccount() );
         extMap.put( "bankName", withdrawLog.getBankName() );
@@ -57,7 +58,7 @@ public class MiFengPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason( resultMap.getOrDefault( "message", "" ).toString() );
-                payAgentService.callBackOrder(withdrawLog, payAgentPlatform);
+                payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
             }
         }
         log.warn( payAgentPlatform.getName() + "订单提交失败 - orderNo:{}", withdrawLog.getOrderNo() );

@@ -62,6 +62,15 @@ public class MemberWithdrawLogController extends BaseController {
 	}
 
 	/**
+	 * 计算所有成员
+	 */
+	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )
+	@GetMapping( value = "/countAll" )
+	public AjaxResult countAll() {
+		return memberWithdrawLogService.countAll();
+	}
+
+	/**
 	 * 获取会员提现信息详细信息
 	 */
 	@PreAuthorize( "@ss.hasPermi('pay:memberWithdrawLog:query')" )

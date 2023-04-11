@@ -1,6 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
-import com.qiqilm.server.admin.domain.RspServerIm;
+import com.qiqilm.server.admin.domain.rsp.RspServerIm;
 import com.qiqilm.server.admin.domain.ServerIm;
 
 import java.util.List;

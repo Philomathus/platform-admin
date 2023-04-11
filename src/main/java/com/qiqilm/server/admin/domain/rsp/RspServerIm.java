@@ -1,9 +1,6 @@
-package com.qiqilm.server.admin.domain;
+package com.qiqilm.server.admin.domain.rsp;
 
-import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * IM即时通讯服务配置对象 server_im

@@ -3,7 +3,7 @@ package com.qiqilm.server.admin.service;
 import java.util.List;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.RspServerIm;
+import com.qiqilm.server.admin.domain.rsp.RspServerIm;
 import com.qiqilm.server.admin.domain.ServerIm;
 
 /**

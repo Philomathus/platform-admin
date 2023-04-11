@@ -3,7 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 import com.qiqilm.server.admin.cache.LiveCacheUtil;
 import com.qiqilm.server.admin.cache.ServerImCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.RspServerIm;
+import com.qiqilm.server.admin.domain.rsp.RspServerIm;
 import com.qiqilm.server.admin.domain.ServerIm;
 import com.qiqilm.server.admin.mapper.ServerImMapper;
 import com.qiqilm.server.admin.service.IServerImService;
@@ -144,7 +144,7 @@ public class ServerImServiceImpl implements IServerImService {
     }
 
     @Transactional( rollbackFor = Exception.class )
-    void updateEffect( long id ) {
+    public void updateEffect(long id) {
         List<ServerIm> serverImList = serverImMapper.selectServerImByEffect();
 
         for ( ServerIm serverIm : serverImList ) {

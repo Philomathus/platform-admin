@@ -1,9 +1,9 @@
 package com.qiqilm.server.admin.domain;
 
-import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.lang.Nullable;
 
 import java.util.Date;
 
@@ -80,6 +80,13 @@ public class ServerSms {
 	 */
 	private String endpoint;
 
+	/**
+	 * 服务器比例
+	 * sql: ratio DOUBLE default 0 null;
+	 */
+	@Nullable
+	private Double ratio;
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
@@ -95,6 +102,7 @@ public class ServerSms {
 				.append( "identify", getIdentify() )
 				.append( "isEffect", getIsEffect() )
 				.append( "endpoint", getEndpoint())
+				.append( "ratio", getRatio())
 				.toString();
 	}
 }

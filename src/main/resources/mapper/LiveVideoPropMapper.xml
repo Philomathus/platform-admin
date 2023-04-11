@@ -230,6 +230,7 @@
         where update_time <![CDATA[ >= ]]> #{begin}
           and update_time <![CDATA[ <= ]]> #{end}
           and anchor > 0
+          and prize > cost
           and puser_id not in (select id from ${dbMainMain}.member_info where status = 2)
         GROUP BY anchor
     </select>
