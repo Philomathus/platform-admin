@@ -476,15 +476,15 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         MemberCard memberCard1 = new MemberCard();
         memberCard1.setBankAccount( member.getBankAccount() );
         memberCard1.setMemberId( member.getMemberId() );
-        List<MemberCard> memberCards = memberCardMapper.selectMemberCardList( memberCard1 );
 
         List<MemberCard> memberCardList = memberCardMapper.findAllByBankAccount( member );
-        if(memberCardList.stream()
-                .filter((mc) -> !mc.getId().equals(member.getId()))
-                .anyMatch((mc) -> mc.getBankAccount().equals(member.getBankAccount()))){
-            return AjaxResult.error( "卡已绑定账号" );
+        List<MemberCard> memberCardListFiltered = memberCardList.stream()
+                .filter((mc) ->
+                        !mc.getId().equals(member.getId()) && mc.getBankAccount().equals(member.getBankAccount()))
+                .collect(Collectors.toList());
+        if (!memberCardListFiltered.isEmpty() && memberCardListFiltered.get(0) != null) {
+            return AjaxResult.error( "卡已绑定帐号" + memberCardListFiltered.get(0).getMemberId());
         }
-
 
         MemberCard memberCard = memberCardMapper.selectMemberCardById( id );
         memberCard.setRealName( member.getRealName().trim() );
