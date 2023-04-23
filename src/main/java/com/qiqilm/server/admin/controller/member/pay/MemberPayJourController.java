@@ -63,6 +63,7 @@ public class MemberPayJourController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('pay:memberPayJour:list')")
     @GetMapping("/listCount")
+    @Log(title = "线上通道报表报表", businessType = BusinessType.EXPORT)
     public Map listCount(MemberPayJour memberPayJour) {
         return memberPayJourService.listCount(memberPayJour);
     }

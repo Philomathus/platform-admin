@@ -23,11 +23,11 @@ import java.util.List;
 @Service
 public class LiveBlackServiceImpl implements ILiveBlackService {
     @Autowired
-    private LiveBlackMapper liveBlackMapper;
-    @Value("${spring.profiles.active}")
-    private String profile;
+    private LiveBlackMapper  liveBlackMapper;
+    @Value( "${spring.profiles.active}" )
+    private String           profile;
     @Autowired
-    private ManageCacheUtil manageCacheUtil;
+    private ManageCacheUtil  manageCacheUtil;
     @Autowired
     private MemberInfoMapper memberInfoMapper;
 
@@ -35,29 +35,31 @@ public class LiveBlackServiceImpl implements ILiveBlackService {
      * 查询拉黑列表
      *
      * @param liveBlack 拉黑
+     *
      * @return 拉黑
      */
     @Override
-    public List<LiveBlack> selectLiveBlackList(LiveBlack liveBlack) {
-        List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList(liveBlack, LiveCenterConfig.me.getLiveCenterDbLive());
-        List<LiveBlack> liveBlackList = new ArrayList<>();
-        for (LiveBlack liveBlack1 : liveBlackAllList) {
-            if (liveBlack1.getBlackUserId().startsWith(profile)) {
-                liveBlackList.add(liveBlack1);
+    public List<LiveBlack> selectLiveBlackList( LiveBlack liveBlack ) {
+        List<LiveBlack> liveBlackAllList = liveBlackMapper.selectLiveBlackList( liveBlack,
+                LiveCenterConfig.me.getLiveCenterDbLive() );
+        List<LiveBlack> liveBlackList    = new ArrayList<>();
+        for ( LiveBlack liveBlack1 : liveBlackAllList ) {
+            if ( liveBlack1.getBlackUserId().startsWith( profile ) ) {
+                liveBlackList.add( liveBlack1 );
             }
         }
         return liveBlackList;
     }
 
     @Override
-    public AjaxResult deleteLiveBlackById(LiveBlack liveBlack) {
-        int num = liveBlackMapper.deleteLiveBlackById(liveBlack.getId(), LiveCenterConfig.me.getLiveCenterDbLive());
-        if (num <= 0) {
-            return AjaxResult.error("移除黑名单失败");
+    public AjaxResult deleteLiveBlackById( LiveBlack liveBlack ) {
+        int num = liveBlackMapper.deleteLiveBlackById( liveBlack.getId(), LiveCenterConfig.me.getLiveCenterDbLive() );
+        if ( num <= 0 ) {
+            return AjaxResult.error( "移除黑名单失败" );
         }
-        manageCacheUtil.removeBlackUser(liveBlack.getHostId(), liveBlack.getBlackUserId());
-        memberInfoMapper.updateSpeak(liveBlack.getBlackUserId(), 0);
-        return AjaxResult.success("移除黑名单成功");
+        manageCacheUtil.removeBlackUser( liveBlack.getHostId(), liveBlack.getBlackUserId() );
+        memberInfoMapper.updateSpeak( liveBlack.getBlackUserId(), 0 );
+        return AjaxResult.success( "移除黑名单成功" );
     }
 
 

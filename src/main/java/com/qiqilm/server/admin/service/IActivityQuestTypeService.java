@@ -1,9 +1,8 @@
 package com.qiqilm.server.admin.service;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.ActivityQuestType;
-import com.qiqilm.server.admin.domain.ActivityType;
+
+import java.util.List;
 
 /**
  * 任务类型Service接口
@@ -62,4 +61,6 @@ public interface IActivityQuestTypeService {
 
 	//给任务信息做的下拉框
 	List<ActivityQuestType> selectActivityQuestType();
+
+	List<ActivityQuestType> nameSelect();
 }

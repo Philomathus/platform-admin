@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.domain.ReportPlamGames;
 import com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth;
 import com.qiqilm.server.admin.mapper.ReportPlamGamesMapper;
 import com.qiqilm.server.admin.service.IReportPlamGamesService;
+import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -38,17 +40,21 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 	 * @return 【请填写功能名称】
 	 */
 	@Override
-	public Object selectReportPlamGamesList( ReportPlamGames reportPlamGames ) {
+	public List<ReportPlamGames> selectReportPlamGamesList( ReportPlamGames reportPlamGames ) {
+		String dateNowStr = LocalDateTimeUtils.format( LocalDate.now() );
 
-		Date             d          = new Date();
-		SimpleDateFormat sdf        = new SimpleDateFormat( "yyyy-MM-dd" );
-		String           dateNowStr = sdf.format( d );
+		if ( dateNowStr.equals( reportPlamGames.getBegindate() ) ) {
+			if ( !redisUtil.exists( "admin-reportPlamGames" ) ) {
+				storage( dateNowStr );
+			}
+		}
+		return reportPlamGamesMapper.selectReportPlamGamesList( reportPlamGames );
 
 		//        Calendar beforeTime = Calendar.getInstance();
 		//        beforeTime.add(Calendar.MINUTE, -5);// 5分钟之前的时间
 		//        Date beforeD = beforeTime.getTime();
 		//      List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList(reportPlamGames);
-		Map<String, Object> resultMap = new HashMap<>();
+		//		Map<String, Object> resultMap = new HashMap<>();
 		//        if (allList.size() == 0 && reportPlamGames.getBegindate().equals(dateNowStr)) {
 		//            storage(dateNowStr);
 		//            return new AjaxResult(900, "报表正在生成，请稍后...");
@@ -68,15 +74,6 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 		//            resultMap.put("rows", allList);
 		//        }
 
-		if ( dateNowStr.equals( reportPlamGames.getBegindate() ) ) {
-			if ( !redisUtil.exists( "admin-reportPlamGames" ) ) {
-				storage( dateNowStr );
-				//return new AjaxResult(900, "报表正在生成，请稍后...");
-			}
-		}
-		List<ReportPlamGames> allList = reportPlamGamesMapper.selectReportPlamGamesList( reportPlamGames );
-		resultMap.put( "rows", allList );
-		return resultMap;
 	}
 
 	@Override

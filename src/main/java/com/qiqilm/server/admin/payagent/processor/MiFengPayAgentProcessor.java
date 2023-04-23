@@ -131,7 +131,10 @@ public class MiFengPayAgentProcessor extends AbstractPayAgent {
             int                 code    = Integer.parseInt( resultMap.getOrDefault( "code", "-1" ).toString() );
             Map<String, Object> dataMap = ( Map<String, Object> ) resultMap.getOrDefault( "data", new HashMap<>() );
             if ( 200 == code && !CollectionUtils.isEmpty( dataMap ) ) {
-                int status        = Integer.parseInt( dataMap.getOrDefault( "trade_status", "-1" ).toString() );
+                int status = Integer.parseInt( dataMap.getOrDefault( "trade_status", "-1" ).toString() );
+                if ( status == -1 ) {
+                    return "订单正在代付中,请稍后";
+                }
                 int orderState    = 1 == status ? 1 : 2;
                 int return_status = status == 1 ? 6 : 5;
                 payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), return_status,

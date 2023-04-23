@@ -1,17 +1,16 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(gFqkxW//h2dh7ubvkm7hV/iIbnNiD0Rk81rQXmuhxWZtOZ3x2Nqm3vC9GDSagJ7wLIBjLgBBmspjieB1TDW6kPqDck57KPFKUvdulm+zF5cRBpX9vLNKx+C5SU46ktsNTYFCoAxP8X6e1TPEVNV1gnNo9WWknMC/zEmd9f6/VOfsnOQaXmWAFJ3OGuYDjBVHECI+0RKjKU8AGWiwJuGIUW98ofDwAqHwUokZ9a7YBW1CYKQKDcKBlHo16r/YG3tAiIh1RKdV2mKaQHCM7Ny27g==)
-      username: ENC(ntsELfEvY1lBOmFyTcgga5DF5OyuB9qA5FrxnMQdlwe14iRRN7BZPddMBZ9oDB+W)
-      password: ENC(FNO20k6i7eNncA5GwwfAkYUhkNXMPlh/VGkMNBoADnG6lPbL6ebkqsR4xJdfM6kHM/0P8R1dZs2+LpMaUWj4Cw==)
+      jdbc-url: ENC(bsf79LecUfJu19qReg9M+6iT3KNHEdOkuZc0hgMHFTntSG09FIPEBWcjP2oV+VDMtTlpGKZT8XBRcoelMJGwuV1dCKkBxZ+ardRZUvTf9tD1WppmTwTq4CCNNCCrCHhvS2ySkHIh1M1yfRucT1xMm6XzrLapEGbwonDWKhuqM9neXweXnXxVphBM/zgK47nfoeOt+IDkToM9ND6Rj+4K4oaTB/mB4sff4L8qpVirHAASUGvupVuk4MPJvY2K8SM0DENw0wg+Aj1IDET6IcOgd7Vg3uUC74mjX0ub1nBvwuA=)
+      username: admin
+      password: djkteCbsupY3RCDkPDPS
     secondary:
-      jdbc-url: ENC(WlfQDA9idMqhLlWQanW8T7NrSpYER5S/EV0eSdeeXlX2f9T31leOXX69piCBaun+JQvxj1uXvYGQB1RLkMA+gmzwg7DWa2+LYNjURswFWI28GimHK7Soe0yLpt7VBiG5RzDmT5bsEUTaxwvWQW2AKq7Rdkl8gzpJ7Cg7uUfwH0VxrmiiBHDj17h3qyzfEiPYm31OVDV8ExN9zgx0ADuOhw==)
-      username: ENC(5mwKH5QTPd1k80o6dLDPTZrCnk/7CDG/vtm7TjBRTpDR0wXRKXmolfitvX9CMBCm)
-      password: ENC(3CQQEKOPYc8qm0DS4EIO+8MWoa6rfLFHJAqdyNvYmVHyp4aSK3Uj/GSs7IzilfXt)
+      jdbc-url: ENC(AxjxThZpL1kolf6Yx5MuBFGbP5sST9IeCMFijDG2zLlFRliUQPMeQt3f8zHbDRllaYPjoIEYVe0QsxTZULfTmJNRk2uRDDYq6U7X33dY6Dxznc33PumGdlo/IblJu+gEJG3UlIZIjkB+wYPSP9N0qioZYHoxuAdyINa84LSUvEk0WXxHRBe1g592bKRm7PbnluKYxsSG60auGF8b9DTPCw==)
+      username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
+      password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(HaWmKXl+VsM5BO6Jomkknznhmx7qO2ZOix2jFD4CxjjcFv8Rc2dysz0V4Ko4mm2B1b/TjKqx4omzndQMCqZLIGEb9VxtfwI53qK8Q4LLQms=)
+    host: ENC(JMBOEMM5OezH2C9GYSdRzHqqJ3macyJK1fRLL0kx9chozwtunc8UKuo69pD6NiWC9uwAvTA2uyHkQrM7D4XcflrqTz8YhDyv5h7lhrzkbMFv363u0042qQTXzKRDL28k)
     port: 6379
-    password: ENC(Hf9BLC78g054vvPbsQIYJ/h6OazPPdcP8MyOc49/obWDsyIviyDjlnnHyt1ipEYAniMR0PnMcLLfvGDKp4h5pw==)
 
 mybatis:
   configuration:

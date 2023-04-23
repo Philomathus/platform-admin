@@ -75,5 +75,4 @@ public interface ActivityQuestInfoMapper {
 	 */
 	public int deleteActivityQuestInfoByIds(String[] ids );
 
-	List<ActivityQuestInfo> titleSelect();
 }

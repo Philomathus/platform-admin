@@ -1,16 +1,14 @@
 package com.qiqilm.server.admin.service.impl;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.cache.ActivityCacheUtil;
-import com.qiqilm.server.admin.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.qiqilm.server.admin.mapper.ActivityQuestTypeMapper;
 import com.qiqilm.server.admin.domain.ActivityQuestType;
+import com.qiqilm.server.admin.mapper.ActivityQuestTypeMapper;
 import com.qiqilm.server.admin.service.IActivityQuestTypeService;
+import com.qiqilm.server.admin.utils.DateUtils;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 任务类型Service业务层处理
@@ -102,5 +100,10 @@ public class ActivityQuestTypeServiceImpl implements IActivityQuestTypeService {
     @Override
     public List<ActivityQuestType> selectActivityQuestType() {
         return activityQuestTypeMapper.selectActivityQuestType();
+    }
+
+    @Override
+    public List<ActivityQuestType> nameSelect() {
+        return activityQuestTypeMapper.nameSelect();
     }
 }

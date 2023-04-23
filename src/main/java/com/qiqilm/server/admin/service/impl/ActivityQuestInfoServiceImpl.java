@@ -2,9 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.cache.ActivityCacheUtil;
 import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
-import com.qiqilm.server.admin.domain.ActivityInfo;
 import com.qiqilm.server.admin.domain.ActivityQuestInfo;
-import com.qiqilm.server.admin.domain.GameInfo;
 import com.qiqilm.server.admin.mapper.ActivityQuestInfoMapper;
 import com.qiqilm.server.admin.service.IActivityQuestInfoService;
 import com.qiqilm.server.admin.utils.StringUtils;
@@ -119,8 +117,4 @@ public class ActivityQuestInfoServiceImpl implements IActivityQuestInfoService {
         return i;
     }
 
-    @Override
-    public List<ActivityQuestInfo> titleSelect() {
-        return activityQuestInfoMapper.titleSelect();
-    }
 }

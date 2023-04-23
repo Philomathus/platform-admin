@@ -151,9 +151,9 @@ public class ActivityQuestInfoController extends BaseController {
 		return AjaxResult.success( gameInfo );
 	}
 
-	@GetMapping( "/titleSelect" )
-	public AjaxResult titleSelect() {
-		List<ActivityQuestInfo> activityQuestInfos = activityQuestInfoService.titleSelect();
-		return AjaxResult.success( activityQuestInfos );
+	@GetMapping( "/nameSelect" )
+	public AjaxResult nameSelect() {
+		List<ActivityQuestType> activityQuestTypes = activityQuestTypeService.nameSelect();
+		return AjaxResult.success( activityQuestTypes );
 	}
 }

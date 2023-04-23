@@ -21,17 +21,43 @@
     </resultMap>
 
     <sql id="selectReportPlamGamesVo">
-        select game_uuid, gameagent, gameplame, gamepepole, gametouzhu, gamecell, gamebet, gamerevenve, gameprofit, plampfit, bili, begindate,updatetime as updateTime from report_plam_games
+        select
+        gameagent,
+        gameplame,
+        sum(gamepepole)     as gamepepole,
+        sum(gametouzhu)     as gametouzhu,
+        sum(gamecell)       as gamecell,
+        sum(gamebet)        as gamebet,
+        sum(gameprofit)     as gameprofit,
+        CONCAT(ROUND(convert(sum(gameprofit),decimal(10,2)) / convert(sum(gamecell),decimal(10,2)) * 100,2),'%') as bili,
+        <choose>
+            <when test="endDate != null">
+                CONCAT( #{begindate}, ' - ', #{endDate} ) as begindate
+            </when>
+            <otherwise>
+                begindate
+            </otherwise>
+        </choose>
+        from
+        report_plam_games
     </sql>
 
     <select id="selectReportPlamGamesList" parameterType="ReportPlamGames" resultMap="ReportPlamGamesResult">
         <include refid="selectReportPlamGamesVo"/>
         <where>
-            <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
-            <if test="begindate != null "> and begindate = #{begindate}</if>
+            <if test="gameplame != null  and gameplame != ''">
+                and gameplame = #{gameplame}
+            </if>
+            <if test="begindate != null and begindate != ''">
+                and begindate <![CDATA[ >= ]]> #{begindate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and begindate <![CDATA[ <= ]]> #{endDate}
+            </if>
         </where>
-        order by game_uuid desc
+        GROUP BY gameagent, gameplame
     </select>
+
     <select id="calldataProrepPlamcom" resultType="string" statementType="CALLABLE">
         {call prorep_plamgame(#{timedateta,mode=IN,jdbcType=VARCHAR},#{timedateta,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}
     </select>
@@ -48,13 +74,13 @@
     <select id="selectReportPlamGamesListMonth"  resultType="com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth">
         select gameplame,
         SUM(gamecell) as gamecell,
-        SUM(gamecell) - SUM(plampfit)  as paicai,
+        SUM(gamecell) - SUM(plampfit) as paicai,
         SUM(plampfit) as gameprofit
         from report_plam_games
         <where>
-            <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
+            <if test="gameplame != null  and gameplame != ''">and gameplame = #{gameplame}</if>
             <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
-                AND  begindate <![CDATA[ >= ]]>  STR_TO_DATE(#{begindate},'%Y-%m-%d')
+                AND begindate <![CDATA[ >= ]]>  STR_TO_DATE(#{begindate},'%Y-%m-%d')
             </if>
             <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
                 AND begindate <![CDATA[ <= ]]> STR_TO_DATE(#{endDate},'%Y-%m-%d')
@@ -63,15 +89,18 @@
         GROUP BY gameplame
         UNION all
         select '送礼金额' as liveprop,
-        '0'  as gamecell,
+        '0' as gamecell,
         '0' as paicai,
         SUM(ticket) from ${dbLive}.live_host_wage_day
         where id like concat(#{dateTime}, '%') and ticket is not NULL
         UNION all
-        select '坐骑金额' as liveprop,'0'  as gamecell,'0' as paicai,SUM(total_diamonds)from ${dbLive}.live_video_prop  where p_user_id not in
-        (select id from member_info where STATUS  = 2 )  AND prop_id = '-2'
+        SELECT '主播结算打码' AS liveprop, '0' AS gamecell, '0' AS paicai, SUM( lottery_cost ) FROM
+        ${dbLive}.live_host_wage_day WHERE id LIKE concat(#{dateTime}, '%') and lottery_cost is not NULL UNION ALL
+        select '坐骑金额' as liveprop,'0' as gamecell,'0' as paicai,SUM(total_diamonds)from ${dbLive}.live_video_prop
+        where p_user_id not in
+        (select id from member_info where STATUS = 2 ) AND prop_id = '-2'
         <if test="begindate!= null and begindate != ''"><!-- 开始时间检索 -->
-            AND  create_date <![CDATA[ >= ]]>  STR_TO_DATE(#{begindate},'%Y-%m-%d')
+            AND create_date <![CDATA[ >= ]]>  STR_TO_DATE(#{begindate},'%Y-%m-%d')
         </if>
         <if test="endDate != null and endDate != ''"><!-- 结束时间检索 -->
             AND create_date <![CDATA[ <= ]]> STR_TO_DATE(#{endDate},'%Y-%m-%d')

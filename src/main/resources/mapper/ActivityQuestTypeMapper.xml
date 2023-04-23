@@ -72,4 +72,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="nameSelect" parameterType="ActivityQuestInfo" resultMap="ActivityQuestTypeResult">
+        select name from activity_quest_type
+    </select>
 </mapper>

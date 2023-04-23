@@ -245,26 +245,30 @@ public abstract class ConstantsPayAgent {
     public static final String HY = "hy";
 
     //ONE_ZERO代付
-    public static final String ONE_ZERO    = "oneZero";
+    public static final String ONE_ZERO          = "oneZero";
     //卓越代付代付
-    public static final String ZHUO_YUE    = "zhuoYue";
-    public static final String ZHUO_YUE2   = "zhuoYue2";
+    public static final String ZHUO_YUE          = "zhuoYue";
+    public static final String ZHUO_YUE2         = "zhuoYue2";
     // 悟空代付
-    public static final String WU_KONG     = "wuKong";
-    public static final String ZHAOH       = "zhaoh";
-    public static final String LIUXING     = "liuXing";
-    public static final String LP          = "LP";
-    public static final String LIU_BANG    = "liuBang";
-    public static final String TIE_NIU     = "tieNiu";
-    public static final String VIP_PAY     = "vipPay";
-    public static final String KUBI_PAY    = "kubiPay";
-    public static final String EPOINT_PAY  = "ePointPay";
-    public static final String YUNBEI_PAY  = "yunBeiPay";
-    public static final String WANBI_PAY   = "wanBiPay";
-    public static final String HE_XING     = "heXingPay";
-    public static final String ZHIYUAN_PAY = "zhiYuanPay";
-    public static final String YIBEI_PAY   = "yiBeiPay";
-    public static final String N8_PAY      = "n8Pay";
-    public static final String SANJIN_PAY  = "sanJinPay";
-    public static final String MIFENG_PAY  = "miFengPay";
+    public static final String WU_KONG           = "wuKong";
+    public static final String ZHAOH             = "zhaoh";
+    public static final String LIUXING           = "liuXing";
+    public static final String LP                = "LP";
+    public static final String LIU_BANG          = "liuBang";
+    public static final String TIE_NIU           = "tieNiu";
+    public static final String VIP_PAY           = "vipPay";
+    public static final String KUBI_PAY          = "kubiPay";
+    public static final String EPOINT_PAY        = "ePointPay";
+    public static final String YUNBEI_PAY        = "yunBeiPay";
+    public static final String WANBI_PAY         = "wanBiPay";
+    public static final String HE_XING           = "heXingPay";
+    public static final String ZHIYUAN_PAY       = "zhiYuanPay";
+    public static final String YIBEI_PAY         = "yiBeiPay";
+    public static final String N8_PAY            = "n8Pay";
+    public static final String SANJIN_PAY        = "sanJinPay";
+    public static final String MIFENG_PAY        = "miFengPay";
+    public static final String GT_PAY            = "gtPay";
+    public static final String YIN_SHENG_BAO_PAY = "YinShengBaoPay";
+    public static final String TO_PAY            = "toPay";
+    public static final String KD_PAY            = "kdPay";
 }

@@ -4,7 +4,6 @@ import com.qiqilm.server.admin.annotation.Log;
 import com.qiqilm.server.admin.core.controller.BaseController;
 import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
-import com.qiqilm.server.admin.domain.PayPlatformNew;
 import com.qiqilm.server.admin.domain.ReportPlamGames;
 import com.qiqilm.server.admin.domain.rsp.RspPlamGamesMonth;
 import com.qiqilm.server.admin.enums.BusinessType;
@@ -49,8 +48,9 @@ public class ReportPlamGamesController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('admin:report-plam-games:list')" )
 	@GetMapping( "/list" )
-	public Object list( ReportPlamGames reportPlamGames ) throws ParseException {
-		return reportPlamGamesService.selectReportPlamGamesList( reportPlamGames );
+	public TableDataInfo list( ReportPlamGames reportPlamGames ) throws ParseException {
+		List<ReportPlamGames> list = reportPlamGamesService.selectReportPlamGamesList( reportPlamGames );
+		return getDataTable(list);
 
 	}
 

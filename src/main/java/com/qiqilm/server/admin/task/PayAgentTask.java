@@ -23,9 +23,6 @@ public class PayAgentTask {
 
     @Scheduled( cron = "0 0/3 * * * ?" ) // 每3分钟执行一次
     public void confirmPayAgentOrder() {
-        if ( profile.equals( "7702" ) ) {
-            return;
-        }
         try {
             log.warn( "开始执行代付订单的超时查询 - 判断锁" );
             if ( redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 30 ) ) {

@@ -65,5 +65,4 @@ public interface IActivityQuestInfoService {
      */
     public int deleteActivityQuestInfoById( String id );
 
-    List<ActivityQuestInfo> titleSelect();
 }

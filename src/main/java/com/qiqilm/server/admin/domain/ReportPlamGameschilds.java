@@ -1,14 +1,12 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import cn.afterturn.easypoi.excel.annotation.Excel;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
 
 /**
  * 游戏投注报表子表对象 report_plam_gameschilds
@@ -72,9 +70,10 @@ public class ReportPlamGameschilds extends BaseEntity {
     private String bili;
 
     /** 日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "日期", width = 30, databaseFormat = "yyyy-MM-dd")
-    private Date begindate;
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "日期"/*, width = 30, databaseFormat = "yyyy-MM-dd"*/)
+    private String begindate;
+    private String endDate;
 
     @Override
     public String toString() {

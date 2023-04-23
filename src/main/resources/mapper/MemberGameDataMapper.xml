@@ -98,7 +98,7 @@
 
     <sql id="whereSelect">
         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-            game_end_time <![CDATA[ >= ]]> #{startTime} and game_end_time <![CDATA[ <= ]]> #{endTime}
+            and game_end_time <![CDATA[ >= ]]> #{startTime} and game_end_time <![CDATA[ <= ]]> #{endTime}
         </if>
         <if test="account != null and account != ''">
             and account = #{account}
@@ -180,9 +180,8 @@
         ${dbMain}.member_game_data${tableLast} m
         LEFT JOIN config_gametype cg ON m.agent = cg.platform_id
         AND m.kind_id = cg.son_platform_id
-        <where>
-            <include refid="whereSelect"></include>
-        </where>
+        where m.profit <![CDATA[ <> ]]> 0
+        <include refid="whereSelect"></include>
     </select>
 
     <select id="findBetList" resultType="com.qiqilm.server.admin.domain.rsp.RspLotteryBetLog">
