@@ -81,3 +81,7 @@ payAgentKuBiPay: 20000
 payAgentVipPay: 200000
 # HY代付额度
 payAgentHYPay: 20000
+# GT代付额度
+payAgentGTPay: 50000
+# 蜜蜂代付额度
+payAgentMiFengPay: 50000

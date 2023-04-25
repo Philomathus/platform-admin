@@ -77,7 +77,7 @@ public class ConfigBank extends BaseEntity {
     private Integer googleAuthCode;
 
     @Excel(name = "文本2")
-    private String tex2;
+    private String text2;
 
     @Override
     public String toString() {
@@ -98,7 +98,7 @@ public class ConfigBank extends BaseEntity {
             .append("accountName", getAccountName())
             .append("bankAddress", getBankAddress())
             .append("discountBill", getDiscountBill())
-            .append("tex2", getTex2())
+            .append("text2", getText2())
             .append("openLevel", getOpenLevel())
             .append("openLevelMax", getOpenLevelMax())
             .toString();
