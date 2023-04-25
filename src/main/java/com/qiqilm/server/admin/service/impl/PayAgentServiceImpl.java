@@ -121,6 +121,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
     private Integer payAgentZhiYuanPay;
     @Value( "${payAgentHYPay:5000}" )
     private Integer payAgentHYPay;
+    @Value( "${payAgentGTPay:5000}" )
+    private Integer payAgentGTPay;
+    @Value( "${payAgentMiFengPay:5000}" )
+    private Integer payAgentMiFengPay;
 
     @Override
     @Transactional( rollbackFor = Exception.class )
@@ -199,7 +203,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
 
         for ( PayAgentLog payAgentLog : payAgentLogs ) {
             for ( PayAgentPlatform payAgentPlatform : payAgentPlatforms ) {
-                if ( !Arrays.asList( ConstantsPayAgent.OK, ConstantsPayAgent.GOPAY ).contains( payAgentPlatform.getCode() ) ) {
+                if ( !Arrays.asList( ConstantsPayAgent.OK, ConstantsPayAgent.GOPAY, ConstantsPayAgent.HUOFENGHUANG )
+                            .contains( payAgentPlatform.getCode() ) ) {
                     continue;
                 }
                 if ( payAgentLog.getPayAgentPlatId().toString().equals( payAgentPlatform.getId().toString() ) ) {
@@ -385,12 +390,20 @@ public class PayAgentServiceImpl implements IPayAgentService {
                                                                                                 .compareTo( new BigDecimal( payAgentHYPay ) )
                 > 0 ) {
             return AjaxResult.error( "此代付暂不支持" + payAgentHYPay + "元以上出款" );
+        } else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.GT_PAY ) ) && withdrawLog.getWithdrawMoney()
+                                                                                                    .compareTo( new BigDecimal( payAgentGTPay ) )
+                > 0 ) {
+            return AjaxResult.error( "此代付暂不支持" + payAgentGTPay + "元以上出款" );
+        } else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.MIFENG_PAY ) ) && withdrawLog.getWithdrawMoney()
+                                                                                                        .compareTo( new BigDecimal( payAgentMiFengPay ) )
+                > 0 ) {
+            return AjaxResult.error( "此代付暂不支持" + payAgentMiFengPay + "元以上出款" );
         } else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0 && !payAgentPlatform.getCode()
                                                                                                                         .equals( ConstantsPayAgent.Ma_Yun )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.VIP_PAY ) && !payAgentPlatform.getCode()
                                                                                                        .equals( ConstantsPayAgent.ZHIYUAN_PAY )
-                && !payAgentPlatform.getCode().equals( ConstantsPayAgent.HY ) && !payAgentPlatform.getCode()
-                                                                                                  .equals( ConstantsPayAgent.YUNBEI_PAY )
+                && !payAgentPlatform.getCode().equals( ConstantsPayAgent.GT_PAY ) && !payAgentPlatform.getCode()
+                                                                                                      .equals( ConstantsPayAgent.MIFENG_PAY )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG ) && !payAgentPlatform.getCode()
                                                                                                        .equals( ConstantsPayAgent.DIDI )
                 && !payAgentPlatform.getCode().contains( ConstantsPayAgent.BINLI ) && !payAgentPlatform.getCode()

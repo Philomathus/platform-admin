@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
@@ -50,7 +49,7 @@ public class HuoFengHuangPayAgentProcessor extends AbstractPayAgent {
 
 		String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
 		String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
-		bodyMap.put( "pay_md5sign", sign );
+		bodyMap.put( "sign", sign );
 
 
 		MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();

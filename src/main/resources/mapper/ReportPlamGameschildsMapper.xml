@@ -3,20 +3,20 @@
 <mapper namespace="com.qiqilm.server.admin.mapper.ReportPlamGameschildsMapper">
 
     <resultMap type="ReportPlamGameschilds" id="ReportPlamGameschildsResult">
-        <result property="gameUuid"    column="game_uuid"    />
-        <result property="gameagent"    column="gameagent"    />
-        <result property="gameplame"    column="gameplame"    />
-        <result property="agentchild"    column="agentchild"    />
-        <result property="agentchildname"    column="agentchildname"    />
-        <result property="gamepepole"    column="gamepepole"    />
-        <result property="gametouzhu"    column="gametouzhu"    />
-        <result property="gamecell"    column="gamecell"    />
-        <result property="gamebet"    column="gamebet"    />
-        <result property="gamerevenve"    column="gamerevenve"    />
-        <result property="gameprofit"    column="gameprofit"    />
-        <result property="plampfit"    column="plampfit"    />
-        <result property="bili"    column="bili"    />
-        <result property="begindate"    column="begindate"    />
+        <result property="gameUuid" column="game_uuid" />
+        <result property="gameagent" column="gameagent" />
+        <result property="gameplame" column="gameplame" />
+        <result property="agentchild" column="agentchild" />
+        <result property="agentchildname" column="agentchildname" />
+        <result property="gamepepole" column="gamepepole" />
+        <result property="gametouzhu" column="gametouzhu" />
+        <result property="gamecell" column="gamecell" />
+        <result property="gamebet" column="gamebet" />
+        <result property="gamerevenve" column="gamerevenve" />
+        <result property="gameprofit" column="gameprofit" />
+        <result property="plampfit" column="plampfit" />
+        <result property="bili" column="bili" />
+        <result property="begindate" column="begindate" />
     </resultMap>
 
     <sql id="selectReportPlamGameschildsVo">
@@ -44,18 +44,20 @@
         from report_plam_gameschilds
     </sql>
 
-    <select id="selectReportPlamGameschildsList" parameterType="ReportPlamGameschilds" resultMap="ReportPlamGameschildsResult">
+    <select id="selectReportPlamGameschildsList" parameterType="ReportPlamGameschilds"
+            resultMap="ReportPlamGameschildsResult">
         select
         gameagent,
         gameplame,
         agentchild,
         agentchildname,
-        sum(gamepepole)     as gamepepole,
-        sum(gametouzhu)     as gametouzhu,
-        sum(gamecell)       as gamecell,
-        sum(gamebet)        as gamebet,
-        sum(gameprofit)     as gameprofit,
-        CONCAT(ROUND(convert(sum(gameprofit),decimal(10,2)) / convert(sum(gamecell),decimal(10,2)) * 100,2),'%') as bili,
+        sum(gamepepole) as gamepepole,
+        sum(gametouzhu) as gametouzhu,
+        sum(gamecell) as gamecell,
+        sum(gamebet) as gamebet,
+        sum(gameprofit) as gameprofit,
+        CONCAT(ROUND(convert(sum(gameprofit),decimal(10,2)) / convert(sum(gamecell),decimal(10,2)) * 100,2),'%') as
+        bili,
         <choose>
             <when test="endDate != null">
                 CONCAT( #{begindate}, ' - ', #{endDate} ) as begindate
@@ -113,7 +115,7 @@
     </select>
 
     <select id="selectReportPlamGameschildsById" parameterType="String" resultMap="ReportPlamGameschildsResult">
-        <include refid="selectReportPlamGameschildsVo"/>
+        <include refid="selectReportPlamGameschildsVo" />
         where game_uuid = #{gameUuid}
     </select>
 
@@ -134,23 +136,23 @@
             <if test="plampfit != null">plampfit,</if>
             <if test="bili != null">bili,</if>
             <if test="begindate != null">begindate,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="gameUuid != null">#{gameUuid},</if>
-                    <if test="gameagent != null">#{gameagent},</if>
-                    <if test="gameplame != null">#{gameplame},</if>
-                    <if test="agentchild != null">#{agentchild},</if>
-                    <if test="agentchildname != null">#{agentchildname},</if>
-                    <if test="gamepepole != null">#{gamepepole},</if>
-                    <if test="gametouzhu != null">#{gametouzhu},</if>
-                    <if test="gamecell != null">#{gamecell},</if>
-                    <if test="gamebet != null">#{gamebet},</if>
-                    <if test="gamerevenve != null">#{gamerevenve},</if>
-                    <if test="gameprofit != null">#{gameprofit},</if>
-                    <if test="plampfit != null">#{plampfit},</if>
-                    <if test="bili != null">#{bili},</if>
-                    <if test="begindate != null">#{begindate},</if>
-             </trim>
+            <if test="gameUuid != null">#{gameUuid},</if>
+            <if test="gameagent != null">#{gameagent},</if>
+            <if test="gameplame != null">#{gameplame},</if>
+            <if test="agentchild != null">#{agentchild},</if>
+            <if test="agentchildname != null">#{agentchildname},</if>
+            <if test="gamepepole != null">#{gamepepole},</if>
+            <if test="gametouzhu != null">#{gametouzhu},</if>
+            <if test="gamecell != null">#{gamecell},</if>
+            <if test="gamebet != null">#{gamebet},</if>
+            <if test="gamerevenve != null">#{gamerevenve},</if>
+            <if test="gameprofit != null">#{gameprofit},</if>
+            <if test="plampfit != null">#{plampfit},</if>
+            <if test="bili != null">#{bili},</if>
+            <if test="begindate != null">#{begindate},</if>
+        </trim>
     </insert>
 
     <update id="updateReportPlamGameschilds" parameterType="ReportPlamGameschilds">
@@ -187,7 +189,9 @@
     </update>
 
     <delete id="deleteReportPlamGameschildsById" parameterType="String">
-        delete from report_plam_gameschilds where game_uuid = #{gameUuid}
+        delete
+        from report_plam_gameschilds
+        where game_uuid = #{gameUuid}
     </delete>
 
     <delete id="deleteReportPlamGameschildsByIds" parameterType="String">
