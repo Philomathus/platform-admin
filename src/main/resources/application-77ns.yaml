@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(8PcMkEYJw1L/G8PhPiagwyyqXgEhxmVhVnr1Wk82fuUNxd9rguFojJvAq2MNEPjfreq76EwoFPV1ql8K3ME80i5LEu43u0GQ6Aiap38MlFln5qxjui2lUCL06x90jtpJqhxMTIU0qjGHKvGgFe5F8DAogrFiTEjpnG4xzPdiUJLiBZBTFZNkvuwL2y2HUY7o4f1ZKiGacVazPwjv/n3NawhWLrYcEiMP7NYVX1kzh8VQtH/lyRZjo9ccyvqKD/Eg+gti1htL1zTwuqeNVYT5EHJJpX2THsrw6UONA81O6Tc=)
+      jdbc-url: ENC(Zy8ugKD3kSmB66JfkBJvfcrlaAIqm/fqEZtrbnXyb7IMAANKZXKC5/Cfqk0xFmGZ0NmmpAsfbbXLwQgNJxRoxPQ3OJa2VN4jyJYnSZDuByM5E3RRCZlvuV3F67a1452oXJ8Fw3bsHiVHKne4N4t8eorqjgQDh2FFZMU1KPakevGMRO64cN7+qZxNCjAOWtxVivRiuslC77Q72zIzvje9HeAP+ltD0ZfXXmfDG9Bd4/sAAItyhdxk+grkjk/s9Ef+9BkUvIO2sf2ll4JYrveBZiJTB7O7FtxDc6pk4wXCtA0=)
       username: admin
       password: ENC(eNEs8Zeo1ZxWlxk7DA8+KKdlWOyq4udWhsa9oqw9RfzxSqbbd7qqNppi8ROSNDYziS5U2jlyX4KlF9gAOzJYCg==)
     secondary:
@@ -9,15 +9,15 @@ spring:
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(pBXCcSmYvFHfKbWo+8ywGGy5LDYX9Y3JejbpH5Bcd5HP6qZcaHoJzcNVovYECDTg1LFJjzrSi0857DB8SiGA7Nl8jjIQGOp7z2fH09G+Gio=)
+    host: ENC(WRDg7iBQGr9ZhkEu/5++wnWrHgT2N0FQvgaeVR4+qBKizfl/u1IPXoiXScU0eTcNgpUJAagZLlopV6lV5k5GTD/UvqSTv/9UG+3givL75Q8=)
     port: 6379
 
 mybatis:
   configuration:
     variables:
-      dbMain: 77jr_main
-      dbLive: 77jr_live
-      dbLottery: 77jr_lottery
+      dbMain: 77ns_main
+      dbLive: 77ns_live
+      dbLottery: 77ns_lottery
 
 liveCenter: 7701
 

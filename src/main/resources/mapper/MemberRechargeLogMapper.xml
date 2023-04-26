@@ -1,333 +1,346 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberRechargeLogMapper">
-	<resultMap type="MemberRechargeLog" id="MemberRechargeLogResult">
-		<result property="id" column="id"/>
-		<result property="memberId" column="member_id"/>
-		<result property="userName" column="user_name"/>
-		<result property="rechargeMoney" column="recharge_money"/>
-		<result property="bankName" column="bank_name"/>
-		<result property="bankAccount" column="bank_account"/>
-		<result property="status" column="status"/>
-		<result property="remark" column="remark"/>
-		<result property="opName" column="op_name"/>
-		<result property="createTime" column="create_time"/>
-		<result property="updateTime" column="update_time"/>
-		<result property="bankAddress" column="bank_address"/>
-		<result property="type" column="type"/>
-		<result property="rechargeUserName" column="recharge_user_name"/>
-		<result property="bankUserName" column="bank_user_name"/>
-		<result property="orderNo" column="order_no"/>
-		<result property="discountBill" column="discount_bill"/>
-		<result property="first" column="first"/>
-		<result property="memberCardRealName" column="member_card_real_name"/>
-	</resultMap>
+    <resultMap type="MemberRechargeLog" id="MemberRechargeLogResult">
+        <result property="id" column="id" />
+        <result property="memberId" column="member_id" />
+        <result property="userName" column="user_name" />
+        <result property="rechargeMoney" column="recharge_money" />
+        <result property="bankName" column="bank_name" />
+        <result property="bankAccount" column="bank_account" />
+        <result property="status" column="status" />
+        <result property="remark" column="remark" />
+        <result property="opName" column="op_name" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="bankAddress" column="bank_address" />
+        <result property="type" column="type" />
+        <result property="rechargeUserName" column="recharge_user_name" />
+        <result property="bankUserName" column="bank_user_name" />
+        <result property="orderNo" column="order_no" />
+        <result property="discountBill" column="discount_bill" />
+        <result property="first" column="first" />
+        <result property="memberCardRealName" column="member_card_real_name" />
+    </resultMap>
 
-	<sql id="selectMemberRechargeLogVo">
-		select id,
-			   member_id,
-			   user_name,
-			   recharge_money,
-			   bank_name,
-			   bank_account,
-			   status,
-			   remark,
-			   op_name,
-			   create_time,
-			   update_time,
-			   bank_address,
-			   type,
-			   recharge_user_name,
-			   bank_user_name,
-			   order_no,
-			   discount_bill,
-			   first,
-		       ip,
-		       member_card_real_name
-		from member_recharge_log
-	</sql>
+    <sql id="selectMemberRechargeLogVo">
+        select id,
+               member_id,
+               user_name,
+               recharge_money,
+               bank_name,
+               bank_account,
+               status,
+               remark,
+               op_name,
+               create_time,
+               update_time,
+               bank_address,
+               type,
+               recharge_user_name,
+               bank_user_name,
+               order_no,
+               discount_bill,
+               first,
+               ip,
+               member_card_real_name
+        from member_recharge_log
+    </sql>
 
-	<select id="selectMemberRechargeLogList" parameterType="MemberRechargeLog" resultMap="MemberRechargeLogResult">
-		<include refid="selectMemberRechargeLogVo"/>
-		<include refid="listWhere"/>
-	</select>
+    <select id="selectMemberRechargeLogList" parameterType="MemberRechargeLog" resultMap="MemberRechargeLogResult">
+        <include refid="selectMemberRechargeLogVo" />
+        <include refid="listWhere" />
+    </select>
 
-	<select id="MemberRechargeLogLists"  resultMap="MemberRechargeLogResult">
-		select l.member_id,
-        ifnull(sum(l.recharge_money),0) as recharge_money from member_recharge_log l
-        left join member_info m ON l.member_id = m.id
-        where l.status=3 and m.status in (1,7) and date_format(l.create_time,'%y%m%d') =  DATE_ADD(CURDATE(), INTERVAL -1 DAY)
-        GROUP BY l.member_id
-     </select>
+    <select id="MemberRechargeLogLists" resultMap="MemberRechargeLogResult">
+        SELECT a.*
+        FROM (SELECT l.member_id,
+                     ifnull(sum(l.recharge_money), 0) AS recharge_money
+              FROM member_recharge_log l
+              WHERE l.STATUS = 3
+                AND l.create_time >= DATE_ADD(CURDATE(), INTERVAL - 1 DAY)
+                AND l.create_time <![CDATA[ <= ]]> DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+              GROUP BY l.member_id) a
+                 LEFT JOIN member_info m ON a.member_id = m.id
+        WHERE m.STATUS IN (1, 7)
+    </select>
 
 
-	<select id="selectMemberRechargeLogById" parameterType="String" resultMap="MemberRechargeLogResult">
-		<include refid="selectMemberRechargeLogVo"/>
-		where id = #{id}
-	</select>
+    <select id="selectMemberRechargeLogById" parameterType="String" resultMap="MemberRechargeLogResult">
+        <include refid="selectMemberRechargeLogVo" />
+        where id = #{id}
+    </select>
 
-	<insert id="insertMemberRechargeLog" parameterType="MemberRechargeLog">
-		insert into member_recharge_log
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
-			<if test="memberId != null">
-				member_id,
-			</if>
-			<if test="userName != null">
-				user_name,
-			</if>
-			<if test="rechargeMoney != null">
-				recharge_money,
-			</if>
-			<if test="bankName != null">
-				bank_name,
-			</if>
-			<if test="bankAccount != null">
-				bank_account,
-			</if>
-			<if test="status != null">
-				status,
-			</if>
-			<if test="remark != null">
-				remark,
-			</if>
-			<if test="opName != null">
-				op_name,
-			</if>
-			<if test="createTime != null">
-				create_time,
-			</if>
-			<if test="updateTime != null">
-				update_time,
-			</if>
-			<if test="bankAddress != null">
-				bank_address,
-			</if>
-			<if test="type != null">
-				type,
-			</if>
-			<if test="rechargeUserName != null">
-				recharge_user_name,
-			</if>
-			<if test="bankUserName != null">
-				bank_user_name,
-			</if>
-			<if test="orderNo != null">
-				order_no,
-			</if>
-			<if test="discountBill != null">
-				discount_bill,
-			</if>
-			<if test="first != null">
-				first,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id},
-			</if>
-			<if test="memberId != null">
-				#{memberId},
-			</if>
-			<if test="userName != null">
-				#{userName},
-			</if>
-			<if test="rechargeMoney != null">
-				#{rechargeMoney},
-			</if>
-			<if test="bankName != null">
-				#{bankName},
-			</if>
-			<if test="bankAccount != null">
-				#{bankAccount},
-			</if>
-			<if test="status != null">
-				#{status},
-			</if>
-			<if test="remark != null">
-				#{remark},
-			</if>
-			<if test="opName != null">
-				#{opName},
-			</if>
-			<if test="createTime != null">
-				#{createTime},
-			</if>
-			<if test="updateTime != null">
-				#{updateTime},
-			</if>
-			<if test="bankAddress != null">
-				#{bankAddress},
-			</if>
-			<if test="type != null">
-				#{type},
-			</if>
-			<if test="rechargeUserName != null">
-				#{rechargeUserName},
-			</if>
-			<if test="bankUserName != null">
-				#{bankUserName},
-			</if>
-			<if test="orderNo != null">
-				#{orderNo},
-			</if>
-			<if test="discountBill != null">
-				#{discountBill},
-			</if>
-			<if test="first != null">
-				#{first},
-			</if>
-		</trim>
-	</insert>
+    <insert id="insertMemberRechargeLog" parameterType="MemberRechargeLog">
+        insert into member_recharge_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="rechargeMoney != null">
+                recharge_money,
+            </if>
+            <if test="bankName != null">
+                bank_name,
+            </if>
+            <if test="bankAccount != null">
+                bank_account,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="opName != null">
+                op_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="bankAddress != null">
+                bank_address,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="rechargeUserName != null">
+                recharge_user_name,
+            </if>
+            <if test="bankUserName != null">
+                bank_user_name,
+            </if>
+            <if test="orderNo != null">
+                order_no,
+            </if>
+            <if test="discountBill != null">
+                discount_bill,
+            </if>
+            <if test="first != null">
+                first,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="memberId != null">
+                #{memberId},
+            </if>
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="rechargeMoney != null">
+                #{rechargeMoney},
+            </if>
+            <if test="bankName != null">
+                #{bankName},
+            </if>
+            <if test="bankAccount != null">
+                #{bankAccount},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="opName != null">
+                #{opName},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="bankAddress != null">
+                #{bankAddress},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="rechargeUserName != null">
+                #{rechargeUserName},
+            </if>
+            <if test="bankUserName != null">
+                #{bankUserName},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo},
+            </if>
+            <if test="discountBill != null">
+                #{discountBill},
+            </if>
+            <if test="first != null">
+                #{first},
+            </if>
+        </trim>
+    </insert>
 
-	<update id="updateMemberRechargeLog" parameterType="MemberRechargeLog">
-		update member_recharge_log
-		<trim prefix="SET" suffixOverrides=",">
-			<if test="memberId != null">
-				member_id = #{memberId},
-			</if>
-			<if test="userName != null">
-				user_name = #{userName},
-			</if>
-			<if test="rechargeMoney != null">
-				recharge_money = #{rechargeMoney},
-			</if>
-			<if test="bankName != null">
-				bank_name = #{bankName},
-			</if>
-			<if test="bankAccount != null">
-				bank_account = #{bankAccount},
-			</if>
-			<if test="status != null">
-				status = #{status},
-			</if>
-			<if test="remark != null">
-				remark = #{remark},
-			</if>
-			<if test="opName != null">
-				op_name = #{opName},
-			</if>
-			<if test="createTime != null">
-				create_time = #{createTime},
-			</if>
-			<if test="updateTime != null">
-				update_time = #{updateTime},
-			</if>
-			<if test="bankAddress != null">
-				bank_address = #{bankAddress},
-			</if>
-			<if test="type != null">
-				type = #{type},
-			</if>
-			<if test="rechargeUserName != null">
-				recharge_user_name = #{rechargeUserName},
-			</if>
-			<if test="bankUserName != null">
-				bank_user_name = #{bankUserName},
-			</if>
-			<if test="orderNo != null">
-				order_no = #{orderNo},
-			</if>
-			<if test="discountBill != null">
-				discount_bill = #{discountBill},
-			</if>
-			<if test="first != null">
-				first = #{first},
-			</if>
-		</trim>
-		where id = #{id}
-	</update>
+    <update id="updateMemberRechargeLog" parameterType="MemberRechargeLog">
+        update member_recharge_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null">
+                member_id = #{memberId},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="rechargeMoney != null">
+                recharge_money = #{rechargeMoney},
+            </if>
+            <if test="bankName != null">
+                bank_name = #{bankName},
+            </if>
+            <if test="bankAccount != null">
+                bank_account = #{bankAccount},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="opName != null">
+                op_name = #{opName},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="bankAddress != null">
+                bank_address = #{bankAddress},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="rechargeUserName != null">
+                recharge_user_name = #{rechargeUserName},
+            </if>
+            <if test="bankUserName != null">
+                bank_user_name = #{bankUserName},
+            </if>
+            <if test="orderNo != null">
+                order_no = #{orderNo},
+            </if>
+            <if test="discountBill != null">
+                discount_bill = #{discountBill},
+            </if>
+            <if test="first != null">
+                first = #{first},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
 
-	<sql id="listWhere">
-		where type = 1
-		<if test="req.bankUserName != null  and req.bankUserName != ''">
-			and bank_user_name = #{req.bankUserName}
-		</if>
-		<if test="req.opName != null  and req.opName != ''">
-			and op_name = #{req.opName}
-		</if>
-		<if test="req.rechargeUserName != null  and req.rechargeUserName != ''">
-			and recharge_user_name = #{req.rechargeUserName}
-		</if>
+    <sql id="listWhere">
+        where type = 1
+        <if test="req.bankUserName != null  and req.bankUserName != ''">
+            and bank_user_name = #{req.bankUserName}
+        </if>
+        <if test="req.opName != null  and req.opName != ''">
+            and op_name = #{req.opName}
+        </if>
+        <if test="req.rechargeUserName != null  and req.rechargeUserName != ''">
+            and recharge_user_name = #{req.rechargeUserName}
+        </if>
         <if test="req.bankName != null  and req.bankName != ''">
-			and bank_name = #{req.bankName}
-		</if>
-		<if test="req.orderNo != null  and req.orderNo != ''">
-			and order_no = #{req.orderNo}
-		</if>
-		<if test="req.status != null">
-			and status = #{req.status}
-		</if>
-		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
-			and recharge_money <![CDATA[ >= ]]> #{req.priceMin}
-			and recharge_money <![CDATA[ <= ]]> #{req.priceMax}
-		</if>
-		<if test="req.searchValue != null and req.searchValue != ''">
-			and (member_id = #{req.searchValue} or user_name = #{req.searchValue})
-		</if>
-		<if test="req.selectStartDate != null and req.selectStartDate != ''">
-			and update_time <![CDATA[ >= ]]> #{req.selectStartDate} and update_time <![CDATA[ <= ]]> #{req.selectEndDate}
-		</if>
-        <if test="req.downLoadDate[0] != null "> and update_time <![CDATA[ >= ]]> '${req.downLoadDate[0]}'</if>
-        <if test="req.downLoadDate[1] != null "> and update_time <![CDATA[ <= ]]> '${req.downLoadDate[1]}'</if>
-	</sql>
+            and bank_name = #{req.bankName}
+        </if>
+        <if test="req.orderNo != null  and req.orderNo != ''">
+            and order_no = #{req.orderNo}
+        </if>
+        <if test="req.status != null">
+            and status = #{req.status}
+        </if>
+        <if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
+            and recharge_money <![CDATA[ >= ]]> #{req.priceMin}
+            and recharge_money <![CDATA[ <= ]]> #{req.priceMax}
+        </if>
+        <if test="req.searchValue != null and req.searchValue != ''">
+            and (member_id = #{req.searchValue} or user_name = #{req.searchValue})
+        </if>
+        <if test="req.selectStartDate != null and req.selectStartDate != ''">
+            and update_time <![CDATA[ >= ]]> #{req.selectStartDate} and update_time <![CDATA[ <= ]]>
+            #{req.selectEndDate}
+        </if>
+        <if test="req.downLoadDate[0] != null ">and update_time <![CDATA[ >= ]]> '${req.downLoadDate[0]}'</if>
+        <if test="req.downLoadDate[1] != null ">and update_time <![CDATA[ <= ]]> '${req.downLoadDate[1]}'</if>
+    </sql>
 
-	<sql id="totalCount">
-		SELECT COUNT(*) total,SUM(recharge_money) totalMoney FROM `member_recharge_log`
-		<include refid="listWhere"/>
-	</sql>
-	<sql id="successMoney">
-		SELECT COUNT(*) totalSuccess,SUM(recharge_money) successMoney FROM `member_recharge_log`
-		<include refid="listWhere"/>
-		and status = 3
-	</sql>
-	<select id="listCount" parameterType="MemberRechargeLog" resultType="java.util.Map">
-		select a.total, b.successMoney, totalSuccess / total successRate from (<include refid="totalCount"/>)a
-			left join (<include refid="successMoney"/>)b on 1 = 1
-	</select>
+    <sql id="totalCount">
+        SELECT COUNT(*) total,SUM(recharge_money) totalMoney FROM `member_recharge_log`
+        <include refid="listWhere" />
+    </sql>
+    <sql id="successMoney">
+        SELECT COUNT(*) totalSuccess,SUM(recharge_money) successMoney FROM `member_recharge_log`
+        <include refid="listWhere" />
+        and status = 3
+    </sql>
+    <select id="listCount" parameterType="MemberRechargeLog" resultType="java.util.Map">
+        select a.total, b.successMoney, totalSuccess / total successRate from (<include refid="totalCount" />)a
+        left join (<include refid="successMoney" />)b on 1 = 1
+    </select>
 
-	<update id="checkRechargeLogFail">
-		update member_recharge_log
-		set status = 4
-		where status = 0
-		and create_time <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 30 MINUTE)
-	</update>
+    <update id="checkRechargeLogFail">
+        update member_recharge_log
+        set status = 4
+        where status = 0
+          and create_time <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+    </update>
 
-	<select id="countRechargeDaySucess" parameterType="java.lang.String" resultType="Integer">
-		select COUNT(1) from member_recharge_log where  date(update_time) = curdate() and  member_id = #{memberId} and status = 3;
-	</select>
+    <select id="countRechargeDaySucess" parameterType="java.lang.String" resultType="Integer">
+        select COUNT(1)
+        from member_recharge_log
+        where date(update_time) = curdate()
+          and member_id = #{memberId}
+          and status = 3;
+    </select>
     <select id="selectMemberBankRecharge" resultType="com.qiqilm.server.admin.domain.rsp.RspBankRecharge">
-		SELECT bank_user_name as bankUserName,bank_name as bankName,bank_account as bankAccount,recharge_money as rechargeMoney,COUNT(1) as time,update_time as updateTime FROM member_recharge_log
-		WHERE  STATUS = '3'
-		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
-			and recharge_money <![CDATA[ >= ]]> #{req.priceMin}
-			and recharge_money <![CDATA[ <= ]]> #{req.priceMax}
-		</if>
-		<if test="req.bankUserName != null and req.bankUserName != ''">
-			and bank_user_name = #{req.bankUserName}
-		</if>
-		<if test="req.updateTime != null and req.updateTime != ''">
-			and update_time like '${req.updateTime}%'
-		</if>
-		GROUP BY bank_user_name,bank_name,recharge_money,bank_account
-		ORDER BY bank_user_name,recharge_money
-	</select>
-	<select id="listCounts" resultType="java.util.Map">
-		SELECT *,sum(recharge_money) as rechargeMoney ,count(*) as totalcount FROM member_recharge_log
-		WHERE  STATUS = '3'
-		<if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
-			and recharge_money <![CDATA[ >= ]]> #{req.priceMin}
-			and recharge_money <![CDATA[ <= ]]> #{req.priceMax}
-		</if>
-		<if test="req.bankUserName != null and req.bankUserName != ''">
-			and bank_user_name = #{req.bankUserName}
-		</if>
-		<if test="req.updateTime != null and req.updateTime != ''">
-			and update_time like '${req.updateTime}%'
-		</if>
-	</select>
+        SELECT bank_user_name as bankUserName,bank_name as bankName,bank_account as bankAccount,recharge_money as
+        rechargeMoney,COUNT(1) as time,update_time as updateTime FROM member_recharge_log
+        WHERE STATUS = '3'
+        <if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
+            and recharge_money <![CDATA[ >= ]]> #{req.priceMin}
+            and recharge_money <![CDATA[ <= ]]> #{req.priceMax}
+        </if>
+        <if test="req.bankUserName != null and req.bankUserName != ''">
+            and bank_user_name = #{req.bankUserName}
+        </if>
+        <if test="req.updateTime != null and req.updateTime != ''">
+            and update_time <![CDATA[ >= ]]> concat(#{req.updateTime), ' 00:00:00')
+            and update_time <![CDATA[ <= ]]> concat(#{req.updateTime), ' 23:59:59')
+        </if>
+        GROUP BY bank_user_name,bank_name,recharge_money,bank_account
+        ORDER BY bank_user_name,recharge_money
+    </select>
+    <select id="listCounts" resultType="java.util.Map">
+        SELECT *,sum(recharge_money) as rechargeMoney ,count(*) as totalcount FROM member_recharge_log
+        WHERE STATUS = '3'
+        <if test="req.priceMin != null and req.priceMax != null  and req.priceMin != ''  and req.priceMax != ''">
+            and recharge_money <![CDATA[ >= ]]> #{req.priceMin}
+            and recharge_money <![CDATA[ <= ]]> #{req.priceMax}
+        </if>
+        <if test="req.bankUserName != null and req.bankUserName != ''">
+            and bank_user_name = #{req.bankUserName}
+        </if>
+        <if test="req.updateTime != null and req.updateTime != ''">
+            and update_time <![CDATA[ >= ]]> concat(#{req.updateTime), ' 00:00:00')
+            and update_time <![CDATA[ <= ]]> concat(#{req.updateTime), ' 23:59:59')
+        </if>
+    </select>
 </mapper>
