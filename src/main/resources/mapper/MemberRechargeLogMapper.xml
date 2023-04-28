@@ -322,8 +322,8 @@
             and bank_user_name = #{req.bankUserName}
         </if>
         <if test="req.updateTime != null and req.updateTime != ''">
-            and update_time <![CDATA[ >= ]]> concat(#{req.updateTime), ' 00:00:00')
-            and update_time <![CDATA[ <= ]]> concat(#{req.updateTime), ' 23:59:59')
+            and update_time <![CDATA[ >= ]]> concat(#{req.updateTime}, ' 00:00:00')
+            and update_time <![CDATA[ <= ]]> concat(#{req.updateTime}, ' 23:59:59')
         </if>
         GROUP BY bank_user_name,bank_name,recharge_money,bank_account
         ORDER BY bank_user_name,recharge_money
@@ -339,8 +339,8 @@
             and bank_user_name = #{req.bankUserName}
         </if>
         <if test="req.updateTime != null and req.updateTime != ''">
-            and update_time <![CDATA[ >= ]]> concat(#{req.updateTime), ' 00:00:00')
-            and update_time <![CDATA[ <= ]]> concat(#{req.updateTime), ' 23:59:59')
+            and update_time <![CDATA[ >= ]]> concat(#{req.updateTime}, ' 00:00:00')
+            and update_time <![CDATA[ <= ]]> concat(#{req.updateTime}, ' 23:59:59')
         </if>
     </select>
 </mapper>

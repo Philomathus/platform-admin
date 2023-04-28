@@ -51,3 +51,5 @@ payAgentLimitAiNongPay: 50000
 payAgentKuBiPay: 20000
 # VIPPAY代付额度
 payAgentVipPay: 200000
+# 百达付代付额度
+payAgentBaiDaFuPay: 50000
