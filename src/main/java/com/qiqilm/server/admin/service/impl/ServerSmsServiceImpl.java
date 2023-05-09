@@ -19,7 +19,6 @@ import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ServerSms;
 import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.mapper.ServerSmsMapper;
-import com.qiqilm.server.admin.proportion.SmsProvider;
 import com.qiqilm.server.admin.service.IServerSmsService;
 import com.qiqilm.server.admin.service.SmsLoadBalancerService;
 import com.qiqilm.server.admin.utils.*;
@@ -204,16 +203,16 @@ public class ServerSmsServiceImpl implements IServerSmsService {
     }
 
     public String sendSms(String phone, long id) {
-        SmsProvider smsProvider = smsLoadBalancerService.getProvider();
+        //SmsProvider smsProvider = smsLoadBalancerService.getProvider();
         ServerSms serverSms = this.selectServerSmsById(id);
-        switch (smsProvider) {
-            case TENCENT:
+        switch (serverSms.getProvider()) {
+            case 0:
                 return this.sendSmsTencent(serverSms, phone);
-            case ALIYUN:
+            case 1:
                 return this.sendSmsAliyun(serverSms, phone);
-            case BAIDU:
+            case 2:
                 return this.sendSmsBaidu(serverSms, phone);
-            case HUAWEI:
+            case 3:
                 return this.sendSmsHuawei(serverSms, phone);
         }
         return null;

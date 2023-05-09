@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://livedata.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77mt_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://livedata.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77lx_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: admin
       password: ENC(eNEs8Zeo1ZxWlxk7DA8+KKdlWOyq4udWhsa9oqw9RfzxSqbbd7qqNppi8ROSNDYziS5U2jlyX4KlF9gAOzJYCg==)
     secondary:
@@ -9,15 +9,15 @@ spring:
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
       password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
   redis:
-    host: ENC(1J1cDcvjC5k5NvptoTVDx2sVT7RZdvg2MzvIA9gHdIHZIieebc6hFk/ZvFm3p7I62RZwFTCPNnURyPYeGHkn9P7mi6CUYcbYxKj1vW1bJTw=)
+    host: ENC(P/wa4i2f4tuDuw3laSDGBgRaH/ENc+RCFTpR5LNVZerh7Fk2y2pOQj00fqB7YZuEZjKVlhOdhOWRu0ZF2+jj4gn7Ybjq8diCCI2Zwu1y9JI=)
     port: 6379
 
 mybatis:
   configuration:
     variables:
-      dbMain: 77mt_main
-      dbLive: 77mt_live
-      dbLottery: 77mt_lottery
+      dbMain: 77lx_main
+      dbLive: 77lx_live
+      dbLottery: 77lx_lottery
 
 liveCenter: 7701
 
@@ -79,5 +79,3 @@ payAgentDaNiuPay: 50000
 payAgentKuBiPay: 20000
 # VIPPAY代付额度
 payAgentVipPay: 200000
-# VIPPAY代付额度
-payAgentZhiYuanPay: 10000

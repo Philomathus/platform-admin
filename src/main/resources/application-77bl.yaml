@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(cCddHfi4ULNniqqin/oDG0x5P6M0PBE0nDXg//fGY0qtNXSN2Dh1t2csUJBchVX6yyIQJPkYz1k2SKMZgMaZU24FQxhZgT7UizFGc4vh1TVH6EfZL3tRRbvujyeDM7Xhmi9IAf97ILRs8heR0HABKr7bOi/t2ff3oHhmbByIf8BUj8HHSHmZ3RB5QoD6chG2Way+Mb6Bco7qnDJ1fpBL+Pig1NviW4fAPqEZj4i4WRpT46dhdr36TrvtzWtBzhhPA7Jk5rvtCcL2ab/knxeVZgX377H3cZ5TKQNzguQ8q2I=)
+      jdbc-url: jdbc:mysql://livedata.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77bl_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: admin
       password: ENC(eNEs8Zeo1ZxWlxk7DA8+KKdlWOyq4udWhsa9oqw9RfzxSqbbd7qqNppi8ROSNDYziS5U2jlyX4KlF9gAOzJYCg==)
     secondary:
