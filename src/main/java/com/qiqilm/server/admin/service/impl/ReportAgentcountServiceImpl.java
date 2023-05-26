@@ -53,20 +53,20 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
                 //如果是当天，校验是否是一个小时之前的数据
                 String s = reportAgentcountMapper.rmemberInfoLately();
                 if(StringUtils.isBlank( s )){
-                    return AjaxResult.error("请重新生成" + beginTime + "数据");
+                    return AjaxResult.error("请重新生成" + beginTime + "数据1");
                 }
                 String l = reportAgentcountMapper.memberInfoLately();
                 LocalDateTime time = LocalDateTimeUtils.parseLocalDateTime(s);
                 Duration between = Duration.between(time, LocalDateTime.now());
                 if (between.getSeconds() > 1200 && !s.equals( l )) {
-                    return AjaxResult.error("请重新生成" + beginTime + "数据");
+                    return AjaxResult.error("请重新生成" + beginTime + "数据2");
                 }
             } else {
                 //昨天的数据，判断数量是否相等
                 int i = reportAgentcountMapper.memberInfoCounts(beginTime + " 00:00:00", beginTime + " 23:59:59");
                 int r = reportAgentcountMapper.rmemberInfoCounts(beginTime + " 00:00:00", beginTime + " 23:59:59");
                 if (i != r) {
-                    return AjaxResult.error("请重新生成" + beginTime + "数据");
+                    return AjaxResult.error("请重新生成" + beginTime + "数据3");
                 }
             }
             reportAgentcount.setAgenttime(beginTime);

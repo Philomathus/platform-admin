@@ -19,41 +19,41 @@ import java.util.List;
 @Component
 public class MessageSendTask {
 
-	@Autowired
-	private IMemberWithdrawLogService memberWithdrawLogService;
+    @Autowired
+    private IMemberWithdrawLogService memberWithdrawLogService;
 
-	@Autowired
-	private RedisUtil          redisUtil;
-	@Autowired
-	private SysConfigCacheUtil sysConfigCacheUtil;
-	@Resource
-	private RobotMessage       robotMessage;
+    @Autowired
+    private RedisUtil          redisUtil;
+    @Autowired
+    private SysConfigCacheUtil sysConfigCacheUtil;
+    @Resource
+    private RobotMessage       robotMessage;
 
-	@Scheduled( fixedDelay = 300000, initialDelay = 1 )
-	public void runTask() {
-		log.info("10分钟未进来:");
-		if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 250 ) ) {
-			return;
-		}
+    @Scheduled( fixedDelay = 300000, initialDelay = 1 )
+    public void runTask() {
+        log.info( "10分钟未进来:" );
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 250 ) ) {
+            return;
+        }
 
-		String flag = sysConfigCacheUtil.getConf( "messageBot" );
-		log.info("10分钟未处理:"+flag);
-		if ( flag.equals( "0" ) ) {
-			return;
-		}
-		List<MemberWithdrawLog> list = memberWithdrawLogService.getWithdrawLogList();
-		log.info("10分钟未处理:"+list.size());
-		if ( list.size() > 0 ) {
-			StringBuffer bf = new StringBuffer( "超过10分钟未处理的出款总数:" );
-			bf.append( list.size() + "\n" );
-			int i = 1;
-			for ( MemberWithdrawLog memberWithdrawLog : list ) {
-				bf.append( i + " 用户ID:" + memberWithdrawLog.getMemberId()
-						+ " 金额:" + memberWithdrawLog.getWithdrawMoney() + "\n" );
-				i++;
-			}
-			log.info("10分钟未处理2:"+bf.toString());
-			robotMessage.send( bf.toString() );
-		}
-	}
+        String flag = sysConfigCacheUtil.getConf( "messageBot" );
+        log.info( "10分钟未处理:" + flag );
+        if ( flag.equals( "0" ) ) {
+            return;
+        }
+        List<MemberWithdrawLog> list = memberWithdrawLogService.getWithdrawLogList();
+        log.info( "10分钟未处理:" + list.size() );
+        if ( list.size() > 0 ) {
+            StringBuffer bf = new StringBuffer( "超过10分钟未处理的出款总数:" );
+            bf.append( list.size() + "\n" );
+            int i = 1;
+            for ( MemberWithdrawLog memberWithdrawLog : list ) {
+                bf.append( i + " 用户ID:" + memberWithdrawLog.getMemberId() + " 金额:" + memberWithdrawLog.getWithdrawMoney()
+                        + "\n" );
+                i++;
+            }
+            log.info( "10分钟未处理2:" + bf );
+            robotMessage.sendByChatId( bf.toString(), sysConfigCacheUtil.getConf( "withdraw_log_telegram" ) );
+        }
+    }
 }

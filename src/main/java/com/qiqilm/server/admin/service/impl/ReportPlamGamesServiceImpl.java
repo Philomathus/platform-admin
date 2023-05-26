@@ -43,7 +43,7 @@ public class ReportPlamGamesServiceImpl implements IReportPlamGamesService {
 	public List<ReportPlamGames> selectReportPlamGamesList( ReportPlamGames reportPlamGames ) {
 		String dateNowStr = LocalDateTimeUtils.format( LocalDate.now() );
 
-		if ( dateNowStr.equals( reportPlamGames.getBegindate() ) ) {
+		if ( dateNowStr.equals( reportPlamGames.getEndDate() ) ) {
 			if ( !redisUtil.exists( "admin-reportPlamGames" ) ) {
 				storage( dateNowStr );
 			}

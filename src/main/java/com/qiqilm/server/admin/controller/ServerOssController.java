@@ -32,9 +32,9 @@ public class ServerOssController extends BaseController {
 	 */
 	@PreAuthorize( "@ss.hasPermi('server:oss:list')" )
 	@GetMapping( "/list" )
-	public TableDataInfo list( ServerOss serverOss ) {
+	public TableDataInfo list(  @RequestHeader(  name="hideAccess", required = false ) boolean hideAccess, ServerOss serverOss ) {
 		startPage();
-		List<ServerOss> list = serverOssService.selectServerOssList( serverOss );
+		List<ServerOss> list = serverOssService.selectServerOssList( serverOss , hideAccess);
 		return getDataTable( list );
 	}
 

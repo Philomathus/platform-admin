@@ -978,6 +978,13 @@
     <update id="boxDish">
         update member_info set total_account = total_account+box_account, box_account = 0 where id = #{memberId}
     </update>
+    <update id="withdrawStatus" parameterType="MemberInfo">
+        update member_info
+        <trim prefix="SET" suffixOverrides=",">
+            birth_day = #{birthDay}
+        </trim>
+        where id = #{id}
+    </update>
 
     <!--	find by ip address -->
     <select id="selectMemberInfoByIp" parameterType="String" resultMap="MemberInfoResult">

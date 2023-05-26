@@ -72,8 +72,18 @@ public class ServerOssServiceImpl implements IServerOssService {
      * @return oss文件存储服务配置
      */
     @Override
-    public List<ServerOss> selectServerOssList( ServerOss serverOss ) {
-        return serverOssMapper.selectServerOssList( serverOss );
+    public List<ServerOss> selectServerOssList( ServerOss serverOss , boolean hideAccess) {
+
+        List<ServerOss> ossList = serverOssMapper.selectServerOssList( serverOss );
+
+        if (hideAccess) {
+            ossList.stream().forEach((r)-> {
+                r.setAccessKey("");
+                r.setAccessSecret("");
+            });
+        }
+
+        return ossList;
     }
 
     /**

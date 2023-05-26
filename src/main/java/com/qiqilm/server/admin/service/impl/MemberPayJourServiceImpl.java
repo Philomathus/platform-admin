@@ -4,7 +4,6 @@ import com.qiqilm.server.admin.domain.MemberPayJour;
 import com.qiqilm.server.admin.domain.rsp.MemberPayJourRsp;
 import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import com.qiqilm.server.admin.mapper.MemberPayJourMapper;
-import com.qiqilm.server.admin.mapper.PayChannelNewMapper;
 import com.qiqilm.server.admin.service.IMemberPayJourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +21,6 @@ import java.util.Map;
 public class MemberPayJourServiceImpl implements IMemberPayJourService {
 	@Autowired
 	private MemberPayJourMapper memberPayJourMapper;
-
-	@Autowired
-	private PayChannelNewMapper payChannelNewMapper;
 
 	/**
 	 * 查询线上充值信息

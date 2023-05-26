@@ -9,6 +9,7 @@ import com.qiqilm.server.admin.core.page.TableDataInfo;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
+import com.qiqilm.server.admin.domain.LiveGuardUser;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
@@ -271,10 +272,8 @@ public class MemberInfoController extends BaseController {
                 if ( StringUtils.isBlank( cell3 ) ) {
                     cell3 = "1";
                 }
-                userId = userId.append( "\"" )
-                                .append( cell1 ).append( "\"" ).append( "," )
-                                .append( cell2 ).append( "," )
-                                .append( cell3 ).append( "),(" );
+                userId = userId.append( "\"" ).append( cell1 ).append( "\"" ).append( "," ).append( cell2 ).append( "," )
+                               .append( cell3 ).append( "),(" );
 
             }
         } catch ( Exception e ) {
@@ -839,5 +838,21 @@ public class MemberInfoController extends BaseController {
             return rspBase;
         }
         return null;
+    }
+
+    @GetMapping( "/liveGuardUser/list" )
+    public TableDataInfo list( LiveGuardUser liveGuardUser ) {
+        startPage();
+        List<LiveGuardUser> list = memberInfoService.selectLiveGuard( liveGuardUser );
+        return getDataTable( list );
+    }
+
+
+    @PreAuthorize( "@ss.hasPermi('member:withdrawStatus:edit')" )
+    @Log( title = "取款状态", businessType = BusinessType.UPDATE )
+    @PutMapping( "/withdrawStatus" )
+    public AjaxResult withdrawStatus( MemberInfo memberInfo ) {
+        log.info( memberInfo );
+        return toAjax( memberInfoService.withdrawStatus( memberInfo ) );
     }
 }

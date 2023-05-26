@@ -60,6 +60,10 @@
 			<include refid="listWhere"/>
 			<if test="downLoadDate[0] != null "> and update_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>
 			<if test="downLoadDate[1] != null "> and update_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>
+			<if test="priceMin != null and priceMax != null  and priceMin != ''  and priceMax != ''">
+				and money <![CDATA[ >= ]]> #{priceMin}
+				and money <![CDATA[ <= ]]> #{priceMax}
+			</if>
 		</where>
 		) j
 		left join pay_platform_new p on j.platform_id = p.id

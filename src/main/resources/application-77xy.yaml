@@ -1,9 +1,9 @@
 spring:
   datasource:
     primary:
-      jdbc-url: ENC(kblJ1I3x4tTOcn4/FKxqxCfsVbTvqzijEbW6q/TwXuq1Y1neiqIwrSnPwHOebV6cj3LrUwc71zuL0vaXiblP3jIafV08oOL0OuV7S4Pi1wXo0AP86+lqsKBG2VlqrpT5guhTTpNJv7dMfGHn0couVMtghsyOf/rFKylz0o1A6wyz/tlWEeutM3XgmxC6hmlbnE/zqYGQLoxk7s63cl7J/Wx1MsS7mKVSjSNoM2c30vUsoRtoD3chSw49YyEGXgIfNaJ4tdJBPWPPAIv1J3tA40fimVEjeQdebxp/C1b4fbw=)
+      jdbc-url: jdbc:mysql://sevenall.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77xy_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: admin
-      password: djkteCbsupY3RCDkPDPS
+      password: dRmBstReqberz!14Xm#
     secondary:
       jdbc-url: ENC(AxjxThZpL1kolf6Yx5MuBFGbP5sST9IeCMFijDG2zLlFRliUQPMeQt3f8zHbDRllaYPjoIEYVe0QsxTZULfTmJNRk2uRDDYq6U7X33dY6Dxznc33PumGdlo/IblJu+gEJG3UlIZIjkB+wYPSP9N0qioZYHoxuAdyINa84LSUvEk0WXxHRBe1g592bKRm7PbnluKYxsSG60auGF8b9DTPCw==)
       username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)

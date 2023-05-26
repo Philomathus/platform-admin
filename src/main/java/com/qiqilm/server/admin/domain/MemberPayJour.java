@@ -127,6 +127,12 @@ public class MemberPayJour implements Serializable {
 	@JsonIgnore
 	private List<String> channelIds;
 
+	@JsonIgnore
+	private String priceMin;
+
+	@JsonIgnore
+	private String priceMax;
+
 	public String getCurrentSuccessRateStr() {
 		if ( currentSuccessRate != null ) {
 			return currentSuccessRate.multiply( new BigDecimal( 100 ) ).setScale( 0, RoundingMode.HALF_UP ).toString().concat(

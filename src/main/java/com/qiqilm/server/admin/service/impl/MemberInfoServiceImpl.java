@@ -601,6 +601,16 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
+    public List<LiveGuardUser> selectLiveGuard(LiveGuardUser liveGuardUser) {
+        return memberInfoMapper.selectLiveGuard(liveGuardUser);
+    }
+
+    @Override
+    public int withdrawStatus( MemberInfo memberInfo ) {
+        return memberInfoMapper.withdrawStatus(memberInfo);
+    }
+
+    @Override
     public AjaxResult personalReport( String startTime, String endTime, String memberId ) {
 
         List<Callable<Map<String, Object>>> forkJoinTasks = new ArrayList<>();

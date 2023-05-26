@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.task;
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.domain.ConfigDomain;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.service.IConfigDomainService;
@@ -21,72 +22,72 @@ import java.util.List;
 @Component
 @Log4j2
 public class DomainTask {
-	@Autowired
-	private RestTemplate         restTemplate;
-	@Autowired
-	private IConfigDomainService configDomainService;
-	@Autowired
-	private RobotMessage         robotMessage;
+    @Autowired
+    private RestTemplate         restTemplate;
+    @Autowired
+    private IConfigDomainService configDomainService;
+    @Autowired
+    private RobotMessage         robotMessage;
 
-	@Autowired
-	private RedisUtil redisUtil;
-	@Autowired
-	private SysConfigCacheUtil sysConfigCacheUtil;
-	@Value( "${spring.profiles.active}" )
-	private String profile;
+    @Autowired
+    private RedisUtil          redisUtil;
+    @Autowired
+    private SysConfigCacheUtil sysConfigCacheUtil;
+    @Value( "${spring.profiles.active}" )
+    private String             profile;
 
-	//@Scheduled( fixedDelay = 300000, initialDelay=300000  )
-	public void checkDomain() {
+    //@Scheduled( fixedDelay = 300000, initialDelay=300000  )
+    public void checkDomain() {
 
-		if(!redisUtil.adminLock(EnumLock.adminTask,getClass().getSimpleName(),200)){
-			return;
-		}
-		if ( "7700".equals( profile ) || "dev".equals( profile ) ) {
-			return;
-		}
-		log.info( "轮询检测域名" + DateUtils.getTime() );
-		List<ConfigDomain> list = configDomainService.selectConfigDomainList( null );
-		String do_main_telegram = sysConfigCacheUtil.getConf( "do_main_telegram" );
-		if (Strings.isBlank(do_main_telegram)){
-			return;
-		}
-		for ( ConfigDomain li : list ) {
-			String url;
-			if ( li.getDgroup() == 4 ) {
-				url = li.getDomain() + "/77ym/7700.txt";
-			} else {
-				url = li.getDomain() + "/verif/ping";
-			}
-			boolean a = doGet( url, 1 );
-			if ( !a ) {
-				String warnText = "7701代理测试域名 " + li.getDomain() + " 检测异常";
-				log.error( warnText );
-				try {
-					robotMessage.sendByChatId( warnText, do_main_telegram );
-				} catch ( Exception e ) {
-					log.error( e.getMessage(), e );
-				}
-			} else {
-				log.info( "域名 " + li.getDomain() + " 检测正常" );
-			}
-		}
-	}
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 200 ) ) {
+            return;
+        }
+        if ( "7700".equals( profile ) || "dev".equals( profile ) || !LiveCenterConfig.me.isLiveCenter() ) {
+            return;
+        }
+        log.info( "轮询检测域名" + DateUtils.getTime() );
+        List<ConfigDomain> list             = configDomainService.selectConfigDomainList( null );
+        String             do_main_telegram = sysConfigCacheUtil.getConf( "do_main_telegram" );
+        if ( Strings.isBlank( do_main_telegram ) ) {
+            return;
+        }
+        for ( ConfigDomain li : list ) {
+            String url;
+            if ( li.getDgroup() == 4 ) {
+                url = li.getDomain() + "/77ym/7700.txt";
+            } else {
+                url = li.getDomain() + "/verif/ping";
+            }
+            boolean a = doGet( url, 1 );
+            if ( !a ) {
+                String warnText = "7701代理测试域名 " + li.getDomain() + " 检测异常";
+                log.error( warnText );
+                try {
+                    robotMessage.sendByChatId( warnText, do_main_telegram );
+                } catch ( Exception e ) {
+                    log.error( e.getMessage(), e );
+                }
+            } else {
+                log.info( "域名 " + li.getDomain() + " 检测正常" );
+            }
+        }
+    }
 
-	public boolean doGet( String url, int retryNum ) {
-		if ( retryNum > 3 ) {
-			log.error( "url:{}访问三次失败，退出重试", url );
-			return false;
-		}
-		try {
-			ResponseEntity<String> resultEntity = restTemplate.getForEntity( url, String.class );
-			if ( resultEntity.getStatusCode() == HttpStatus.OK ) {
-				return true;
-			}
-		} catch ( Exception e ) {
-			log.warn( e.getMessage(), e );
-			retryNum++;
-			return doGet( url, retryNum );
-		}
-		return false;
-	}
+    public boolean doGet( String url, int retryNum ) {
+        if ( retryNum > 3 ) {
+            log.error( "url:{}访问三次失败，退出重试", url );
+            return false;
+        }
+        try {
+            ResponseEntity<String> resultEntity = restTemplate.getForEntity( url, String.class );
+            if ( resultEntity.getStatusCode() == HttpStatus.OK ) {
+                return true;
+            }
+        } catch ( Exception e ) {
+            log.warn( e.getMessage(), e );
+            retryNum++;
+            return doGet( url, retryNum );
+        }
+        return false;
+    }
 }

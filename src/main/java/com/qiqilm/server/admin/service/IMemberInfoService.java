@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.core.vo.RspBase;
+import com.qiqilm.server.admin.domain.LiveGuardUser;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
@@ -101,4 +102,8 @@ public interface IMemberInfoService {
     RspBase<?> boxDish( String memberId );
 
 	int unBlockStatus( MemberInfo memberInfo );
+
+    List<LiveGuardUser> selectLiveGuard( LiveGuardUser liveGuardUser);
+
+    int withdrawStatus( MemberInfo memberInfo );
 }

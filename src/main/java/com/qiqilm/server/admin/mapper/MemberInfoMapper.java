@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
+import com.qiqilm.server.admin.domain.LiveGuardUser;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.rsp.RspMemberChannel;
@@ -150,4 +151,8 @@ public interface MemberInfoMapper {
     int boxDish( @Param( "memberId" ) String memberId );
 
     int unBlockStatus(@Param( "array" )  List<String> loginIp,@Param("realName") String realName );
+
+    List<LiveGuardUser> selectLiveGuard(LiveGuardUser liveGuardUser);
+
+    int withdrawStatus( MemberInfo memberInfo );
 }
