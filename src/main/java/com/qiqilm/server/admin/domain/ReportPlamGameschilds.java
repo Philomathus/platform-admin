@@ -74,6 +74,7 @@ public class ReportPlamGameschilds extends BaseEntity {
     @Excel(name = "日期"/*, width = 30, databaseFormat = "yyyy-MM-dd"*/)
     private String begindate;
     private String endDate;
+    private String gameplamid;
 
     @Override
     public String toString() {

@@ -174,6 +174,17 @@
                 and vip <![CDATA[ >= ]]> #{vipMin}
                 and vip <![CDATA[ <= ]]> #{vipMax}
             </if>
+            <if test="levelIntegral != null">
+                <choose>
+                    <when test="levelIntegral == 0">
+                        and level_integral <![CDATA[ <= ]]> 0
+                    </when>
+                    <otherwise>
+                        and level_integral > 0
+                    </otherwise>
+                </choose>
+            </if>
+
 
         </where>
         order by reg_time desc
@@ -1059,21 +1070,37 @@
     </select>
 
     <select id="personalGameData" resultType="Map">
-        select a.*,p.name platformName from(
-        select ifnull(SUM(cell_score),0) as cellScore,
-        ifnull(SUM(all_bet),0) as allBet,
-        ifnull(SUM(profit),0) as profit,
-        platform_id platformId
-        from member_game_data${dbNodes}
-        where account= #{memberId} and game_end_time >=  #{startTime}
-        and game_end_time <![CDATA[ <= ]]> #{endTime}
-        GROUP BY platform_id) a left join game_platform p on p.id = a.platformId
+        select a.*, p.name platformName
+        from (select ifnull(SUM(cell_score), 0) as cellScore,
+                     ifnull(SUM(all_bet), 0)    as allBet,
+                     ifnull(SUM(profit), 0)     as profit,
+                     platform_id                   platformId
+              from member_game_data${dbNodes}
+              where account = #{memberId}
+                and game_end_time >= #{startTime}
+                and game_end_time <![CDATA[ <= ]]> #{endTime}
+                and profit <![CDATA[ <> ]]> 0
+              GROUP BY platform_id) a
+                 left join game_platform p on p.id = a.platformId
     </select>
     <select id="totalAccount" resultType="hashmap">
         select total_account,box_account from ${dbMain}.member_info
         where id = #{memberId}
     </select>
 
+    <select id="selectLiveGuard" parameterType="LiveGuardUser" resultType="LiveGuardUser">
+        select
+            anchor_id as anchorId,
+            start_time,
+            type,
+            DATE_FORMAT(guard_end_time,'%Y-%m-%d %H:%i:%s') as guardEndTime
+        from
+            ${dbLive}.live_guard_user
+        where
+            p_user_id = #{userId}
+          and
+            guard_end_time >= now()
+    </select>
 </mapper>
 
 

@@ -347,7 +347,7 @@
 		t.channel_id,t.platform_id
 	</select>
 	<select id="listCounts" resultType="java.util.Map">
-		SELECT SUM( t.sub_money ) AS subMoney ,SUM(t.sub_money *  c.pay_rate ) AS handlingfeeTotal ,t.platform_id,t.channel_id,t.update_time,COUNT(*) AS totalcount
+		SELECT SUM( t.sub_money ) AS subMoney ,SUM(t.sub_money * IFNULL(c.pay_rate,t.platform_rate) ) AS handlingfeeTotal ,t.platform_id,t.channel_id,t.update_time,COUNT(*) AS totalcount
 		FROM member_pay_jour t LEFT JOIN pay_channel_new c ON t.channel_id = c.id
 		WHERE t.STATUS='1'
 		<if test="platformId != null and platformId != ''">

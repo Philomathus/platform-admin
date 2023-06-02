@@ -58,4 +58,6 @@ public interface IReportPlamGameschildsService {
 	 * @return 结果
 	 */
 	public int deleteReportPlamGameschildsById(String gameUuid);
+
+	public List<ReportPlamGameschilds> selectByBettorsCount( ReportPlamGameschilds reportPlamGameschilds );
 }

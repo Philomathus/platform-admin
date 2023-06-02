@@ -1,8 +1,8 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.ReportPlamGameschilds;
+
+import java.util.List;
 
 /**
  * 游戏投注报表子表Mapper接口
@@ -58,4 +58,8 @@ public interface ReportPlamGameschildsMapper {
 	 * @return 结果
 	 */
 	public int deleteReportPlamGameschildsByIds(String[] gameUuids );
+
+	public String getPlatformIdByGameUuid( String gameUuid );
+
+	public List<ReportPlamGameschilds> selectByBettorsCounts( ReportPlamGameschilds reportPlamGameschilds );
 }

@@ -83,4 +83,11 @@ public class ReportPlamGameschildsServiceImpl implements IReportPlamGameschildsS
     public int deleteReportPlamGameschildsById(String gameUuid) {
         return reportPlamGameschildsMapper.deleteReportPlamGameschildsById(gameUuid);
     }
+
+    @Override
+    public List<ReportPlamGameschilds> selectByBettorsCount( ReportPlamGameschilds reportPlamGamesChilds ) {
+        String platformId = reportPlamGameschildsMapper.getPlatformIdByGameUuid( reportPlamGamesChilds.getGameUuid() );
+        reportPlamGamesChilds.setGameplamid( platformId );
+        return reportPlamGameschildsMapper.selectByBettorsCounts( reportPlamGamesChilds );
+    }
 }
