@@ -1,5 +1,4 @@
 package com.qiqilm.server.admin.domain;
-
 import lombok.Data;
 
 @Data

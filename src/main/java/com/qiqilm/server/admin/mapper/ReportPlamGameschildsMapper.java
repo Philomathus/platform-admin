@@ -1,8 +1,7 @@
 package com.qiqilm.server.admin.mapper;
 
-import com.qiqilm.server.admin.domain.ReportPlamGameschilds;
-
 import java.util.List;
+import com.qiqilm.server.admin.domain.ReportPlamGameschilds;
 
 /**
  * 游戏投注报表子表Mapper接口

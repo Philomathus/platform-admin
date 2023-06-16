@@ -85,3 +85,5 @@ payAgentHYPay: 20000
 payAgentGTPay: 50000
 # 蜜蜂代付额度
 payAgentMiFengPay: 50000
+# BB玖鼎代付额度
+payAgentBBJiuDingPay: 50000

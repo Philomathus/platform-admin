@@ -85,3 +85,5 @@ payAgentDaNiuPay: 50000
 payAgentKuBiPay: 20000
 # VIPPAY代付额度
 payAgentVipPay: 200000
+# BB玖鼎代付额度
+payAgentBBJiuDingPay: 50000

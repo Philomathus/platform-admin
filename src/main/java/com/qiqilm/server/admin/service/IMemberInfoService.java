@@ -103,7 +103,7 @@ public interface IMemberInfoService {
 
 	int unBlockStatus( MemberInfo memberInfo );
 
-    List<LiveGuardUser> selectLiveGuard( LiveGuardUser liveGuardUser);
+    List<LiveGuardUser> selectLiveGuard(LiveGuardUser liveGuardUser);
 
     int withdrawStatus( MemberInfo memberInfo );
 }

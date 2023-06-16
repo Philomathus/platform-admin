@@ -668,6 +668,7 @@ public class MemberInfoController extends BaseController {
     }
 
     @ApiOperation( value = "修复打码", notes = "修復打碼" )
+    @Log( title = "打码修复", businessType = BusinessType.INSERT )
     @PostMapping( "/memberBcodeRepair" )
     public Object memberBcodeRepair( HttpServletRequest request, MemberInfo memberInfo ) throws Exception {
         RspBase<?> checkRspBase = this.checkGoogleAuth( memberInfo );

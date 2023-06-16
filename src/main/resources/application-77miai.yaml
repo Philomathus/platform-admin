@@ -81,3 +81,5 @@ payAgentKuBiPay: 20000
 payAgentYunBeiPay: 30000
 # VIPPAY代付额度
 payAgentVipPay: 200000
+# 新贝代付额度
+payAgentXinBeiPay: 50000

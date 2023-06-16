@@ -24,7 +24,7 @@ public class HostLiveGiftFix {
             return;
         }
 
-        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 900)) {
+        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName(), 30)) {
             return;
         }
 

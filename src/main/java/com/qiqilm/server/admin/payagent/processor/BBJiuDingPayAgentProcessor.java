@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
@@ -31,9 +30,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository(value = ConstantsPayAgent.BAIDAFU + "PayAgentProcessor")
+@Repository(value = ConstantsPayAgent.BB_JIUDING_PAY + "PayAgentProcessor")
 @Log4j2
-public class BaiDaFuPayAgentProcessor extends AbstractPayAgent {
+public class BBJiuDingPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
