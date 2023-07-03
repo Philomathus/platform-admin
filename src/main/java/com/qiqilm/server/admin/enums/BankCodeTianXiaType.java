@@ -220,7 +220,7 @@ public enum BankCodeTianXiaType {
     PERB( Arrays.asList( "蒙商银行" ) ),
     MSRCB( Arrays.asList( "密山农商银行" ) ),
     MYCC( Arrays.asList( "绵阳商业银行" ) ),
-    CMBC( Arrays.asList( "民生银行" ) ),
+    CMBC( Arrays.asList( "民生银行", "中国民生银行" ) ),
     CGNB( Arrays.asList( "南充市商业银行" ) ),
     NRCB( Arrays.asList( "南海农商银行" ) ),
     NRCBANK( Arrays.asList( "南海农信" ) ),

@@ -185,6 +185,10 @@
                 </choose>
             </if>
 
+            <if test="integral != null and integral != ''">
+                and code_total/level_integral <![CDATA[ > ]]> #{integral}
+            </if>
+
 
         </where>
         order by reg_time desc

@@ -299,6 +299,9 @@ public class MemberInfo extends DownLoadTime {
 
     private Integer googleAuthCode;
 
+    @JsonIgnore
+    private Integer integral;
+
     public Set<String> getSearchValues() {
         if ( StringUtils.isNotBlank( searchValue ) ) {
             String[]    strings        = searchValue.split( "," );

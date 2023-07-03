@@ -9,7 +9,6 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -161,6 +160,8 @@ public class LiveUser extends DownLoadTime {
 
 	private String userIds;
 	private Set<String> userIdSet;
+
+	private Integer virtualAnchor;
 
 	public Set<String> getUserIdSet() {
 		if(StringUtils.isNotBlank(userIds)){

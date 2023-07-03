@@ -19,7 +19,7 @@ mybatis:
       dbLive: 77yy_live
       dbLottery: 77yy_lottery
 
-liveCenter: 7701
+liveCenter: 7708
 
 im:
   # 群聊

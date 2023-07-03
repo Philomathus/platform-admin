@@ -387,7 +387,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
             return AjaxResult.error( "主播已下播，更新失败" );
         }
         if ( liveVideo.getSort() != null && liveVideo.getSort() != 9999999 ) {
-            if ( liveVideo.getSort() <= 0 || liveVideo.getSort() >= 100 ) {
+            if ( liveVideo.getSort() <= 0 || liveVideo.getSort() >= 999 ) {
                 redisUtil.unlink( "admin:videoSort:" + liveVideo.getId() );
                 return AjaxResult.error( "固定位大小有误，请输入大于0小于100的整数值" );
             }
