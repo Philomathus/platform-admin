@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
@@ -25,7 +24,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -44,7 +42,6 @@ public class ChanHongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("BankCardRealName", withdrawLog.getBankUserName());
         bodyMap.put("MerchantUniqueOrderId", withdrawLog.getOrderNo());
         bodyMap.put("NotifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
-        bodyMap.put("Timestamp", DateFormatUtils.formate(reqPayAgent.getCurrentTime(), DateFormatUtils.TIGHT_PATTERN_DATETIME));
         bodyMap.put("WithdrawTypeId", 0);
         bodyMap.put("Remark", "111");
 
@@ -140,7 +137,6 @@ public class ChanHongPayAgentProcessor extends AbstractPayAgent {
 
         Map<String, Object> dataMap = new TreeMap<>();
         dataMap.put("MerchantId", payAgentPlatform.getMerId());
-        dataMap.put("Timestamp", DateFormatUtils.formate(new Date(), DateFormatUtils.TIGHT_PATTERN_DATETIME));
         dataMap.put("MerchantUniqueOrderId", withdrawLog.getOrderNo());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
