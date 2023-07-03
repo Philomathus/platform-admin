@@ -46,6 +46,7 @@ public class ChanHongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("NotifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
         bodyMap.put("Timestamp", DateFormatUtils.formate(reqPayAgent.getCurrentTime(), DateFormatUtils.TIGHT_PATTERN_DATETIME));
         bodyMap.put("WithdrawTypeId", 0);
+        bodyMap.put("Remark", "111");
 
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
