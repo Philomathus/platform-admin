@@ -43,7 +43,7 @@ public class ChanHongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("MerchantUniqueOrderId", withdrawLog.getOrderNo());
         bodyMap.put("NotifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
         bodyMap.put("WithdrawTypeId", 0);
-        bodyMap.put("Remark", "111");
+        bodyMap.put("Remark", 0);
 
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
