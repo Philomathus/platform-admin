@@ -89,3 +89,7 @@ payAgentKuBiPay: 20000
 payAgentVipPay: 200000
 # BB玖鼎代付额度
 payAgentBBJiuDingPay: 50000
+# MY代付额度
+payAgentMyPay: 50000
+# 天奇代付额度
+payAgentTianQiPay: 50000
