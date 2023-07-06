@@ -42,9 +42,11 @@ public class TengDaPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("amount", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP).intValue());
         dataMap.put("accountName", withdrawLog.getBankUserName().trim());
         dataMap.put("accountNo", withdrawLog.getBankAccount().trim());
+        dataMap.put("accountType", "1");
         dataMap.put("bankName", withdrawLog.getBankName());
         dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + payAgentPlatform.getCode());
         dataMap.put("version", "1.0");
+        dataMap.put("remark", "123");
         dataMap.put("reqTime", DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
 
         String md5key = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
@@ -77,7 +79,7 @@ public class TengDaPayAgentProcessor extends AbstractPayAgent {
         log.info(payAgentPlatform.getName()+"下单结果{},订单号:{}", JsonUtil.object2Json(resultMap),withdrawLog.getOrderNo());
 
         if (!CollectionUtils.isEmpty(resultMap)) {
-            if ("0".equals(resultMap.getOrDefault("retCode", "").toString())) {
+            if ("SUCCESS".equals(resultMap.getOrDefault("retCode", "").toString())) {
                 log.info(payAgentPlatform.getName()+"订单提交成功 - listResult:{}", JsonUtil.object2Json(resultMap));
                 return true;
             } else {

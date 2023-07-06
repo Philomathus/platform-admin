@@ -77,7 +77,13 @@ payAgentLimitGoPayPay: 100000
 payAgentDaNiuPay: 50000
 # 酷币代付额度
 payAgentKuBiPay: 20000
-# VIPPAY代付额度
-payAgentVipPay: 200000
 # BB玖鼎代付额度
 payAgentBBJiuDingPay: 50000
+# MY代付额度
+payAgentMyPay: 50000
+# 天奇代付额度
+payAgentTianQiPay: 50000
+# OkPay代付额度
+payAgentLimitOkPayPay: 50000
+# VIPPAY代付额度
+payAgentVipPay: 50000
