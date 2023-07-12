@@ -33,3 +33,7 @@ payAgentLimitLianFuBao: 30000
 payAgentKuBiPay: 20000
 # VIPPAY代付额度
 payAgentVipPay: 200000
+# 8k代付额度
+payAgent8kPay: 20000
+# 波币代付额度
+payAgentBoBiPay: 20000

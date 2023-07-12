@@ -89,3 +89,7 @@ payAgentBBJiuDingPay: 50000
 payAgentMyPay: 50000
 # 天奇代付额度
 payAgentTianQiPay: 50000
+# 8k代付额度
+payAgent8kPay: 20000
+# 波币代付额度
+payAgentBoBiPay: 20000

@@ -22,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
@@ -40,7 +41,7 @@ public class MyPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> dataMap = new TreeMap<>();
         dataMap.put( "merchantId", payAgentPlatform.getMerId() );
         dataMap.put( "merchantOrderNo", withdrawLog.getOrderNo() );
-        dataMap.put( "amount", withdrawLog.getWithdrawMoney() );
+        dataMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
         dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put( "bankcardAccountName", withdrawLog.getBankUserName() );
         dataMap.put( "bankcardAccountNo", withdrawLog.getBankAccount() );

@@ -133,6 +133,10 @@ public class PayAgentServiceImpl implements IPayAgentService {
     private Integer payAgentMyPay;
     @Value ( "${payAgentTianQiPay:5000}" )
     private Integer payAgentTianQiPay;
+    @Value ( "${payAgent8kPay:5000}" )
+    private Integer payAgent8kPay;
+    @Value ( "${payAgentBoBiPay:5000}" )
+    private Integer payAgentBoBiPay;
 
     @Override
     @Transactional ( rollbackFor = Exception.class )
@@ -402,9 +406,15 @@ public class PayAgentServiceImpl implements IPayAgentService {
         } else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.MY_PAY ) )
                 && withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentMyPay ) ) > 0 ) {
             return AjaxResult.error( "此代付暂不支持" + payAgentMyPay + "元以上出款" );
-        }  else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.TIAN_QI_PAY ) )
+        } else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.TIAN_QI_PAY ) )
                 && withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentTianQiPay ) ) > 0 ) {
             return AjaxResult.error( "此代付暂不支持" + payAgentTianQiPay + "元以上出款" );
+        } else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent._8K_PAY ) )
+                && withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgent8kPay ) ) > 0 ) {
+            return AjaxResult.error( "此代付暂不支持" + payAgent8kPay + "元以上出款" );
+        } else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.BO_BI_PAY ) )
+                && withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentBoBiPay ) ) > 0 ) {
+            return AjaxResult.error( "此代付暂不支持" + payAgentBoBiPay + "元以上出款" );
         } else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.VIP_PAY )
@@ -414,6 +424,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.HEZHONG )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.DIDI )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.MY_PAY )
+                && !payAgentPlatform.getCode().equals( ConstantsPayAgent._8K_PAY )
+                && !payAgentPlatform.getCode().equals( ConstantsPayAgent.BO_BI_PAY )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.TIAN_QI_PAY )
                 && !payAgentPlatform.getCode().contains( ConstantsPayAgent.BINLI )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.BINLI2 )
