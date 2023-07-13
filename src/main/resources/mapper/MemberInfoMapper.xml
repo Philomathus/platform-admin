@@ -1105,6 +1105,15 @@
           and
             guard_end_time >= now()
     </select>
+
+    <update id="updateCodeTotalVipLevel" parameterType="MemberInfo">
+        update ${dbMain}.member_info
+        set vip = (select max(level_flag) from ${dbMain}.config_vip
+                   where level_money <![CDATA[ <= ]]> #{codeTotal}),
+            code_total = #{codeTotal}
+        where id = #{id}
+    </update>
+
 </mapper>
 
 

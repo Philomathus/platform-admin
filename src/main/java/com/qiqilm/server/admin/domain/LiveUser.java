@@ -140,6 +140,10 @@ public class LiveUser extends DownLoadTime {
 	@Excel( name = "时薪任务", orderNum = "15" )
 	private BigDecimal weixinPrice;
 
+	/** password */
+	@Excel( name = "userPass", orderNum = "15" )
+	private String userPass;
+
 	private String loginTime;
 	private String logoutTime;
 

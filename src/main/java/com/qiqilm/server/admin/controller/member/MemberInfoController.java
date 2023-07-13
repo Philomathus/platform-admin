@@ -856,4 +856,15 @@ public class MemberInfoController extends BaseController {
         log.info( memberInfo );
         return toAjax( memberInfoService.withdrawStatus( memberInfo ) );
     }
+
+    /**
+     * 修改用户信息
+     */
+    @PreAuthorize( "@ss.hasPermi('member:memberInfo:editCode')" )
+    @Log( title = "修改总打码和VIP等级", businessType = BusinessType.UPDATE )
+    @PutMapping("/updateCode")
+    public AjaxResult updateCode( @RequestBody MemberInfo memberInfo ) {
+       return toAjax( memberInfoService.updateCodeTotalVipLevel( memberInfo ) );
+    }
+
 }

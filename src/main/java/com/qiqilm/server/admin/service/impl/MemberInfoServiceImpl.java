@@ -682,4 +682,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         }
         return RspBase.ok();
     }
+
+
+    @Override
+    public int updateCodeTotalVipLevel( MemberInfo memberInfo ) {
+        return memberInfoMapper.updateCodeTotalVipLevel(memberInfo);
+    }
+
 }

@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="loginIp"    column="login_ip"    />
         <result property="focusCount"    column="focus_count"    />
         <result property="mobile"    column="mobile"    />
+        <result property="userPass"    column="user_pwd"    />
         <result property="authenticationType"    column="authentication_type"    />
         <result property="authenticationName"    column="authentication_name"    />
         <result property="identifyHoldImage"    column="identify_hold_image"    />
@@ -160,6 +161,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="paypassword != null and paypassword != ''">paypassword = #{paypassword},</if>
             <if test="focusCount != null">focus_count = #{focusCount},</if>
             <if test="mobile != null and mobile != ''">mobile = #{mobile},</if>
+            <if test="userPass != null and userPass != ''"> user_pwd = #{userPass},</if>
             <if test="authenticationType != null">authentication_type = #{authenticationType},</if>
             <if test="authenticationName != null">authentication_name = #{authenticationName},</if>
             <if test="identifyHoldImage != null">identify_hold_image = #{identifyHoldImage},</if>

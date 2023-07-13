@@ -155,4 +155,6 @@ public interface MemberInfoMapper {
     List<LiveGuardUser> selectLiveGuard(LiveGuardUser liveGuardUser);
 
     int withdrawStatus( MemberInfo memberInfo );
+
+    int updateCodeTotalVipLevel( MemberInfo memberInfo );
 }

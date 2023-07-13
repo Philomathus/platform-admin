@@ -214,7 +214,7 @@ public class LiveUserController extends BaseController {
             return rspBase;
         }
 
-        if( StringUtils.isEmpty(  liveUser.getPassword() )){
+        if( StringUtils.isEmpty(  liveUser.getUserPass() )){
             rspBase.setMsg( "请输入密码验证码" );
             rspBase.setCode( 1 );
             return rspBase;
