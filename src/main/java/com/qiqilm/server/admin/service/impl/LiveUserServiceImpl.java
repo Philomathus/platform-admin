@@ -1,9 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.qiqilm.server.admin.cache.ConfigDomainCacheUtil;
-import com.qiqilm.server.admin.cache.LiveCacheUtil;
-import com.qiqilm.server.admin.cache.RedisCacheUtil;
-import com.qiqilm.server.admin.cache.VideoCacheUtil;
+import com.qiqilm.server.admin.cache.*;
 import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.*;
@@ -23,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.*;
 
 /**
@@ -55,6 +49,9 @@ public class LiveUserServiceImpl implements ILiveUserService {
     private LiveCacheUtil         liveCacheUtil;
     @Resource
     private BankListMapper        bankListMapper;
+
+    @Resource
+    private SysConfigCacheUtil sysConfigCacheUtil;
 
     /**
      * 查询主播用户信息
@@ -97,11 +94,18 @@ public class LiveUserServiceImpl implements ILiveUserService {
     @Override
     public List<LiveUser> selectLiveUserList( LiveUser liveUser ) {
         List<LiveUser> liveUsers = liveUserMapper.selectLiveUserList( liveUser );
-        for ( LiveUser user : liveUsers ) {
+
+        String listHostList = sysConfigCacheUtil.getConf( "test_host_list" );
+
+        liveUsers.forEach( user -> {
+
+            boolean phone = listHostList.contains( user.getMobile() );
+            user.setVirtualAnchor( phone ? 1 : 0 );
+
             if ( StringUtils.isNotBlank( user.getMobile() ) ) {
                 user.setMobile( new StringBuilder( user.getMobile() ).replace( 3, 7, "****" ).toString() );
             }
-        }
+        } );
         return liveUsers;
     }
 
