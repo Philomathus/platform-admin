@@ -85,3 +85,5 @@ payAgentTianQiPay: 50000
 payAgentLimitOkPayPay: 50000
 # VIPPAY代付额度
 payAgentVipPay: 50000
+# 8k代付额度
+payAgent8kPay: 50000
