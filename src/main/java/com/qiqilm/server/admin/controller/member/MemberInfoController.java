@@ -858,7 +858,7 @@ public class MemberInfoController extends BaseController {
     }
 
     /**
-     * 修改用户信息
+     * 修改总打码和VIP等级
      */
     @PreAuthorize( "@ss.hasPermi('member:memberInfo:editCode')" )
     @Log( title = "修改总打码和VIP等级", businessType = BusinessType.UPDATE )

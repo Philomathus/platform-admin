@@ -39,3 +39,5 @@ payAgentLimitOkPayPay: 50000
 payAgentVipPay: 50000
 # 8k代付额度
 payAgent8kPay: 50000
+# 乐途代付额度
+payAgentLeTuPay: 50000

@@ -93,3 +93,7 @@ payAgentBBJiuDingPay: 50000
 payAgentMyPay: 50000
 # 天奇代付额度
 payAgentTianQiPay: 50000
+# 乐途代付额度
+payAgentLeTuPay: 50000
+# HY代付额度
+payAgentHYPay: 50000

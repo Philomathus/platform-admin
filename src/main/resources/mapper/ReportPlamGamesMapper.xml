@@ -63,11 +63,20 @@
     </select>
 
     <select id="countBetData" resultType="com.qiqilm.server.admin.domain.ReportPlamGames">
-        select sum(gamecell) as countBetMoney,sum(gamepepole) as countBetPeople,sum(gameprofit) as memberProfit
+        select sum(gamecell) as countBetMoney,
+               sum(gamepepole) as countBetPeople,
+               sum(gameprofit) as memberProfit
         from ${dbMain}.report_plam_games
         <where>
-            <if test="gameplame != null  and gameplame != ''"> and gameplame = #{gameplame}</if>
-            <if test="begindate != null "> and begindate = #{begindate}</if>
+            <if test="gameplame != null  and gameplame != ''">
+                and gameplame = #{gameplame}
+            </if>
+            <if test="begindate != null and begindate != ''">
+                and begindate <![CDATA[ >= ]]> #{begindate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and begindate <![CDATA[ <= ]]> #{endDate}
+            </if>
         </where>
     </select>
 

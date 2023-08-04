@@ -137,6 +137,8 @@ public class PayAgentServiceImpl implements IPayAgentService {
     private Integer payAgent8kPay;
     @Value ( "${payAgentBoBiPay:5000}" )
     private Integer payAgentBoBiPay;
+    @Value ( "${payAgentLeTuPay:5000}" )
+    private Integer payAgentLeTuPay;
 
     @Override
     @Transactional ( rollbackFor = Exception.class )
@@ -263,7 +265,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
             return AjaxResult.error( "审核流程非法" );
         }
 
-        if ( ( payAgentPlatform.getCode().contains( ConstantsPayAgent.LIAN_FU_BAO ) || payAgentPlatform.getCode()
+        /*if ( ( payAgentPlatform.getCode().contains( ConstantsPayAgent.LIAN_FU_BAO ) || payAgentPlatform.getCode()
                 .equals( ConstantsPayAgent.LIAN_FU_BAO2 )
                 || payAgentPlatform.getCode().equals( ConstantsPayAgent.LIAN_FU_BAO3 ) || payAgentPlatform.getCode()
                 .equals( ConstantsPayAgent.LIAN_FU_BAO4 )
@@ -415,6 +417,9 @@ public class PayAgentServiceImpl implements IPayAgentService {
         } else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.BO_BI_PAY ) )
                 && withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentBoBiPay ) ) > 0 ) {
             return AjaxResult.error( "此代付暂不支持" + payAgentBoBiPay + "元以上出款" );
+        } else if ( ( payAgentPlatform.getCode().equals( ConstantsPayAgent.LE_TU_PAY ) )
+                && withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLeTuPay ) ) > 0 ) {
+            return AjaxResult.error( "此代付暂不支持" + payAgentLeTuPay + "元以上出款" );
         } else if ( withdrawLog.getWithdrawMoney().compareTo( new BigDecimal( payAgentLimit ) ) > 0
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.Ma_Yun )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.VIP_PAY )
@@ -425,6 +430,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.DIDI )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.MY_PAY )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent._8K_PAY )
+                && !payAgentPlatform.getCode().equals( ConstantsPayAgent.LE_TU_PAY )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.BO_BI_PAY )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.TIAN_QI_PAY )
                 && !payAgentPlatform.getCode().contains( ConstantsPayAgent.BINLI )
@@ -490,7 +496,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN )
                 && !payAgentPlatform.getCode().equals( ConstantsPayAgent.HUIYUAN2 ) ) {
             return AjaxResult.error( "代付暂不支持" + payAgentLimit + "元以上出款" );
-        }
+        }*/
 
         LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    userName  = loginUser.getUser().getUserName();

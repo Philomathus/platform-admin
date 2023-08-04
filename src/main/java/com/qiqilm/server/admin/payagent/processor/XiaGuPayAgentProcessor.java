@@ -6,7 +6,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeXiaGuType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
@@ -28,11 +27,10 @@ public class XiaGuPayAgentProcessor extends AbstractPayAgent {
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         BankCodeXiaGuType bankCodeType = BankCodeXiaGuType.getCodeByDesc( withdrawLog.getBankName() );
         if ( bankCodeType == null ) {
-            log.warn( payAgentPlatform.getName() + "代付无法支持的银行类型 - 银行类型:{}", withdrawLog.getBankName() );
-            payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
-            throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
+            withdrawLog.setBankCode( withdrawLog.getBankName() );
+        } else {
+            withdrawLog.setBankCode( bankCodeType.name() );
         }
-        withdrawLog.setBankCode( bankCodeType.name() );
 
         SortedMap<String, Object> bodyMap = new TreeMap<>();
 
@@ -126,7 +124,7 @@ public class XiaGuPayAgentProcessor extends AbstractPayAgent {
             if ( !CollectionUtils.isEmpty( resultMap ) ) {
                 Map<String, Object> resultDataMap = ( Map<String, Object> ) resultMap.getOrDefault( "data", new HashMap<>() );
                 if ( "1".equals( resultMap.getOrDefault( "code", "" ).toString() ) ) {
-                    int                 orderStatus   = Integer.parseInt( resultDataMap.getOrDefault( "status", 0 ).toString() );
+                    int orderStatus = Integer.parseInt( resultDataMap.getOrDefault( "status", 0 ).toString() );
 
                     // status 4代付中5代付失败6代付成功
                     // orderState (0=处理中，1=成功，2=失败)

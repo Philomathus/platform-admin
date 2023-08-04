@@ -93,3 +93,5 @@ payAgentTianQiPay: 50000
 payAgent8kPay: 20000
 # 波币代付额度
 payAgentBoBiPay: 20000
+# 乐途代付额度
+payAgentLeTuPay: 50000

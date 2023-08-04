@@ -87,3 +87,5 @@ payAgentMyPay: 50000
 payAgentTianQiPay: 50000
 # 8k代付额度
 payAgent8kPay: 20000
+# 乐途代付额度
+payAgentLeTuPay: 50000
