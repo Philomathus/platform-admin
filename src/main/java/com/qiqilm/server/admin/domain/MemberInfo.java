@@ -220,10 +220,16 @@ public class MemberInfo extends DownLoadTime {
     private Date cleanTime;
 
     /**
-     * 总的充值金额
+     * 总的充值金额- 累计需求打码
      */
-    @Excel( name = "总的充值金额" )
+    @Excel( name = "累计需求打码" )
     private BigDecimal levelIntegral;
+
+    /**
+     * 累计充值金额
+     */
+    @Excel( name = "累计充值金额" )
+    private BigDecimal accountCharge;
 
     /**
      * 邀请码
