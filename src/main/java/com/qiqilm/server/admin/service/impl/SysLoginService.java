@@ -51,20 +51,10 @@ public class SysLoginService {
      * @return 结果
      */
     public AjaxResult login(String ip, LoginBody loginBody) throws Exception {
-        if ( !redisUtil.lock( EnumLock.loginUser, loginBody.getUsername(), "1", 5 ) ) {
+        if ( !redisUtil.lock( EnumLock.loginUser, loginBody.getUsername().toLowerCase(), "1", 5 ) ) {
             return AjaxResult.error( "正在登录中，请勿重复点击登录" );
         }
-        String googleAuthSecret = userService.selectGoogleAuthKeyByUserName(loginBody.getUsername());
-        if (StringUtils.isBlank(googleAuthSecret)) {
-            return AjaxResult.error("请联系管理员绑定google验证秘钥");
-        }
-        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr(
-                "secretkey/googleAuthPrivateKey"));
-        if (!GoogleAuthUtil.verifyCode(googleAuthKey, loginBody.getGoogleAuthCode())) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginBody.getUsername(), AdminConstants.LOGIN_FAIL,
-                    MessageUtils.message("user.google.auth.error")));
-            return AjaxResult.error("google验证码不正确，请检查");
-        }
+
 
         // 用户验证
         Authentication authentication = null;
@@ -92,6 +82,18 @@ public class SysLoginService {
                     MessageUtils.message("user.block.ip"), ip));
             log.warn("限制IP:{}登录", ip);
             return AjaxResult.error("您所在区域无法登录本系统IP：" + ip);
+        }
+
+        String googleAuthSecret = userService.selectGoogleAuthKeyByUserName(loginBody.getUsername());
+        if (StringUtils.isBlank(googleAuthSecret)) {
+            return AjaxResult.error("请联系管理员绑定google验证秘钥");
+        }
+        String googleAuthKey = RSACoder.decryptByPrivateKey(googleAuthSecret, AuthUtil.getSecurityKeyStr(
+                "secretkey/googleAuthPrivateKey"));
+        if (!GoogleAuthUtil.verifyCode(googleAuthKey, loginBody.getGoogleAuthCode())) {
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginBody.getUsername(), AdminConstants.LOGIN_FAIL,
+                    MessageUtils.message("user.google.auth.error")));
+            return AjaxResult.error("google验证码不正确，请检查");
         }
 
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginBody.getUsername(), AdminConstants.LOGIN_SUCCESS,

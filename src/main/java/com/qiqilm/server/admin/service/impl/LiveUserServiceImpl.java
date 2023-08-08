@@ -57,7 +57,6 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 查询主播用户信息
      *
      * @param id 主播用户信息ID
-     *
      * @return 主播用户信息
      */
     @Override
@@ -69,15 +68,15 @@ public class LiveUserServiceImpl implements ILiveUserService {
             }
             String domainValue = configDomainCacheUtil.getValue( "domain.oss" );
             if ( StringUtils.isNotBlank( liveUser.getIdentifyHoldImage() ) && !liveUser.getIdentifyHoldImage()
-                                                                                       .startsWith( "http" ) ) {
+                    .startsWith( "http" ) ) {
                 liveUser.setIdentifyHoldImage( domainValue + liveUser.getIdentifyHoldImage() );
             }
             if ( StringUtils.isNotBlank( liveUser.getIdentifyNagativeImage() ) && !liveUser.getIdentifyNagativeImage()
-                                                                                           .startsWith( "http" ) ) {
+                    .startsWith( "http" ) ) {
                 liveUser.setIdentifyNagativeImage( domainValue + liveUser.getIdentifyNagativeImage() );
             }
             if ( StringUtils.isNotBlank( liveUser.getIdentifyPositiveImage() ) && !liveUser.getIdentifyPositiveImage()
-                                                                                           .startsWith( "http" ) ) {
+                    .startsWith( "http" ) ) {
                 liveUser.setIdentifyPositiveImage( domainValue + liveUser.getIdentifyPositiveImage() );
             }
         }
@@ -88,7 +87,6 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 查询主播用户信息列表
      *
      * @param liveUser 主播用户信息
-     *
      * @return 主播用户信息
      */
     @Override
@@ -113,7 +111,6 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 修改主播用户信息
      *
      * @param liveUser 主播用户信息
-     *
      * @return 结果
      */
     @Override
@@ -340,7 +337,6 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 接近生活
      *
      * @param map 地图
-     *
      * @return {@link AjaxResult}
      */
     @Override
@@ -438,7 +434,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
         return AjaxResult.success();
     }
 
-    @Transactional( rollbackFor = Exception.class )
+    @Transactional ( rollbackFor = Exception.class )
     public void updateFamily( Map<Long, LiveUser> liveUserMap ) {
         for ( Map.Entry<Long, LiveUser> entry : liveUserMap.entrySet() ) {
             long           userId         = entry.getKey();
