@@ -91,7 +91,7 @@ public class XinHePayAgentProcessor extends AbstractPayAgent {
                 log.error( "提现相关记录丢失 - merOrderNo:{}", withdrawOrderId );
                 return "fail";
             }
-            if ( withdrawLog.getStatus() == 3 || withdrawLog.getStatus() == 4 ) {
+            if ( withdrawLog.getStatus() == 6 ) {
                 log.error( "已有代付记录 - merOrderNo:{}", withdrawOrderId );
                 return "success";
             }
