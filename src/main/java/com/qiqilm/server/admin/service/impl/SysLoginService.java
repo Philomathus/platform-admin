@@ -55,7 +55,6 @@ public class SysLoginService {
             return AjaxResult.error( "正在登录中，请勿重复点击登录" );
         }
 
-
         // 用户验证
         Authentication authentication = null;
         try {
