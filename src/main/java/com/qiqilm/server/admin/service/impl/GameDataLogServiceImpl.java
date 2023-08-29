@@ -5,17 +5,14 @@ import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.IGameDataLogService;
-import com.qiqilm.server.admin.task.beat.GameDataTableHelp;
 import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -34,7 +31,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class GameDataLogServiceImpl implements IGameDataLogService {
     @Resource
-    private GameDataLogMapper gameDataLogMapper;
+    private GameDataRecordMapper gameDataRecordMapper;
 
     @Resource
     private MemberBcodeMapper memberBcodeMapper;
@@ -59,104 +56,28 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     @Resource
     private RobotMessage       robotMessage;
 
-    @Autowired
+    @Resource
     private SysConfigCacheUtil sysConfigCacheUtil;
 
-    /**
-     * 查询总代理游戏注单
-     *
-     * @param id 总代理游戏注单ID
-     *
-     * @return 总代理游戏注单
-     */
-    @Override
-    public GameDataLog selectGameDataLogById( String id ) {
-        return gameDataLogMapper.selectGameDataLogById( id );
-    }
-
-    /**
-     * 查询总代理游戏注单列表
-     *
-     * @return 总代理游戏注单
-     */
-    @Override
-    public List<GameDataLog> selectGameDataLogList( String cxAgent, String start, String end, String account,
-                                                    String platformId ) {
-        return gameDataLogMapper.selectGameDataLogList( cxAgent, start, end, account, platformId );
-    }
-
-    @Override
-    @Transactional
-    public void beatGameCode( Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent,
-                              String start, String end, String account, String platformId ) {
-        List<GameDataLog> list = gameDataLogMapper.selectGameDataLogList( cxAgent, start, end, account, platformId );
-        if ( list.size() == 0 ) {
-            return;
-        }
-        Map<String, BigDecimal> willCodeMap  = new HashMap<>();
-        List<MemberGameData>    willCodeList = new ArrayList<>();
-        SqlSession              session      = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
-        MemberGameDataMapper    mapper       = session.getMapper( MemberGameDataMapper.class );
-        for ( GameDataLog og : list ) {
-            if ( mapper.findExist( og.getAccount().substring( og.getAccount().length() - 1 ), og.getId() ) != null ) {
-                continue;
-            }
-
-            MemberGameData gameDataLog = new MemberGameData();
-            gameDataLog.setId( og.getId() );
-            gameDataLog.setGameId( og.getGameId() );
-            gameDataLog.setGameRound( og.getGameRound() );
-            gameDataLog.setAccount( og.getAccount() );
-            gameDataLog.setKindId( og.getKindId() );
-            gameDataLog.setCellScore( og.getCellScore() );
-            gameDataLog.setAllBet( og.getAllBet() );
-            gameDataLog.setProfit( og.getProfit() );
-            gameDataLog.setGameStartTime( og.getGameStartTime() );
-            gameDataLog.setGameEndTime( og.getGameEndTime() );
-            gameDataLog.setAgent( og.getAgent() );
-            gameDataLog.setStatus( 0 );
-            gameDataLog.setPlatformType( platformType.get( og.getPlatformId() ) );
-            gameDataLog.setPlatformId( og.getPlatformId() );
-            gameDataLog.setRevenue( og.getRevenue() );
-            gameDataLog.setServerId( og.getServerId() );
-
-            willCodeList.add( gameDataLog );
-
-            if ( new BigDecimal( gameDataLog.getProfit() ).compareTo( BigDecimal.ZERO ) == 0 ) {
-                continue;
-            }
-
-            if ( beatRateMap.containsKey( og.getPlatformId() ) ) {
-
-                BigDecimal beatAdd = new BigDecimal( og.getCellScore() ).multiply( beatRateMap.get( og.getPlatformId() ) )
-                                                                        .setScale( 4 );
-                willCodeMap.putIfAbsent( og.getAccount(), BigDecimal.ZERO );
-                willCodeMap.put( og.getAccount(), willCodeMap.get( og.getAccount() ).add( beatAdd ) );
-            }
-        }
-
-        insertBatch( session, mapper, willCodeList );
-
-        doBeatCode( willCodeMap );
-
-        deQuestCheck( willCodeList );
-
-    }
+    private static final String TABLE_PREFIX = "game_data_record_";
 
     @Override
     public void beatGameCodeAgent( String dTime, Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap,
                                    String cxAgent, String start, String end, String account, String platformId ) {
-        String sday = dTime.substring( 0, 10 ).replace( "-", "" );
-        List<GameDataLog> list = gameDataLogMapper.selectGameDataAgentList( GameDataTableHelp.getGameDataByAgent( cxAgent,
-                sday ), start, end, account, platformId );
-        if ( list.size() == 0 ) {
+        String day = end.substring( 0, 10 ).replace( "-", "" );
+        List<GameDataRecord> gameDataRecords = gameDataRecordMapper.selectGameDataRecordAgentList(
+                TABLE_PREFIX + day, start, end, cxAgent, account, getDataRemoteByEnum( platformId ) );
+
+        if ( gameDataRecords.isEmpty() ) {
+            log.warn( "拉单条数为0, 开始时间:{} 结束时间:{}", start, end );
             return;
         }
+        log.info( "拉单条数:{}, 开始时间:{} 结束时间:{}", gameDataRecords.size(), start, end );
         Map<String, BigDecimal> willCodeMap  = new HashMap<>();
         List<MemberGameData>    willCodeList = new ArrayList<>();
         SqlSession              session      = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
         MemberGameDataMapper    mapper       = session.getMapper( MemberGameDataMapper.class );
-        for ( GameDataLog og : list ) {
+        for ( GameDataRecord og : gameDataRecords ) {
             if ( mapper.findExist( og.getAccount().substring( og.getAccount().length() - 1 ), og.getId() ) != null ) {
                 continue;
             }
@@ -171,10 +92,10 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             gameDataLog.setProfit( og.getProfit() );
             gameDataLog.setGameStartTime( og.getGameStartTime() );
             gameDataLog.setGameEndTime( og.getGameEndTime() );
-            gameDataLog.setAgent( og.getAgent() );
+            gameDataLog.setAgent( og.getGameAgent() );
             gameDataLog.setStatus( 0 );
             gameDataLog.setPlatformType( platformType.get( og.getPlatformId() ) );
-            gameDataLog.setPlatformId( og.getPlatformId() );
+            gameDataLog.setPlatformId( getEnumByDataRemote( og.getPlatformId().intValue() ) );
             gameDataLog.setRevenue( og.getRevenue() );
             willCodeList.add( gameDataLog );
 
@@ -188,14 +109,107 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
                 willCodeMap.put( og.getAccount(), willCodeMap.get( og.getAccount() ).add( beatAdd ) );
             }
         }
-
+        log.warn( "准备处理条数:{}, 开始时间:{} 结束时间:{}", willCodeList.size(), start, end );
         insertBatch( session, mapper, willCodeList );
-
         doBeatCode( willCodeMap );
-
         deQuestCheck( willCodeList );
+        log.info( "新拉单拉取条数：{},实际插入:{}", gameDataRecords.size(), willCodeList.size() );
+    }
 
-        log.info( "新拉单拉取条数：{},实际插入:{}", list.size(), willCodeList.size() );
+    public static Integer getDataRemoteByEnum( String platformId ) {
+        if ( platformId == null ) {
+            return null;
+        }
+        Integer pid;
+        switch ( platformId ) {
+        case "1":
+            pid = 39;
+            break;
+        case "2":
+            pid = 12;
+            break;
+        case "5":
+            pid = 8;
+            break;
+        case "6":
+            pid = 9;
+            break;
+        case "7":
+            pid = 11;
+            break;
+        case "8":
+        case "9":
+        case "10":
+        case "11":
+            pid = 16;
+            break;
+        case "12":
+            pid = 40;
+            break;
+        case "14":
+            pid = 3;
+            break;
+        case "15":
+            pid = 38;
+            break;
+        case "17":
+            pid = 13;
+            break;
+        case "50":
+            pid = 1;
+            break;
+        case "51":
+            pid = 21;
+            break;
+        default:
+            pid = null;
+        }
+        return pid;
+    }
+
+    public static Integer getEnumByDataRemote( Integer platformId ) {
+        Integer pid;
+        switch ( platformId ) {
+        case 1:
+            pid = 50;
+            break;
+        case 3:
+            pid = 14;
+            break;
+        case 8:
+            pid = 5;
+            break;
+        case 9:
+            pid = 6;
+            break;
+        case 11:
+            pid = 7;
+            break;
+        case 12:
+            pid = 2;
+            break;
+        case 13:
+            pid = 17;
+            break;
+        case 16:
+            pid = 8;
+            break;
+        case 21:
+            pid = 51;
+            break;
+        case 38:
+            pid = 15;
+            break;
+        case 39:
+            pid = 1;
+            break;
+        case 40:
+            pid = 12;
+            break;
+        default:
+            pid = null;
+        }
+        return pid;
     }
 
     //批量插入
@@ -538,18 +552,6 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
         doBeatCode( willCodeMap );
 
-    }
-
-    /**
-     * 批量删除总代理游戏注单
-     *
-     * @param ids 需要删除的总代理游戏注单ID
-     *
-     * @return 结果
-     */
-    @Override
-    public int deleteGameDataLogByIds( String[] ids ) {
-        return gameDataLogMapper.deleteGameDataLogByIds( ids );
     }
 
 }

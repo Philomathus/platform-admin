@@ -5,9 +5,9 @@ spring:
       username: root
       password: f:e=h>EVUH,!N7zS&J`9
     secondary:
-      jdbc-url: jdbc:mysql://8.210.10.193:3306/db_data?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&autoReconnect=true&failOverReadOnly=false
-      username: root
-      password: f:e=h>EVUH,!N7zS&J`9
+      jdbc-url: jdbc:mysql://livedata-instance-1.c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/general?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: admin
+      password: dRmBstReqberz!14Xm#
   redis:
     host: 8.210.10.193
     port: 6379

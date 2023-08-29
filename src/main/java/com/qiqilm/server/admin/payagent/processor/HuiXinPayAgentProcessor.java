@@ -114,13 +114,13 @@ public class HuiXinPayAgentProcessor extends AbstractPayAgent {
             }
             if ( withdrawLog.getStatus() == 0 ) {
                 log.error( "已有代付记录 - merOrderNo:{}", withdrawOrderId );
-                return "SUCCESS";
+                return "OK";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( withdrawOrderId );
             payAgentService.processOrderPay( withdrawLog, payAgentLog, requestMap.getOrDefault( "transaction_id", "" )
                                                                                  .toString(), payAgentPlatform,
                     "1".equals( refCode ) );
-            return "SUCCESS";
+            return "OK";
         }
         return "fail";
     }

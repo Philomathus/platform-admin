@@ -5,9 +5,9 @@ spring:
       username: admin
       password: djkteCbsupY3RCDkPDPS
     secondary:
-      jdbc-url: ENC(AxjxThZpL1kolf6Yx5MuBFGbP5sST9IeCMFijDG2zLlFRliUQPMeQt3f8zHbDRllaYPjoIEYVe0QsxTZULfTmJNRk2uRDDYq6U7X33dY6Dxznc33PumGdlo/IblJu+gEJG3UlIZIjkB+wYPSP9N0qioZYHoxuAdyINa84LSUvEk0WXxHRBe1g592bKRm7PbnluKYxsSG60auGF8b9DTPCw==)
-      username: ENC(NweOTIFHXJmN2GDkY9kx/du0wCaiuyffLLi90mmZw57PsRMcnQF+ctPChmhGqYdK)
-      password: ENC(ekQ2imJG92Uk9ch+IgceOeH3xA8cR3ouY8e1zL4VS6T0rngXO+YlCdk+0Mpo5cKH)
+      jdbc-url: jdbc:mysql://livedata-instance-1.c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/general?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: admin
+      password: dRmBstReqberz!14Xm#
   redis:
     host: ENC(JMBOEMM5OezH2C9GYSdRzHqqJ3macyJK1fRLL0kx9chozwtunc8UKuo69pD6NiWC9uwAvTA2uyHkQrM7D4XcflrqTz8YhDyv5h7lhrzkbMFv363u0042qQTXzKRDL28k)
     port: 6379

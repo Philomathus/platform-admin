@@ -53,9 +53,6 @@ public class GameDataTask {
         if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName() ) ) {
             return;
         }
-        if ( "7700".equals( profile ) ) {
-            return;
-        }
 
         Date   endDay  = new Date();
         Date   starDay = DateFormatUtils.addMin( endDay, -2 );
