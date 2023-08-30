@@ -63,7 +63,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
 
     @Override
     public void beatGameCodeAgent( String dTime, Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap,
-                                   String cxAgent, String start, String end, String account, String platformId ) {
+                                   String cxAgent, String start, String end, String account, Long platformId ) {
         String day = end.substring( 0, 10 ).replace( "-", "" );
         List<GameDataRecord> gameDataRecords = gameDataRecordMapper.selectGameDataRecordAgentList(
                 TABLE_PREFIX + day, start, end, cxAgent, account, getDataRemoteByEnum( platformId ) );
@@ -81,6 +81,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             if ( mapper.findExist( og.getAccount().substring( og.getAccount().length() - 1 ), og.getId() ) != null ) {
                 continue;
             }
+            Integer enumByDataRemote = getEnumByDataRemote( og.getPlatformId().intValue() );
             MemberGameData gameDataLog = new MemberGameData();
             gameDataLog.setId( og.getId() );
             gameDataLog.setGameId( og.getGameId() );
@@ -94,16 +95,16 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
             gameDataLog.setGameEndTime( og.getGameEndTime() );
             gameDataLog.setAgent( og.getGameAgent() );
             gameDataLog.setStatus( 0 );
-            gameDataLog.setPlatformType( platformType.get( og.getPlatformId() ) );
-            gameDataLog.setPlatformId( getEnumByDataRemote( og.getPlatformId().intValue() ) );
+            gameDataLog.setPlatformType( platformType.get( enumByDataRemote ) );
+            gameDataLog.setPlatformId( enumByDataRemote );
             gameDataLog.setRevenue( og.getRevenue() );
             willCodeList.add( gameDataLog );
 
             if ( new BigDecimal( gameDataLog.getProfit() ).compareTo( BigDecimal.ZERO ) == 0 ) {
                 continue;
             }
-            if ( beatRateMap.containsKey( og.getPlatformId() ) ) {
-                BigDecimal beatAdd = new BigDecimal( og.getCellScore() ).multiply( beatRateMap.get( og.getPlatformId() ) )
+            if ( beatRateMap.containsKey( enumByDataRemote ) ) {
+                BigDecimal beatAdd = new BigDecimal( og.getCellScore() ).multiply( beatRateMap.get( enumByDataRemote ) )
                                                                         .setScale( 4, RoundingMode.HALF_UP );
                 willCodeMap.putIfAbsent( og.getAccount(), BigDecimal.ZERO );
                 willCodeMap.put( og.getAccount(), willCodeMap.get( og.getAccount() ).add( beatAdd ) );
@@ -116,12 +117,12 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         log.info( "新拉单拉取条数：{},实际插入:{}", gameDataRecords.size(), willCodeList.size() );
     }
 
-    public static Integer getDataRemoteByEnum( String platformId ) {
+    public static Integer getDataRemoteByEnum( Long platformId ) {
         if ( platformId == null ) {
             return null;
         }
         Integer pid;
-        switch ( platformId ) {
+        switch ( platformId.toString() ) {
         case "1":
             pid = 39;
             break;

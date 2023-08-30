@@ -26,57 +26,62 @@ import java.util.Map;
 @Component
 public class FixDataTask {
     @Autowired
-    private IGameDataLogService gameDataLogService;
+    private IGameDataLogService     gameDataLogService;
     @Autowired
-    private IGamePlatformService gamePlatformService;
+    private IGamePlatformService    gamePlatformService;
     @Autowired
     private MemberGameDatafixMapper memberGameDatafixMapper;
 
     @Autowired
     private RedisUtil redisUtil;
 
-    @Value("${spring.profiles.active}")
-    private String profile;
-    private Map<Integer, String> platformType = new HashMap<>();
-    private Map<Integer, BigDecimal> beatRateMap = new HashMap<>();
+    @Value( "${spring.profiles.active}" )
+    private String                   profile;
+    private Map<Integer, String>     platformType = new HashMap<>();
+    private Map<Integer, BigDecimal> beatRateMap  = new HashMap<>();
 
     @PostConstruct
     public void init() {
         //DynamicDataSourceContextHolder.setDataSourceKey("secondaryDataSource");
-        for (GamePlatform gm : gamePlatformService.selectGamePlatformList(new GamePlatform())) {
-            platformType.put(gm.getId(), gm.getGameTypeid());
-            beatRateMap.put(gm.getId(), gm.getRateBeat());
+        for ( GamePlatform gm : gamePlatformService.selectGamePlatformList( new GamePlatform() ) ) {
+            platformType.put( gm.getId(), gm.getGameTypeid() );
+            beatRateMap.put( gm.getId(), gm.getRateBeat() );
         }
         //DynamicDataSourceContextHolder.clearDataSourceKey();
     }
 
 
-    @Scheduled(fixedDelay = 600000, initialDelay = 1)
+    @Scheduled( fixedDelay = 30000, initialDelay = 1 )
     public void runTask() throws Exception {
-        if (!redisUtil.adminLock(EnumLock.adminTask, getClass().getSimpleName())) {
-            return;
-        }
         MemberGameDatafix query = new MemberGameDatafix();
         query.setStatus( 0 );
         List<MemberGameDatafix> memberGameDatafixes = memberGameDatafixMapper.selectMemberGameDatafixList( query );
         for ( MemberGameDatafix memberGameDatafix : memberGameDatafixes ) {
-            if (memberGameDatafix == null) {
+            if ( memberGameDatafix == null ) {
                 continue;
             }
             Long platformId = memberGameDatafix.getPlatformId();
-            if (platformId == 3 || platformId == 4) {
+            if ( platformId != null && ( platformId == 3 || platformId == 4 ) ) {
                 continue;
             }
-            String platformid = platformId.toString();
-            try {
-                gameDataLogService.beatGameCodeAgent(memberGameDatafix.getGameStartTime(), platformType, beatRateMap, profile, memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime(), memberGameDatafix.getUserId(), platformid);
-                MemberGameDatafix data = new MemberGameDatafix();
-                data.setId(memberGameDatafix.getId());
-                data.setStatus(1);
-                memberGameDatafixMapper.updateMemberGameDatafix(data);
-            } catch (Exception e) {
-                log.error("修复游戏注定数据失败,", e);
+            if ( !redisUtil.adminLock( EnumLock.adminTask, this.getClass().getSimpleName() + memberGameDatafix.getId(), 9999 ) ) {
+                return;
             }
+            log.warn( "进来了" + memberGameDatafix.getId() );
+            try {
+                gameDataLogService.beatGameCodeAgent( memberGameDatafix.getGameStartTime(), platformType, beatRateMap, profile,
+                        memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime(), memberGameDatafix.getUserId()
+                        , platformId );
+                MemberGameDatafix data = new MemberGameDatafix();
+                data.setId( memberGameDatafix.getId() );
+                data.setStatus( 1 );
+                memberGameDatafixMapper.updateMemberGameDatafix( data );
+            } catch ( Exception e ) {
+                log.error( "修复游戏注定数据失败,", e );
+            }
+            redisUtil.unLock( EnumLock.adminTask, this.getClass().getSimpleName() + memberGameDatafix.getId() );
+            log.warn( "结束了" + memberGameDatafix.getId() );
         }
+
     }
 }

@@ -13,13 +13,14 @@ import java.util.Map;
  */
 public interface IGameDataLogService {
 
-    public void beatGameCodeAgent(String dTime, Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap, String cxAgent, String start, String end, String account, String platformId);
+    public void beatGameCodeAgent( String dTime, Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap,
+                                   String cxAgent, String start, String end, String account, Long platformId );
 
-    public void beatLotteryCode(String platformTypeId, BigDecimal beatRate, String start, String end);
-
-
-    public void beatLiveProp(String platformTypeId, BigDecimal beatRate, long start, long end);
+    public void beatLotteryCode( String platformTypeId, BigDecimal beatRate, String start, String end );
 
 
-    void beatLotteryCode2(String platformTypeId, BigDecimal beatRate, LotteryBet0 lotteryBet0);
+    public void beatLiveProp( String platformTypeId, BigDecimal beatRate, long start, long end );
+
+
+    void beatLotteryCode2( String platformTypeId, BigDecimal beatRate, LotteryBet0 lotteryBet0 );
 }
