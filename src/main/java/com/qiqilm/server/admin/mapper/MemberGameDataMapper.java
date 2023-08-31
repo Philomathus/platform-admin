@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.rsp.RspMemberGameData;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 会员注单数据Mapper接口
@@ -32,6 +31,6 @@ public interface MemberGameDataMapper {
 
 	RspLotteryBetLog findBetLists(String gameId);
 
-	Integer findExist(@Param( "dbNodes" ) String dbNodes,@Param("keyId") String id);
+	Integer findExist(@Param( "dbNodes" ) String dbNodes,@Param("keyId") String id, @Param("gameId") String gameId);
 
 }

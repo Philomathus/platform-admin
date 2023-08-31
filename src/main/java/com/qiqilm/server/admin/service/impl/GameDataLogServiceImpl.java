@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -59,14 +60,17 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     @Resource
     private SysConfigCacheUtil sysConfigCacheUtil;
 
+    @Value( "${spring.profiles.active}" )
+    private String profile;
+
     private static final String TABLE_PREFIX = "game_data_record_";
 
     @Override
     public void beatGameCodeAgent( String dTime, Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap,
-                                   String cxAgent, String start, String end, String account, Long platformId ) {
+                                   String start, String end, String account, Long platformId ) {
         String day = end.substring( 0, 10 ).replace( "-", "" );
         List<GameDataRecord> gameDataRecords = gameDataRecordMapper.selectGameDataRecordAgentList(
-                TABLE_PREFIX + day, start, end, cxAgent, account, getDataRemoteByEnum( platformId ) );
+                TABLE_PREFIX + day, start, end, profile, account, getDataRemoteByEnum( platformId ) );
 
         if ( gameDataRecords.isEmpty() ) {
             log.warn( "拉单条数为0, 开始时间:{} 结束时间:{}", start, end );
@@ -78,11 +82,12 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         SqlSession              session      = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
         MemberGameDataMapper    mapper       = session.getMapper( MemberGameDataMapper.class );
         for ( GameDataRecord og : gameDataRecords ) {
-            if ( mapper.findExist( og.getAccount().substring( og.getAccount().length() - 1 ), og.getId() ) != null ) {
+            if ( mapper.findExist( og.getAccount().substring( og.getAccount().length() - 1 ), og.getId(), og.getGameId() )
+                    != null ) {
                 continue;
             }
-            Integer enumByDataRemote = getEnumByDataRemote( og.getPlatformId().intValue() );
-            MemberGameData gameDataLog = new MemberGameData();
+            Integer        enumByDataRemote = getEnumByDataRemote( og.getPlatformId().intValue() );
+            MemberGameData gameDataLog      = new MemberGameData();
             gameDataLog.setId( og.getId() );
             gameDataLog.setGameId( og.getGameId() );
             gameDataLog.setGameRound( og.getGameRound() );
@@ -309,7 +314,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     public void deQuestCheck( final List<MemberGameData> list ) {
         //查找全部任务
         List<ActivityQuestInfo> listConfQuet = questInfoMapper.selectAllQuestList();
-        Set<Integer> questSet = listConfQuet.stream().map( ActivityQuestInfo::getPlatformId ).collect( Collectors.toSet() );
+        Set<Integer>            questSet     = listConfQuet.stream().map( ActivityQuestInfo::getPlatformId )
+                                                           .collect( Collectors.toSet() );
         for ( MemberGameData data : list ) {
             //过滤没参加活动的游戏平台
             if ( !questSet.contains( data.getPlatformId() ) ) {
@@ -368,7 +374,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         SqlSession              session      = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
         MemberGameDataMapper    mapper       = session.getMapper( MemberGameDataMapper.class );
         for ( LotteryBet og : list ) {
-            if ( mapper.findExist( og.getPuserId().substring( og.getPuserId().length() - 1 ), og.getId() ) != null ) {
+            if ( mapper.findExist( og.getPuserId().substring( og.getPuserId().length() - 1 ), og.getId(), null ) != null ) {
                 continue;
             }
             MemberGameData gameDataLog = new MemberGameData();
@@ -424,7 +430,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         SqlSession              session      = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
         MemberGameDataMapper    mapper       = session.getMapper( MemberGameDataMapper.class );
 
-        if ( mapper.findExist( lotteryBet.getPuserId().substring( lotteryBet.getPuserId().length() - 1 ), lotteryBet.getId() )
+        if ( mapper.findExist( lotteryBet.getPuserId()
+                                         .substring( lotteryBet.getPuserId().length() - 1 ), lotteryBet.getId(), null )
                 == null ) {
             MemberGameData gameDataLog = new MemberGameData();
             gameDataLog.setId( lotteryBet.getId() );

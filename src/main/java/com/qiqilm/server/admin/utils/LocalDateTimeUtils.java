@@ -162,9 +162,13 @@ public class LocalDateTimeUtils {
 		return  LocalDateTimeUtils.formatTime( dateTime, LocalDateTimeUtils.SPLIT_PATTERN_DATETIME );
 	}
 
-	public static void main( String[] args ) {
-		long          sec      = 1602034562;
-		LocalDateTime dateTime = LocalDateTimeUtils.getDateTimeOfTimestamp( sec * 1000L );
-		System.out.println( LocalDateTimeUtils.formatTime( dateTime, LocalDateTimeUtils.SPLIT_PATTERN_DATETIME ) );
+	/**
+	 * 判断是否同一天
+	 *
+	 * @param one
+	 * @param two
+	 */
+	public static boolean isSameDay( LocalDateTime one, LocalDateTime two ) {
+		return one.toLocalDate().compareTo( two.toLocalDate() ) == 0;
 	}
 }

@@ -9,7 +9,6 @@ import com.qiqilm.server.admin.service.IGamePlatformService;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -34,9 +33,6 @@ public class FixDataTask {
 
     @Autowired
     private RedisUtil redisUtil;
-
-    @Value( "${spring.profiles.active}" )
-    private String                   profile;
     private Map<Integer, String>     platformType = new HashMap<>();
     private Map<Integer, BigDecimal> beatRateMap  = new HashMap<>();
 
@@ -69,7 +65,7 @@ public class FixDataTask {
             }
             log.warn( "进来了" + memberGameDatafix.getId() );
             try {
-                gameDataLogService.beatGameCodeAgent( memberGameDatafix.getGameStartTime(), platformType, beatRateMap, profile,
+                gameDataLogService.beatGameCodeAgent( memberGameDatafix.getGameStartTime(), platformType, beatRateMap,
                         memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime(), memberGameDatafix.getUserId()
                         , platformId );
                 MemberGameDatafix data = new MemberGameDatafix();
