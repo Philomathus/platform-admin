@@ -56,7 +56,7 @@ public class GameDataTask {
         String        end     = LocalDateTimeUtils.format( endDay );
         if ( LocalDateTimeUtils.isSameDay( starDay, endDay ) ) {
             try {
-                gameDataLogService.beatGameCodeAgent( begin, platformType, beatRateMap, begin, end, null, null );
+                gameDataLogService.beatGameCodeAgent( platformType, beatRateMap, begin, end, null, null );
             } catch ( Exception e ) {
                 log.error( "1游戏拉取注单异常{}", e.getMessage(), e );
             }
@@ -66,21 +66,21 @@ public class GameDataTask {
             end     = LocalDateTimeUtils.format( endDay );
 
             try {
-                gameDataLogService.beatGameCodeAgent( begin, platformType, beatRateMap, begin, end, null, null );
+                gameDataLogService.beatGameCodeAgent( platformType, beatRateMap, begin, end, null, null );
             } catch ( Exception e ) {
                 log.error( "4游戏拉取注单异常{}", e.getMessage(), e );
             }
         } else {
             end = LocalDateTimeUtils.format( starDay.plusMinutes( 5 ).toLocalDate().atStartOfDay() );
             try {
-                gameDataLogService.beatGameCodeAgent( begin, platformType, beatRateMap, begin, end, null, null );
+                gameDataLogService.beatGameCodeAgent( platformType, beatRateMap, begin, end, null, null );
             } catch ( Exception e ) {
                 log.error( "2游戏拉取注单异常{}", e.getMessage(), e );
             }
             begin = end;
             end   = LocalDateTimeUtils.format( endDay );
             try {
-                gameDataLogService.beatGameCodeAgent( end, platformType, beatRateMap, begin, end, null, null );
+                gameDataLogService.beatGameCodeAgent( platformType, beatRateMap, begin, end, null, null );
             } catch ( Exception e ) {
                 log.error( "3游戏拉取注单异常{}", e.getMessage(), e );
             }

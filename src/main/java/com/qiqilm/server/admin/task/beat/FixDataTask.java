@@ -65,7 +65,7 @@ public class FixDataTask {
             }
             log.warn( "进来了" + memberGameDatafix.getId() );
             try {
-                gameDataLogService.beatGameCodeAgent( memberGameDatafix.getGameStartTime(), platformType, beatRateMap,
+                gameDataLogService.beatGameCodeAgent( platformType, beatRateMap,
                         memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime(), memberGameDatafix.getUserId()
                         , platformId );
                 MemberGameDatafix data = new MemberGameDatafix();

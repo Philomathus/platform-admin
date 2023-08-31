@@ -66,7 +66,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     private static final String TABLE_PREFIX = "game_data_record_";
 
     @Override
-    public void beatGameCodeAgent( String dTime, Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap,
+    public void beatGameCodeAgent( Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap,
                                    String start, String end, String account, Long platformId ) {
         String day = end.substring( 0, 10 ).replace( "-", "" );
         List<GameDataRecord> gameDataRecords = gameDataRecordMapper.selectGameDataRecordAgentList(
