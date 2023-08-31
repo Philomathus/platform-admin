@@ -31,6 +31,6 @@ public interface MemberGameDataMapper {
 
 	RspLotteryBetLog findBetLists(String gameId);
 
-	Integer findExist(@Param( "dbNodes" ) String dbNodes,@Param("keyId") String id, @Param("gameId") String gameId);
+	Integer findExist(@Param( "dbNodes" ) String dbNodes,@Param("keyId") String id);
 
 }

@@ -5,6 +5,7 @@ import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.vo.LiveVideoPropVo;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.IGameDataLogService;
+import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
 import com.qiqilm.server.admin.utils.RobotMessage;
 import lombok.extern.log4j.Log4j2;
@@ -66,8 +67,8 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
     private static final String TABLE_PREFIX = "game_data_record_";
 
     @Override
-    public void beatGameCodeAgent( Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap,
-                                   String start, String end, String account, Long platformId ) {
+    public void beatGameCodeAgent( Map<Integer, String> platformType, Map<Integer, BigDecimal> beatRateMap, String start,
+                                   String end, String account, Long platformId ) {
         String day = end.substring( 0, 10 ).replace( "-", "" );
         List<GameDataRecord> gameDataRecords = gameDataRecordMapper.selectGameDataRecordAgentList(
                 TABLE_PREFIX + day, start, end, profile, account, getDataRemoteByEnum( platformId ) );
@@ -82,8 +83,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         SqlSession              session      = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
         MemberGameDataMapper    mapper       = session.getMapper( MemberGameDataMapper.class );
         for ( GameDataRecord og : gameDataRecords ) {
-            if ( mapper.findExist( og.getAccount().substring( og.getAccount().length() - 1 ), og.getId(), og.getGameId() )
-                    != null ) {
+            if ( mapper.findExist( og.getAccount().substring( og.getAccount().length() - 1 ), og.getId() ) != null ) {
                 continue;
             }
             Integer        enumByDataRemote = getEnumByDataRemote( og.getPlatformId().intValue() );
@@ -374,7 +374,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         SqlSession              session      = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
         MemberGameDataMapper    mapper       = session.getMapper( MemberGameDataMapper.class );
         for ( LotteryBet og : list ) {
-            if ( mapper.findExist( og.getPuserId().substring( og.getPuserId().length() - 1 ), og.getId(), null ) != null ) {
+            if ( mapper.findExist( og.getPuserId().substring( og.getPuserId().length() - 1 ), og.getId() ) != null ) {
                 continue;
             }
             MemberGameData gameDataLog = new MemberGameData();
@@ -430,8 +430,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         SqlSession              session      = sqlSessionTemplate.getSqlSessionFactory().openSession( ExecutorType.BATCH, false );
         MemberGameDataMapper    mapper       = session.getMapper( MemberGameDataMapper.class );
 
-        if ( mapper.findExist( lotteryBet.getPuserId()
-                                         .substring( lotteryBet.getPuserId().length() - 1 ), lotteryBet.getId(), null )
+        if ( mapper.findExist( lotteryBet.getPuserId().substring( lotteryBet.getPuserId().length() - 1 ), lotteryBet.getId() )
                 == null ) {
             MemberGameData gameDataLog = new MemberGameData();
             gameDataLog.setId( lotteryBet.getId() );

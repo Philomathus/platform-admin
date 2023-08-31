@@ -30,7 +30,6 @@
     <select id="findExist" resultType="java.lang.Integer">
 		SELECT status FROM ${dbMain}.member_game_data${dbNodes}
 		WHERE id = #{keyId}
-        <if test="gameId != null and gameId != ''">or game_id = #{gameId}</if>
 	</select>
 
     <insert id="insertMemberGameData" >

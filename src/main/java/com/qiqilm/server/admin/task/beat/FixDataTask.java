@@ -6,6 +6,7 @@ import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.mapper.MemberGameDatafixMapper;
 import com.qiqilm.server.admin.service.IGameDataLogService;
 import com.qiqilm.server.admin.service.IGamePlatformService;
+import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,7 @@ public class FixDataTask {
     private MemberGameDatafixMapper memberGameDatafixMapper;
 
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisUtil                redisUtil;
     private Map<Integer, String>     platformType = new HashMap<>();
     private Map<Integer, BigDecimal> beatRateMap  = new HashMap<>();
 
@@ -46,6 +48,20 @@ public class FixDataTask {
         //DynamicDataSourceContextHolder.clearDataSourceKey();
     }
 
+    @Scheduled( cron = "0 */10 * * * ?" )
+    public void scheduled() throws Exception {
+        try {
+            log.warn( "开始补单游戏注单数据" );
+            LocalDateTime endDay  = LocalDateTime.now().minusMinutes( 10 );
+            LocalDateTime starDay = endDay.minusMinutes( 30 );
+            String        begin   = LocalDateTimeUtils.format( starDay );
+            String        end     = LocalDateTimeUtils.format( endDay );
+
+            gameDataLogService.beatGameCodeAgent( platformType, beatRateMap, begin, end, null, null );
+        } catch ( Exception e ) {
+            log.error( "补单游戏注单数据失败,", e );
+        }
+    }
 
     @Scheduled( fixedDelay = 30000, initialDelay = 1 )
     public void runTask() throws Exception {
@@ -65,15 +81,14 @@ public class FixDataTask {
             }
             log.warn( "进来了" + memberGameDatafix.getId() );
             try {
-                gameDataLogService.beatGameCodeAgent( platformType, beatRateMap,
-                        memberGameDatafix.getGameStartTime(), memberGameDatafix.getGameEndTime(), memberGameDatafix.getUserId()
-                        , platformId );
+                gameDataLogService.beatGameCodeAgent( platformType, beatRateMap, memberGameDatafix.getGameStartTime(),
+                        memberGameDatafix.getGameEndTime(), memberGameDatafix.getUserId(), platformId );
                 MemberGameDatafix data = new MemberGameDatafix();
                 data.setId( memberGameDatafix.getId() );
                 data.setStatus( 1 );
                 memberGameDatafixMapper.updateMemberGameDatafix( data );
             } catch ( Exception e ) {
-                log.error( "修复游戏注定数据失败,", e );
+                log.error( "修复游戏注单数据失败,", e );
             }
             redisUtil.unLock( EnumLock.adminTask, this.getClass().getSimpleName() + memberGameDatafix.getId() );
             log.warn( "结束了" + memberGameDatafix.getId() );
