@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.payagent.processor;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.qiqilm.server.admin.constant.ConstantsPayAgent;
 import com.qiqilm.server.admin.domain.MemberWithdrawLog;
 import com.qiqilm.server.admin.domain.PayAgentLog;
@@ -27,7 +28,6 @@ public class ZiXingPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> params = new LinkedHashMap<>();
         params.put( "fxid", payAgentPlatform.getMerId() );
         params.put( "fxaction", "repay" );
-        params.put( "fxnotifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         Map<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put( "fxddh", withdrawLog.getOrderNo() );
@@ -35,12 +35,15 @@ public class ZiXingPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "fxfee", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
         bodyMap.put( "fxbody", withdrawLog.getBankAccount() );
         bodyMap.put( "fxname", withdrawLog.getBankUserName() );
+        bodyMap.put( "fxzhihang", withdrawLog.getBankAddress() );
 
-        params.put( "fxbody", JsonUtil.object2Json( bodyMap ) );
+        params.put( "fxbody", JsonUtil.object2Json( Collections.singleton( bodyMap ) ) );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl2( params ) + signMd5;
+        log.warn( tempStr );
         params.put( "fxsign", DigestUtils.md5Hex( tempStr ) );
+        params.put( "fxnotifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         log.warn( payAgentPlatform.getName() + "下单请求参数{}", JsonUtil.object2Json( params ) );
 
@@ -51,14 +54,22 @@ public class ZiXingPayAgentProcessor extends AbstractPayAgent {
         log.info( payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
 
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
-            String              code      = resultMap.getOrDefault( "fxstatus", "" ).toString();
-            Map<String, Object> fxbodyMap = ( Map<String, Object> ) resultMap.getOrDefault( "fxbody", new HashMap<>() );
-            int                 fxstatus  = Integer.parseInt( fxbodyMap.getOrDefault( "fxstatus", "0" ).toString() );
-            if ( "1".equals( code ) && fxstatus > 0 ) {
-                log.info( payAgentPlatform.getName() + "订单提交成功 - listResult:{}", JsonUtil.object2Json( resultMap ) );
-                return true;
+            String code = resultMap.getOrDefault( "fxstatus", "" ).toString();
+
+            if ( "1".equals( code ) ) {
+                List<Map<String, Object>> fxbodyListMap = JsonUtil.json2Array( resultMap.getOrDefault( "fxbody", "" )
+                                                                                        .toString(),
+                        new TypeReference<List<Map<String, Object>>>() {} );
+                int fxstatus = Integer.parseInt( fxbodyListMap.get( 0 ).getOrDefault( "fxstatus", "0" ).toString() );
+                if ( fxstatus > 0 ) {
+                    log.info( payAgentPlatform.getName() + "订单提交成功 - listResult:{}", JsonUtil.object2Json( resultMap ) );
+                    return true;
+                } else {
+                    log.error( payAgentPlatform.getName() + "订单提交失败 - listResult:{}", JsonUtil.object2Json( resultMap ) );
+                }
             } else {
                 reqPayAgent.setFailReason( resultMap.getOrDefault( "fxmsg", "" ).toString() );
+                payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
             }
         }
         log.warn( payAgentPlatform.getName() + "订单提交失败 - result:{}", JsonUtil.object2Json( resultMap ) );
@@ -123,7 +134,7 @@ public class ZiXingPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put( "fxddh", withdrawLog.getOrderNo() );
 
-        params.put( "fxbody", JsonUtil.object2Json( bodyMap ) );
+        params.put( "fxbody", Collections.singleton( bodyMap ) );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 

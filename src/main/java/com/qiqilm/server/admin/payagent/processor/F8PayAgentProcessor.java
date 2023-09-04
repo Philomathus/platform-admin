@@ -28,19 +28,23 @@ public class F8PayAgentProcessor extends AbstractPayAgent {
 
         bodyMap.put( "appId", payAgentPlatform.getMerId() );
         bodyMap.put( "appOrderNo", withdrawLog.getOrderNo() );
-        bodyMap.put( "orderAmt", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
+        bodyMap.put( "orderAmt", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
         bodyMap.put( "payId", "401" );
         bodyMap.put( "accNo", withdrawLog.getBankAccount().trim() );
         bodyMap.put( "accName", withdrawLog.getBankUserName().trim() );
         bodyMap.put( "bankName", withdrawLog.getBankName() );
-        bodyMap.put( "notifyURL", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
-
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
 
-        String sign = DigestUtils.md5Hex( tempStr ).toLowerCase();
+        log.warn( tempStr );
+
+        String sign = DigestUtils.md5Hex( tempStr ).toUpperCase();
         bodyMap.put( "sign", sign );
+
+        bodyMap.put( "notifyURL", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
+
+        log.warn( JsonUtil.object2Json( bodyMap ) );
 
         Map<String, Object> resultMap = this.sendPostMap( payAgentPlatform.getPayOrderAddr(), packageForm( bodyMap ),
                 reqPayAgent );
@@ -53,6 +57,7 @@ public class F8PayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason( resultMap.getOrDefault( "msg", "" ).toString() );
+                payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
             }
         }
         return false;
