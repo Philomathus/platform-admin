@@ -13,7 +13,7 @@ public enum BankCodeZhaoHType {
     ABC(Arrays.asList("农业银行")),
     PSBC(Arrays.asList("邮政储蓄银行", "中国邮政储蓄银行", "中国邮政银行", "中国邮政储蓄", "中国邮政", "邮政银行")),
     BOC(Arrays.asList("中国银行")),
-    BCM(Arrays.asList("交通银行")),
+    COMM(Arrays.asList("交通银行")),
     CMB(Arrays.asList("招商银行")),
     CEB(Arrays.asList("光大银行")),
     CIB(Arrays.asList("兴业银行")),
