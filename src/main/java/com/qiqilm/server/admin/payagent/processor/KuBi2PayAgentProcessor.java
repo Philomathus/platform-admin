@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Repository( value = ConstantsPayAgent.KUBI_PAY + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.KUBI2_PAY + "PayAgentProcessor" )
 @Log4j2
-public class KuBiPayAgentProcessor extends AbstractPayAgent {
+public class KuBi2PayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         BankCodeKuBiType bankCodeType = BankCodeKuBiType.getCodeByDesc( withdrawLog.getBankName() );
