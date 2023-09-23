@@ -17,7 +17,7 @@ public class HostLiveGiftFix {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "1 0 0 * * ?")
     public void listenerMonitor() {
 
         if (!LiveCenterConfig.me.isLiveCenter()) {
