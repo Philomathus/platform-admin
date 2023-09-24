@@ -270,7 +270,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
         //更新用户账户余额
         boolean updateMemberCharge = this.updateMemberCharge( memberInfo.getId(), add, "线下存款" );
         if ( updateMemberCharge ) {
-            this.paySendIm( memberInfo.getId(), memberRechargeLog.getRechargeMoney() );
+            //this.paySendIm( memberInfo.getId(), memberRechargeLog.getRechargeMoney() );
         }
         return updateMemberCharge;
     }
