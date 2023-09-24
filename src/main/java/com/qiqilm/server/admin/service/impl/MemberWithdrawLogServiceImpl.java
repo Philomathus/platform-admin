@@ -257,9 +257,10 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         int updateW = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
         //回退提现金额
         BigDecimal withdrawMoney = memberWithdrawLog.getWithdrawMoney();
-        if ( StringUtils.hasText( memberWithdrawLog.getAccount() )
-                && "VIPPAY".equalsIgnoreCase( memberWithdrawLog.getBankCode() ) ) {
-            withdrawMoney = withdrawMoney.subtract( new BigDecimal( memberWithdrawLog.getAccount() ) );
+        String     account       = memberWithdrawLog.getAccount();
+        log.warn( JsonUtil.object2Json( memberWithdrawLog ) );
+        if ( StringUtils.hasText( account ) && "VIPPAY".equalsIgnoreCase( memberWithdrawLog.getBankCode() ) ) {
+            withdrawMoney = withdrawMoney.subtract( new BigDecimal( account ) );
         }
         int updateM = memberInfoMapper.updateMoneySelect( memberWithdrawLog.getMemberId(), withdrawMoney, null, null, null,
                 null );
@@ -267,7 +268,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             throw new BusinessException( "订单拒绝失败" );
         }
         BigDecimal now = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
-        logService.logMoneyAll( memberWithdrawLog.getMemberId(), memberWithdrawLog.getAccount(), EnumMoney.bohui, now,
+        logService.logMoneyAll( memberWithdrawLog.getMemberId(), memberWithdrawLog.getMemberId(), EnumMoney.bohui, now,
                 withdrawMoney, null,
                 "驳回人：" + userName + "-" + ip, memberWithdrawLog.getOrderNo() + "bohui" );
     }
@@ -283,7 +284,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             return AjaxResult.error( "请勿重复提交" );
         }
         List<MemberWithdrawLog> withdrawLogList = memberWithdrawLogMapper.selectByIds( req.getIds() );
-        if ( withdrawLogList == null || withdrawLogList.size() == 0 ) {
+        if ( CollectionUtils.isEmpty( withdrawLogList ) ) {
             return AjaxResult.error( "该订单已被处理,请刷新界面" );
         }
         IMemberWithdrawLogService service = SpringUtils.getBean( IMemberWithdrawLogService.class );

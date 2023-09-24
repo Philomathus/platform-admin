@@ -9,6 +9,7 @@
         <result property="withdrawMoney" column="withdraw_money"/>
         <result property="bankName" column="bank_name"/>
         <result property="bankAccount" column="bank_account"/>
+        <result property="bankCode" column="bank_code"/>
         <result property="bankAddress" column="bank_address"/>
         <result property="bankUserName" column="bank_user_name"/>
         <result property="status" column="status"/>
@@ -33,6 +34,7 @@
         withdraw_money,
         bank_name,
         bank_account,
+        bank_code,
         bank_address,
         bank_user_name,
         status,
