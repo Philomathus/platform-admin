@@ -43,15 +43,16 @@ public class JinYiPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( param ) + "&key=" + signMd5;
 
-        String sign = DigestUtils.md5Hex( tempStr ).toLowerCase();
-        param.put( "sign", sign );
+        param.put( "sign", DigestUtils.md5Hex( tempStr ).toLowerCase() );
 
-        String message = JsonUtil.object2Json( sign );
+        String message = JsonUtil.object2Json( param );
         log.warn( message );
 
         Map<String, Object> params = new HashMap<>();
         params.put( "mno", payAgentPlatform.getMerId() );
         params.put( "content", AESCoder.encryptByKey( message, payAgentPlatform.getSignPublicKey() ) );
+
+        log.warn( JsonUtil.object2Json( params ) + "::" + payAgentPlatform.getPayOrderAddr() );
 
         Map<String, Object> resultMap = this.sendPostMap( payAgentPlatform.getPayOrderAddr(), packageForm( params ),
                 reqPayAgent );
@@ -66,10 +67,10 @@ public class JinYiPayAgentProcessor extends AbstractPayAgent {
                     if ( "0".equals( defrayStatus ) ) {
                         log.info( payAgentPlatform.getName() + "订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
                         return true;
-                    } else {
-                        reqPayAgent.setFailReason( resultMap.getOrDefault( "msg", "" ).toString() );
                     }
                 }
+            } else {
+                reqPayAgent.setFailReason( resultMap.getOrDefault( "msg", "" ).toString() );
             }
         }
         log.info( payAgentPlatform.getName() + "订单提交失败 - 订单号:{}", withdrawLog.getOrderNo() );
@@ -134,17 +135,16 @@ public class JinYiPayAgentProcessor extends AbstractPayAgent {
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( param ) + "&key=" + signMd5;
 
-        String sign = DigestUtils.md5Hex( tempStr ).toLowerCase();
-        param.put( "sign", sign );
+        param.put( "sign", DigestUtils.md5Hex( tempStr ).toLowerCase() );
 
-        String message = JsonUtil.object2Json( sign );
+        String message = JsonUtil.object2Json( param );
         log.warn( message );
 
         Map<String, Object> params = new HashMap<>();
         params.put( "mno", payAgentPlatform.getMerId() );
         params.put( "content", AESCoder.encryptByKey( message, payAgentPlatform.getSignPublicKey() ) );
 
-        Map<String, Object> resultMap = this.sendPostMap( payAgentPlatform.getPayOrderAddr(), packageForm( params ), null );
+        Map<String, Object> resultMap = this.sendPostMap( payAgentPlatform.getPayOrderQueryAddr(), packageForm( params ), null );
 
         log.warn( payAgentPlatform.getName() + "查询结果 - result:{}", JsonUtil.object2Json( resultMap ) );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
@@ -161,8 +161,8 @@ public class JinYiPayAgentProcessor extends AbstractPayAgent {
                     status = 5;
                 }
                 payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, statusType );
-                return resultMap.getOrDefault( "msg", "" ).toString();
             }
+            return resultMap.getOrDefault( "msg", "" ).toString();
         }
         return payAgentPlatform.getName() + "查询失败,订单号:" + withdrawLog.getOrderNo();
     }
