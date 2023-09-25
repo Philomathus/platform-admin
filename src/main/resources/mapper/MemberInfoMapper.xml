@@ -1105,6 +1105,11 @@
           and
             guard_end_time >= now()
     </select>
+    <select id="selectUserNameById" resultType="java.lang.String">
+        SELECT user_name
+        from ${dbMain}.member_info
+        where id = #{memberId}
+    </select>
 
     <update id="updateCodeTotalVipLevel" parameterType="MemberInfo">
         update ${dbMain}.member_info

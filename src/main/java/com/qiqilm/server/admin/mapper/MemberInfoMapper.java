@@ -157,4 +157,6 @@ public interface MemberInfoMapper {
     int withdrawStatus( MemberInfo memberInfo );
 
     int updateCodeTotalVipLevel( MemberInfo memberInfo );
+
+    String selectUserNameById( @Param( "memberId" ) String memberId );
 }

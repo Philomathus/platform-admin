@@ -258,18 +258,19 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         //回退提现金额
         BigDecimal withdrawMoney = memberWithdrawLog.getWithdrawMoney();
         String     account       = memberWithdrawLog.getAccount();
-        log.warn( JsonUtil.object2Json( memberWithdrawLog ) );
-        if ( StringUtils.hasText( account ) && "VIPPAY".equalsIgnoreCase( memberWithdrawLog.getBankCode() ) ) {
+        String     memberId      = memberWithdrawLog.getMemberId();
+        String     accountName   = memberInfoMapper.selectUserNameById( memberId );
+        if ( StringUtils.hasText( account ) && !account.equals( accountName )
+                && "VIPPAY".equalsIgnoreCase( memberWithdrawLog.getBankCode() ) ) {
             withdrawMoney = withdrawMoney.subtract( new BigDecimal( account ) );
         }
-        int updateM = memberInfoMapper.updateMoneySelect( memberWithdrawLog.getMemberId(), withdrawMoney, null, null, null,
-                null );
+
+        int updateM = memberInfoMapper.updateMoneySelect( memberId, withdrawMoney, null, null, null, null );
         if ( updateW <= 0 || updateM <= 0 ) {
             throw new BusinessException( "订单拒绝失败" );
         }
-        BigDecimal now = memberInfoMapper.selectTotalAccountById( memberWithdrawLog.getMemberId() );
-        logService.logMoneyAll( memberWithdrawLog.getMemberId(), memberWithdrawLog.getMemberId(), EnumMoney.bohui, now,
-                withdrawMoney, null,
+        BigDecimal now = memberInfoMapper.selectTotalAccountById( memberId );
+        logService.logMoneyAll( memberId, memberId, EnumMoney.bohui, now, withdrawMoney, null,
                 "驳回人：" + userName + "-" + ip, memberWithdrawLog.getOrderNo() + "bohui" );
     }
 
