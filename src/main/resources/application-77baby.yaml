@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://livedata.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77yy_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://livedata.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77baby_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: admin
       password: ENC(eNEs8Zeo1ZxWlxk7DA8+KKdlWOyq4udWhsa9oqw9RfzxSqbbd7qqNppi8ROSNDYziS5U2jlyX4KlF9gAOzJYCg==)
     secondary:
@@ -9,23 +9,17 @@ spring:
       username: admin
       password: dRmBstReqberz!14Xm#
   redis:
-    host: ENC(/x3sbqi7hzTZK4XJyX4MgQ65KvKV/F3vQyeLUBQY3SPZr/khHSX1WxfFeGG7nbBvSlbv14zXncBWrn+EihLnggriNcBIv0se1ohUIg5ZGBA=)
+    host: baby.zczoyz.ng.0001.ape1.cache.amazonaws.com
     port: 6379
 
 mybatis:
   configuration:
     variables:
-      dbMain: 77yy_main
-      dbLive: 77yy_live
-      dbLottery: 77yy_lottery
+      dbMain: 77baby_main
+      dbLive: 77baby_live
+      dbLottery: 77baby_lottery
 
-liveCenter: 7708
-
-im:
-  # 群聊
-  sendGroupMsg: http://47.243.143.163:43000/chat/sendGroupMsg/
-  # 单聊
-  sendMsg: http://47.243.143.163:43000/chat/sendMsg/
+liveCenter: 7701
 
 # 代付额度
 payAgentLimit: 5000

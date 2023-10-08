@@ -14,6 +14,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.qiqilm.server.admin.cache.ServerOssCacheUtil;
+import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.domain.ServerOss;
 import com.qiqilm.server.admin.mapper.ServerOssMapper;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +54,9 @@ public class ServerOssServiceImpl implements IServerOssService {
     @Autowired
     private ServerOssCacheUtil serverOssCacheUtil;
 
+    @Resource
+    private SysConfigCacheUtil sysConfigCacheUtil;
+
     /**
      * 查询oss文件存储服务配置
      *
@@ -61,7 +66,11 @@ public class ServerOssServiceImpl implements IServerOssService {
      */
     @Override
     public ServerOss selectServerOssById( Long id ) {
-        return serverOssMapper.selectServerOssById( id );
+        ServerOss serverOss = serverOssMapper.selectServerOssById( id );
+        serverOss.setAccessKey( new StringBuilder( serverOss.getAccessKey() ).replace( 5,15,"*******" ).toString() ) ;
+        serverOss.setAccessSecret( serverOss.getAccessSecret().replace( serverOss.getAccessSecret().substring( 7,30 ),
+                "********" ));
+        return serverOss;
     }
 
     /**
@@ -72,17 +81,15 @@ public class ServerOssServiceImpl implements IServerOssService {
      * @return oss文件存储服务配置
      */
     @Override
-    public List<ServerOss> selectServerOssList( ServerOss serverOss , boolean hideAccess) {
-
+    public List<ServerOss> selectServerOssList( ServerOss serverOss ) {
         List<ServerOss> ossList = serverOssMapper.selectServerOssList( serverOss );
-
-        if (hideAccess) {
-            ossList.stream().forEach((r)-> {
-                r.setAccessKey("");
-                r.setAccessSecret("");
+        String hideAccess = sysConfigCacheUtil.getConf( "ossKeyHide" );
+        if ( "0".equals( hideAccess )  ) {
+            ossList.forEach(( r)-> {
+                r.setAccessKey("*****");
+                r.setAccessSecret("*****");
             });
         }
-
         return ossList;
     }
 

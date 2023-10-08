@@ -58,6 +58,7 @@ public class ChanHongPayAgentProcessor extends AbstractPayAgent {
                 return true;
             } else {
                 reqPayAgent.setFailReason( resultMap.getOrDefault( "Message", "" ).toString() );
+                payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
             }
         }
         return false;

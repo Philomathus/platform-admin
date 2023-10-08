@@ -236,9 +236,9 @@ public class LiveUserServiceImpl implements ILiveUserService {
         }
         Integer   lotteryId   = ( Integer ) map.get( "lotteryId" );
         String    lotteryName = ( String ) map.get( "lotteryName" );
-        LiveVideo liveVideo   = liveVideoMapper.selectLiveVideoById( new Long( id ) );
+        LiveVideo liveVideo   = liveVideoMapper.selectLiveVideoById( id.longValue() );
         log.error( "虚拟主播开播map:{}", JsonUtil.object2Json( map ) );
-        LiveUser hostInfo = liveUserMapper.selectLiveUserById( new Long( id ) );
+        LiveUser hostInfo = liveUserMapper.selectLiveUserById( id.longValue() );
         imReg( hostInfo );
 
         if ( liveVideo != null ) {
@@ -267,7 +267,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
         } else {
             //新增
             liveVideo = new LiveVideo();
-            liveVideo.setId( new Long( id ) );
+            liveVideo.setId( id.longValue() );
             liveVideo.setLiveIn( 1 );
             liveVideo.setUserId( id );
             liveVideo.setBeginTime( new Date() );
@@ -402,7 +402,6 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 踢出主播
      *
      * @param userIds
-     *
      * @return success
      * @desc 1：要判断主播是否在直播 live_video live_in字段
      * 2：要更新live_user 家族id清空 。。。

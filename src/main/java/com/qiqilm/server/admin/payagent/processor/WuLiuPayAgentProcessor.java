@@ -28,7 +28,7 @@ import java.util.*;
 
 @Repository(value = ConstantsPayAgent.WULIU + "PayAgentProcessor")
 @Log4j2
-public class wuliuPayAgentProcessor extends AbstractPayAgent {
+public class WuLiuPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         Map<String, Object> bodyMap = new LinkedHashMap<>();

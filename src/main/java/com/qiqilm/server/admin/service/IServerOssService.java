@@ -29,7 +29,7 @@ public interface IServerOssService {
 	 * @param serverOss oss文件存储服务配置
 	 * @return oss文件存储服务配置集合
 	 */
-	public List<ServerOss> selectServerOssList( ServerOss serverOss, boolean hideAccess);
+	public List<ServerOss> selectServerOssList( ServerOss serverOss);
 
 	/**
 	 * 新增oss文件存储服务配置

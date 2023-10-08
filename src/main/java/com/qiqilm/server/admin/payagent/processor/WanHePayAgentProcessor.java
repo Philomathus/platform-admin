@@ -27,9 +27,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Repository( value = ConstantsPayAgent.HENG_SHENG_PAY + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.WAN_HE_PAY + "PayAgentProcessor" )
 @Log4j2
-public class HongShengPayAgentProcessor extends AbstractPayAgent {
+public class WanHePayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {

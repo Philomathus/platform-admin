@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeHuaZhongType;
-import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.JsonUtil;
@@ -37,8 +36,7 @@ public class WanGuoPayAgentProcessor extends AbstractPayAgent {
 
         BankCodeHuaZhongType bankCodeType = BankCodeHuaZhongType.getCodeByDesc( withdrawLog.getBankName() );
         if ( bankCodeType == null ) {
-            payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
-            throw new BusinessException( "此代付无法支持的银行类型：" + withdrawLog.getBankName() );
+            bankCodeType = BankCodeHuaZhongType.QTBC;
         }
         withdrawLog.setBankCode( bankCodeType.name() );
 

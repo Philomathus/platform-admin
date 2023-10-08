@@ -76,9 +76,14 @@ public class ServerSms {
 	private Date updateTime;
 
 	/**
-	 * 管理员账号
+	 * 分类密钥
 	 */
 	private String endpoint;
+
+	/**
+	 * 分类的秘密
+	 */
+	private String classificationKey;
 
 	/**
 	 * 服务器比例
@@ -102,6 +107,7 @@ public class ServerSms {
 				.append( "identify", getIdentify() )
 				.append( "isEffect", getIsEffect() )
 				.append( "endpoint", getEndpoint())
+				.append( "classificationKey", getClassificationKey())
 				.append( "ratio", getRatio())
 				.toString();
 	}

@@ -27,9 +27,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Repository( value = ConstantsPayAgent.HENG_SHENG_PAY + "PayAgentProcessor" )
+@Repository ( value = ConstantsPayAgent.HUA_ZHONG4_PAY + "PayAgentProcessor" )
 @Log4j2
-public class HongShengPayAgentProcessor extends AbstractPayAgent {
+public class HuaZhong4PayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
@@ -55,8 +55,7 @@ public class HongShengPayAgentProcessor extends AbstractPayAgent {
         params.put( "sign", sign );
         log.warn( payAgentPlatform.getName() + "下单请求参数{}", JsonUtil.object2Json( params ) );
 
-        Map<String, Object> resultMap = this.sendPostMap( payAgentPlatform.getPayOrderAddr(), packageJson( params ),
-                reqPayAgent );
+        Map<String, Object> resultMap = this.sendPostMap( payAgentPlatform.getPayOrderAddr(), packageJson( params ), reqPayAgent );
 
         log.info( payAgentPlatform.getName() + "下单结果 - result:{}", JsonUtil.object2Json( resultMap ) );
 
@@ -99,8 +98,7 @@ public class HongShengPayAgentProcessor extends AbstractPayAgent {
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( merchantOrderNo );
             payAgentService.processOrderPay( withdrawLog, payAgentLog, "", payAgentPlatform, "1".equals( status ) );
-            log.info( payAgentPlatform.getName()
-                    + "订单号:{},回调状态:{},", merchantOrderNo, "1".equals( status ) ? "成功" : "失败" );
+            log.info( payAgentPlatform.getName() + "订单号:{},回调状态:{},", merchantOrderNo, "1".equals( status ) ? "成功" : "失败" );
             return "success";
         }
         log.warn( payAgentPlatform.getName() + "验签失败" );
@@ -108,8 +106,7 @@ public class HongShengPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public Map<String, Object> reverseCheckOrderPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap,
-                                                     String realIp ) throws Exception {
+    public Map<String, Object> reverseCheckOrderPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
         return null;
     }
 
@@ -138,13 +135,13 @@ public class HongShengPayAgentProcessor extends AbstractPayAgent {
         try {
             resultMap = restTemplate.execute( payAgentPlatform.getPayOrderQueryAddr(), HttpMethod.POST,
                     restTemplate.httpEntityCallback( httpEntity ), response -> {
-                InputStream bodyStream = response.getBody();
-                String      text;
-                try ( Reader reader = new InputStreamReader( bodyStream ) ) {
-                    text = CharStreams.toString( reader );
-                }
-                return JsonUtil.json2Map( text );
-            } );
+                        InputStream bodyStream = response.getBody();
+                        String      text;
+                        try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                            text = CharStreams.toString( reader );
+                        }
+                        return JsonUtil.json2Map( text );
+                    } );
             log.warn( payAgentPlatform.getName() + "查询结果 - result:{}", JsonUtil.object2Json( resultMap ) );
 
             if ( !CollectionUtils.isEmpty( resultMap ) ) {
@@ -159,14 +156,13 @@ public class HongShengPayAgentProcessor extends AbstractPayAgent {
                         int status      = 4;
                         int orderStatus = 0;
                         if ( "1".equals( statusCode ) ) {
-                            status      = 6;
+                            status = 6;
                             orderStatus = 1;
                         } else {
-                            status      = 5;
+                            status = 5;
                             orderStatus = 2;
                         }
-                        payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
-                                orderStatus );
+                        payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderStatus );
                     }
                 }
                 return resultMap.getOrDefault( "msg", "" ).toString();

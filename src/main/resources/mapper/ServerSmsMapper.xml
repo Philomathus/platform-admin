@@ -18,6 +18,7 @@
 		<result property="updateTime" column="update_time"/>
 		<result property="updateTime" column="update_time"/>
 		<result property="endpoint" column="endpoint"/>
+		<result property="classificationKey" column="classification_key"/>
 	</resultMap>
 
 	<sql id="selectServerSmsVo">
@@ -33,6 +34,7 @@
 			   identify,
 			   is_effect,
 			   endpoint,
+			   classification_key,
 		       update_time,
 		       ratio
 		from ${dbLive}.server_sms
@@ -97,6 +99,9 @@
 			<if test="endpoint != null and endpoint != ''">
 				endpoint,
 			</if>
+			<if test="classificationKey != null and classificationKey != ''">
+				classification_key,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="name != null and name != ''">
@@ -134,6 +139,9 @@
 			</if>
 			<if test="endpoint != null and endpoint != ''">
 				#{endpoint},
+			</if>
+			<if test="classificationKey != null and classificationKey != ''">
+				#{classificationKey},
 			</if>
 		</trim>
 	</insert>
@@ -176,6 +184,9 @@
 			</if>
 			<if test="endpoint != null and endpoint !=''">
 				endpoint = #{endpoint},
+			</if>
+			<if test="classificationKey != null and classificationKey != ''">
+				classification_key = #{classificationKey},
 			</if>
 		</trim>
 		where id = #{id}
