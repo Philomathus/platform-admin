@@ -413,7 +413,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
             resultMap = restTemplate.postForObject( serverSms.getEndpoint(), httpEntity, Map.class );
             if ( !CollectionUtils.isEmpty( resultMap ) ) {
                 Map<String, Object> businessData = ( Map<String, Object> ) resultMap.get( "BusinessData" );
-                if ( !CollectionUtils.isEmpty( businessData ) && ( Long ) businessData.getOrDefault( "code", 0 ) == 10000 ) {
+                if ( !CollectionUtils.isEmpty( businessData ) && ( Integer ) businessData.getOrDefault( "code", 0 ) == 10000 ) {
                     return code;
                 }
             }

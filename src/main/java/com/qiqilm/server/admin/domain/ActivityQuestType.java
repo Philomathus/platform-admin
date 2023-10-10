@@ -25,6 +25,10 @@ public class ActivityQuestType extends BaseEntity {
     @Excel(name = "所属游戏id")
     private String gameId;
 
+    /** 排序 从小到大顺序 */
+    @Excel(name = "排序 从小到大顺序")
+    private Integer sort;
+
     public void setId(String id) {
         this.id = id;
     }
@@ -47,6 +51,10 @@ public class ActivityQuestType extends BaseEntity {
         return gameId;
     }
 
+    public Integer getSort() {
+        return sort;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -55,6 +63,7 @@ public class ActivityQuestType extends BaseEntity {
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("gameId", getGameId())
+            .append("sort", getSort())
             .toString();
     }
 }
