@@ -44,7 +44,7 @@
     </select>
 
     <select id="selectLotteryHistoryNameList" parameterType="LotteryHistory" resultMap="LotteryHistoryResult">
-        select distinct name from ${dbLottery}.lottery_info
+        select name,id  from ${dbLottery}.lottery_info where status = 1
     </select>
 
     <select id="selectKtimeById" resultType="java.lang.String">

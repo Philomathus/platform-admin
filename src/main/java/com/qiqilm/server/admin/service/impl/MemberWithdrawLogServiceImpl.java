@@ -58,8 +58,6 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
     @Autowired
     private SysConfigCacheUtil           sysConfigCacheUtil;
     @Autowired
-    private SysRoleMapper                sysRoleMapper;
-    @Autowired
     private PayAgentServiceImpl          payAgentServiceImpl;
 
     /**
@@ -91,7 +89,8 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             for ( MemberWithdrawLog me : memberWithdrawLogList ) {
                 //入款人姓名不为空，并且入款人不包含提现人，整条数据标红警告
                 if ( Strings.isNotBlank( me.getRechargeUserName() ) && Strings.isNotBlank( me.getBankUserName() ) && !me
-                        .getRechargeUserName().contains( me.getBankUserName() ) ) {
+                        .getRechargeUserName()
+                        .contains( me.getBankUserName() ) ) {
                     me.setRechargeUserNameStatus( 1 );//等于1,数据警告
                 } else {
                     me.setRechargeUserNameStatus( 0 );
@@ -557,17 +556,20 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
             PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( req.getPayAgentPlatId() );
             req.setRemark( "人工代付:" + payAgentPlatform.getName() );
         }
-        memberWithdrawLog.setRemark( req.getRemark() );
-        memberWithdrawLog.setStatus( status );
-        memberWithdrawLog.setOpName( userName );
-        memberWithdrawLog.setUpdateTime( new Date() );
-        int i = memberWithdrawLogMapper.updateMemberWithdrawLog( memberWithdrawLog );
+        MemberWithdrawLog update = new MemberWithdrawLog();
+        update.setId( memberWithdrawLog.getId() );
+        update.setRemark( req.getRemark() );
+        update.setStatus( status );
+        update.setOpName( userName );
+        update.setUpdateTime( new Date() );
+        int i = memberWithdrawLogMapper.updateMemberWithdrawLog( update );
 
         //gopay提现彩金
         payAgentServiceImpl.gopayWithdraw( memberWithdrawLog, true );
 
         if ( i > 0 ) {
             redisUtil.unLock( EnumLock.member, memberWithdrawLog.getMemberId() );
+            log.info( JsonUtil.object2Json( memberWithdrawLog ) );
             return AjaxResult.success();
         }
 

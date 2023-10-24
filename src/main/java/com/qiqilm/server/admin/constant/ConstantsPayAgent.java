@@ -295,9 +295,9 @@ public abstract class ConstantsPayAgent {
     public static final String YIAN_PAY          = "yiAnPay";
     public static final String XIN_HE_PAY        = "xinHePay";
     public static final String HUA_ZHONG_PAY     = "huaZhongPay";
-    public static final String HUA_ZHONG2_PAY     = "huaZhong2Pay";
-    public static final String HUA_ZHONG3_PAY     = "huaZhong3Pay";
-    public static final String HUA_ZHONG4_PAY     = "huaZhong4Pay";
+    public static final String HUA_ZHONG2_PAY    = "huaZhong2Pay";
+    public static final String HUA_ZHONG3_PAY    = "huaZhong3Pay";
+    public static final String HUA_ZHONG4_PAY    = "huaZhong4Pay";
     public static final String BO_QI_PAY         = "boQiPay";
     public static final String WAN_SHUN_PAY      = "wanShunPay";
     public static final String BA_MA_PAY         = "baMaPay";
@@ -316,4 +316,5 @@ public abstract class ConstantsPayAgent {
     public static final String WAN_HE_PAY        = "wanHePay";
     public static final String TIANXIAHUI_PAY    = "tianXiaHuiPay";
     public static final String LIANLIAN_PAY      = "lianLianPay";
+    public static final String QIANYI_PAY        = "qianYiPay";
 }
