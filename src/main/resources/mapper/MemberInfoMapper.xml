@@ -612,6 +612,7 @@
         </if>
     </update>
 
+    <!-- TODO -->
     <update id="updateBeatCode">
         update member_info
         <set>
@@ -620,6 +621,7 @@
         </set>
         where id = #{userId}
           and status in (1, 4, 6, 7)
+          and level_integral >= code_account
     </update>
     <insert id="call_pro_useranalysis" statementType="CALLABLE">
         {call pro_useranalysis(#{userid,mode=IN,jdbcType=VARCHAR})}
