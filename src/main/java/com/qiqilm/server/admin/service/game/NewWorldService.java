@@ -84,6 +84,7 @@ public class NewWorldService {
                      .append( paramStr ).append( "&key=" ).append( md5 );
         String              result    = PostData.get( gamePlatform.getApiUrl() + stringBuilder );
         Map<String, Object> resultMap = JsonUtil.json2Map( result );
+        log.warn( result );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
             resultMap = ( Map<String, Object> ) resultMap.get( "d" );
             if ( StringUtils.equals( "0", String.valueOf( resultMap.get( "code" ) ) ) ) {
