@@ -531,6 +531,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         BigDecimal   old          = memberInfoMapper.getMemberMoney( userId );
 
         EnumGamePlatform enumGamePlatform = EnumGamePlatform.getByType( platformId );
+        log.warn( "UserId: {} enumGamePlatform: {}", userId, enumGamePlatform.getName() );
         try {
             XiaFenResult xiaFenResult;
             switch ( enumGamePlatform ) {
