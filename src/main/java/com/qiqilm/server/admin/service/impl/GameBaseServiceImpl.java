@@ -417,6 +417,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
                 String resAll = PostData.getAllBalance( gamePlatform.getAgent(), userId, gamePlatform.getDes(),
 						gamePlatform.getMd5(), gamePlatform.getApiUrl() );
 
+                log.warn( resAll );
                 GameApiRes gameApiResAll = JsonUtil.json2Object( resAll, GameApiRes.class );
                 BigDecimal backMoney = gameApiResAll.getD().getCode() != 0 ? BigDecimal.ZERO : BigDecimal
                         .valueOf( gameApiResAll.getD().getMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
@@ -706,6 +707,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
             log.error( "获取总分失败，memId=" + account );
             return xiaFenResult;
         }
+        log.warn( resAll );
         GameApiRes gameApiResAll = JsonUtil.json2Object( resAll, GameApiRes.class );
         if ( gameApiResAll.getD().getCode() != 0 ) {
             log.error( "获取总分失败code：" + gameApiResAll.getD().getCode() );
@@ -723,6 +725,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
             log.error( "下分失败，，account=" + account );
             return xiaFenResult;
         }
+        log.warn( resXF );
         GameApiRes gameApiResXF = JsonUtil.json2Object( resXF, GameApiRes.class );
 
         if ( gameApiResXF.getD().getCode() != 0 ) {

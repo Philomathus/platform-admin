@@ -86,9 +86,9 @@ public class NewWorldService {
         Map<String, Object> resultMap = JsonUtil.json2Map( result );
         log.warn( result );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
-            resultMap = ( Map<String, Object> ) resultMap.get( "d" );
+            resultMap = ( Map<String, Object> ) resultMap.get( "dataStr" );
             if ( StringUtils.equals( "0", String.valueOf( resultMap.get( "code" ) ) ) ) {
-                return new BigDecimal( String.valueOf( resultMap.get( "money" ) ) );
+                return new BigDecimal( String.valueOf( resultMap.get( "score" ) ) );
             }
             log.warn( "newWorld 余额 失败->{}", JsonUtil.object2Json( resultMap ) );
         }
