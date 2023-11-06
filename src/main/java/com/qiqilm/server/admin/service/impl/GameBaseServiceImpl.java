@@ -419,7 +419,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 
                 GameApiRes gameApiResAll = JsonUtil.json2Object( resAll, GameApiRes.class );
                 BigDecimal backMoney = gameApiResAll.getD().getCode() != 0 ? BigDecimal.ZERO : BigDecimal
-                        .valueOf( gameApiResAll.getD().getFreeMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+                        .valueOf( gameApiResAll.getD().getMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.KY_CHESS.getType() );
                 rspGameBalance.setName( EnumGamePlatform.KY_CHESS.getName() );
@@ -441,7 +441,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
 
                 GameApiRes gameApiResAll = JsonUtil.json2Object( resAll, GameApiRes.class );
                 BigDecimal backMoney = gameApiResAll.getD().getCode() != 0 ? BigDecimal.ZERO : BigDecimal
-                        .valueOf( gameApiResAll.getD().getFreeMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+                        .valueOf( gameApiResAll.getD().getMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.KY_CHESS_NEW.getType() );
                 rspGameBalance.setName( EnumGamePlatform.KY_CHESS_NEW.getName() );
@@ -540,6 +540,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
                 xiaFenResult = outGameOG( userId, gamePlatform.getApiUrl(), orderId );
                 break;
             case KY_CHESS:
+            case KAIXUAN_CHESS_NEW:
                 xiaFenResult = outGameKY( userId, gamePlatform, orderId );
                 break;
             case AG_LIVE:
@@ -710,7 +711,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
             log.error( "获取总分失败code：" + gameApiResAll.getD().getCode() );
             return xiaFenResult;
         }
-        BigDecimal backMoney = new BigDecimal( gameApiResAll.getD().getFreeMoney() );
+        BigDecimal backMoney = new BigDecimal( gameApiResAll.getD().getMoney() );
         if ( backMoney.compareTo( BigDecimal.ZERO ) == 0 ) {
             xiaFenResult.setOk( true );
             return xiaFenResult;

@@ -10,7 +10,7 @@ public class GameApiUrl {
 
     private Integer status;
 
-    private Float freeMoney ;
+    private Float money ;
 
     private Integer gameStatus;
 }
