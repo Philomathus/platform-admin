@@ -420,7 +420,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
                 log.warn( resAll );
                 GameApiRes gameApiResAll = JsonUtil.json2Object( resAll, GameApiRes.class );
                 BigDecimal backMoney = gameApiResAll.getD().getCode() != 0 ? BigDecimal.ZERO : BigDecimal
-                        .valueOf( gameApiResAll.getD().getMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+                        .valueOf( gameApiResAll.getD().getFreeMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.KY_CHESS.getType() );
                 rspGameBalance.setName( EnumGamePlatform.KY_CHESS.getName() );
