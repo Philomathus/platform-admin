@@ -66,7 +66,7 @@ public class NewWorldService {
     }
 
     public BigDecimal queryCoin( GamePlatform gamePlatform, String userId, Date date ) {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder(gamePlatform.getApiUrl());
         StringBuilder param         = new StringBuilder();
         String        agent         = gamePlatform.getAgent();
         long          timestamp     = date.getTime();
@@ -82,9 +82,9 @@ public class NewWorldService {
         md5 = DigestUtils.md5Hex( agent + timestamp + md5 );
         stringBuilder.append( "?agent=" ).append( agent ).append( "&timestamp=" ).append( timestamp ).append( "&param=" )
                      .append( paramStr ).append( "&key=" ).append( md5 );
-        String              result    = PostData.get( gamePlatform.getApiUrl() + stringBuilder );
+        String              result    = PostData.get( stringBuilder.toString() );
         Map<String, Object> resultMap = JsonUtil.json2Map( result );
-        log.warn( result );
+        log.warn( stringBuilder + " ::: " + result );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
             resultMap = ( Map<String, Object> ) resultMap.get( "dataStr" );
             if ( StringUtils.equals( "0", String.valueOf( resultMap.get( "code" ) ) ) ) {
