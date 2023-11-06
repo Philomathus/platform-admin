@@ -24,8 +24,13 @@ public class NewWorldService {
         StringBuilder param         = new StringBuilder();
         String        agent         = gamePlatform.getAgent();
         long          timestamp     = date.getTime();
-        param.append( "s=3&account=" ).append( userId ).append( "&money=" ).append( changeMoney ).append( "&orderid=" )
-             .append( orderId );
+        param
+                .append( "s=3&account=" )
+                .append( userId )
+                .append( "&money=" )
+                .append( changeMoney )
+                .append( "&orderid=" )
+                .append( orderId );
         String paramStr;
         try {
             paramStr = Encrypt.AESEncrypt( param.toString(), gamePlatform.getDes() );
@@ -35,8 +40,15 @@ public class NewWorldService {
         }
         String md5 = gamePlatform.getMd5();
         md5 = DigestUtils.md5Hex( agent + timestamp + md5 );
-        stringBuilder.append( "?agent=" ).append( agent ).append( "&timestamp=" ).append( timestamp ).append( "&param=" )
-                     .append( paramStr ).append( "&key=" ).append( md5 );
+        stringBuilder
+                .append( "?agent=" )
+                .append( agent )
+                .append( "&timestamp=" )
+                .append( timestamp )
+                .append( "&param=" )
+                .append( paramStr )
+                .append( "&key=" )
+                .append( md5 );
         String              result    = PostData.get( gamePlatform.getApiUrl() + stringBuilder );
         Map<String, Object> resultMap = JsonUtil.json2Map( result );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
@@ -66,11 +78,11 @@ public class NewWorldService {
     }
 
     public BigDecimal queryCoin( GamePlatform gamePlatform, String userId, Date date ) {
-        StringBuilder stringBuilder = new StringBuilder(gamePlatform.getApiUrl());
+        StringBuilder stringBuilder = new StringBuilder( gamePlatform.getApiUrl() );
         StringBuilder param         = new StringBuilder();
         String        agent         = gamePlatform.getAgent();
         long          timestamp     = date.getTime();
-        param.append( "s=1&account=" ).append( userId );
+        param.append( "method=1&gamePlayer=" ).append( userId );
         String paramStr;
         try {
             paramStr = Encrypt.AESEncrypt( param.toString(), gamePlatform.getDes() );
@@ -80,15 +92,22 @@ public class NewWorldService {
         }
         String md5 = gamePlatform.getMd5();
         md5 = DigestUtils.md5Hex( agent + timestamp + md5 );
-        stringBuilder.append( "?agent=" ).append( agent ).append( "&timestamp=" ).append( timestamp ).append( "&param=" )
-                     .append( paramStr ).append( "&key=" ).append( md5 );
-        String              result    = PostData.get( stringBuilder.toString() );
-        Map<String, Object> resultMap = JsonUtil.json2Map( result );
+        stringBuilder
+                .append( "?channel=" )
+                .append( agent )
+                .append( "&mTime=" )
+                .append( timestamp )
+                .append( "&paramerter=" )
+                .append( paramStr )
+                .append( "&key=" )
+                .append( md5 );
+        String result = PostData.get( stringBuilder.toString() );
         log.warn( stringBuilder + " ::: " + result );
+        Map<String, Object> resultMap = JsonUtil.json2Map( result );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
             resultMap = ( Map<String, Object> ) resultMap.get( "dataStr" );
-            if ( StringUtils.equals( "0", String.valueOf( resultMap.get( "code" ) ) ) ) {
-                return new BigDecimal( String.valueOf( resultMap.get( "score" ) ) );
+            if ( org.apache.commons.lang3.StringUtils.equals( "0", String.valueOf( resultMap.get( "code" ) ) ) ) {
+                return new BigDecimal( String.valueOf( resultMap.get( "score" ) ) ).setScale( 0, BigDecimal.ROUND_DOWN );
             }
             log.warn( "newWorld 余额 失败->{}", JsonUtil.object2Json( resultMap ) );
         }
