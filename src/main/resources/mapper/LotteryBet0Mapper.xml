@@ -131,6 +131,9 @@
         <if test="lotteryName != null  and lotteryName != ''">
             and lottery_name like concat('%', #{lotteryName}, '%')
         </if>
+		<if test="lotteryId != null ">
+			and lottery_id =  #{lotteryId}
+		</if>
         <if test="startTime != null">
             and bet_time <![CDATA[ >= ]]> #{startTime} and bet_time <![CDATA[ <= ]]> #{endTime}
         </if>
