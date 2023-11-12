@@ -182,7 +182,8 @@ public class PayServiceImpl implements IPayService {
         BigDecimal codeMoney           = money;
         BigDecimal vipPayCodeMultiples = sysConfigCacheUtil.getConfBd( "vippay_income_code_multiples" );
         String     des                 = "线上充值";
-        if ( "508".equals( memberPayJour.getPlatformId() ) && vipPayCodeMultiples.compareTo( BigDecimal.ZERO ) > 0 ) {
+        if ( "508".equals( memberPayJour.getPlatformId() ) && vipPayCodeMultiples.compareTo( BigDecimal.ZERO ) > 0
+                && chargeGive.compareTo( BigDecimal.ZERO ) > 0 ) {
             codeMoney = money.multiply( vipPayCodeMultiples );
             des       = "vipPay充值" + vipPayCodeMultiples + "倍打码";
         }
