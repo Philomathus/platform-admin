@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository( value = ConstantsPayAgent.WANBI_PAY + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.WANBI_WANB_PAY + "PayAgentProcessor" )
 @Log4j2
-public class WanBiPayAgentProcessor extends AbstractPayAgent {
+public class WanBiWanbPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         String userId  = payAgentPlatform.getMerId();
@@ -48,7 +48,7 @@ public class WanBiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "notifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put( "exrate", "0.00" );
         bodyMap.put( "examount", amount );
-        bodyMap.put( "currency", "usdt" );
+        bodyMap.put( "currency", "wanb" );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = userId + "0.00" + orderId + account + signMd5;
