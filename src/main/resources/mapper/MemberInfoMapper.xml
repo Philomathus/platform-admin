@@ -93,12 +93,12 @@
     </sql>
 
     <select id="selectMemberInfoList" parameterType="MemberInfo" resultMap="MemberInfoResult">
-        <include refid="selectMemberInfoVo"/>
+        <include refid="selectMemberInfoVo" />
         <where>
             <if test="bankAccount != null  and bankAccount != ''">
                 and id in (select member_id
-                           from member_card
-                           where bank_account = #{bankAccount} or real_name = #{bankAccount})
+                from member_card
+                where bank_account = #{bankAccount} or real_name = #{bankAccount})
             </if>
             <!--<if test="searchValue != null  and searchValue != ''">
                 and (id = #{searchValue} or phone = #{searchValue} or user_name = #{searchValue})
@@ -163,7 +163,7 @@
                 <foreach item="value" collection="searchValues" open="(" separator="," close=")">
                     #{value}
                 </foreach>
-                 or user_name in
+                or user_name in
                 <foreach item="value" collection="searchValues" open="(" separator="," close=")">
                     #{value}
                 </foreach>
@@ -188,10 +188,13 @@
             <if test="integral != null and integral != ''">
                 and code_total/level_integral <![CDATA[ > ]]> #{integral}
             </if>
-
-
         </where>
         order by reg_time desc
+    </select>
+
+    <select id="selectMemberInfoHistoryById" parameterType="String" resultMap="MemberInfoResult">
+        select * from member_info_history
+        where id = #{id}
     </select>
 
     <select id="selectMemberInfoById" parameterType="String" resultMap="MemberInfoResult">
@@ -580,6 +583,133 @@
         where id = #{id}
     </update>
 
+    <update id="updateMemberInfoHistory" parameterType="MemberInfo">
+        update member_info_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberCode != null and memberCode != ''">
+                member_code = #{memberCode},
+            </if>
+            <if test="cxAgent != null and cxAgent != ''">
+                cx_agent = #{cxAgent},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="vip != null">
+                vip = #{vip},
+            </if>
+            <if test="totalAccount != null">
+                total_account = #{totalAccount},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="isOnline != null">
+                is_online = #{isOnline},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="regTime != null">
+                reg_time = #{regTime},
+            </if>
+            <if test="registIp != null">
+                regist_ip = #{registIp},
+            </if>
+            <if test="loginIp != null">
+                login_ip = #{loginIp},
+            </if>
+            <if test="loginAddress != null">
+                login_address = #{loginAddress},
+            </if>
+            <if test="loginDev != null">
+                login_dev = #{loginDev},
+            </if>
+            <if test="nickName != null">
+                nick_name = #{nickName},
+            </if>
+            <if test="birthDay != null">
+                birth_day = #{birthDay},
+            </if>
+            <if test="qq != null">
+                qq = #{qq},
+            </if>
+            <if test="wechat != null">
+                wechat = #{wechat},
+            </if>
+            <if test="headImg != null">
+                head_img = #{headImg},
+            </if>
+            <if test="onlineTime != null">
+                online_time = #{onlineTime},
+            </if>
+            <if test="linkUrl != null">
+                link_url = #{linkUrl},
+            </if>
+            <if test="loginTime != null">
+                login_time = #{loginTime},
+            </if>
+            <if test="boxAccount != null">
+                box_account = #{boxAccount},
+            </if>
+            <if test="boxPass != null">
+                box_pass = #{boxPass},
+            </if>
+            <if test="cleanTime != null">
+                clean_time = #{cleanTime},
+            </if>
+            <if test="levelIntegral != null">
+                level_integral = #{levelIntegral},
+            </if>
+            <if test="inviterCode != null">
+                inviter_code = #{inviterCode},
+            </if>
+            <if test="inviteMoney != null">
+                invite_money = #{inviteMoney},
+            </if>
+            <if test="codeAccount != null">
+                code_account = #{codeAccount},
+            </if>
+            <if test="pid != null">
+                PID = #{pid},
+            </if>
+            <if test="codeTotal != null">
+                code_total = #{codeTotal},
+            </if>
+            <if test="channelcode != null">
+                channelCode = #{channelcode},
+            </if>
+            <if test="speak != null">
+                speak = #{speak},
+            </if>
+            <if test="loginNum != null">
+                login_num = #{loginNum},
+            </if>
+            <if test="version != null">
+                version = #{version},
+            </if>
+            <if test="withdrawalPass != null">
+                withdrawal_pass = #{withdrawalPass},
+            </if>
+            <if test="deviceId != null">
+                device_id = #{deviceId},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
     <select id="selectMaxMemberCode" resultType="java.lang.Integer">
         select IFNULL(max(member_code), 0)
         from member_info
@@ -692,6 +822,11 @@
     <select id="countByPhone" resultType="int">
         select count(0)
         from member_info
+        where phone = #{pone}
+    </select>
+    <select id="countHistoryByPhone" resultType="int">
+        select count(0)
+        from member_info_history
         where phone = #{pone}
     </select>
     <update id="updateInviterCode">

@@ -25,6 +25,7 @@ public interface MemberInfoMapper {
      * @return 会员信息
      */
     public MemberInfo selectMemberInfoById(String id);
+    public MemberInfo selectMemberInfoHistoryById(String id);
 
     /**
      * 查询会员信息列表
@@ -49,6 +50,7 @@ public interface MemberInfoMapper {
      * @return 结果
      */
     public int updateMemberInfo(MemberInfo memberInfo);
+    public int updateMemberInfoHistory(MemberInfo memberInfo);
 
     int selectMaxMemberCode();
 
@@ -85,6 +87,7 @@ public interface MemberInfoMapper {
     int countByUserName(String userName);
 
     int countByPhone(String phone);
+    int countHistoryByPhone(String phone);
 
     String findBanRemark(@Param("memberid") String memberid);
 
