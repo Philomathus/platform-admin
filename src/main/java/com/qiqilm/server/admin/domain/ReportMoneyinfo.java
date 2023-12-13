@@ -96,6 +96,11 @@ public class ReportMoneyinfo implements Serializable {
     @Excel(name = "主播提现")
     private BigDecimal totalActiveprop;
 
+    @Excel(name = "usdt人数")
+    private Integer usdtRenshu;
+    @Excel(name = "usdt金额")
+    private BigDecimal usdtJine;
+
     private BigDecimal paymentAmount;//入款总额
     private BigDecimal outMoney;//出款总额
     private BigDecimal countMoney;//合计
@@ -128,6 +133,9 @@ public class ReportMoneyinfo implements Serializable {
                 .append("totalProfile", getTotalProfile())
                 .append("totalGiveprop", getTotalGiveprop())
                 .append("totalLast", getTotalLast())
+                .append("totalLast", getTotalLast())
+                .append("usdtRenshu", getUsdtRenshu())
+                .append("usetJine", getUsdtJine())
                 .toString();
     }
 }

@@ -50,13 +50,13 @@ public class UserEnterLogTask {
         if(!profile.startsWith("77")||profile.equals("7700")){
             return ;
         }
-        Long count ;
+        Integer count ;
 
         try {
             count = liveLogService.banchUpdateEnterLog();
         }catch (Exception e){
             log.error("进直播间会员数异常",e);
-            count = -1L;
+            count = -1;
         }
 
 

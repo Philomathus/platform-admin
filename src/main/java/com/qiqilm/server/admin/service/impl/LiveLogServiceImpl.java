@@ -10,9 +10,12 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @Log4j2
@@ -25,11 +28,13 @@ public class LiveLogServiceImpl implements ILiveLogService {
     private SqlSessionTemplate sqlSessionTemplate;
 
 
-    public Long banchUpdateEnterLog() {
-        Long size = strRedisTemplate.opsForList().size( Constants.LIVEENTERLOG );
-
+    public Integer banchUpdateEnterLog() {
+        Set<String> strArticleCountList = strRedisTemplate.opsForSet().members( Constants.LIVEENTERLOG );
+        if ( CollectionUtils.isEmpty(strArticleCountList)) {
+            return 0;
+        }
         strRedisTemplate.unlink(Constants.LIVEENTERLOG);
-        /*
+
         Map<String, Integer> cmap = new HashMap<>();
         for (String id : strArticleCountList) {
             cmap.putIfAbsent(id, 0);
@@ -42,8 +47,8 @@ public class LiveLogServiceImpl implements ILiveLogService {
             log.error("批量插入进直播间会员数异常",e);
         }
 
-        log.info("批量插入进直播间会员数：{},执行时间:{}ms", cmap.size(), System.currentTimeMillis() - now);*/
-        return size;
+        log.info("批量插入进直播间会员数：{},执行时间:{}ms", cmap.size(), System.currentTimeMillis() - now);
+        return cmap.size();
 
     }
     public void dobanchUpdate(Map<String, Integer> cmap) {
