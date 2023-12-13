@@ -4,5 +4,5 @@ package com.qiqilm.server.admin.service;
 
 public interface ILiveLogService{
 
-    Integer banchUpdateEnterLog();
+    Long banchUpdateEnterLog();
 }
