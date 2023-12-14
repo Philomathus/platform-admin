@@ -27,19 +27,21 @@ public class KaiHuiPayAgentProcessor extends AbstractPayAgent {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put( "member_code", payAgentPlatform.getMerId() );
 
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put( "order_amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
+        Map<String, String> dataMap = new TreeMap<>();
+        dataMap.put( "order_amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString() );
         dataMap.put( "order_id", withdrawLog.getOrderNo() );
         dataMap.put( "bank_name", withdrawLog.getBankName().trim() );
         dataMap.put( "card_address", withdrawLog.getBankAddress() );
         dataMap.put( "card_nummber", withdrawLog.getBankAccount().trim() );
         dataMap.put( "card_name", withdrawLog.getBankUserName().trim() );
-        dataMap.put( "notify_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LU_FEI );
+        dataMap.put( "notify_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put( "callback_url", "" );
 
         bodyMap.put( "data", JsonUtil.object2Json( dataMap ) );
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
-        bodyMap.put( "sign", DigestUtils.md5Hex( this.assemblyUrl( dataMap ) + signMd5 ) );
+        String signStr    = this.assemblyUrl3( dataMap ) + signMd5;
+        log.warn( signStr );
+        bodyMap.put( "sign", DigestUtils.md5Hex( signStr ) );
 
         log.warn( JsonUtil.object2Json( bodyMap ) );
 
@@ -69,7 +71,7 @@ public class KaiHuiPayAgentProcessor extends AbstractPayAgent {
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
-        String signStr = DigestUtils.md5Hex( this.assemblyUrl( bodyMap ) + signMd5 );
+        String signStr = DigestUtils.md5Hex( this.assemblyUrl3( bodyMap ) + signMd5 );
 
         log.info( payAgentPlatform.getName() + "代付回调签名字符串:" + sign + "_" + signStr );
         if ( sign.equalsIgnoreCase( signStr ) ) {
@@ -114,7 +116,7 @@ public class KaiHuiPayAgentProcessor extends AbstractPayAgent {
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
-        String sign = DigestUtils.md5Hex( this.assemblyUrl( paramsMap ) + signMd5 );
+        String sign = DigestUtils.md5Hex( this.assemblyUrl3( paramsMap ) + signMd5 );
         paramsMap.put( "sign", sign );
 
 

@@ -18,12 +18,15 @@ public class Test {
 
     @org.junit.jupiter.api.Test
     public void test1() {
-        String agent = "7707";
-        //String host  = "livedata.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com"; // 新平台
-        String host  = "back01.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com"; // 迁移平台
+        String agent = "77ql";
+        // String host  = "livedata.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com"; // 新平台
+        String host  = "heimdallasg-live-database-6871ee299fd9b97f.elb.ap-east-1.amazonaws.com"; // 新平台 读写分离
+        //String host  = "back01.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com"; // 迁移平台
         String jdbc = stringEncryptor.encrypt( "jdbc:mysql://" + host + ":3306/" + agent
                 + "_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false" );
         System.out.println( agent + "main: " + jdbc );
+
+        // jdbc:mysql://livedata.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/cx_live?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
 
         String jdbc2 = stringEncryptor.encrypt( "jdbc:mysql://" + host + ":3306/" + agent
                 + "_live?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false" );
@@ -34,7 +37,7 @@ public class Test {
         System.out.println( agent + "lottery: " + jdbc3 );
 
 
-        String username = stringEncryptor.encrypt( "ql.zczoyz.ng.0001.ape1.cache.amazonaws.com" );
+        String username = stringEncryptor.encrypt( "servercp.zczoyz.ng.0001.ape1.cache.amazonaws.com" );
         System.out.println( "redisHost: " + username );
 
         //String password = stringEncryptor.encrypt( "X*5GXuIIMo5gY1ua" );
