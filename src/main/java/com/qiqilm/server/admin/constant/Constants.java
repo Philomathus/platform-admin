@@ -67,7 +67,7 @@ public abstract class Constants {
 	// 坐骑配置
 	public static final String LIVE_MOUNT   = LIVE_PREX + "mount";
 	// 进入日志临时缓存
-	public static final String LIVEENTERLOG = LIVE_PREX + "live-enter-log_";
+	public static final String LIVEENTERLOG = LIVE_PREX + "live-enter-log";
 
 	public static final String  LIVE_HOST_LOCK                 = LIVE_PREX + "lock:";
 

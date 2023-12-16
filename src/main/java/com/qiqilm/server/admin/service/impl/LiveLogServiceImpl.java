@@ -7,15 +7,14 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 @Log4j2
@@ -23,19 +22,28 @@ public class LiveLogServiceImpl implements ILiveLogService {
 
     @Resource
     private StringRedisTemplate strRedisTemplate;
+    @Resource
+    private SqlSessionTemplate  sqlSessionTemplate;
 
-    @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
+    private static final long pageSize = 1000;
 
-
-    public Integer banchUpdateEnterLog() {
-        Boolean b = strRedisTemplate.hasKey( "live:live-enter-log" );
-        if ( b != null && b ) {
-            strRedisTemplate.unlink( "live:live-enter-log" );
+    public Long banchUpdateEnterLog() {
+        Long size = strRedisTemplate.opsForList().size( Constants.LIVEENTERLOG );
+        if ( size == null || size == 0 ) {
+            return 0L;
         }
-        Set<String> strArticleCountList = strRedisTemplate.opsForSet().members( Constants.LIVEENTERLOG );
-        if ( CollectionUtils.isEmpty( strArticleCountList ) ) {
-            return 0;
+        List<String> strArticleCountList = new ArrayList<>();
+
+        long pageCount = size % pageSize == 0 ? ( size / pageSize ) : ( size / pageSize + 1 );
+        for ( int pageNum = 1; pageNum <= pageCount; pageNum++ ) {
+            long from = ( pageNum - 1 ) * pageSize;
+            long to   = Math.min( pageNum * pageSize, size );
+            if ( from > to ) {
+                from = to;
+            }
+            strArticleCountList.addAll( strRedisTemplate
+                    .opsForList()
+                    .range( Constants.LIVEENTERLOG, from, pageNum == pageCount ? -1 : to ) );
         }
         strRedisTemplate.unlink( Constants.LIVEENTERLOG );
 
@@ -52,7 +60,7 @@ public class LiveLogServiceImpl implements ILiveLogService {
         }
 
         log.info( "批量插入进直播间会员数：{},执行时间:{}ms", cmap.size(), System.currentTimeMillis() - now );
-        return cmap.size();
+        return size;
 
     }
 
