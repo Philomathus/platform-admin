@@ -1,5 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
+import com.google.common.collect.ImmutableMap;
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.mapper.LiveEnterLogMapper;
 import com.qiqilm.server.admin.service.ILiveLogService;
@@ -11,10 +12,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Log4j2
@@ -27,10 +25,10 @@ public class LiveLogServiceImpl implements ILiveLogService {
 
     private static final long pageSize = 1000;
 
-    public Long banchUpdateEnterLog() {
+    public Map<String, Long> banchUpdateEnterLog() {
         Long size = strRedisTemplate.opsForList().size( Constants.LIVEENTERLOG );
         if ( size == null || size == 0 ) {
-            return 0L;
+            return Collections.emptyMap();
         }
         List<String> strArticleCountList = new ArrayList<>();
 
@@ -60,7 +58,7 @@ public class LiveLogServiceImpl implements ILiveLogService {
         }
 
         log.info( "批量插入进直播间会员数：{},执行时间:{}ms", cmap.size(), System.currentTimeMillis() - now );
-        return size;
+        return ImmutableMap.of( "size", size, "cmapSize", ( long ) cmap.size() );
 
     }
 

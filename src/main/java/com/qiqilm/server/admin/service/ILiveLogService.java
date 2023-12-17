@@ -1,8 +1,9 @@
 package com.qiqilm.server.admin.service;
 
 
+import java.util.Map;
 
 public interface ILiveLogService{
 
-    Long banchUpdateEnterLog();
+    Map<String, Long> banchUpdateEnterLog();
 }
