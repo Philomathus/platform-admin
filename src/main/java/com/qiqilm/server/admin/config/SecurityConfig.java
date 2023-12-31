@@ -110,6 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers( "/pay/memberPayJour/all-list" ).anonymous()
 				.antMatchers( "/pay/memberPayJour/error-list" ).anonymous()
 				.antMatchers( "/test/countHostGift" ).anonymous()
+				.antMatchers( "/report/memberData/**" ).anonymous()
 				// 除上面外的所有请求全部需要鉴权认证
 				.anyRequest().authenticated()
 				.and()

@@ -28,9 +28,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository( value = ConstantsPayAgent.HUI_XIN_PAY + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.OUYI_PAY + "PayAgentProcessor" )
 @Log4j2
-public class HuiXinPayAgentProcessor extends AbstractPayAgent {
+public class OuYiPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
@@ -48,7 +48,6 @@ public class HuiXinPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + signMd5;
         String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
         bodyMap.put( "sign", sign );
-
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll( bodyMap );
@@ -98,7 +97,6 @@ public class HuiXinPayAgentProcessor extends AbstractPayAgent {
     public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
         String signRes = requestMap.remove( "sign" ).toString();
         requestMap.remove( "success_time" );
-        requestMap.remove( "remark" );
 
         Map<String, Object> dataMap = new TreeMap<>( requestMap );
         String              signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );

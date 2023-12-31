@@ -230,7 +230,7 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
                 }
 
             } catch ( Exception e ) {
-                e.printStackTrace();
+                log.error( in.getId() );
             }
 
         }
