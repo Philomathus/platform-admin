@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://moli-dandu.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77dc_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://sevenall.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77jz_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: admin
       password: ENC(eNEs8Zeo1ZxWlxk7DA8+KKdlWOyq4udWhsa9oqw9RfzxSqbbd7qqNppi8ROSNDYziS5U2jlyX4KlF9gAOzJYCg==)
     secondary:
@@ -9,15 +9,15 @@ spring:
       username: admin
       password: dRmBstReqberz!14Xm#
   redis:
-    host: server77dc.zczoyz.ng.0001.ape1.cache.amazonaws.com
+    host: jz.zczoyz.ng.0001.ape1.cache.amazonaws.com
     port: 6379
 
 mybatis:
   configuration:
     variables:
-      dbMain: 77dc_main
-      dbLive: 77dc_live
-      dbLottery: 77dc_lottery
+      dbMain: 77jz_main
+      dbLive: 77jz_live
+      dbLottery: 77jz_lottery
 
 liveCenter: 7701
 

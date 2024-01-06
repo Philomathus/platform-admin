@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://livedata.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77cp_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://sevenall.cluster-c2mgsz0wk6v3.ap-east-1.rds.amazonaws.com:3306/77mj_main?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: admin
       password: ENC(eNEs8Zeo1ZxWlxk7DA8+KKdlWOyq4udWhsa9oqw9RfzxSqbbd7qqNppi8ROSNDYziS5U2jlyX4KlF9gAOzJYCg==)
     secondary:
@@ -9,15 +9,15 @@ spring:
       username: admin
       password: dRmBstReqberz!14Xm#
   redis:
-    host: ENC(cDLhlKmKT/3MKm6N22QpenVIbWoWUCkbq3g2pJWDHxf/kj4nj+vp7XMp6BHmGZwJpBweaEnJSKgaS+GgDkHctcd4+Q+Mg3XVtnz0+aEMNLEi1T7gop81chuJr7yLPtWN)
+    host: mj.zczoyz.ng.0001.ape1.cache.amazonaws.com
     port: 6379
 
 mybatis:
   configuration:
     variables:
-      dbMain: 77cp_main
-      dbLive: 77cp_live
-      dbLottery: 77cp_lottery
+      dbMain: 77mj_main
+      dbLive: 77mj_live
+      dbLottery: 77mj_lottery
 
 liveCenter: 7701
 
