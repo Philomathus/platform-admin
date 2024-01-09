@@ -42,6 +42,11 @@ public class ReportMemberDataStatisticsController {
         return AjaxResult.success(reportMemberStatisticsService.getTotalRegistration(req));
     }
 
+    @PostMapping( "/gift" )
+    public AjaxResult getTotalGift( @RequestBody ReqReportMemberStatistics req) {
+        return AjaxResult.success(reportMemberStatisticsService.getTotalGift(req));
+    }
+
 //    @PostMapping("totalCode")
 
 }

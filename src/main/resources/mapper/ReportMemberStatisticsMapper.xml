@@ -48,7 +48,15 @@
         group by member_id
     </select>
     <select id="getUserBalance" resultType="java.math.BigDecimal">
-        select sum(total_account) from member_info where inviter_code = #{req.channelCode}
+        select sum(total_account) from member_info
+        <where>
+            <if test="req.inclusive_date != null">
+                and DATE_FORMAT(reg_time, '%Y-%m-%d') = #{req.inclusive_date}
+            </if>
+            <if test="req.channelCode != null">
+                and inviter_code = #{req.channelCode}
+            </if>
+        </where>
     </select>
     <select id="getTotalRegistration" resultType="java.lang.Long">
         select count(id) total_registration from member_info
@@ -58,6 +66,18 @@
             </if>
             <if test="req.channelCode != null">
                 and inviter_code = #{req.channelCode}
+            </if>
+        </where>
+    </select>
+    <select id="getTotalGift" resultType="java.math.BigDecimal">
+        select ifnull(SUM(lvp.total_ticket),0.0) total_gift from ${dbLive}.live_video_prop lvp
+        <where>
+            and lvp.prop_id > 0
+            <if test="req.inclusive_date != null">
+                and DATE_FORMAT(lvp.create_date, '%Y-%m-%d') = #{req.inclusive_date}
+            </if>
+            <if test="req.channelCode != null">
+                and lvp.p_user_id in (select mi.id from ${dbMain}.member_info mi where mi.inviter_code = #{req.channelCode})
             </if>
         </where>
     </select>
