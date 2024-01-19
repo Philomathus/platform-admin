@@ -14,6 +14,11 @@ public interface ReportMemberStatisticsService {
     BigDecimal getUserBalance( ReqReportMemberStatistics req );
 
     Long getTotalRegistration( ReqReportMemberStatistics req );
+
     BigDecimal getTotalGift( ReqReportMemberStatistics req );
+
+    Long getDailyRechargeCount( ReqReportMemberStatistics req );
+
+    Long getDailyFirstRechargeCount( ReqReportMemberStatistics req );
 
 }

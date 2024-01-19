@@ -47,6 +47,14 @@ public class ReportMemberDataStatisticsController {
         return AjaxResult.success(reportMemberStatisticsService.getTotalGift(req));
     }
 
-//    @PostMapping("totalCode")
+    @PostMapping( "/dailyFirstRechargeCount" )
+    public AjaxResult getDailyFirstRechargeCount(@RequestBody ReqReportMemberStatistics req) {
+        return AjaxResult.success( reportMemberStatisticsService.getDailyFirstRechargeCount(req) );
+    }
+
+    @PostMapping( "/dailyRechargeCount" )
+    public AjaxResult getDailyRechargeCount(@RequestBody ReqReportMemberStatistics req) {
+        return AjaxResult.success( reportMemberStatisticsService.getDailyRechargeCount(req) );
+    }
 
 }

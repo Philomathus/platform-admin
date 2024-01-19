@@ -15,5 +15,10 @@ public interface ReportMemberStatisticsMapper {
     BigDecimal getUserBalance(@Param("req") ReqReportMemberStatistics req);
 
     Long getTotalRegistration(@Param("req") ReqReportMemberStatistics req);
+
     BigDecimal getTotalGift(@Param("req") ReqReportMemberStatistics req);
+
+    Long getDailyRechargeCount( ReqReportMemberStatistics req );
+
+    Long getDailyFirstRechargeCount( @Param("req")  ReqReportMemberStatistics req );
 }

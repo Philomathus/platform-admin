@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.service.impl;
 
 
-
 import com.qiqilm.server.admin.domain.req.ReqReportMemberStatistics;
 import com.qiqilm.server.admin.mapper.ReportMemberStatisticsMapper;
 import com.qiqilm.server.admin.service.ReportMemberStatisticsService;
@@ -63,5 +62,23 @@ public class ReportMemberStatisticsServiceImpl implements ReportMemberStatistics
         BigDecimal result =  reportMemberStatisticsMapper.getTotalGift(req);
         log.info("result of getTotalGift: {}", result);
         return result;
+    }
+
+    private void setDefaults(ReqReportMemberStatistics reqReportMemberStatistics) {
+        if( StringUtils.isBlank(reqReportMemberStatistics.getInclusive_date()) ){
+//            reqReportMemberStatistics.setInclusive_date( LocalDateTimeUtils.format( LocalDate.now() ) );
+        }
+    }
+
+    @Override
+    public Long getDailyRechargeCount( ReqReportMemberStatistics req ) {
+        setDefaults(req);
+        return reportMemberStatisticsMapper.getDailyRechargeCount(req) ;
+    }
+
+    @Override
+    public Long getDailyFirstRechargeCount( ReqReportMemberStatistics req ) {
+        setDefaults(req);
+        return reportMemberStatisticsMapper.getDailyFirstRechargeCount(req) ;
     }
 }
