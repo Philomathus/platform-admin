@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqPayUsdtRecharge;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IPayUsdtRechargeService;
@@ -129,13 +130,19 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
      */
     @Override
     public int lock( Long id ) {
-        LoginUser       loginUser       = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-        String          userName        = loginUser.getUser().getUserName();
-        PayUsdtRecharge payUsdtRecharge = new PayUsdtRecharge();
-        payUsdtRecharge.setId( id );
-        payUsdtRecharge.setOpName( userName );
-        payUsdtRecharge.setRemark( "锁定人:" + userName );
-        payUsdtRecharge.setStatus( "0" );
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+
+        PayUsdtRecharge payUsdtRecharge = this.selectPayUsdtRechargeById( id );
+        if ( !"1".equals( payUsdtRecharge.getStatus() ) ) {
+            throw new BusinessException( "订单状态有误,请刷新数据" );
+        }
+
+        PayUsdtRecharge update = new PayUsdtRecharge();
+        update.setId( id );
+        update.setOpName( userName );
+        update.setRemark( "锁定人:" + userName );
+        update.setStatus( "0" );
         return payUsdtRechargeMapper.updatePayUsdtRecharge( payUsdtRecharge );
     }
 
@@ -151,8 +158,13 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         LoginUser       loginUser       = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String          userName        = loginUser.getUser().getUserName();
         PayUsdtRecharge payUsdtRecharge = this.selectPayUsdtRechargeById( id );
-        List<SysRole>   roles           = loginUser.getUser().getRoles();
-        boolean         contains        = roles.stream().anyMatch( m -> "common".equals( m.getRoleKey() ) );
+
+        if ( !"0".equals( payUsdtRecharge.getStatus() ) ) {
+            return AjaxResult.error( "订单状态有误,请刷新数据" );
+        }
+
+        List<SysRole> roles    = loginUser.getUser().getRoles();
+        boolean       contains = roles.stream().anyMatch( m -> "common".equals( m.getRoleKey() ) );
         if ( !contains ) {
             if ( StringUtils.hasText( payUsdtRecharge.getOpName() ) && !userName.equals( payUsdtRecharge.getOpName() ) ) {
                 return AjaxResult.error( "该订单只能由" + payUsdtRecharge.getOpName() + "处理" );
@@ -224,8 +236,10 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     public boolean updatePayUsdtRechargeLogic( PayUsdtRecharge payUsdtRecharge ) {
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( payUsdtRecharge.getMemberId() );
 
-        BigDecimal chargeGive = payUsdtRecharge.getDiscountBill().multiply( payUsdtRecharge.getRechargeMoney() )
-                                               .setScale( 2, BigDecimal.ROUND_HALF_UP ); // 充值彩金
+        BigDecimal chargeGive = payUsdtRecharge
+                .getDiscountBill()
+                .multiply( payUsdtRecharge.getRechargeMoney() )
+                .setScale( 2, BigDecimal.ROUND_HALF_UP ); // 充值彩金
 
         boolean isFirst = memberInfo.getLevelIntegral().compareTo( BigDecimal.ZERO ) == 0
                 || memberInfo.getLevelIntegral().compareTo( memberInfo.getInviteMoney() ) <= 0;
@@ -250,7 +264,8 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         if ( firstRechargeCashBack.compareTo( BigDecimal.ZERO ) > 0 ) {
             logService.logMoneyAdd( null, memberInfo.getId(), memberInfo.getUserName(), EnumMoney.wongive,
                     firstRechargeCashBack, memberInfo
-                    .getTotalAccount().add( chargeGive )
+                    .getTotalAccount()
+                    .add( chargeGive )
                     .add( firstRechargeCashBack ), "首冲赠送彩金；代充", payUsdtRecharge.getTransactionId() );
         }
 
@@ -263,7 +278,8 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         }
 
         //usdt充值日志
-        logService.logMoneyAdd( null, payUsdtRecharge.getMemberId(), memberInfo.getUserName(), EnumMoney.usdt,
+        logService.logMoneyAdd( "usdtRecharge-"
+                + payUsdtRecharge.getId(), payUsdtRecharge.getMemberId(), memberInfo.getUserName(), EnumMoney.usdt,
                 payUsdtRecharge.getRechargeMoney(), memberInfo.getTotalAccount(), payUsdtRecharge.getRemark(),
                 payUsdtRecharge.getTransactionId() );
 
@@ -315,9 +331,10 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     private void recommendProcess( PayUsdtRecharge payUsdtRecharge, MemberInfo memberInfo ) {
         //新增佣金记录
         if ( org.apache.commons.lang3.StringUtils.isNotBlank( memberInfo.getInviterCode() ) ) {
-            Map<Integer, ConfigRecommend> billMap = configRecommendMapper.selectConfigRecommendList( null ).stream()
-                                                                         .collect( Collectors.toMap( ConfigRecommend::getLevel,
-                                                                                 Function.identity() ) );
+            Map<Integer, ConfigRecommend> billMap = configRecommendMapper
+                    .selectConfigRecommendList( null )
+                    .stream()
+                    .collect( Collectors.toMap( ConfigRecommend::getLevel, Function.identity() ) );
 
             MemberInfo rd1 = memberInfoMapper.findRecommendByInviterCode( memberInfo.getInviterCode() );
             MemberInfo rd2 = null;

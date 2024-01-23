@@ -28,6 +28,7 @@ public class LiveLogServiceImpl implements ILiveLogService {
     public Map<String, Long> banchUpdateEnterLog() {
         Long size = strRedisTemplate.opsForList().size( Constants.LIVEENTERLOG );
         if ( size == null || size == 0 ) {
+            log.error( "进直播间会员数为空" );
             return Collections.emptyMap();
         }
         List<String> strArticleCountList = new ArrayList<>();

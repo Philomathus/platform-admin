@@ -65,7 +65,7 @@ public class UserEnterLogTask {
         try {
             String paytext = "30分钟进直播间人次:" + size + "进直播间人数:" + count;
             if ( size < 0 ) {
-                paytext = "30分钟进直播间人数异常";
+                paytext = "30分钟进直播间人数为0";
             }
             robotMessage.sendByChatId( paytext, online_user_telegram );
 

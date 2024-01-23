@@ -19,7 +19,7 @@ mybatis:
       dbLive: 77baby_live
       dbLottery: 77baby_lottery
 
-liveCenter: 77baby
+liveCenter: 7701
 
 # 代付额度
 payAgentLimit: 5000
