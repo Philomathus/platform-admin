@@ -27,7 +27,7 @@ public class SuiYiFuPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> params = new TreeMap<>();
         params.put( "merId", payAgentPlatform.getMerId() );
         params.put( "orderId", withdrawLog.getOrderNo() );
-        params.put( "money", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
+        params.put( "money", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ) );
         params.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         params.put( "nonceStr", UuidUtil.getRandomUuidWithoutSeparator() );
         params.put( "name", withdrawLog.getBankUserName() );
@@ -64,10 +64,11 @@ public class SuiYiFuPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
-        String rspSign = requestMap.remove( "sign" ).toString();
-        String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
-        String tempStr = this.assemblyUrl( requestMap ) + "&key=" + signMd5;
-        String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
+        String              rspSign = requestMap.remove( "sign" ).toString();
+        String              signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
+        Map<String, Object> treeMap = new TreeMap<>( requestMap );
+        String              tempStr = this.assemblyUrl( treeMap ) + "&key=" + signMd5;
+        String              sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
 
         log.info( payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign );
         if ( rspSign.equalsIgnoreCase( sign ) ) {
