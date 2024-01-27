@@ -148,7 +148,7 @@
     
             <if test="rechargeMoney != null">recharge_money = #{rechargeMoney},</if>
     
-            <if test="status != null">status = #{status},</if>
+            <if test="status != null">`status` = #{status},</if>
     
             <if test="remark != null">remark = #{remark},</if>
     

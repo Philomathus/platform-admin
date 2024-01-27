@@ -143,7 +143,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         update.setOpName( userName );
         update.setRemark( "锁定人:" + userName );
         update.setStatus( "0" );
-        return payUsdtRechargeMapper.updatePayUsdtRecharge( payUsdtRecharge );
+        return payUsdtRechargeMapper.updatePayUsdtRecharge( update );
     }
 
     /**

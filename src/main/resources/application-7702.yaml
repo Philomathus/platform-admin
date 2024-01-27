@@ -18,6 +18,8 @@ mybatis:
       dbMain: 7702_main
       dbLive: 7702_live
       dbLottery: 7702_lottery
+    # spring boot集成mybatis的方式打印sql
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 liveCenter: 7701
 
