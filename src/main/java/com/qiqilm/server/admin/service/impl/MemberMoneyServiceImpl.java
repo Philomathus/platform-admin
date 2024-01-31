@@ -150,10 +150,12 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
         logService.logmarkMoneyPaiSong( userId, memberInfo.getUserName(), EnumMoney.wongive, now, total, moneydes,
                 moneydes + ",操作人:" + admin_name, markorder );
         //打码
+        BigDecimal beatMoney = money;
         if ( money.compareTo( BigDecimal.ZERO ) > 0 ) {
             MemberBcode codeFlow = new MemberBcode();
             codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-            codeFlow.setIncome( money.multiply( beat ).setScale( 2 ) );
+            beatMoney = money.multiply( beat ).setScale( 2, RoundingMode.DOWN );
+            codeFlow.setIncome( beatMoney );
             codeFlow.setCreateTime( new Date() );
             codeFlow.setStatus( 0 );
             codeFlow.setCur( BigDecimal.ZERO );
@@ -162,7 +164,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
             codeFlowMapper.insertMemberBcode( codeFlow );
         }
         //加钱
-        memberInfoMapper.updateMoneySelect( userId, money, null, money, null, null );
+        memberInfoMapper.updateMoneySelect( userId, money, null, beatMoney, null, null );
     }
 
     /**
