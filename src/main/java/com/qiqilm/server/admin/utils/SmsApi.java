@@ -86,10 +86,10 @@ public class SmsApi {
                 msg = this.sendSmsBaidu( serverSms, phone, msg );
                 break;
             case 3:
-                this.sendSmsHuawei( serverSms, phone, msg );
+                msg = this.sendSmsHuawei( serverSms, phone, msg );
                 break;
             case 4:
-                this.sendSmsYunJi( serverSms, phone, msg );
+                msg = this.sendSmsYunJi( serverSms, phone, msg );
                 break;
             default:
                 throw new BusinessException( "不支持的短信运营商类型" );

@@ -15,10 +15,7 @@ import com.qiqilm.server.admin.mapper.MemberInfoMapper;
 import com.qiqilm.server.admin.mapper.MemberMoneyMapper;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberMoneyService;
-import com.qiqilm.server.admin.utils.DateFormatUtils;
-import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.ServletUtil;
-import com.qiqilm.server.admin.utils.UuidUtil;
+import com.qiqilm.server.admin.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,7 +107,9 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
                     redisUtil.unLock( EnumLock.member, "paiSong" + memberMoney.getMoneydes() );
                     throw new BusinessException( "会员id不存在:" + li.getMemberId() );
                 }
-                this.processMoney( li, memberInfo, memberMoney.getMoneydes(), startFirstTime, today, admin_name );
+                SpringUtils
+                        .getAopProxy( this )
+                        .processMoney( li, memberInfo, memberMoney.getMoneydes(), startFirstTime, today, admin_name );
             }
         } else {
             redisUtil.unLock( EnumLock.member, "paiSong" + memberMoney.getMoneydes() );
