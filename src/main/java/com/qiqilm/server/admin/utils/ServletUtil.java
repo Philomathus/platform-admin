@@ -81,7 +81,7 @@ public class ServletUtil {
 			response.setCharacterEncoding( "utf-8" );
 			response.getWriter().print( string );
 		} catch ( IOException e ) {
-			e.printStackTrace();
+			log.error( e.getMessage(), e );
 		}
 		return null;
 	}

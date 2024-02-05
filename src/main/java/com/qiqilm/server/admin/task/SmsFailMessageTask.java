@@ -48,7 +48,7 @@ public class SmsFailMessageTask {
 			beginTime = DateFormatUtils.formate( DateFormatUtils.addMin( new Date(), -3 ) );
 			endTime = DateFormatUtils.formate( new Date() );
 		} catch ( Exception e ) {
-			e.printStackTrace();
+			log.error( e.getMessage(), e );
 		}
 		List<SmsFailLog> result = messageSendMapper.smsFailMessage( beginTime, endTime );
 

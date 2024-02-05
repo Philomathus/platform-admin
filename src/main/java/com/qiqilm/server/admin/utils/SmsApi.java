@@ -271,7 +271,7 @@ public class SmsApi {
             String passwordDigestBase64Str = Base64Utils.encodeToString( md.digest() );
             return String.format( WSSE_HEADER_FORMAT, appKey, passwordDigestBase64Str, nonce, time );
         } catch ( NoSuchAlgorithmException e ) {
-            e.printStackTrace();
+            log.error( e.getMessage(), e );
         }
         return null;
     }

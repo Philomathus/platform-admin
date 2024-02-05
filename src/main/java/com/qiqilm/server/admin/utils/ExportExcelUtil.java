@@ -6,6 +6,7 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.qiqilm.server.admin.exception.ExcelException;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+@Log4j2
 public class ExportExcelUtil {
 	public static void exportExcel( List<?> list, String title, String sheetName, Class<?> pojoClass, boolean isCreateHeader,
 									HttpServletResponse response ) {
@@ -49,7 +51,7 @@ public class ExportExcelUtil {
 					"attachment;filename=data.xls" );
 			workbook.write( response.getOutputStream() );
 		} catch ( IOException e ) {
-			e.printStackTrace();
+			log.error( e.getMessage(), e );
 			throw new ExcelException( e.getMessage() );
 		}
 	}
@@ -72,7 +74,7 @@ public class ExportExcelUtil {
 		} catch ( NoSuchElementException e ) {
 			throw new ExcelException( "模板不能为空" );
 		} catch ( Exception e ) {
-			e.printStackTrace();
+			log.error( e.getMessage(), e );
 			throw new ExcelException( e.getMessage() );
 		}
 		return list;

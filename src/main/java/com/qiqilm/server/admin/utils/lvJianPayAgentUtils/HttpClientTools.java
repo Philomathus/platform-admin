@@ -79,7 +79,7 @@ public class HttpClientTools {
             }
             br.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error( e.getMessage(), e );
             log.info("模拟form发送 POST 请求出现异常", e);
         } finally {
             if (conn != null) {

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.qiqilm.server.admin.exception.BaseException;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Objects;
 
 @Data
+@Log4j2
 public class MessageType {
 
     private String groupId ;
@@ -74,7 +76,7 @@ public class MessageType {
                    return null;
             }
        }catch (Exception e){
-           e.printStackTrace();
+           log.error( e.getMessage(), e );
            throw new BaseException( "未初始化消息体" );
        }
 

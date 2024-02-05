@@ -101,7 +101,7 @@ public class JsonUtil {
 			try {
 				return getObjectMapper().convertValue( map, valueType );
 			} catch ( Exception e ) {
-				e.printStackTrace();
+				log.error( e.getMessage(), e );
 			}
 		}
 		return null;
@@ -112,7 +112,7 @@ public class JsonUtil {
 			try {
 				return getObjectMapper().convertValue( map, javaType );
 			} catch ( Exception e ) {
-				e.printStackTrace();
+				log.error( e.getMessage(), e );
 			}
 		}
 		return null;
@@ -134,7 +134,7 @@ public class JsonUtil {
 			try {
 				return getObjectMapper().convertValue( obj, Map.class );
 			} catch ( Exception e ) {
-				e.printStackTrace();
+				log.error( e.getMessage(), e );
 			}
 		}
 		return null;

@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.utils;
 
 import com.warrenstrange.googleauth.GoogleAuthenticator;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base32;
 import org.springframework.util.Base64Utils;
 
@@ -11,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
 
+@Log4j2
 public class GoogleAuthUtil {
 	/**
 	 * 随机生成一个密钥
@@ -53,7 +55,7 @@ public class GoogleAuthUtil {
 			buffer = byteArrayOutputStream.toByteArray();
 			return Base64Utils.encodeToString( buffer );
 		} catch ( IOException e ) {
-			e.printStackTrace();
+			log.error( e.getMessage(), e );
 		}
 
 

@@ -36,7 +36,7 @@ public class RobotMessage extends TelegramLongPollingBot {
             try {
                 execute( message );
             } catch ( TelegramApiException e ) {
-                e.printStackTrace();
+                log.error( e.getMessage(), e );
             }
         }
     }
@@ -53,7 +53,7 @@ public class RobotMessage extends TelegramLongPollingBot {
         try {
             execute( message );
         } catch ( TelegramApiException e ) {
-            e.printStackTrace();
+            log.error( e.getMessage() );
         }
     }
 }

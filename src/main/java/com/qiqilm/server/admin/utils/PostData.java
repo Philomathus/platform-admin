@@ -69,7 +69,7 @@ public class PostData {
 
             log.info( obj );
         } catch ( Exception e ) {
-            e.printStackTrace();
+            log.error( e.getMessage(), e );
         }
         return obj;
     }
@@ -106,7 +106,7 @@ public class PostData {
                 return text;
             } );*/
         } catch ( Exception e ) {
-            e.printStackTrace();
+            log.error( e.getMessage(), e );
         }
         return obj;
     }

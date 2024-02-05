@@ -490,7 +490,7 @@ public abstract class DateFormatUtils {
 			try {
 				System.out.println(convertMeidongTOBeijing(stringDate));
 			} catch (ParseException e) {
-				e.printStackTrace();
+				log.error( e.getMessage(), e );
 			}
 		}
 		for (int i = 10; i < 13 ;i ++){
@@ -500,7 +500,7 @@ public abstract class DateFormatUtils {
 			try {
 				System.out.println(convertMeidongTOBeijing(stringDate));
 			} catch (ParseException e) {
-				e.printStackTrace();
+				log.error( e.getMessage(), e );
 			}
 		}
 	}
