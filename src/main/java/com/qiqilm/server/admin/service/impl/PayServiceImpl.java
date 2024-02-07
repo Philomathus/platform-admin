@@ -115,7 +115,7 @@ public class PayServiceImpl implements IPayService {
             log.setParam4( "备注：人工补单" );
             log.setParamIp( UserDataUtil.getIp( ServletUtil.getHttpServletRequest() ) );
             actionLogsMapper.insertMemberActionLogs( log );
-            SpringUtils.getBean( IPayService.class ).updatePayJourStatus( payJour, "操作人：" + userName );
+            SpringUtils.getAopProxy( this ).updatePayJourStatus( payJour, "操作人：" + userName );
         }
         return AjaxResult.success();
     }
@@ -126,7 +126,7 @@ public class PayServiceImpl implements IPayService {
         if ( "1".equals( memberPayJour.getStatus() ) ) {
             return false;
         }
-        PayServiceImpl payService = SpringUtils.getBean( this.getClass() );
+        PayServiceImpl payService = SpringUtils.getAopProxy( this );
 
         Date now = new Date();
         //更新支付订单状态
@@ -324,7 +324,7 @@ public class PayServiceImpl implements IPayService {
         }
     }
 
-    private void recommendProcess( MemberPayJour payJour, MemberInfo memberInfo ) {
+    public void recommendProcess( MemberPayJour payJour, MemberInfo memberInfo ) {
         if ( StringUtils.hasText( memberInfo.getInviterCode() ) ) {
             Map<Integer, ConfigRecommend> billMap = configRecommendMapper
                     .selectConfigRecommendList( null )
