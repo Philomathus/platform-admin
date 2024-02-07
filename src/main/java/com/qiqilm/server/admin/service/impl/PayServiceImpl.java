@@ -143,6 +143,8 @@ public class PayServiceImpl implements IPayService {
         if ( memberInfo.getLevelIntegral().compareTo( BigDecimal.ZERO ) == 0
                 || memberInfo.getLevelIntegral().compareTo( memberInfo.getInviteMoney() ) <= 0 ) {
             updatePayJour.setFirst( 1L );
+        } else {
+            updatePayJour.setFirst( 0L );
         }
 
         BigDecimal payJourMoney = payJour.getIsPatchOrder() == 1 ? payJour.getSubMoney() : memberPayJour.getMoney();
