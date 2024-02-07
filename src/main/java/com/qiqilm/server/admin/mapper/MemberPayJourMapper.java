@@ -1,7 +1,6 @@
 package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.MemberPayJour;
-import com.qiqilm.server.admin.domain.PayChannelNew;
 import com.qiqilm.server.admin.domain.rsp.MemberPayJourRsp;
 import com.qiqilm.server.admin.domain.rsp.RspPayJour;
 import org.apache.ibatis.annotations.Param;
@@ -57,4 +56,6 @@ public interface MemberPayJourMapper {
 	Map listCounts( MemberPayJour req );
 
 	List<MemberPayJourRsp> selectMemberPayJourRspList(@Param("count") Long count);
+
+	int successTodayCount( @Param( "memberId" ) String memberId, @Param( "platformId" ) String platformId );
 }

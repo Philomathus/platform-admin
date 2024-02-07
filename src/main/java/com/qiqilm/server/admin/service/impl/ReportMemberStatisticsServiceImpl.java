@@ -23,15 +23,15 @@ public class ReportMemberStatisticsServiceImpl implements ReportMemberStatistics
 
     @Override
     public BigDecimal getTotalRecharge( ReqReportMemberStatistics req ) {
-//        if( req.getInclusive_date().isEmpty()){
-//            req.setInclusive_date( DateFormatUtils.formate( new Date(), DateFormatUtils.SPLIT_PATTERN_DATE ) );
-//        }
+        if( StringUtils.isEmpty( req.getInclusive_date() )){
+            req.setInclusive_date( DateFormatUtils.formate( new Date(), DateFormatUtils.SPLIT_PATTERN_DATE ) );
+        }
         return reportMemberStatisticsMapper.getTotalRecharge(req) ;
     }
 
     @Override
     public BigDecimal getTotalWithdrawal( ReqReportMemberStatistics req ) {
-        if( StringUtils.isEmpty( req.getInclusive_date() ) ){
+        if( StringUtils.isEmpty(req.getInclusive_date() )){
             req.setInclusive_date( DateFormatUtils.formate( new Date(), DateFormatUtils.SPLIT_PATTERN_DATE ) );
         }
         return reportMemberStatisticsMapper.getTotalWithdrawal(req);
@@ -39,7 +39,7 @@ public class ReportMemberStatisticsServiceImpl implements ReportMemberStatistics
 
     @Override
     public BigDecimal getUserBalance( ReqReportMemberStatistics req ) {
-        if( StringUtils.isEmpty( req.getInclusive_date() ) ){
+        if( StringUtils.isEmpty( req.getInclusive_date()  ) ){
             req.setInclusive_date( DateFormatUtils.formate( new Date(), DateFormatUtils.SPLIT_PATTERN_DATE ) );
         }
         return reportMemberStatisticsMapper.getUserBalance(req);
@@ -47,7 +47,7 @@ public class ReportMemberStatisticsServiceImpl implements ReportMemberStatistics
 
     @Override
     public Long getTotalRegistration( ReqReportMemberStatistics req ) {
-        if( StringUtils.isEmpty(req.getInclusive_date()) ){
+        if( StringUtils.isEmpty(req.getInclusive_date() ) ){
             req.setInclusive_date( DateFormatUtils.formate( new Date(), DateFormatUtils.SPLIT_PATTERN_DATE ) );
         }
         return reportMemberStatisticsMapper.getTotalRegistration(req);
@@ -56,7 +56,7 @@ public class ReportMemberStatisticsServiceImpl implements ReportMemberStatistics
 
     @Override
     public BigDecimal getTotalGift(ReqReportMemberStatistics req) {
-        if( StringUtils.isEmpty( req.getInclusive_date() )){
+        if( StringUtils.isEmpty( req.getInclusive_date() ) ){
             req.setInclusive_date( DateFormatUtils.formate( new Date(), DateFormatUtils.SPLIT_PATTERN_DATE ) );
         }
         BigDecimal result =  reportMemberStatisticsMapper.getTotalGift(req);

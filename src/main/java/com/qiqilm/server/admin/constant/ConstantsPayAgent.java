@@ -328,4 +328,5 @@ public abstract class ConstantsPayAgent {
     public static final String SUIYIFU_PAY       = "suiYiFuPay";
     public static final String CFB_PAY           = "cfbPay";
     public static final String GUAN_TIAN_PAY     = "guanTianPay";
+    public static final String XIANG_YANG_PAY    = "xiangYangPay";
 }

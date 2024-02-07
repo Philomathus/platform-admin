@@ -387,4 +387,14 @@
 		) a
 		LEFT JOIN pay_platform_new p ON p.id = a.platformId
 	</select>
+
+	<select id="successTodayCount" resultType="java.lang.Integer">
+		select count(0)
+		from member_pay_jour
+		where member_id = #{memberId}
+		  and status = 1
+		  and platform_id = #{platformId}
+		  and pay_time
+		<![CDATA[ >= ]]> DATE_SUB(CURDATE(), INTERVAL 0 DAY)
+	</select>
 </mapper>

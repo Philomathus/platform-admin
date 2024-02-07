@@ -4,23 +4,26 @@
 
     <select id="getTotalRecharge" resultType="java.math.BigDecimal">
         SELECT sum(a.recharge_money) total_recharge
-        FROM (SELECT p.member_id, p.money recharge_money
-        FROM pay_agent_recharge_log p
+        FROM (
+        SELECT p.recharge_acount member_id, p.money recharge_money
+        FROM pay_agent_recharge_record p
         <if test="inclusive_date != null">
             WHERE DATE_FORMAT(p.create_time, '%Y-%m-%d') = #{inclusive_date}
         </if>
         UNION ALL
         SELECT m.member_id, m.recharge_money
         FROM member_recharge_log m
-        WHERE m.`type` = 1
+        WHERE m.`type` = 1 and m.status = '3'
         <if test="inclusive_date != null">
             and DATE_FORMAT(m.create_time, '%Y-%m-%d') = #{inclusive_date}
         </if>
         UNION ALL
         SELECT u.member_id, u.recharge_money
         FROM pay_usdt_recharge u
+
+        where u.status = '3'
         <if test="inclusive_date != null">
-            where DATE_FORMAT(u.create_time, '%Y-%m-%d') = #{inclusive_date}
+             and DATE_FORMAT(u.create_time, '%Y-%m-%d') = #{inclusive_date}
         </if>
         UNION ALL
         select j.member_id, j.money recharge_money
@@ -44,6 +47,7 @@
             <if test="channelCode != null">
                 and member_id in (SELECT id from member_info where inviter_code = #{channelCode})
             </if>
+               and ( status = 3 or status = 6 )
         </where>
         group by member_id
     </select>
@@ -72,13 +76,14 @@
     <select id="getTotalGift" resultType="java.math.BigDecimal">
         select ifnull( SUM( lvp.total_ticket ), 0.0 ) total_gift from ${dbLive}.live_video_prop lvp
         <where>
-            and lvp.to_user_id > -1
+            and lvp.to_user_id > 0
             <if test="inclusive_date != null">
                 and DATE_FORMAT( lvp.create_date , '%Y-%m-%d') = #{inclusive_date}
             </if>
             <if test="channelCode != null">
                 and lvp.p_user_id in ( select mi.id from ${dbMain}.member_info mi where mi.inviter_code = #{channelCode} )
             </if>
+            and lvp.ActionStatus = 'OK'
         </where>
     </select>
 

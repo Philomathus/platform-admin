@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.cache.MemberCacheManager;
+import com.qiqilm.server.admin.cache.PayCacheUtil;
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
@@ -47,8 +48,6 @@ public class PayServiceImpl implements IPayService {
     @Autowired
     private   MemberActionLogsMapper              actionLogsMapper;
     @Autowired
-    private   MemberRechargeLogMapper             rechargeLogMapper;
-    @Autowired
     private   MemberBcodeMapper                   memberBcodeMapper;
     @Autowired
     private   MemberRecommendMapper               recommendMapper;
@@ -66,6 +65,8 @@ public class PayServiceImpl implements IPayService {
     private   SysConfigCacheUtil                  sysConfigCacheUtil;
     @Autowired
     protected RestTemplate                        restTemplate;
+    @Autowired
+    private   PayCacheUtil                        payCacheUtil;
 
     @Override
     @Transactional( rollbackFor = Exception.class )
@@ -125,34 +126,106 @@ public class PayServiceImpl implements IPayService {
         if ( "1".equals( memberPayJour.getStatus() ) ) {
             return false;
         }
+        PayServiceImpl payService = SpringUtils.getBean( this.getClass() );
 
+        Date now = new Date();
         //更新支付订单状态
         MemberPayJour updatePayJour = new MemberPayJour();
         updatePayJour.setId( payJour.getId() );
         updatePayJour.setStatus( "1" );
-        updatePayJour.setUpdateTime( DateFormatUtils.formate( new Date() ) );
+        updatePayJour.setUpdateTime( DateFormatUtils.formate( now ) );
         updatePayJour.setSubMoney( payJour.getSubMoney() );
         updatePayJour.setTradeSn( payJour.getTradeSn() );
         updatePayJour.setIsPatchOrder( payJour.getIsPatchOrder() );
         updatePayJour.setRemark( payJour.getRemark() );
-        payJourMapper.updateMemberPayJour( updatePayJour );
 
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( payJour.getMemberId() );
+        if ( memberInfo.getLevelIntegral().compareTo( BigDecimal.ZERO ) == 0
+                || memberInfo.getLevelIntegral().compareTo( memberInfo.getInviteMoney() ) <= 0 ) {
+            updatePayJour.setFirst( 1L );
+        }
 
         BigDecimal payJourMoney = payJour.getIsPatchOrder() == 1 ? payJour.getSubMoney() : memberPayJour.getMoney();
 
-        BigDecimal payjourDiscountRate = new BigDecimal( sysConfigCacheUtil.getConf( "payjour_discount_rate" ) );
+        //支付通道优惠比例
+        BigDecimal    chargeGive    = null;
+        PayChannelNew payChannelNew = payCacheUtil.getPayChannel( Long.valueOf( memberPayJour.getChannelId() ) );
 
-        // 充值彩金
-        BigDecimal chargeGive = payjourDiscountRate.multiply( payJourMoney ).setScale( 2, RoundingMode.HALF_UP );
+        String firstRechargeRate = sysConfigCacheUtil.getConf( "pay_first_recharge_rate" );
+        String nextRechargeRate  = sysConfigCacheUtil.getConf( "pay_next_recharge_rate" );
+
+        if ( StringUtils.hasText( firstRechargeRate ) && StringUtils.hasText( nextRechargeRate ) ) {
+            String[] payFirstPlatformRates = firstRechargeRate.split( ";" );
+
+            String[] payNextPlatformRates = nextRechargeRate.split( ";" );
+
+            for ( String payPlatformRate : payFirstPlatformRates ) {
+                String[] firstPaySplit = payPlatformRate.split( "," );
+                if ( memberPayJour.getPlatformId().equals( firstPaySplit[ 0 ] )
+                        && payJourMapper.successTodayCount( memberPayJour.getMemberId(), memberPayJour.getPlatformId() ) == 0 ) {
+                    BigDecimal firstRate = new BigDecimal( firstPaySplit[ 1 ] );
+                    chargeGive = payJourMoney.multiply( firstRate ).setScale( 2, RoundingMode.HALF_UP );
+                    log.warn( "首冲 {},{},{}", chargeGive, memberPayJour.getPlatformId(), memberPayJour.getMemberId() );
+                    break;
+                }
+            }
+            if ( chargeGive == null ) {
+                for ( String payPlatformRate : payNextPlatformRates ) {
+                    String[] firstPaySplit = payPlatformRate.split( "," );
+                    if ( memberPayJour.getPlatformId().equals( firstPaySplit[ 0 ] )
+                            && payJourMapper.successTodayCount( memberPayJour.getMemberId(), memberPayJour.getPlatformId() )
+                            > 0 ) {
+                        BigDecimal firstRate = new BigDecimal( firstPaySplit[ 1 ] );
+                        chargeGive = payJourMoney.multiply( firstRate ).setScale( 2, RoundingMode.HALF_UP );
+                        log.warn( "每笔 {},{},{}", chargeGive, memberPayJour.getPlatformId(), memberPayJour.getMemberId() );
+                        break;
+                    }
+                }
+            }
+        }
+        if ( chargeGive == null ) {
+            if ( "508".equals( memberPayJour.getPlatformId() ) ) { // 508 是vipPay
+
+                String newVipPayRate = sysConfigCacheUtil.getConf( "new_vippay_rate" );
+
+                if ( org.apache.commons.lang3.StringUtils.isNotBlank( newVipPayRate ) ) {
+                    String[] newVipPayRates = newVipPayRate.split( ";" );
+                    for ( String rates : newVipPayRates ) {
+                        String[]   spit   = rates.split( "," );
+                        BigDecimal amount = new BigDecimal( spit[ 0 ] );
+                        if ( payJourMoney.compareTo( amount ) >= 0 ) {
+                            chargeGive = payJourMoney.multiply( new BigDecimal( spit[ 1 ] ) ).setScale( 2, RoundingMode.HALF_UP );
+                        }
+
+                    }
+                } else {
+                    chargeGive = sysConfigCacheUtil
+                            .getConfBd( "vippay_rate" )
+                            .multiply( payJourMoney )
+                            .setScale( 2, RoundingMode.HALF_UP );
+                }
+
+            } else if ( payChannelNew != null && StringUtils.hasText( payChannelNew.getDiscountBill() ) ) {
+                chargeGive = new BigDecimal( payChannelNew.getDiscountBill() )
+                        .multiply( payJourMoney )
+                        .setScale( 2, RoundingMode.HALF_UP );
+            } else {
+                chargeGive = BigDecimal.ZERO;
+            }
+        }
 
         //套利号无优惠
         if ( memberInfo.getStatus() == 4 ) {
-            chargeGive = new BigDecimal( 0 );
+            chargeGive = BigDecimal.ZERO;
         }
 
+        //		BigDecimal payjourDiscountRate = sysConfigCacheUtil.getConfBd( "payjour_discount_rate" );
+        //
+        //		// 充值彩金
+        //		BigDecimal chargeGive = payjourDiscountRate.multiply( payJourMoney ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+
         BigDecimal firstRechargeCashBack = BigDecimal.ZERO; // 首冲赠送彩金
-        if ( memberPayJour.getFirst() == 1 && sysConfigCacheUtil.getConfBool( "is_first_recharge_cash_back" ) ) {
+        if ( updatePayJour.getFirst() == 1 && sysConfigCacheUtil.getConfBool( "is_first_recharge_cash_back" ) ) {
             BigDecimal rebate = cashBackFirstRechargeMapper.selectByRechargeMoney( payJourMoney );
             if ( rebate != null && rebate.compareTo( BigDecimal.ZERO ) > 0 ) {
                 firstRechargeCashBack = rebate;
@@ -165,15 +238,18 @@ public class PayServiceImpl implements IPayService {
 
         String orderId = payJour.getOrderNo();
 
+        payJourMapper.updateMemberPayJour( updatePayJour );
         if ( chargeGive.compareTo( BigDecimal.ZERO ) > 0 ) {
             logService.logMoneyAll( memberInfo.getId(), memberInfo.getUserName(), EnumMoney.chargegive,
-                    nowmoney.add( chargeGive ), chargeGive, null, name, orderId );
+                    nowmoney.add( chargeGive ), chargeGive, null, name,
+                    orderId + "_" + EnumMoney.chargegive.name() );
         }
 
         if ( firstRechargeCashBack.compareTo( BigDecimal.ZERO ) > 0 ) {
             logService.logMoneyAll( memberInfo.getId(), memberInfo.getUserName(), EnumMoney.wongive, nowmoney
-                    .add( chargeGive )
-                    .add( firstRechargeCashBack ), firstRechargeCashBack, null, "首冲赠送彩金；" + name, orderId );
+                            .add( chargeGive )
+                            .add( firstRechargeCashBack ), firstRechargeCashBack, null,
+                    "首冲赠送彩金；" + name, orderId + "_" + EnumMoney.wongive.name() );
         }
 
         logService.logMoneyAll( memberInfo.getId(), memberInfo.getUserName(), EnumMoney.charge, nowmoney, payJourMoney, null,
@@ -189,24 +265,17 @@ public class PayServiceImpl implements IPayService {
         }
 
         //新增佣金记录
-        this.recommendProcess( payJour, memberInfo );
+        payService.recommendProcess( payJour, memberInfo );
         MemberBcode codeFlow = new MemberBcode();
         codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
         codeFlow.setIncome( codeMoney );
-        codeFlow.setCreateTime( new Date() );
+        codeFlow.setCreateTime( now );
         codeFlow.setStatus( 0 );
         codeFlow.setCur( BigDecimal.ZERO );
         codeFlow.setUserId( memberInfo.getId() );
         codeFlow.setDes( des );
         if ( memberBcodeMapper.insertMemberBcode( codeFlow ) > 0
                 && memberInfoMapper.updateMoneySelect( memberInfo.getId(), money, null, codeMoney, null, null ) > 0 ) {
-            MemberRechargeLog memberRechargeLog = new MemberRechargeLog();
-            memberRechargeLog.setId( payJour.getId() );
-            memberRechargeLog.setStatus( 3 );
-            memberRechargeLog.setUpdateTime( new Date() );
-            memberRechargeLog.setRechargeMoney( payJourMoney );
-            rechargeLogMapper.updateMemberRechargeLog( memberRechargeLog );
-
             log.warn( "会员线上充值上分成功 - orderNo:{}", payJour.getOrderNo() );
             try {
                 if ( memberInfo.getLevelIntegral().compareTo( BigDecimal.ZERO ) == 0
@@ -218,7 +287,7 @@ public class PayServiceImpl implements IPayService {
             } catch ( Exception e ) {
                 log.error( "首充报错", e );
             }
-            this.paySendIm( memberInfo.getId(), payJourMoney );
+            payService.paySendIm( memberInfo.getId(), payJourMoney );
             return true;
         }
         return false;
