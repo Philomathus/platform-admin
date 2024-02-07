@@ -13,7 +13,6 @@ import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.scheduling.annotation.Async;
@@ -176,16 +175,19 @@ public class MemberCacheManager {
 			wheelUser.setSkinTimes( 1 );
 			wheelUserMapper.updateWheelUser( wheelUser );
 		}
-		//加坐骑33
+		int mountId = sysConfigCacheUtil.getConfInt( "bank_mount" );
+		if ( mountId == 0 ) {
+			return;
+		}
 		LiveUserMount query = new LiveUserMount();
 		query.setUserId( pUserId );
-		query.setMountId( 33 );
+		query.setMountId( mountId );
 		int day = 3;
 		if ( DateFormatUtils.getDaysOfHour( new Date() ) > 12 ) {
 			day += 1;
 		}
 		List<LiveUserMount> list = liveUserMountMapper.selectLiveUserMountList( query );
-		if ( list.size() == 0 ) {
+		if ( list.isEmpty() ) {
 			query.setIsUse( "0" );
 			Date d = new Date( System.currentTimeMillis() + day * 24 * 60 * 60 * 1000L );//过期时间
 			query.setEffectiveTime( d );
