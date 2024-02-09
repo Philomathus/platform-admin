@@ -182,7 +182,7 @@ public class MemberCacheManager {
 		LiveUserMount query = new LiveUserMount();
 		query.setUserId( pUserId );
 		query.setMountId( mountId );
-		int day = 3;
+		int day = sysConfigCacheUtil.getConfInt( "bank_mount_day", 3 );
 		if ( DateFormatUtils.getDaysOfHour( new Date() ) > 12 ) {
 			day += 1;
 		}
@@ -214,7 +214,7 @@ public class MemberCacheManager {
 		LiveUserMount query = new LiveUserMount();
 		query.setUserId( pUserId );
 		query.setMountId( mountId );
-		int day = 1;
+		int day = sysConfigCacheUtil.getConfInt( "bank_mount_day", 3 );
 		if ( DateFormatUtils.getDaysOfHour( new Date() ) > 12 ) {
 			day += 1;
 		}
