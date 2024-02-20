@@ -243,8 +243,9 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             } else {
                 beatNum = new BigDecimal( 0 );
             }
-            memberInfoMapper.updateMoneySelect( userId, money, null, money.multiply( beatNum )
-                                                                          .setScale( 2, RoundingMode.HALF_UP ), null, null );
+            memberInfoMapper.updateMoneySelect( userId, money, null, money
+                    .multiply( beatNum )
+                    .setScale( 2, RoundingMode.HALF_UP ), null, null );
             MemberActionLogs log = new MemberActionLogs();
             log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
             log.setUserId( userId );
@@ -430,7 +431,10 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
                     userIds = req.getMemberIds().split( "\n" );
                     StringBuilder userId = new StringBuilder();
                     for ( int i = 0; i < userIds.length; i++ ) {
-                        userId.append( "\"" ).append( userIds[ i ] ).append( "\"" )
+                        userId
+                                .append( "\"" )
+                                .append( userIds[ i ] )
+                                .append( "\"" )
                                 .append( "," )
                                 .append( req.getMoney() )
                                 .append( "," )
@@ -443,7 +447,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
                     return AjaxResult.error( 0, "分割会员ID出错,请检查格式" );
                 }
             } else {
-                req.setUserIds( "\"" + req.getMemberIds() + "\"" + "," + req.getMoney() + "," + req.getMoney());
+                req.setUserIds( "\"" + req.getMemberIds() + "\"" + "," + req.getMoney() + "," + req.getMoney() );
             }
             //清除表中数据
             memberInfoMapper.clear();
@@ -478,12 +482,12 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         memberCard1.setMemberId( member.getMemberId() );
 
         List<MemberCard> memberCardList = memberCardMapper.findAllByBankAccount( member );
-        List<MemberCard> memberCardListFiltered = memberCardList.stream()
-                .filter((mc) ->
-                        !mc.getId().equals(member.getId()) && mc.getBankAccount().equals(member.getBankAccount()))
-                .collect(Collectors.toList());
-        if (!memberCardListFiltered.isEmpty() && memberCardListFiltered.get(0) != null) {
-            return AjaxResult.error( "卡已绑定帐号" + memberCardListFiltered.get(0).getMemberId());
+        List<MemberCard> memberCardListFiltered = memberCardList
+                .stream()
+                .filter( ( mc ) -> !mc.getId().equals( member.getId() ) && mc.getBankAccount().equals( member.getBankAccount() ) )
+                .collect( Collectors.toList() );
+        if ( !memberCardListFiltered.isEmpty() && memberCardListFiltered.get( 0 ) != null ) {
+            return AjaxResult.error( "卡已绑定帐号" + memberCardListFiltered.get( 0 ).getMemberId() );
         }
 
         MemberCard memberCard = memberCardMapper.selectMemberCardById( id );
@@ -565,8 +569,10 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     public AjaxResult findMemberFollowList( String id ) {
         Set<String> liveHostSet = redisUtil.sMembers( "live:user-new-follow:" + id );
         if ( !liveHostSet.isEmpty() ) {
-            List<LiveUser> liveUserList = liveUserMapper.selectLiveUserInId( liveHostSet.stream().map( Long::parseLong )
-                                                                                        .collect( Collectors.toSet() ) );
+            List<LiveUser> liveUserList = liveUserMapper.selectLiveUserInId( liveHostSet
+                    .stream()
+                    .map( Long::parseLong )
+                    .collect( Collectors.toSet() ) );
             return AjaxResult.success( liveUserList );
         }
         return AjaxResult.success();
@@ -601,13 +607,13 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
-    public List<LiveGuardUser> selectLiveGuard(LiveGuardUser liveGuardUser) {
-        return memberInfoMapper.selectLiveGuard(liveGuardUser);
+    public List<LiveGuardUser> selectLiveGuard( LiveGuardUser liveGuardUser ) {
+        return memberInfoMapper.selectLiveGuard( liveGuardUser );
     }
 
     @Override
     public int withdrawStatus( MemberInfo memberInfo ) {
-        return memberInfoMapper.withdrawStatus(memberInfo);
+        return memberInfoMapper.withdrawStatus( memberInfo );
     }
 
     @Override
@@ -654,8 +660,11 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
         } ).filter( Objects::nonNull ).collect( Collectors.toSet() );
         resultSet.add( ImmutableMap.of( "memberId", memberId ) );
 
-        Map<String, Object> resultMap = resultSet.stream().map( Map::entrySet ).flatMap( Set::stream )
-                                                 .collect( Collectors.toMap( Map.Entry::getKey, Map.Entry::getValue ) );
+        Map<String, Object> resultMap = resultSet
+                .stream()
+                .map( Map::entrySet )
+                .flatMap( Set::stream )
+                .collect( Collectors.toMap( Map.Entry::getKey, Map.Entry::getValue ) );
 
         List<Map> mapList = memberInfoMapper.personalGameData( startTime, endTime, memberId, memberId.substring(
                 memberId.length() - 1 ) );
@@ -686,7 +695,10 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
     @Override
     public int updateCodeTotalVipLevel( MemberInfo memberInfo ) {
-        return memberInfoMapper.updateCodeTotalVipLevel(memberInfo);
+        if ( com.qiqilm.server.admin.utils.StringUtils.isNotBlank( memberInfo.getId() ) || memberInfo.getCodeTotal() == null ) {
+            throw new BusinessException( "输入有误" );
+        }
+        return memberInfoMapper.updateCodeTotalVipLevel( memberInfo );
     }
 
 }

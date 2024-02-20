@@ -1249,7 +1249,7 @@
 
     <update id="updateCodeTotalVipLevel" parameterType="MemberInfo">
         update ${dbMain}.member_info
-        set vip = (select max(level_flag) from ${dbMain}.config_vip
+        set vip = (select ifnull(max(level_flag),1) from ${dbMain}.config_vip
                    where level_money <![CDATA[ <= ]]> #{codeTotal}),
             code_total = #{codeTotal}
         where id = #{id}
