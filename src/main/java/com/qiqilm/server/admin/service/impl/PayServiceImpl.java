@@ -102,20 +102,24 @@ public class PayServiceImpl implements IPayService {
         payJour.setRemark( "操作人：" + userName + "人工补单" );
 
         if ( !"1".equals( payJour.getStatus() ) ) {
-            MemberActionLogs log = new MemberActionLogs();
-            log.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-            log.setUserId( payJour.getMemberId() );
-            log.setUserName( payJour.getUserName() );
-            log.setcTime( new Date() );
-            log.setType( EnumAction.gm.getType() );
-            log.setDes( EnumAction.gm.getDes() );
-            log.setParam1( "加分资金：" + payJour.getSubMoney() );
-            log.setParam2( "payJour订单号：" + orderNo );
-            log.setParam3( "操作人：" + userName );
-            log.setParam4( "备注：人工补单" );
-            log.setParamIp( UserDataUtil.getIp( ServletUtil.getHttpServletRequest() ) );
-            actionLogsMapper.insertMemberActionLogs( log );
-            SpringUtils.getAopProxy( this ).updatePayJourStatus( payJour, "操作人：" + userName );
+            MemberActionLogs actionLogs = new MemberActionLogs();
+            actionLogs.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+            actionLogs.setUserId( payJour.getMemberId() );
+            actionLogs.setUserName( payJour.getUserName() );
+            actionLogs.setcTime( new Date() );
+            actionLogs.setType( EnumAction.gm.getType() );
+            actionLogs.setDes( EnumAction.gm.getDes() );
+            actionLogs.setParam1( "加分资金：" + payJour.getSubMoney() );
+            actionLogs.setParam2( "payJour订单号：" + orderNo );
+            actionLogs.setParam3( "操作人：" + userName );
+            actionLogs.setParam4( "备注：人工补单" );
+            actionLogs.setParamIp( UserDataUtil.getIp( ServletUtil.getHttpServletRequest() ) );
+            actionLogsMapper.insertMemberActionLogs( actionLogs );
+            try {
+                SpringUtils.getBean( IPayService.class ).updatePayJourStatus( payJour, "操作人：" + userName );
+            } catch ( Exception e ) {
+                log.error( e.getMessage(), e );
+            }
         }
         return AjaxResult.success();
     }
