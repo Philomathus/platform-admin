@@ -155,7 +155,10 @@ public class PayServiceImpl implements IPayService {
 
         //支付通道优惠比例
         BigDecimal    chargeGive    = null;
-        PayChannelNew payChannelNew = payCacheUtil.getPayChannel( Long.valueOf( memberPayJour.getChannelId() ) );
+        PayChannelNew payChannelNew = null;
+        if ( memberPayJour.getChannelId() != null ) {
+            payChannelNew = payCacheUtil.getPayChannel( Long.valueOf( memberPayJour.getChannelId() ) );
+        }
 
         String firstRechargeRate = sysConfigCacheUtil.getConf( "pay_first_recharge_rate" );
         String nextRechargeRate  = sysConfigCacheUtil.getConf( "pay_next_recharge_rate" );
@@ -195,6 +198,7 @@ public class PayServiceImpl implements IPayService {
                 String newVipPayRate = sysConfigCacheUtil.getConf( "new_vippay_rate" );
 
                 if ( org.apache.commons.lang3.StringUtils.isNotBlank( newVipPayRate ) ) {
+                    chargeGive = BigDecimal.ZERO;
                     String[] newVipPayRates = newVipPayRate.split( ";" );
                     for ( String rates : newVipPayRates ) {
                         String[]   spit   = rates.split( "," );
