@@ -695,7 +695,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
 
     @Override
     public int updateCodeTotalVipLevel( MemberInfo memberInfo ) {
-        if ( com.qiqilm.server.admin.utils.StringUtils.isNotBlank( memberInfo.getId() ) || memberInfo.getCodeTotal() == null ) {
+        if ( com.qiqilm.server.admin.utils.StringUtils.isBlank( memberInfo.getId() ) || memberInfo.getCodeTotal() == null ) {
             throw new BusinessException( "输入有误" );
         }
         return memberInfoMapper.updateCodeTotalVipLevel( memberInfo );
