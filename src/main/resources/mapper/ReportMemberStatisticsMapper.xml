@@ -7,10 +7,12 @@
         FROM (
         SELECT p.recharge_acount member_id, p.money recharge_money
         FROM pay_agent_recharge_record p
-        <if test="inclusive_date != null">
-            and p.create_time >= STR_TO_DATE(CONCAT(#{inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
-            and p.create_time &lt;= STR_TO_DATE(CONCAT(#{inclusive_date},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
-        </if>
+        <where>
+            <if test="inclusive_date != null">
+                and p.create_time >= STR_TO_DATE(CONCAT(#{inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+                and p.create_time &lt;= STR_TO_DATE(CONCAT(#{inclusive_date},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
         UNION ALL
         SELECT m.member_id, m.recharge_money
         FROM member_recharge_log m
@@ -95,14 +97,6 @@
                 and update_time &lt;= STR_TO_DATE(CONCAT(#{inclusive_date}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
               UNION ALL
               select DISTINCT member_id
-              from pay_usdt_recharge
-              where `first` = '1'
-                and `status` = '3'
-                and member_id in (select id from member_info where inviter_code = #{channelCode})
-                and update_time >= STR_TO_DATE(CONCAT(#{inclusive_date}, ' 00:00:00'), '%Y-%m-%d %H:%i:%s')
-                and update_time &lt;= STR_TO_DATE(CONCAT(#{inclusive_date}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
-              UNION ALL
-              select DISTINCT member_id
               from member_pay_jour
               where `first` = '1'
                 and `status` = '1'
@@ -114,12 +108,14 @@
     <select id="getDailyRechargeCount" resultType="java.lang.Long">
         SELECT ifnull(count( distinct a.member_id), 0)
         FROM (
-        SELECT distinct p.member_id
+        SELECT distinct p.recharge_acount member_id
         FROM pay_agent_recharge_record p
-        <if test="inclusive_date != null">
-            and p.create_time >= STR_TO_DATE(CONCAT(#{inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
-            and p.create_time &lt;= STR_TO_DATE(CONCAT(#{inclusive_date},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
-        </if>
+        <where>
+            <if test="inclusive_date != null">
+                and p.create_time >= STR_TO_DATE(CONCAT(#{inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+                and p.create_time &lt;= STR_TO_DATE(CONCAT(#{inclusive_date},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
         UNION ALL
         SELECT distinct m.member_id
         FROM member_recharge_log m
@@ -137,7 +133,7 @@
             and u.update_time &lt;= STR_TO_DATE(CONCAT(#{inclusive_date},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
         UNION ALL
-        select j.member_id, j.money recharge_money
+        select j.member_id
         from member_pay_jour j where j.status = '1'
         <if test="inclusive_date != null">
             and j.update_time >= STR_TO_DATE(CONCAT(#{inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
