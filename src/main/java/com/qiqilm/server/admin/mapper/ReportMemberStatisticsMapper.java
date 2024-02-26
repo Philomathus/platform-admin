@@ -7,17 +7,17 @@ import java.math.BigDecimal;
 
 public interface ReportMemberStatisticsMapper {
 
-    BigDecimal getTotalRecharge( ReqReportMemberStatistics req );
+    BigDecimal getTotalRecharge( ReqReportMemberStatistics req);
 
-    BigDecimal getTotalWithdrawal( ReqReportMemberStatistics req );
+    BigDecimal getTotalWithdrawal( ReqReportMemberStatistics req);
 
-    BigDecimal getUserBalance( ReqReportMemberStatistics req );
+    BigDecimal getUserBalance( ReqReportMemberStatistics req);
 
-    Long getTotalRegistration( ReqReportMemberStatistics req );
+    Long getTotalRegistration( ReqReportMemberStatistics req);
 
-    BigDecimal getTotalGift( ReqReportMemberStatistics req );
+    BigDecimal getTotalGift( ReqReportMemberStatistics req);
 
     Long getDailyRechargeCount( ReqReportMemberStatistics req );
 
-    Long getDailyFirstRechargeCount( ReqReportMemberStatistics req );
+    Long getDailyFirstRechargeCount(  ReqReportMemberStatistics req );
 }
