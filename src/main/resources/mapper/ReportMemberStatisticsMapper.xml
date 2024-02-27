@@ -77,7 +77,7 @@
     </select>
     <select id="getTotalGift" resultType="java.math.BigDecimal">
         select ifnull( SUM( lvp.total_ticket ), 0.0 ) total_gift from ${dbLive}.live_video_prop lvp
-        where lvp.to_user_id > 0 and lvp.prop_id > 0
+        where lvp.to_user_id > 0
         <if test="inclusive_date != null">
             and lvp.create_date = #{inclusive_date}
         </if>
