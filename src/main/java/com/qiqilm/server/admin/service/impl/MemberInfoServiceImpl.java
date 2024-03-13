@@ -259,9 +259,14 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             log.setParam4( "备注：" + Mk );
             log.setParamIp( ip );
             actionLogsMapper.insertMemberActionLogs( log );
-            logService.logmarkMoney( userId, oldmemberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder );
+            if( "2".equals( req.getMoneydes()  )){
+                logService.logmarkMoney( userId, oldmemberInfo.getUserName(), EnumMoney.activity, now, total, Mk, markorder );
+            }else{
+                logService.logmarkMoney( userId, oldmemberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder );
+            }
+
         } else {
-            rspBase.setMsg( "该成员redis未初始化金额，或者您输入的金额有误 " );
+            rspBase.setMsg( "该成员redis未初始化金额，或者您输入的金额有误" );
             rspBase.setCode( 1 );
             return rspBase;
         }
