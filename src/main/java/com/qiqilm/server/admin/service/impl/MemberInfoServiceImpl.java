@@ -261,7 +261,7 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
             actionLogsMapper.insertMemberActionLogs( log );
             logService.logmarkMoney( userId, oldmemberInfo.getUserName(), EnumMoney.gm, now, total, Mk, markorder );
         } else {
-            rspBase.setMsg( "该成员redis未初始化金额，或者您输入的金额有误" );
+            rspBase.setMsg( "该成员redis未初始化金额，或者您输入的金额有误 " );
             rspBase.setCode( 1 );
             return rspBase;
         }
