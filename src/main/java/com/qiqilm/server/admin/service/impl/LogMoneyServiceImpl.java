@@ -31,21 +31,12 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
     @Override
     public List<LogMoney> selectLogMoneyList( LogMoney logMoney ) {
         this.getTime( logMoney );
-        if ( "智勇大闯关".equals( logMoney.getMark() ) ) {
-            logMoney.setMark( logMoney.getMark() + "彩金" );
-        }
         if ( StringUtils.isNotBlank( logMoney.getSearchValue() ) && logMoney.getSearchValue().startsWith( "77" ) ) {
             String tableLast = logMoney.getSearchValue().substring( logMoney.getSearchValue().length() - 1 );
             logMoney.setTableLast( tableLast );
             return logMoneyMapper.selectLogMoneySingleList( logMoney );
-        } else if ( logMoney.getTypes() != null && "8".equals( logMoney.getTypes()[ 0 ] )
-                && "智勇大闯关彩金".equals( logMoney.getMark() ) ) {
+        } else if ( logMoney.getTypes() != null ) {
             return logMoneyMapper.selectLogMoneyList( logMoney );
-        } else if ( logMoney.getTypes() == null && StringUtils.isNotBlank( logMoney.getMark() )
-                && StringUtils.isBlank( logMoney.getSearchValue() ) ) {
-            return logMoneyMapper.selectLogMoneyList( logMoney );
-        } else if ( logMoney.getTypes() != null && StringUtils.isBlank( logMoney.getSearchValue() ) ) {
-            return logMoneyMapper.selectLogMoneyFirstList( logMoney );
         } else {
             logMoney.setTableLast( "0" );
             return logMoneyMapper.selectLogMoneySingleList( logMoney );
