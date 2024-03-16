@@ -295,7 +295,7 @@ public class PayServiceImpl implements IPayService {
                     }
                 }
             } catch ( Exception e ) {
-                log.error( "首充报错", e );
+                log.error( "首充报错 {}", e.getMessage(), e );
             }
             payService.paySendIm( memberInfo.getId(), payJourMoney );
             return true;
