@@ -8,6 +8,7 @@ import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
+import com.qiqilm.server.admin.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Repository;
@@ -31,7 +32,7 @@ public class KaiHuiPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "order_amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString() );
         dataMap.put( "order_id", withdrawLog.getOrderNo() );
         dataMap.put( "bank_name", withdrawLog.getBankName().trim() );
-        dataMap.put( "card_address", withdrawLog.getBankAddress() );
+        dataMap.put( "card_address", StringUtils.isBlank( withdrawLog.getBankAddress() ) ? "" : withdrawLog.getBankAddress() );
         dataMap.put( "card_nummber", withdrawLog.getBankAccount().trim() );
         dataMap.put( "card_name", withdrawLog.getBankUserName().trim() );
         dataMap.put( "notify_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
@@ -39,7 +40,7 @@ public class KaiHuiPayAgentProcessor extends AbstractPayAgent {
 
         bodyMap.put( "data", JsonUtil.object2Json( dataMap ) );
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
-        String signStr    = this.assemblyUrl3( dataMap ) + signMd5;
+        String signStr = this.assemblyUrl3( dataMap ) + signMd5;
         log.warn( signStr );
         bodyMap.put( "sign", DigestUtils.md5Hex( signStr ) );
 
@@ -107,10 +108,9 @@ public class KaiHuiPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-        MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-        PayAgentPlatform    payAgentPlatform =
-                payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-        Map<String, Object> paramsMap        = new TreeMap<>();
+        MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+        PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
+        Map<String, Object> paramsMap = new TreeMap<>();
         paramsMap.put( "member_code", payAgentPlatform.getMerId() );
         paramsMap.put( "order_no", withdrawLog.getOrderNo() );
 
