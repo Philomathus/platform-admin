@@ -266,12 +266,21 @@ public class PayServiceImpl implements IPayService {
                 name, orderId );
 
         BigDecimal codeMoney           = money;
-        BigDecimal vipPayCodeMultiples = sysConfigCacheUtil.getConfBd( "vippay_income_code_multiples" );
         String     des                 = "线上充值";
-        if ( "508".equals( memberPayJour.getPlatformId() ) && vipPayCodeMultiples.compareTo( BigDecimal.ZERO ) > 0
-                && chargeGive.compareTo( BigDecimal.ZERO ) > 0 ) {
-            codeMoney = money.multiply( vipPayCodeMultiples );
-            des       = "vipPay充值" + vipPayCodeMultiples + "倍打码";
+        if ( "508".equals( memberPayJour.getPlatformId() ) && chargeGive.compareTo( BigDecimal.ZERO ) > 0 ) {
+            BigDecimal vipPayCodeMultiples = sysConfigCacheUtil.getConfBd( "vippay_income_code_multiples" );
+            if ( vipPayCodeMultiples.compareTo( BigDecimal.ZERO ) > 0 ) {
+                codeMoney = money.multiply( vipPayCodeMultiples );
+                des       = "vipPay充值" + vipPayCodeMultiples + "倍打码";
+            }
+        }
+
+        if ( "702".equals( memberPayJour.getPlatformId() ) && chargeGive.compareTo( BigDecimal.ZERO ) > 0 ) {
+            BigDecimal abPayCodeMultiples = sysConfigCacheUtil.getConfBd( "abpay_income_code_multiples" );
+            if ( abPayCodeMultiples.compareTo( BigDecimal.ZERO ) > 0 ) {
+                codeMoney = money.multiply( abPayCodeMultiples );
+                des       = "abPay充值" + abPayCodeMultiples + "倍打码";
+            }
         }
 
         //新增佣金记录
