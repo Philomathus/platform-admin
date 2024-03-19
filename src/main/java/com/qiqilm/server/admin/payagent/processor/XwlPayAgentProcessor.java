@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
@@ -64,7 +65,8 @@ public class XwlPayAgentProcessor extends AbstractPayAgent {
             return "fail";
         }
         String sign = requestMap.remove( "sign" ).toString();
-
+        //去除空值参数
+        requestMap.values().removeIf( value -> value == null || StringUtils.isBlank( value.toString() ) );
         SortedMap<String, Object> signMap  = new TreeMap<>( requestMap );
         String                    signData = this.assemblyUrl( signMap );
 
