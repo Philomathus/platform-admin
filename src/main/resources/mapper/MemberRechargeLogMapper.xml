@@ -343,4 +343,53 @@
             and update_time <![CDATA[ <= ]]> concat(#{req.updateTime}, ' 23:59:59')
         </if>
     </select>
+    <select id="bankRechargeSum" resultType="com.qiqilm.server.admin.domain.vo.MemberSumRecharge">
+        SELECT a.*
+        FROM (SELECT l.member_id AS memberId,
+                     ifnull(sum(l.recharge_money), 0) AS money
+              FROM member_recharge_log l
+              WHERE l.STATUS = 3
+                AND l.create_time >= DATE_ADD(CURDATE(), INTERVAL - 1 DAY)
+                AND l.create_time <![CDATA[ <= ]]> DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+              GROUP BY l.member_id) a
+                 LEFT JOIN member_info m ON a.memberId = m.id
+        WHERE m.STATUS IN (1, 7)
+    </select>
+    <select id="allRechargeSum" resultType="com.qiqilm.server.admin.domain.vo.MemberSumRecharge">
+        SELECT b.* FROM (
+        SELECT a.member_id AS memberId, ifnull(sum(a.money), 0) AS money
+        FROM (
+        SELECT l.member_id, ifnull(sum(l.recharge_money), 0) AS money FROM member_recharge_log l
+        WHERE l.STATUS = 3 AND l.update_time >= DATE_ADD(CURDATE(), INTERVAL - 1 DAY)
+        AND l.update_time  <![CDATA[ <= ]]>   DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+        GROUP BY l.member_id
+
+        union all
+
+        SELECT l.member_id, ifnull(sum(l.money), 0) AS money
+        FROM member_pay_jour l
+        WHERE l.STATUS = 1
+        AND l.update_time >= DATE_ADD(CURDATE(), INTERVAL - 1 DAY)
+        AND l.update_time  <![CDATA[ <= ]]>   DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+        GROUP BY l.member_id
+
+        union all
+
+        SELECT l.member_id, ifnull(sum(l.money), 0) AS money
+        FROM pay_agent_recharge_log l
+        WHERE l.create_time >= DATE_ADD(CURDATE(), INTERVAL - 1 DAY)
+        AND l.create_time  <![CDATA[ <= ]]>   DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+        GROUP BY l.member_id
+
+        union all
+
+        SELECT l.member_id, ifnull(sum(l.recharge_money), 0) AS money
+        FROM pay_usdt_recharge l
+        WHERE l.STATUS = 3
+        AND l.create_time >= DATE_ADD(CURDATE(), INTERVAL - 1 DAY)
+        AND l.create_time  <![CDATA[ <= ]]>   DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+        GROUP BY l.member_id
+        ) a GROUP BY a.member_id
+        ) b LEFT JOIN member_info t ON b.memberId = t.id WHERE t.STATUS IN (1, 7)
+    </select>
 </mapper>

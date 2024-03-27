@@ -1,21 +1,16 @@
 package com.qiqilm.server.admin.task;
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
+import com.qiqilm.server.admin.domain.ActivityCashBack;
 import com.qiqilm.server.admin.domain.MemberBcode;
 import com.qiqilm.server.admin.domain.MemberInfo;
-import com.qiqilm.server.admin.domain.MemberRechargeLog;
+import com.qiqilm.server.admin.domain.vo.MemberSumRecharge;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.exception.BusinessException;
-import com.qiqilm.server.admin.mapper.ActivityCashBackMapper;
-import com.qiqilm.server.admin.mapper.LogMoneyMapper;
-import com.qiqilm.server.admin.mapper.MemberBcodeMapper;
-import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogService;
-import com.qiqilm.server.admin.service.IMemberRechargeLogService;
-import com.qiqilm.server.admin.utils.JsonUtil;
-import com.qiqilm.server.admin.utils.RedisUtil;
-import com.qiqilm.server.admin.utils.UuidUtil;
+import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,8 +21,6 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 充值返现活动
@@ -36,25 +29,26 @@ import java.util.stream.Collectors;
 @Component
 public class MemberCashBackTask {
     @Resource
-    private IMemberRechargeLogService memberRechargeLogService;
+    private MemberRechargeLogMapper memberRechargeLogMapper;
     @Resource
-    private ActivityCashBackMapper    activityCashBackMapper;
+    private ActivityCashBackMapper  activityCashBackMapper;
     @Resource
-    private MemberBcodeMapper         memberBcodeMapper;
+    private MemberBcodeMapper       memberBcodeMapper;
     @Resource
-    private MemberInfoMapper          memberInfoMapper;
+    private MemberInfoMapper        memberInfoMapper;
     @Resource
-    private LogMoneyMapper            logMoneyMapper;
+    private LogMoneyMapper          logMoneyMapper;
     @Resource
-    private SysConfigCacheUtil        sysConfigCacheUtil;
+    private SysConfigCacheUtil      sysConfigCacheUtil;
     @Resource
-    private ILogService               logService;
+    private ILogService             logService;
     @Resource
-    private RedisUtil                 redisUtil;
+    private RedisUtil               redisUtil;
 
     @Scheduled( cron = "0 58 15 * * ?" )// 每天15:58点执行一次
     public void cashBackTask() {
-        if ( !sysConfigCacheUtil.getConfBool( "cash_back_switch" ) ) {
+        int cashBackSwitch = sysConfigCacheUtil.getConfInt( "cash_back_switch" );
+        if ( cashBackSwitch <= 0 ) {
             return;
         }
         if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 5000 ) ) {
@@ -63,36 +57,37 @@ public class MemberCashBackTask {
         log.info( "开始执行充值返现活动任务" );
 
         //查询昨天公司入款金额
-        List<MemberRechargeLog> memberRechargeLogs = memberRechargeLogService.memberRechargeLogLists();
+        List<MemberSumRecharge> memberRechargeLogs;
+        if ( cashBackSwitch == 1 ) {
+            memberRechargeLogs = memberRechargeLogMapper.bankRechargeSum();
+        } else {
+            memberRechargeLogs = memberRechargeLogMapper.allRechargeSum();
+        }
 
-        Set<String> all = memberRechargeLogs.stream().map( memberRechargeLog -> memberRechargeLog.getMemberId() + ":"
-                + memberRechargeLog.getRechargeMoney() ).collect( Collectors.toSet() );
-        log.warn( "执行充值返现活动任务 - 昨日充值会员:{}", JsonUtil.object2Json( all ) );
+        log.warn( "执行充值返现活动任务 - 昨日充值会员:{}", JsonUtil.object2Json( memberRechargeLogs ) );
+
+        List<ActivityCashBack> activityCashBackList = activityCashBackMapper.selectActivate();
 
         long now = System.currentTimeMillis();
-        for ( MemberRechargeLog memberRechargeLog : memberRechargeLogs ) {
-            //要返现金额
-            Integer bycash = activityCashBackMapper.selectActivityCashBackBycash( memberRechargeLog.getRechargeMoney() );
-            if ( bycash != null ) {
-                int count = logMoneyMapper.findExistActivityCashBack( memberRechargeLog.getMemberId(), memberRechargeLog
-                        .getMemberId().substring( memberRechargeLog.getMemberId().length() - 1 ) );
-                if ( count > 0 ) {
-                    log.error( "执行充值返现活动任务 - 存在充值记录的会员:{}, 金额:{}", memberRechargeLog.getMemberId(),
-                            memberRechargeLog.getRechargeMoney() );
-                    continue;
+        for ( MemberSumRecharge sumRecharge : memberRechargeLogs ) {
+            Long bycash = null;
+            for ( ActivityCashBack activityCashBack : activityCashBackList ) {
+                if ( new BigDecimal( activityCashBack.getDepositTotalMin() ).compareTo( sumRecharge.getMoney() ) <= 0
+                        && new BigDecimal( activityCashBack.getDepositTotalMax() ).compareTo( sumRecharge.getMoney() ) > 0 ) {
+                    bycash = activityCashBack.getRebate();
                 }
-                //会员返现
-                try {
-                    this.updateMemberCharge( memberRechargeLog.getMemberId(), new BigDecimal( bycash ),
-                            EnumMoney.activity.getDes(), memberRechargeLog.getOrderNo() );
-                } catch ( Exception e ) {
-                    log.error( memberRechargeLog.getMemberId() + "数据插入失败" + e.getMessage(), e );
-                    log.error( "执行充值返现活动任务 - 充值失败的会员:{}, 金额:{}", memberRechargeLog.getMemberId(),
-                            memberRechargeLog.getRechargeMoney() );
-                }
-            } else {
-                log.warn( "执行充值返现活动任务 - 未达到充值标准的会员:{}, 金额:{}", memberRechargeLog.getMemberId(),
-                        memberRechargeLog.getRechargeMoney() );
+            }
+            if ( bycash == null ) {
+                log.warn( "执行充值返现活动任务 - 未达到充值标准的会员:{}, 金额:{}", sumRecharge.getMemberId(), sumRecharge.getMoney() );
+                continue;
+            }
+            try {
+                SpringUtils
+                        .getAopProxy( this )
+                        .updateMemberCharge( sumRecharge.getMemberId(), new BigDecimal( bycash ), EnumMoney.activity.getDes() );
+            } catch ( Exception e ) {
+                log.error( sumRecharge.getMemberId() + "数据插入失败" + e.getMessage(), e );
+                log.error( "执行充值返现活动任务 - 充值失败的会员:{}, 金额:{}", sumRecharge.getMemberId(), sumRecharge.getMoney() );
             }
         }
         redisUtil.strSet( getClass().getSimpleName(), "0", Duration.ofHours( 23 ) );
@@ -100,9 +95,11 @@ public class MemberCashBackTask {
     }
 
     @Transactional( rollbackFor = Exception.class )
-    public void updateMemberCharge( String userId, BigDecimal money, String chargeType, String orderNo ) {
+    public void updateMemberCharge( String userId, BigDecimal money, String chargeType ) {
+        String orderId =
+                "CZFX" + DateFormatUtils.formate( new Date(), DateFormatUtils.TIGHT_PATTERN_DATE ) + userId.replace( "_", "" );
         MemberBcode codeFlow = new MemberBcode();
-        codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+        codeFlow.setId( orderId );
         codeFlow.setIncome( money );//
         codeFlow.setCreateTime( new Date() );
         codeFlow.setStatus( 0 );
@@ -110,9 +107,8 @@ public class MemberCashBackTask {
         codeFlow.setUserId( userId );
         codeFlow.setDes( chargeType );
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( userId );
-        //日志
-        logService.logMoneyAdd( null, userId, memberInfo.getUserName(), EnumMoney.activity, money, memberInfo.getTotalAccount()
-                , "充值返现活动", orderNo );
+        logService.logMoneyAdd( orderId, userId, memberInfo.getUserName(), EnumMoney.activity, money,
+                memberInfo.getTotalAccount(), "充值返现活动", null );
         int i = memberBcodeMapper.insertMemberBcode( codeFlow );
         int j = memberInfoMapper.updateMoneySelect( userId, money, null, money, null, null );
         if ( i <= 0 || j <= 0 ) {

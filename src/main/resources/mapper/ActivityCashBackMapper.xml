@@ -58,6 +58,11 @@
         SELECT * FROM log_money9 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5') ) t
     </select>
 
+    <select id="selectActivate" resultMap="ActivityCashBackResult">
+        <include refid="selectActivityCashBackVo" />
+        where status = 1
+    </select>
+
     <insert id="insertActivityCashBack" parameterType="ActivityCashBack" useGeneratedKeys="true" keyProperty="id">
         insert into ${dbMain}.activity_cash_back
         <trim prefix="(" suffix=")" suffixOverrides=",">

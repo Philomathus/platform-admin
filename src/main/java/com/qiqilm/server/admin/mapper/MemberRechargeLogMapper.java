@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import com.qiqilm.server.admin.domain.MemberRechargeLog;
 import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
 import com.qiqilm.server.admin.domain.rsp.RspBankRecharge;
+import com.qiqilm.server.admin.domain.vo.MemberSumRecharge;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -58,4 +59,8 @@ public interface MemberRechargeLogMapper {
 	List<RspBankRecharge> selectMemberBankRecharge(@Param( "req" )ReqMemberRechargeLog req);
 
 	public Map listCounts( @Param( "req" ) ReqMemberRechargeLog req );
+
+    List<MemberSumRecharge> bankRechargeSum();
+
+	List<MemberSumRecharge> allRechargeSum();
 }

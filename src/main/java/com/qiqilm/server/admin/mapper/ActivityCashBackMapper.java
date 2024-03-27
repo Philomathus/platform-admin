@@ -1,12 +1,11 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.ActivityCashBack;
 import com.qiqilm.server.admin.domain.rsp.RspActivityCashBack;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.PathVariable;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 【返现活动】Mapper接口
@@ -66,4 +65,6 @@ public interface ActivityCashBackMapper {
 	 * @return 结果
 	 */
 	public int deleteActivityCashBackByIds(Long[] ids );
+
+	List<ActivityCashBack> selectActivate();
 }
