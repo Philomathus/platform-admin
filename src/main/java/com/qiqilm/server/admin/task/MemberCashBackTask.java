@@ -46,6 +46,7 @@ public class MemberCashBackTask {
     private RedisUtil               redisUtil;
 
     @Scheduled( cron = "0 58 15 * * ?" )// 每天15:58点执行一次
+    @Scheduled( cron = "0 58 16 * * ?" )// 每天16:58点执行一次
     public void cashBackTask() {
         int cashBackSwitch = sysConfigCacheUtil.getConfInt( "cash_back_switch" );
         if ( cashBackSwitch <= 0 ) {
@@ -65,8 +66,9 @@ public class MemberCashBackTask {
         }
 
         log.warn( "执行充值返现活动任务 - 昨日充值会员:{}", JsonUtil.object2Json( memberRechargeLogs ) );
-
-        List<ActivityCashBack> activityCashBackList = activityCashBackMapper.selectActivate();
+        ActivityCashBack query = new ActivityCashBack();
+        query.setStatus( "1" );
+        List<ActivityCashBack> activityCashBackList = activityCashBackMapper.selectActivityCashBackList( query );
 
         long now = System.currentTimeMillis();
         for ( MemberSumRecharge sumRecharge : memberRechargeLogs ) {
@@ -81,10 +83,19 @@ public class MemberCashBackTask {
                 log.warn( "执行充值返现活动任务 - 未达到充值标准的会员:{}, 金额:{}", sumRecharge.getMemberId(), sumRecharge.getMoney() );
                 continue;
             }
+            String memberIdW_ = sumRecharge.getMemberId().replace( "_", "" );
+            String dbNodes    = sumRecharge.getMemberId().substring( sumRecharge.getMemberId().length() - 1 );
+
+            String orderId = "CZFX" + DateFormatUtils.formate( new Date(), DateFormatUtils.TIGHT_PATTERN_DATE ) + memberIdW_;
+            if ( logMoneyMapper.findExist( dbNodes, orderId ) > 0 ) {
+                log.error( "执行充值返现活动任务 - 存在充值记录的会员:{}, 金额:{}", sumRecharge.getMemberId(), sumRecharge.getMoney() );
+                continue;
+            }
             try {
                 SpringUtils
                         .getAopProxy( this )
-                        .updateMemberCharge( sumRecharge.getMemberId(), new BigDecimal( bycash ), EnumMoney.activity.getDes() );
+                        .updateMemberCharge( sumRecharge.getMemberId(), new BigDecimal( bycash ), EnumMoney.activity.getDes(),
+                                orderId );
             } catch ( Exception e ) {
                 log.error( sumRecharge.getMemberId() + "数据插入失败" + e.getMessage(), e );
                 log.error( "执行充值返现活动任务 - 充值失败的会员:{}, 金额:{}", sumRecharge.getMemberId(), sumRecharge.getMoney() );
@@ -95,9 +106,7 @@ public class MemberCashBackTask {
     }
 
     @Transactional( rollbackFor = Exception.class )
-    public void updateMemberCharge( String userId, BigDecimal money, String chargeType ) {
-        String orderId =
-                "CZFX" + DateFormatUtils.formate( new Date(), DateFormatUtils.TIGHT_PATTERN_DATE ) + userId.replace( "_", "" );
+    public void updateMemberCharge( String userId, BigDecimal money, String chargeType, String orderId ) {
         MemberBcode codeFlow = new MemberBcode();
         codeFlow.setId( orderId );
         codeFlow.setIncome( money );//

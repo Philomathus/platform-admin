@@ -29,11 +29,6 @@
         where id = #{id}
     </select>
 
-    <select id="selectActivityCashBackBycash" parameterType="java.math.BigDecimal" resultType="java.lang.Integer">
-        select rebate from ${dbMain}.activity_cash_back
-        where status =1 and  deposit_total_min <![CDATA[ <= ]]> #{cash}
-        and deposit_total_max > #{cash}
-    </select>
     <select id="selectActivityCashBackLists"
             resultType="com.qiqilm.server.admin.domain.rsp.RspActivityCashBack">
         SELECT t.user_id,t.income,t.mark,t.create_time FROM (
@@ -56,11 +51,6 @@
         SELECT * FROM log_money8 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5')
         UNION ALL
         SELECT * FROM log_money9 WHERE create_time <![CDATA[ >= ]]> #{startTime} AND create_time &lt;= #{endTime} AND TYPE IN ('5') ) t
-    </select>
-
-    <select id="selectActivate" resultMap="ActivityCashBackResult">
-        <include refid="selectActivityCashBackVo" />
-        where status = 1
     </select>
 
     <insert id="insertActivityCashBack" parameterType="ActivityCashBack" useGeneratedKeys="true" keyProperty="id">

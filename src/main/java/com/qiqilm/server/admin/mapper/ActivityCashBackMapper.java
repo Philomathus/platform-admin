@@ -2,9 +2,7 @@ package com.qiqilm.server.admin.mapper;
 
 import com.qiqilm.server.admin.domain.ActivityCashBack;
 import com.qiqilm.server.admin.domain.rsp.RspActivityCashBack;
-import org.apache.ibatis.annotations.Param;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -56,8 +54,6 @@ public interface ActivityCashBackMapper {
 	 */
 	public int deleteActivityCashBackById(Long id);
 
-	Integer selectActivityCashBackBycash(@Param("cash") BigDecimal cash);
-
 	/**
 	 * 批量删除【返现活动】
 	 *
@@ -65,6 +61,4 @@ public interface ActivityCashBackMapper {
 	 * @return 结果
 	 */
 	public int deleteActivityCashBackByIds(Long[] ids );
-
-	List<ActivityCashBack> selectActivate();
 }
