@@ -1,10 +1,11 @@
 package com.qiqilm.server.admin.domain;
 
-import java.math.BigDecimal;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
 
 /**
  * 【请填写功能名称】对象 config_vip
@@ -53,6 +54,10 @@ public class ConfigVip extends BaseEntity {
     /** 需求打码量 */
     @Excel(name = "需求打码量")
     private BigDecimal levelMoney;
+
+    private BigDecimal weekCharge;
+    private BigDecimal monthCharge;
+    private BigDecimal bcodeMultiple;
 
     public void setId(String id) {
         this.id = id;
@@ -123,6 +128,30 @@ public class ConfigVip extends BaseEntity {
 
     public BigDecimal getLevelMoney() {
         return levelMoney;
+    }
+
+    public BigDecimal getWeekCharge() {
+        return weekCharge;
+    }
+
+    public void setWeekCharge( BigDecimal weekCharge ) {
+        this.weekCharge = weekCharge;
+    }
+
+    public BigDecimal getMonthCharge() {
+        return monthCharge;
+    }
+
+    public void setMonthCharge( BigDecimal monthCharge ) {
+        this.monthCharge = monthCharge;
+    }
+
+    public BigDecimal getBcodeMultiple() {
+        return bcodeMultiple;
+    }
+
+    public void setBcodeMultiple( BigDecimal bcodeMultiple ) {
+        this.bcodeMultiple = bcodeMultiple;
     }
 
     @Override
