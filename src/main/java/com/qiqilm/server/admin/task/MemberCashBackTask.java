@@ -46,7 +46,7 @@ public class MemberCashBackTask {
     private RedisUtil               redisUtil;
 
     @Scheduled( cron = "0 58 15 * * ?" )// 每天15:58点执行一次
-    @Scheduled( cron = "0 58 16 * * ?" )// 每天16:58点执行一次
+    @Scheduled( cron = "0 58 16 * * ?" )// 每天17:58点执行一次
     public void cashBackTask() {
         int cashBackSwitch = sysConfigCacheUtil.getConfInt( "cash_back_switch" );
         if ( cashBackSwitch <= 0 ) {
@@ -87,7 +87,7 @@ public class MemberCashBackTask {
             String dbNodes    = sumRecharge.getMemberId().substring( sumRecharge.getMemberId().length() - 1 );
 
             String orderId = "CZFX" + DateFormatUtils.formate( new Date(), DateFormatUtils.TIGHT_PATTERN_DATE ) + memberIdW_;
-            if ( logMoneyMapper.findExist( dbNodes, orderId ) > 0 ) {
+            if ( logMoneyMapper.findExist( dbNodes, orderId ) != null ) {
                 log.error( "执行充值返现活动任务 - 存在充值记录的会员:{}, 金额:{}", sumRecharge.getMemberId(), sumRecharge.getMoney() );
                 continue;
             }

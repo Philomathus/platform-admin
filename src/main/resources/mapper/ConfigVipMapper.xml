@@ -143,9 +143,9 @@
                zfl,
                yfl,
                level_money,
-               week_charge,
-               month_charge,
-               bcode_multiple
+               week_charge as weekCharge,
+               month_charge as monthCharge,
+               bcode_multiple as bcodeMultiple
         from config_vip
         order by level_flag
     </select>
