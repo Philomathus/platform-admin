@@ -52,7 +52,7 @@ public class MemberCashBackTask {
         if ( cashBackSwitch <= 0 ) {
             return;
         }
-        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 5000 ) ) {
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName(), 1000 ) ) {
             return;
         }
         log.info( "开始执行充值返现活动任务" );
