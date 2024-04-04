@@ -210,6 +210,9 @@ public class LiveVideo extends BaseEntity {
 	@Excel( name = "彩票名称" )
 	private String lotteryName;
 
+	@ApiModelProperty(value = "视频是否连麦 0 未连麦，> 0 连麦主播")
+	private Integer concatVideo;
+
 	private String  liveStatus = "";
 	private String  lineName;
 	private Integer lineStatus;

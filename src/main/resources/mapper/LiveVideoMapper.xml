@@ -23,6 +23,7 @@
         <result property="lotteryName" column="lottery_name"/>
         <result property="voteNumber" column="vote_Number"/>
         <result property="isLivePay" column="is_live_pay"/>
+        <result property="concatVideo" column="is_concatvideo"/>
         <result property="lineName" column="lineName"/>
         <result property="lineStatus" column="lineStatus"/>
         <result property="createType" column="create_type"/>
@@ -61,6 +62,7 @@
 		lottery_name,
 		vote_Number,
 		is_live_pay,
+        is_concatvideo,
 		s.name lineName,
 		s.status lineStatus,
 		live_image,
@@ -241,6 +243,9 @@
             <if test="lv.sortInit != null">
                 sort_init = #{lv.sortInit},
             </if>
+            <if test="lv.concatVideo != null">
+                is_concatvideo = #{lv.concatVideo},
+            </if>
         </trim>
         where id = #{lv.id}
     </update>
@@ -382,6 +387,9 @@
             <if test="sortInit != null">
                 sort_init = #{sortInit},
             </if>
+            <if test="concatVideo != null">
+                is_concatvideo = #{concatVideo},
+            </if>
         </trim>
         where id = #{id}
     </update>
@@ -459,6 +467,7 @@
             <if test="lv.nPlayFlv != null">n_play_flv,</if>
             <if test="lv.hostName != null">host_name,</if>
             <if test="lv.lotteryName != null">lottery_name,</if>
+            <if test="lv.concatVideo != null">is_concatvideo,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="lv.id != null">#{lv.id},</if>
@@ -509,6 +518,7 @@
             <if test="lv.nPlayFlv != null">#{lv.nPlayFlv},</if>
             <if test="lv.hostName != null">#{lv.hostName},</if>
             <if test="lv.lotteryName != null">#{lv.lotteryName},</if>
+            <if test="lv.concatVideo != null">#{lv.concatVideo},</if>
         </trim>
     </insert>
     <select id="selectLiveVideoList2" parameterType="LiveVideo" resultMap="LiveVideoResult">
