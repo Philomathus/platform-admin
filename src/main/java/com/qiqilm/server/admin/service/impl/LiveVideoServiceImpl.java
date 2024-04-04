@@ -172,6 +172,7 @@ public class LiveVideoServiceImpl implements ILiveVideoService {
         updateVideo.setLiveIn( 0 );
         updateVideo.setIsAborted( isAborted );
         updateVideo.setEndDate( now );
+        updateVideo.setConcatVideo( 0 );
         updateVideo.setId( id );
         if ( isAborted ) {
             Double monitorTimeLong = videoCacheUtil.getVideoMonitorTime( Integer.parseInt( "" + id ) );
