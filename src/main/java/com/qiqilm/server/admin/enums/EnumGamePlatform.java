@@ -11,7 +11,7 @@ public enum EnumGamePlatform {
     CX_LOTTERY(4, "77彩票"),
     AG_LIVE(5, "AG视讯"),
     MG_LIVE(6, "MG电子"),
-    NG_LIVE(7, "NG电子"),
+    NG_LIVE(7, "UPG电子"),
     BBIN_SPORT(9, "BBIN体育"),
     BBIN_DIANZI(10, "BBIN电子"),
     BBIN_FISH(11, "BBIN捕鱼"),
