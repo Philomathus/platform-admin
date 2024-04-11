@@ -2,22 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.ActivityWithdrawCashBackMapper">
     <resultMap type="ActivityWithdrawCashBack" id="ActivityWithdrawCashBackResult">
-        <result property="bankCode"         column="bank_code"/>
-        <result property="withdrawTotalMin" column="withdraw_total_min"/>
-        <result property="withdrawTotalMax" column="withdraw_total_max"/>
-        <result property="rate"             column="rate"/>
-        <result property="status"           column="status"/>
+        <result property="bankCode" column="bank_code" />
+        <result property="withdrawTotalMin" column="withdraw_total_min" />
+        <result property="withdrawTotalMax" column="withdraw_total_max" />
+        <result property="rate" column="rate" />
+        <result property="bcodeRate" column="bcode_rate" />
+        <result property="status" column="status" />
     </resultMap>
 
     <sql id="selectActivityWithdrawCashBackVo">
-        select bank_code, withdraw_total_min, withdraw_total_max, rate, status from activity_withdraw_cash_back
+        select bank_code, withdraw_total_min, withdraw_total_max, rate, bcode_rate, status
+        from activity_withdraw_cash_back
     </sql>
 
     <insert id="add">
         insert into activity_withdraw_cash_back
-            (bank_code, withdraw_total_min, withdraw_total_max, rate, status)
-        values
-            (#{bankCode}, #{withdrawTotalMin}, #{withdrawTotalMax}, #{rate}, #{status})
+            (bank_code, withdraw_total_min, withdraw_total_max, rate, bcode_rate, status)
+        values (#{bankCode}, #{withdrawTotalMin}, #{withdrawTotalMax}, #{rate}, #{bcodeRate}, #{status})
     </insert>
 
     <update id="update">
@@ -26,6 +27,7 @@
             <if test="withdrawTotalMin != null">withdraw_total_min = #{withdrawTotalMin},</if>
             <if test="withdrawTotalMax != null">withdraw_total_max = #{withdrawTotalMax},</if>
             <if test="rate != null">rate = #{rate},</if>
+            <if test="bcodeRate != null">bcode_rate = #{bcodeRate},</if>
             <if test="status != null">status = #{status},</if>
         </set>
         where bank_code = #{bankCode}
@@ -46,15 +48,23 @@
     </delete>
 
     <select id="selectByBankCode" resultMap="ActivityWithdrawCashBackResult">
-        <include refid="selectActivityWithdrawCashBackVo"/>
+        <include refid="selectActivityWithdrawCashBackVo" />
         where bank_code = #{bankCode}
     </select>
 
     <select id="list" resultMap="ActivityWithdrawCashBackResult">
-        <include refid="selectActivityWithdrawCashBackVo"/>
+        <include refid="selectActivityWithdrawCashBackVo" />
+        <where>
+            <if test="bankCode != null">bank_code = #{bankCode},</if>
+            <if test="withdrawTotalMin != null">withdraw_total_min = #{withdrawTotalMin},</if>
+            <if test="withdrawTotalMax != null">withdraw_total_max = #{withdrawTotalMax},</if>
+            <if test="status != null">status = #{status},</if>
+        </where>
     </select>
 
     <select id="getConfigBankList" resultType="com.qiqilm.server.admin.domain.ConfigBank">
-        select code, name from config_bank where code like '%pay'
+        select code, name
+        from config_bank
+        where code like '%pay'
     </select>
 </mapper>

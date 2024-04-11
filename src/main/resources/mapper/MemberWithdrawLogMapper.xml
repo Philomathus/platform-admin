@@ -4,63 +4,62 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiqilm.server.admin.mapper.MemberWithdrawLogMapper">
     <resultMap type="MemberWithdrawLog" id="MemberWithdrawLogResult">
-        <result property="id" column="id"/>
-        <result property="memberId" column="member_id"/>
-        <result property="withdrawMoney" column="withdraw_money"/>
-        <result property="bankName" column="bank_name"/>
-        <result property="bankAccount" column="bank_account"/>
-        <result property="bankCode" column="bank_code"/>
-        <result property="bankAddress" column="bank_address"/>
-        <result property="bankUserName" column="bank_user_name"/>
-        <result property="status" column="status"/>
-        <result property="type" column="type"/>
-        <result property="createTime" column="create_time"/>
-        <result property="opName" column="op_name"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="orderNo" column="order_no"/>
-        <result property="remark" column="remark"/>
-        <result property="account" column="account"/>
-        <result property="first" column="first"/>
-        <result property="rechargeWithdrawRate" column="recharge_withdraw_rate"/>
-        <result property="bankCharge" column="bank_charge"/>
-        <result property="realBankAddress" column="real_bank_address"/>
-        <result property="rechargeUserName" column="recharge_user_name"/>
-        <result property="rechargeCodeRatio" column="recharge_code_ratio"/>
+        <result property="id" column="id" />
+        <result property="memberId" column="member_id" />
+        <result property="withdrawMoney" column="withdraw_money" />
+        <result property="bankName" column="bank_name" />
+        <result property="bankAccount" column="bank_account" />
+        <result property="bankCode" column="bank_code" />
+        <result property="bankAddress" column="bank_address" />
+        <result property="bankUserName" column="bank_user_name" />
+        <result property="status" column="status" />
+        <result property="type" column="type" />
+        <result property="createTime" column="create_time" />
+        <result property="opName" column="op_name" />
+        <result property="updateTime" column="update_time" />
+        <result property="orderNo" column="order_no" />
+        <result property="remark" column="remark" />
+        <result property="account" column="account" />
+        <result property="first" column="first" />
+        <result property="rechargeWithdrawRate" column="recharge_withdraw_rate" />
+        <result property="bankCharge" column="bank_charge" />
+        <result property="realBankAddress" column="real_bank_address" />
+        <result property="rechargeUserName" column="recharge_user_name" />
+        <result property="rechargeCodeRatio" column="recharge_code_ratio" />
     </resultMap>
 
     <sql id="selectMemberWithdrawLogVo">
         select id,
-        member_id,
-        withdraw_money,
-        bank_name,
-        bank_account,
-        bank_code,
-        bank_address,
-        bank_user_name,
-        status,
-        type,
-        create_time,
-        op_name,
-        update_time,
-        order_no,
-        remark,
-        account,
-        first,
-        recharge_withdraw_rate,
-        bank_charge,
-        real_bank_address,
-        recharge_user_name,
-        recharge_code_ratio
+               member_id,
+               withdraw_money,
+               bank_name,
+               bank_account,
+               bank_code,
+               bank_address,
+               bank_user_name,
+               status,
+               type,
+               create_time,
+               op_name,
+               update_time,
+               order_no,
+               remark,
+               account,
+               first,
+               recharge_withdraw_rate,
+               bank_charge,
+               real_bank_address,
+               recharge_user_name,
+               recharge_code_ratio
         from `${dbMain}`.member_withdraw_log
     </sql>
 
     <sql id="selectMemberWithdrawLogShunWeiVo">
-        select
-        withdraw_money withdrawMoney,
-        bank_name bankName,
-        bank_account bankAccount,
-        bank_user_name bankUserName,
-        order_no orderNo
+        select withdraw_money withdrawMoney,
+               bank_name      bankName,
+               bank_account   bankAccount,
+               bank_user_name bankUserName,
+               order_no       orderNo
         from `${dbMain}`.member_withdraw_log
     </sql>
     <sql id="selectMember">
@@ -92,45 +91,45 @@
         </if>
     </sql>
     <select id="selectMemberWithdrawLogList" parameterType="MemberWithdrawLog" resultMap="MemberWithdrawLogResult">
-        <include refid="selectMemberWithdrawLogVo"/>
+        <include refid="selectMemberWithdrawLogVo" />
         <where>
-           <include refid="selectMember"></include>
+            <include refid="selectMember"></include>
             <if test="searchValue != null and searchValue != ''">
                 and order_no = #{searchValue}
             </if>
-            <if test="downLoadDate[0] != null "> and create_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>
-            <if test="downLoadDate[1] != null "> and create_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>
+            <if test="downLoadDate[0] != null ">and create_time <![CDATA[ >= ]]> '${downLoadDate[0]}'</if>
+            <if test="downLoadDate[1] != null ">and create_time <![CDATA[ <= ]]> '${downLoadDate[1]}'</if>
         </where>
         <if test="searchValue != null and searchValue != ''">
-        UNION
-        <include refid="selectMemberWithdrawLogVo"/>
-        <where>
-            <include refid="selectMember"></include>
-            <if test="searchValue != null and searchValue != ''">
-                and member_id = #{searchValue}
-            </if>
-        </where>
-        UNION
-        <include refid="selectMemberWithdrawLogVo"/>
-        <where>
-            <include refid="selectMember"></include>
-            <if test="searchValue != null and searchValue != ''">
-                and account = #{searchValue}
-            </if>
-        </where>
-        UNION
-        <include refid="selectMemberWithdrawLogVo"/>
-        <where>
-            <include refid="selectMember"></include>
-            <if test="searchValue != null and searchValue != ''">
-                and bank_user_name = #{searchValue}
-            </if>
-        </where>
+            UNION
+            <include refid="selectMemberWithdrawLogVo" />
+            <where>
+                <include refid="selectMember"></include>
+                <if test="searchValue != null and searchValue != ''">
+                    and member_id = #{searchValue}
+                </if>
+            </where>
+            UNION
+            <include refid="selectMemberWithdrawLogVo" />
+            <where>
+                <include refid="selectMember"></include>
+                <if test="searchValue != null and searchValue != ''">
+                    and account = #{searchValue}
+                </if>
+            </where>
+            UNION
+            <include refid="selectMemberWithdrawLogVo" />
+            <where>
+                <include refid="selectMember"></include>
+                <if test="searchValue != null and searchValue != ''">
+                    and bank_user_name = #{searchValue}
+                </if>
+            </where>
         </if>
     </select>
 
     <select id="selectMemberWithdrawLogById" parameterType="String" resultMap="MemberWithdrawLogResult">
-        <include refid="selectMemberWithdrawLogVo"/>
+        <include refid="selectMemberWithdrawLogVo" />
         where id = #{id}
     </select>
 
@@ -309,7 +308,7 @@
     </update>
 
     <select id="selectByOrderNo" resultMap="MemberWithdrawLogResult">
-        <include refid="selectMemberWithdrawLogVo"/>
+        <include refid="selectMemberWithdrawLogVo" />
         where order_no = #{orderNo}
     </select>
 
@@ -350,7 +349,7 @@
         select count(*) total ,sum(withdraw_money) successTotal from `${dbMain}`.member_withdraw_log
         <where>
             <include refid="whereTotal"></include>
-             and  (status = 3 or status = 6)
+            and (status = 3 or status = 6)
         </where>
     </sql>
     <select id="getTotal" parameterType="MemberWithdrawLog" resultType="java.util.Map">
@@ -380,8 +379,9 @@
         </foreach>
     </select>
 
-    <select id="selectMemberWithdrawLogShunWeiList" resultType="com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei">
-        <include refid="selectMemberWithdrawLogShunWeiVo"/>
+    <select id="selectMemberWithdrawLogShunWeiList"
+            resultType="com.qiqilm.server.admin.domain.MemberWithdrawLogShunWei">
+        <include refid="selectMemberWithdrawLogShunWeiVo" />
         where `status` <![CDATA[ <= ]]> 1 and id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
@@ -389,7 +389,11 @@
     </select>
 
     <select id="selectRegisterByMemberIds" resultType="com.qiqilm.server.admin.domain.MemberWithdrawLog">
-        select member_id,count(member_id) count FROM member_withdraw_log where status in ('3','6') and member_id in (${memberIds}) GROUP BY member_id
+        select member_id, count(member_id) count
+        FROM member_withdraw_log
+        where status in ('3', '6')
+          and member_id in (${memberIds})
+        GROUP BY member_id
     </select>
 
     <select id="selectPayAgentOrder" resultMap="MemberWithdrawLogResult">
@@ -416,18 +420,31 @@
         FROM `${dbMain}`.member_withdraw_log
         <where>
             <if test="opName != null and opName != ''">and op_name = #{opName}</if>
-            <if test="searchTime[0] != null and searchTime[0] != ''" > and update_time <![CDATA[ >= ]]> '${searchTime[0]}'</if>
-            <if test="searchTime[1] != null and searchTime[1] != ''"> and update_time <![CDATA[ <= ]]> '${searchTime[1]}'</if>
+            <if test="searchTime[0] != null and searchTime[0] != ''">and update_time <![CDATA[ >= ]]>
+                '${searchTime[0]}'
+            </if>
+            <if test="searchTime[1] != null and searchTime[1] != ''">and update_time <![CDATA[ <= ]]>
+                '${searchTime[1]}'
+            </if>
         </where>
         GROUP BY
         STATUS,
         op_name
     </select>
     <select id="countAll" resultType="java.lang.Integer">
-        select
-            count(*) numberTotal
-        from
-            `${dbMain}`.member_withdraw_log
+        select count(*) numberTotal
+        from `${dbMain}`.member_withdraw_log
         where create_time between timestamp(current_date) and now();
+    </select>
+
+    <select id="groupByBankCodeSumMoneyYesterday"
+            resultType="com.qiqilm.server.admin.domain.vo.MemberSumWithdraw">
+        select member_id memberId,bank_code bankCode, sum(withdraw_money) money from member_withdraw_log where
+        create_time >= DATE_ADD(CURDATE(), INTERVAL - 1 DAY)
+        AND create_time <![CDATA[ <= ]]> DATE_ADD(CURDATE(), INTERVAL 0 DAY) and `status` in (3, 6) and bank_code in
+        <foreach item="bankCode" collection="array" open="(" separator="," close=")">
+            #{bankCode}
+        </foreach>
+        GROUP BY member_id,bank_code
     </select>
 </mapper>

@@ -2,15 +2,20 @@ package com.qiqilm.server.admin.task;
 
 import com.qiqilm.server.admin.cache.SysConfigCacheUtil;
 import com.qiqilm.server.admin.domain.ActivityCashBack;
+import com.qiqilm.server.admin.domain.ActivityWithdrawCashBack;
 import com.qiqilm.server.admin.domain.MemberBcode;
 import com.qiqilm.server.admin.domain.MemberInfo;
 import com.qiqilm.server.admin.domain.vo.MemberSumRecharge;
+import com.qiqilm.server.admin.domain.vo.MemberSumWithdraw;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogService;
-import com.qiqilm.server.admin.utils.*;
+import com.qiqilm.server.admin.utils.DateFormatUtils;
+import com.qiqilm.server.admin.utils.JsonUtil;
+import com.qiqilm.server.admin.utils.RedisUtil;
+import com.qiqilm.server.admin.utils.SpringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,6 +26,8 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 充值返现活动
@@ -29,21 +36,25 @@ import java.util.List;
 @Component
 public class MemberCashBackTask {
     @Resource
-    private MemberRechargeLogMapper memberRechargeLogMapper;
+    private MemberRechargeLogMapper        memberRechargeLogMapper;
     @Resource
-    private ActivityCashBackMapper  activityCashBackMapper;
+    private MemberWithdrawLogMapper        memberWithdrawLogMapper;
     @Resource
-    private MemberBcodeMapper       memberBcodeMapper;
+    private ActivityCashBackMapper         activityCashBackMapper;
     @Resource
-    private MemberInfoMapper        memberInfoMapper;
+    private ActivityWithdrawCashBackMapper activityWithdrawCashBackMapper;
     @Resource
-    private LogMoneyMapper          logMoneyMapper;
+    private MemberBcodeMapper              memberBcodeMapper;
     @Resource
-    private SysConfigCacheUtil      sysConfigCacheUtil;
+    private MemberInfoMapper               memberInfoMapper;
     @Resource
-    private ILogService             logService;
+    private LogMoneyMapper                 logMoneyMapper;
     @Resource
-    private RedisUtil               redisUtil;
+    private SysConfigCacheUtil             sysConfigCacheUtil;
+    @Resource
+    private ILogService                    logService;
+    @Resource
+    private RedisUtil                      redisUtil;
 
     @Scheduled( cron = "0 58 15 * * ?" )// 每天15:58点执行一次
     @Scheduled( cron = "0 58 16 * * ?" )// 每天16:58点执行一次
@@ -123,5 +134,73 @@ public class MemberCashBackTask {
         if ( i <= 0 || j <= 0 ) {
             throw new BusinessException( "数据插入失败" );
         }
+    }
+
+    @Scheduled( cron = "0 58 15 * * ?" )// 每天15:58点执行一次
+    @Scheduled( cron = "0 58 16 * * ?" )// 每天16:58点执行一次
+    public void withdrawCashBackTask() {
+        int cashBackSwitch = sysConfigCacheUtil.getConfInt( "withdraw_cash_back_switch" );
+        if ( cashBackSwitch <= 0 ) {
+            return;
+        }
+        if ( !redisUtil.adminLock( EnumLock.adminTask, getClass().getSimpleName() + "Withdraw", 1000 ) ) {
+            return;
+        }
+        log.info( "开始执行提现返现活动任务" );
+        ActivityWithdrawCashBack query = new ActivityWithdrawCashBack();
+        query.setStatus( 1 );
+        List<ActivityWithdrawCashBack> activityWithdrawCashBackList = activityWithdrawCashBackMapper.list( query );
+
+        Set<String> bankCodes = activityWithdrawCashBackList
+                .stream()
+                .map( ActivityWithdrawCashBack::getBankCode )
+                .collect( Collectors.toSet() );
+
+        List<MemberSumWithdraw> memberSumWithdraws = memberWithdrawLogMapper.groupByBankCodeSumMoneyYesterday( bankCodes );
+
+        for ( MemberSumWithdraw sumWithdraw : memberSumWithdraws ) {
+            BigDecimal rate  = null;
+            BigDecimal bcode = null;
+            for ( ActivityWithdrawCashBack activityCashBack : activityWithdrawCashBackList ) {
+                if ( sumWithdraw.getBankCode().equalsIgnoreCase( activityCashBack.getBankCode() )
+                        && new BigDecimal( activityCashBack.getWithdrawTotalMin() ).compareTo( sumWithdraw.getMoney() ) <= 0
+                        && new BigDecimal( activityCashBack.getWithdrawTotalMax() ).compareTo( sumWithdraw.getMoney() ) > 0 ) {
+                    rate  = activityCashBack.getRate();
+                    bcode = activityCashBack.getBcodeRate();
+                }
+            }
+            if ( rate == null ) {
+                log.warn( "执行充值返现活动任务 - 未达到提现标准的会员:{}, 金额:{}, 银行编码:{}", sumWithdraw.getMemberId(), sumWithdraw.getMoney(),
+                        sumWithdraw.getBankCode() );
+                continue;
+            }
+            String memberIdW_ = sumWithdraw.getMemberId().replace( "_", "" );
+            String dbNodes    = sumWithdraw.getMemberId().substring( sumWithdraw.getMemberId().length() - 1 );
+
+            String orderId =
+                    "TXFX" + DateFormatUtils.formate( new Date(), DateFormatUtils.TIGHT_PATTERN_DATE ) + sumWithdraw.getBankCode()
+                            + memberIdW_;
+            if ( logMoneyMapper.findExist( dbNodes, orderId ) != null ) {
+                log.error( "执行提现返现活动任务 - 存在提现返现记录的会员:{}, 金额:{}, 银行编码:{}", sumWithdraw.getMemberId(), sumWithdraw.getMoney(),
+                        sumWithdraw.getBankCode() );
+                continue;
+            }
+            try {
+                SpringUtils
+                        .getAopProxy( this )
+                        .updateMemberWithdraw( sumWithdraw.getMemberId(), sumWithdraw.getMoney(), rate, bcode,
+                                EnumMoney.activity.getDes(), orderId );
+            } catch ( Exception e ) {
+                log.error( sumWithdraw.getMemberId() + "数据插入失败" + e.getMessage(), e );
+                log.error( "执行提现返现活动任务 - 提现失败的会员:{}, 金额:{}, 银行编码:{}", sumWithdraw.getMemberId(), sumWithdraw.getMoney(),
+                        sumWithdraw.getBankCode() );
+            }
+        }
+    }
+
+    @Transactional( rollbackFor = Exception.class )
+    public void updateMemberWithdraw( String memberId, BigDecimal money, BigDecimal rate, BigDecimal bcode, String des,
+                                      String orderId ) {
+
     }
 }
