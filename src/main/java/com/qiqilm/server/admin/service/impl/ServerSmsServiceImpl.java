@@ -39,13 +39,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -427,6 +425,31 @@ public class ServerSmsServiceImpl implements IServerSmsService {
         return null;
     }
 
+    private String sendSmsBao( ServerSms serverSms, String phone ) {
+
+        try {
+            String code = createCode();
+            String httpArg = "u=" + serverSms.getAppKey() + "&" +
+                    "p=" + serverSms.getAppAccess() + "&" +
+                    "m=" + phone + "&" +
+                    "c=" + "【诗顾兔】您的验证码是 " + code  + "。如非本人操作，请忽略本短信";
+
+            String httpUrl = serverSms.getEndpoint() + "?" + httpArg;
+
+            ResponseEntity<Object> responseEntity = restTemplate.getForEntity(
+                    httpUrl, Object.class );
+            Object returnCode = responseEntity.getBody();
+
+            if ( ! Objects.isNull( returnCode ) && org.apache.commons.lang3.StringUtils.isNotBlank( returnCode.toString() ) && "0".equals( returnCode.toString() ) ) {
+                log.info( "send code success {} " ,  code  );
+                return "【诗顾兔】您的验证码是 " + code  + "。如非本人操作，请忽略本短信";
+            }
+            return  null;
+        } catch (Exception e) {
+            log.error( e.getMessage() );
+        }
+        return null;
+    }
 
     private String createCode() {
         StringBuilder code = new StringBuilder();

@@ -808,7 +808,9 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
 
         WithdrawReport withdrawReportp = new WithdrawReport();
         withdrawReportp.setClass_twoname( "充值总的金额" );
-        withdrawReportp.setT_value( rspMemberInfo7.getTotalincom() );
+        BigDecimal rechargeAmount = new BigDecimal( rspMemberInfo13.getUsdtrechargemoney() );
+        BigDecimal totalAmount    = new BigDecimal( rspMemberInfo7.getTotalincom() );
+        withdrawReportp.setT_value( totalAmount.add( rechargeAmount ).toString() );
         withdrawReports.add( withdrawReportp );
 
         WithdrawReport withdrawReportq = new WithdrawReport();

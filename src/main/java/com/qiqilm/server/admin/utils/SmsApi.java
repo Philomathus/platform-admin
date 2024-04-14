@@ -39,10 +39,7 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j2
 @Component
@@ -90,6 +87,9 @@ public class SmsApi {
                 break;
             case 4:
                 msg = this.sendSmsYunJi( serverSms, phone, msg );
+                break;
+            case 5:
+                msg = this.sendSmsBao( serverSms, phone, msg );
                 break;
             default:
                 throw new BusinessException( "不支持的短信运营商类型" );
@@ -317,6 +317,31 @@ public class SmsApi {
             throw new RuntimeException( e.getMessage(), e );
         }
 
+        return null;
+    }
+
+    private String sendSmsBao( ServerSms serverSms, String phone , String code ) {
+
+        try {
+            String httpArg = "u=" + serverSms.getAppKey() + "&" +
+                    "p=" + serverSms.getAppAccess() + "&" +
+                    "m=" + phone + "&" +
+                    "c=" + "【诗顾兔】您的验证码是 " + code  + "。如非本人操作，请忽略本短信";
+
+            String httpUrl = serverSms.getEndpoint() + "?" + httpArg;
+
+            ResponseEntity<Object> responseEntity = restTemplate.getForEntity(
+                    httpUrl, Object.class );
+            Object returnCode = responseEntity.getBody();
+
+            if ( ! Objects.isNull( returnCode ) && org.apache.commons.lang3.StringUtils.isNotBlank( returnCode.toString() ) && "0".equals( returnCode.toString() ) ) {
+                log.info( "send code success {} " ,  code  );
+                return "【诗顾兔】您的验证码是 " + code  + "。如非本人操作，请忽略本短信";
+            }
+            return  null;
+        } catch (Exception e) {
+            log.error( e.getMessage() );
+        }
         return null;
     }
 
