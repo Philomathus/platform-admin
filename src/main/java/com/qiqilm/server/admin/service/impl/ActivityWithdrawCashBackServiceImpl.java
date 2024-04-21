@@ -15,33 +15,35 @@ public class ActivityWithdrawCashBackServiceImpl implements IActivityWithdrawCas
     ActivityWithdrawCashBackMapper mapper;
 
     @Override
-    public ActivityWithdrawCashBack selectByBankCode(String bankCode) {
-        return mapper.selectByBankCode(bankCode);
+    public ActivityWithdrawCashBack selectById( Integer id ) {
+        return mapper.selectById( id );
     }
 
     @Override
-    public List<ActivityWithdrawCashBack> list(ActivityWithdrawCashBack req) {
-        return mapper.list(req);
+    public List<ActivityWithdrawCashBack> list( ActivityWithdrawCashBack req ) {
+        return mapper.list( req );
     }
 
     @Override
-    public int deleteByBankCodes(List<String> bankCodes) {
-        return mapper.deleteByBankCodes(bankCodes);
+    public int deleteByBankCodes( List<String> bankCodes ) {
+        return mapper.deleteByIds( bankCodes );
     }
 
     @Override
-    public int add(ActivityWithdrawCashBack req) {
-        return mapper.add(req);
+    public int add( ActivityWithdrawCashBack req ) {
+        req.setStatus( 0 );
+        return mapper.add( req );
     }
 
     @Override
-    public int update(ActivityWithdrawCashBack req) {
-        return mapper.update(req);
+    public int update( ActivityWithdrawCashBack req ) {
+        req.setStatus( null );
+        return mapper.update( req );
     }
 
     @Override
-    public int updateStatus(ActivityWithdrawCashBack req) {
-        return mapper.updateStatus(req);
+    public int updateStatus( ActivityWithdrawCashBack req ) {
+        return mapper.updateStatus( req );
     }
 
     @Override

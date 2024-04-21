@@ -25,9 +25,9 @@ public class ActivityWithdrawCashBackController extends BaseController {
         return getDataTable( service.list( req ) );
     }
 
-    @GetMapping( value = "/{bankCode}" )
-    public AjaxResult getInfo( @PathVariable( "bankCode" ) String bankCode ) {
-        return AjaxResult.success( service.selectByBankCode( bankCode ) );
+    @GetMapping( value = "/{id}" )
+    public AjaxResult getInfo( @PathVariable( "id" ) Integer id ) {
+        return AjaxResult.success( service.selectById( id ) );
     }
 
     @PostMapping

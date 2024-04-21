@@ -221,6 +221,8 @@ public class ServerSmsServiceImpl implements IServerSmsService {
             return this.sendSmsHuawei( serverSms, phone );
         case 4:
             return this.sendSmsYunJi( serverSms, phone );
+        case 5:
+            return this.sendSmsBao( serverSms, phone );
         }
         return null;
     }

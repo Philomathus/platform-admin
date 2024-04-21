@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
@@ -186,10 +187,10 @@ public class MemberCashBackTask {
                 continue;
             }
             try {
+                BigDecimal money = sumWithdraw.getMoney().multiply( rate ).setScale( 2, RoundingMode.HALF_DOWN );
                 SpringUtils
                         .getAopProxy( this )
-                        .updateMemberWithdraw( sumWithdraw.getMemberId(), sumWithdraw.getMoney(), rate, bcode,
-                                EnumMoney.activity.getDes(), orderId );
+                        .updateMemberWithdraw( sumWithdraw.getMemberId(), money, bcode, EnumMoney.activity.getDes(), orderId );
             } catch ( Exception e ) {
                 log.error( sumWithdraw.getMemberId() + "数据插入失败" + e.getMessage(), e );
                 log.error( "执行提现返现活动任务 - 提现失败的会员:{}, 金额:{}, 银行编码:{}", sumWithdraw.getMemberId(), sumWithdraw.getMoney(),
@@ -199,8 +200,28 @@ public class MemberCashBackTask {
     }
 
     @Transactional( rollbackFor = Exception.class )
-    public void updateMemberWithdraw( String memberId, BigDecimal money, BigDecimal rate, BigDecimal bcode, String des,
-                                      String orderId ) {
+    public void updateMemberWithdraw( String userId, BigDecimal money, BigDecimal bcode, String chargeType, String orderId ) {
+        if ( bcode != null && bcode.compareTo( BigDecimal.ZERO ) > 0 ) {
+            MemberBcode codeFlow = new MemberBcode();
+            codeFlow.setId( orderId );
+            codeFlow.setIncome( money.multiply( bcode ).setScale( 2, RoundingMode.HALF_DOWN ) );
+            codeFlow.setCreateTime( new Date() );
+            codeFlow.setStatus( 0 );
+            codeFlow.setCur( BigDecimal.ZERO );
+            codeFlow.setUserId( userId );
+            codeFlow.setDes( chargeType );
 
+            int i = memberBcodeMapper.insertMemberBcode( codeFlow );
+            if ( i <= 0 ) {
+                throw new BusinessException( "数据插入失败" );
+            }
+        }
+        MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( userId );
+        logService.logMoneyAdd( orderId, userId, memberInfo.getUserName(), EnumMoney.activity, money,
+                memberInfo.getTotalAccount(), "提现返现活动", null );
+        int j = memberInfoMapper.updateMoneySelect( userId, money, null, money, null, null );
+        if ( j <= 0 ) {
+            throw new BusinessException( "数据插入失败" );
+        }
     }
 }
