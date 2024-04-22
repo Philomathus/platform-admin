@@ -17,7 +17,6 @@
 		<result property="anchor" column="anchor"/>
 		<result property="code" column="code"/>
 		<result property="betTime" column="bet_time"/>
-		<result property="updateTime" column="update_time"/>
 	</resultMap>
 
 	<select id="selectLotteryBet0List" parameterType="LotteryBet0" resultMap="LotteryBet0Result">
@@ -114,7 +113,7 @@
 
 	<sql id="Base_Column_List">
 		id,lottery_id,puser_id,issue,status,method_id,bet_select,bet_ids,chip,prize,cost,lottery_name,
-		anchor,code,bet_time,FROM_UNIXTIME(update_time) update_time
+		anchor,code,bet_time
 	</sql>
 
 	<sql id="whereSelect">

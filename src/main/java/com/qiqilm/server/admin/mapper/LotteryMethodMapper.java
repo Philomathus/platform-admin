@@ -1,8 +1,10 @@
 package com.qiqilm.server.admin.mapper;
 
-import java.util.List;
-
 import com.qiqilm.server.admin.domain.LotteryMethod;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 彩票种类Mapper接口
@@ -12,12 +14,14 @@ import com.qiqilm.server.admin.domain.LotteryMethod;
  */
 public interface LotteryMethodMapper {
 
-	/**
-	 * 查询彩票种类列表
-	 *
-	 * @param lotteryMethod 彩票种类
-	 * @return 彩票种类集合
-	 */
-	public List<LotteryMethod> selectLotteryMethodList(LotteryMethod lotteryMethod);
+    /**
+     * 查询彩票种类列表
+     *
+     * @param lotteryMethod 彩票种类
+     *
+     * @return 彩票种类集合
+     */
+    public List<LotteryMethod> selectLotteryMethodList( LotteryMethod lotteryMethod );
 
+    List<LotteryMethod> selectByBatchId( @Param( "array" ) Collection<String> methodIds );
 }

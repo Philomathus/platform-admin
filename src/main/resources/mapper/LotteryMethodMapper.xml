@@ -23,4 +23,11 @@
             <if test="ind != null "> and ind = #{ind}</if>
         </where>
     </select>
+    <select id="selectByBatchId" resultMap="LotteryMethodResult">
+        <include refid="selectLotteryMethodVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

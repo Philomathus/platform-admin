@@ -100,6 +100,8 @@ public class LotteryBet0 extends BaseEntity {
 	@JsonIgnore
 	private String priceMax;
 
+	private String methodStr;
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder( this, ToStringStyle.MULTI_LINE_STYLE )
