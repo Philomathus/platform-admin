@@ -14,6 +14,7 @@ import com.qiqilm.server.admin.service.ILotteryBet0Service;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,13 +53,15 @@ public class LotteryBet0Controller extends BaseController {
     @GetMapping( "/list" )
     public TableDataInfo list( LotteryBet0 lotteryBet0 ) {
         startPage();
-        List<LotteryBet0>   list              = lotteryBet0Service.selectLotteryBet0List( lotteryBet0 );
-        Set<String>         methodIds         = list.stream().map( LotteryBet0::getMethodId ).collect( Collectors.toSet() );
-        List<LotteryMethod> lotteryMethodList = lotteryMethodMapper.selectByBatchId( methodIds );
-        for ( LotteryBet0 bet : list ) {
-            for ( LotteryMethod lotteryMethod : lotteryMethodList ) {
-                if ( bet.getMethodId().equals( lotteryMethod.getId() ) ) {
-                    bet.setMethodStr( lotteryMethod.getName() );
+        List<LotteryBet0> list = lotteryBet0Service.selectLotteryBet0List( lotteryBet0 );
+        if ( !CollectionUtils.isEmpty( list ) ) {
+            Set<String>         methodIds         = list.stream().map( LotteryBet0::getMethodId ).collect( Collectors.toSet() );
+            List<LotteryMethod> lotteryMethodList = lotteryMethodMapper.selectByBatchId( methodIds );
+            for ( LotteryBet0 bet : list ) {
+                for ( LotteryMethod lotteryMethod : lotteryMethodList ) {
+                    if ( bet.getMethodId().equals( lotteryMethod.getId() ) ) {
+                        bet.setMethodStr( lotteryMethod.getName() );
+                    }
                 }
             }
         }
