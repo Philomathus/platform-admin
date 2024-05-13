@@ -214,7 +214,7 @@ public class LiveUserController extends BaseController {
             return rspBase;
         }
 
-        if( StringUtils.isEmpty(  liveUser.getUserPass() )){
+        if ( StringUtils.isEmpty( liveUser.getUserPass() ) ) {
             rspBase.setMsg( "请输入密码验证码" );
             rspBase.setCode( 1 );
             return rspBase;
@@ -231,7 +231,6 @@ public class LiveUserController extends BaseController {
         liveUserService.updateLiveUser( liveUser );
         return new RspBase();
     }
-
 
 
     /**
@@ -288,6 +287,16 @@ public class LiveUserController extends BaseController {
         newLiveUser.setYpoint( liveUser.getYpoint() );
         newLiveUser.setWeiboMoney( liveUser.getWeiboMoney() );
         newLiveUser.setWeixinPrice( liveUser.getWeixinPrice() );
+        return toAjax( liveUserService.updateLiveUser( newLiveUser ) );
+    }
+
+    @PreAuthorize( "@ss.hasPermi('admin:liveUser:edit')" )
+    @Log( title = "更改收费开关", businessType = BusinessType.UPDATE )
+    @PutMapping( "/openPay" )
+    public AjaxResult openPay( @RequestBody LiveUser liveUser ) {
+        LiveUser newLiveUser = new LiveUser();
+        newLiveUser.setId( liveUser.getId() );
+        newLiveUser.setOpenPay( liveUser.getOpenPay() );
         return toAjax( liveUserService.updateLiveUser( newLiveUser ) );
     }
 
