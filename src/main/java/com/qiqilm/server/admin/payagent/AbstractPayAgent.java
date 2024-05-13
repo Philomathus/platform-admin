@@ -11,6 +11,7 @@ import com.qiqilm.server.admin.service.IPayAgentService;
 import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -45,6 +46,9 @@ public abstract class AbstractPayAgent implements BasePayAgent {
 	protected SysConfigCacheUtil      sysConfigCacheUtil;
 
 	public static final String SECRET_PAYAGENT_KEY;
+
+	@Value( "${spring.profiles.active}" )
+	protected String profile;
 
 	static {
 		try {

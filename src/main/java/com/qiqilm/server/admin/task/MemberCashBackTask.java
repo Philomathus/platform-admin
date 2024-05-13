@@ -159,6 +159,7 @@ public class MemberCashBackTask {
 
         List<MemberSumWithdraw> memberSumWithdraws = memberWithdrawLogMapper.groupByBankCodeSumMoneyYesterday( bankCodes );
 
+        log.warn( "执行提现返现活动任务 - 昨日提现会员:{}", JsonUtil.object2Json( memberSumWithdraws ) );
         for ( MemberSumWithdraw sumWithdraw : memberSumWithdraws ) {
             BigDecimal rate  = null;
             BigDecimal bcode = null;
@@ -171,7 +172,7 @@ public class MemberCashBackTask {
                 }
             }
             if ( rate == null ) {
-                log.warn( "执行充值返现活动任务 - 未达到提现标准的会员:{}, 金额:{}, 银行编码:{}", sumWithdraw.getMemberId(), sumWithdraw.getMoney(),
+                log.warn( "执行提现返现活动任务 - 未达到提现标准的会员:{}, 金额:{}, 银行编码:{}", sumWithdraw.getMemberId(), sumWithdraw.getMoney(),
                         sumWithdraw.getBankCode() );
                 continue;
             }

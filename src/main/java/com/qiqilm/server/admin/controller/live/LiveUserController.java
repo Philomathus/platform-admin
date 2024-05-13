@@ -268,7 +268,7 @@ public class LiveUserController extends BaseController {
         newLiveUser.setIsAuthentication( liveUser.getIsAuthentication() );
         newLiveUser.setVExplain( liveUser.getVExplain() );
         newLiveUser.setInvestorSendInfo( liveUser.getInvestorSendInfo() );
-        newLiveUser.setOpenPay( liveUser.getOpenPay() );
+        newLiveUser.setOpenPay( null );
         newLiveUser.setCoin( liveUser.getCoin() );
         if ( liveUser.getXpoint() != null ) {
             BigDecimal ticketCattyRatio = sysConfigCacheUtil.getConfBd( "ticket_catty_ratio" );

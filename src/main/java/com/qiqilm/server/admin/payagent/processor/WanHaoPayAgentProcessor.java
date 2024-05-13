@@ -32,7 +32,7 @@ public class WanHaoPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "bank_name", withdrawLog.getBankName().trim() );
         bodyMap.put( "acct_name", withdrawLog.getBankUserName().trim() );
         bodyMap.put( "acct_no", withdrawLog.getBankAccount().trim() );
-        bodyMap.put( "open_name", withdrawLog.getBankAddress().trim() );
+        bodyMap.put( "open_name", withdrawLog.getBankAddress() );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String signStr = bodyMap.get( "mch_id" ) + "&" + bodyMap.get( "out_trade_no" ) + "&" + bodyMap.get( "money" ) + "&"
