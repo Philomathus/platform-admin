@@ -1,6 +1,9 @@
 package com.qiqilm.server.admin.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.qiqilm.server.admin.utils.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qiqilm.server.admin.mapper.MessageOnSiteMapper;
@@ -49,6 +52,20 @@ public class MessageOnSiteServiceImpl implements IMessageOnSiteService {
     @Override
     public int insertMessageOnSite(MessageOnSite messageOnSite) {
         return messageOnSiteMapper.insertMessageOnSite(messageOnSite);
+    }
+
+    @Override
+    public int insertMultipleMessageOnSite(MessageOnSite messageOnSite) {
+        String[] ids = messageOnSite.getToUserId().split( "," );
+        messageOnSite.setPubdatetime( new Date() );
+        messageOnSite.setReceiverType( "ALL_MEMBER" );
+        messageOnSite.setAction( "DIALOG" );
+        for ( String id : ids ) {
+            messageOnSite.setId( UuidUtil.getRandomUuidWithoutSeparator() );
+            messageOnSite.setToUserId( id );
+            messageOnSiteMapper.insertMessageOnSite(messageOnSite);
+        }
+        return 1;
     }
 
     /**

@@ -34,6 +34,7 @@ public interface IMessageOnSiteService {
 	 * @return 结果
 	 */
 	public int insertMessageOnSite(MessageOnSite messageOnSite);
+	public int insertMultipleMessageOnSite(MessageOnSite messageOnSite);
 
 	/**
 	 * 修改站内信息

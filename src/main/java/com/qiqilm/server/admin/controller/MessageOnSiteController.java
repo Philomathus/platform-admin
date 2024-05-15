@@ -123,15 +123,6 @@ public class MessageOnSiteController extends BaseController {
         if ( StringUtils.isBlank( messageOnSite.getToUserId() ) ) {
             return AjaxResult.error( "请输入会员ID" );
         }
-        String[] ids = messageOnSite.getToUserId().split( "," );
-        messageOnSite.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-        messageOnSite.setPubdatetime( new Date() );
-        messageOnSite.setReceiverType( "ALL_MEMBER" );
-        messageOnSite.setAction( "DIALOG" );
-        for ( String id : ids ) {
-            messageOnSite.setToUserId( id );
-            messageOnSiteService.insertMessageOnSite( messageOnSite );
-        }
-        return AjaxResult.success();
+        return AjaxResult.success( messageOnSiteService.insertMultipleMessageOnSite( messageOnSite ) );
     }
 }

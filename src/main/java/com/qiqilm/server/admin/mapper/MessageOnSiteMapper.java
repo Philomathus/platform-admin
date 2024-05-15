@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.mapper;
 import java.util.List;
 
 import com.qiqilm.server.admin.domain.MessageOnSite;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 站内信息Mapper接口
@@ -34,6 +35,7 @@ public interface MessageOnSiteMapper {
 	 * @return 结果
 	 */
 	public int insertMessageOnSite(MessageOnSite messageOnSite);
+
 
 	/**
 	 * 修改站内信息
