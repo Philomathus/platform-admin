@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="receiverType != null  and receiverType != ''"> and receiver_type = #{receiverType}</if>
             <if test="receiver != null  and receiver != ''"> and receiver = #{receiver}</if>
             <if test="action != null  and action != ''"> and action = #{action}</if>
+            <if test="toUserId != null  and toUserId != ''"> and to_user_id = #{toUserId}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 and date_format(pubDateTime,'%y%m%d') <![CDATA[ >= ]]> date_format(#{params.beginTime},'%y%m%d')
             </if>
