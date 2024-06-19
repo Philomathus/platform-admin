@@ -344,4 +344,5 @@ public abstract class ConstantsPayAgent {
     public static final String LONG_TENG_PAY     = "longTengPay";
     public static final String BS_PAY            = "bsPay";
     public static final String LE_HONG_PAY       = "leHongPay";
+    public static final String AFU_PAY           = "afuPay";
 }
