@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiqilm.server.admin.mapper.LogMoneyMonthlyMapper">
+    <resultMap type="LogMoney" id="LogMoneyResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="type" column="type"/>
+        <result property="des" column="des"/>
+        <result property="income" column="income"/>
+        <result property="pay" column="pay"/>
+        <result property="total" column="total"/>
+        <result property="createTime" column="create_time"/>
+        <result property="totalBefore" column="total_before"/>
+        <result property="mark" column="mark"/>
+        <result property="markorder" column="markorder"/>
+        <result property="agent" column="agent"  />
+    </resultMap>
+
+    <sql id="selectLogMoneyVo">
+        select id,
+               user_id,
+               user_name,
+               type,
+               des,
+               income,
+               pay,
+               total,
+               create_time,
+               total_before,
+               mark,
+               markorder
+        from ${dbMain}.log_money${tableLast}
+    </sql>
+
+    <sql id="whereSelect">
+        <if test="searchValue != null  and searchValue != ''">
+            and user_id = #{searchValue}
+        </if>
+        <if test="userName != null  and userName != ''">
+            and user_name = #{userName}
+        </if>
+        <if test="types != null and types.length != 0">
+            and type in
+            <foreach item="id" collection="types" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="startTime != null">
+            and create_time <![CDATA[ >= ]]>  #{startTime} and create_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="mark != null  and mark != ''">
+            and mark like concat('%', #{mark}, '%')
+        </if>
+    </sql>
+
+    <select id="selectLogMonthlyList" parameterType="LogMoney" resultMap="LogMoneyResult">
+        <include refid="selectLogMoneyVo"/>
+        <where>
+            <include refid="whereSelect" />
+        </where>
+    </select>
+
+    <select id="totalMonthlyCount" parameterType="LogMoney" resultType="java.util.Map">
+        select ifnull(sum(income),0) as totalIncome,
+        ifnull(sum(pay),0) as totalPay
+        from ${dbMain}.log_money${tableLast}
+        <where>
+            <include refid="whereSelect"/>
+        </where>
+    </select>
+
+    <select id="listMonthlyCount" parameterType="LogMoney" resultType="java.util.Map">
+        select SUM(income)-SUM(pay) as totalIncome from ${dbMain}.log_money${tableLast}
+        <where>
+            <include refid="whereSelect" />
+        </where>
+    </select>
+</mapper>
