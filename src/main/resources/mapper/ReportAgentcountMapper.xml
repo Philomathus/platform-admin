@@ -35,7 +35,6 @@
         <include refid="selectReportAgentcountVo"/>
         <where>
             <if test="agentcode != null  and agentcode != ''"> and agentcode = #{agentcode}</if>
-            <if test="agentname != null  and agentname != ''"> and agentname like concat('%', #{agentname}, '%')</if>
             <if test="agenttime != null and agenttime != ''"><!-- 开始时间检索 -->
               and  agenttime = #{agenttime}
             </if>
