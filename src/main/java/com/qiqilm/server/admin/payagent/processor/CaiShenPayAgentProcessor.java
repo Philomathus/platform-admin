@@ -49,7 +49,7 @@ public class CaiShenPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("acc_name", acc_name);
         bodyMap.put("amount", amount);
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
-        bodyMap.put("ext1", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.CAISHEN);
+        bodyMap.put("ext1", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String tempSign = "md5="+signMd5 + "&" + "merchant_no=" + merchant_no + "&" + "tran_flow="
                 + tran_flow + "&" + "amount=" + amount + "&" + "acc_no=" + acc_no + "&"

@@ -42,7 +42,7 @@ public class JiuJiuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("uid", UUID.randomUUID().toString().replace("-", ""));
         bodyMap.put("attach", "attach");
         bodyMap.put("sendtype", "POST");
-        bodyMap.put("callbackurl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JIUJIU);
+        bodyMap.put("callbackurl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put("cardno", withdrawLog.getBankAccount().trim());
         bodyMap.put("bankname", withdrawLog.getBankName().trim());
         bodyMap.put("payee", withdrawLog.getBankUserName().trim());

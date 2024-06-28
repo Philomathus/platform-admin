@@ -45,7 +45,7 @@ public class XinShiJiPayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "cardnumber", withdrawLog.getBankAccount().trim() );
 		bodyMap.put( "province", "广东省" );
 		bodyMap.put( "city", "广州市" );
-		bodyMap.put( "notifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.NEWSHIJI );
+		bodyMap.put( "notifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 

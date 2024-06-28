@@ -47,7 +47,7 @@ public class LeLePayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("accountOwner", accountOwner);
         bodyMap.put("accountRemark", accountRemark);
         bodyMap.put("currency", "CNY");
-        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.LELE);
+        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         log.info("请求报文:"+JsonUtil.object2Json(bodyMap));
 

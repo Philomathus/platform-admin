@@ -52,7 +52,7 @@ public class FeiYuePayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "bankAccount", withdrawLog.getBankUserName().trim() );
 		bodyMap.put( "subbranchProvince", "中国" );
 		bodyMap.put( "orderScore", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ).toString() );
-		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.FEI_YUE );
+		bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		String signStr = this.assemblyUrl( bodyMap ) + signMd5;
 

@@ -41,7 +41,7 @@ public class QuanFuPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "accountName", STR2HEX( withdrawLog.getBankUserName() ) );
         dataMap.put( "cnaps", "308290003298" );
         dataMap.put( "accountType", "1" );
-        dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.QUANFU );
+        dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( dataMap ) + "&key=" + signMd5;

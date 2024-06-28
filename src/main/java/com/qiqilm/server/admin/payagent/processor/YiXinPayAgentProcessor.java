@@ -53,7 +53,7 @@ public class YiXinPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("bank_province", "广东省");
         dataMap.put("bank_city", "广州市");
         dataMap.put("bank_name", withdrawLog.getBankName());
-        dataMap.put("call_back_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.YIXIN);
+        dataMap.put("call_back_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;

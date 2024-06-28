@@ -37,7 +37,7 @@ public class FaCaiLePayAgentProcessor extends AbstractPayAgent {
         dataMap.put("bank", withdrawLog.getBankName());
         dataMap.put("branch", withdrawLog.getBankName());
         dataMap.put("bank_card", withdrawLog.getBankAccount());
-        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.FACAILE);
+        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put("time", System.currentTimeMillis() / 1000);
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);

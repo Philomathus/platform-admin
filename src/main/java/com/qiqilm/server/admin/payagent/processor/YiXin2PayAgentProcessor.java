@@ -56,7 +56,7 @@ public class YiXin2PayAgentProcessor extends AbstractPayAgent {
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         dataMap.put("sign", sign);
         dataMap.put("bank_code", withdrawLog.getBankCode());
-        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.YIXIN2);
+        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put("channel", "SK1");
 
         MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();

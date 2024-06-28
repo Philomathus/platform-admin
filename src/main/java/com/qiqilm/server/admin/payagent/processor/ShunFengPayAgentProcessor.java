@@ -30,7 +30,7 @@ public class ShunFengPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "out_trade_no", withdrawLog.getOrderNo() );
         bodyMap.put( "money", withdrawLog.getWithdrawMoney().setScale( 2, BigDecimal.ROUND_HALF_UP ) );
         bodyMap.put( "pay_type", "1" );
-        bodyMap.put( "notify_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.SHUN_FENG );
+        bodyMap.put( "notify_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put( "bank_name", withdrawLog.getBankName().trim() );
         bodyMap.put( "acct_name", withdrawLog.getBankUserName().trim() );
         bodyMap.put( "acct_no", withdrawLog.getBankAccount().trim() );

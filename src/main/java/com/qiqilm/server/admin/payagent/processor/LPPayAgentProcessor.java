@@ -58,7 +58,7 @@ public class LPPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "bank_code", bankCodeType.name() );
         bodyMap.put( "bank_name", Base64Utils.encodeToString( withdrawLog.getBankName().getBytes( StandardCharsets.UTF_8 ) ) );
         bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString() );
-        bodyMap.put( "backend_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LP );
+        bodyMap.put( "backend_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String tempStr = this.assemblyUrl( bodyMap ) + "&pay_pwd=" + payAgentPlatform.getHeaderKey() + "&key=" + signMd5;

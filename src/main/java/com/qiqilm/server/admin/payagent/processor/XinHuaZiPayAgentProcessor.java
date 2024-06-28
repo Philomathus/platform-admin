@@ -43,7 +43,7 @@ public class XinHuaZiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("accName", withdrawLog.getBankUserName().trim());
 
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.XIN_HUA_ZI);
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put("remark", "daifu");
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + "&api_key=" + signMd5;

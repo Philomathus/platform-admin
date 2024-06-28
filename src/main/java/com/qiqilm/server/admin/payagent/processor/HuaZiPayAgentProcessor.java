@@ -54,7 +54,7 @@ public class HuaZiPayAgentProcessor extends AbstractPayAgent {
 
         String sign = DigestUtils.md5Hex(signStr);
         bodyMap.put("sign", sign);
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HUA_ZI);
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put("remark", "fbjsdhf");
 
         MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();

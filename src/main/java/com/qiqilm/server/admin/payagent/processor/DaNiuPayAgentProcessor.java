@@ -59,7 +59,7 @@ public class DaNiuPayAgentProcessor extends AbstractPayAgent {
         log.warn(tempStr);
         String sign = RSACoder.signMd5Rsa(tempStr, payAgentPlatform.getSignPrivateKey());
         dataMap.put("Sign", sign);
-        dataMap.put("BackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DANIU);
+        dataMap.put("BackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         log.warn(JsonUtil.object2Json(dataMap));
 
         HttpHeaders httpHeaders = new HttpHeaders();

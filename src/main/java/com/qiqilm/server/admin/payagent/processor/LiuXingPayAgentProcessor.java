@@ -38,7 +38,7 @@ public class LiuXingPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 0, RoundingMode.HALF_UP ).intValue() );
         dataMap.put( "accountName", withdrawLog.getBankUserName().trim() );
         dataMap.put( "accountNo", withdrawLog.getBankAccount().trim() );
-        dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIUXING );
+        dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 

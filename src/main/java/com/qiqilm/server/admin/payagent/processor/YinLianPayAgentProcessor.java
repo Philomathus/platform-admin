@@ -60,7 +60,7 @@ public class YinLianPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("city", "深圳市");
         bodyMap.put("bankCode", withdrawLog.getBankCode());
         bodyMap.put("remark", "remark");
-        bodyMap.put("callBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.YINLIAN);
+        bodyMap.put("callBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 

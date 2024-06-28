@@ -35,7 +35,7 @@ public class XiaoYuePayAgentProcessor extends AbstractPayAgent {
         dataMap.put("money", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         dataMap.put("pay_type", "MANUAL_BANK");
         dataMap.put("secret_type", "md5_secret");
-        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.XIAOYUE);
+        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put("bank_name", withdrawLog.getBankName());
         dataMap.put("bank_no", withdrawLog.getBankAccount().trim());
         dataMap.put("bank_user_name", withdrawLog.getBankUserName().trim());

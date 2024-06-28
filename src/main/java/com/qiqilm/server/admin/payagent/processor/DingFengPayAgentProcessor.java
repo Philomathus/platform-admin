@@ -45,7 +45,7 @@ public class DingFengPayAgentProcessor extends AbstractPayAgent {
 		bodyMap.put( "bank_master_name", URLEncoder.encode( withdrawLog.getBankUserName().trim(), "UTF-8" ) );
 		bodyMap.put( "bank_creater_name", URLEncoder.encode( withdrawLog.getBankName().trim(), "UTF-8" ) );
 
-		String url       = sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.DINGFENG;
+		String url       = sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 		String urlBase64 = Base64Encrypt( url );
 
 		bodyMap.put( "notify_url", urlBase64 );

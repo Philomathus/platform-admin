@@ -80,7 +80,7 @@ public class LvJianPayAgentProcessor extends AbstractPayAgent {
         params.put( "city", "深圳市" );
         params.put( "bankLinked", "305584018192" );
         params.put( "mobile", "15114741145" );
-        params.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LVJIAN );
+        params.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         String sign = null;
         try {
             sign = HttpClientTools.md5ascii( params, md5key );

@@ -51,7 +51,7 @@ public class QunPayAgentProcessor extends AbstractPayAgent {
         String sign = DigestUtils.md5Hex(signStr);
         bodyMap.put("cardName", withdrawLog.getBankUserName().trim());
         bodyMap.put("bankName", withdrawLog.getBankName().trim());
-        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.QUN_ZHI_FU);
+        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put("remarks", withdrawLog.getOrderNo());
 
         bodyMap.put("sign", sign);

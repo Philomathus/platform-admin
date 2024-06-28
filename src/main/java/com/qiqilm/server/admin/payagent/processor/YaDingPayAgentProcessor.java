@@ -32,7 +32,7 @@ public class YaDingPayAgentProcessor extends AbstractPayAgent {
         map.put("OpenBank",withdrawLog.getBankName());
         map.put("CardNum",withdrawLog.getBankAccount());
         map.put("Amount",withdrawLog.getWithdrawMoney().setScale(2,BigDecimal.ROUND_HALF_UP));
-        map.put("ReturnUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.YADING);
+        map.put("ReturnUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         map.put("OutOrderId", withdrawLog.getOrderNo());
         List<Map<String,Object>> dataList = new LinkedList<>();
         dataList.add(map);

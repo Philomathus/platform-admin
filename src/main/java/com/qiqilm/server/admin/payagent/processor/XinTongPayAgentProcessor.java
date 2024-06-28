@@ -38,7 +38,7 @@ public class XinTongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).intValue() );
         bodyMap.put( "bankAccountName", withdrawLog.getBankUserName().trim() );
         bodyMap.put( "bankCardNum", withdrawLog.getBankAccount().trim() );
-        bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.XINTONG );
+        bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put( "clientIp", "127.0.0.1" );
         bodyMap.put( "remark", "remark" );
 

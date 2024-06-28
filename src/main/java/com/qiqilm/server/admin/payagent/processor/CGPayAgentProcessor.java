@@ -47,7 +47,7 @@ public class CGPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("RMBAmount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
         bodyMap.put("CryptoAmount", withdrawLog.getWithdrawMoney().multiply(new BigDecimal(100000000L))
                 .setScale(0, RoundingMode.HALF_UP).toString());
-        bodyMap.put("CallBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.CG);
+        bodyMap.put("CallBackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put("AutoWithdraw", "AUTO");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);

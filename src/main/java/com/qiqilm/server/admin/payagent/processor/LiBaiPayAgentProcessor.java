@@ -44,7 +44,7 @@ public class LiBaiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "bankCardNumber", withdrawLog.getBankAccount() );
         bodyMap.put( "bankName", withdrawLog.getBankName() );
         bodyMap.put( "bankRealName", withdrawLog.getBankUserName() );
-        bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIBAI_PAY );
+        bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
         String sign    = this.assemblyUrl( bodyMap ) + signMd5;

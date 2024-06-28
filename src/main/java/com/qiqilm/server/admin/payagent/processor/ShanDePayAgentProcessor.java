@@ -43,7 +43,7 @@ public class ShanDePayAgentProcessor extends AbstractPayAgent {
         dataMap.put("accountName", withdrawLog.getBankUserName().trim());
         dataMap.put("accountNo", withdrawLog.getBankAccount().trim());
         dataMap.put("bankName", withdrawLog.getBankName());
-        dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.SHANDE);
+        dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put("remark", withdrawLog.getBankName());
         dataMap.put("reqTime", DateFormatUtils.formate(new Date(), "yyyyMMddHHmmss"));
 

@@ -52,7 +52,7 @@ public class XiaoFeiPayAgentProcessor extends AbstractPayAgent {
         String signStr = this.assemblyUrl(dataMap) + signMd5;
         dataMap.put("sign", DigestUtils.md5Hex(signStr).toUpperCase());
         dataMap.put("bankName", withdrawLog.getBankName());
-        dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.XIAO_FEI);
+        dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         dataMap.forEach((k, v) -> map.add(k, v));

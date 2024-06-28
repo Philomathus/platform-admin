@@ -39,7 +39,7 @@ public class BinLiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("merchant_order_sn", withdrawLog.getOrderNo());
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, RoundingMode.HALF_UP));
         bodyMap.put("code", "1");
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.BINLI);
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put("attach", "attach");
         bodyMap.put("timestamp", System.currentTimeMillis() / 1000);
         bodyMap.put("name", withdrawLog.getBankUserName().trim());

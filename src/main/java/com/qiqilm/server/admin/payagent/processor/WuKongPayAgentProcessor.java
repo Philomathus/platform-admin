@@ -46,7 +46,7 @@ public class WuKongPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bankName", withdrawLog.getBankName());
         bodyMap.put("bankCardNumber", withdrawLog.getBankAccount());
         bodyMap.put("bankRealName", withdrawLog.getBankUserName());
-        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.WU_KONG);
+        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(bodyMap) + signMd5;

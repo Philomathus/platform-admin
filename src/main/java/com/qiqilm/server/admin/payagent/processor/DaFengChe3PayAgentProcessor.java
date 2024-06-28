@@ -43,7 +43,7 @@ public class DaFengChe3PayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("card_no", withdrawLog.getBankAccount().trim());
         bodyMap.put("card_name", withdrawLog.getBankUserName().trim());
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DAFENGCHE3);
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 

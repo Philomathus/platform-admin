@@ -53,7 +53,7 @@ public class LangYaPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("addtime", System.currentTimeMillis() + "");
         dataMap.put("bankcode", withdrawLog.getBankCode());
         dataMap.put("list", JsonUtil.object2Json(list));
-        dataMap.put("callback_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.LANG_YA);
+        dataMap.put("callback_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
         String tempStr = this.assemblyUrl(dataMap) + "&key=" + signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();

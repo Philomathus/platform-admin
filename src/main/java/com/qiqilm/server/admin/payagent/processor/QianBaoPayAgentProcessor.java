@@ -39,7 +39,7 @@ public class QianBaoPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("cardName", withdrawLog.getBankUserName().trim());
         bodyMap.put("cardNo", withdrawLog.getBankAccount().trim());
         bodyMap.put("cardType", withdrawLog.getBankName().trim());
-        bodyMap.put("cbUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.QIANBAO);
+        bodyMap.put("cbUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         String tempStr = this.assemblyUrl(bodyMap);
         System.out.println("待加密字符串" + tempStr);
         //RSA2证书为2048位，使用算法SHA256withRSA。

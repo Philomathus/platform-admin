@@ -72,7 +72,7 @@ public class ShangYinPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("bankPayPurpose", "");
         dataMap.put("Leave_word", "");
         dataMap.put("Ext", "");
-        dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.SHANG_YIN);
+        dataMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put("userId", payAgentPlatform.getHeaderKey());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);

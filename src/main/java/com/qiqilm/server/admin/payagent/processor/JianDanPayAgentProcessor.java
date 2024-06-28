@@ -45,7 +45,7 @@ public class JianDanPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("bank_name", withdrawLog.getBankName().trim());
         bodyMap.put("branch_bank_name", withdrawLog.getBankName().trim());
         bodyMap.put("money", withdrawLog.getWithdrawMoney());
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JIANDAN);
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put("extend_info", withdrawLog.getOrderNo());
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);

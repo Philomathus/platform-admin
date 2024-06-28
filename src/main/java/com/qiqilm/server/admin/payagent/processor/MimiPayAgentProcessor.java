@@ -40,14 +40,14 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "value", withdrawLog.getWithdrawMoney().setScale( 2,
 				BigDecimal.ROUND_HALF_UP ).toString() );
 		dataMap.put( "orderid", withdrawLog.getOrderNo() );
-		dataMap.put( "callbackurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.MIMI );
+		dataMap.put( "callbackurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 
 		String sb = "parter=" + payAgentPlatform.getMerId() + "&type=unionpay&value=" +
 				withdrawLog.getWithdrawMoney().setScale( 2, BigDecimal.ROUND_HALF_UP ).toString() +
 				"&orderid=" + withdrawLog.getOrderNo() + "&callbackurl=" +
-				sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.MIMI + signMd5;
+				sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 		String sign = DigestUtils.md5Hex( sb );
 		dataMap.put( "sign", sign );
 		dataMap.put( "hrefbackurl", "" );

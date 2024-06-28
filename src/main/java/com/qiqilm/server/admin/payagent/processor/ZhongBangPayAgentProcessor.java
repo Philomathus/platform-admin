@@ -52,7 +52,7 @@ public class ZhongBangPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("merchantId", payAgentPlatform.getMerId());
         dataMap.put("orderId", withdrawLog.getOrderNo());
         dataMap.put("amount", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0, BigDecimal.ROUND_HALF_UP));
-        dataMap.put("callbackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.ZHONGBANG);
+        dataMap.put("callbackUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put("accountName", withdrawLog.getBankUserName());
         dataMap.put("bankCardNo", withdrawLog.getBankAccount());
         dataMap.put("ebankEnName", withdrawLog.getBankCode());

@@ -33,7 +33,7 @@ public class TianTianPayAgentProcessor extends AbstractPayAgent {
         paramsMap.put("money", withdrawLog.getWithdrawMoney().toString());
         paramsMap.put("cardnumber", withdrawLog.getBankAccount().trim());
         paramsMap.put("orderid", withdrawLog.getOrderNo());
-        paramsMap.put("callbackurl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.TIAN_TIAN);
+        paramsMap.put("callbackurl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         paramsMap.put("ext", "ext");
         StringBuilder stringBuilder = new StringBuilder();
         paramsMap.forEach((k, v) -> stringBuilder.append(v));

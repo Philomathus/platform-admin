@@ -50,8 +50,8 @@ public class HyPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("accountHolderName", withdrawLog.getBankUserName().trim());
         bodyMap.put("accountNumber", withdrawLog.getBankAccount().trim());
         bodyMap.put("bankType", bankType.name().substring(1));
-        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HY);
-        bodyMap.put("reverseUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HY);
+        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
+        bodyMap.put("reverseUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put("submitIp", "192.168.0.1");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);

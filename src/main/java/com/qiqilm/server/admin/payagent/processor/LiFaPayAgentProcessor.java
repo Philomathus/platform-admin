@@ -51,7 +51,7 @@ public class LiFaPayAgentProcessor extends AbstractPayAgent {
                         + "深圳市北京路支行";
         String clearUserInfo = encrypt( content, payAgentPlatform.getSignPublicKey() );
         bodyMap.put( "clearUserInfo", clearUserInfo );
-        bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIFA );
+        bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + payAgentPlatform.getSignPublicKey();
         String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();

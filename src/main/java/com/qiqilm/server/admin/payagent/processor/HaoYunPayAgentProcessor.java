@@ -42,7 +42,7 @@ public class HaoYunPayAgentProcessor extends AbstractPayAgent {
         dataMap.put("money", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
         dataMap.put("pay_type", "MANUAL_BANK");
         dataMap.put("secret_type", "md5_secret");
-        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.HAOYUN);
+        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put("bank_name", withdrawLog.getBankName());
         dataMap.put("bank_no", withdrawLog.getBankAccount());
         dataMap.put("bank_user_name", withdrawLog.getBankUserName());

@@ -49,7 +49,7 @@ public class ZhongJiaPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "name", encrypt( withdrawLog.getBankName(), payAgentPlatform.getSignMd5() ) );
 		dataMap.put( "cardNo", encrypt( withdrawLog.getBankAccount(), payAgentPlatform.getSignMd5() ) );
 		dataMap.put( "idcard", encrypt( "36522819610223364", payAgentPlatform.getSignMd5() ) );
-		dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.ZHONGJIA );
+		dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
 		String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 		StringBuilder sb = new StringBuilder();

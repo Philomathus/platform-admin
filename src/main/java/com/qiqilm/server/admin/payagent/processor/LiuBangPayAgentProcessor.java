@@ -42,7 +42,7 @@ public class LiuBangPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "subbranch", withdrawLog.getBankName().trim() );
         bodyMap.put( "accountname", withdrawLog.getBankUserName().trim() );
         bodyMap.put( "cardnumber", withdrawLog.getBankAccount().trim() );
-        bodyMap.put( "notifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.LIU_BANG );
+        bodyMap.put( "notifyurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
 

@@ -38,7 +38,7 @@ public class TeLunSu2PayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "BankNumber", withdrawLog.getBankAccount() );
 		dataMap.put( "BankAcc", withdrawLog.getBankUserName() );
 		dataMap.put( "orderNo", withdrawLog.getOrderNo() );
-		dataMap.put( "MsgUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.TE_LUN_SU2 );
+		dataMap.put( "MsgUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 		dataMap.put( "Bank", withdrawLog.getBankName() );
 		dataMap.put( "mch_id", payAgentPlatform.getMerId() );
 

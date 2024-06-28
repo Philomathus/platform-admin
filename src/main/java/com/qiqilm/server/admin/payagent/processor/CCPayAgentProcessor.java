@@ -50,7 +50,7 @@ public class CCPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl(bodyMap) +"&key="+ signMd5;
         String sign = DigestUtils.md5Hex(tempStr).toUpperCase();
         bodyMap.put("sign", sign);
-        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.CC);
+        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         log.warn(payAgentPlatform.getName()+"下单请求参数{}", JsonUtil.object2Json(bodyMap));
 
         HttpHeaders httpHeaders = new HttpHeaders();

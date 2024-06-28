@@ -41,7 +41,7 @@ public class DiDiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("accountName", withdrawLog.getBankUserName().trim());
         bodyMap.put("shopId", Integer.valueOf(payAgentPlatform.getMerId()));
         bodyMap.put("merchantOrderSn", withdrawLog.getOrderNo());
-        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.DIDI);
+        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 

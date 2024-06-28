@@ -9,7 +9,6 @@ import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.BankCodeJinXinType;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
@@ -55,7 +54,7 @@ public class JinXinPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("merchantBankCardCity", "深圳市");
         bodyMap.put("merchantBankCardBranch", "深圳支行");
         bodyMap.put("amount", withdrawLog.getWithdrawMoney().setScale(2, BigDecimal.ROUND_HALF_UP));
-        bodyMap.put("callback", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JINXIN);
+        bodyMap.put("callback", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 

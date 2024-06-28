@@ -42,7 +42,7 @@ public class ChongUPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("BankCardNumber", withdrawLog.getBankAccount());
         bodyMap.put("BankCardRealName", withdrawLog.getBankUserName());
         bodyMap.put("MerchantUniqueOrderId", withdrawLog.getOrderNo());
-        bodyMap.put("NotifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.CHONGU);
+        bodyMap.put("NotifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put("Timestamp", DateFormatUtils.formate(reqPayAgent.getCurrentTime(), DateFormatUtils.TIGHT_PATTERN_DATETIME));
         bodyMap.put("WithdrawTypeId", 0);
 

@@ -44,7 +44,7 @@ public class NewmaxPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put("province", "广东省");
         bodyMap.put("city", "广州市");
         bodyMap.put("merchant_id", payAgentPlatform.getMerId());
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.NEWMAX);
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);
 

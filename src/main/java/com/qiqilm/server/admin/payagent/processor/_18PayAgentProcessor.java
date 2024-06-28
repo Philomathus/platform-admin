@@ -34,7 +34,7 @@ public class _18PayAgentProcessor extends AbstractPayAgent {
         dataMap.put("merchant_sn", payAgentPlatform.getMerId());
         dataMap.put("down_sn", withdrawLog.getOrderNo());
         dataMap.put("amount", withdrawLog.getWithdrawMoney().multiply(BigDecimal.valueOf(100)).setScale(0, BigDecimal.ROUND_HALF_UP));
-        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.EIGHTEEN);
+        dataMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         dataMap.put("channel_code", "1065");
 
         String signMd5 = RSACoder.decryptByPrivateKey(payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY);

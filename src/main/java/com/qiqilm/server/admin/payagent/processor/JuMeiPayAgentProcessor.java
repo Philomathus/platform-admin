@@ -49,7 +49,7 @@ public class JuMeiPayAgentProcessor extends AbstractPayAgent {
 
         String sign = createSign(bodyMap, signMd5);
         bodyMap.put("sign", sign);
-        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.JUMEI);
+        bodyMap.put("notify_url", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(bodyMap);

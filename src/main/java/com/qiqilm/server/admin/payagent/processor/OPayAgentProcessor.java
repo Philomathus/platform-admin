@@ -46,7 +46,7 @@ public class OPayAgentProcessor extends AbstractPayAgent {
         String tempStr = this.assemblyUrl2(bodyMap) + signMd5;
         String sign = DigestUtils.md5Hex(tempStr);
         bodyMap.put("sign", sign);
-        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl") + ConstantsPayAgent.OPay);
+        bodyMap.put("notifyUrl", sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 
         MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         requestMap.setAll(bodyMap);

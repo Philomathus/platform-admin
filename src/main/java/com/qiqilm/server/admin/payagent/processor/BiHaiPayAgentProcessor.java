@@ -42,7 +42,7 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "money", withdrawLog.getWithdrawMoney().toString() );
 		dataMap.put( "cardnumber", withdrawLog.getBankAccount().trim() );
 		dataMap.put( "orderid", withdrawLog.getOrderNo() );
-		dataMap.put( "callbackurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.BIHAI );
+		dataMap.put( "callbackurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 		dataMap.put( "ext", "ext" );
 		StringBuilder stringBuilder = new StringBuilder();
 		dataMap.forEach( ( k, v ) -> stringBuilder.append( v ) );
@@ -187,7 +187,7 @@ public class BiHaiPayAgentProcessor extends AbstractPayAgent {
 		dataMap.put( "money", withdrawLog.getWithdrawMoney().toString() );
 		dataMap.put( "cardnumber", withdrawLog.getBankAccount().trim() );
 		dataMap.put( "orderid", withdrawLog.getOrderNo() );
-		dataMap.put( "callbackurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.BIHAI );
+		dataMap.put( "callbackurl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 		dataMap.put( "ext", "ext" );
 		StringBuilder stringBuilder = new StringBuilder();
 		dataMap.forEach( ( k, v ) -> stringBuilder.append( v ) );

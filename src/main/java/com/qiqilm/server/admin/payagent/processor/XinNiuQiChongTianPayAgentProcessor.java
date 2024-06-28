@@ -41,7 +41,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		String money     = withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString();
 		String remarks   = withdrawLog.getOrderNo();
 		String sh_id     = payAgentPlatform.getMerId();
-		String notifyURL = sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + ConstantsPayAgent.XIN_NIU_QI_CHONG_TIAN;
+		String notifyURL = sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
 		map.put( "name", name );
 		map.put( "Card", Card );
 		map.put( "Bankof", Bankof );
