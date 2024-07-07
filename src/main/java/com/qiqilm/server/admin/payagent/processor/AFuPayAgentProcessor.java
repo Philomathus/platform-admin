@@ -29,7 +29,7 @@ public class AFuPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "appId", payAgentPlatform.getMerId() );
         bodyMap.put( "appOrderNo", withdrawLog.getOrderNo() );
         bodyMap.put( "orderAmt", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
-        bodyMap.put( "payId", "401" );
+        bodyMap.put( "payId", "402" );
         bodyMap.put( "accNo", withdrawLog.getBankAccount().trim() );
         bodyMap.put( "accName", withdrawLog.getBankUserName().trim() );
         bodyMap.put( "bankName", withdrawLog.getBankName() );
