@@ -442,7 +442,7 @@ public enum BankCodeTianXiaHuiType {
     SDZZQF( Arrays.asList( "芝罘齐丰村镇银行" ) ),
     BOC( Arrays.asList( "中国银行" ) ),
     YSB( Arrays.asList( "中国银盛" ) ),
-    PSBC( Arrays.asList( "中国邮政储蓄银行" ) ),
+    PSBC( Arrays.asList( "邮政储蓄银行", "中国邮政储蓄银行", "中国邮政银行", "中国邮政储蓄", "中国邮政", "邮政银行" ) ),
     ZSXLVTB( Arrays.asList( "中山小榄村镇银行" ) ),
     AIBANK( Arrays.asList( "中信百信银行股份有限公司" ) ),
     CITIC( Arrays.asList( "中信银行股份有限公司" ) ),
