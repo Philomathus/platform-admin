@@ -483,10 +483,10 @@ public class GameBaseServiceImpl implements IGameBaseService {
                 headers.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
                 //将请求头部和参数合成一个请求
                 HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>( headers );
-                ResponseEntity<BalanceResult>             response      = restTemplate.exchange( url, method, requestEntity,
-                        BalanceResult.class );
-                BalanceResult                             resultOG      = response.getBody();
-                log.warn( JsonUtil.object2Json( resultOG ) );
+                ResponseEntity<BalanceResult> response = restTemplate.exchange( url, method, requestEntity, BalanceResult.class );
+                BalanceResult resultOG = response.getBody();
+                log.warn( "OG查询余额 - userId:{} - url:{} - header:{} - result:{}", userId, url, JsonUtil.object2Json( headers ),
+                        JsonUtil.object2Json( resultOG ) );
                 BigDecimal backMoney = "success".equals( resultOG.getStatus() ) ? resultOG.getData()
                         .getBalance() : BigDecimal.ZERO;
                 RspGameBalance rspGameBalance = new RspGameBalance();
@@ -724,9 +724,8 @@ public class GameBaseServiceImpl implements IGameBaseService {
         headers.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
         //将请求头部和参数合成一个请求
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>( headers );
-        ResponseEntity<BalanceResult>             response      = restTemplate.exchange( url, method, requestEntity,
-                BalanceResult.class );
-        BalanceResult                             result        = response.getBody();
+        ResponseEntity<BalanceResult> response = restTemplate.exchange( url, method, requestEntity, BalanceResult.class );
+        BalanceResult result = response.getBody();
         if ( !result.getStatus().equals( "success" ) ) {
             log.error( "取得余额失败失败 userId:" + account );
             return xiaFenResult;
