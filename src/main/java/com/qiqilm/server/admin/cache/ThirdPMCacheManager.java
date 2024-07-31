@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.cache;
 
 import com.qiqilm.server.admin.constant.Constants;
 import com.qiqilm.server.admin.domain.vo.TokenResult;
-import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -42,7 +42,7 @@ public class ThirdPMCacheManager {
 		ResponseEntity<TokenResult> responseToken = restTemplate.exchange( url, method, requestEntity, TokenResult.class );
 		TokenResult                 tokenResult   = responseToken.getBody();
 		if ( !tokenResult.getStatus().equals( "success" ) ) {
-			throw new BaseException( "获取OG視訊安全凭证失败" );
+			throw new BusinessException( "获取OG視訊安全凭证失败" );
 		}
 		redisUtil.strSet( Constants.PLATFORM_TOKEN + "og:" + account, tokenResult.getData().getToken(),
 				Duration.ofSeconds( 1200 ) );

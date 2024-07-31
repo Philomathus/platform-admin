@@ -7,7 +7,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import com.qiqilm.server.admin.utils.StringUtils;
@@ -47,7 +46,7 @@ public class MimiPayAgentProcessor extends AbstractPayAgent {
 		String sb = "parter=" + payAgentPlatform.getMerId() + "&type=unionpay&value=" +
 				withdrawLog.getWithdrawMoney().setScale( 2, BigDecimal.ROUND_HALF_UP ).toString() +
 				"&orderid=" + withdrawLog.getOrderNo() + "&callbackurl=" +
-				sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
+				sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode();
 		String sign = DigestUtils.md5Hex( sb );
 		dataMap.put( "sign", sign );
 		dataMap.put( "hrefbackurl", "" );

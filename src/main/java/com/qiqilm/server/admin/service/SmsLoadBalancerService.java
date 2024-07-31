@@ -1,7 +1,7 @@
 package com.qiqilm.server.admin.service;
 
 import com.qiqilm.server.admin.domain.ServerSms;
-import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.ServerSmsMapper;
 import com.qiqilm.server.admin.proportion.SmsLoadBalancerConfiguration;
 import com.qiqilm.server.admin.proportion.SmsProvider;
@@ -31,7 +31,7 @@ public class SmsLoadBalancerService {
             List<ServerSms> serverSmsList = serverSmsMapper.selectServerSmsList(queryServerSms);
             log.info("Retrieved serverSms list size: {}", serverSmsList.size());
             if(serverSmsList.size() == 0) {
-                throw new BaseException("There are no SMS providers");
+                throw new BusinessException("There are no SMS providers");
             }
             serverSmsList.forEach(serverSms -> smsLoadBalancerConfiguration.addProvider(
                     SmsProvider.getProviderByCode(serverSms.getProvider()), serverSms.getRatio() != null ? serverSms.getRatio() : 0));

@@ -1,17 +1,17 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://47.57.3.228:3306/7700_main?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      jdbc-url: jdbc:mysql://8.210.10.193:3306/7700_main?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
       username: root
-      password: 77lm@20210107
+      password: f:e=h>EVUH,!N7zS&J`9
     secondary:
-      jdbc-url: jdbc:mysql://seventry.rwlb.rds.aliyuncs.com:3306/db_data?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-      username: 77tv_webcs
-      password: 77tvwebcs_oradba
+      jdbc-url: jdbc:mysql://8.210.10.193:3306/general?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      username: root
+      password: f:e=h>EVUH,!N7zS&J`9
   redis:
-    host: 47.57.3.228
+    host: 8.210.10.193
     port: 6379
-    password: 75a2-4e0e-9897-0347cc
+    password: EvYsN39ViArDumx4pWyH
 
 mybatis:
   configuration:
@@ -21,3 +21,5 @@ mybatis:
       dbLottery: 7700_lottery
     # spring boot集成mybatis的方式打印sql
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+liveCenter: 7700

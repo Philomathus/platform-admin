@@ -10,7 +10,7 @@ import com.qiqilm.server.admin.domain.req.ReqMemberRechargeLog;
 import com.qiqilm.server.admin.domain.rsp.RspBankRecharge;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
-import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILogService;
 import com.qiqilm.server.admin.service.IMemberRechargeLogService;
@@ -184,7 +184,7 @@ public class MemberRechargeLogServiceImpl implements IMemberRechargeLogService {
     @Transactional( rollbackFor = Exception.class )
     public boolean finalAudit( ReqMemberRechargeLog req, String userName, String mark, MemberRechargeLog memberRechargeLog ) {
         if ( memberRechargeLog.getStatus() != 1 ) {
-            throw new BaseException( "订单状态有误" );
+            throw new BusinessException( "订单状态有误" );
         }
 
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( memberRechargeLog.getMemberId() );

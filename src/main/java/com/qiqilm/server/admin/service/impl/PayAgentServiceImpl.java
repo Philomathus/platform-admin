@@ -9,7 +9,6 @@ import com.qiqilm.server.admin.domain.*;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.enums.EnumMoney;
-import com.qiqilm.server.admin.exception.BaseException;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.payagent.BasePayAgent;
@@ -630,7 +629,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
         MemberWithdrawLog withdrawLog = withdrawLogMapper.selectMemberWithdrawLogById( memberWithdrawLog.getId() );
         PayAgentLog       payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( memberWithdrawLog.getOrderNo() );
         if ( !( withdrawLog.getStatus() == 1 || withdrawLog.getStatus() == 4 ) ) {
-            throw new BaseException( "审核流程非法" );
+            throw new BusinessException( "审核流程非法" );
         }
 
         //gopay提现彩金

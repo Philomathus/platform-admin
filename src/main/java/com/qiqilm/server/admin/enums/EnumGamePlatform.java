@@ -7,6 +7,7 @@ public enum EnumGamePlatform {
     //
     KY_CHESS(1, "开元棋牌"),
     OG_LIVE(2, "OG视讯"),
+    OG_NEW(41, "新OG电子"),
     CX_LIVE(3, "77直播"),
     CX_LOTTERY(4, "77彩票"),
     AG_LIVE(5, "AG视讯"),

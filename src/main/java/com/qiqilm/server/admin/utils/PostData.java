@@ -3,7 +3,7 @@ package com.qiqilm.server.admin.utils;
 import com.google.common.io.CharStreams;
 import com.qiqilm.server.admin.domain.GamePlatform;
 import com.qiqilm.server.admin.enums.EnumGamePlatform;
-import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.httpclient.HttpClient;
@@ -84,7 +84,7 @@ public class PostData {
      * @Date 2016-08-26
      */
     public static String get( String postUrl ) {
-        String     obj    = null;
+        String obj = null;
         try {
             HttpClient client = new HttpClient();
             GetMethod  method = new GetMethod( postUrl );
@@ -136,7 +136,7 @@ public class PostData {
         String param = Encrypt.AESEncrypt( params, dk );
         String key   = DigestUtils.md5Hex( agent + time + mk );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "提交" + postUrl );
         return get( postUrl );
     }
@@ -159,7 +159,7 @@ public class PostData {
         String param  = Encrypt.AESEncrypt( params, des );
         String key    = DigestUtils.md5Hex( agent + time + md5 );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "请求URL：" + postUrl );
         return get( postUrl );
     }
@@ -184,7 +184,7 @@ public class PostData {
         String param  = Encrypt.AESEncrypt( params, des );
         String key    = DigestUtils.md5Hex( agent + time + md5 );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "请求URL：" + postUrl );
         return get( postUrl );
     }
@@ -210,7 +210,7 @@ public class PostData {
         String param  = Encrypt.AESEncrypt( params, des );
         String key    = DigestUtils.md5Hex( agent + time + md5 );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "请求URL：" + postUrl );
         return get( postUrl );
     }
@@ -233,7 +233,7 @@ public class PostData {
         String param  = Encrypt.AESEncrypt( params, des );
         String key    = DigestUtils.md5Hex( agent + time + md5 );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "请求URL：" + postUrl );
         return get( postUrl );
     }
@@ -255,7 +255,7 @@ public class PostData {
         String param  = Encrypt.AESEncrypt( params, des );
         String key    = DigestUtils.md5Hex( agent + time + md5 );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "请求URL：" + postUrl );
         return get( postUrl );
     }
@@ -279,7 +279,7 @@ public class PostData {
         String param  = Encrypt.AESEncrypt( params, dk );
         String key    = DigestUtils.md5Hex( agent + time + mk );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "提交" + postUrl );
         return get( postUrl );
     }
@@ -301,7 +301,7 @@ public class PostData {
         String param  = Encrypt.AESEncrypt( params, des );
         String key    = DigestUtils.md5Hex( agent + time + md5 );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "请求URL：" + postUrl );
         return get( postUrl );
     }
@@ -313,7 +313,7 @@ public class PostData {
         String param  = Encrypt.AESEncrypt( params, DESKey );
         String key    = DigestUtils.md5Hex( agent + time + md5 );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "请求URL：" + postUrl );
         return get( postUrl );
     }
@@ -336,7 +336,7 @@ public class PostData {
         String param  = Encrypt.AESEncrypt( params, des );
         String key    = DigestUtils.md5Hex( agent + time + md5 );
         String postUrl = apiUrl.concat( "?agent=" ).concat( agent ).concat( "&timestamp=" ).concat( time ).concat( "&param=" )
-                               .concat( param ).concat( "&key=" ).concat( key );
+                .concat( param ).concat( "&key=" ).concat( key );
         log.info( "请求URL：" + postUrl );
         return get( postUrl );
     }
@@ -356,6 +356,10 @@ public class PostData {
                 || EnumGamePlatform.BBIN_DIANZI.getType() == platform_id ) {
             return account.split( "_" )[ 1 ].concat( String.valueOf( System.currentTimeMillis() / 1000 ) );
         }
+        if ( EnumGamePlatform.OG_NEW.getType() == platform_id ) {
+            return agent.concat( DateFormatUtils.formate( date, "yyyyMMddHHmmssSSS" ) ).concat( account ).toLowerCase()
+                    .replaceAll( "_", "" );
+        }
         return agent.concat( DateFormatUtils.formate( date, "yyyyMMddHHmmssSSS" ) ).concat( account );
 
     }
@@ -369,7 +373,7 @@ public class PostData {
         String url         = gamePlatform.getApiUrl();
         String encrypt_key = gamePlatform.getDes();
         String params = ( "cagent=" + gamePlatform.getAgent() + "/\\\\\\\\/method=lg/\\\\\\\\/loginname=" + account
-                + "/\\\\\\\\/actype=1/\\\\\\\\/password=" + account + "/\\\\\\\\/cur=CNY/\\\\\\\\/oddtype=A" );
+                                  + "/\\\\\\\\/actype=1/\\\\\\\\/password=" + account + "/\\\\\\\\/cur=CNY/\\\\\\\\/oddtype=A" );
         String targetParams = DESSecretUtil.jdkBase64String( DESSecretUtil.desEncrypt( params, encrypt_key ) );
         targetParams = targetParams.replace( "\n", "" );
         targetParams = targetParams.replace( "\r", "" );
@@ -384,15 +388,15 @@ public class PostData {
     public static String AGtogame( String account, GamePlatform gamePlatform, String orderId, String kindId ) throws Exception {
         String encrypt_key = gamePlatform.getDes();
         String params = ( "cagent=" + gamePlatform.getAgent() + "/\\\\\\\\/loginname=" + account + "/\\\\\\\\/actype=1"
-                + "/\\\\\\\\/password=" + account + "/\\\\\\\\/cur=CNY/\\\\\\\\/oddtype=A"
-                + "/\\\\\\\\/dm=https://77.tv?AGGameQuit/\\\\\\\\/sid=" + gamePlatform.getAgent() + orderId + "/\\\\\\\\/lang"
-                + "=1" + "/\\\\\\\\/gameType=" + kindId );
+                                  + "/\\\\\\\\/password=" + account + "/\\\\\\\\/cur=CNY/\\\\\\\\/oddtype=A"
+                                  + "/\\\\\\\\/dm=https://77.tv?AGGameQuit/\\\\\\\\/sid=" + gamePlatform.getAgent() + orderId
+                                  + "/\\\\\\\\/lang" + "=1" + "/\\\\\\\\/gameType=" + kindId );
         String targetParams = DESSecretUtil.jdkBase64String( DESSecretUtil.desEncrypt( params, encrypt_key ) );
         targetParams = targetParams.replace( "\n", "" );
         targetParams = targetParams.replace( "\r", "" );
         String key = DigestUtils.md5Hex( targetParams + gamePlatform.getMd5() );
         String postUrl = "https://gci.zhk365.com/".concat( "forwardGame.do?params=" ).concat( targetParams ).concat( "&key=" )
-                                                  .concat( key );
+                .concat( key );
         return postUrl;
     }
 
@@ -401,8 +405,8 @@ public class PostData {
         String url         = gamePlatform.getApiUrl();
         String encrypt_key = gamePlatform.getDes();
         String params = ( "cagent=" + gamePlatform.getAgent() + "/\\\\\\\\/loginname=" + account + "/\\\\\\\\/actype=1"
-                + "/\\\\\\\\/password=" + account + "/\\\\\\\\/cur=CNY" + "/\\\\\\\\/method=tc/\\\\\\\\/billno=" + orderId
-                + "/\\\\\\\\/type=" + type + "/\\\\\\\\/credit=" + changeMoney + "" );
+                                  + "/\\\\\\\\/password=" + account + "/\\\\\\\\/cur=CNY" + "/\\\\\\\\/method=tc/\\\\\\\\/billno="
+                                  + orderId + "/\\\\\\\\/type=" + type + "/\\\\\\\\/credit=" + changeMoney + "" );
         String targetParams = DESSecretUtil.jdkBase64String( DESSecretUtil.desEncrypt( params, encrypt_key ) );
         targetParams = targetParams.replace( "\n", "" );
         targetParams = targetParams.replace( "\r", "" );
@@ -421,8 +425,9 @@ public class PostData {
         String url         = gamePlatform.getApiUrl();
         String encrypt_key = gamePlatform.getDes();
         String params = ( "cagent=" + gamePlatform.getAgent() + "/\\\\\\\\/loginname=" + account + "/\\\\\\\\/actype=1"
-                + "/\\\\\\\\/password=" + account + "/\\\\\\\\/cur=CNY/\\\\\\\\/flag=1" + "/\\\\\\\\/method=tcc/\\\\\\\\/billno="
-                + orderId + "/\\\\\\\\/type=" + type + "/\\\\\\\\/credit=" + changeMoney );
+                                  + "/\\\\\\\\/password=" + account + "/\\\\\\\\/cur=CNY/\\\\\\\\/flag=1"
+                                  + "/\\\\\\\\/method=tcc/\\\\\\\\/billno=" + orderId + "/\\\\\\\\/type=" + type
+                                  + "/\\\\\\\\/credit=" + changeMoney );
         String targetParams = DESSecretUtil.jdkBase64String( DESSecretUtil.desEncrypt( params, encrypt_key ) );
         targetParams = targetParams.replace( "\n", "" );
         targetParams = targetParams.replace( "\r", "" );
@@ -440,7 +445,7 @@ public class PostData {
         String url         = gamePlatform.getApiUrl();
         String encrypt_key = gamePlatform.getDes();
         String params = ( "cagent=" + gamePlatform.getAgent() + "/\\\\\\\\/cur=CNY/\\\\\\\\/actype=1"
-                + "/\\\\\\\\/method=qos/\\\\\\\\/billno=" + orderId );
+                                  + "/\\\\\\\\/method=qos/\\\\\\\\/billno=" + orderId );
         String targetParams = DESSecretUtil.jdkBase64String( DESSecretUtil.desEncrypt( params, encrypt_key ) );
         targetParams = targetParams.replace( "\n", "" );
         targetParams = targetParams.replace( "\r", "" );
@@ -458,7 +463,7 @@ public class PostData {
         String url         = gamePlatform.getApiUrl();
         String encrypt_key = gamePlatform.getDes();
         String params = ( "cagent=" + gamePlatform.getAgent() + "/\\\\\\\\/cur=CNY/\\\\\\\\/actype=1/\\\\\\\\/loginname="
-                + account + "/\\\\\\\\/actype=1" + "/\\\\\\\\/method=gb/\\\\\\\\/password=" + account );
+                                  + account + "/\\\\\\\\/actype=1" + "/\\\\\\\\/method=gb/\\\\\\\\/password=" + account );
         String targetParams = DESSecretUtil.jdkBase64String( DESSecretUtil.desEncrypt( params, encrypt_key ) );
         targetParams = targetParams.replace( "\n", "" );
         targetParams = targetParams.replace( "\r", "" );
@@ -485,7 +490,7 @@ public class PostData {
 
             obj = restTemplate.execute( postUrl, HttpMethod.POST, restTemplate.httpEntityCallback( httpEntity ), response -> {
                 if ( response.getRawStatusCode() != 200 ) {
-                    throw new BaseException( "AG接口请求异常" );
+                    throw new BusinessException( "AG接口请求异常" );
                 }
                 InputStream bodyStream = response.getBody();
                 String      text;
@@ -495,7 +500,7 @@ public class PostData {
                 return text;
             } );
         } catch ( Exception e ) {
-            throw new BaseException( e );
+            throw new BusinessException( e );
         }
         return obj;
     }
@@ -548,7 +553,8 @@ public class PostData {
     }
 
     public static void playersMg( String token, String userId, GamePlatform gamePlatform ) {
-        String url = gamePlatform.getApiUrl() + gamePlatform.getAgent() + "/players?agentCode=" + gamePlatform.getAgent();
+        String                        url     =
+                gamePlatform.getApiUrl() + gamePlatform.getAgent() + "/players?agentCode=" + gamePlatform.getAgent();
         HttpHeaders                   headers = new HttpHeaders();
         MultiValueMap<String, String> params  = new LinkedMultiValueMap<>();
         params.add( "playerId", userId );
@@ -589,20 +595,21 @@ public class PostData {
         if ( responseGameResult.getStatusCodeValue() == 201 ) {
             Map result = responseGameResult.getBody();
             //			log.info(result);
-            //throw new BaseException( "MG转账失败" );
+            //throw new BusinessException( "MG转账失败" );
             return result.get( "status" ).equals( "Succeeded" );
         } else {
-            //throw new BaseException( "MG转账失败" );
+            //throw new BusinessException( "MG转账失败" );
             return false;
         }
     }
 
     public static BigDecimal getMGBalance( String token, String userId, GamePlatform gamePlatform ) {
-        BigDecimal backMoney = BigDecimal.ZERO;
-        String url = gamePlatform.getApiUrl() + gamePlatform.getAgent() + "/players/" + userId + "?properties=balance";
-        HttpHeaders                   headers = new HttpHeaders();
-        MultiValueMap<String, String> params  = new LinkedMultiValueMap<>();
-        HttpMethod                    method  = HttpMethod.GET;
+        BigDecimal                    backMoney = BigDecimal.ZERO;
+        String                        url       =
+                gamePlatform.getApiUrl() + gamePlatform.getAgent() + "/players/" + userId + "?properties=balance";
+        HttpHeaders                   headers   = new HttpHeaders();
+        MultiValueMap<String, String> params    = new LinkedMultiValueMap<>();
+        HttpMethod                    method    = HttpMethod.GET;
         headers.add( "Authorization", "Bearer " + token );
         // 以表单的方式提交
         headers.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
@@ -619,9 +626,9 @@ public class PostData {
     }
 
     public static void main( String[] args ) {
-        String url = "http://127.0.0.1:42002/test/test";
-        RestTemplate restTemp = new RestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
+        String       url         = "http://127.0.0.1:42002/test/test";
+        RestTemplate restTemp    = new RestTemplate();
+        HttpHeaders  httpHeaders = new HttpHeaders();
         httpHeaders.setAccept( new ArrayList<>() );
         httpHeaders.setConnection( new ArrayList<>() );
         HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>( null, httpHeaders );
@@ -633,7 +640,7 @@ public class PostData {
             }
             return text;
         } );
-        System.out.println(obj);
-        System.out.println(get( url ));
+        System.out.println( obj );
+        System.out.println( get( url ) );
     }
 }

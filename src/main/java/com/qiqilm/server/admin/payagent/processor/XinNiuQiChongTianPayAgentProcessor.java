@@ -8,7 +8,6 @@ import com.qiqilm.server.admin.domain.PayAgentLog;
 import com.qiqilm.server.admin.domain.PayAgentPlatform;
 import com.qiqilm.server.admin.domain.req.ReqPayAgent;
 import com.qiqilm.server.admin.payagent.AbstractPayAgent;
-import com.qiqilm.server.admin.utils.AuthUtil;
 import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
@@ -41,7 +40,7 @@ public class XinNiuQiChongTianPayAgentProcessor extends AbstractPayAgent {
 		String money     = withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ).toString();
 		String remarks   = withdrawLog.getOrderNo();
 		String sh_id     = payAgentPlatform.getMerId();
-		String notifyURL = sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
+		String notifyURL = sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode();
 		map.put( "name", name );
 		map.put( "Card", Card );
 		map.put( "Bankof", Bankof );

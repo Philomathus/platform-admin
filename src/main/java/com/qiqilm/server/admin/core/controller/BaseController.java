@@ -10,7 +10,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.LotteryHistory;
 import com.qiqilm.server.admin.domain.LotteryInfo;
 import com.qiqilm.server.admin.domain.MemberGameData;
-import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.exception.ControllerExceptionHandler;
 import com.qiqilm.server.admin.service.IMemberGameDataMinService;
 import com.qiqilm.server.admin.utils.*;
@@ -181,7 +181,7 @@ public class BaseController extends ControllerExceptionHandler {
 		Long day = (preEnd.getTime() - preStart.getTime()) / (1000 * 60 * 60 * 24);
 		//校验前缀
 		if (day <= 0 && sufStart > sufEnd) {
-			throw new BaseException("彩种名称[" + lotteryHistory.getName() + "],开始期数:{" + startIssue + "}不能大于结束期数:{" + endIssue + "},请排查!");
+			throw new BusinessException("彩种名称[" + lotteryHistory.getName() + "],开始期数:{" + startIssue + "}不能大于结束期数:{" + endIssue + "},请排查!");
 		}
 		TreeMap<String,LotteryHistory> historyMap = new TreeMap<>();
 		//当天

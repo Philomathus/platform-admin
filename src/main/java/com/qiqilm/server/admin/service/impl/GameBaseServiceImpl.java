@@ -12,7 +12,7 @@ import com.qiqilm.server.admin.domain.vo.GameResult;
 import com.qiqilm.server.admin.domain.vo.XiaFenResult;
 import com.qiqilm.server.admin.enums.EnumGamePlatform;
 import com.qiqilm.server.admin.enums.EnumLock;
-import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.manager.LogAction;
 import com.qiqilm.server.admin.manager.LogMoney;
 import com.qiqilm.server.admin.mapper.GamePlatformMapper;
@@ -23,17 +23,25 @@ import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.game.*;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 
 import javax.annotation.Resource;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -94,69 +102,72 @@ public class GameBaseServiceImpl implements IGameBaseService {
         final Date                    date          = new Date();
         List<Integer>                 lists         = memberGameMoneyMapper.lists( userId );
         Set<Callable<RspGameBalance>> forkJoinTasks = new HashSet<>();
-		if ( lists.contains( EnumGamePlatform.AG_LIVE.getType() ) ) {
-			forkJoinTasks.add( this.agBalanceTask( userId, date ) );
-		}
-		if ( lists.contains( EnumGamePlatform.OG_LIVE.getType() ) ) {
-			forkJoinTasks.add( this.ogBalanceTask( userId ) );
-		}
-		if ( lists.contains( EnumGamePlatform.KY_CHESS.getType() ) ) {
-			forkJoinTasks.add( this.kyBalanceTask( userId ) );
-		}
-		if ( lists.contains( EnumGamePlatform.KY_CHESS_NEW.getType() ) ) {
-			forkJoinTasks.add( this.kyNewBalanceTask( userId ) );
-		}
-		if ( lists.contains( EnumGamePlatform.MG_LIVE.getType() ) ) {
-			forkJoinTasks.add( this.mgBalanceTask( userId ) );
-		}
-		if ( lists.contains( EnumGamePlatform.NG_LIVE.getType() ) ) {
-			forkJoinTasks.add( this.ngBalanceTask( userId ) );
-		}
-		if ( lists.contains( EnumGamePlatform.BBIN_LIVE.getType() ) ) {
-			forkJoinTasks.add( this.bbinBalanceTask( userId, EnumGamePlatform.BBIN_LIVE.getType() ) );
-		}
-		if ( lists.contains( EnumGamePlatform.BBIN_SPORT.getType() ) ) {
-			forkJoinTasks.add( this.bbinBalanceTask( userId, EnumGamePlatform.BBIN_SPORT.getType() ) );
-		}
-		if ( lists.contains( EnumGamePlatform.BBIN_DIANZI.getType() ) ) {
-			forkJoinTasks.add( this.bbinBalanceTask( userId, EnumGamePlatform.BBIN_DIANZI.getType() ) );
-		}
-		if ( lists.contains( EnumGamePlatform.BBIN_FISH.getType() ) ) {
-			forkJoinTasks.add( this.bbinBalanceTask( userId, EnumGamePlatform.BBIN_FISH.getType() ) );
-		}
-		if ( lists.contains( EnumGamePlatform.SHABA_SPORT.getType() ) ) {
-			forkJoinTasks.add( this.shabaBalanceTask( userId ) );
-		}
-		if ( lists.contains( EnumGamePlatform.ICG_DIANZI.getType() ) ) {
-			forkJoinTasks.add( this.icgBalanceTask( userId ) );
-		}
-		if ( lists.contains( EnumGamePlatform.MEITIAN_CHESS.getType() ) ) {
-			forkJoinTasks.add( this.mtBalanceTask( userId ) );
-		}
-		if ( lists.contains( EnumGamePlatform.KAIXUAN_CHESS.getType() ) ) {
-			forkJoinTasks.add( this.kxBalanceTask( userId, date ) );
-		}
-		if ( lists.contains( EnumGamePlatform.KAIXUAN_CHESS_NEW.getType() ) ) {
-			forkJoinTasks.add( this.kxNewBalanceTask( userId, date ) );
-		}
-		if ( lists.contains( EnumGamePlatform.NEWWORLD_CHESS.getType() ) ) {
-			forkJoinTasks.add( this.newWorldBalanceTask( userId, date ) );
-		}
-		if ( lists.contains( EnumGamePlatform.AFB.getType() ) ) {
-			forkJoinTasks.add( this.afbBalanceTask( userId, date ) );
-		}
-		if ( lists.contains( EnumGamePlatform.FANY_SPORT.getType() ) ) {
-			forkJoinTasks.add( this.fanyBalanceTask( userId, date ) );
-		}
-		if ( lists.contains( EnumGamePlatform.BG_LIVE.getType() ) ) {
-			forkJoinTasks.add( this.bgBalanceTask( userId, EnumGamePlatform.BG_LIVE.getType() ) );
-		}
-		if ( lists.contains( EnumGamePlatform.BG_DIANZI.getType() ) ) {
-			forkJoinTasks.add( this.bgBalanceTask( userId, EnumGamePlatform.BG_DIANZI.getType() ) );
-		}
-		if ( lists.contains( EnumGamePlatform.BG_FISH.getType() ) ) {
-			forkJoinTasks.add( this.bgBalanceTask( userId, EnumGamePlatform.BG_FISH.getType() ) );
-		}
+        if ( lists.contains( EnumGamePlatform.AG_LIVE.getType() ) ) {
+            forkJoinTasks.add( this.agBalanceTask( userId, date ) );
+        }
+        if ( lists.contains( EnumGamePlatform.OG_LIVE.getType() ) ) {
+            forkJoinTasks.add( this.ogBalanceTask( userId ) );
+        }
+        if ( lists.contains( EnumGamePlatform.OG_NEW.getType() ) ) {
+            forkJoinTasks.add( this.ogNewBalanceTask( userId ) );
+        }
+        if ( lists.contains( EnumGamePlatform.KY_CHESS.getType() ) ) {
+            forkJoinTasks.add( this.kyBalanceTask( userId ) );
+        }
+        if ( lists.contains( EnumGamePlatform.KY_CHESS_NEW.getType() ) ) {
+            forkJoinTasks.add( this.kyNewBalanceTask( userId ) );
+        }
+        if ( lists.contains( EnumGamePlatform.MG_LIVE.getType() ) ) {
+            forkJoinTasks.add( this.mgBalanceTask( userId ) );
+        }
+        if ( lists.contains( EnumGamePlatform.NG_LIVE.getType() ) ) {
+            forkJoinTasks.add( this.ngBalanceTask( userId ) );
+        }
+        if ( lists.contains( EnumGamePlatform.BBIN_LIVE.getType() ) ) {
+            forkJoinTasks.add( this.bbinBalanceTask( userId, EnumGamePlatform.BBIN_LIVE.getType() ) );
+        }
+        if ( lists.contains( EnumGamePlatform.BBIN_SPORT.getType() ) ) {
+            forkJoinTasks.add( this.bbinBalanceTask( userId, EnumGamePlatform.BBIN_SPORT.getType() ) );
+        }
+        if ( lists.contains( EnumGamePlatform.BBIN_DIANZI.getType() ) ) {
+            forkJoinTasks.add( this.bbinBalanceTask( userId, EnumGamePlatform.BBIN_DIANZI.getType() ) );
+        }
+        if ( lists.contains( EnumGamePlatform.BBIN_FISH.getType() ) ) {
+            forkJoinTasks.add( this.bbinBalanceTask( userId, EnumGamePlatform.BBIN_FISH.getType() ) );
+        }
+        if ( lists.contains( EnumGamePlatform.SHABA_SPORT.getType() ) ) {
+            forkJoinTasks.add( this.shabaBalanceTask( userId ) );
+        }
+        if ( lists.contains( EnumGamePlatform.ICG_DIANZI.getType() ) ) {
+            forkJoinTasks.add( this.icgBalanceTask( userId ) );
+        }
+        if ( lists.contains( EnumGamePlatform.MEITIAN_CHESS.getType() ) ) {
+            forkJoinTasks.add( this.mtBalanceTask( userId ) );
+        }
+        if ( lists.contains( EnumGamePlatform.KAIXUAN_CHESS.getType() ) ) {
+            forkJoinTasks.add( this.kxBalanceTask( userId, date ) );
+        }
+        if ( lists.contains( EnumGamePlatform.KAIXUAN_CHESS_NEW.getType() ) ) {
+            forkJoinTasks.add( this.kxNewBalanceTask( userId, date ) );
+        }
+        if ( lists.contains( EnumGamePlatform.NEWWORLD_CHESS.getType() ) ) {
+            forkJoinTasks.add( this.newWorldBalanceTask( userId, date ) );
+        }
+        if ( lists.contains( EnumGamePlatform.AFB.getType() ) ) {
+            forkJoinTasks.add( this.afbBalanceTask( userId, date ) );
+        }
+        if ( lists.contains( EnumGamePlatform.FANY_SPORT.getType() ) ) {
+            forkJoinTasks.add( this.fanyBalanceTask( userId, date ) );
+        }
+        if ( lists.contains( EnumGamePlatform.BG_LIVE.getType() ) ) {
+            forkJoinTasks.add( this.bgBalanceTask( userId, EnumGamePlatform.BG_LIVE.getType() ) );
+        }
+        if ( lists.contains( EnumGamePlatform.BG_DIANZI.getType() ) ) {
+            forkJoinTasks.add( this.bgBalanceTask( userId, EnumGamePlatform.BG_DIANZI.getType() ) );
+        }
+        if ( lists.contains( EnumGamePlatform.BG_FISH.getType() ) ) {
+            forkJoinTasks.add( this.bgBalanceTask( userId, EnumGamePlatform.BG_FISH.getType() ) );
+        }
 
         List<Future<RspGameBalance>> futureList = forkJoinPool.invokeAll( forkJoinTasks );
         Set<RspGameBalance> resultSet = futureList.stream().map( t -> {
@@ -173,7 +184,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.FANY_SPORT.getType() );
-                BigDecimal backMoney = fanYSportService.queryCoin( gamePlatform, userId, date );
+                BigDecimal   backMoney    = fanYSportService.queryCoin( gamePlatform, userId, date );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.FANY_SPORT.getType() );
@@ -210,7 +221,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.AFB.getType() );
-                BigDecimal backMoney = afbService.queryCoin( gamePlatform, userId, date );
+                BigDecimal   backMoney    = afbService.queryCoin( gamePlatform, userId, date );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.AFB.getType() );
@@ -228,7 +239,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform =
-						gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.NEWWORLD_CHESS.getType() );
+                        gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.NEWWORLD_CHESS.getType() );
                 BigDecimal backMoney = newWorldService.queryCoin( gamePlatform, userId, date );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
@@ -247,7 +258,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.LEG_CHESS.getType() );
-                BigDecimal backMoney = legService.queryCoin( gamePlatform, userId, date );
+                BigDecimal   backMoney    = legService.queryCoin( gamePlatform, userId, date );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.LEG_CHESS.getType() );
@@ -265,7 +276,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.KAIXUAN_CHESS.getType() );
-                BigDecimal backMoney = kaiXuanService.queryCoin( gamePlatform, userId, date );
+                BigDecimal   backMoney    = kaiXuanService.queryCoin( gamePlatform, userId, date );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.KAIXUAN_CHESS.getType() );
@@ -283,7 +294,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform =
-						gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.KAIXUAN_CHESS_NEW.getType() );
+                        gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.KAIXUAN_CHESS_NEW.getType() );
                 BigDecimal backMoney = kaiXuanService.queryCoin( gamePlatform, userId, date );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
@@ -302,7 +313,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.MEITIAN_CHESS.getType() );
-                BigDecimal backMoney = meiTianService.queryCoin( gamePlatform, userId );
+                BigDecimal   backMoney    = meiTianService.queryCoin( gamePlatform, userId );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.MEITIAN_CHESS.getType() );
@@ -320,7 +331,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.ICG_DIANZI.getType() );
-                BigDecimal backMoney = icgService.queryCoin( gamePlatform, userId );
+                BigDecimal   backMoney    = icgService.queryCoin( gamePlatform, userId );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.ICG_DIANZI.getType() );
@@ -338,7 +349,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.SHABA_SPORT.getType() );
-                BigDecimal backMoney = shabaService.queryCoin( gamePlatform, userId );
+                BigDecimal   backMoney    = shabaService.queryCoin( gamePlatform, userId );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.SHABA_SPORT.getType() );
@@ -415,12 +426,13 @@ public class GameBaseServiceImpl implements IGameBaseService {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.KY_CHESS.getType() );
                 String resAll = PostData.getAllBalance( gamePlatform.getAgent(), userId, gamePlatform.getDes(),
-						gamePlatform.getMd5(), gamePlatform.getApiUrl() );
+                        gamePlatform.getMd5(), gamePlatform.getApiUrl() );
 
                 log.warn( resAll );
                 GameApiRes gameApiResAll = JsonUtil.json2Object( resAll, GameApiRes.class );
-                BigDecimal backMoney = gameApiResAll.getD().getCode() != 0 ? BigDecimal.ZERO : BigDecimal
-                        .valueOf( gameApiResAll.getD().getFreeMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+                BigDecimal backMoney =
+                        gameApiResAll.getD().getCode() != 0 ? BigDecimal.ZERO : BigDecimal.valueOf( gameApiResAll.getD()
+                                .getFreeMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.KY_CHESS.getType() );
                 rspGameBalance.setName( EnumGamePlatform.KY_CHESS.getName() );
@@ -438,11 +450,12 @@ public class GameBaseServiceImpl implements IGameBaseService {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.KY_CHESS_NEW.getType() );
                 String resAll = PostData.getAllBalance( gamePlatform.getAgent(), userId, gamePlatform.getDes(),
-						gamePlatform.getMd5(), gamePlatform.getApiUrl() );
+                        gamePlatform.getMd5(), gamePlatform.getApiUrl() );
 
                 GameApiRes gameApiResAll = JsonUtil.json2Object( resAll, GameApiRes.class );
-                BigDecimal backMoney = gameApiResAll.getD().getCode() != 0 ? BigDecimal.ZERO : BigDecimal
-                        .valueOf( gameApiResAll.getD().getFreeMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+                BigDecimal backMoney =
+                        gameApiResAll.getD().getCode() != 0 ? BigDecimal.ZERO : BigDecimal.valueOf( gameApiResAll.getD()
+                                .getFreeMoney() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.KY_CHESS_NEW.getType() );
                 rspGameBalance.setName( EnumGamePlatform.KY_CHESS_NEW.getName() );
@@ -460,7 +473,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.OG_LIVE.getType() );
-                HttpHeaders headers = new HttpHeaders();
+                HttpHeaders  headers      = new HttpHeaders();
                 thirdPMCacheManager.pullOgToken( userId, gamePlatform.getApiUrl(), gamePlatform.getDes(), gamePlatform.getMd5() );
                 headers.set( "X-Token", thirdPMCacheManager.getOgToken( userId ) );
                 String url = gamePlatform.getApiUrl() + "/game-providers/30/balance?username=" + userId;
@@ -470,13 +483,61 @@ public class GameBaseServiceImpl implements IGameBaseService {
                 headers.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
                 //将请求头部和参数合成一个请求
                 HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>( headers );
-                ResponseEntity<BalanceResult> response = restTemplate.exchange( url, method, requestEntity, BalanceResult.class );
-                BalanceResult resultOG = response.getBody();
+                ResponseEntity<BalanceResult>             response      = restTemplate.exchange( url, method, requestEntity,
+                        BalanceResult.class );
+                BalanceResult                             resultOG      = response.getBody();
+                log.warn( JsonUtil.object2Json( resultOG ) );
                 BigDecimal backMoney = "success".equals( resultOG.getStatus() ) ? resultOG.getData()
-                                                                                          .getBalance() : BigDecimal.ZERO;
+                        .getBalance() : BigDecimal.ZERO;
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.OG_LIVE.getType() );
                 rspGameBalance.setName( EnumGamePlatform.OG_LIVE.getName() );
+                rspGameBalance.setValue( backMoney );
+                return rspGameBalance;
+            } catch ( Exception e ) {
+                log.error( e.getMessage(), e );
+            }
+            return null;
+        };
+    }
+
+    private Callable<RspGameBalance> ogNewBalanceTask( final String userId ) {
+        return () -> {
+            try {
+                GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.OG_NEW.getType() );
+
+                MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
+                requestMap.add( "player_id", userId );
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.set( "key", gamePlatform.getDes() );
+                headers.set( "operator-name", gamePlatform.getAgent() );
+                HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>( headers );
+
+                UriComponents uriComponents = UriComponentsBuilder.fromUriString(
+                                gamePlatform.getApiUrl() + "/api/v2/platform/transfer-wallet/get-balance" ).queryParams( requestMap )
+                        .build( true );
+
+                Map<String, Object> resultMap = restTemplate.execute( uriComponents.toUri(), HttpMethod.GET,
+                        restTemplate.httpEntityCallback( requestEntity ), response -> {
+                    InputStream bodyStream = response.getBody();
+                    String      text;
+                    try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                        text = IOUtils.toString( reader );
+                    }
+                    return JsonUtil.json2Map( text );
+                } );
+
+                BigDecimal backMoney;
+                if ( !CollectionUtils.isEmpty( resultMap ) && "S-100".equals( resultMap.get( "rs_code" ).toString() ) ) {
+                    backMoney = new BigDecimal( resultMap.getOrDefault( "current_balance", "0" ).toString() );
+                } else {
+                    backMoney = BigDecimal.ZERO;
+                }
+
+                RspGameBalance rspGameBalance = new RspGameBalance();
+                rspGameBalance.setType( EnumGamePlatform.OG_NEW.getType() );
+                rspGameBalance.setName( EnumGamePlatform.OG_NEW.getName() );
                 rspGameBalance.setValue( backMoney );
                 return rspGameBalance;
             } catch ( Exception e ) {
@@ -492,16 +553,16 @@ public class GameBaseServiceImpl implements IGameBaseService {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( EnumGamePlatform.AG_LIVE.getType() );
 
                 String orderId = PostData.createOrderId( gamePlatform.getAgent(), userId, EnumGamePlatform.AG_LIVE.getType(),
-						date );
+                        date );
                 String result = PostData.GetBalance( userId, gamePlatform, orderId );
 
                 Document doc = DocumentUtil.getXml( result );
                 String money = doc.getElementsByTagName( "result" ).item( 0 ).getAttributes().getNamedItem( "info" )
-                                  .getTextContent();
+                        .getTextContent();
                 String msg = doc.getElementsByTagName( "result" ).item( 0 ).getAttributes().getNamedItem( "msg" )
-                                .getTextContent();
+                        .getTextContent();
                 BigDecimal backMoney = StringUtils.isNotBlank( msg ) ? BigDecimal.ZERO : new BigDecimal( money ).setScale( 2,
-						BigDecimal.ROUND_HALF_UP );
+                        BigDecimal.ROUND_HALF_UP );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
                 rspGameBalance.setType( EnumGamePlatform.AG_LIVE.getType() );
@@ -539,6 +600,9 @@ public class GameBaseServiceImpl implements IGameBaseService {
             case OG_LIVE:
                 thirdPMCacheManager.pullOgToken( userId, gamePlatform.getApiUrl(), gamePlatform.getDes(), gamePlatform.getMd5() );
                 xiaFenResult = outGameOG( userId, gamePlatform.getApiUrl(), orderId );
+                break;
+            case OG_NEW:
+                xiaFenResult = outGameOGNew( userId, gamePlatform, orderId );
                 break;
             case KY_CHESS:
             case KAIXUAN_CHESS_NEW:
@@ -591,7 +655,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
                 break;
             }
             if ( xiaFenResult == null ) {
-                throw new BaseException( "获取游戏下分记录异常" );
+                throw new BusinessException( "获取游戏下分记录异常" );
             }
             if ( xiaFenResult.getBackMoney().compareTo( BigDecimal.ZERO ) == 0 ) {
                 return AjaxResult.error( "下分金额为0！" );
@@ -603,7 +667,7 @@ public class GameBaseServiceImpl implements IGameBaseService {
             } else {
                 memberInfoService.outGameFail( orderId, userId, platformId );
                 log.info( "人工下分失败：会员ID:{},下分平台:{},金额:{},result:{}", userId, gamePlatform.getName(), xiaFenResult.getBackMoney()
-						, xiaFenResult.isOk() );
+                        , xiaFenResult.isOk() );
                 return AjaxResult.error();
             }
         } catch ( Exception e ) {
@@ -616,17 +680,16 @@ public class GameBaseServiceImpl implements IGameBaseService {
 
     @Transactional( rollbackFor = Exception.class )
     public void xiafen( MemberInfo member, GamePlatform gamePlatform, XiaFenResult xiaFenResult, String orderId, BigDecimal old
-			, String name, MemberGameMoney gameMoney ) {
+            , String name, MemberGameMoney gameMoney ) {
         memberInfoService.outGMGameSucess( orderId, member.getId(), gamePlatform.getId()
-                                                                                .intValue(), xiaFenResult.getBackMoney(),
-				member.getUserName() );
+                .intValue(), xiaFenResult.getBackMoney(), member.getUserName() );
         logMoney.logPlatformSwitch( member.getId(), member.getUserName(), xiaFenResult.getBackMoney(), old,
-				gamePlatform.getAgent(), name, orderId );
+                gamePlatform.getAgent(), name, orderId );
         logAction.logXiafen( ServletUtil.getHttpServletRequest(), member.getId(), member.getUserName(), name, orderId,
-				xiaFenResult
-                .getBackMoney().subtract( gameMoney.getMoney() ), member.getTotalAccount(), xiaFenResult.getBackMoney() );
+                xiaFenResult.getBackMoney()
+                .subtract( gameMoney.getMoney() ), member.getTotalAccount(), xiaFenResult.getBackMoney() );
         log.info( "人工下分成功：会员ID:{},下分平台:{},金额:{},result:{}", member.getId(), gamePlatform.getName(), xiaFenResult.getBackMoney()
-				, xiaFenResult.isOk() );
+                , xiaFenResult.isOk() );
     }
 
     private MemberGameMoney getMemberGameMoney( String userId, Integer platformId ) {
@@ -661,8 +724,9 @@ public class GameBaseServiceImpl implements IGameBaseService {
         headers.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
         //将请求头部和参数合成一个请求
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>( headers );
-        ResponseEntity<BalanceResult> response = restTemplate.exchange( url, method, requestEntity, BalanceResult.class );
-        BalanceResult result = response.getBody();
+        ResponseEntity<BalanceResult>             response      = restTemplate.exchange( url, method, requestEntity,
+                BalanceResult.class );
+        BalanceResult                             result        = response.getBody();
         if ( !result.getStatus().equals( "success" ) ) {
             log.error( "取得余额失败失败 userId:" + account );
             return xiaFenResult;
@@ -702,7 +766,8 @@ public class GameBaseServiceImpl implements IGameBaseService {
         XiaFenResult xiaFenResult = new XiaFenResult();
         String       resAll;
         try {
-            resAll = PostData.getAllBalance( gamePlatform.getAgent(), account, gamePlatform.getDes(), gamePlatform.getMd5(), gamePlatform.getApiUrl() );
+            resAll = PostData.getAllBalance( gamePlatform.getAgent(), account, gamePlatform.getDes(), gamePlatform.getMd5(),
+                    gamePlatform.getApiUrl() );
         } catch ( Exception e ) {
             log.error( "获取总分失败，memId=" + account );
             return xiaFenResult;
@@ -720,7 +785,8 @@ public class GameBaseServiceImpl implements IGameBaseService {
         }
         String resXF;
         try {
-            resXF = PostData.xiafen( gamePlatform.getAgent(), account, backMoney.toString(), orderId, gamePlatform.getDes(), gamePlatform.getMd5(), gamePlatform.getApiUrl() );
+            resXF = PostData.xiafen( gamePlatform.getAgent(), account, backMoney.toString(), orderId, gamePlatform.getDes(),
+                    gamePlatform.getMd5(), gamePlatform.getApiUrl() );
         } catch ( Exception e ) {
             log.error( "下分失败，，account=" + account );
             return xiaFenResult;
@@ -729,8 +795,8 @@ public class GameBaseServiceImpl implements IGameBaseService {
         GameApiRes gameApiResXF = JsonUtil.json2Object( resXF, GameApiRes.class );
 
         if ( gameApiResXF.getD().getCode() != 0 ) {
-            log.error( "EEEEEE下分异常，可能正在结算,资金暂时保存在：{}中,code:{},memberId:{}，下分金额：{}", gamePlatform.getName(), gameApiResXF
-                    .getD().getCode(), account, backMoney );
+            log.error( "EEEEEE下分异常，可能正在结算,资金暂时保存在：{}中,code:{},memberId:{}，下分金额：{}", gamePlatform.getName(), gameApiResXF.getD()
+                    .getCode(), account, backMoney );
             return xiaFenResult;
         }
         xiaFenResult.setOk( true );
@@ -751,14 +817,14 @@ public class GameBaseServiceImpl implements IGameBaseService {
         String result = PostData.GetBalance( account, gamePlatform, orderId );
         if ( result == null ) {
             log.error( "查询AG余额失败account:{}", account );
-            throw new BaseException( "查询余额失败!" );
+            throw new BusinessException( "查询余额失败!" );
         } else {
             Document doc = DocumentUtil.getXml( result );
             money = doc.getElementsByTagName( "result" ).item( 0 ).getAttributes().getNamedItem( "info" ).getTextContent();
             String msg = doc.getElementsByTagName( "result" ).item( 0 ).getAttributes().getNamedItem( "msg" ).getTextContent();
             if ( !StringUtils.isEmpty( msg ) ) {
                 log.error( "查询余额失败!" + msg );
-                throw new BaseException( "下分失败!" );
+                throw new BusinessException( "下分失败!" );
             }
         }
         BigDecimal backMoney = new BigDecimal( money );
@@ -769,24 +835,24 @@ public class GameBaseServiceImpl implements IGameBaseService {
         String type = "OUT";
         String res  = PostData.PrepareTransferCredit( account, gamePlatform, backMoney, orderId, type );
         if ( res == null ) {
-            throw new BaseException( "预转账失败!" );
+            throw new BusinessException( "预转账失败!" );
         } else {
             Document doc = DocumentUtil.getXml( res );
             String   msg = doc.getElementsByTagName( "result" ).item( 0 ).getAttributes().getNamedItem( "msg" ).getTextContent();
             if ( !StringUtils.isEmpty( msg ) ) {
                 log.error( "预转账失败!" + msg );
-                throw new BaseException( "下分失败!" );
+                throw new BusinessException( "下分失败!" );
             }
         }
         String resAll = PostData.confirmMoney( account, gamePlatform, backMoney, orderId, type );
         if ( resAll == null ) {
-            throw new BaseException( "确认转账失败!" );
+            throw new BusinessException( "确认转账失败!" );
         } else {
             Document doc = DocumentUtil.getXml( resAll );
             String   msg = doc.getElementsByTagName( "result" ).item( 0 ).getAttributes().getNamedItem( "msg" ).getTextContent();
             if ( !StringUtils.isEmpty( msg ) ) {
                 log.error( "确认转账失败!" + msg );
-                throw new BaseException( "进入游戏失败!" );
+                throw new BusinessException( "进入游戏失败!" );
             }
         }
         xiaFenResult.setOk( true );
@@ -811,7 +877,78 @@ public class GameBaseServiceImpl implements IGameBaseService {
             xiaFenResult.setBackMoney( balance );
             return xiaFenResult;
         } catch ( Exception e ) {
-            throw new BaseException( "MG下分游戏失败!" + e.getMessage() );
+            throw new BusinessException( "MG下分游戏失败!" + e.getMessage() );
         }
+    }
+
+    public XiaFenResult outGameOGNew( String account, GamePlatform gamePlatform, String orderId ) {
+        XiaFenResult xiaFenResult = new XiaFenResult();
+
+        //取得余额
+        MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<>();
+        requestMap.add( "player_id", account );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set( "key", gamePlatform.getDes() );
+        headers.set( "operator-name", gamePlatform.getAgent() );
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>( headers );
+
+        UriComponents uriComponents = UriComponentsBuilder.fromUriString(
+                        gamePlatform.getApiUrl() + "/api/v2/platform/transfer-wallet/get-balance" ).queryParams( requestMap )
+                .build( true );
+
+        Map<String, Object> resultMap = restTemplate.execute( uriComponents.toUri(), HttpMethod.GET,
+                restTemplate.httpEntityCallback( requestEntity ), response -> {
+            InputStream bodyStream = response.getBody();
+            String      text;
+            try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                text = IOUtils.toString( reader );
+            }
+            return JsonUtil.json2Map( text );
+        } );
+        if ( !CollectionUtils.isEmpty( resultMap ) && "S-100".equals( resultMap.get( "rs_code" ).toString() ) ) {
+            BigDecimal balance = new BigDecimal( resultMap.getOrDefault( "current_balance", "0" ).toString() );
+            xiaFenResult.setBackMoney( balance );
+            if ( balance.compareTo( BigDecimal.ZERO ) == 0 ) {
+                xiaFenResult.setOk( true );
+                return xiaFenResult;
+            }
+        } else {
+            log.error( "取得余额失败失败 userId:" + account );
+            return xiaFenResult;
+        }
+
+        //转出余额
+        Map<String, String> params = new TreeMap<>();
+        params.put( "player_id", account );
+        params.put( "transaction_id", orderId );
+        params.put( "transfer_amount", xiaFenResult.getBackMoney().stripTrailingZeros().toPlainString() );
+        params.put( "timestamp", String.valueOf( System.currentTimeMillis() / 1000 ) );
+
+        StringBuilder sb = new StringBuilder();
+        params.forEach( ( k, v ) -> sb.append( k ).append( "=" ).append( v ).append( "&" ) );
+        String sign = sb.substring( 0, sb.length() - 1 ) + gamePlatform.getMd5();
+        params.put( "signature", DigestUtils.md5Hex( sign ) );
+
+        headers.setContentType( MediaType.APPLICATION_JSON );
+
+        resultMap = restTemplate.execute( gamePlatform.getApiUrl()
+                + "/api/v2/platform/transfer-wallet/withdraw", HttpMethod.POST,
+                restTemplate.httpEntityCallback( new HttpEntity<>( params, headers ) ), response -> {
+            InputStream bodyStream = response.getBody();
+            String      text;
+            try ( Reader reader = new InputStreamReader( bodyStream ) ) {
+                text = IOUtils.toString( reader );
+            }
+            return JsonUtil.json2Map( text );
+        } );
+
+        if ( !CollectionUtils.isEmpty( resultMap ) && "S-100".equals( resultMap.get( "rs_code" ).toString() ) ) {
+            xiaFenResult.setOk( true );
+            return xiaFenResult;
+        }
+
+        log.error( "转出余额失败 userId:" + account );
+        return xiaFenResult;
     }
 }

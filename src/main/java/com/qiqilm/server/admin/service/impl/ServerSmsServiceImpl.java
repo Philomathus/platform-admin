@@ -18,6 +18,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.core.vo.LoginUser;
 import com.qiqilm.server.admin.domain.ServerSms;
 import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.mapper.ServerSmsMapper;
 import com.qiqilm.server.admin.service.IServerSmsService;
 import com.qiqilm.server.admin.service.SmsLoadBalancerService;
@@ -39,7 +40,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -254,10 +254,10 @@ public class ServerSmsServiceImpl implements IServerSmsService {
                 return code;
             } else {
                 log.warn( "短信发送失败:{}", JsonUtil.object2Json( res ) );
-                throw new BaseException( com.tencentcloudapi.sms.v20190711.models.SendSmsResponse.toJsonString( res ) );
+                throw new BusinessException( com.tencentcloudapi.sms.v20190711.models.SendSmsResponse.toJsonString( res ) );
             }
         } catch ( TencentCloudSDKException e ) {
-            throw new BaseException( e );
+            throw new BusinessException( e );
         }
     }
 
@@ -286,10 +286,10 @@ public class ServerSmsServiceImpl implements IServerSmsService {
                 // {"requestId":"01C0231F-AF35-4AE8-A92B-BC10ACDB90C6","bizId":null,"code":"isv.SMS_TEMPLATE_ILLEGAL",
                 // "message":"模板不合法(不存在或被拉黑)"}
                 log.warn( "阿里云短信发送失败:{}", JsonUtil.object2Json( sendSmsResponse ) );
-                throw new BaseException( JsonUtil.object2Json( sendSmsResponse ) );
+                throw new BusinessException( JsonUtil.object2Json( sendSmsResponse ) );
             }
         } catch ( ClientException e ) {
-            throw new BaseException( e );
+            throw new BusinessException( e );
         }
     }
 
@@ -315,10 +315,10 @@ public class ServerSmsServiceImpl implements IServerSmsService {
                 return code;
             } else {
                 log.warn( "百度云短信发送失败:{}", JsonUtil.object2Json( sendSmsResponse ) );
-                throw new BaseException( JsonUtil.object2Json( sendSmsResponse ) );
+                throw new BusinessException( JsonUtil.object2Json( sendSmsResponse ) );
             }
         } catch ( Exception e ) {
-            throw new BaseException( e );
+            throw new BusinessException( e );
         }
     }
 

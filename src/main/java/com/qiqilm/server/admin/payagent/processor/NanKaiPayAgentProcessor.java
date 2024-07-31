@@ -25,7 +25,7 @@ public class NanKaiPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay(MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent) throws Exception {
         //南开代付:header_key = paykey, MD5_key = paySecret
-        String notifyUrl = sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
+        String notifyUrl = sysConfigCacheUtil.getConf("payAgentNotifyUrl" ) + payAgentPlatform.getCode();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
         Map<String, Object> bodyMap = new HashMap<>();
         bodyMap.put("payKey", payAgentPlatform.getHeaderKey());

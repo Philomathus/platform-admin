@@ -2,7 +2,7 @@ package com.qiqilm.server.admin.im;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.qiqilm.server.admin.exception.BaseException;
+import com.qiqilm.server.admin.exception.BusinessException;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
@@ -40,7 +40,7 @@ public class MessageType {
 
     public ObjectNode getNode(){
         if(Objects.isNull(data))
-            throw new BaseException( "获取节点失败" );
+            throw new BusinessException( "获取节点失败" );
         return ofNode(data);
     }
 
@@ -77,7 +77,7 @@ public class MessageType {
             }
        }catch (Exception e){
            log.error( e.getMessage(), e );
-           throw new BaseException( "未初始化消息体" );
+           throw new BusinessException( "未初始化消息体" );
        }
 
        node.put("MsgContent",content);

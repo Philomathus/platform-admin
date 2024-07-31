@@ -15,6 +15,7 @@ import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +58,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 查询主播用户信息
      *
      * @param id 主播用户信息ID
+     *
      * @return 主播用户信息
      */
     @Override
@@ -87,6 +89,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 查询主播用户信息列表
      *
      * @param liveUser 主播用户信息
+     *
      * @return 主播用户信息
      */
     @Override
@@ -111,6 +114,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 修改主播用户信息
      *
      * @param liveUser 主播用户信息
+     *
      * @return 结果
      */
     @Override
@@ -320,8 +324,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
             } catch ( Exception e ) {
                 log.error( "主播调用开播接口 - 测试群组失败 - userId:{};groupId:{}", id, liveVideo.getGroupId(), e );
                 //创建 im 聊天群
-                String groupId = imApi.createGroup( null, GroupType.AV_CHART_ROOM,
-                        String.valueOf( liveVideo.getUserId() ) );
+                String groupId = imApi.createGroup( null, GroupType.AV_CHART_ROOM, String.valueOf( liveVideo.getUserId() ) );
                 log.info( "主播调用开播接口 - 开始创建群组 - userId:{};groupId:{}", id, groupId );
                 liveVideo.setGroupId( groupId );
             }
@@ -337,6 +340,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 接近生活
      *
      * @param map 地图
+     *
      * @return {@link AjaxResult}
      */
     @Override
@@ -402,6 +406,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
      * 踢出主播
      *
      * @param userIds
+     *
      * @return success
      * @desc 1：要判断主播是否在直播 live_video live_in字段
      * 2：要更新live_user 家族id清空 。。。
@@ -433,7 +438,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
         return AjaxResult.success();
     }
 
-    @Transactional ( rollbackFor = Exception.class )
+    @Transactional( rollbackFor = Exception.class )
     public void updateFamily( Map<Long, LiveUser> liveUserMap ) {
         for ( Map.Entry<Long, LiveUser> entry : liveUserMap.entrySet() ) {
             long           userId         = entry.getKey();
