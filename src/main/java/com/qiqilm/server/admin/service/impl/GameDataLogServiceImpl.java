@@ -211,8 +211,11 @@ public class GameDataLogServiceImpl implements IGameDataLogService {
         case 40:
             pid = 12;
             break;
+        case 41:
+            pid = 41;
+            break;
         default:
-            pid = null;
+            pid = platformId;
         }
         return pid;
     }
