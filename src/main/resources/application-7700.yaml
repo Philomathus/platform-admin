@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://8.210.10.193:3306/7700_main?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      jdbc-url: jdbc:mysql://43.199.95.227:3306/7700_main?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: root
       password: f:e=h>EVUH,!N7zS&J`9
     secondary:
@@ -9,7 +9,7 @@ spring:
       username: general
       password: 5P3Aq3P6n&VB$BNK
   redis:
-    host: 8.210.10.193
+    host: 43.199.95.227
     port: 6379
     password: EvYsN39ViArDumx4pWyH
 

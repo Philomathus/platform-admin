@@ -1,15 +1,15 @@
 spring:
   datasource:
     primary:
-      jdbc-url: jdbc:mysql://8.210.10.193:3306/7700_main?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      jdbc-url: jdbc:mysql://43.199.95.227:3306/7700_main?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
       username: root
       password: f:e=h>EVUH,!N7zS&J`9
     secondary:
-      jdbc-url: jdbc:mysql://8.210.10.193:3306/general?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+      jdbc-url: jdbc:mysql://43.199.95.227:3306/general?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
       username: root
       password: f:e=h>EVUH,!N7zS&J`9
   redis:
-    host: 8.210.10.193
+    host: 43.199.95.227
     port: 6379
     password: EvYsN39ViArDumx4pWyH
 
