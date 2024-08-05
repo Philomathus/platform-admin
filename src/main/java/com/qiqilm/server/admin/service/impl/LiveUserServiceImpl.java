@@ -95,14 +95,9 @@ public class LiveUserServiceImpl implements ILiveUserService {
     @Override
     public List<LiveUser> selectLiveUserList( LiveUser liveUser ) {
         List<LiveUser> liveUsers = liveUserMapper.selectLiveUserList( liveUser );
-
-        String listHostList = sysConfigCacheUtil.getConf( "test_host_list" );
-
         liveUsers.forEach( user -> {
-
-            boolean phone = listHostList.contains( user.getMobile() );
-            user.setVirtualAnchor( phone ? 1 : 0 );
-
+            boolean isVirtual = StringUtils.isNotBlank( user.getUserPass() ) && NumberUtils.isCreatable( user.getUserPass() );
+            user.setVirtualAnchor( isVirtual ? 1 : 0 );
             if ( StringUtils.isNotBlank( user.getMobile() ) ) {
                 user.setMobile( new StringBuilder( user.getMobile() ).replace( 3, 7, "****" ).toString() );
             }
