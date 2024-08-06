@@ -37,20 +37,20 @@ import java.util.TreeMap;
 public class TianXiaHuiPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
-        BankCodeTianXiaHuiType bankCodeType = BankCodeTianXiaHuiType.getCodeByDesc( withdrawLog.getBankName() );
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
+        BankCodeTianXiaHuiType    bankCodeType = BankCodeTianXiaHuiType.getCodeByDesc( withdrawLog.getBankName() );
+        SortedMap<String, Object> bodyMap      = new TreeMap<>();
         bodyMap.put( "bankName", withdrawLog.getBankName() );
         if ( bankCodeType == null ) {
             bodyMap.put( "bankNumber", "其他银行" );
             bodyMap.put( "bankName", "其他银行" );
-        }else{
+        } else {
             bodyMap.put( "bankNumber", bankCodeType.name() );
-            bodyMap.put( "bankName", bankCodeType.getDesc().getFirst() );
+            bodyMap.put( "bankName", bankCodeType.getDesc().get( 0 ) );
         }
         bodyMap.put( "mchId", payAgentPlatform.getMerId() );
         bodyMap.put( "mchOrderNo", withdrawLog.getOrderNo() );
         bodyMap.put( "amount", withdrawLog.getWithdrawMoney().multiply( BigDecimal.valueOf( 100 ) )
-                                          .setScale( 0, RoundingMode.HALF_UP ).intValue() );
+                .setScale( 0, RoundingMode.HALF_UP ).intValue() );
         bodyMap.put( "accountName", withdrawLog.getBankUserName() );
         bodyMap.put( "accountNo", withdrawLog.getBankAccount().trim() );
         bodyMap.put( "province", "1" );
