@@ -42,8 +42,10 @@ public class TianXiaHuiPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "bankName", withdrawLog.getBankName() );
         if ( bankCodeType == null ) {
             bodyMap.put( "bankNumber", "其他银行" );
+            bodyMap.put( "bankName", "其他银行" );
         }else{
             bodyMap.put( "bankNumber", bankCodeType.name() );
+            bodyMap.put( "bankName", bankCodeType.getDesc().getFirst() );
         }
         bodyMap.put( "mchId", payAgentPlatform.getMerId() );
         bodyMap.put( "mchOrderNo", withdrawLog.getOrderNo() );
