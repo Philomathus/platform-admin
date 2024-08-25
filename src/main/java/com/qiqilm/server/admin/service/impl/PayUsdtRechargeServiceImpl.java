@@ -29,10 +29,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.RoundingMode;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -236,11 +234,6 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     public boolean updatePayUsdtRechargeLogic( PayUsdtRecharge payUsdtRecharge ) {
         MemberInfo memberInfo = memberInfoMapper.selectMemberInfoById( payUsdtRecharge.getMemberId() );
 
-        BigDecimal chargeGive = payUsdtRecharge
-                .getDiscountBill()
-                .multiply( payUsdtRecharge.getRechargeMoney() )
-                .setScale( 2, BigDecimal.ROUND_HALF_UP ); // 充值彩金
-
         boolean isFirst = memberInfo.getLevelIntegral().compareTo( BigDecimal.ZERO ) == 0
                 || memberInfo.getLevelIntegral().compareTo( memberInfo.getInviteMoney() ) <= 0;
 
@@ -252,9 +245,30 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
             }
         }
 
+        BigDecimal chargeGive = BigDecimal.ZERO; // 充值彩金
+
         //套利号无优惠
-        if ( memberInfo.getStatus() == 4 ) {
-            chargeGive = BigDecimal.ZERO;
+        if ( memberInfo.getStatus() != 4 ) {
+            String usdtRechargeRewardRates = sysConfigCacheUtil.getConf( "usdt_next_recharge_rate" );
+            if ( StringUtils.hasText( usdtRechargeRewardRates ) && usdtRechargeRewardRates.contains( "," ) ) {
+                List<String> usdtNextRechargeRates = Arrays.asList( usdtRechargeRewardRates.split( ";" ) );
+                // 翻转排序,先判断最大的
+                Collections.reverse( usdtNextRechargeRates );
+                for ( String usdtNextRechargeRate : usdtNextRechargeRates ) {
+                    String[]   firstPaySplit = usdtNextRechargeRate.split( "," );
+                    BigDecimal money         = new BigDecimal( firstPaySplit[ 0 ] );
+                    BigDecimal rate          = new BigDecimal( firstPaySplit[ 1 ] );
+                    if ( payUsdtRecharge.getRechargeMoney().compareTo( money ) >= 0 ) {
+                        chargeGive = payUsdtRecharge.getRechargeMoney().multiply( rate ).setScale( 2, RoundingMode.HALF_UP );
+                        log.warn( "USDT优惠比例 - 会员ID:{} - 配置:{} - 赠送金额:{}", payUsdtRecharge.getMemberId(), usdtNextRechargeRate,
+                                chargeGive.stripTrailingZeros().toPlainString() );
+                        break;
+                    }
+                }
+            } else {
+                chargeGive = payUsdtRecharge.getDiscountBill().multiply( payUsdtRecharge.getRechargeMoney() )
+                        .setScale( 2, RoundingMode.HALF_UP );
+            }
         }
 
         //优惠钱+充值金额+首冲优惠
@@ -263,17 +277,14 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         // 首冲赠送彩金
         if ( firstRechargeCashBack.compareTo( BigDecimal.ZERO ) > 0 ) {
             logService.logMoneyAdd( null, memberInfo.getId(), memberInfo.getUserName(), EnumMoney.wongive,
-                    firstRechargeCashBack, memberInfo
-                    .getTotalAccount()
-                    .add( chargeGive )
-                    .add( firstRechargeCashBack ), "首冲赠送彩金；代充", payUsdtRecharge.getTransactionId() );
+                    firstRechargeCashBack, memberInfo.getTotalAccount()
+                    .add( chargeGive ).add( firstRechargeCashBack ), "首冲赠送彩金；代充", payUsdtRecharge.getTransactionId() );
         }
 
         //充值彩金日志
         if ( chargeGive.compareTo( BigDecimal.ZERO ) > 0 ) {
             logService.logMoneyAdd( null, memberInfo.getId(), memberInfo.getUserName(), EnumMoney.chargegive, chargeGive,
-                    memberInfo
-                    .getTotalAccount()
+                    memberInfo.getTotalAccount()
                     .add( payUsdtRecharge.getRechargeMoney() ), payUsdtRecharge.getRemark(), payUsdtRecharge.getTransactionId() );
         }
 
@@ -331,9 +342,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     private void recommendProcess( PayUsdtRecharge payUsdtRecharge, MemberInfo memberInfo ) {
         //新增佣金记录
         if ( org.apache.commons.lang3.StringUtils.isNotBlank( memberInfo.getInviterCode() ) ) {
-            Map<Integer, ConfigRecommend> billMap = configRecommendMapper
-                    .selectConfigRecommendList( null )
-                    .stream()
+            Map<Integer, ConfigRecommend> billMap = configRecommendMapper.selectConfigRecommendList( null ).stream()
                     .collect( Collectors.toMap( ConfigRecommend::getLevel, Function.identity() ) );
 
             MemberInfo rd1 = memberInfoMapper.findRecommendByInviterCode( memberInfo.getInviterCode() );
