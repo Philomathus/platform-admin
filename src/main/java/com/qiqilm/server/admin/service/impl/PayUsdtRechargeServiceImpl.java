@@ -246,6 +246,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         }
 
         BigDecimal chargeGive = BigDecimal.ZERO; // 充值彩金
+        BigDecimal multi       = BigDecimal.ONE;
 
         //套利号无优惠
         if ( memberInfo.getStatus() != 4 ) {
@@ -258,10 +259,14 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
                     String[]   firstPaySplit = usdtNextRechargeRate.split( "," );
                     BigDecimal money         = new BigDecimal( firstPaySplit[ 0 ] );
                     BigDecimal rate          = new BigDecimal( firstPaySplit[ 1 ] );
+                    if ( firstPaySplit.length >= 3 ) {
+                        multi = new BigDecimal( firstPaySplit[ 2 ] );
+                    }
                     if ( payUsdtRecharge.getRechargeMoney().compareTo( money ) >= 0 ) {
                         chargeGive = payUsdtRecharge.getRechargeMoney().multiply( rate ).setScale( 2, RoundingMode.HALF_UP );
                         log.warn( "USDT优惠比例 - 会员ID:{} - 配置:{} - 赠送金额:{}", payUsdtRecharge.getMemberId(), usdtNextRechargeRate,
-                                chargeGive.stripTrailingZeros().toPlainString() );
+                                chargeGive.stripTrailingZeros()
+                                .toPlainString() );
                         break;
                     }
                 }
@@ -301,7 +306,7 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         this.recommendProcess( payUsdtRecharge, memberInfo );
 
         //更新用户账户余额
-        boolean updateMemberCharge = this.updateMemberCharge( memberInfo.getId(), add, "USDT充值" );
+        boolean updateMemberCharge = this.updateMemberCharge( memberInfo.getId(), add, "USDT充值", multi );
         if ( updateMemberCharge ) {
             this.paySendIm( memberInfo.getId(), payUsdtRecharge.getRechargeMoney() );
         }
@@ -386,10 +391,10 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
         }
     }
 
-    private boolean updateMemberCharge( String userId, BigDecimal money, String chargeType ) {
+    private boolean updateMemberCharge( String userId, BigDecimal money, String chargeType, BigDecimal multi ) {
         MemberBcode codeFlow = new MemberBcode();
         codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-        codeFlow.setIncome( money );//
+        codeFlow.setIncome( money.multiply( multi ).setScale( 2, RoundingMode.DOWN ) );//
         codeFlow.setCreateTime( new Date() );
         codeFlow.setStatus( 0 );
         codeFlow.setCur( BigDecimal.ZERO );
