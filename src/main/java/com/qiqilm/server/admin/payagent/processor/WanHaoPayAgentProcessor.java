@@ -41,6 +41,8 @@ public class WanHaoPayAgentProcessor extends AbstractPayAgent {
 
         bodyMap.put( "sign", DigestUtils.md5Hex( signStr ) );
 
+        log.warn( JsonUtil.object2Json( bodyMap ) );
+
         Map<String, Object> resultMap = this.sendPostMap( payAgentPlatform.getPayOrderAddr(), packageJson( bodyMap ),
                 reqPayAgent );
 
