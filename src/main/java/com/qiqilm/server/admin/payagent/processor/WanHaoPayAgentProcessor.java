@@ -13,7 +13,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,7 +25,7 @@ public class WanHaoPayAgentProcessor extends AbstractPayAgent {
         Map<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put( "mch_id", payAgentPlatform.getMerId() );
         bodyMap.put( "out_trade_no", withdrawLog.getOrderNo() );
-        bodyMap.put( "money", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
+        bodyMap.put( "money", withdrawLog.getWithdrawMoney().stripTrailingZeros().toPlainString() );
         bodyMap.put( "pay_type", "1" );
         bodyMap.put( "notify_url", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
         bodyMap.put( "bank_name", withdrawLog.getBankName().trim() );
