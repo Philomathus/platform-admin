@@ -394,14 +394,15 @@ public class PayUsdtRechargeServiceImpl implements IPayUsdtRechargeService {
     private boolean updateMemberCharge( String userId, BigDecimal money, String chargeType, BigDecimal multi ) {
         MemberBcode codeFlow = new MemberBcode();
         codeFlow.setId( UuidUtil.getRandomUuidWithoutSeparator() );
-        codeFlow.setIncome( money.multiply( multi ).setScale( 2, RoundingMode.DOWN ) );//
+        BigDecimal income = money.multiply( multi ).setScale( 2, RoundingMode.DOWN );
+        codeFlow.setIncome( income );//
         codeFlow.setCreateTime( new Date() );
         codeFlow.setStatus( 0 );
         codeFlow.setCur( BigDecimal.ZERO );
         codeFlow.setUserId( userId );
         codeFlow.setDes( chargeType );
         return memberBcodeMapper.insertMemberBcode( codeFlow ) > 0
-                && memberInfoMapper.updateMoneySelect( userId, money, null, money, null, null ) > 0;
+                && memberInfoMapper.updateMoneySelect( userId, money, null, income, null, null ) > 0;
     }
 
     /**
