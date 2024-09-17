@@ -235,14 +235,14 @@ public class MemberInfoController extends BaseController {
                 }
                 if ( memberSet.contains( cell1 ) ) {
                     duplicateSet.add( cell1 );
-                    break;
+                } else {
+                    memberSet.add( cell1 );
+                    MemberMoney memberMoney = new MemberMoney();
+                    memberMoney.setMemberId( cell1 );
+                    memberMoney.setMoney( new BigDecimal( cell2 ) );
+                    memberMoney.setBeat( new BigDecimal( cell3 ) );
+                    memberMoneyList.add( memberMoney );
                 }
-                memberSet.add( cell1 );
-                MemberMoney memberMoney = new MemberMoney();
-                memberMoney.setMemberId( cell1 );
-                memberMoney.setMoney( new BigDecimal( cell2 ) );
-                memberMoney.setBeat( new BigDecimal( cell3 ) );
-                memberMoneyList.add( memberMoney );
             }
         } catch ( Exception e ) {
             log.error( e.getMessage(), e );
