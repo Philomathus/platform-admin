@@ -97,7 +97,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
         String            startFirstTime = DateFormatUtils.formate( DateFormatUtils.getTodayMorning() );
         SimpleDateFormat  df             = new SimpleDateFormat( "yyyy-MM-dd" );//设置日期格式
         String            today          = df.format( new Date() );// new Date()为获取当前系统时间
-        if ( list.size() > 0 ) {
+        if ( !list.isEmpty() ) {
             for ( MemberMoney li : list ) {
                 if ( li.getMoney().compareTo( new BigDecimal( 10000 ) ) >= 0 ) {
                     throw new BusinessException( String.format( "会员%s派送金额超过一万, 派送金额:%s", li.getMemberId(), li.getMoney() ) );
@@ -116,7 +116,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
             throw new BusinessException( "请先上传有数据的excel" );
         }
         //完成派送清除表中数据
-        memberInfoMapper.clear();
+        memberMoneyMapper.clear();
         redisUtil.unLock( EnumLock.member, "paiSong" + memberMoney.getMoneydes() );
         return new AjaxResult( 0, "操作成功" );
     }
@@ -208,7 +208,7 @@ public class MemberMoneyServiceImpl implements IMemberMoneyService {
      */
     @Override
     public Integer clear() {
-        return memberInfoMapper.clear();
+        return memberMoneyMapper.clear();
     }
 
     @Override

@@ -46,9 +46,6 @@ public class MemberMoneyController extends BaseController {
 		return getDataTable( list );
 	}
 
-	/**
-	 * 查询派送彩金暂存表列表
-	 */
 	@PreAuthorize( "@ss.hasPermi('admin:memberMoney:remove')" )
 	@GetMapping( "/handleClean" )
 	public AjaxResult handleClean() {

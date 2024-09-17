@@ -40,6 +40,13 @@
              </trim>
     </insert>
 
+    <insert id="insertBatch">
+        insert into member_money (member_id, money, beat)
+        <foreach collection="list" item="item" open="values" separator=",">
+            (#{item.memberId}, #{item.money}, #{item.beat})
+        </foreach>
+    </insert>
+
     <update id="updateMemberMoney" parameterType="MemberMoney">
         update member_money
         <trim prefix="SET" suffixOverrides=",">
@@ -58,6 +65,10 @@
         <foreach item="memberId" collection="array" open="(" separator="," close=")">
             #{memberId}
         </foreach>
+    </delete>
+
+    <delete id="clear">
+        TRUNCATE TABLE member_money
     </delete>
 
 

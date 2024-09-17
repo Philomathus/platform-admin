@@ -36,19 +36,7 @@
 	</sql>
 
 	<select id="selectLogMoneySingleList" parameterType="LogMoney" resultMap="LogMoneyResult">
-		select id,
-		user_id,
-		user_name,
-		type,
-		des,
-		income,
-		pay,
-		total,
-		create_time,
-		total_before,
-		mark,
-		markorder
-		from ${dbMain}.log_money${tableLast} a
+		select * from ${dbMain}.log_money${tableLast} a
 		<where>
 			<if test="searchValue != null  and searchValue != ''">
 				and user_id = #{searchValue}
@@ -58,19 +46,7 @@
 	</select>
 
 	<select id="selectLogMoneyFirstList" parameterType="LogMoney" resultMap="LogMoneyResult">
-		select id,
-		user_id,
-		user_name,
-		type,
-		des,
-		income,
-		pay,
-		total,
-		create_time,
-		total_before,
-		mark,
-		markorder
-		from ${dbMain}.log_money a
+		select * from ${dbMain}.log_money a
 		<where>
 			<include refid="whereSelect" />
 		</where>
@@ -78,34 +54,34 @@
 
 	<select id="selectLogMoneyList" parameterType="LogMoney" resultMap="LogMoneyResult">
 		select * from (
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money0
+			SELECT * FROM log_money0
 			<where><include refid="whereSelect" /></where>
 			UNION ALL
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money1
+			SELECT * FROM log_money1
 			<where><include refid="whereSelect" /></where>
 			UNION ALL
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money2
+			SELECT * FROM log_money2
 			<where><include refid="whereSelect" /></where>
 			UNION ALL
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money3
+			SELECT * FROM log_money3
 			<where><include refid="whereSelect" /></where>
 			UNION ALL
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money4
+			SELECT * FROM log_money4
 			<where><include refid="whereSelect" /></where>
 			UNION ALL
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money5
+			SELECT * FROM log_money5
 			<where><include refid="whereSelect" /></where>
 			UNION ALL
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money6
+			SELECT * FROM log_money6
 			<where><include refid="whereSelect" /></where>
 			UNION ALL
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money7
+			SELECT * FROM log_money7
 			<where><include refid="whereSelect" /></where>
 			UNION ALL
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money8
+			SELECT * FROM log_money8
 			<where><include refid="whereSelect" /></where>
 			UNION ALL
-			SELECT id,user_id,user_name,type,des,income,pay,total,create_time,total_before,mark,markorder FROM log_money9
+			SELECT * FROM log_money9
 			<where><include refid="whereSelect" /></where>
 		) a
 	</select>
@@ -120,10 +96,6 @@
 		<if test="startTime != null">
 			and create_time <![CDATA[ >= ]]>  #{startTime} and create_time <![CDATA[ <= ]]> #{endTime}
 		</if>
-<!--		<if test="mark != null  and mark != ''">-->
-<!--			and mark like concat('%', #{mark}, '%')-->
-<!--		</if>-->
-
 		<if test="mark != null  and mark != ''">
 			and mark = #{mark}
 		</if>
@@ -209,23 +181,54 @@
         </if>
     </sql>
 
-    <select id="totalCount" parameterType="LogMoney" resultType="java.util.Map">
-        select ifnull(sum(income),0) as totalIncome,
-		ifnull(sum(pay),0) as totalPay
-        from ${dbMain}.log_money
-        <where>
-            <include refid="whereCount"/>
-		</where>
-    </select>
-
 	<select id="listCount" parameterType="LogMoney" resultType="java.util.Map">
-		select SUM(income)-SUM(pay) as totalIncome from ${dbMain}.log_money${tableLast}
+		select
+		    ifnull(sum(income),0) as totalIncome,
+			ifnull(sum(pay),0) as totalPay
+		from ${dbMain}.log_money${tableLast}
 		<where>
 			<if test="searchValue != null  and searchValue != ''">
 				and user_id = #{searchValue}
 			</if>
 			<include refid="whereSelect" />
 		</where>
+	</select>
+
+	<select id="listCountAll" parameterType="LogMoney" resultType="java.util.Map">
+		select
+		ifnull(sum(a.income), 0) as totalIncome,
+		ifnull(sum(a.pay), 0) as totalPay
+		from (
+		SELECT income,pay FROM ${dbMain}.log_money0
+		<where><include refid="whereSelect" /></where>
+		UNION ALL
+		SELECT income,pay FROM ${dbMain}.log_money1
+		<where><include refid="whereSelect" /></where>
+		UNION ALL
+		SELECT income,pay FROM ${dbMain}.log_money2
+		<where><include refid="whereSelect" /></where>
+		UNION ALL
+		SELECT income,pay FROM ${dbMain}.log_money3
+		<where><include refid="whereSelect" /></where>
+		UNION ALL
+		SELECT income,pay FROM ${dbMain}.log_money4
+		<where><include refid="whereSelect" /></where>
+		UNION ALL
+		SELECT income,pay FROM ${dbMain}.log_money5
+		<where><include refid="whereSelect" /></where>
+		UNION ALL
+		SELECT income,pay FROM ${dbMain}.log_money6
+		<where><include refid="whereSelect" /></where>
+		UNION ALL
+		SELECT income,pay FROM ${dbMain}.log_money7
+		<where><include refid="whereSelect" /></where>
+		UNION ALL
+		SELECT income,pay FROM ${dbMain}.log_money8
+		<where><include refid="whereSelect" /></where>
+		UNION ALL
+		SELECT income,pay FROM ${dbMain}.log_money9
+		<where><include refid="whereSelect" /></where>
+		) a
 	</select>
 
 	<update id="updateByIdSelective">

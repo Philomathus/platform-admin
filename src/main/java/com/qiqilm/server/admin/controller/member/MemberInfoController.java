@@ -12,6 +12,7 @@ import com.qiqilm.server.admin.core.vo.RspBase;
 import com.qiqilm.server.admin.domain.LiveGuardUser;
 import com.qiqilm.server.admin.domain.MemberCard;
 import com.qiqilm.server.admin.domain.MemberInfo;
+import com.qiqilm.server.admin.domain.MemberMoney;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.domain.req.ReqSmallFeatures;
 import com.qiqilm.server.admin.domain.vo.*;
@@ -19,7 +20,7 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.enums.EnumLock;
 import com.qiqilm.server.admin.exception.BusinessException;
 import com.qiqilm.server.admin.im.ImApi;
-import com.qiqilm.server.admin.mapper.MemberInfoMapper;
+import com.qiqilm.server.admin.mapper.MemberMoneyMapper;
 import com.qiqilm.server.admin.service.IMemberInfoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
@@ -30,15 +31,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -54,7 +56,7 @@ public class MemberInfoController extends BaseController {
     @Resource
     private IMemberInfoService memberInfoService;
     @Resource
-    private MemberInfoMapper   memberInfoMapper;
+    private MemberMoneyMapper  memberMoneyMapper;
     @Resource
     private TokenService       tokenService;
     @Resource
@@ -194,66 +196,25 @@ public class MemberInfoController extends BaseController {
         return AjaxResult.success( memberInfoService.queryPhones( req ) );
     }
 
-    /**
-     * 批量会员ID派送彩金
-     */
-    @PostMapping( value = "/commitMoney" )
-    public Object commitMoney( @RequestBody ReqSmallFeatures req ) throws Exception {
-        RspBase rspBase = new RspBase();
-        if ( req.getGoogleAuthCode() == null ) {
-            rspBase.setMsg( "请输入google验证码" );
-            rspBase.setCode( 1 );
-            return rspBase;
-        }
-        LoginUser loginUser        = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-        String    googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName( loginUser.getUsername() );
-
-        if ( !org.springframework.util.StringUtils.hasText( googleAuthSecret ) ) {
-            rspBase.setMsg( "未绑定google验证秘钥，无法审核" );
-            rspBase.setCode( 1 );
-            return rspBase;
-        }
-        if ( googleAuthSecret.length() == 32 ) {
-            rspBase.setMsg( "google验证秘钥未加密，请重新登录" );
-            rspBase.setCode( 1 );
-            return rspBase;
-        }
-        String googleAuthKey = RSACoder.decryptByPrivateKey( googleAuthSecret, AuthUtil.getSecurityKeyStr(
-                "secretkey" + "/googleAuthPrivateKey" ) );
-
-        if ( !GoogleAuthUtil.verifyCode( googleAuthKey, req.getGoogleAuthCode() ) ) {
-            rspBase.setMsg( "google验证码不正确，请检查" );
-            rspBase.setCode( 1 );
-            return rspBase;
-        }
-        return AjaxResult.success( memberInfoService.commitMoney( req ) );
-    }
-
     @RequestMapping( value = "/batchInsertShops", method = RequestMethod.POST )
     @Transactional( rollbackFor = Exception.class )
     public AjaxResult batchInsert( @RequestParam( "excelFile" ) MultipartFile excelFile ) throws Exception {
-        Workbook      workbook = null;
-        StringBuilder userId   = new StringBuilder();
-        try {
-            workbook = WorkbookFactory.create( excelFile.getInputStream() );
-            excelFile.getInputStream().close();
+        Set<String> memberSet    = new HashSet<>();
+        Set<String> duplicateSet = new HashSet<>();
+
+        List<MemberMoney> memberMoneyList = new ArrayList<>();
+        try ( InputStream inputStream = excelFile.getInputStream(); Workbook workbook = WorkbookFactory.create( inputStream ) ) {
             //工作表对象
             Sheet sheet = workbook.getSheetAt( 0 );
-            //总行数
-            int rowLength = sheet.getLastRowNum() + 1;
-            //工作表的列
-            Row row = sheet.getRow( 0 );
-            //总列数
-            //            int colLength = row.getLastCellNum();
+
             //得到指定的单元格
-            for ( int i = 1; i < rowLength; i++ ) {
-                Cell cell = row.getCell( i );
-                row = sheet.getRow( i );
+            for ( int i = 1; i < sheet.getLastRowNum() + 1; i++ ) {
+                Row    row   = sheet.getRow( i );
                 String cell1 = null;
                 String cell2 = null;
                 String cell3 = null;
                 for ( int j = 0; j < 3; j++ ) {
-                    cell = row.getCell( j );
+                    Cell cell = row.getCell( j );
                     if ( cell != null ) {
                         cell.setCellType( CellType.STRING );
                         String data = cell.getStringCellValue();
@@ -267,23 +228,34 @@ public class MemberInfoController extends BaseController {
                     }
                 }
                 if ( StringUtils.isBlank( cell1 ) || StringUtils.isBlank( cell2 ) ) {
-                    break;
+                    return AjaxResult.error( "第" + ( i + 1 ) + "行数据不完整" );
                 }
                 if ( StringUtils.isBlank( cell3 ) ) {
                     cell3 = "1";
                 }
-                userId = userId.append( "\"" ).append( cell1 ).append( "\"" ).append( "," ).append( cell2 ).append( "," )
-                               .append( cell3 ).append( "),(" );
-
+                if ( memberSet.contains( cell1 ) ) {
+                    duplicateSet.add( cell1 );
+                    break;
+                }
+                memberSet.add( cell1 );
+                MemberMoney memberMoney = new MemberMoney();
+                memberMoney.setMemberId( cell1 );
+                memberMoney.setMoney( new BigDecimal( cell2 ) );
+                memberMoney.setBeat( new BigDecimal( cell3 ) );
+                memberMoneyList.add( memberMoney );
             }
         } catch ( Exception e ) {
-            e.getMessage();
+            log.error( e.getMessage(), e );
         }
-        userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
-        String userIds = String.valueOf( userId );
+        if ( !CollectionUtils.isEmpty( duplicateSet ) ) {
+            return AjaxResult.error( "数据重复，请检查 - 重复ID: " + StringUtils.join( duplicateSet, "," ) );
+        }
+        if ( CollectionUtils.isEmpty( memberMoneyList ) ) {
+            return AjaxResult.error( "无数据,或者数据格式不正确" );
+        }
         //清除表中数据
-        memberInfoMapper.clear();
-        memberInfoMapper.insertPaiSong( userIds );
+        memberMoneyMapper.clear();
+        memberMoneyMapper.insertBatch( memberMoneyList );
         return AjaxResult.success();
     }
 
@@ -862,9 +834,9 @@ public class MemberInfoController extends BaseController {
      */
     @PreAuthorize( "@ss.hasPermi('member:memberInfo:editCode')" )
     @Log( title = "修改总打码和VIP等级", businessType = BusinessType.UPDATE )
-    @PutMapping("/updateCode")
+    @PutMapping( "/updateCode" )
     public AjaxResult updateCode( @RequestBody MemberInfo memberInfo ) {
-       return toAjax( memberInfoService.updateCodeTotalVipLevel( memberInfo ) );
+        return toAjax( memberInfoService.updateCodeTotalVipLevel( memberInfo ) );
     }
 
 }

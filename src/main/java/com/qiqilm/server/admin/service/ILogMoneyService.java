@@ -27,10 +27,4 @@ public interface ILogMoneyService {
 	 * @return {@link TableDataInfo}
 	 */
 	AjaxResult listCount(LogMoney logMoney);
-
-    /**
-     * @param logMoney 日志的钱
-     * @return {@link TableDataInfo}
-     */
-    AjaxResult totalCount(LogMoney logMoney);
 }

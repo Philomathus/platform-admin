@@ -35,19 +35,9 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
             String tableLast = logMoney.getSearchValue().substring( logMoney.getSearchValue().length() - 1 );
             logMoney.setTableLast( tableLast );
             return logMoneyMapper.selectLogMoneySingleList( logMoney );
-        } else if ( logMoney.getTypes() != null ) {
-            return logMoneyMapper.selectLogMoneyList( logMoney );
         } else {
-            logMoney.setTableLast( "0" );
-            return logMoneyMapper.selectLogMoneySingleList( logMoney );
+            return logMoneyMapper.selectLogMoneyList( logMoney );
         }
-        //return logMoneyMapper.selectLogMoneyList( logMoney );
-    }
-
-    @Override
-    public AjaxResult totalCount( LogMoney logMoney ) {
-        this.getTime( logMoney );
-        return AjaxResult.success( logMoneyMapper.totalCount( logMoney ) );
     }
 
     @Override
@@ -56,8 +46,9 @@ public class LogMoneyServiceImpl implements ILogMoneyService {
         if ( StringUtils.isNotBlank( logMoney.getSearchValue() ) && logMoney.getSearchValue().startsWith( "77" ) ) {
             String tableLast = logMoney.getSearchValue().substring( logMoney.getSearchValue().length() - 1 );
             logMoney.setTableLast( tableLast );
+            return AjaxResult.success( logMoneyMapper.listCount( logMoney ) );
         }
-        return AjaxResult.success( logMoneyMapper.listCount( logMoney ) );
+        return AjaxResult.success( logMoneyMapper.listCountAll( logMoney ) );
     }
 
 

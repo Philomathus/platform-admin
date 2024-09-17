@@ -10,5 +10,6 @@ public class ReqSmallFeatures {
     private String phonesByIds;
     private String memberIds;
     private String money;
+    private String beat;
     private Integer googleAuthCode;
 }

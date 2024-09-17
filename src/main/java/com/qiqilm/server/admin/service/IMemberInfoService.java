@@ -70,7 +70,6 @@ public interface IMemberInfoService {
 
 	AjaxResult updatePhones(ReqSmallFeatures req);
 	AjaxResult queryPhones(ReqSmallFeatures req);
-	AjaxResult commitMoney(ReqSmallFeatures req);
 
 	AjaxResult unbindCard(MemberCard memberCard);
 

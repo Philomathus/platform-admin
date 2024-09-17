@@ -1071,17 +1071,6 @@
         </where>
     </select>
 
-    <delete id="clear">
-        delete
-        from member_money
-        where 1 = 1
-    </delete>
-
-    <insert id="insertPaiSong" parameterType="String">
-        insert into member_money(member_id, money, beat)
-        values (${userIds})
-    </insert>
-
     <select id="selectNikeNameById" resultMap="MemberInfoResult">
         select nick_name, id
         from member_info where id in

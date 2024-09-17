@@ -119,9 +119,6 @@ public interface MemberInfoMapper {
 
     List<MemberInfo> selectRegisterByMemberIds(String memberIds);
 
-    Integer clear();
-    Integer insertPaiSong(@Param("userIds") String userIds);
-
     List<MemberInfo> selectNikeNameById( @Param( "array" ) Collection<String> memberIds );
 
 

@@ -427,42 +427,6 @@ public class MemberInfoServiceImpl implements IMemberInfoService {
     }
 
     @Override
-    @Transactional( rollbackFor = Exception.class )
-    public AjaxResult commitMoney( ReqSmallFeatures req ) {
-        if ( StringUtils.hasText( req.getMemberIds() ) ) {
-            String[] userIds = null;
-            if ( req.getMemberIds().contains( "\n" ) ) {
-                try {
-                    userIds = req.getMemberIds().split( "\n" );
-                    StringBuilder userId = new StringBuilder();
-                    for ( int i = 0; i < userIds.length; i++ ) {
-                        userId
-                                .append( "\"" )
-                                .append( userIds[ i ] )
-                                .append( "\"" )
-                                .append( "," )
-                                .append( req.getMoney() )
-                                .append( "," )
-                                .append( req.getMoney() )
-                                .append( "),(" );
-                    }
-                    userId = new StringBuilder( userId.substring( 0, userId.length() - 3 ) );
-                    req.setUserIds( userId.toString() );
-                } catch ( Exception e ) {
-                    return AjaxResult.error( 0, "分割会员ID出错,请检查格式" );
-                }
-            } else {
-                req.setUserIds( "\"" + req.getMemberIds() + "\"" + "," + req.getMoney() + "," + req.getMoney() );
-            }
-            //清除表中数据
-            memberInfoMapper.clear();
-            memberInfoMapper.insertPaiSong( req.getUserIds() );
-            return AjaxResult.success();
-        }
-        return AjaxResult.error( 0, "请输入批量会员ID" );
-    }
-
-    @Override
     public AjaxResult unbindCard( MemberCard member ) {
         String           id             = member.getId();
         String           memberId       = member.getMemberId();

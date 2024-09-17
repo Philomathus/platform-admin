@@ -47,8 +47,8 @@ public interface LogMoneyMapper {
 							 @Param( "money" ) BigDecimal money, @Param( "pay" ) BigDecimal pay,
 							 @Param( "dbNodes" ) String dbNodes, @Param( "startTime" ) String startTime );
 
-	Map totalCount( LogMoney logMoney );
 	Map listCount( LogMoney logMoney );
+	Map listCountAll( LogMoney logMoney );
 
 	int updateByIdSelective(@Param("req") LogMoney reqLogMoney, @Param( "dbNodes" ) String dbNodes);
 
