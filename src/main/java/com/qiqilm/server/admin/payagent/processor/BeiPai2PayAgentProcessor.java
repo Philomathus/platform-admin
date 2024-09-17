@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -68,11 +69,14 @@ public class BeiPai2PayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
 
-        String                    rspSign = requestMap.remove( "sign" ).toString();
+        String rspSign = requestMap.remove( "sign" ).toString();
+        requestMap.values().removeIf( value -> value == null || !StringUtils.hasText( value.toString() ) );
+
         SortedMap<String, Object> bodyMap = new TreeMap<>( requestMap );
-        String                    md5key  = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
-        String                    tempStr = this.assemblyUrl( bodyMap ) + "&key=" + md5key;
-        String                    sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
+
+        String md5key  = RSACoder.decryptByPrivateKey( payAgentPlatform.getSignMd5(), SECRET_PAYAGENT_KEY );
+        String tempStr = this.assemblyUrl( bodyMap ) + "&key=" + md5key;
+        String sign    = DigestUtils.md5Hex( tempStr ).toUpperCase();
 
         log.info( payAgentPlatform.getName() + "回调签名:" + rspSign + "_" + sign );
         if ( rspSign.equalsIgnoreCase( sign ) ) {

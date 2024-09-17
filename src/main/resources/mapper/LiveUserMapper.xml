@@ -52,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		is_authentication,login_ip,focus_count,mobile,authentication_type,authentication_name,identify_hold_image,
 		identify_positive_image,identify_nagative_image, u.fans_count, ticket, refund_ticket,is_ban,v_explain,family_id,
 		coin,ticket_catty_ratio,open_pay,ban_remark,identify_number,login_time,logout_time,f.name family_name,
-        f.user_id family_user_id,f.nick_name family_nick_name,u.qq_id,u.qq_token,u.xpoint,u.ypoint,u.weixin_account
+        f.user_id family_user_id,f.nick_name family_nick_name,u.qq_id,u.qq_token,u.xpoint,u.ypoint,u.weixin_account, user_pwd
 		from ${dbLive}.live_user u left join ${dbLive}.live_family f on (f.id = u.family_id)
 		left join ${dbLive}.live_video g on (u.id = g.user_id)
     </sql>
@@ -73,6 +73,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="familyId != null "> and family_id = #{familyId}</if>
             <if test="coin != null "> and coin = #{coin}</if>
             <if test="openPay != null "> and open_pay = #{openPay}</if>
+            <if test="virtualAnchor == 1"> and user_pwd is not null and user_pwd != '' and user_pwd REGEXP '^[0-9]+$'</if>
+            <if test="virtualAnchor == 0"> and (user_pwd is null or user_pwd = '' or user_pwd not REGEXP '^[0-9]+$')</if>
             <if test="userIdSet != null and userIdSet.size() != 0">
                 and u.id in
                 <foreach item="userId" collection="userIdSet" open="(" separator="," close=")">

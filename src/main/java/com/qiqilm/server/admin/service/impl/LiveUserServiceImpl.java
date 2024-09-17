@@ -15,7 +15,6 @@ import com.qiqilm.server.admin.mapper.*;
 import com.qiqilm.server.admin.service.ILiveUserService;
 import com.qiqilm.server.admin.utils.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,7 +95,7 @@ public class LiveUserServiceImpl implements ILiveUserService {
     public List<LiveUser> selectLiveUserList( LiveUser liveUser ) {
         List<LiveUser> liveUsers = liveUserMapper.selectLiveUserList( liveUser );
         liveUsers.forEach( user -> {
-            boolean isVirtual = StringUtils.isNotBlank( user.getUserPass() ) && NumberUtils.isCreatable( user.getUserPass() );
+            boolean isVirtual = StringUtils.isNotBlank( user.getUserPass() ) && StringUtils.isNumeric( user.getUserPass() );
             user.setVirtualAnchor( isVirtual ? 1 : 0 );
             if ( StringUtils.isNotBlank( user.getMobile() ) ) {
                 user.setMobile( new StringBuilder( user.getMobile() ).replace( 3, 7, "****" ).toString() );
