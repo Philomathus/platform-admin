@@ -53,10 +53,4 @@ public class AesUtil {
 	public static String aesDecrypt(String encryptStr, String decryptKey) throws Exception {
 		return aesDecryptByBytes(base64Decode(encryptStr), decryptKey);
 	}
-
-	public static void main( String[] args ) throws Exception {
-		AesUtil a=new AesUtil();
-		String url="http://12v22b.wcwyy.cn/live/cx_930.flv?auth_key=1611300047-38898-0-652b7074c55f5b08dea862feff77b325";
-		System.out.println(a.aesEncrypt(url,"2222222222222222"));
-	}
 }

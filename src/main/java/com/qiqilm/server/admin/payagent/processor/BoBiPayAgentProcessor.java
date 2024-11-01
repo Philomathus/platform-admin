@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository ( value = ConstantsPayAgent.BO_BI_PAY + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.BO_BI_PAY + "PayAgentProcessor" )
 @Log4j2
 public class BoBiPayAgentProcessor extends AbstractPayAgent {
     @Override
@@ -43,12 +43,13 @@ public class BoBiPayAgentProcessor extends AbstractPayAgent {
 
         log.info( payAgentPlatform.getName() + "下单结果- result:{}", JsonUtil.object2Json( resultMap ) );
         if ( !CollectionUtils.isEmpty( resultMap ) ) {
-            String code   = resultMap.getOrDefault( "code", "" ).toString();
+            String code = resultMap.getOrDefault( "code", "" ).toString();
             if ( "0".equals( code ) ) {
                 log.info( payAgentPlatform.getName() + "代付订单提交成功 - result:{}", JsonUtil.object2Json( resultMap ) );
                 return true;
             } else {
                 reqPayAgent.setFailReason( resultMap.getOrDefault( "msg", "" ).toString() );
+                payAgentService.callBackOrder( withdrawLog, payAgentPlatform );
             }
         }
         return false;
@@ -87,7 +88,8 @@ public class BoBiPayAgentProcessor extends AbstractPayAgent {
     }
 
     @Override
-    public Map<String, Object> reverseCheckOrderPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
+    public Map<String, Object> reverseCheckOrderPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap,
+                                                     String realIp ) throws Exception {
         return null;
     }
 
@@ -120,21 +122,20 @@ public class BoBiPayAgentProcessor extends AbstractPayAgent {
                 int status     = 4;
                 int orderState = 0;
                 switch ( orderStatus ) {
-                    case 2:
-                        status = 5;
-                        orderState = 2;
-                        break;
-                    case 1:
-                        status = 6;
-                        orderState = 1;
-                        break;
-                    default:
-                        break;
+                case 2:
+                    status = 5;
+                    orderState = 2;
+                    break;
+                case 1:
+                    status = 6;
+                    orderState = 1;
+                    break;
+                default:
+                    break;
                 }
 
-                payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status,
-                        orderState );
-                return resultMap.getOrDefault("msg", "").toString();
+                payAgentService.processOrder( payAgentPlatform, withdrawLog, withdrawLog.getUpdateTime(), status, orderState );
+                return resultMap.getOrDefault( "msg", "" ).toString();
             }
         }
         return payAgentPlatform.getName() + "查询失败,订单号:" + withdrawLog.getOrderNo();

@@ -74,7 +74,7 @@ public class ReportAgentcountServiceImpl implements IReportAgentcountService {
             reportAgentcount.setAgenttime(beginTime + "-" + endTime);
         }
         if (reportAgentcount.getAgentcode() != null) {//判断代理号是否为空，代理号不为空，并且没有查询到数据，
-            reportAgentcountMapper.calldataProrepPlamcom(beginTime, endTime, reportAgentcount.getAgentcode().trim());//调用存储过程
+            reportAgentcountMapper.calldataProrepPlamcom(beginTime, endTime, reportAgentcount.getAgentcode().trim());// 调用存储过程
             List<ReportAgentcount> allList1 = reportAgentcountMapper.selectReportAgentcountList(reportAgentcount);
             return AjaxResult.success(allList1);
         }
