@@ -969,6 +969,7 @@
                      CONVERT(sum(g.profit), DECIMAL(10, 2))     yingLi
               FROM member_game_data${tableLast} g
               WHERE account = #{userid}
+              and game_end_time >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
               GROUP BY g.platform_id) a
                  LEFT JOIN game_platform p ON a.platform_id = p.id
     </select>
