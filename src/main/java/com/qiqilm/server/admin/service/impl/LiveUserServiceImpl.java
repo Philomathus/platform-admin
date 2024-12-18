@@ -173,6 +173,11 @@ public class LiveUserServiceImpl implements ILiveUserService {
 
     @Override
     public AjaxResult insertLiveUser( LiveUser liveUser ) {
+        liveUser.setNickName( liveUser.getNickName().replaceAll( "'", "" ) );
+        liveUser.setNickName( liveUser.getNickName().replaceAll( "\"", "" ) );
+        if ( EmojiFilter.containsEmoji( liveUser.getNickName() ) ) {
+            return AjaxResult.error( "昵称不合法" );
+        }
         if ( ValidatorUtil.isNumber11( liveUser.getMobile() ) ) {
             //	    查询手机号是否存在
             List<LiveUser> list = liveUserMapper.selectLiveUsersByMobile( liveUser.getMobile() );
