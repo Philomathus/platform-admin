@@ -17,9 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Repository( value = ConstantsPayAgent.HJDF_PAY + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.SANJIN2_PAY + "PayAgentProcessor" )
 @Log4j2
-public class HjdfPayAgentProcessor extends AbstractPayAgent {
+public class SanJin2PayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         Map<String, Object> dataMap = new TreeMap<>();
@@ -27,7 +27,7 @@ public class HjdfPayAgentProcessor extends AbstractPayAgent {
         dataMap.put( "orderNo", withdrawLog.getOrderNo() );
         dataMap.put( "amount", withdrawLog.getWithdrawMoney().stripTrailingZeros().toPlainString() );
         dataMap.put( "cardNumber", withdrawLog.getBankAccount().trim() );
-        dataMap.put( "payType", "DF001" );
+        dataMap.put( "payType", payAgentPlatform.getHeaderKey() );
         dataMap.put( "account", withdrawLog.getBankUserName() );
         dataMap.put( "bankName", withdrawLog.getBankName() );
         dataMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
