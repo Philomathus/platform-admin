@@ -267,7 +267,7 @@ public class PayServiceImpl implements IPayService {
 
         BigDecimal codeMoney           = money;
         String     des                 = "线上充值";
-        if ( "508".equals( memberPayJour.getPlatformId() ) && chargeGive.compareTo( BigDecimal.ZERO ) > 0 ) {
+        if ( "508".equals( memberPayJour.getPlatformId() ) ) {
             BigDecimal vipPayCodeMultiples = sysConfigCacheUtil.getConfBd( "vippay_income_code_multiples" );
             if ( vipPayCodeMultiples.compareTo( BigDecimal.ZERO ) > 0 ) {
                 codeMoney = money.multiply( vipPayCodeMultiples );
@@ -275,7 +275,7 @@ public class PayServiceImpl implements IPayService {
             }
         }
 
-        if ( "702".equals( memberPayJour.getPlatformId() ) && chargeGive.compareTo( BigDecimal.ZERO ) > 0 ) {
+        if ( "702".equals( memberPayJour.getPlatformId() ) ) {
             BigDecimal abPayCodeMultiples = sysConfigCacheUtil.getConfBd( "abpay_income_code_multiples" );
             if ( abPayCodeMultiples.compareTo( BigDecimal.ZERO ) > 0 ) {
                 codeMoney = money.multiply( abPayCodeMultiples );
