@@ -171,4 +171,12 @@ public class LocalDateTimeUtils {
 	public static boolean isSameDay( LocalDateTime one, LocalDateTime two ) {
 		return one.toLocalDate().compareTo( two.toLocalDate() ) == 0;
 	}
+
+	/**
+	 * 获得今天的 23:59:59
+	 */
+	public static LocalDateTime getEndOfToday() {
+		LocalDate localDate = LocalDate.now();
+		return localDate.atTime( 23, 59, 59 );
+	}
 }

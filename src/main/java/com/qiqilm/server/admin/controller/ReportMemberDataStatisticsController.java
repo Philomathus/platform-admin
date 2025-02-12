@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.controller;
 
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.req.ReqReportMemberStatistics;
+import com.qiqilm.server.admin.im.vo.RspMemberStats;
 import com.qiqilm.server.admin.service.ReportMemberStatisticsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,4 +58,8 @@ public class ReportMemberDataStatisticsController {
         return AjaxResult.success( reportMemberStatisticsService.getDailyRechargeCount(req) );
     }
 
+    @PostMapping( "/getMemberStats" )
+    public AjaxResult getMemberStats( @RequestBody ReqReportMemberStatistics req ) {
+        return AjaxResult.success( reportMemberStatisticsService.getMemberStats( req ) );
+    }
 }

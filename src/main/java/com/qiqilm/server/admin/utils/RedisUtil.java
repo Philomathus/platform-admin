@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +45,13 @@ public class RedisUtil {
      * 给key指定到期时间
      */
     public Boolean expireAt( String key, Date expireAt ) {
+        return stringRedisTemplate.expireAt( key, expireAt );
+    }
+
+    /**
+     * 给key指定到期时间
+     */
+    public Boolean expireAt( String key, Instant expireAt ) {
         return stringRedisTemplate.expireAt( key, expireAt );
     }
 

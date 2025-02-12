@@ -2,6 +2,8 @@ package com.qiqilm.server.admin.mapper;
 
 
 import com.qiqilm.server.admin.domain.req.ReqReportMemberStatistics;
+import com.qiqilm.server.admin.im.vo.RechargeStatsDto;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 
@@ -20,4 +22,9 @@ public interface ReportMemberStatisticsMapper {
     Long getDailyRechargeCount( ReqReportMemberStatistics req );
 
     Long getDailyFirstRechargeCount(  ReqReportMemberStatistics req );
+
+    Long getDailyWithdrawCount( @Param( "req" ) ReqReportMemberStatistics req );
+
+    RechargeStatsDto getRechargeStats( @Param( "req" ) ReqReportMemberStatistics req );
+
 }

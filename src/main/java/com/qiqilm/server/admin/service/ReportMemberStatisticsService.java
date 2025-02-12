@@ -2,6 +2,7 @@ package com.qiqilm.server.admin.service;
 
 
 import com.qiqilm.server.admin.domain.req.ReqReportMemberStatistics;
+import com.qiqilm.server.admin.im.vo.RspMemberStats;
 
 import java.math.BigDecimal;
 
@@ -21,4 +22,5 @@ public interface ReportMemberStatisticsService {
 
     Long getDailyFirstRechargeCount( ReqReportMemberStatistics req );
 
+    RspMemberStats getMemberStats( ReqReportMemberStatistics req );
 }
