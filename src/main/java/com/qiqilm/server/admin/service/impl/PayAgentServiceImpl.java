@@ -515,7 +515,7 @@ public class PayAgentServiceImpl implements IPayAgentService {
             return AjaxResult.error( "google验证码不正确，请检查" );
         }
 
-        if ( !redisUtil.lock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo(), "1", 10 ) ) {
+        if ( !redisUtil.lock( EnumLock.payAgent, reqPayAgent.getWithdrawOrderNo(), "1", 30 ) ) {
             return AjaxResult.error( "请勿重复提交代付订单:" + reqPayAgent.getWithdrawOrderNo() );
         }
 
@@ -554,14 +554,14 @@ public class PayAgentServiceImpl implements IPayAgentService {
             log.warn( "代付平台未找到 - payAgentPlatId:{}", reqPayAgent.getPayAgentPlatId() );
             return AjaxResult.error( "代付平台未找到" );
         }
+        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
+        String    userName  = loginUser.getUser().getUserName();
+        if ( !redisUtil.lock( EnumLock.payAgent, userName, "1", 30 ) ) {
+            return AjaxResult.error( "代付订单提交过快" );
+        }
         List<PayAgentLog> payAgentLogList = payAgentLogMapper.selectByAgentLogOrderList( reqPayAgent.getWithdrawOrderNos() );
         if ( payAgentLogList.size() > 0 ) {
             return AjaxResult.error( "被选中的订单已有代付记录" );
-        }
-        LoginUser loginUser = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
-        String    userName  = loginUser.getUser().getUserName();
-        if ( !redisUtil.lock( EnumLock.payAgent, userName, "1", 10 ) ) {
-            return AjaxResult.error( "代付订单提交过快" );
         }
 
         List<MemberWithdrawLog> withdrawLogs = withdrawLogMapper.selectPayAgentOrder( reqPayAgent.getWithdrawOrderNos(),

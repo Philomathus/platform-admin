@@ -22,9 +22,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository( value = ConstantsPayAgent.XINWEILAI_PAY + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.TIAN_SHENG_PAY + "PayAgentProcessor" )
 @Log4j2
-public class XinWeiLaiPayAgentProcessor extends AbstractPayAgent {
+public class TianShengPayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         Map<String, Object> dataMap = new TreeMap<>();

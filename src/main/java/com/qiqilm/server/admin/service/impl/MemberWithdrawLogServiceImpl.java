@@ -834,7 +834,7 @@ public class MemberWithdrawLogServiceImpl implements IMemberWithdrawLogService {
         withdrawReports.add( withdrawReportt );
 
         //游戏
-        if ( rspMemberInfo12 != null && rspMemberInfo12.size() != 0 ) {
+        if ( rspMemberInfo12 != null && !rspMemberInfo12.isEmpty() ) {
             for ( RspMemberInfo rs : rspMemberInfo12 ) {
                 WithdrawReport withdrawReportTwo = new WithdrawReport();
                 withdrawReportTwo.setClass_twoname( rs.getClass_twoname() );
