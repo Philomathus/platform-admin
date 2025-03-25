@@ -90,6 +90,9 @@ spring:
       max-request-size: 50MB
   lifecycle:
     timeout-per-shutdown-phase: 5s
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 pagehelper:
   autoRuntimeDialect: true
