@@ -23,6 +23,7 @@ import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +32,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -90,6 +93,9 @@ public class SmsApi {
                 break;
             case 5:
                 msg = this.sendSmsBao( serverSms, phone, msg );
+                break;
+            case 6:
+                msg = this.sendSms163( serverSms, phone, msg );
                 break;
             default:
                 throw new BusinessException( "不支持的短信运营商类型" );
@@ -343,6 +349,44 @@ public class SmsApi {
             log.error( e.getMessage() );
         }
         return null;
+    }
+
+    private String sendSms163( ServerSms serverSms, String phone , String code ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put( "mobile", phone );
+        params.put( "templateid", Integer.parseInt( serverSms.getTemplate() ) );
+        params.put( "authCode", code );
+
+        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        requestMap.setAll( params );
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType( MediaType.APPLICATION_FORM_URLENCODED );
+        httpHeaders.add( "AppKey", serverSms.getAppKey() );
+        String nonce = UuidUtil.getRandomUuidWithoutSeparator();
+        httpHeaders.add( "Nonce", nonce );
+        String curTime = String.valueOf( System.currentTimeMillis() / 1000 );
+        httpHeaders.add( "CurTime", curTime );
+        httpHeaders.add( "CheckSum", DigestUtils.sha1Hex( serverSms.getAppAccess() + nonce + curTime ) );
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>( requestMap, httpHeaders );
+
+        try {
+            ResponseEntity<Map> responseEntity = restTemplate.postForEntity( serverSms.getEndpoint(), httpEntity, Map.class );
+            Map<String, Object> entityBody = responseEntity.getBody();
+            if ( responseEntity.getStatusCode().is2xxSuccessful() ) {
+                if ( !CollectionUtils.isEmpty( entityBody ) ) {
+                    String rspCode = entityBody.getOrDefault( "code", "" ).toString();
+                    if ( "200".equals( rspCode ) ) {
+                        return code;
+                    }
+                }
+            }
+            log.error( JsonUtil.object2Json( entityBody ) );
+        } catch ( Exception e ) {
+            log.error( "短信发送失败" + e.getMessage(), e );
+
+        }
+        throw new BusinessException( "短信发送失败,请联系客服" );
     }
 
     //记录短信登录异常日志

@@ -1,6 +1,7 @@
 package com.qiqilm.server.admin.utils;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Base64Utils;
 
@@ -143,33 +144,30 @@ public class AESCoder {
         return Base64Utils.encodeToString( encrypted );
     }
 
-    public static String bytesToHex( byte[] bytes ) {
-        StringBuilder buf = new StringBuilder( bytes.length * 2 );
-        for ( byte b : bytes ) { // 使用String的format方法进行转换
-            buf.append( String.format( "%02x", b & 0xff ) );
-        }
-        return buf.toString();
-    }
-
     public static String decryptByKeyIv( String content, String AESKey, String AESIV ) throws Exception {
         Cipher          cipher   = Cipher.getInstance( "AES/CBC/PKCS5Padding" );
         SecretKeySpec   skeySpec = new SecretKeySpec( AESKey.getBytes( StandardCharsets.US_ASCII ), AES );
         IvParameterSpec iv       = new IvParameterSpec( AESIV.getBytes() );//使用CBC模式，需要一个向量iv，可增加加密算法的强度
         cipher.init( Cipher.DECRYPT_MODE, skeySpec, iv );
-        byte[] buffer    = toBytes( content );
-        byte[] encrypted = cipher.doFinal( buffer );
+        byte[] encrypted = cipher.doFinal( Hex.decodeHex( content ) );
         return new String( encrypted, StandardCharsets.UTF_8 );//此处使用BASE64做转码。
     }
 
-    public static byte[] toBytes( String str ) {
-        if ( str == null || str.trim().equals( "" ) ) {
-            return new byte[ 0 ];
-        }
-        byte[] bytes = new byte[ str.length() / 2 ];
-        for ( int i = 0; i < str.length() / 2; i++ ) {
-            String subStr = str.substring( i * 2, i * 2 + 2 );
-            bytes[ i ] = ( byte ) Integer.parseInt( subStr, 16 );
-        }
-        return bytes;
+    public static String encryptBase64ByKeyIv( String content, String AESKey, String AESIV ) throws Exception {
+        Cipher          cipher   = Cipher.getInstance( "AES/CBC/PKCS5Padding" );
+        SecretKeySpec   skeySpec = new SecretKeySpec( Base64Utils.decodeFromString( AESKey ), AES );
+        IvParameterSpec iv       = new IvParameterSpec( Base64Utils.decodeFromString( AESIV ) );
+        cipher.init( Cipher.ENCRYPT_MODE, skeySpec, iv );
+        byte[] encrypted = cipher.doFinal( content.getBytes( StandardCharsets.UTF_8 ) );
+        return Base64Utils.encodeToString( encrypted );
+    }
+
+    public static String decryptBase64ByKeyIv( String content, String AESKey, String AESIV ) throws Exception {
+        Cipher          cipher   = Cipher.getInstance( "AES/CBC/PKCS5Padding" );
+        SecretKeySpec   skeySpec = new SecretKeySpec( Base64Utils.decodeFromString( AESKey ), AES );
+        IvParameterSpec iv       = new IvParameterSpec( Base64Utils.decodeFromString( AESIV ) );
+        cipher.init( Cipher.DECRYPT_MODE, skeySpec, iv );
+        byte[] encrypted = cipher.doFinal( Base64Utils.decodeFromString( content ) );
+        return new String( encrypted, StandardCharsets.UTF_8 );
     }
 }
