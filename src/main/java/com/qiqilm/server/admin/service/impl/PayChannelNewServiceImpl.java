@@ -44,7 +44,7 @@ public class PayChannelNewServiceImpl implements IPayChannelNewService {
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    private static final BigDecimal MIN = new BigDecimal( "0.001" );
+    private static final BigDecimal MIN = BigDecimal.ZERO;
     private static final BigDecimal MAX = new BigDecimal( "0.4" );
 
     /**
