@@ -5,7 +5,7 @@ import com.qiqilm.server.admin.config.LiveCenterConfig;
 import com.qiqilm.server.admin.domain.LiveVideo;
 import com.qiqilm.server.admin.im.ImApi;
 import com.qiqilm.server.admin.imserver.ImServerUtils;
-import com.qiqilm.server.admin.service.ILiveVideoService;
+import com.qiqilm.server.admin.mapper.LiveVideoMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,7 @@ import java.util.Map;
 @Component
 public class HelpNoticeUtil implements Serializable {
     @Autowired
-    private ILiveVideoService  liveVideoService;
+    private LiveVideoMapper    liveVideoMapper;
     @Autowired
     private SysConfigCacheUtil sysConfigCacheUtil;
 
@@ -88,7 +88,7 @@ public class HelpNoticeUtil implements Serializable {
         }
 
         String value = JsonUtil.object2Json( ext );
-        for ( LiveVideo liveVideo : liveVideoService.selectOnlineLiveGroups() ) {
+        for ( LiveVideo liveVideo : liveVideoMapper.selectOnlineLiveGroups() ) {
             try {
                 imApi.sendSystemNotify( liveVideo.getGroupId(), value );
                 imServerUtils.sendGroupMessage( String.valueOf( liveVideo.getId() ), ext );
