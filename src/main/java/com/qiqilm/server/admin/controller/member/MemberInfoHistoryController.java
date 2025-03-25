@@ -26,7 +26,6 @@ import com.qiqilm.server.admin.service.IMemberInfoHistoryService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -299,7 +298,7 @@ public class MemberInfoHistoryController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "重置密码", notes = "重置密码")
+
     @RequestMapping(value = "/reset", method = RequestMethod.POST)
     @Log(title = "重置密码", businessType = BusinessType.UPDATE)
     public Object reset(HttpServletRequest request, ReqAddScore req) throws Exception {
@@ -342,7 +341,7 @@ public class MemberInfoHistoryController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "加分", notes = "人工入款")
+
     @RequestMapping(value = "/addScore", method = RequestMethod.POST)
     @Log(title = "加分", businessType = BusinessType.UPDATE)
     public Object addScore(HttpServletRequest request, ReqAddScore req) throws Exception {
@@ -394,7 +393,7 @@ public class MemberInfoHistoryController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "会员发送短信", notes = "会员发送短信")
+
     @RequestMapping(value = "/sendMsg", method = RequestMethod.POST)
     @Log(title = "会员发送短信", businessType = BusinessType.UPDATE)
     public RspBase sendMsg(@RequestBody Map map) throws Exception {
@@ -415,7 +414,7 @@ public class MemberInfoHistoryController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "会员修改邀请码", notes = "会员修改邀请码")
+
     @RequestMapping(value = "/updateInviterCode", method = RequestMethod.POST)
     @Log(title = "会员修改邀请码", businessType = BusinessType.UPDATE)
     public AjaxResult updateInviterCode(@RequestBody Map map) throws Exception {
@@ -459,7 +458,7 @@ public class MemberInfoHistoryController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "修改手机号", notes = "修改手机号")
+
     @RequestMapping(value = "/updateMobile", method = RequestMethod.POST)
     @Log(title = "会员发送短信", businessType = BusinessType.UPDATE)
     public AjaxResult updateMobile(@RequestBody Map map) throws Exception {
@@ -487,7 +486,7 @@ public class MemberInfoHistoryController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "查询资金明细列表", notes = "查询资金明细列表")
+
     @RequestMapping(value = "/report", method = RequestMethod.GET)
     public PageBO<WithdrawReport> findMemberCardList(@RequestParam("id") String memberId, PageVO req) {
         return memberInfoHistoryService.withdrawReport(memberId, req.getPage(), req.getLimit());
@@ -498,13 +497,12 @@ public class MemberInfoHistoryController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "会员银行卡列表", notes = "会员银行卡列表")
+
     @RequestMapping(value = "/card-list", method = RequestMethod.GET)
     public PageBO<MemberCard> findMemberCardList(@RequestParam("id") String memberId, ReqMemberInfo req) {
         return memberInfoHistoryService.findMemberCardPage(memberId, req.getPage(), req.getLimit(), req.getOrderBy());
     }
 
-    @ApiOperation(value = "重置保险箱账户", notes = "重置保险箱账户")
     @PostMapping("/resetPassword")
     public Object resetPassword(HttpServletRequest request,
                                 @RequestParam(value = "userId") String userId) {
@@ -518,7 +516,6 @@ public class MemberInfoHistoryController extends BaseController {
         return rspBase;
     }
 
-    @ApiOperation(value = "重置提现", notes = "重置提现")
     @PostMapping("/resettx")
     public Object resettx(HttpServletRequest request,
                           MemberInfo memberInfo) throws Exception {
@@ -556,7 +553,7 @@ public class MemberInfoHistoryController extends BaseController {
         rspBase.setData("成功");
         return rspBase;
     }
-    @ApiOperation(value = "修復打碼", notes = "修復打碼")
+
     @PostMapping("/memberBcodeRepair")
     public Object memberBcodeRepair(HttpServletRequest request,
                                     MemberInfo memberInfo) throws Exception {
@@ -594,7 +591,6 @@ public class MemberInfoHistoryController extends BaseController {
         return rspBase;
     }
 
-    @ApiOperation(value = "修改vip等级", notes = "修改vip等级")
     @PostMapping("/updateVip")
     public Object updateVip(HttpServletRequest request,
                             MemberInfo memberInfo) throws Exception {
@@ -627,7 +623,6 @@ public class MemberInfoHistoryController extends BaseController {
         return (ajaxResult);
     }
 
-    @ApiOperation(value = "禁言用户IM", notes = "禁言用户IM")
     @PostMapping("/imDealBan")
     public Object imDealBan( MemberInfo memberInfo) {
         if (Objects.isNull(memberInfo.getBanSpeakTime())){

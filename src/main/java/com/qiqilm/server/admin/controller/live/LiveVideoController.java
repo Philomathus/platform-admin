@@ -10,7 +10,6 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
 import com.qiqilm.server.admin.utils.HelpNoticeUtil;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +109,6 @@ public class LiveVideoController extends BaseController {
         return liveVideoService.updateVideoSort( liveVideo );
     }
 
-    @ApiOperation( "直播间小助手" )
     @Log( title = "直播间小助手", businessType = BusinessType.UPDATE )
     @PostMapping( "/sendLiveMsg" )
     public AjaxResult sendLiveMsg( @RequestBody LiveVideo liveVideo ) {

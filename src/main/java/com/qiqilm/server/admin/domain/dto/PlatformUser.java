@@ -1,8 +1,6 @@
 package com.qiqilm.server.admin.domain.dto;
 
 import com.qiqilm.server.admin.enums.PlatformUserKey;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -10,17 +8,17 @@ import java.util.Map;
 
 
 @Data
-@ApiModel()
+
 public class PlatformUser {
-	@ApiModelProperty(value = "会员ID")
+
 	private String  userId;
-	@ApiModelProperty(value = "会员昵称")
+
 	private String  nickName;
-	@ApiModelProperty(value = "会员头像")
+
 	private String  headImage;
-	@ApiModelProperty(value = "会员类型")
+
 	private Integer status;
-	@ApiModelProperty(value = "会员vip")
+
 	private Integer vip;
 
 	private long time;

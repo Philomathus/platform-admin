@@ -1,10 +1,9 @@
 package com.qiqilm.server.admin.domain;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.core.vo.BaseEntity;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -175,7 +174,6 @@ public class LiveVideo extends BaseEntity {
 	@Excel( name = "付费人数" )
 	private Long livePayCount;
 
-	@ApiModelProperty(value = "0:APP端创建的直播;1:PC端创建的直播")
 	private Boolean createType;
 
 	/** 直播的时长 */
@@ -210,7 +208,6 @@ public class LiveVideo extends BaseEntity {
 	@Excel( name = "彩票名称" )
 	private String lotteryName;
 
-	@ApiModelProperty(value = "视频是否连麦 0 未连麦，> 0 连麦主播")
 	private Integer concatVideo;
 
 	private String  liveStatus = "";

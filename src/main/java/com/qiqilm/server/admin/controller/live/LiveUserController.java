@@ -19,7 +19,6 @@ import com.qiqilm.server.admin.service.ILiveVideoService;
 import com.qiqilm.server.admin.service.ISysUserService;
 import com.qiqilm.server.admin.service.impl.TokenService;
 import com.qiqilm.server.admin.utils.*;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -150,7 +149,7 @@ public class LiveUserController extends BaseController {
     /**
      * 发送短信
      */
-    @ApiOperation( value = "修改手机号", notes = "修改手机号" )
+
     @RequestMapping( value = "/updateMobile", method = RequestMethod.POST )
     @Log( title = "会员发送短信", businessType = BusinessType.UPDATE )
     public AjaxResult updateMobile( @RequestBody Map map ) throws Exception {
@@ -188,7 +187,7 @@ public class LiveUserController extends BaseController {
     /**
      * 重置密码
      */
-    @ApiOperation( value = "重置密码", notes = "重置密码" )
+
     @PostMapping( "/resetPass" )
     @Log( title = "重置密码", businessType = BusinessType.UPDATE )
     @PreAuthorize( "@ss.hasPermi('admin:liveUser:resetPass')" )
@@ -303,7 +302,7 @@ public class LiveUserController extends BaseController {
     /**
      * 重置提现密码
      */
-    @ApiOperation( value = "重置提现密码", notes = "重置提现密码" )
+
     @PostMapping( "/reset" )
     @Log( title = "重置提现密码", businessType = BusinessType.UPDATE )
     @PreAuthorize( "@ss.hasPermi('admin:liveUser:reset')" )
@@ -349,15 +348,12 @@ public class LiveUserController extends BaseController {
         return toAjax( liveUserService.updateLiveUser( liveUser ) );
     }
 
-
-    @ApiOperation( "加入家族" )
     @Log( title = "加入家族", businessType = BusinessType.UPDATE )
     @PutMapping( "/gofamiily" )
     public AjaxResult gofamiily( @RequestBody LiveUser user ) {
         return liveUserService.updateFamilyID( user.getFamilyId(), user.getUserIdSet() );
     }
 
-    @ApiOperation( "修改印票" )
     @Log( title = "修改印票", businessType = BusinessType.UPDATE )
     @PostMapping( "/updateTicket" )
     public AjaxResult updateTicket( LiveUser user ) {

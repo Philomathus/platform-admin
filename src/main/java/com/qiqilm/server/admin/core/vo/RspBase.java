@@ -1,8 +1,6 @@
 package com.qiqilm.server.admin.core.vo;
 
 import com.qiqilm.server.admin.exception.ErrCode;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -12,13 +10,9 @@ import lombok.Data;
  * @author admin
  */
 @Data
-@ApiModel("返回类")
 public class RspBase<T>{
-    @ApiModelProperty(value = "0=成功,401=登录异常,其他=业务异常")
     private int code;//ErrCode
-    @ApiModelProperty(value = "客户端提示")
     private String msg = "成功";
-    @ApiModelProperty(value = "业务数据")
     private T data;
 
     public RspBase( T data) {

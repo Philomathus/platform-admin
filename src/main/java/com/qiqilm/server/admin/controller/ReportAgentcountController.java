@@ -13,7 +13,6 @@ import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IReportAgentcountService;
 import com.qiqilm.server.admin.utils.DateFormatUtils;
 import com.qiqilm.server.admin.utils.ExportExcelUtil;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +42,7 @@ public class ReportAgentcountController extends BaseController {
 	 *
 	 * @return
 	 */
-	@ApiOperation( value = "查询统计注册人数", notes = "查询统计注册人数" )
+
 	@PostMapping( value = "/record" )
 	public RspBase record( HttpServletRequest request, Map map ) {
 		String time = DateFormatUtils.formate( new Date(), "yyyy-MM-dd" );

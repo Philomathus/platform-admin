@@ -3,7 +3,6 @@ package com.qiqilm.server.admin.domain;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.qiqilm.server.admin.domain.req.DownLoadTime;
 import com.qiqilm.server.admin.utils.StringUtils;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -99,7 +98,6 @@ public class LiveUser extends DownLoadTime {
 	@Excel( name = "家族ID", orderNum = "2" )
 	private Long familyId;
 
-	@ApiModelProperty(value = "用户签名过期时间")
 	private Long expiryAfter;
 
 	@Excel( name = "家族名称", orderNum = "3" )
