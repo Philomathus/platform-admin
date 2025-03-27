@@ -431,10 +431,11 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 
         try {
             String code = createCode();
+            String template = serverSms.getTemplate().replace( "{code}", code );
             String httpArg = "u=" + serverSms.getAppKey() + "&" +
                     "p=" + serverSms.getAppAccess() + "&" +
                     "m=" + phone + "&" +
-                    "c=" + "【诗顾兔】您的验证码是 " + code  + "。如非本人操作，请忽略本短信";
+                    "c=" + template;
 
             String httpUrl = serverSms.getEndpoint() + "?" + httpArg;
 
@@ -444,7 +445,7 @@ public class ServerSmsServiceImpl implements IServerSmsService {
 
             if ( ! Objects.isNull( returnCode ) && org.apache.commons.lang3.StringUtils.isNotBlank( returnCode.toString() ) && "0".equals( returnCode.toString() ) ) {
                 log.info( "send code success {} " ,  code  );
-                return "【诗顾兔】您的验证码是 " + code  + "。如非本人操作，请忽略本短信";
+                return template;
             }
             return  null;
         } catch (Exception e) {
