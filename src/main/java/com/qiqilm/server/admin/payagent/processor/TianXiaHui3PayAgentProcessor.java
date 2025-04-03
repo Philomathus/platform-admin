@@ -32,9 +32,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-@Repository( value = ConstantsPayAgent.TIANXIAHUI_PAY + "PayAgentProcessor" )
+@Repository( value = ConstantsPayAgent.TIANXIAHUI3_PAY + "PayAgentProcessor" )
 @Log4j2
-public class TianXiaHuiPayAgentProcessor extends AbstractPayAgent {
+public class TianXiaHui3PayAgentProcessor extends AbstractPayAgent {
     @Override
     public boolean orderPay( MemberWithdrawLog withdrawLog, PayAgentPlatform payAgentPlatform, ReqPayAgent reqPayAgent ) throws Exception {
         BankCodeTianXiaHuiType    bankCodeType = BankCodeTianXiaHuiType.getCodeByDesc( withdrawLog.getBankName() );
@@ -53,8 +53,6 @@ public class TianXiaHuiPayAgentProcessor extends AbstractPayAgent {
                 .setScale( 0, RoundingMode.HALF_UP ).intValue() );
         bodyMap.put( "accountName", withdrawLog.getBankUserName() );
         bodyMap.put( "accountNo", withdrawLog.getBankAccount().trim() );
-        bodyMap.put( "province", "1" );
-        bodyMap.put( "city", "1" );
         bodyMap.put( "remark", withdrawLog.getOrderNo() );
         bodyMap.put( "reqTime", DateFormatUtils.formate( new Date(), "yyyyMMddHHmmss" ) );
         bodyMap.put( "notifyUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );

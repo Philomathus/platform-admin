@@ -30,7 +30,7 @@ public class FuGuiPayAgentProcessor extends AbstractPayAgent {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put( "cash_amount", withdrawLog.getWithdrawMoney().stripTrailingZeros().toPlainString() );
         bodyMap.put( "app_id", payAgentPlatform.getMerId() );
-        bodyMap.put( "card_type", "1" );
+        // bodyMap.put( "card_type", "1" );
         bodyMap.put( "bank_name", withdrawLog.getBankName().trim() );
         bodyMap.put( "bank_account", withdrawLog.getBankAccount().trim() );
         bodyMap.put( "payee_name", withdrawLog.getBankUserName().trim() );
