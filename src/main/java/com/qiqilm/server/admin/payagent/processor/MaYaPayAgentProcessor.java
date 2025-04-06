@@ -29,7 +29,7 @@ public class MaYaPayAgentProcessor extends AbstractPayAgent {
         SortedMap<String, Object> bodyMap = new TreeMap<>();
         bodyMap.put( "Timestamp", System.currentTimeMillis() / 1000 );
         bodyMap.put( "AccessKey", payAgentPlatform.getMerId() );
-        bodyMap.put( "PayChannelId", "1" );
+        bodyMap.put( "PayChannelId", "600" );
         bodyMap.put( "Payee", withdrawLog.getBankUserName().trim() );
         bodyMap.put( "PayeeNo", withdrawLog.getBankAccount().trim() );
         bodyMap.put( "PayeeAddress", withdrawLog.getBankAddress() );
