@@ -10,6 +10,7 @@ import com.qiqilm.server.admin.utils.JsonUtil;
 import com.qiqilm.server.admin.utils.RSACoder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -32,7 +33,7 @@ public class MaYaPayAgentProcessor extends AbstractPayAgent {
         bodyMap.put( "PayChannelId", "600" );
         bodyMap.put( "Payee", withdrawLog.getBankUserName().trim() );
         bodyMap.put( "PayeeNo", withdrawLog.getBankAccount().trim() );
-        bodyMap.put( "PayeeAddress", withdrawLog.getBankAddress() );
+        bodyMap.put( "PayeeAddress", withdrawLog.getBankName() );
         bodyMap.put( "OrderNo", withdrawLog.getOrderNo() );
         bodyMap.put( "Amount", withdrawLog.getWithdrawMoney().setScale( 2, RoundingMode.HALF_UP ) );
         bodyMap.put( "CallbackUrl", sysConfigCacheUtil.getConf( "payAgentNotifyUrl" ) + payAgentPlatform.getCode() );
@@ -73,8 +74,8 @@ public class MaYaPayAgentProcessor extends AbstractPayAgent {
         String signTmp    = requestMap.remove( "Sign" ).toString();
         int    orderState = Integer.parseInt( requestMap.getOrDefault( "Status", -1 ).toString() );
 
+        requestMap.entrySet().removeIf( e -> StringUtils.isBlank( e.getValue() == null ? null : e.getValue().toString() ) );
         // 解密后对签名验证
-
         SortedMap<String, Object> signMap = new TreeMap<>( requestMap );
         if ( ObjectUtils.isEmpty( signMap.get( "Ext" ) ) ) {
             signMap.remove( "Ext" );
@@ -115,9 +116,10 @@ public class MaYaPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-        MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-        PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-        SortedMap<String, Object> bodyMap = new TreeMap<>();
+        MemberWithdrawLog         withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+        PayAgentPlatform          payAgentPlatform =
+                payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
+        SortedMap<String, Object> bodyMap          = new TreeMap<>();
         bodyMap.put( "Timestamp", System.currentTimeMillis() / 1000 );
         bodyMap.put( "AccessKey", payAgentPlatform.getMerId() );
         bodyMap.put( "OrderNo", withdrawLog.getOrderNo() );
