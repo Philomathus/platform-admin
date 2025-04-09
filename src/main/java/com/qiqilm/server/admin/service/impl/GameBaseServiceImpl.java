@@ -367,6 +367,9 @@ public class GameBaseServiceImpl implements IGameBaseService {
         return () -> {
             try {
                 GamePlatform gamePlatform = gamePlatformMapper.selectGamePlatformById( platformId );
+                if ( gamePlatform.getStatus() == 0 ) {
+                    return null;
+                }
                 BigDecimal   backMoney    = bbinService.queryCoin( gamePlatform, userId.replace( "_", "BBIN" ) );
 
                 RspGameBalance rspGameBalance = new RspGameBalance();
