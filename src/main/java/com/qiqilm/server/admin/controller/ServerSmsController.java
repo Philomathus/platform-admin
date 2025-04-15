@@ -7,6 +7,7 @@ import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.ServerSms;
 import com.qiqilm.server.admin.enums.BusinessType;
 import com.qiqilm.server.admin.service.IServerSmsService;
+import com.qiqilm.server.admin.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,14 @@ public class ServerSmsController extends BaseController {
 	public TableDataInfo list( ServerSms serverSms ) {
 		startPage();
 		List<ServerSms> list = serverSmsService.selectServerSmsList( serverSms );
+
+		final int minMaskLength = 2;
+		final int maxMaskLength = 8;
+		list.forEach( s -> {
+			s.setAppKey( StringUtils.mask( s.getAppKey(), minMaskLength, maxMaskLength ) );
+			s.setAppAccess( StringUtils.mask( s.getAppAccess(), minMaskLength, maxMaskLength ) );
+		} );
+
 		return getDataTable( list );
 	}
 
@@ -42,7 +51,14 @@ public class ServerSmsController extends BaseController {
 	@PreAuthorize( "@ss.hasPermi('server:sms:query')" )
 	@GetMapping( value = "/{id}" )
 	public AjaxResult getInfo( @PathVariable( "id" ) Long id ) {
-		return AjaxResult.success( serverSmsService.selectServerSmsById( id ) );
+		final ServerSms serverSms = serverSmsService.selectServerSmsById( id );
+
+		final int minMaskLength = 2;
+		final int maxMaskLength = 8;
+		serverSms.setAppKey( StringUtils.mask( serverSms.getAppKey(), minMaskLength, maxMaskLength ) );
+		serverSms.setAppAccess( StringUtils.mask( serverSms.getAppAccess(), minMaskLength, maxMaskLength ) );
+
+		return AjaxResult.success( serverSms );
 	}
 
 	/**

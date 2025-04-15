@@ -385,6 +385,26 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return StrFormatter.format( template, params );
 	}
 
+	public static String maskMiddle( String input, char symbol, int length ) {
+		final String mask = StringUtils.repeat( symbol, length );
+		final int totalLength = input.length();
+		final int start = (totalLength - length) / 2;
+		final int end = start + length;
+		return StringUtils.overlay( input, mask, start, end );
+	}
+
+	public static String maskStart( String input, char symbol, int length ) {
+		return StringUtils.repeat( symbol, length ) + input.substring( input.length() - length );
+	}
+
+	public static String mask( String input, int minLength, int maxLength ) {
+		final int maskLength = Math.min( maxLength, input.length() / 2 );
+		final char symbol = '*';
+
+		return maskLength > minLength ? maskMiddle( input, symbol, maskLength ) :
+			maskStart( input, symbol, maskLength );
+	}
+
     public static void main(String[] args) {
         System.out.println( toCamelCase("user_name"));
     }
