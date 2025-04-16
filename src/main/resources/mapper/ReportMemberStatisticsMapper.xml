@@ -52,7 +52,7 @@
         </if>
     </select>
     <select id="getUserBalance" resultType="java.math.BigDecimal">
-        select sum(total_account) from member_info
+        select sum(total_account , 0) from member_info
         <where>
             <if test="inclusive_date != null">
                 and reg_time >= STR_TO_DATE(CONCAT(#{inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')

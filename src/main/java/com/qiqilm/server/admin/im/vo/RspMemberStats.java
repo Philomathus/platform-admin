@@ -17,4 +17,6 @@ public class RspMemberStats {
     Long       dailyFirstRechargeCount;
     Long       totalWithdrawCount;
     BigDecimal totalRechargeAmount;
+    BigDecimal gift;
+    BigDecimal userBalance;
 }

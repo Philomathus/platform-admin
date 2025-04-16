@@ -113,6 +113,8 @@ public class ReportMemberStatisticsServiceImpl implements ReportMemberStatistics
                 .totalRechargeAmount( rechargeStatsDto.getTotalRecharge().setScale( 2, RoundingMode.HALF_DOWN ) )
                 .dailyFirstRechargeCount( reportMemberStatisticsMapper.getDailyFirstRechargeCount( req ) )
                 .totalWithdrawCount( reportMemberStatisticsMapper.getDailyWithdrawCount( req ) )
+                .gift( reportMemberStatisticsMapper.getTotalGift( req ) )
+                .userBalance( reportMemberStatisticsMapper.getUserBalance( req ) )
                 .build();
 
         redisUtils.strSet( key, JsonUtil.object2Json( rspMemberStats ) );
