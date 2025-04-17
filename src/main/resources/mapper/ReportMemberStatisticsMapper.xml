@@ -52,7 +52,7 @@
         </if>
     </select>
     <select id="getUserBalance" resultType="java.math.BigDecimal">
-        select sum(total_account , 0) from member_info
+        select ifnull( sum(total_account), 0 ) from member_info
         <where>
             <if test="inclusive_date != null">
                 and reg_time >= STR_TO_DATE(CONCAT(#{inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
@@ -161,7 +161,7 @@
 
     <select id="getRechargeStats" resultType="com.qiqilm.server.admin.im.vo.RechargeStatsDto">
         SELECT ifnull(count( distinct a.member_id), 0) dailyRechargeCount,
-        ifnull(sum( distinct a.recharge_money), 0) totalRecharge
+        ifnull(sum( a.recharge_money), 0) totalRecharge
         FROM (
         SELECT p.member_id member_id, p.recharge_money recharge_money
         FROM member_recharge_log p
@@ -177,6 +177,22 @@
         <if test="req.inclusive_date != null">
             and j.update_time <![CDATA[ >= ]]>  STR_TO_DATE(CONCAT(#{req.inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
             and j.update_time <![CDATA[ <= ]]>  STR_TO_DATE(CONCAT(#{req.inclusive_date},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        union all
+        SELECT u.member_id member_id, u.recharge_money recharge_money
+        FROM pay_usdt_recharge u
+        WHERE u.status = 3
+        <if test="req.inclusive_date != null">
+            and u.update_time <![CDATA[ >= ]]>  STR_TO_DATE(CONCAT(#{req.inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+            and u.update_time <![CDATA[ <= ]]>  STR_TO_DATE(CONCAT(#{req.inclusive_date},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        union all
+        SELECT ar.recharge_acount member_id, ar.money recharge_money
+        FROM pay_agent_recharge_record ar
+        WHERE
+        <if test="req.inclusive_date != null">
+            ar.create_time <![CDATA[ >= ]]>  STR_TO_DATE(CONCAT(#{req.inclusive_date},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+            and ar.create_time <![CDATA[ <= ]]>  STR_TO_DATE(CONCAT(#{req.inclusive_date},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
         ) as a
         inner join member_info as mi on mi.id = a.member_id

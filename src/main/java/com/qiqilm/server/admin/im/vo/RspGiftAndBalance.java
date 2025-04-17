@@ -11,10 +11,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RspMemberStats {
-    Long       totalRegistration;
-    Long       dailyRechargeCount;
-    Long       dailyFirstRechargeCount;
-    Long       totalWithdrawCount;
-    BigDecimal totalRechargeAmount;
+public class RspGiftAndBalance {
+    BigDecimal gift;
+    BigDecimal userBalance;
 }

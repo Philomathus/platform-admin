@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.qiqilm.server.admin.annotation.DataScope;
 import com.qiqilm.server.admin.constant.UserConstants;
 import com.qiqilm.server.admin.core.vo.AjaxResult;
 import com.qiqilm.server.admin.domain.MemberInfo;
@@ -52,7 +51,6 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 用户信息集合信息
      */
     @Override
-    @DataScope( userAlias = "u" )
     public List<SysUser> selectUserList( SysUser user ) {
         return userMapper.selectUserList( user );
     }

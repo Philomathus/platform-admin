@@ -89,8 +89,6 @@
 			<!-- 结束时间检索 -->
 			AND date_format(u.create_time, '%y%m%d') <![CDATA[ <= ]]> date_format(#{params.endTime}, '%y%m%d')
 		</if>
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
 	</select>
 
 	<select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
