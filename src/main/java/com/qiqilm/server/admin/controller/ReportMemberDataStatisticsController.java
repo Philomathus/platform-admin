@@ -62,4 +62,9 @@ public class ReportMemberDataStatisticsController {
     public AjaxResult getMemberStats( @RequestBody ReqReportMemberStatistics req ) {
         return AjaxResult.success( reportMemberStatisticsService.getMemberStats( req ) );
     }
+
+    @PostMapping( "/getGiftAndBalance" )
+    public AjaxResult getGiftAndBalance( @RequestBody ReqReportMemberStatistics req ) {
+        return AjaxResult.success( reportMemberStatisticsService.getGiftAndBalance( req ) );
+    }
 }

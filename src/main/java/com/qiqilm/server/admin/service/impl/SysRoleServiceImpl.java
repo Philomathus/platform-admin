@@ -1,6 +1,5 @@
 package com.qiqilm.server.admin.service.impl;
 
-import com.qiqilm.server.admin.annotation.DataScope;
 import com.qiqilm.server.admin.constant.UserConstants;
 import com.qiqilm.server.admin.domain.SysRole;
 import com.qiqilm.server.admin.domain.SysRoleMenu;
@@ -41,7 +40,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
 	 * @return 角色数据集合信息
 	 */
 	@Override
-	@DataScope( userAlias = "u" )
 	public List<SysRole> selectRoleList( SysRole role ) {
 		return roleMapper.selectRoleList( role );
 	}

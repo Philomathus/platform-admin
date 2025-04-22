@@ -3,6 +3,7 @@ package com.qiqilm.server.admin.service.impl;
 
 import com.qiqilm.server.admin.domain.req.ReqReportMemberStatistics;
 import com.qiqilm.server.admin.im.vo.RechargeStatsDto;
+import com.qiqilm.server.admin.im.vo.RspGiftAndBalance;
 import com.qiqilm.server.admin.im.vo.RspMemberStats;
 import com.qiqilm.server.admin.mapper.ReportMemberStatisticsMapper;
 import com.qiqilm.server.admin.service.ReportMemberStatisticsService;
@@ -12,7 +13,6 @@ import com.qiqilm.server.admin.utils.LocalDateTimeUtils;
 import com.qiqilm.server.admin.utils.RedisUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -122,4 +122,12 @@ public class ReportMemberStatisticsServiceImpl implements ReportMemberStatistics
         return rspMemberStats;
     }
 
+    @Override
+    public RspGiftAndBalance getGiftAndBalance( ReqReportMemberStatistics req ) {
+        setDefaults( req );
+        return RspGiftAndBalance.builder()
+                .gift( reportMemberStatisticsMapper.getTotalGift( req ) )
+                .userBalance( reportMemberStatisticsMapper.getUserBalance( req ) )
+                .build();
+    }
 }

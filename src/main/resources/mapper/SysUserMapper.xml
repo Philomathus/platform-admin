@@ -78,19 +78,6 @@
 		<if test="userName != null and userName != ''">
 			AND u.user_name like concat('%', #{userName}, '%')
 		</if>
-		<if test="status != null and status != ''">
-			AND u.status = #{status}
-		</if>
-		<if test="params.beginTime != null and params.beginTime != ''">
-			<!-- 开始时间检索 -->
-			AND date_format(u.create_time, '%y%m%d') <![CDATA[ >= ]]> date_format(#{params.beginTime}, '%y%m%d')
-		</if>
-		<if test="params.endTime != null and params.endTime != ''">
-			<!-- 结束时间检索 -->
-			AND date_format(u.create_time, '%y%m%d') <![CDATA[ <= ]]> date_format(#{params.endTime}, '%y%m%d')
-		</if>
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
 	</select>
 
 	<select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
