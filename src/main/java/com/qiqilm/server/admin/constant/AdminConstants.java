@@ -124,4 +124,8 @@ public class AdminConstants {
 	 * 频繁访问,限流
 	 */
 	public static final String ACCESS_TIMES = "access_limit:";
+
+	public static final String RESET_PASSWORD_CODE = "reset_password_code:";
+
+	public static final int RESET_PASSWORD_CODE_LENGTH = 6;
 }

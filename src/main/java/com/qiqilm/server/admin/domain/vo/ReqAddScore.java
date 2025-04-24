@@ -15,4 +15,5 @@ public class ReqAddScore {
     private String ordermk;
     private Integer googleAuthCode;
     private String password;
+    private String resetPasswordCode;
 }

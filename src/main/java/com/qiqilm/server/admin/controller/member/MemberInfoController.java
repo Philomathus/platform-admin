@@ -39,8 +39,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.qiqilm.server.admin.constant.AdminConstants.RESET_PASSWORD_CODE;
+import static com.qiqilm.server.admin.constant.AdminConstants.RESET_PASSWORD_CODE_LENGTH;
 
 /**
  * 用户信息Controller
@@ -418,6 +424,20 @@ public class MemberInfoController extends BaseController {
             rspBase.setCode( 1 );
             return rspBase;
         }
+
+        if ( req.getResetPasswordCode() == null ) {
+            rspBase.setMsg( "请输入重置代码" );
+            rspBase.setCode( 1 );
+            return rspBase;
+        }
+
+        final String resetPasswordCode = redisUtil.strGet( RESET_PASSWORD_CODE + req.getId() );
+        if( !StringUtils.equals( resetPasswordCode, req.getResetPasswordCode() ) ) {
+            rspBase.setMsg( "重置代码不正确，请检查" );
+            rspBase.setCode( 1 );
+            return rspBase;
+        }
+
         LoginUser loginUser        = tokenService.getLoginUser( ServletUtil.getHttpServletRequest() );
         String    googleAuthSecret = sysUserService.selectGoogleAuthKeyByUserName( loginUser.getUsername() );
 
@@ -445,8 +465,24 @@ public class MemberInfoController extends BaseController {
         int i = memberInfoService.updateMemberInfo( memberInfo );
         if ( i > 0 ) {
             memberCacheManager.delToken( memberInfo.getId() );
+            redisUtil.unlink( RESET_PASSWORD_CODE + memberInfo.getId() );
         }
         return new RspBase();
+    }
+
+    @GetMapping( "/resetPasswordQrCode/{memberId}" )
+    public RspBase<?> resetPasswordQrCode( @PathVariable String memberId,
+                                           @RequestParam( required = false, defaultValue = "250" ) int width,
+                                           @RequestParam( required = false, defaultValue = "250" ) int height ) {
+        final Random random = new Random();
+        final String code = Stream.generate( () -> String.valueOf( random.nextInt(10) ) )
+                .limit( RESET_PASSWORD_CODE_LENGTH )
+                .collect( Collectors.joining() );
+
+        redisUtil.strSet( RESET_PASSWORD_CODE + memberId, code, Duration.ofMinutes(5) );
+
+        final String qrCodeBase64 = QRCodeGenerator.generateQRCodeBase64( code, width, height );
+        return new RspBase<>( qrCodeBase64 );
     }
 
     /**
