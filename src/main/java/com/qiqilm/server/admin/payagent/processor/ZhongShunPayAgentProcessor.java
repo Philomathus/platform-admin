@@ -74,7 +74,7 @@ public class ZhongShunPayAgentProcessor extends AbstractPayAgent {
     @Override
     public String callbackPay( PayAgentPlatform payAgentPlatform, Map<String, Object> requestMap, String realIp ) throws Exception {
         String sign           = requestMap.remove( "payment_md5sign" ).toString();
-        String status         = requestMap.getOrDefault( "status", "" ).toString();
+        String refCode        = requestMap.getOrDefault( "refCode", "" ).toString();
         String transaction_id = requestMap.getOrDefault( "transaction_id", "" ).toString();
 
         //去除空值参数
@@ -101,8 +101,7 @@ public class ZhongShunPayAgentProcessor extends AbstractPayAgent {
                 return "OK";
             }
             PayAgentLog payAgentLog = payAgentLogMapper.selectByWithdrawOrderNo( out_trade_id );
-            payAgentService.processOrderPay( withdrawLog, payAgentLog, transaction_id, payAgentPlatform,
-                    "success".equals( status ) );
+            payAgentService.processOrderPay( withdrawLog, payAgentLog, transaction_id, payAgentPlatform, "1".equals( refCode ) );
             return "OK";
         }
         return "fail";
@@ -116,9 +115,10 @@ public class ZhongShunPayAgentProcessor extends AbstractPayAgent {
 
     @Override
     public String queryOrderPay( PayAgentLog payAgentLog ) throws Exception {
-        MemberWithdrawLog withdrawLog = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
-        PayAgentPlatform payAgentPlatform = payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
-        Map<String, Object> paramsMap = new TreeMap<>();
+        MemberWithdrawLog   withdrawLog      = withdrawLogMapper.selectByOrderNo( payAgentLog.getWithdrawOrderNo() );
+        PayAgentPlatform    payAgentPlatform =
+                payAgentPlatformMapper.selectPayAgentPlatformById( payAgentLog.getPayAgentPlatId() );
+        Map<String, Object> paramsMap        = new TreeMap<>();
         paramsMap.put( "payment_memberid", payAgentPlatform.getMerId() );
         paramsMap.put( "payment_orderid", withdrawLog.getOrderNo() );
 
